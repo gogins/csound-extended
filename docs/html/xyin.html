@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm257374"></a>
+        <a id="idm257009"></a>
         <h2>Description</h2>
         <p>
       Sense the cursor position in an output window. When <span class="emphasis"><em>xyin</em></span> is called the position of the mouse within the output window is used to reply to the request.  This simple mechanism does mean that only one <span class="emphasis"><em>xyin</em></span> can be used accurately at once.  The position of the mouse is reported in the output window.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm257379"></a>
+        <a id="idm257014"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kx, ky <span class="command"><strong>xyin</strong></span> iprd, ixmin, ixmax, iymin, iymax [, ixinit] [, iyinit]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm257383"></a>
+        <a id="idm257018"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iprd</em></span> -- period of cursor sensing (in seconds). Typically .1 seconds.
@@ -64,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm257391"></a>
+        <a id="idm257026"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xyin</em></span> samples the cursor x-y position in an input window every <span class="emphasis"><em>iprd</em></span> seconds. Output values are repeated (not interpolated) at the k-rate, and remain fixed until a new change is registered in the window. There may be any number of input windows. This unit is useful for real-time control, but continuous motion should be avoided if <span class="emphasis"><em>iprd</em></span> is unusually small.
@@ -88,21 +88,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm257400"></a>
+        <a id="idm257035"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the xyin opcode. It uses the file <a class="ulink" href="examples/xyin.csd.html" target="_top"> (click here to play) <em class="citetitle">xyin.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm257405"></a>
+          <a id="idm257040"></a>
           <p class="title">
-            <strong>Example 1157. Example of the xyin opcode.</strong>
+            <strong>Example 1160. Example of the xyin opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm257412"></a>
+              <a id="idm257047"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -137,7 +137,7 @@
   k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span> <span class="nb">xyin</span> i<span class="n">prd</span><span class="p">,</span> i<span class="n">xmin</span><span class="p">,</span> i<span class="n">xmax</span><span class="p">,</span> i<span class="n">ymin</span><span class="p">,</span> i<span class="n">ymax</span><span class="p">,</span> i<span class="n">xinit</span><span class="p">,</span> i<span class="n">yinit</span>
 
   <span class="c1">; Print out the values of kx and ky.</span>
-  <span class="nb">printks</span> <span class="s">"kx=%f, ky=%f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> i<span class="n">prd</span><span class="p">,</span> k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span>
+  <span class="nb">printks</span> <span class="s">"kx=</span><span class="si">%f</span><span class="s">, ky=</span><span class="si">%f</span><span class="se">\\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">prd</span><span class="p">,</span> k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span>
 
   <span class="c1">; Play an oscillator, use the x values for amplitude and</span>
   <span class="c1">; the y values for frequency.</span>
@@ -178,7 +178,7 @@ kx=10.765685, ky=15.644135
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm257532"></a>
+        <a id="idm257170"></a>
         <h2>Credits</h2>
         <p>Example written by Kevin Conder.</p>
       </div>

@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm113445"></a>
+        <a id="idm113428"></a>
         <h2>Description</h2>
         <p>
       A low frequency oscillator of various shapes.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm113448"></a>
+        <a id="idm113431"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kres <span class="command"><strong>lfo</strong></span> kamp, kcps [, itype]</pre>
         <pre class="synopsis">ares <span class="command"><strong>lfo</strong></span> kamp, kcps [, itype]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm113454"></a>
+        <a id="idm113437"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>itype</em></span> (optional, default=0) -- determine the waveform of the oscillator. Default is 0.
@@ -86,7 +86,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm113478"></a>
+        <a id="idm113461"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- amplitude of output
@@ -96,21 +96,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm113484"></a>
+        <a id="idm113467"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the lfo opcode. It uses the file <a class="ulink" href="examples/lfo.csd.html" target="_top"> (click here to play) <em class="citetitle">lfo.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm113489"></a>
+          <a id="idm113472"></a>
           <p class="title">
-            <strong>Example 468. Example of the lfo opcode.</strong>
+            <strong>Example 469. Example of the lfo opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm113496"></a>
+              <a id="idm113479"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -130,9 +130,9 @@
 <span class="kd">instr</span> <span class="nf">1</span>
 
 k<span class="n">cps</span>  <span class="o">=</span> <span class="mi">5</span>
-i<span class="n">type</span> <span class="o">=</span> <span class="nb">p4</span>	<span class="c1">;lfo type</span>
+i<span class="n">type</span> <span class="o">=</span> <span class="vi">p4</span>	<span class="c1">;lfo type</span>
 
-k<span class="n">lfo</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">20</span>
+k<span class="n">lfo</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">20</span>
 a<span class="n">l</span>   <span class="nb">lfo</span> k<span class="n">lfo</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> i<span class="n">type</span>
 a<span class="n">sig</span> <span class="nb">poscil</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">220</span><span class="o">+</span>a<span class="n">l</span><span class="p">,</span> <span class="mi">1</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
@@ -157,7 +157,7 @@ a<span class="n">sig</span> <span class="nb">poscil</span> <span class="mf">.5</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm113586"></a>
+        <a id="idm113569"></a>
         <h2>Credits</h2>
         <p>
       </p>

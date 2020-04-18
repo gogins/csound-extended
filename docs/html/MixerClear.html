@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm139188"></a>
+        <a id="idm137759"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">
           <span class="command">
@@ -48,13 +48,13 @@
         </pre>
       </div>
       <div class="refsect1">
-        <a id="idm139192"></a>
+        <a id="idm137763"></a>
         <h2>Description</h2>
         <p>Resets all channels of a buss to 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm139195"></a>
+        <a id="idm137766"></a>
         <h2>Performance</h2>
         <p>
 Use of the mixer requires that instruments setting gains have smaller numbers than instruments sending signals, 
@@ -64,7 +64,7 @@ However, an instrument may have any number of sends or receives. After the final
 </p>
       </div>
       <div class="refsect1">
-        <a id="idm139200"></a>
+        <a id="idm137771"></a>
         <h2>Examples</h2>
         <pre class="programlisting">
 <span class="oblock">instr</span> 220 <span class="comment">; Master output</span>
@@ -99,13 +99,13 @@ However, an instrument may have any number of sends or receives. After the final
       Here is a complete example of the Mixerclear opcode. It uses the file <a class="ulink" href="examples/Mixer.csd.html" target="_top"> (click here to play) <em class="citetitle">Mixer.csd</em></a>
       </p>
         <div class="example">
-          <a id="idm139240"></a>
+          <a id="idm137811"></a>
           <p class="title">
             <strong>Example 585. Complete example of the Mixerclear opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm139242"></a>
+              <a id="idm137813"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -124,7 +124,7 @@ However, an instrument may have any number of sends or receives. After the final
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">att</span>	<span class="nb">expon</span> <span class="mf">0.01</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;create an attack</span>
+k<span class="n">att</span>	<span class="nb">expon</span> <span class="mf">0.01</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;create an attack</span>
 a<span class="n">out</span>	<span class="nb">poscil</span> <span class="mf">.7</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span><span class="mi">1</span>
 	<span class="nb">MixerSetLevel</span>	<span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> k<span class="n">att</span>	<span class="c1">;impose attack on the gain level</span>
 	<span class="nb">MixerSend</span> a<span class="n">out</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span>		<span class="c1">;send to channel 0</span>
@@ -168,7 +168,7 @@ a<span class="n">outL</span><span class="p">,</span> a<span class="n">outR</span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm139403"></a>
+        <a id="idm137974"></a>
         <h2>Credits</h2>
         <p>Author: Michael Gogins (gogins at pipeline dot com).</p>
       </div>

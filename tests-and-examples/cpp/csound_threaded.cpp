@@ -1,5 +1,6 @@
 #include <csound/csound_threaded.hpp>
 #include <iostream>
+#include <string>
 
 /**
  * Example of using the _threaded_ C++ API. Compile with something like:
@@ -250,11 +251,19 @@ int main(int argc, char *argv[])
 {
     CsoundThreaded csound;
     csound.SetOption("-d");
+    csound.SetOption("-m0");
     csound.SetOption("-odac:plughw:1,0");
     csound.CompileCsdText(csd_text);
     csound.Start();
     int thread = csound.Perform();
     std::cout << "Performing in thread 0x" << std::hex << thread << "..." << std::endl;
+    while (true) {
+        std::cout << "Enter code for Csound:" << std::endl;
+        std::string input;
+        std::getline(std::cin, input);
+        auto result = csound.EvalCode(input.c_str());
+        std::cout << "Result: " << result << std::endl;
+    };
     csound.Join();
     std::cout << "Finished." << std::endl;
 }

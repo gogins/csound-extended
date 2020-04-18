@@ -43,12 +43,12 @@
     functions.    </p>
       </div>
       <div class="refsect1">
-        <a id="idm121318"></a>
+        <a id="idm121430"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>lorismorph</strong></span> isrcidx, itgtidx, istoreidx, kfreqmorphenv, kampmorphenv, kbwmorphenv</pre>
       </div>
       <div class="refsect1">
-        <a id="idm121322"></a>
+        <a id="idm121434"></a>
         <h2>Description</h2>
         <p><span class="emphasis"><em>lorismorph</em></span> morphs two stored sets of bandwidth-enhanced
     partials and stores a new set of partials representing the morphed
@@ -60,7 +60,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm121326"></a>
+        <a id="idm121438"></a>
         <h2>Initialization</h2>
         <p><span class="emphasis"><em>istoreidx, ireadidx, isrcidx, itgtidx</em></span> are
     labels that identify a stored set of bandwidth-enhanced
@@ -74,7 +74,7 @@
     instances.</p>
       </div>
       <div class="refsect1">
-        <a id="idm121337"></a>
+        <a id="idm121449"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>lorismorph</em></span> generates a set of bandwidth-enhanced partials by
     morphing two stored sets of partials, the source and target partials,
@@ -94,20 +94,20 @@
     <span class="emphasis"><em>kbwmorphenv</em></span>.</p>
       </div>
       <div class="refsect1">
-        <a id="idm121351"></a>
+        <a id="idm121463"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the lorismorph opcode. It uses the file <a class="ulink" href="examples/lorismorph.csd.html" target="_top"> (click here to play) <em class="citetitle">lorismorph.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm121356"></a>
+          <a id="idm121468"></a>
           <p class="title">
-            <strong>Example 504. Example of the lorismorph opcode.</strong>
+            <strong>Example 505. Example of the lorismorph opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm121363"></a>
+              <a id="idm121475"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -134,9 +134,9 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">onset</span>	<span class="o">=</span> <span class="nb">p4</span>
-i<span class="n">decay</span>	<span class="o">=</span> <span class="nb">p5</span>
-i<span class="n">tmorph</span> <span class="o">=</span> <span class="nb">p3</span> <span class="o">-</span> <span class="p">(</span>i<span class="n">onset</span> <span class="o">+</span> i<span class="n">decay</span><span class="p">)</span>
+i<span class="n">onset</span>	<span class="o">=</span> <span class="vi">p4</span>
+i<span class="n">decay</span>	<span class="o">=</span> <span class="vi">p5</span>
+i<span class="n">tmorph</span> <span class="o">=</span> <span class="vi">p3</span> <span class="o">-</span> <span class="p">(</span>i<span class="n">onset</span> <span class="o">+</span> i<span class="n">decay</span><span class="p">)</span>
 i<span class="n">pshift</span>	<span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="mf">8.02</span><span class="p">)</span><span class="o">/</span><span class="nb">cpspch</span><span class="p">(</span><span class="mf">8.08</span><span class="p">)</span>
     
 k<span class="n">tme</span>	<span class="nb">linseg</span>	<span class="mi">0</span><span class="p">,</span> i<span class="n">onset</span><span class="p">,</span> <span class="mf">.2</span><span class="p">,</span> i<span class="n">tmorph</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> i<span class="n">decay</span><span class="p">,</span> <span class="mf">2.1</span>    <span class="c1">; meow time function, morph from .2 to 2.0 seconds</span>
@@ -159,9 +159,9 @@ a<span class="n">sig</span>	<span class="n">lorisplay</span>  <span class="mi">3
 
 <span class="kd">instr</span> <span class="nf">2</span>
 
-i<span class="n">onset</span>	 <span class="o">=</span> <span class="nb">p4</span>
-i<span class="n">morph</span>	 <span class="o">=</span> <span class="nb">p5</span> <span class="o">-</span> <span class="nb">p4</span>
-i<span class="n">release</span> <span class="o">=</span> <span class="nb">p3</span> <span class="o">-</span> <span class="nb">p5</span>
+i<span class="n">onset</span>	 <span class="o">=</span> <span class="vi">p4</span>
+i<span class="n">morph</span>	 <span class="o">=</span> <span class="vi">p5</span> <span class="o">-</span> <span class="vi">p4</span>
+i<span class="n">release</span> <span class="o">=</span> <span class="vi">p3</span> <span class="o">-</span> <span class="vi">p5</span>
     
 k<span class="n">tclar</span>	<span class="nb">linseg</span>	<span class="mi">0</span><span class="p">,</span> i<span class="n">onset</span><span class="p">,</span> <span class="mf">.75</span><span class="p">,</span> i<span class="n">morph</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> i<span class="n">release</span><span class="p">,</span> <span class="mf">2.4</span>
 k<span class="n">tmeow</span>	<span class="nb">linseg</span>	<span class="mi">0</span><span class="p">,</span> i<span class="n">onset</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> i<span class="n">morph</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> i<span class="n">release</span><span class="p">,</span> <span class="mf">3.4</span>
@@ -197,7 +197,7 @@ a<span class="n">sig</span>	<span class="n">lorisplay</span>  <span class="mi">3
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm121705"></a>
+        <a id="idm121817"></a>
         <h2>Credits</h2>
         <p>This implementation of the Loris unit generators was written by Kelly
     Fitz (<a class="ulink" href="mailto:loris@cerlsoundgroup.org" target="_top">loris@cerlsoundgroup.org</a>). It is patterned after a prototype implementation of the

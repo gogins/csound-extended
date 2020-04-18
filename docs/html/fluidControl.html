@@ -39,12 +39,13 @@
            </p>
       </div>
       <div class="refsect1">
-        <a id="idm78778"></a>
+        <a id="idm78407"></a>
         <h2>Syntax</h2>
-        <pre class="synopsis"><span class="command"><strong>fluidControl</strong></span> ienginenum, kstatus, kchannel, kdata1, kdata2</pre>
+        <pre class="synopsis"><span class="command"><strong>fluidControl</strong></span> ienginenum, kstatus, kchannel, \
+    kdata1, kdata2 [,imsgs]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm78782"></a>
+        <a id="idm78411"></a>
         <h2>Description</h2>
         <p>Plugin opcode in fluidOpcodes.</p>
         <p>The fluid opcodes provide a simple
@@ -57,13 +58,15 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm78786"></a>
+        <a id="idm78415"></a>
         <h2>Initialization</h2>
         <p><span class="emphasis"><em>ienginenum </em></span> -- engine number assigned from
-fluidEngine</p>
+ fluidEngine</p>
+        <p><span class="emphasis"><em>imsgs</em></span> -- if zero suppresses printing of
+ messages when commands arrive.  Default value is 1.</p>
       </div>
       <div class="refsect1">
-        <a id="idm78790"></a>
+        <a id="idm78421"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>kstatus </em></span> -- MIDI channel message status byte: 128 for
 note off, 144 for note on, 176 for control change, 192 for program change, or
@@ -83,17 +86,18 @@ consistently use one MIDI channel that was assigned to a Fluidsynth
 program using fluidLoad.</p>
         <p>In this implementation, SoundFont effects such as chorus or
 reverb are used if and only if they are defaults for the preset. There
-is no means of turning such effects on or off, or of changing their
-parameters, from Csound.</p>
+are some ways of turning effects chorus and reverb on or off using
+fluidEngine, and of changing some of their parameters with fluidCCi and
+fluidCCk.</p>
       </div>
       <div class="refsect1">
-        <a id="idm78802"></a>
+        <a id="idm78433"></a>
         <h2>Examples</h2>
         <p>
       Here is a more complex example of the fluidsynth opcodes written by Istvan Varga. It uses the file <a class="ulink" href="examples/fluidcomplex.csd.html" target="_top"> (click here to play) <em class="citetitle">fluidcomplex.csd</em></a>.
     </p>
         <div class="refsect1">
-          <a id="idm78807"></a>
+          <a id="idm78438"></a>
           <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -118,7 +122,7 @@ parameters, from Csound.</p>
 i<span class="n">chn</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="nl">lp1</span><span class="p">:</span>
         <span class="nb">massign</span>   i<span class="n">chn</span><span class="p">,</span> <span class="mi">0</span>
-        <span class="k">loop_le</span>   i<span class="n">chn</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="nl">lp1</span>
+        <span class="kp">loop_le</span>   i<span class="n">chn</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="nl">lp1</span>
         <span class="nb">pgmassign</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 
 <span class="c1">; initialize FluidSynth</span>
@@ -133,8 +137,8 @@ gi<span class="n">sf2</span>   <span class="nb">fluidLoad</span> <span class="s"
         <span class="k">igoto</span>     <span class="nl">skipInit</span>
   <span class="nl">doInit</span><span class="p">:</span>
         <span class="nb">fluidProgramSelect</span> <span class="nb">i</span><span class="p">(</span>k<span class="n">eng</span><span class="p">),</span> <span class="nb">i</span><span class="p">(</span>k<span class="n">chn</span><span class="p">),</span> <span class="nb">i</span><span class="p">(</span>k<span class="n">sf2</span><span class="p">),</span> <span class="nb">i</span><span class="p">(</span>k<span class="n">bnk</span><span class="p">),</span> <span class="nb">i</span><span class="p">(</span>k<span class="n">pre</span><span class="p">)</span>
-        <span class="nb">reinit</span>    <span class="n">doInit</span>
-        <span class="nb">rireturn</span>
+        <span class="kp">reinit</span>    <span class="nl">doInit</span>
+        <span class="kp">rireturn</span>
   <span class="nl">skipInit</span><span class="p">:</span>
 <span class="kd">endop</span>
 
@@ -146,7 +150,7 @@ gi<span class="n">sf2</span>   <span class="nb">fluidLoad</span> <span class="s"
         <span class="nb">fluidControl</span> gi<span class="n">fld</span><span class="p">,</span> <span class="mi">192</span><span class="p">,</span> k<span class="n">chn</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
         <span class="nb">fluidControl</span> gi<span class="n">fld</span><span class="p">,</span> <span class="mi">176</span><span class="p">,</span> k<span class="n">chn</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">100</span>
         <span class="nb">fluidControl</span> gi<span class="n">fld</span><span class="p">,</span> <span class="mi">176</span><span class="p">,</span> k<span class="n">chn</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">64</span>
-        <span class="k">loop_le</span>   k<span class="n">chn</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="nl">lp2</span>
+        <span class="kp">loop_le</span>   k<span class="n">chn</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="nl">lp2</span>
   <span class="k">endif</span>
 
   <span class="c1">; send any MIDI events received to FluidSynth</span>
@@ -179,7 +183,7 @@ gi<span class="n">sf2</span>   <span class="nb">fluidLoad</span> <span class="s"
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm79054"></a>
+        <a id="idm78685"></a>
         <h2>See Also</h2>
         <p><a class="link" href="fluidEngine.html" title="fluidEngine"><em class="citetitle">fluidEngine</em></a>, <a class="link" href="fluidNote.html" title="fluidNote"><em class="citetitle">fluidNote</em></a>, <a class="link" href="fluidLoad.html" title="fluidLoad"><em class="citetitle">fluidLoad</em></a></p>
         <p> More information on soundfonts is in the Floss Manuals: <a class="ulink" href="http://write.flossmanuals.net/csound/d-reading-midi-files" target="_top"><em class="citetitle">http://write.flossmanuals.net/csound/d-reading-midi-files</em></a></p>
@@ -187,13 +191,14 @@ gi<span class="n">sf2</span>   <span class="nb">fluidLoad</span> <span class="s"
         Wikipedia: <a class="ulink" href="http://en.wikipedia.org/wiki/Soundfont" target="_top"><em class="citetitle">http://en.wikipedia.org/wiki/Soundfont</em></a></p>
       </div>
       <div class="refsect1">
-        <a id="idm79069"></a>
+        <a id="idm78700"></a>
         <h2>Credits</h2>
         <p>Opcodes by Michael Gogins (gogins at pipeline dot
   com). Thanks to Peter Hanappe for Fluidsynth, and to Steven Yi for
   seeing that it is necessary to break up the Fluidsynth into several
   different Csound opcodes.</p>
         <p>New in Csound5.00</p>
+        <p>Optional imsgs parameter introduced in version 6.14.</p>
       </div>
     </div>
     <div class="navfooter">

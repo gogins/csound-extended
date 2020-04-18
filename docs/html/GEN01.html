@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm264559"></a>
+        <a id="idm264209"></a>
         <h2>Description</h2>
         <p>
       This subroutine transfers data from a soundfile into a function table.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm264562"></a>
+        <a id="idm264212"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span>#  time  size  1  filcod  skiptime  format  channel</pre>
       </div>
       <div class="refsect1">
-        <a id="idm264566"></a>
+        <a id="idm264216"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>size</em></span> -- number of points in the table. Ordinarily a power of 2 or a power-of-2 plus 1 (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f statement</em></a>); the maximum tablesize is 16777216 (2<sup>24</sup>) points. The allocation of table memory can be <span class="emphasis"><em>deferred</em></span> by setting this parameter to 0; the size allocated is then the number of points in the file (probably not a power-of-2), and the table is not usable by normal oscillators, but it is usable by a <a class="link" href="loscil.html" title="loscil"><em class="citetitle">loscil</em></a> unit. The soundfile can also be mono or stereo.
@@ -141,19 +141,19 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm264612"></a>
+        <a id="idm264262"></a>
         <h2>Examples</h2>
         <p>
 	    Here is an example of the GEN01 routine. It uses the files <a class="ulink" href="examples/gen01.csd.html" target="_top"> (click here to play) <em class="citetitle">gen01.csd</em></a> and several sound files.
       </p>
         <div class="example">
-          <a id="idm264617"></a>
+          <a id="idm264267"></a>
           <p class="title">
-            <strong>Example 1196. An example of the GEN01 routine.</strong>
+            <strong>Example 1199. An example of the GEN01 routine.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm264619"></a>
+              <a id="idm264269"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span> 
 <span class="nt">&lt;CsOptions&gt;</span> 
@@ -172,7 +172,7 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">;plays deferred and non-deferred sounds with loscil</span>
 
-i<span class="n">fn</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">fn</span> <span class="o">=</span> <span class="vi">p4</span>
 i<span class="n">bas</span> <span class="o">=</span> <span class="mi">1</span>
 
 a<span class="n">sig</span> <span class="nb">loscil</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">fn</span><span class="p">,</span> i<span class="n">bas</span>
@@ -182,8 +182,8 @@ a<span class="n">sig</span> <span class="nb">loscil</span> <span class="mi">1</s
 
 <span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">;plays only non-deffered sound            </span>
 
-i<span class="n">snd</span>  <span class="o">=</span> <span class="nb">p4</span>
-a<span class="n">read</span> <span class="nb">line</span>   <span class="vg">sr</span><span class="o">*</span><span class="nb">p3</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">0</span>				<span class="c1">;play this backward</span>
+i<span class="n">snd</span>  <span class="o">=</span> <span class="vi">p4</span>
+a<span class="n">read</span> <span class="nb">line</span>   <span class="vg">sr</span><span class="o">*</span><span class="vi">p3</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">0</span>				<span class="c1">;play this backward</span>
 a<span class="n">sig</span>  <span class="nb">tablei</span> a<span class="n">read</span><span class="p">,</span> i<span class="n">snd</span>				<span class="c1">;use table 1</span>
       <span class="nb">outs</span>   a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
         
@@ -240,7 +240,7 @@ a<span class="n">sig</span>  <span class="nb">tablei</span> a<span class="n">rea
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm264771"></a>
+        <a id="idm264421"></a>
         <h2>Credits</h2>
         <p>September 2003. Thanks goes to Dr. Richard Boulanger for
     pointing out the references to the AIFF file format.</p>

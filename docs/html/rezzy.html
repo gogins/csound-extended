@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm188911"></a>
+        <a id="idm188203"></a>
         <h2>Description</h2>
         <p>
       A resonant low-pass filter.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm188914"></a>
+        <a id="idm188206"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>rezzy</strong></span> asig, xfco, xres [, imode, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm188918"></a>
+        <a id="idm188210"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imode</em></span> (optional, default=0) -- high-pass or low-pass mode. If zero, <span class="emphasis"><em>rezzy</em></span> is low-pass. If not zero, <span class="emphasis"><em>rezzy</em></span> is high-pass. Default value is 0. (New in Csound version 3.50)
@@ -63,7 +63,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm188926"></a>
+        <a id="idm188218"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- input signal
@@ -79,21 +79,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm188936"></a>
+        <a id="idm188228"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the rezzy opcode. It uses the file <a class="ulink" href="examples/rezzy.csd.html" target="_top"> (click here to play) <em class="citetitle">rezzy.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm188941"></a>
+          <a id="idm188233"></a>
           <p class="title">
-            <strong>Example 853. Example of the rezzy opcode.</strong>
+            <strong>Example 855. Example of the rezzy opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm188948"></a>
+              <a id="idm188240"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -113,8 +113,8 @@
 <span class="kd">instr</span> <span class="nf">1</span>
 
 a<span class="n">saw</span> <span class="nb">vco2</span> <span class="mf">.3</span><span class="p">,</span> <span class="mi">110</span>	<span class="c1">;sawtooth</span>
-k<span class="n">cf</span>  <span class="nb">line</span> <span class="mi">1760</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">220</span>	<span class="c1">;vary cut-off frequency from 220 to 1280 Hz</span>
-k<span class="n">res</span> <span class="o">=</span> <span class="nb">p4</span>		<span class="c1">;vary resonance too</span>
+k<span class="n">cf</span>  <span class="nb">line</span> <span class="mi">1760</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">220</span>	<span class="c1">;vary cut-off frequency from 220 to 1280 Hz</span>
+k<span class="n">res</span> <span class="o">=</span> <span class="vi">p4</span>		<span class="c1">;vary resonance too</span>
 a<span class="n">res</span> <span class="nb">rezzy</span> a<span class="n">saw</span><span class="p">,</span> k<span class="n">cf</span><span class="p">,</span> k<span class="n">res</span>
 a<span class="n">sig</span> <span class="nb">balance</span> a<span class="n">res</span><span class="p">,</span> a<span class="n">saw</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
@@ -137,7 +137,7 @@ a<span class="n">sig</span> <span class="nb">balance</span> a<span class="n">res
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm189029"></a>
+        <a id="idm188321"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="biquad.html" title="biquad"><em class="citetitle">biquad</em></a>,
@@ -145,7 +145,7 @@ a<span class="n">sig</span> <span class="nb">balance</span> a<span class="n">res
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm189036"></a>
+        <a id="idm188328"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm64100"></a>
+        <a id="idm63696"></a>
         <h2>Description</h2>
         <p>
       Returns the length of a sound file.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64103"></a>
+        <a id="idm63699"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ir <span class="command"><strong>filelen</strong></span> ifilcod, [iallowraw]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm64107"></a>
+        <a id="idm63703"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifilcod</em></span> -- sound file to be queried
@@ -61,28 +61,28 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64113"></a>
+        <a id="idm63709"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>filelen</em></span> returns the length of the sound file <span class="emphasis"><em>ifilcod</em></span> in seconds. <span class="emphasis"><em>filelen</em></span> can return the length of convolve and PVOC files if the "allow raw sound file" flag is not zero (it is non-zero by default).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64119"></a>
+        <a id="idm63715"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the filelen opcode. It uses the file <a class="ulink" href="examples/filelen.csd.html" target="_top"> (click here to play) <em class="citetitle">filelen.csd</em></a>, <a class="ulink" href="examples/fox.wav" target="_top"><em class="citetitle">fox.wav</em></a>, and <a class="ulink" href="examples/kickroll.wav" target="_top"><em class="citetitle">kickroll.wav</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm64128"></a>
+          <a id="idm63724"></a>
           <p class="title">
             <strong>Example 277. Example of the filelen opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm64135"></a>
+              <a id="idm63731"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -101,19 +101,19 @@
 
 <span class="kd">instr</span> <span class="nf">1</span> <span class="c1">; choose between mono or stereo file</span>
 
-i<span class="n">len</span>   <span class="nb">filelen</span> <span class="nb">p4</span>	<span class="c1">;calculate length of soundfile</span>
+i<span class="n">len</span>   <span class="nb">filelen</span> <span class="vi">p4</span>	<span class="c1">;calculate length of soundfile</span>
 <span class="nb">print</span>  i<span class="n">len</span>
-i<span class="n">chn</span> <span class="nb">filenchnls</span>  <span class="nb">p4</span>	<span class="c1">;check number of channels</span>
+i<span class="n">chn</span> <span class="nb">filenchnls</span>  <span class="vi">p4</span>	<span class="c1">;check number of channels</span>
 <span class="c1">;print  ichn</span>
 
 <span class="k">if</span> <span class="p">(</span>i<span class="n">chn</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">then</span>
 <span class="c1">;mono signal</span>
-a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="nb">p4</span><span class="p">,</span> <span class="mi">1</span>	
+a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="vi">p4</span><span class="p">,</span> <span class="mi">1</span>	
      <span class="nb">outs</span>    a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
 <span class="k">else</span>
 <span class="c1">;stereo signal</span>
-a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span> <span class="nb">diskin2</span> <span class="nb">p4</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> 
+a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span> <span class="nb">diskin2</span> <span class="vi">p4</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> 
        <span class="nb">outs</span>    a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>
 
 <span class="k">endif</span>
@@ -144,7 +144,7 @@ instr 1:  ilen = 0.857
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64229"></a>
+        <a id="idm63825"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="filebit.html" title="filebit"><em class="citetitle">filebit</em></a>,
@@ -154,7 +154,7 @@ instr 1:  ilen = 0.857
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64240"></a>
+        <a id="idm63836"></a>
         <h2>Credits</h2>
         <p>
       </p>

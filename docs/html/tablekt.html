@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm221361"></a>
+        <a id="idm220979"></a>
         <h2>Description</h2>
         <p>
       k-rate control over table numbers.
@@ -49,13 +49,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm221368"></a>
+        <a id="idm220986"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>tablekt</strong></span> xndx, kfn [, ixmode] [, ixoff] [, iwrap]</pre>
         <pre class="synopsis">kres <span class="command"><strong>tablekt</strong></span> kndx, kfn [, ixmode] [, ixoff] [, iwrap]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm221374"></a>
+        <a id="idm220992"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ixmode</em></span> -- if 0, <span class="emphasis"><em>xndx</em></span> and <span class="emphasis"><em>ixoff</em></span> ranges match the length of the table. if non-zero <span class="emphasis"><em>xndx</em></span> and <span class="emphasis"><em>ixoff</em></span> have a 0 to 1 range. Default is 0
@@ -68,7 +68,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm221395"></a>
+        <a id="idm221013"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kndx</em></span> -- Index into table, either a positive number range matching the table length (<span class="emphasis"><em>ixmode</em></span> = 0) or a 0 to 1 range (<span class="emphasis"><em>ixmode</em></span> not equal to 0).
@@ -98,21 +98,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm221416"></a>
+        <a id="idm221034"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the tablekt opcode. It uses the file <a class="ulink" href="examples/tablekt.csd.html" target="_top"> (click here to play) <em class="citetitle">tablekt.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm221421"></a>
+          <a id="idm221039"></a>
           <p class="title">
-            <strong>Example 1001. Example of the tablekt opcode.</strong>
+            <strong>Example 1004. Example of the tablekt opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm221428"></a>
+              <a id="idm221046"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -142,7 +142,7 @@ k<span class="n">metro</span> <span class="nb">init</span> <span class="mi">1</s
 k<span class="n">newft</span> <span class="nb">metro</span> k<span class="n">metro</span>		<span class="c1">;make a new choice for selecting the function table once a second</span>
 
 <span class="k">if</span> k<span class="n">newft</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">then</span>
-  k<span class="n">fn</span> <span class="o">=</span> <span class="p">(</span>k<span class="n">fn</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">?</span> <span class="mi">2</span> <span class="p">:</span> <span class="mi">1</span><span class="p">)</span> 	<span class="c1">;switch between 1 and 2</span>
+  k<span class="n">fn</span> <span class="o">=</span> <span class="p">(</span>k<span class="n">fn</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="mi">2</span> <span class="o">:</span> <span class="mi">1</span><span class="p">)</span> 	<span class="c1">;switch between 1 and 2</span>
   k<span class="n">metro</span> <span class="nb">random</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">2</span> 		<span class="c1">;create new metro frequency</span>
   <span class="nb">printk2</span> k<span class="n">fn</span>
 <span class="k">endif</span>
@@ -175,14 +175,14 @@ a<span class="n">res</span> <span class="nb">tablekt</span> a<span class="n">ndx
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm221559"></a>
+        <a id="idm221177"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="tableikt.html" title="tableikt"><em class="citetitle">tableikt</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm221564"></a>
+        <a id="idm221182"></a>
         <h2>Credits</h2>
         <p>
       </p>

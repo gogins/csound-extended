@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm144432"></a>
+        <a id="idm143076"></a>
         <h2>Description</h2>
         <p>
       A white noise generator with an IIR lowpass filter.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm144435"></a>
+        <a id="idm143079"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>noise</strong></span> xamp, kbeta</pre>
       </div>
       <div class="refsect1">
-        <a id="idm144439"></a>
+        <a id="idm143083"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xamp</em></span> -- amplitude of final output
@@ -72,21 +72,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm144455"></a>
+        <a id="idm143099"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the noise opcode. It uses the file <a class="ulink" href="examples/noise.csd.html" target="_top"> (click here to play) <em class="citetitle">noise.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm144460"></a>
+          <a id="idm143104"></a>
           <p class="title">
             <strong>Example 614. Example of the noise opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm144467"></a>
+              <a id="idm143111"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -105,7 +105,7 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">beta</span> <span class="nb">line</span> <span class="o">-</span><span class="mf">0.9999</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.9999</span>	<span class="c1">;change beta value between -1 to 1</span>
+k<span class="n">beta</span> <span class="nb">line</span> <span class="o">-</span><span class="mf">0.9999</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">0.9999</span>	<span class="c1">;change beta value between -1 to 1</span>
 a<span class="n">sig</span>  <span class="nb">noise</span> <span class="mf">.3</span><span class="p">,</span> k<span class="n">beta</span>
 a<span class="n">sig</span>  <span class="nb">clip</span> a<span class="n">sig</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.9</span>	<span class="c1">;clip signal</span>
       <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
@@ -130,13 +130,13 @@ a<span class="n">sig</span>  <span class="nb">clip</span> a<span class="n">sig</
 
       </p>
         <div class="example">
-          <a id="idm144531"></a>
+          <a id="idm143175"></a>
           <p class="title">
             <strong>Example 615. Example of the noise opcode controlled with a GUI.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm144533"></a>
+              <a id="idm143177"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -186,7 +186,7 @@ a<span class="n">sig</span>  <span class="nb">clip</span> a<span class="n">sig</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm144631"></a>
+        <a id="idm143275"></a>
         <h2>Credits</h2>
         <p>
       </p>

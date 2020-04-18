@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm251822"></a>
+        <a id="idm251454"></a>
         <h2>Description</h2>
         <p>
       Audio output is a tone similar to a bowed string, using a physical model developed from Perry Cook, but re-coded for Csound.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm251825"></a>
+        <a id="idm251457"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>wgbow</strong></span> kamp, kfreq, kpres, krat, kvibf, kvamp \
     [, ifn] [, iminfreq]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm251829"></a>
+        <a id="idm251461"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- optional table of shape of vibrato,
@@ -63,7 +63,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm251837"></a>
+        <a id="idm251469"></a>
         <h2>Performance</h2>
         <p>
       A note is played on a string-like instrument, with the arguments as below.
@@ -88,21 +88,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm251852"></a>
+        <a id="idm251484"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the wgbow opcode. It uses the file <a class="ulink" href="examples/wgbow.csd.html" target="_top"> (click here to play) <em class="citetitle">wgbow.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm251857"></a>
+          <a id="idm251489"></a>
           <p class="title">
-            <strong>Example 1135. Example of the wgbow opcode.</strong>
+            <strong>Example 1138. Example of the wgbow opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm251864"></a>
+              <a id="idm251496"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -121,11 +121,11 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">pres</span> <span class="o">=</span> <span class="nb">p4</span>							<span class="c1">;pressure value</span>
-k<span class="n">rat</span> <span class="o">=</span> <span class="nb">p5</span>							<span class="c1">;position along string</span>
+k<span class="n">pres</span> <span class="o">=</span> <span class="vi">p4</span>							<span class="c1">;pressure value</span>
+k<span class="n">rat</span> <span class="o">=</span> <span class="vi">p5</span>							<span class="c1">;position along string</span>
 k<span class="n">vibf</span> <span class="o">=</span> <span class="mf">6.12723</span>
 
-k<span class="n">vib</span>  <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span>				<span class="c1">; amplitude envelope for the vibrato.		</span>
+k<span class="n">vib</span>  <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span>				<span class="c1">; amplitude envelope for the vibrato.		</span>
 k<span class="n">vamp</span> <span class="o">=</span> k<span class="n">vib</span> <span class="o">*</span> <span class="mf">0.01</span>
 a<span class="n">sig</span>  <span class="nb">wgbow</span> <span class="mf">.7</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> k<span class="n">pres</span><span class="p">,</span> k<span class="n">rat</span><span class="p">,</span> k<span class="n">vibf</span><span class="p">,</span> k<span class="n">vamp</span><span class="p">,</span> <span class="mi">1</span>
       <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
@@ -150,7 +150,7 @@ a<span class="n">sig</span>  <span class="nb">wgbow</span> <span class="mf">.7</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm251973"></a>
+        <a id="idm251605"></a>
         <h2>Credits</h2>
         <p>
       </p>

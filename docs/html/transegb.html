@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm229948"></a>
+        <a id="idm229578"></a>
         <h2>Description</h2>
         <p>
       Constructs a user-definable envelope in absolute time.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm229951"></a>
+        <a id="idm229581"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>transegb</strong></span> ia, itim, itype, ib [, itim2] [, itype] [, ic] ...</pre>
         <pre class="synopsis">kres <span class="command"><strong>transegb</strong></span> ia, itim, itype, ib [, itim2] [, itype] [, ic] ...</pre>
       </div>
       <div class="refsect1">
-        <a id="idm229957"></a>
+        <a id="idm229587"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ia</em></span> -- starting value.
@@ -80,7 +80,7 @@ ibeg + (ivalue - ibeg) * (1 - exp( i*itype/(n-1) )) / (1 - exp(ity
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm229973"></a>
+        <a id="idm229603"></a>
         <h2>Performance</h2>
         <p>
       If <span class="emphasis"><em>itype</em></span> &gt; 0, there is a slowly rising (concave) or slowly decaying
@@ -89,7 +89,7 @@ ibeg + (ivalue - ibeg) * (1 - exp( i*itype/(n-1) )) / (1 - exp(ity
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm229980"></a>
+        <a id="idm229610"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the transegb opcode. It uses the file <a class="ulink" href="examples/transegb.csd.html" target="_top"> (click here to play) <em class="citetitle">transegb.csd</em></a>. The example produces the following output:
@@ -103,14 +103,14 @@ ibeg + (ivalue - ibeg) * (1 - exp( i*itype/(n-1) )) / (1 - exp(ity
         <p>
       </p>
         <div class="example">
-          <a id="idm229992"></a>
+          <a id="idm229622"></a>
           <p class="title">
-            <strong>Example 1042. Example of the transegb opcode.</strong>
+            <strong>Example 1045. Example of the transegb opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm229999"></a>
+              <a id="idm229629"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -131,7 +131,7 @@ ibeg + (ivalue - ibeg) * (1 - exp( i*itype/(n-1) )) / (1 - exp(ity
 <span class="kd">instr</span> <span class="nf">1</span>
 <span class="c1">;p4 and p5 determine the type of curve for each</span>
 <span class="c1">;section of the envelope</span>
-k<span class="n">env</span> <span class="nb">transegb</span> <span class="mf">0.01</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.25</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p5</span><span class="p">,</span> <span class="mf">0.01</span>
+k<span class="n">env</span> <span class="nb">transegb</span> <span class="mf">0.01</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span><span class="mf">0.25</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p5</span><span class="p">,</span> <span class="mf">0.01</span>
 a<span class="n">1</span> <span class="nb">oscil</span> k<span class="n">env</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">1</span>
 <span class="nb">outs</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">1</span>
 <span class="kd">endin</span>
@@ -159,7 +159,7 @@ a<span class="n">1</span> <span class="nb">oscil</span> k<span class="n">env</sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm230113"></a>
+        <a id="idm229743"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="expseg.html" title="expseg"><em class="citetitle">expseg</em></a>,
@@ -174,7 +174,7 @@ a<span class="n">1</span> <span class="nb">oscil</span> k<span class="n">env</sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm230134"></a>
+        <a id="idm229764"></a>
         <h2>Credits</h2>
         <p>
       </p>

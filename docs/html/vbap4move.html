@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm237750"></a>
+        <a id="idm237382"></a>
         <h2>Description</h2>
         <p>
       Distributes an audio signal among 4 channels with moving virtual sources.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm237753"></a>
+        <a id="idm237385"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ar1, ar2, ar3, ar4 <span class="command"><strong>vbap4move</strong></span> asig, idur, ispread, ifldnum, ifld1 \
       [, ifld2] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm237757"></a>
+        <a id="idm237389"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idur</em></span> -- the duration over which the
@@ -73,7 +73,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm237770"></a>
+        <a id="idm237402"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- audio signal to be panned
@@ -101,34 +101,34 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm237795"></a>
+        <a id="idm237427"></a>
         <h2>Examples</h2>
         <p>
       See the entry for <a class="link" href="vbap8move.html" title="vbap8move"><em class="citetitle">vbap8move</em></a> for an example of usage of the <span class="emphasis"><em>vbapXmove</em></span> opcodes.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm237801"></a>
+        <a id="idm237433"></a>
         <h2>Reference</h2>
         <p>
       Ville Pulkki: <span class="quote">“<span class="quote">Virtual Sound Source Positioning Using Vector Base Amplitude Panning</span>”</span> <span class="emphasis"><em>Journal of the Audio Engineering Society</em></span>, 1997 June, Vol. 45/6, p. 456.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm237806"></a>
+        <a id="idm237438"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the vbap4move opcode. It uses the file <a class="ulink" href="examples/vbap4move.csd.html" target="_top"> (click here to play) <em class="citetitle">vbap4move.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm237811"></a>
+          <a id="idm237443"></a>
           <p class="title">
-            <strong>Example 1079. Example of the vbap4move opcode.</strong>
+            <strong>Example 1082. Example of the vbap4move opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm237818"></a>
+              <a id="idm237450"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -150,7 +150,7 @@
 <span class="kd">instr</span> <span class="nf">1</span>
 
 a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;loop beats.wav</span>
-a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span><span class="p">,</span>a<span class="n">3</span><span class="p">,</span>a<span class="n">4</span> <span class="nb">vbap4move</span>  a<span class="n">sig</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">310</span><span class="p">,</span> <span class="mi">180</span>	<span class="c1">;change movement of soundsource in</span>
+a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span><span class="p">,</span>a<span class="n">3</span><span class="p">,</span>a<span class="n">4</span> <span class="nb">vbap4move</span>  a<span class="n">sig</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">310</span><span class="p">,</span> <span class="mi">180</span>	<span class="c1">;change movement of soundsource in</span>
      <span class="nb">outq</span> a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span><span class="p">,</span>a<span class="n">3</span><span class="p">,</span>a<span class="n">4</span>				<span class="c1">;the rear speakers</span>
 
 <span class="kd">endin</span> 
@@ -170,7 +170,7 @@ a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span><span 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm237905"></a>
+        <a id="idm237537"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vbap16.html" title="vbap16"><em class="citetitle">vbap16</em></a>,
@@ -184,7 +184,7 @@ a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span><span 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm237924"></a>
+        <a id="idm237556"></a>
         <h2>Credits</h2>
         <p>
       </p>

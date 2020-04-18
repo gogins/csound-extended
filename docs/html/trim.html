@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm231626"></a>
+        <a id="idm231256"></a>
         <h2>Description</h2>
         <p>
       Lengthen or shorten a one-dimensional array.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm231629"></a>
+        <a id="idm231259"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>trim_i</strong></span> iarray, ilen</pre>
         <pre class="synopsis"><span class="command"><strong>trim</strong></span> xarray, klen</pre>
       </div>
       <div class="refsect1">
-        <a id="idm231635"></a>
+        <a id="idm231265"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>iarray</em></span> -- a one-dimensional irate array
@@ -69,20 +69,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm231644"></a>
+        <a id="idm231274"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the trim opcode. It uses the file <a class="ulink" href="examples/trim.csd.html" target="_top"> (click here to play) <em class="citetitle">trim.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm231649"></a>
+          <a id="idm231279"></a>
           <p class="title">
-            <strong>Example 1049. Example of the trim opcode.</strong>
+            <strong>Example 1052. Example of the trim opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm231656"></a>
+              <a id="idm231286"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -91,14 +91,14 @@
 <span class="nt">&lt;CsInstruments&gt;</span>
 <span class="kd">instr</span> <span class="nf">1</span>
     k<span class="n">A1</span><span class="p">[]</span>   <span class="nb">fillarray</span>       <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span> <span class="c1">; &lt;-- 8 elements</span>
-            <span class="nb">printf</span>          <span class="s">"lenarray(kA1) before slicearray: </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">lenarray</span><span class="p">:</span><span class="nb">k</span><span class="p">(</span>k<span class="n">A1</span><span class="p">)</span>
+            <span class="nb">printf</span>          <span class="s">"lenarray(kA1) before slicearray: </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">lenarray</span><span class="p">:</span><span class="kt">k</span><span class="p">(</span>k<span class="n">A1</span><span class="p">)</span>
             k<span class="n">A1</span>     <span class="nb">slicearray</span>      k<span class="n">A1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span> <span class="c1">; &lt;-- 4 elements</span>
-            <span class="nb">printf</span>          <span class="s">"lenarray(kA1) AFTER  slicearray: </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">lenarray</span><span class="p">:</span><span class="nb">k</span><span class="p">(</span>k<span class="n">A1</span><span class="p">)</span>
-            <span class="n">trim</span>            k<span class="n">A1</span><span class="p">,</span> <span class="mi">4</span>
+            <span class="nb">printf</span>          <span class="s">"lenarray(kA1) AFTER  slicearray: </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">lenarray</span><span class="p">:</span><span class="kt">k</span><span class="p">(</span>k<span class="n">A1</span><span class="p">)</span>
+            <span class="nb">trim</span>            k<span class="n">A1</span><span class="p">,</span> <span class="mi">4</span>
             <span class="nb">printks</span>         <span class="s">"kA1 after trim: { "</span><span class="p">,</span> <span class="mi">0</span>
       k<span class="n">Cnt</span>    <span class="o">=</span>               <span class="mi">0</span>
  
-    <span class="k">while</span> <span class="p">(</span>k<span class="n">Cnt</span> <span class="o">&lt;</span> <span class="nb">lenarray</span><span class="p">:</span><span class="nb">k</span><span class="p">(</span>k<span class="n">A1</span><span class="p">))</span> <span class="k">do</span>
+    <span class="k">while</span> <span class="p">(</span>k<span class="n">Cnt</span> <span class="o">&lt;</span> <span class="nb">lenarray</span><span class="p">:</span><span class="kt">k</span><span class="p">(</span>k<span class="n">A1</span><span class="p">))</span> <span class="k">do</span>
                     <span class="nb">printf</span>  <span class="s">"</span><span class="si">%d</span><span class="s"> "</span><span class="p">,</span> k<span class="n">Cnt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">A1</span><span class="p">[</span>k<span class="n">Cnt</span><span class="p">]</span>
             k<span class="n">Cnt</span>    <span class="o">+=</span>      <span class="mi">1</span>
      <span class="k">od</span>
@@ -124,14 +124,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm231775"></a>
+        <a id="idm231405"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="slicearray.html" title="slicearray"><em class="citetitle">slicearray</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm231780"></a>
+        <a id="idm231410"></a>
         <h2>Credits</h2>
         <p>Author: John ffitch 2018</p>
         <p>New in version 6.12</p>

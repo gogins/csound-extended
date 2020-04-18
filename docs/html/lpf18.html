@@ -39,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm123347"></a>
+        <a id="idm123459"></a>
         <h2>Description</h2>
         <p>
       Implementation of a 3 pole sweepable resonant lowpass filter.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm123350"></a>
+        <a id="idm123462"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>lpf18</strong></span> asig, xfco, xres, xdist [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm123354"></a>
+        <a id="idm123466"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iskip</em></span> (optional, default=0) -- Skip initialization if present and non-zero.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm123358"></a>
+        <a id="idm123470"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xfco</em></span> -- the filter cutoff frequency in Hz. Should be in the range 0 to <span class="emphasis"><em>sr</em></span>/2.
@@ -92,20 +92,20 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm123381"></a>
+        <a id="idm123493"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the lpf18 opcode. It uses the file <a class="ulink" href="examples/lpf18.csd.html" target="_top"> (click here to play) <em class="citetitle">lpf18.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm123386"></a>
+          <a id="idm123498"></a>
           <p class="title">
-            <strong>Example 512. Example of the lpf18 opcode.</strong>
+            <strong>Example 513. Example of the lpf18 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm123393"></a>
+              <a id="idm123505"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -135,10 +135,10 @@
 
   <span class="c1">; Filter the sine waveform.</span>
   <span class="c1">; Vary the cutoff frequency (kfco) from 300 to 3,000 Hz.</span>
-  k<span class="n">fco</span> <span class="nb">line</span> <span class="mi">300</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">3000</span>
+  k<span class="n">fco</span> <span class="nb">line</span> <span class="mi">300</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">3000</span>
   k<span class="n">res</span> <span class="nb">init</span> <span class="mf">0.8</span>
-  k<span class="n">dist</span> <span class="o">=</span> <span class="nb">p4</span>
-  i<span class="n">vol</span> <span class="o">=</span> <span class="nb">p5</span>
+  k<span class="n">dist</span> <span class="o">=</span> <span class="vi">p4</span>
+  i<span class="n">vol</span> <span class="o">=</span> <span class="vi">p5</span>
   a<span class="n">out</span> <span class="nb">lpf18</span> a<span class="n">sine</span><span class="p">,</span> k<span class="n">fco</span><span class="p">,</span> k<span class="n">res</span><span class="p">,</span> k<span class="n">dist</span>
 
   <span class="nb">out</span> a<span class="n">out</span> <span class="o">*</span> i<span class="n">vol</span>
@@ -167,7 +167,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm123500"></a>
+        <a id="idm123612"></a>
         <h2>Credits</h2>
         <p>
       </p>

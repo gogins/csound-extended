@@ -10,7 +10,7 @@
     <link rel="home" href="index.html" title="The Canonical Csound Reference Manual" />
     <link rel="up" href="OpcodesTop.html" title="Orchestra Opcodes and Operators" />
     <link rel="prev" href="strrindexk.html" title="strrindexk" />
-    <link rel="next" href="strsub.html" title="strsub" />
+    <link rel="next" href="strstrip.html" title="strstrip" />
   </head>
   <body>
     <div class="navheader">
@@ -21,7 +21,7 @@
         <tr>
           <td width="20%" align="left"><a accesskey="p" href="strrindexk.html">Prev</a> </td>
           <th width="60%" align="center">Orchestra Opcodes and Operators</th>
-          <td width="20%" align="right"> <a accesskey="n" href="strsub.html">Next</a></td>
+          <td width="20%" align="right"> <a accesskey="n" href="strstrip.html">Next</a></td>
         </tr>
       </table>
       <hr />
@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm216659"></a>
+        <a id="idm216189"></a>
         <h2>Description</h2>
         <p>
       Allows a string to be linked with a numeric value.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm216662"></a>
+        <a id="idm216192"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>strset</strong></span> iarg, istring</pre>
       </div>
       <div class="refsect1">
-        <a id="idm216666"></a>
+        <a id="idm216196"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iarg</em></span> -- the numeric value.
@@ -64,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm216674"></a>
+        <a id="idm216204"></a>
         <h2>Examples</h2>
         <p>
       The following statement, used in the orchestra header, will allow the numeric value 10 to be substituted anywhere the soundfile <span class="emphasis"><em>asound.wav</em></span> is called for.
@@ -79,21 +79,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm216681"></a>
+        <a id="idm216211"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the strset opcode. It uses the file <a class="ulink" href="examples/strset.csd.html" target="_top"> (click here to play) <em class="citetitle">strset.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm216686"></a>
+          <a id="idm216216"></a>
           <p class="title">
-            <strong>Example 980. Example of the strset opcode.</strong>
+            <strong>Example 982. Example of the strset opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm216693"></a>
+              <a id="idm216223"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -114,7 +114,7 @@
 <span class="nb">strset</span> <span class="mi">2</span><span class="p">,</span> <span class="s">"String 2</span><span class="se">\\</span><span class="s">n"</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
-S<span class="n">tr</span> <span class="nb">strget</span> <span class="nb">p4</span>
+S<span class="n">tr</span> <span class="nb">strget</span> <span class="vi">p4</span>
 <span class="nb">prints</span> S<span class="n">tr</span>
 <span class="kd">endin</span>
 
@@ -134,7 +134,7 @@ S<span class="n">tr</span> <span class="nb">strget</span> <span class="nb">p4</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm216748"></a>
+        <a id="idm216278"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pset.html" title="pset"><em class="citetitle">pset</em></a> and 
@@ -150,14 +150,14 @@ S<span class="n">tr</span> <span class="nb">strget</span> <span class="nb">p4</s
           <td width="20%" align="center">
             <a accesskey="u" href="OpcodesTop.html">Up</a>
           </td>
-          <td width="40%" align="right"> <a accesskey="n" href="strsub.html">Next</a></td>
+          <td width="40%" align="right"> <a accesskey="n" href="strstrip.html">Next</a></td>
         </tr>
         <tr>
           <td width="40%" align="left" valign="top">strrindexk </td>
           <td width="20%" align="center">
             <a accesskey="h" href="index.html">Home</a>
           </td>
-          <td width="40%" align="right" valign="top"> strsub</td>
+          <td width="40%" align="right" valign="top"> strstrip</td>
         </tr>
       </table>
     </div>

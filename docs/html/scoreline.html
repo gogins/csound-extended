@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm193329"></a>
+        <a id="idm192701"></a>
         <h2>Description</h2>
         <p>
       Scoreline will issue one or more score events, if ktrig is 1 every k-period. 
@@ -48,39 +48,39 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm193332"></a>
+        <a id="idm192704"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>scoreline</strong></span> Sin, ktrig</pre>
       </div>
       <div class="refsect1">
-        <a id="idm193336"></a>
+        <a id="idm192708"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em><span class="quote">“<span class="quote">Sin</span>”</span></em></span> --  a string (in double-quotes or enclosed by {{ }}) containing one or more score events.
 </p>
       </div>
       <div class="refsect1">
-        <a id="idm193341"></a>
+        <a id="idm192713"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em><span class="quote">“<span class="quote">ktrig</span>”</span></em></span> -- event trigger, 1 issues the score event, 0 bypasses it.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm193346"></a>
+        <a id="idm192718"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the scoreline opcode. It uses the file <a class="ulink" href="examples/scoreline.csd.html" target="_top"> (click here to play) <em class="citetitle">scoreline.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm193351"></a>
+          <a id="idm192723"></a>
           <p class="title">
-            <strong>Example 877. Example of the scoreline opcode.</strong>
+            <strong>Example 879. Example of the scoreline opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm193358"></a>
+              <a id="idm192730"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -103,14 +103,14 @@ k<span class="n">trig</span> <span class="nb">metro</span> <span class="mi">3</s
 <span class="nb">scoreline</span> <span class="s">{{</span>				<span class="c1">;so it sounds like an echo</span>
             <span class="nb">i</span> <span class="mi">2</span>  <span class="mi">0</span>  <span class="mi">3</span>  <span class="s">"flute.aiff"</span>
             <span class="nb">i</span> <span class="mi">2</span>  <span class="mi">1</span>  <span class="mi">3</span>  <span class="s">"beats.wav"</span>
-            <span class="s">}}</span><span class="p">,</span> k<span class="n">trig</span>
+            <span class="s">}}</span><span class="err">,</span> <span class="err">ktrig</span>
 k<span class="n">trig</span> <span class="o">=</span> <span class="mi">0</span>
         
 <span class="kd">endin</span>
 
 <span class="kd">instr</span> <span class="nf">2</span>
 
-a<span class="n">sig</span> <span class="nb">soundin</span> <span class="nb">p4</span>
+a<span class="n">sig</span> <span class="nb">soundin</span> <span class="vi">p4</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="o">*</span><span class="mf">.3</span><span class="p">,</span> a<span class="n">sig</span><span class="o">*</span><span class="mf">.3</span>
 
 <span class="kd">endin</span>
@@ -139,7 +139,7 @@ String  <span class="opc">sprintfk</span> {{i 2 0 %f "%s" %f %f %f %f}}, idur, S
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm193439"></a>
+        <a id="idm192811"></a>
         <h2>See also</h2>
         <p><a class="link" href="event.html" title="event"><em class="citetitle">event</em></a>,
     <a class="link" href="event_i.html" title="event_i"><em class="citetitle">event_i</em></a>,
@@ -155,7 +155,7 @@ written by Jim Aikin, and in the Floss Manuals: <a class="ulink" href="http://wr
 </p>
       </div>
       <div class="refsect1">
-        <a id="idm193461"></a>
+        <a id="idm192833"></a>
         <h2>Credits</h2>
         <p>Author: Victor Lazzarini, 2007 </p>
       </div>

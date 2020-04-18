@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm217544"></a>
+        <a id="idm217156"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>sumarray</em></span> opcode returns the sum of all
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm217548"></a>
+        <a id="idm217160"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ksum <span class="command"><strong>sumarray</strong></span> karray</pre>
       </div>
       <div class="refsect1">
-        <a id="idm217552"></a>
+        <a id="idm217164"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ksum</em></span> --  variable for result.
@@ -62,20 +62,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm217558"></a>
+        <a id="idm217170"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the sumarray opcode. It uses the file <a class="ulink" href="examples/sumarray.csd.html" target="_top"> (click here to play) <em class="citetitle">sumarray.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm217563"></a>
+          <a id="idm217175"></a>
           <p class="title">
-            <strong>Example 985. Example of the sumarray opcode.</strong>
+            <strong>Example 988. Example of the sumarray opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm217570"></a>
+              <a id="idm217182"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -95,12 +95,12 @@ k<span class="n">Indx</span>      <span class="o">=</span>          <span class=
   <span class="k">until</span> k<span class="n">Indx</span> <span class="o">==</span> <span class="mi">10</span> <span class="k">do</span>
 k<span class="n">Num</span>       <span class="nb">random</span>     <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span>
 k<span class="n">Arr</span><span class="p">[</span>k<span class="n">Indx</span><span class="p">]</span> <span class="o">=</span>         k<span class="n">Num</span>
-           <span class="nb">printf</span>     <span class="s">"kArr[</span><span class="si">%d</span><span class="s">] = %10f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Indx</span><span class="p">,</span> k<span class="n">Num</span>
+           <span class="nb">printf</span>     <span class="s">"kArr[</span><span class="si">%d</span><span class="s">] = </span><span class="si">%10f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Indx</span><span class="p">,</span> k<span class="n">Num</span>
 k<span class="n">Indx</span>      <span class="o">+=</span>         <span class="mi">1</span>
   <span class="k">od</span>
 <span class="c1">;calculate sum of all values and print it out</span>
 k<span class="n">Sum</span>       <span class="nb">sumarray</span>   k<span class="n">Arr</span>
-           <span class="nb">printf</span>     <span class="s">"Sum of all values in kArr = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Sum</span>
+           <span class="nb">printf</span>     <span class="s">"Sum of all values in kArr = </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Sum</span>
            <span class="nb">turnoff</span>
 <span class="kd">endin</span>
 <span class="nt">&lt;/CsInstruments&gt;</span>
@@ -117,7 +117,7 @@ k<span class="n">Sum</span>       <span class="nb">sumarray</span>   k<span clas
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm217650"></a>
+        <a id="idm217264"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="maxarray.html" title="maxarray"><em class="citetitle">minarray</em></a>, 
@@ -126,7 +126,7 @@ k<span class="n">Sum</span>       <span class="nb">sumarray</span>   k<span clas
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm217659"></a>
+        <a id="idm217273"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm227155"></a>
+        <a id="idm226776"></a>
         <h2>Description</h2>
         <p>
       Similar to <a class="link" href="igoto.html" title="igoto"><em class="citetitle">igoto</em></a> but effective only during an i-time pass at which a new note is being <span class="quote">“<span class="quote">tied</span>”</span> onto a previously held note. (See <a class="link" href="i.html" title="i Statement (Instrument or Note Statement)"><em class="citetitle">i Statement</em></a>) It does not work when a tie has not taken place. Allows an instrument to skip initialization of units according to whether a proposed tie was in fact successful. (See also <a class="link" href="tival.html" title="tival"><em class="citetitle">tival</em></a>).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm227165"></a>
+        <a id="idm226786"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>tigoto</strong></span> label</pre>
         <p>
@@ -54,20 +54,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm227171"></a>
+        <a id="idm226792"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the tigoto opcode. It uses the file <a class="ulink" href="examples/tigoto.csd.html" target="_top"> (click here to play) <em class="citetitle">tigoto.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm227176"></a>
+          <a id="idm226797"></a>
           <p class="title">
-            <strong>Example 1027. Example of the tigoto opcode.</strong>
+            <strong>Example 1030. Example of the tigoto opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm227183"></a>
+              <a id="idm226804"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -86,20 +86,20 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">dur</span>  <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">p3</span><span class="p">)</span>				<span class="c1">;make p3 positive even if p3 is negative in score</span>
+i<span class="n">dur</span>  <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="vi">p3</span><span class="p">)</span>				<span class="c1">;make p3 positive even if p3 is negative in score</span>
 i<span class="n">tiv</span>  <span class="nb">tival</span>
 i<span class="n">1</span>    <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>				<span class="c1">;assume this is tied note, so keep fase of oscili</span>
-      <span class="k">tigoto</span> <span class="nl">slur</span>			<span class="c1">;no reinitialisation on tied notes</span>
+      <span class="kp">tigoto</span> <span class="nl">slur</span>			<span class="c1">;no reinitialisation on tied notes</span>
 i<span class="n">1</span>    <span class="o">=</span> <span class="mi">0</span>				<span class="c1">;first note, so reset phase</span>
-a<span class="n">att</span>  <span class="nb">line</span> <span class="nb">p4</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> <span class="mi">0</span>			<span class="c1">;primary envelope</span>
+a<span class="n">att</span>  <span class="nb">line</span> <span class="vi">p4</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> <span class="mi">0</span>			<span class="c1">;primary envelope</span>
 
 <span class="nl">slur</span><span class="p">:</span>
       <span class="k">if</span> i<span class="n">tiv</span><span class="o">==</span><span class="mi">0</span> <span class="k">kgoto</span> <span class="nl">note</span>		<span class="c1">;no expression on first and second note</span>
-a<span class="n">slur</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">dur</span><span class="o">*</span><span class="mf">.3</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> i<span class="n">dur</span><span class="o">*</span><span class="mf">.7</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">;envelope for slurred note</span>
+a<span class="n">slur</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">dur</span><span class="o">*</span><span class="mf">.3</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> i<span class="n">dur</span><span class="o">*</span><span class="mf">.7</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">;envelope for slurred note</span>
 a<span class="n">att</span>  <span class="o">=</span> a<span class="n">att</span> <span class="o">+</span> a<span class="n">slur</span>
 
 <span class="nl">note</span><span class="p">:</span>
-a<span class="n">sig</span>  <span class="nb">oscili</span> a<span class="n">att</span><span class="p">,</span> <span class="nb">p5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">1</span>
+a<span class="n">sig</span>  <span class="nb">oscili</span> a<span class="n">att</span><span class="p">,</span> <span class="vi">p5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">1</span>
       <span class="nb">outs</span>   a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
 <span class="kd">endin</span>
@@ -122,7 +122,7 @@ a<span class="n">sig</span>  <span class="nb">oscili</span> a<span class="n">att
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm227317"></a>
+        <a id="idm226938"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cigoto.html" title="cigoto"><em class="citetitle">cigoto</em></a>,

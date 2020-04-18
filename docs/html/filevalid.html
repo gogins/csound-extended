@@ -39,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64887"></a>
+        <a id="idm64498"></a>
         <h2>Description</h2>
         <p>
       Returns 1 if the sound file exists and is readable, or 0 if not.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64890"></a>
+        <a id="idm64501"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ir <span class="command"><strong>filevalid</strong></span> ifilcod</pre>
       </div>
       <div class="refsect1">
-        <a id="idm64894"></a>
+        <a id="idm64505"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifilcod</em></span> -- sound file to be queried
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64898"></a>
+        <a id="idm64509"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>filevalid</em></span> returns 1 if the sound file
@@ -66,21 +66,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64903"></a>
+        <a id="idm64514"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the filevalid opcode. It uses the file <a class="ulink" href="examples/filevalid.csd.html" target="_top"> (click here to play) <em class="citetitle">filevalid.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm64908"></a>
+          <a id="idm64519"></a>
           <p class="title">
             <strong>Example 282. Example of the filevalid opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm64915"></a>
+              <a id="idm64526"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -98,14 +98,14 @@
 <span class="vg">0dbfs</span> <span class="o">=</span> <span class="mi">1</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
-S<span class="n">file</span>     <span class="nb">strget</span>    <span class="nb">p4</span>
+S<span class="n">file</span>     <span class="nb">strget</span>    <span class="vi">p4</span>
 i<span class="n">vld</span>      <span class="nb">filevalid</span> S<span class="n">file</span>
 
 <span class="k">if</span> i<span class="n">vld</span><span class="o">&gt;</span><span class="mi">0</span> <span class="k">then</span>
 a<span class="n">sig</span>      <span class="nb">diskin2</span>   S<span class="n">file</span><span class="p">,</span> <span class="mi">1</span>
           <span class="nb">outs</span>      a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 <span class="k">else</span>
-          <span class="nb">printf_i</span>  <span class="s">"Audiofile '%s' does not exist!</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> S<span class="n">file</span>
+          <span class="nb">printf_i</span>  <span class="s">"Audiofile '</span><span class="si">%s</span><span class="s">' does not exist!</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> S<span class="n">file</span>
 <span class="k">endif</span>
 <span class="kd">endin</span>
 
@@ -132,7 +132,7 @@ Audiofile 'frox.wav' does not exist!
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64989"></a>
+        <a id="idm64602"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="filebit.html" title="filebit"><em class="citetitle">filebit</em></a>,
@@ -143,7 +143,7 @@ Audiofile 'frox.wav' does not exist!
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm65002"></a>
+        <a id="idm64615"></a>
         <h2>Credits</h2>
         <p>
       </p>

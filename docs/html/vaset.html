@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm236353"></a>
+        <a id="idm235985"></a>
         <h2>Description</h2>
         <p>
       Write values into the current buffer of an a-rate variable at the given
@@ -86,12 +86,12 @@
      </p>
       </div>
       <div class="refsect1">
-        <a id="idm236362"></a>
+        <a id="idm235994"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vaset</strong></span> kval, kndx, avar</pre>
       </div>
       <div class="refsect1">
-        <a id="idm236366"></a>
+        <a id="idm235998"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kval</em></span> - value to write into avar
@@ -105,21 +105,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm236374"></a>
+        <a id="idm236006"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the vaset opcode. It uses the file <a class="ulink" href="examples/vaset.csd.html" target="_top"> (click here to play) <em class="citetitle">vaset.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm236379"></a>
+          <a id="idm236011"></a>
           <p class="title">
-            <strong>Example 1073. Example of the vaset opcode.</strong>
+            <strong>Example 1076. Example of the vaset opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm236386"></a>
+              <a id="idm236018"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -135,8 +135,8 @@
 <span class="vg">nchnls</span><span class="o">=</span><span class="mi">2</span>
 
 	<span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; Sine Wave</span>
-i<span class="n">freq</span> <span class="o">=</span> <span class="p">(</span><span class="nb">p4</span> <span class="o">&gt;</span> <span class="mi">15</span> <span class="p">?</span> <span class="nb">p4</span> <span class="p">:</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">))</span>
-i<span class="n">amp</span> <span class="o">=</span> <span class="nb">ampdb</span><span class="p">(</span><span class="nb">p5</span><span class="p">)</span>
+i<span class="n">freq</span> <span class="o">=</span> <span class="p">(</span><span class="vi">p4</span> <span class="o">&gt;</span> <span class="mi">15</span> <span class="o">?</span> <span class="vi">p4</span> <span class="o">:</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p4</span><span class="p">))</span>
+i<span class="n">amp</span> <span class="o">=</span> <span class="nb">ampdb</span><span class="p">(</span><span class="vi">p5</span><span class="p">)</span>
 
 k<span class="n">env</span> <span class="nb">adsr</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">.9</span><span class="p">,</span> <span class="mf">0.2</span>
 
@@ -159,7 +159,7 @@ k<span class="n">newval</span> <span class="o">=</span> <span class="nb">sin</sp
 
 	k<span class="n">sampnum</span> <span class="o">=</span> k<span class="n">sampnum</span> <span class="o">+</span> <span class="mi">1</span>
 
-<span class="k">loop_lt</span> k<span class="n">count</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="vg">ksmps</span><span class="p">,</span> <span class="nl">loopStart</span>
+<span class="kp">loop_lt</span> k<span class="n">count</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="vg">ksmps</span><span class="p">,</span> <span class="nl">loopStart</span>
 
 a<span class="n">out</span> <span class="o">=</span> a<span class="n">out</span> <span class="o">*</span> i<span class="n">amp</span> <span class="o">*</span> k<span class="n">env</span>
 
@@ -184,14 +184,14 @@ a<span class="n">out</span> <span class="o">=</span> a<span class="n">out</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm236517"></a>
+        <a id="idm236149"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vaget.html" title="vaget"><em class="citetitle">vaget</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm236522"></a>
+        <a id="idm236154"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,7 +39,7 @@
            </p>
       </div>
       <div class="refsect1">
-        <a id="idm55378"></a>
+        <a id="idm54940"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>divz</strong></span> xa, xb, ksubst</pre>
         <pre class="synopsis">ires <span class="command"><strong>divz</strong></span> ia, ib, isubst</pre>
@@ -47,35 +47,35 @@
         <pre class="synopsis">...<span class="command"><strong>divz</strong></span>(ka, kb, ksubst)... (no rate restriction)</pre>
       </div>
       <div class="refsect1">
-        <a id="idm55388"></a>
+        <a id="idm54950"></a>
         <h2>Description</h2>
         <p> 
       Safely divides two numbers.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm55391"></a>
+        <a id="idm54953"></a>
         <h2>Initialization</h2>
         <p>
       Whenever <span class="emphasis"><em>b</em></span> is not zero, set the result to the value <span class="emphasis"><em>a / b</em></span>; when <span class="emphasis"><em>b</em></span> is zero, set it to the value of <span class="emphasis"><em>subst</em></span> instead.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm55398"></a>
+        <a id="idm54960"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the divz opcode. It uses the file <a class="ulink" href="examples/divz.csd.html" target="_top"> (click here to play) <em class="citetitle">divz.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm55403"></a>
+          <a id="idm54965"></a>
           <p class="title">
             <strong>Example 225. Example of the divz opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm55410"></a>
+              <a id="idm54972"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -98,7 +98,7 @@
   <span class="c1">; Define the numbers to be divided.</span>
   k<span class="n">a</span> <span class="nb">init</span> <span class="mi">200</span>
   <span class="c1">; Linearly change the value of kb from 200 to 0.</span>
-  k<span class="n">b</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">200</span>
+  k<span class="n">b</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">200</span>
   <span class="c1">; If a "divide by zero" error occurs, substitute -1.</span>
   k<span class="n">subst</span> <span class="nb">init</span> <span class="o">-</span><span class="mi">1</span>
   
@@ -106,7 +106,7 @@
   k<span class="n">results</span> <span class="nb">divz</span> k<span class="n">a</span><span class="p">,</span> k<span class="n">b</span><span class="p">,</span> k<span class="n">subst</span>
 
   <span class="c1">; Print out the results.</span>
-  <span class="nb">printks</span> <span class="s">"%f / %f = %f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">a</span><span class="p">,</span> k<span class="n">b</span><span class="p">,</span> k<span class="n">results</span>
+  <span class="nb">printks</span> <span class="s">"</span><span class="si">%f</span><span class="s"> / </span><span class="si">%f</span><span class="s"> = </span><span class="si">%f</span><span class="se">\\n</span><span class="s">"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">a</span><span class="p">,</span> k<span class="n">b</span><span class="p">,</span> k<span class="n">results</span>
 <span class="kd">endin</span>
 
 
@@ -136,7 +136,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm55487"></a>
+        <a id="idm55054"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="assign.html" title="="><em class="citetitle">=</em></a>,
@@ -145,7 +145,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm55496"></a>
+        <a id="idm55063"></a>
         <h2>Credits</h2>
         <p>Author: John ffitch after an idea by Barry L. Vercoe</p>
         <p>Example written by Kevin Conder.</p>

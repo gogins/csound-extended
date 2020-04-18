@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm183591"></a>
+        <a id="idm182769"></a>
         <h2>Description</h2>
         <p>
       Generates a user-controlled random number series with interpolation between each new number.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm183594"></a>
+        <a id="idm182772"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>randomi</strong></span> kmin, kmax, xcps [,imode] [,ifirstval]</pre>
         <pre class="synopsis">kres <span class="command"><strong>randomi</strong></span> kmin, kmax, kcps [,imode] [,ifirstval]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm183600"></a>
+        <a id="idm182778"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imode</em></span> (optional, default=0) -- first interpolation cycle mode (see below)
@@ -62,7 +62,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm183606"></a>
+        <a id="idm182784"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kmin</em></span> -- minimum range limit
@@ -102,21 +102,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm183634"></a>
+        <a id="idm182812"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the randomi opcode. It uses the file <a class="ulink" href="examples/randomi.csd.html" target="_top"> (click here to play) <em class="citetitle">randomi.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm183639"></a>
+          <a id="idm182817"></a>
           <p class="title">
-            <strong>Example 825. Example of the randomi opcode.</strong>
+            <strong>Example 827. Example of the randomi opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm183646"></a>
+              <a id="idm182824"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -143,12 +143,12 @@
   k<span class="n">min</span>    <span class="nb">init</span> <span class="mi">220</span>
   k<span class="n">max</span>    <span class="nb">init</span> <span class="mi">440</span>
   k<span class="n">cps</span>    <span class="nb">init</span> <span class="mi">10</span>
-  i<span class="n">mode</span>   <span class="o">=</span>    <span class="nb">p4</span>
-  i<span class="n">fstval</span> <span class="o">=</span>    <span class="nb">p5</span>
+  i<span class="n">mode</span>   <span class="o">=</span>    <span class="vi">p4</span>
+  i<span class="n">fstval</span> <span class="o">=</span>    <span class="vi">p5</span>
   
      <span class="nb">printf_i</span> <span class="s">"</span><span class="se">\n</span><span class="s">Mode: </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">mode</span>
   k<span class="n">1</span> <span class="nb">randomi</span> k<span class="n">min</span><span class="p">,</span> k<span class="n">max</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> i<span class="n">mode</span><span class="p">,</span> i<span class="n">fstval</span>
-     <span class="nb">printks</span> <span class="s">"k1 = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">1</span>
+     <span class="nb">printks</span> <span class="s">"k1 = </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">1</span>
 <span class="kd">endin</span>
 
 <span class="nt">&lt;/CsInstruments&gt;</span>
@@ -208,7 +208,7 @@ k1 = 303.038109
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm183751"></a>
+        <a id="idm182930"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="randi.html" title="randi"><em class="citetitle">randi</em></a>,
@@ -217,7 +217,7 @@ k1 = 303.038109
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm183760"></a>
+        <a id="idm182939"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>Arguments <span class="emphasis"><em>imode</em></span> and <span class="emphasis"><em>ifirstval</em></span>

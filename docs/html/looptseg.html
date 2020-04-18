@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm120398"></a>
+        <a id="idm120506"></a>
         <h2>Description</h2>
         <p>
       Generate control signal consisting of controllable exponential segments or linear segments delimited by two or more specified points. The entire envelope is looped at <span class="emphasis"><em>kfreq</em></span> rate. Each parameter can be varied at k-rate.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm120402"></a>
+        <a id="idm120510"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ksig <span class="command"><strong>looptseg</strong></span> kfreq, ktrig, iphase, kvalue0, ktype0, ktime0, [, kvalue1] [,ktype1] [, ktime1] \
       [, kvalue2] [,ktype2] [, ktime2] [...] [, kvalueN] [,ktypeN] [, ktimeN]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm120406"></a>
+        <a id="idm120514"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iphase</em></span> -- A value between 0 and 1 to say
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm120410"></a>
+        <a id="idm120518"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ksig</em></span> -- Output signal.
@@ -95,21 +95,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm120437"></a>
+        <a id="idm120545"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the looptseg opcode. It uses the file <a class="ulink" href="examples/looptseg.csd.html" target="_top"> (click here to play) <em class="citetitle">looptseg.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm120442"></a>
+          <a id="idm120550"></a>
           <p class="title">
-            <strong>Example 500. Example of the looptseg opcode.</strong>
+            <strong>Example 501. Example of the looptseg opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm120449"></a>
+              <a id="idm120557"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -130,12 +130,12 @@
 k<span class="n">freq</span>   <span class="o">=</span>        <span class="mi">1</span>         <span class="c1">; frequency of loop repetition</span>
 k<span class="n">trig</span>   <span class="nb">init</span>     <span class="mi">0</span>         <span class="c1">; loop restart trigger (not used)</span>
 i<span class="n">phase</span>  <span class="o">=</span>        <span class="mi">0</span>         <span class="c1">; initial phase</span>
-k<span class="n">typ</span>    <span class="nb">line</span>     <span class="mi">6</span><span class="p">,</span><span class="nb">p3</span><span class="p">,</span><span class="o">-</span><span class="mi">6</span>   <span class="c1">; explore the useful range of curve types</span>
+k<span class="n">typ</span>    <span class="nb">line</span>     <span class="mi">6</span><span class="p">,</span><span class="vi">p3</span><span class="p">,</span><span class="o">-</span><span class="mi">6</span>   <span class="c1">; explore the useful range of curve types</span>
 <span class="c1">; loop of filter cutoff values (oct format)</span>
 <span class="c1">;                                     value curve dur.</span>
-k<span class="n">cfoct</span> <span class="nb">looptseg</span>  k<span class="n">freq</span><span class="p">,</span> k<span class="n">trig</span><span class="p">,</span> i<span class="n">phase</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span>   k<span class="n">typ</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> \
-                                      <span class="mi">4</span><span class="p">,</span>    k<span class="n">typ</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> \
-                                      <span class="mi">11</span><span class="p">,</span>   k<span class="n">typ</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> \
+k<span class="n">cfoct</span> <span class="nb">looptseg</span>  k<span class="n">freq</span><span class="p">,</span> k<span class="n">trig</span><span class="p">,</span> i<span class="n">phase</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span>   k<span class="n">typ</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="w">\</span>
+                                      <span class="mi">4</span><span class="p">,</span>    k<span class="n">typ</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="w">\</span>
+                                      <span class="mi">11</span><span class="p">,</span>   k<span class="n">typ</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="w">\</span>
                                       <span class="mi">4</span>
 a<span class="n">sig</span>  <span class="nb">vco2</span>     <span class="mf">0.2</span><span class="p">,</span><span class="nb">cpsmidinn</span><span class="p">(</span><span class="mi">48</span><span class="p">),</span><span class="mi">0</span>             <span class="c1">; a sawtooth</span>
 a<span class="n">sig</span>  <span class="nb">moogladder</span>  a<span class="n">sig</span><span class="p">,</span><span class="nb">cpsoct</span><span class="p">(</span>k<span class="n">cfoct</span><span class="p">),</span><span class="nb">rnd</span><span class="p">(</span><span class="mf">0.6</span><span class="p">)</span> <span class="c1">; filter sawtooth</span>
@@ -156,7 +156,7 @@ a<span class="n">sig</span>  <span class="nb">moogladder</span>  a<span class="n
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm120561"></a>
+        <a id="idm120672"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="lpshold.html" title="lpshold"><em class="citetitle">lpshold</em></a>
@@ -164,7 +164,7 @@ a<span class="n">sig</span>  <span class="nb">moogladder</span>  a<span class="n
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm120568"></a>
+        <a id="idm120679"></a>
         <h2>Credits</h2>
         <p>Author: John ffitch</p>
         <p>New in Version 5.12</p>

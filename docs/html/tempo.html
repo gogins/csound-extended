@@ -39,26 +39,26 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm226711"></a>
+        <a id="idm226331"></a>
         <h2>Description</h2>
         <p>
       Apply tempo control to an uninterpreted score.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm226714"></a>
+        <a id="idm226334"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>tempo</strong></span> ktempo, istartempo</pre>
       </div>
       <div class="refsect1">
-        <a id="idm226718"></a>
+        <a id="idm226338"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>istartempo</em></span> -- initial tempo (in beats per minute). Typically 60.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm226722"></a>
+        <a id="idm226342"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktempo</em></span> -- The tempo to which the score will be adjusted.
@@ -68,21 +68,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm226734"></a>
+        <a id="idm226354"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the tempo opcode. Remember, it only works if you use the <a class="link" href="CommandFlags.html#FlagsMinusLowerT"><em class="citetitle">-t</em></a> flag with Csound. The example uses the file <a class="ulink" href="examples/tempo.csd.html" target="_top"> (click here to play) <em class="citetitle">tempo.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm226741"></a>
+          <a id="idm226361"></a>
           <p class="title">
-            <strong>Example 1024. Example of the tempo opcode.</strong>
+            <strong>Example 1027. Example of the tempo opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm226748"></a>
+              <a id="idm226368"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -107,7 +107,7 @@
   <span class="nb">printk</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">val</span>
 
   <span class="c1">; If the fourth p-field is 1, increase the tempo.</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nb">p4</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">kgoto</span> <span class="nl">speedup</span>
+  <span class="k">if</span> <span class="p">(</span><span class="vi">p4</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">kgoto</span> <span class="nl">speedup</span>
     <span class="k">kgoto</span> <span class="nl">playit</span>
 
 <span class="nl">speedup</span><span class="p">:</span>
@@ -128,7 +128,7 @@
 
 <span class="c1">; p4 = plays at a faster tempo (when p4=1).</span>
 <span class="c1">; Play Instrument #1 at the normal tempo, repeat 3 times.</span>
-<span class="nb">r</span><span class="mi">3</span>
+<span class="err">r</span><span class="mi">3</span>
 <span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.00</span> <span class="mf">00.25</span> <span class="mi">0</span>
 <span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.25</span> <span class="mf">00.25</span> <span class="mi">0</span>
 <span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.50</span> <span class="mf">00.25</span> <span class="mi">0</span>
@@ -136,7 +136,7 @@
 <span class="nb">s</span>
 
 <span class="c1">; Play Instrument #1 at a faster tempo, repeat 3 times.</span>
-<span class="nb">r</span><span class="mi">3</span>
+<span class="err">r</span><span class="mi">3</span>
 <span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.00</span> <span class="mf">00.25</span> <span class="mi">1</span>
 <span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.25</span> <span class="mf">00.25</span> <span class="mi">0</span>
 <span class="nb">i</span> <span class="mi">1</span> <span class="mf">00.50</span> <span class="mf">00.25</span> <span class="mi">0</span>
@@ -155,14 +155,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm226872"></a>
+        <a id="idm226492"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="tempoval.html" title="tempoval"><em class="citetitle">tempoval</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm226877"></a>
+        <a id="idm226497"></a>
         <h2>Credits</h2>
         <p>Example written by Kevin Conder.</p>
       </div>

@@ -39,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm198930"></a>
+        <a id="idm198313"></a>
         <h2>Description</h2>
         <p>
       Assigns all presets of a previously loaded SoundFont2 (SF2)
@@ -56,12 +56,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm198937"></a>
+        <a id="idm198320"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>sfpassign</strong></span> istartindex, ifilhandle[, imsgs]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm198941"></a>
+        <a id="idm198324"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>istartindex</em></span> -- starting index preset by the user in bulk preset assignments.
@@ -74,7 +74,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm198950"></a>
+        <a id="idm198333"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>sfpassign</em></span> assigns all presets of a previously loaded SF2 file to a sequence of progressive index numbers, to be used later with the opcodes <a class="link" href="sfplay.html" title="sfplay"><em class="citetitle">sfplay</em></a> and <a class="link" href="sfplaym.html" title="sfplaym"><em class="citetitle">sfplaym</em></a>. <span class="emphasis"><em>istartindex</em></span> specifies the starting index number. Any number of <span class="emphasis"><em>sfpassign</em></span> instances can be placed in the header section of an orchestra, each one assigning presets belonging to different SF2 files. The user must take care that preset index numbers of different SF2 files do not overlap.
@@ -84,20 +84,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm198961"></a>
+        <a id="idm198344"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the sfpassign opcode. It uses the file <a class="ulink" href="examples/sfpassign.csd.html" target="_top"> (click here to play) <em class="citetitle">sfpassign.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm198966"></a>
+          <a id="idm198349"></a>
           <p class="title">
-            <strong>Example 905. Example of the sfpassign opcode.</strong>
+            <strong>Example 907. Example of the sfpassign opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm198973"></a>
+              <a id="idm198356"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -124,10 +124,10 @@ gi<span class="n">r</span>	<span class="nb">sfload</span>	<span class="s">"01hps
 
 <span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; play guitar from score and midi keyboard - preset index = 0</span>
 
-	<span class="nb">mididefault</span>	<span class="mi">60</span><span class="p">,</span> <span class="nb">p3</span>
-	<span class="nb">midinoteonkey</span>	<span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>
-i<span class="n">num</span>	<span class="nb">init</span>	<span class="nb">p4</span>
-i<span class="n">vel</span>	<span class="nb">init</span>	<span class="nb">p5</span>
+	<span class="nb">mididefault</span>	<span class="mi">60</span><span class="p">,</span> <span class="vi">p3</span>
+	<span class="nb">midinoteonkey</span>	<span class="vi">p4</span><span class="p">,</span> <span class="vi">p5</span>
+i<span class="n">num</span>	<span class="nb">init</span>	<span class="vi">p4</span>
+i<span class="n">vel</span>	<span class="nb">init</span>	<span class="vi">p5</span>
 i<span class="n">vel</span>	<span class="nb">init</span>	i<span class="n">vel</span><span class="o">/</span><span class="mi">127</span>					<span class="c1">;make velocity dependent</span>
 k<span class="n">amp</span>	<span class="nb">linsegr</span>	<span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mi">0</span>
 k<span class="n">amp</span>	<span class="o">=</span> k<span class="n">amp</span><span class="o">/</span><span class="mi">5000</span>						<span class="c1">;scale amplitude</span>
@@ -139,10 +139,10 @@ a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span>	<span
 	
 <span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">; play harpsichord from score and midi keyboard - preset index = 1</span>
 
-	<span class="nb">mididefault</span>	<span class="mi">60</span><span class="p">,</span> <span class="nb">p3</span>
-	<span class="nb">midinoteonkey</span>	<span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>
-i<span class="n">num</span>	<span class="nb">init</span>	<span class="nb">p4</span>
-i<span class="n">vel</span>	<span class="nb">init</span>	<span class="nb">p5</span>
+	<span class="nb">mididefault</span>	<span class="mi">60</span><span class="p">,</span> <span class="vi">p3</span>
+	<span class="nb">midinoteonkey</span>	<span class="vi">p4</span><span class="p">,</span> <span class="vi">p5</span>
+i<span class="n">num</span>	<span class="nb">init</span>	<span class="vi">p4</span>
+i<span class="n">vel</span>	<span class="nb">init</span>	<span class="vi">p5</span>
 i<span class="n">vel</span>	<span class="nb">init</span>	i<span class="n">vel</span><span class="o">/</span><span class="mi">127</span>					<span class="c1">;make velocity dependent</span>
 k<span class="n">amp</span>	<span class="nb">linsegr</span>	<span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mi">0</span>
 k<span class="n">amp</span>	<span class="o">=</span> k<span class="n">amp</span><span class="o">/</span><span class="mi">1000</span>						<span class="c1">;scale amplitude</span>
@@ -177,7 +177,7 @@ a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span>	<span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm199202"></a>
+        <a id="idm198585"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="sfilist.html" title="sfilist"><em class="citetitle">sfilist</em></a>,
@@ -191,7 +191,7 @@ a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span>	<span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm199221"></a>
+        <a id="idm198604"></a>
         <h2>Credits</h2>
         <p>
       </p>

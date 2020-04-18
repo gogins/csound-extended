@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm176323"></a>
+        <a id="idm175471"></a>
         <h2>Description</h2>
         <p>
       Scale the frequency components of a pv stream, resulting
@@ -48,12 +48,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm176326"></a>
+        <a id="idm175474"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>pvscale</strong></span> fsigin, kscal[, kkeepform, kgain, kcoefs]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm176330"></a>
+        <a id="idm175478"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>fsig</em></span> -- output pv stream
@@ -101,14 +101,14 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm176347"></a>
+        <a id="idm175495"></a>
         <h2>Examples</h2>
         <p>
       </p>
         <div class="example">
-          <a id="idm176350"></a>
+          <a id="idm175498"></a>
           <p class="title">
-            <strong>Example 766. Example</strong>
+            <strong>Example 768. Example</strong>
           </p>
           <div class="example-contents">
             <pre class="programlisting">
@@ -135,14 +135,14 @@ adel  <span class="opc">deltapn</span>   1024                     <span class="c
       Here is an example of the use of the <span class="emphasis"><em>pvscale</em></span> opcode. It uses the file <a class="ulink" href="examples/pvscale.csd.html" target="_top"> (click here to play) <em class="citetitle">pvscale.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm176374"></a>
+          <a id="idm175522"></a>
           <p class="title">
-            <strong>Example 767. Example of the <span class="emphasis"><em>pvscale</em></span> opcode.</strong>
+            <strong>Example 769. Example of the <span class="emphasis"><em>pvscale</em></span> opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm176382"></a>
+              <a id="idm175530"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -164,9 +164,9 @@ i<span class="n">winsize</span>	<span class="o">=</span>		i<span class="n">fftsi
 i<span class="n">winshape</span>	<span class="o">=</span>		<span class="mi">1</span><span class="c1">; von-Hann window</span>
 S<span class="n">file</span>		<span class="o">=</span>		<span class="s">"fox.wav"</span>
 a<span class="n">in</span>		<span class="nb">soundin</span>	S<span class="n">file</span>
-<span class="n">fftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="c1">; fft-analysis of the audio-signal</span>
-<span class="n">fftblur</span>	<span class="nb">pvscale</span>	<span class="n">fftin</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span><span class="p">,</span> <span class="nb">p6</span><span class="c1">; scale</span>
-a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fftblur</span><span class="c1">; resynthesis</span>
+f<span class="n">ftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="c1">; fft-analysis of the audio-signal</span>
+f<span class="n">ftblur</span>	<span class="nb">pvscale</span>	f<span class="n">ftin</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> <span class="vi">p5</span><span class="p">,</span> <span class="vi">p6</span><span class="c1">; scale</span>
+a<span class="n">out</span>		<span class="nb">pvsynth</span>	f<span class="n">ftblur</span><span class="c1">; resynthesis</span>
 		<span class="nb">out</span>		a<span class="n">out</span>
 <span class="kd">endin</span>
 
@@ -187,7 +187,7 @@ a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fft
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm176490"></a>
+        <a id="idm175638"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvsanal.html" title="pvsanal"><em class="citetitle">pvsanal</em></a>,
@@ -196,7 +196,7 @@ a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fft
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm176499"></a>
+        <a id="idm175647"></a>
         <h2>Credits</h2>
         <p>
       </p>

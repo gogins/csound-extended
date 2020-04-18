@@ -39,21 +39,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm172442"></a>
+        <a id="idm171590"></a>
         <h2>Description</h2>
         <p>
       Accesses table values by direct indexing with linear interpolation.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm172445"></a>
+        <a id="idm171593"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>ptablei</strong></span> andx, ifn [, ixmode] [, ixoff] [, iwrap]</pre>
         <pre class="synopsis">ires <span class="command"><strong>ptablei</strong></span> indx, ifn [, ixmode] [, ixoff] [, iwrap]</pre>
         <pre class="synopsis">kres <span class="command"><strong>ptablei</strong></span> kndx, ifn [, ixmode] [, ixoff] [, iwrap]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm172453"></a>
+        <a id="idm171601"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- function table number.  The table
@@ -94,7 +94,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm172473"></a>
+        <a id="idm171621"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ptablei</em></span> is a interpolating unit in which
@@ -106,20 +106,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm172479"></a>
+        <a id="idm171627"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the ptablei opcode. It uses the file <a class="ulink" href="examples/ptablei.csd.html" target="_top"> (click here to play) <em class="citetitle">ptablei.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm172484"></a>
+          <a id="idm171632"></a>
           <p class="title">
-            <strong>Example 746. Example of the ptablei opcode.</strong>
+            <strong>Example 748. Example of the ptablei opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm172491"></a>
+              <a id="idm171639"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -140,8 +140,8 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">fn</span> <span class="o">=</span> <span class="nb">p4</span>
-i<span class="n">size</span> <span class="o">=</span> <span class="nb">p5</span>
+i<span class="n">fn</span> <span class="o">=</span> <span class="vi">p4</span>
+i<span class="n">size</span> <span class="o">=</span> <span class="vi">p5</span>
 i<span class="n">thresh</span> <span class="o">=</span> <span class="mf">0.5</span>
     
 i<span class="n">temp</span> <span class="nb">ftgen</span> i<span class="n">fn</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">size</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">2</span>
@@ -158,23 +158,23 @@ i<span class="n">_index</span> <span class="o">=</span> <span class="mi">0</span
          i<span class="n">write_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
     <span class="k">endif</span>
 <span class="nb">ptableiw</span> i<span class="n">write_value</span><span class="p">,</span> i<span class="n">_index</span><span class="p">,</span> i<span class="n">fn</span>
-<span class="k">loop_lt</span> i<span class="n">_index</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">size</span><span class="p">,</span> <span class="nl">loop_start</span>
+<span class="kp">loop_lt</span> i<span class="n">_index</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">size</span><span class="p">,</span> <span class="nl">loop_start</span>
     <span class="nb">turnoff</span>
 
 <span class="kd">endin</span>
 
 <span class="kd">instr</span> <span class="nf">2</span>
 
-i<span class="n">fn</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">fn</span> <span class="o">=</span> <span class="vi">p4</span>
 i<span class="n">size</span> <span class="o">=</span> <span class="nb">ftlen</span><span class="p">(</span>i<span class="n">fn</span><span class="p">)</span>    
 <span class="nb">prints</span> <span class="s">"Index</span><span class="se">\t</span><span class="s">Value</span><span class="se">\n</span><span class="s">"</span>
     
 i<span class="n">_index</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="nl">loop_start</span><span class="p">:</span>
     i<span class="n">value</span> <span class="nb">tablei</span> i<span class="n">_index</span><span class="p">,</span> i<span class="n">fn</span>
-    <span class="nb">prints</span> <span class="s">"</span><span class="si">%d</span><span class="s">:</span><span class="se">\t</span><span class="s">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">_index</span><span class="p">,</span> i<span class="n">value</span>
+    <span class="nb">prints</span> <span class="s">"</span><span class="si">%d</span><span class="s">:</span><span class="se">\t</span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">_index</span><span class="p">,</span> i<span class="n">value</span>
 
-  <span class="k">loop_lt</span> i<span class="n">_index</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">size</span><span class="p">,</span> <span class="nl">loop_start</span>		<span class="c1">;read table 1 with our index</span>
+  <span class="kp">loop_lt</span> i<span class="n">_index</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">size</span><span class="p">,</span> <span class="nl">loop_start</span>		<span class="c1">;read table 1 with our index</span>
 
 a<span class="n">out</span> <span class="nb">oscili</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> i<span class="n">fn</span>			<span class="c1">;use table to play the polypulse</span>
      <span class="nb">outs</span>   a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
@@ -195,7 +195,7 @@ a<span class="n">out</span> <span class="nb">oscili</span> <span class="mf">.5</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm172659"></a>
+        <a id="idm171807"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="table.html" title="table"><em class="citetitle">table</em></a>,
@@ -210,7 +210,7 @@ a<span class="n">out</span> <span class="nb">oscili</span> <span class="mf">.5</
         <p> More information on this opcode: <a class="ulink" href="http://www.csoundjournal.com/issue12/genInstruments.html" target="_top"><em class="citetitle">http://www.csoundjournal.com/issue12/genInstruments.html</em></a>  , written by Jacob Joaquin </p>
       </div>
       <div class="refsect1">
-        <a id="idm172681"></a>
+        <a id="idm171829"></a>
         <h2>Credits</h2>
         <p>
       </p>

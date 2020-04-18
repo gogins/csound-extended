@@ -39,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm112889"></a>
+        <a id="idm112868"></a>
         <h2>Description</h2>
         <p>
       During the p-time passes only, unconditionally transfer control to the statement labeled by <span class="emphasis"><em>label</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm112893"></a>
+        <a id="idm112872"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>kgoto</strong></span> label</pre>
         <p>
@@ -54,21 +54,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm112899"></a>
+        <a id="idm112878"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the kgoto opcode. It uses the file <a class="ulink" href="examples/kgoto.csd.html" target="_top"> (click here to play) <em class="citetitle">kgoto.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm112904"></a>
+          <a id="idm112883"></a>
           <p class="title">
-            <strong>Example 466. Example of the kgoto opcode.</strong>
+            <strong>Example 467. Example of the kgoto opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm112911"></a>
+              <a id="idm112890"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -90,7 +90,7 @@
 <span class="kd">instr</span> <span class="nf">1</span>
   <span class="c1">; Change kval linearly from 0 to 2 over</span>
   <span class="c1">; the period set by the third p-field.</span>
-  k<span class="n">val</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">2</span>
+  k<span class="n">val</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">2</span>
 
   <span class="c1">; If kval is greater than or equal to 1 then play the high note.</span>
   <span class="c1">; If not then play the low note.</span>
@@ -107,7 +107,7 @@
 
 <span class="nl">playit</span><span class="p">:</span>
   <span class="c1">; Print the values of kval and kfreq.</span>
-  <span class="nb">printks</span> <span class="s">"kval = %f, kfreq = %f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">val</span><span class="p">,</span> k<span class="n">freq</span>
+  <span class="nb">printks</span> <span class="s">"kval = </span><span class="si">%f</span><span class="s">, kfreq = </span><span class="si">%f</span><span class="se">\\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">val</span><span class="p">,</span> k<span class="n">freq</span>
 
   a<span class="n">1</span> <span class="nb">oscil</span> <span class="mi">10000</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> <span class="mi">1</span>
   <span class="nb">out</span> a<span class="n">1</span>
@@ -143,7 +143,7 @@ kval = 1.999639, kfreq = 880.000000</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm113014"></a>
+        <a id="idm112996"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cggoto.html" title="cggoto"><em class="citetitle">cggoto</em></a>,
@@ -157,7 +157,7 @@ kval = 1.999639, kfreq = 880.000000</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm113033"></a>
+        <a id="idm113015"></a>
         <h2>Credits</h2>
         <p>Example written by Kevin Conder.</p>
       </div>

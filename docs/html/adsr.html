@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm23054"></a>
+        <a id="idm22134"></a>
         <h2>Description</h2>
         <p>
       Calculates the classical ADSR envelope using linear segments.
    </p>
       </div>
       <div class="refsect1">
-        <a id="idm23057"></a>
+        <a id="idm22137"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>adsr</strong></span> iatt, idec, islev, irel [, idel]</pre>
         <pre class="synopsis">kres <span class="command"><strong>adsr</strong></span> iatt, idec, islev, irel [, idel]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm23063"></a>
+        <a id="idm22143"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iatt</em></span> -- duration of attack phase
@@ -71,7 +71,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm23075"></a>
+        <a id="idm22155"></a>
         <h2>Performance</h2>
         <p>
       The envelope generated is the range 0 to 1 and may need to be scaled 
@@ -100,21 +100,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm23098"></a>
+        <a id="idm22178"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the adsr opcode. It uses the file <a class="ulink" href="examples/adsr.csd.html" target="_top"> (click here to play) <em class="citetitle">adsr.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm23103"></a>
+          <a id="idm22183"></a>
           <p class="title">
             <strong>Example 45. Example of the adsr opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm23110"></a>
+              <a id="idm22190"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -133,13 +133,13 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">att</span>  <span class="o">=</span> <span class="nb">p5</span>
-i<span class="n">dec</span>  <span class="o">=</span> <span class="nb">p6</span>  
-i<span class="n">slev</span> <span class="o">=</span> <span class="nb">p7</span>
-i<span class="n">rel</span>  <span class="o">=</span> <span class="nb">p8</span>
+i<span class="n">att</span>  <span class="o">=</span> <span class="vi">p5</span>
+i<span class="n">dec</span>  <span class="o">=</span> <span class="vi">p6</span>  
+i<span class="n">slev</span> <span class="o">=</span> <span class="vi">p7</span>
+i<span class="n">rel</span>  <span class="o">=</span> <span class="vi">p8</span>
 
 k<span class="n">env</span>	<span class="nb">adsr</span> i<span class="n">att</span><span class="p">,</span> i<span class="n">dec</span><span class="p">,</span> i<span class="n">slev</span><span class="p">,</span> i<span class="n">rel</span>
-k<span class="n">cps</span> <span class="o">=</span>  <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span> 	  <span class="c1">;frequency</span>
+k<span class="n">cps</span> <span class="o">=</span>  <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p4</span><span class="p">)</span> 	  <span class="c1">;frequency</span>
 
 a<span class="n">sig</span>	<span class="nb">vco2</span>  k<span class="n">env</span> <span class="o">*</span> <span class="mf">0.8</span><span class="p">,</span> k<span class="n">cps</span>
 	<span class="nb">outs</span>  a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
@@ -165,7 +165,7 @@ a<span class="n">sig</span>	<span class="nb">vco2</span>  k<span class="n">env</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm23210"></a>
+        <a id="idm22290"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="madsr.html" title="madsr"><em class="citetitle">madsr</em></a>,
@@ -174,7 +174,7 @@ a<span class="n">sig</span>	<span class="nb">vco2</span>  k<span class="n">env</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm23219"></a>
+        <a id="idm22299"></a>
         <h2>Credits</h2>
         <p>Author: John ffitch</p>
         <p>New in version 3.49</p>

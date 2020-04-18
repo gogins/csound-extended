@@ -39,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm200786"></a>
+        <a id="idm200169"></a>
         <h2>Description</h2>
         <p>
       Audio output is a tone related to the shaking of a maraca or similar gourd instrument. The method is a physically inspired model developed from Perry Cook, but re-coded for Csound.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm200789"></a>
+        <a id="idm200172"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>shaker</strong></span> kamp, kfreq, kbeans, kdamp, ktimes [, idecay]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm200793"></a>
+        <a id="idm200176"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idecay</em></span> -- If present indicates for how long at the end of the note the shaker is to be damped. The default value is zero.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm200797"></a>
+        <a id="idm200180"></a>
         <h2>Performance</h2>
         <p>
       A note is played on a maraca-like instrument, with the arguments as below.
@@ -97,21 +97,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm200814"></a>
+        <a id="idm200197"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the shaker opcode. It uses the file <a class="ulink" href="examples/shaker.csd.html" target="_top"> (click here to play) <em class="citetitle">shaker.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm200819"></a>
+          <a id="idm200202"></a>
           <p class="title">
-            <strong>Example 911. Example of the shaker opcode.</strong>
+            <strong>Example 913. Example of the shaker opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm200826"></a>
+              <a id="idm200209"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -131,7 +131,7 @@
 
 <span class="c1">; Instrument #1</span>
 <span class="kd">instr</span> <span class="nf">1</span>
-k<span class="n">freq</span>	<span class="nb">line</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">440</span>
+k<span class="n">freq</span>	<span class="nb">line</span> <span class="vi">p4</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">440</span>
    a<span class="n">1</span> <span class="nb">shaker</span> <span class="mi">10000</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span>
    <span class="nb">out</span> a<span class="n">1</span>
 <span class="kd">endin</span>
@@ -154,7 +154,7 @@ k<span class="n">freq</span>	<span class="nb">line</span> <span class="nb">p4</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm200891"></a>
+        <a id="idm200274"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,7 +39,7 @@
       </p>
       </div>
       <div class="refsect1">
-        <a id="idm212908"></a>
+        <a id="idm212426"></a>
         <h2>Description</h2>
         <p>Plugin opcode in stkopd.</p>
         <p>
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm212912"></a>
+        <a id="idm212430"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asignal <span class="command"><strong>STKPlucked</strong></span> ifrequency, iamplitude</pre>
       </div>
       <div class="refsect1">
-        <a id="idm212916"></a>
+        <a id="idm212434"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifrequency</em></span> -- Frequency of note played, in Hertz.
@@ -62,7 +62,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm212922"></a>
+        <a id="idm212440"></a>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note: Note">
             <tr>
@@ -83,20 +83,20 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm212928"></a>
+        <a id="idm212446"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the STKPlucked opcode. It uses the file <a class="ulink" href="examples/STKPlucked.csd.html" target="_top"> (click here to play) <em class="citetitle">STKPlucked.csd</em></a>.
      
       </p>
         <div class="example">
-          <a id="idm212933"></a>
+          <a id="idm212451"></a>
           <p class="title">
-            <strong>Example 957. Example of the STKPlucked opcode.</strong>
+            <strong>Example 959. Example of the STKPlucked opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm212935"></a>
+              <a id="idm212453"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -115,9 +115,9 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>  <span class="c1">;STKPlucked - has no controllers</span>
 
-i<span class="n">frq</span>	<span class="o">=</span>	<span class="nb">p4</span>
+i<span class="n">frq</span>	<span class="o">=</span>	<span class="vi">p4</span>
 
-a<span class="n">sig</span>	S<span class="n">TKPlucked</span> <span class="nb">cpspch</span><span class="p">(</span>i<span class="n">frq</span><span class="p">),</span> <span class="mi">1</span>
+a<span class="n">sig</span>	<span class="nb">STKPlucked</span> <span class="nb">cpspch</span><span class="p">(</span>i<span class="n">frq</span><span class="p">),</span> <span class="mi">1</span>
 	<span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 <span class="kd">endin</span>
 
@@ -138,14 +138,14 @@ a<span class="n">sig</span>	S<span class="n">TKPlucked</span> <span class="nb">c
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm212996"></a>
+        <a id="idm212514"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="STKSitar.html" title="STKSitar"><em class="citetitle">STKSitar</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm213001"></a>
+        <a id="idm212519"></a>
         <h2>Credits</h2>
         <p>
       </p>

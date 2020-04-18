@@ -40,7 +40,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm175640"></a>
+        <a id="idm174788"></a>
         <h2>Description</h2>
         <p>
       Average the amp/freq time functions of each analysis channel for
@@ -49,12 +49,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm175643"></a>
+        <a id="idm174791"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>pvsblur</strong></span> fsigin, kblurtime, imaxdel</pre>
       </div>
       <div class="refsect1">
-        <a id="idm175647"></a>
+        <a id="idm174795"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>fsig</em></span> -- output pv stream
@@ -95,20 +95,20 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm175660"></a>
+        <a id="idm174808"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the use of the <span class="emphasis"><em>pvsblur</em></span> opcode. It uses the file <a class="ulink" href="examples/pvsblur.csd.html" target="_top"> (click here to play) <em class="citetitle">pvsblur.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm175666"></a>
+          <a id="idm174814"></a>
           <p class="title">
-            <strong>Example 762. Example of the <span class="emphasis"><em>pvsblur</em></span> opcode.</strong>
+            <strong>Example 764. Example of the <span class="emphasis"><em>pvsblur</em></span> opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm175674"></a>
+              <a id="idm174822"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -130,9 +130,9 @@ i<span class="n">winsize</span>	<span class="o">=</span>		i<span class="n">fftsi
 i<span class="n">winshape</span>	<span class="o">=</span>		<span class="mi">1</span><span class="c1">; von-Hann window</span>
 S<span class="n">file</span>		<span class="o">=</span>		<span class="s">"fox.wav"</span>
 a<span class="n">in</span>		<span class="nb">soundin</span>	S<span class="n">file</span>
-<span class="n">fftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="c1">; fft-analysis of the audio-signal</span>
-<span class="n">fftblur</span>	<span class="nb">pvsblur</span>	<span class="n">fftin</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="mi">1</span><span class="c1">; blur</span>
-a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fftblur</span><span class="c1">; resynthesis</span>
+f<span class="n">ftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="c1">; fft-analysis of the audio-signal</span>
+f<span class="n">ftblur</span>	<span class="nb">pvsblur</span>	f<span class="n">ftin</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> <span class="mi">1</span><span class="c1">; blur</span>
+a<span class="n">out</span>		<span class="nb">pvsynth</span>	f<span class="n">ftblur</span><span class="c1">; resynthesis</span>
 		<span class="nb">out</span>		a<span class="n">out</span>
 <span class="kd">endin</span>
 
@@ -152,7 +152,7 @@ a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fft
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm175763"></a>
+        <a id="idm174911"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvsanal.html" title="pvsanal"><em class="citetitle">pvsanal</em></a>,
@@ -161,7 +161,7 @@ a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fft
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm175772"></a>
+        <a id="idm174920"></a>
         <h2>Credits</h2>
         <p>
       </p>

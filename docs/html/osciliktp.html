@@ -39,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm150361"></a>
+        <a id="idm149094"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>osciliktp</em></span> allows phase modulation (which is actually implemented as k-rate frequency modulation, by differentiating phase input). The disadvantage is that there is no amplitude control, and frequency can be varied only at the control-rate. This opcode can be faster or slower than <a class="link" href="oscilikt.html" title="oscilikt"><em class="citetitle">oscilikt</em></a>, depending on the control-rate.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm150367"></a>
+        <a id="idm149100"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>osciliktp</strong></span> kcps, kfn, kphs [, istor]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm150371"></a>
+        <a id="idm149104"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>istor</em></span> (optional, defaults to 0) -- Skips initialization.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm150375"></a>
+        <a id="idm149108"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ares</em></span> -- audio-rate ouptut signal.
@@ -76,21 +76,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm150394"></a>
+        <a id="idm149127"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the osciliktp opcode. It uses the file <a class="ulink" href="examples/osciliktp.csd.html" target="_top"> (click here to play) <em class="citetitle">osciliktp.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm150399"></a>
+          <a id="idm149132"></a>
           <p class="title">
             <strong>Example 642. Example of the osciliktp opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm150406"></a>
+              <a id="idm149139"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -110,7 +110,7 @@
 
 <span class="c1">; Instrument #1: osciliktp example</span>
 <span class="kd">instr</span> <span class="nf">1</span>
-  k<span class="n">phs</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">4</span>
+  k<span class="n">phs</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">4</span>
 
   a<span class="n">1x</span> <span class="nb">osciliktp</span> <span class="mf">220.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
   a<span class="n">1y</span> <span class="nb">osciliktp</span> <span class="mf">220.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span>k<span class="n">phs</span>
@@ -141,7 +141,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm150486"></a>
+        <a id="idm149219"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="oscilikt.html" title="oscilikt"><em class="citetitle">oscilikt</em></a> and
@@ -149,7 +149,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm150493"></a>
+        <a id="idm149226"></a>
         <h2>Credits</h2>
         <p>Author: Istvan Varga</p>
         <p>New in version 4.22</p>

@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64415"></a>
+        <a id="idm64011"></a>
         <h2>Description</h2>
         <p>
       Returns the peak absolute value of a sound file.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64418"></a>
+        <a id="idm64014"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ir <span class="command"><strong>filepeak</strong></span> ifilcod [, ichnl]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm64422"></a>
+        <a id="idm64018"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifilcod</em></span> -- sound file to be queried
@@ -74,14 +74,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64436"></a>
+        <a id="idm64032"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>filepeak</em></span> returns the peak absolute value of the sound file <span class="emphasis"><em>ifilcod</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64441"></a>
+        <a id="idm64037"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the filepeak opcode. It uses the file <a class="ulink" href="examples/filepeak.csd.html" target="_top"> (click here to play) <em class="citetitle">filepeak.csd</em></a>,
@@ -89,14 +89,14 @@ and <a class="ulink" href="examples/Church.wav" target="_top"><em class="citetit
 
       </p>
         <div class="example">
-          <a id="idm64448"></a>
+          <a id="idm64044"></a>
           <p class="title">
             <strong>Example 279. Example of the filepeak opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm64455"></a>
+              <a id="idm64051"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -115,10 +115,10 @@ and <a class="ulink" href="examples/Church.wav" target="_top"><em class="citetit
 
 <span class="kd">instr</span> <span class="nf">1</span> 
 
-i<span class="n">scaldb</span> <span class="o">=</span> <span class="nb">p4</span> <span class="c1">;set peak amplitude in dB</span>
+i<span class="n">scaldb</span> <span class="o">=</span> <span class="vi">p4</span> <span class="c1">;set peak amplitude in dB</span>
 i<span class="n">peak</span>   <span class="nb">filepeak</span> <span class="s">"Church.wav"</span>
 i<span class="n">scal</span>   <span class="o">=</span> <span class="nb">ampdb</span><span class="p">(</span>i<span class="n">scaldb</span><span class="p">)</span><span class="o">/</span>i<span class="n">peak</span> <span class="c1">;calculate amp multiplier</span>
-<span class="nb">printf_i</span> <span class="s">"</span><span class="se">\n</span><span class="s">Peak value in file '%s' is %f (%.3f dB).</span><span class="se">\n\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"Church.wav"</span><span class="p">,</span> i<span class="n">peak</span><span class="p">,</span> <span class="nb">dbamp</span><span class="p">(</span>i<span class="n">peak</span><span class="p">)</span>
+<span class="nb">printf_i</span> <span class="s">"</span><span class="se">\n</span><span class="s">Peak value in file '</span><span class="si">%s</span><span class="s">' is </span><span class="si">%f</span><span class="s"> (</span><span class="si">%.3f</span><span class="s"> dB).</span><span class="se">\n\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"Church.wav"</span><span class="p">,</span> i<span class="n">peak</span><span class="p">,</span> <span class="nb">dbamp</span><span class="p">(</span>i<span class="n">peak</span><span class="p">)</span>
 
 a<span class="n">snd</span> <span class="nb">soundin</span> <span class="s">"Church.wav"</span>
      <span class="nb">outs</span> a<span class="n">snd</span><span class="p">,</span> a<span class="n">snd</span>
@@ -132,7 +132,7 @@ a<span class="n">sig</span> <span class="o">=</span> a<span class="n">snd</span>
 
 a<span class="n">out</span>   <span class="nb">soundin</span>  <span class="s">"Church_norm.wav"</span>
 i<span class="n">pknew</span> <span class="nb">filepeak</span> <span class="s">"Church_norm.wav"</span>
-<span class="nb">printf_i</span> <span class="s">"</span><span class="se">\n</span><span class="s">Peak value in file '%s' is %f (%.3f dB).</span><span class="se">\n\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"Church_norm.wav"</span><span class="p">,</span> i<span class="n">pknew</span><span class="p">,</span> <span class="nb">dbamp</span><span class="p">(</span>i<span class="n">pknew</span><span class="p">)</span>
+<span class="nb">printf_i</span> <span class="s">"</span><span class="se">\n</span><span class="s">Peak value in file '</span><span class="si">%s</span><span class="s">' is </span><span class="si">%f</span><span class="s"> (</span><span class="si">%.3f</span><span class="s"> dB).</span><span class="se">\n\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"Church_norm.wav"</span><span class="p">,</span> i<span class="n">pknew</span><span class="p">,</span> <span class="nb">dbamp</span><span class="p">(</span>i<span class="n">pknew</span><span class="p">)</span>
        <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
 <span class="kd">endin</span>
@@ -160,7 +160,7 @@ Peak value in file 'Church_norm.wav' is 0.501190 (-6.000 dB).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64583"></a>
+        <a id="idm64191"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="filelen.html" title="filelen"><em class="citetitle">filelen</em></a>,
@@ -169,7 +169,7 @@ Peak value in file 'Church_norm.wav' is 0.501190 (-6.000 dB).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm64592"></a>
+        <a id="idm64200"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm113914"></a>
+        <a id="idm113897"></a>
         <h2>Description</h2>
         <p>
       Trace a straight line between specified points.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm113917"></a>
+        <a id="idm113900"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>line</strong></span> ia, idur, ib</pre>
         <pre class="synopsis">kres <span class="command"><strong>line</strong></span> ia, idur, ib</pre>
       </div>
       <div class="refsect1">
-        <a id="idm113923"></a>
+        <a id="idm113906"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ia</em></span> -- starting value.
@@ -65,7 +65,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm113932"></a>
+        <a id="idm113915"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>line</em></span> generates control or audio signals whose values move linearly from an initial value to a final one.
@@ -98,21 +98,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm113946"></a>
+        <a id="idm113929"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the line opcode. It uses the file <a class="ulink" href="examples/line.csd.html" target="_top"> (click here to play) <em class="citetitle">line.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm113951"></a>
+          <a id="idm113934"></a>
           <p class="title">
-            <strong>Example 471. Example of the line opcode.</strong>
+            <strong>Example 472. Example of the line opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm113958"></a>
+              <a id="idm113941"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -131,12 +131,12 @@
 
 <span class="kd">instr</span> <span class="nf">1</span> 
 
-k<span class="n">p</span> <span class="o">=</span> <span class="nb">p6</span>
+k<span class="n">p</span> <span class="o">=</span> <span class="vi">p6</span>
 <span class="c1">;choose between expon or line</span>
 <span class="k">if</span> <span class="p">(</span>k<span class="n">p</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span> 	
-  k<span class="n">pitch</span> <span class="nb">expon</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p5</span> 
+  k<span class="n">pitch</span> <span class="nb">expon</span> <span class="vi">p4</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p5</span> 
 <span class="k">elseif</span> <span class="p">(</span>k<span class="n">p</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">then</span>
-  k<span class="n">pitch</span> <span class="nb">line</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p5</span> 
+  k<span class="n">pitch</span> <span class="nb">line</span> <span class="vi">p4</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p5</span> 
 <span class="k">endif</span>
 
 a<span class="n">sig</span>   <span class="nb">vco2</span> <span class="mf">.6</span><span class="p">,</span> k<span class="n">pitch</span> 
@@ -165,7 +165,7 @@ a<span class="n">sig</span>   <span class="nb">vco2</span> <span class="mf">.6</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm114089"></a>
+        <a id="idm114072"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="expon.html" title="expon"><em class="citetitle">expon</em></a>, 
@@ -176,7 +176,7 @@ a<span class="n">sig</span>   <span class="nb">vco2</span> <span class="mf">.6</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm114102"></a>
+        <a id="idm114085"></a>
         <h2>Credits</h2>
       </div>
     </div>

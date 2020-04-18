@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm179554"></a>
+        <a id="idm178732"></a>
         <h2>Description</h2>
         <p>
       Mix 'seamlessly' two pv signals.  This opcode combines the
@@ -48,12 +48,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm179557"></a>
+        <a id="idm178735"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>pvsmix</strong></span> fsigin1, fsigin2</pre>
       </div>
       <div class="refsect1">
-        <a id="idm179561"></a>
+        <a id="idm178739"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>fsig</em></span> -- output pv stream
@@ -84,20 +84,20 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm179572"></a>
+        <a id="idm178750"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the pvsmix opcode. It uses the file <a class="ulink" href="examples/pvsmix.csd.html" target="_top"> (click here to play) <em class="citetitle">pvsmix.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm179577"></a>
+          <a id="idm178755"></a>
           <p class="title">
-            <strong>Example 791. Example of the pvsmix opcode.</strong>
+            <strong>Example 793. Example of the pvsmix opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm179584"></a>
+              <a id="idm178762"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -120,10 +120,10 @@ gi<span class="n">sin</span>	<span class="nb">ftgen</span>	<span class="mi">1</s
 
 a<span class="n">sig1</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;signal in 1</span>
 a<span class="n">sig2</span> <span class="nb">oscil</span>   <span class="mf">.3</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> gi<span class="n">sin</span>		<span class="c1">;signal in 2</span>
-<span class="n">fsig1</span> <span class="nb">pvsanal</span> a<span class="n">sig1</span><span class="p">,</span><span class="mi">1024</span><span class="p">,</span><span class="mi">256</span><span class="p">,</span><span class="mi">1024</span><span class="p">,</span><span class="mi">0</span>	<span class="c1">;pvoc analysis </span>
-<span class="n">fsig2</span> <span class="nb">pvsanal</span> a<span class="n">sig2</span><span class="p">,</span><span class="mi">1024</span><span class="p">,</span><span class="mi">256</span><span class="p">,</span><span class="mi">1024</span><span class="p">,</span><span class="mi">0</span>	<span class="c1">;of both signals</span>
-<span class="n">fsall</span> <span class="nb">pvsmix</span>  <span class="n">fsig1</span><span class="p">,</span> <span class="n">fsig2</span> 
-a<span class="n">sig</span>  <span class="nb">pvsynth</span> <span class="n">fsall</span>
+f<span class="n">sig1</span> <span class="nb">pvsanal</span> a<span class="n">sig1</span><span class="p">,</span><span class="mi">1024</span><span class="p">,</span><span class="mi">256</span><span class="p">,</span><span class="mi">1024</span><span class="p">,</span><span class="mi">0</span>	<span class="c1">;pvoc analysis </span>
+f<span class="n">sig2</span> <span class="nb">pvsanal</span> a<span class="n">sig2</span><span class="p">,</span><span class="mi">1024</span><span class="p">,</span><span class="mi">256</span><span class="p">,</span><span class="mi">1024</span><span class="p">,</span><span class="mi">0</span>	<span class="c1">;of both signals</span>
+f<span class="n">sall</span> <span class="nb">pvsmix</span>  f<span class="n">sig1</span><span class="p">,</span> f<span class="n">sig2</span> 
+a<span class="n">sig</span>  <span class="nb">pvsynth</span> f<span class="n">sall</span>
       <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span> 
 
 <span class="kd">endin</span> 
@@ -142,7 +142,7 @@ a<span class="n">sig</span>  <span class="nb">pvsynth</span> <span class="n">fsa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm179680"></a>
+        <a id="idm178858"></a>
         <h2>Credits</h2>
         <p>
       </p>

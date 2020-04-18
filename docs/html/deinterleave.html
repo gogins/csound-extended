@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm50920"></a>
+        <a id="idm50480"></a>
         <h2>Description</h2>
         <p>
       Takes an input array and deinterleaves its data by choosing the
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm50923"></a>
+        <a id="idm50483"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout1[], kout2[] <span class="command"><strong>deinterleave</strong></span> kin[]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm50927"></a>
+        <a id="idm50487"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kout1[], kout2[]</em></span> -- output arrays containing the
@@ -64,19 +64,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm50933"></a>
+        <a id="idm50493"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the deinterleave opcode. It uses the file <a class="ulink" href="examples/deinterleave.csd.html" target="_top"> (click here to play) <em class="citetitle">deinterleave.csd</em></a>.</p>
         <div class="example">
-          <a id="idm50938"></a>
+          <a id="idm50498"></a>
           <p class="title">
             <strong>Example 196. Example of the deinterleave opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm50945"></a>
+              <a id="idm50505"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -89,7 +89,7 @@
 
 k<span class="n">Int</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span>
 
-k<span class="n">out1</span><span class="p">[],</span>k<span class="n">out2</span><span class="p">[]</span> <span class="n">deinterleave</span> k<span class="n">Int</span>
+k<span class="n">out1</span><span class="p">[],</span>k<span class="n">out2</span><span class="p">[]</span> <span class="nb">deinterleave</span> k<span class="n">Int</span>
 
 <span class="nb">printf</span> <span class="s">"input: </span><span class="se">\n</span><span class="si">%d</span><span class="s"> </span><span class="si">%d</span><span class="s"> </span><span class="si">%d</span><span class="s"> </span><span class="si">%d</span><span class="s"> </span><span class="si">%d</span><span class="s"> </span><span class="si">%d</span><span class="s"> </span><span class="si">%d</span><span class="s"> </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
          k<span class="n">Int</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> k<span class="n">Int</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> k<span class="n">Int</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> k<span class="n">Int</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
@@ -114,7 +114,7 @@ k<span class="n">out1</span><span class="p">[],</span>k<span class="n">out2</spa
         <br class="example-break" />
       </div>
       <div class="refsect1">
-        <a id="idm51098"></a>
+        <a id="idm50658"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vectorial.html" title="Vectorial Opcodes"><em class="citetitle"></em>Vectorial opcodes</a>,
@@ -122,7 +122,7 @@ k<span class="n">out1</span><span class="p">[],</span>k<span class="n">out2</spa
 </p>
       </div>
       <div class="refsect1">
-        <a id="idm51105"></a>
+        <a id="idm50665"></a>
         <h2>Credits</h2>
         <p>
       </p>

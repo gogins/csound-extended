@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm194584"></a>
+        <a id="idm193964"></a>
         <h2>Description</h2>
         <p>
       Select sample value from three based on audio-rate comparisons of
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm194587"></a>
+        <a id="idm193967"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout <span class="command"><strong>select</strong></span> a1, a2, aless, aequal, amore</pre>
       </div>
       <div class="refsect1">
-        <a id="idm194591"></a>
+        <a id="idm193971"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>a1, a2</em></span> -- audio signals that are compared.
@@ -71,20 +71,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm194602"></a>
+        <a id="idm193982"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the select opcode. It uses the file <a class="ulink" href="examples/select.csd.html" target="_top"> (click here to play) <em class="citetitle">select.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm194607"></a>
+          <a id="idm193987"></a>
           <p class="title">
-            <strong>Example 885. Example of the select opcode.</strong>
+            <strong>Example 887. Example of the select opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm194614"></a>
+              <a id="idm193994"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 
@@ -96,9 +96,9 @@
   a<span class="n">1</span> <span class="nb">oscil</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">440</span>
   a<span class="n">2</span> <span class="nb">oscil</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mi">880</span>
   a<span class="n">z</span> <span class="o">=</span> <span class="mi">0</span>
-  a<span class="n">low</span> <span class="nb">line</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
-  a<span class="n">high</span> <span class="nb">line</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>
-  a<span class="n">out</span>  <span class="n">select</span> a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span><span class="p">,</span>a<span class="n">low</span><span class="p">,</span>a<span class="n">z</span><span class="p">,</span>a<span class="n">high</span>
+  a<span class="n">low</span> <span class="nb">line</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
+  a<span class="n">high</span> <span class="nb">line</span> <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1</span>
+  a<span class="n">out</span>  <span class="nb">select</span> a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span><span class="p">,</span>a<span class="n">low</span><span class="p">,</span>a<span class="n">z</span><span class="p">,</span>a<span class="n">high</span>
   <span class="nb">outch</span> <span class="mi">1</span><span class="p">,</span> a<span class="n">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>a<span class="n">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>a<span class="n">out</span>
   <span class="kd">endin</span>
 <span class="nt">&lt;/CsInstruments&gt;</span>
@@ -117,14 +117,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm194688"></a>
+        <a id="idm194068"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="deltap.html" title="deltap"><em class="citetitle">deltap</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm194693"></a>
+        <a id="idm194073"></a>
         <h2>Credits</h2>
         <p>By: John ffitch 2016</p>
         <p>New in vesion 6.09</p>

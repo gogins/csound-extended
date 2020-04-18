@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm240008"></a>
+        <a id="idm239640"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>vco2ift</em></span> is the same as <a class="link" href="vco2ft.html" title="vco2ft"><em class="citetitle">vco2ft</em></a>, but works at i-time. It is suitable for use with opcodes that expect an i-rate table number (for example, <a class="link" href="oscili.html" title="oscili"><em class="citetitle">oscili</em></a>).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm240016"></a>
+        <a id="idm239648"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ifn <span class="command"><strong>vco2ift</strong></span> icps, iwave [, inyx]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm240020"></a>
+        <a id="idm239652"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- the ftable number.
@@ -94,20 +94,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm240056"></a>
+        <a id="idm239688"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the vco2ift opcode. It uses the file <a class="ulink" href="examples/vco2ift.csd.html" target="_top"> (click here to play) <em class="citetitle">vco2ift.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm240061"></a>
+          <a id="idm239693"></a>
           <p class="title">
-            <strong>Example 1086. Example of the vco2ift opcode.</strong>
+            <strong>Example 1089. Example of the vco2ift opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm240068"></a>
+              <a id="idm239700"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -127,12 +127,12 @@
 <span class="c1">; user defined waveform -2: fixed table size (64), number of partials</span>
 <span class="c1">; multiplier is 1.4</span>
 i<span class="n">tmp</span>    <span class="nb">ftgen</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mi">1</span>
-i<span class="n">ft</span>     <span class="nb">vco2init</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">2</span>
+i<span class="n">ft</span>     <span class="nb">vco2init</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">2</span>
 
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">cps</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">cps</span> <span class="o">=</span> <span class="vi">p4</span>
 i<span class="n">fn</span>  <span class="nb">vco2ift</span> i<span class="n">cps</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span>	<span class="c1">;with user defined waveform</span>
 <span class="nb">print</span> i<span class="n">fn</span>
 a<span class="n">sig</span> <span class="nb">oscili</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> i<span class="n">fn</span>		<span class="c1">; (-2), and sr/2 bandwidth</span>
@@ -168,7 +168,7 @@ instr 1:  ifn = 3.000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm240185"></a>
+        <a id="idm239817"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vco2ft.html" title="vco2ft"><em class="citetitle">vco2ft</em></a>,
@@ -177,7 +177,7 @@ instr 1:  ifn = 3.000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm240194"></a>
+        <a id="idm239826"></a>
         <h2>Credits</h2>
         <p>Author: Istvan Varga</p>
         <p>New in version 4.22</p>

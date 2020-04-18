@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm203903"></a>
+        <a id="idm203298"></a>
         <h2>Description</h2>
         <p>
    This opcode records input audio and plays it back in a loop with user-defined
@@ -48,12 +48,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm203906"></a>
+        <a id="idm203301"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asig, krec <span class="command"><strong>sndloop</strong></span> ain, kpitch, ktrig, idur, ifad</pre>
       </div>
       <div class="refsect1">
-        <a id="idm203910"></a>
+        <a id="idm203305"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idur </em></span> -- loop duration in seconds
@@ -63,7 +63,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm203916"></a>
+        <a id="idm203311"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- output sig
@@ -82,20 +82,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm203926"></a>
+        <a id="idm203321"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the sndloop opcode. It uses the file <a class="ulink" href="examples/sndloop.csd.html" target="_top"> (click here to play) <em class="citetitle">sndloop.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm203931"></a>
+          <a id="idm203326"></a>
           <p class="title">
-            <strong>Example 921. Example of the sndloop opcode.</strong>
+            <strong>Example 923. Example of the sndloop opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm203938"></a>
+              <a id="idm203333"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -114,10 +114,10 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">trig</span>  <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">trig</span>  <span class="o">=</span> <span class="vi">p4</span>
 a<span class="n">sig</span>   <span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;get the signal in, loop it</span>
 k<span class="n">trig</span>  <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">trig</span><span class="p">,</span> <span class="mi">1</span>				<span class="c1">;when to trigger signal = p4</span>
-k<span class="n">pitch</span> <span class="nb">line</span> <span class="mf">1.2</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.5</span>				<span class="c1">;vary pitch of recorded signal</span>
+k<span class="n">pitch</span> <span class="nb">line</span> <span class="mf">1.2</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">.5</span>				<span class="c1">;vary pitch of recorded signal</span>
 a<span class="n">out</span><span class="p">,</span>k<span class="n">rec</span> <span class="nb">sndloop</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">pitch</span><span class="p">,</span> k<span class="n">trig</span><span class="p">,</span> <span class="mf">.4</span><span class="p">,</span> <span class="mf">0.05</span>	<span class="c1">;rec starts at p4 sec, for .4 secs and 0.05 crossfade</span>
        <span class="nb">printk2</span> k<span class="n">rec</span>               	  	<span class="c1">; prints the recording signal</span>
        <span class="nb">outs</span>    a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
@@ -148,7 +148,7 @@ a<span class="n">out</span><span class="p">,</span>k<span class="n">rec</span> <
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm204036"></a>
+        <a id="idm203431"></a>
         <h2>Credits</h2>
         <p>
       </p>

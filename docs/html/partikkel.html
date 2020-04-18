@@ -42,7 +42,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm157587"></a>
+        <a id="idm156325"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>partikkel</em></span> was conceived after reading Curtis Roads' book
@@ -71,7 +71,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm157596"></a>
+        <a id="idm156334"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">a1 [, a2, a3, a4, a5, a6, a7, a8] <span class="command"><strong>partikkel</strong></span> agrainfreq, \
               kdistribution, idisttab, async, kenv2amt, ienv2tab, ienv_attack, \
@@ -84,7 +84,7 @@
               [, iopcode_id, ipanlaws]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm157600"></a>
+        <a id="idm156338"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idisttab</em></span> -- function table number,
@@ -228,7 +228,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm157664"></a>
+        <a id="idm156402"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xgrainfreq</em></span> -- number of grains per
@@ -376,20 +376,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm157738"></a>
+        <a id="idm156476"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the partikkel opcode. It uses the file <a class="ulink" href="examples/partikkel.csd.html" target="_top"> (click here to play) <em class="citetitle">partikkel.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm157743"></a>
+          <a id="idm156481"></a>
           <p class="title">
             <strong>Example 680. Example of the partikkel opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm157750"></a>
+              <a id="idm156488"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -451,12 +451,12 @@ k<span class="n">wavekey3</span>	<span class="o">=</span> <span class="mi">1</sp
 k<span class="n">wavekey4</span>	<span class="o">=</span> <span class="mi">1</span>			<span class="c1">;</span>
 i<span class="n">max_grains</span>	<span class="o">=</span> <span class="mi">100</span>			<span class="c1">; max grains per k period</span>
 
-a<span class="n">sig</span>	<span class="nb">partikkel</span> k<span class="n">grainfreq</span><span class="p">,</span> k<span class="n">distribution</span><span class="p">,</span> i<span class="n">disttab</span><span class="p">,</span> a<span class="n">sync</span><span class="p">,</span> k<span class="n">env2amt</span><span class="p">,</span> i<span class="n">env2tab</span><span class="p">,</span> \
-               i<span class="n">env_attack</span><span class="p">,</span> i<span class="n">env_decay</span><span class="p">,</span> k<span class="n">sustain_amount</span><span class="p">,</span> k<span class="n">a_d_ratio</span><span class="p">,</span> k<span class="n">duration</span><span class="p">,</span> k<span class="n">amp</span><span class="p">,</span> i<span class="n">gainmasks</span><span class="p">,</span> \
-               k<span class="n">wavfreq</span><span class="p">,</span> k<span class="n">sweepshape</span><span class="p">,</span> i<span class="n">wavfreqstarttab</span><span class="p">,</span> i<span class="n">wavfreqendtab</span><span class="p">,</span> a<span class="n">wavfm</span><span class="p">,</span> \
-               i<span class="n">fmamptab</span><span class="p">,</span> k<span class="n">fmenv</span><span class="p">,</span> i<span class="n">cosine</span><span class="p">,</span> k<span class="n">TrainCps</span><span class="p">,</span> k<span class="n">numpartials</span><span class="p">,</span> \
-               k<span class="n">chroma</span><span class="p">,</span> i<span class="n">channelmasks</span><span class="p">,</span> k<span class="n">randommask</span><span class="p">,</span> k<span class="n">waveform1</span><span class="p">,</span> k<span class="n">waveform2</span><span class="p">,</span> k<span class="n">waveform3</span><span class="p">,</span> k<span class="n">waveform4</span><span class="p">,</span> \
-               i<span class="n">waveamptab</span><span class="p">,</span> a<span class="n">samplepos1</span><span class="p">,</span> a<span class="n">samplepos2</span><span class="p">,</span> a<span class="n">samplepos3</span><span class="p">,</span> a<span class="n">samplepos4</span><span class="p">,</span> \
+a<span class="n">sig</span>	<span class="nb">partikkel</span> k<span class="n">grainfreq</span><span class="p">,</span> k<span class="n">distribution</span><span class="p">,</span> i<span class="n">disttab</span><span class="p">,</span> a<span class="n">sync</span><span class="p">,</span> k<span class="n">env2amt</span><span class="p">,</span> i<span class="n">env2tab</span><span class="p">,</span> <span class="w">\</span>
+               i<span class="n">env_attack</span><span class="p">,</span> i<span class="n">env_decay</span><span class="p">,</span> k<span class="n">sustain_amount</span><span class="p">,</span> k<span class="n">a_d_ratio</span><span class="p">,</span> k<span class="n">duration</span><span class="p">,</span> k<span class="n">amp</span><span class="p">,</span> i<span class="n">gainmasks</span><span class="p">,</span> <span class="w">\</span>
+               k<span class="n">wavfreq</span><span class="p">,</span> k<span class="n">sweepshape</span><span class="p">,</span> i<span class="n">wavfreqstarttab</span><span class="p">,</span> i<span class="n">wavfreqendtab</span><span class="p">,</span> a<span class="n">wavfm</span><span class="p">,</span> <span class="w">\</span>
+               i<span class="n">fmamptab</span><span class="p">,</span> k<span class="n">fmenv</span><span class="p">,</span> i<span class="n">cosine</span><span class="p">,</span> k<span class="n">TrainCps</span><span class="p">,</span> k<span class="n">numpartials</span><span class="p">,</span> <span class="w">\</span>
+               k<span class="n">chroma</span><span class="p">,</span> i<span class="n">channelmasks</span><span class="p">,</span> k<span class="n">randommask</span><span class="p">,</span> k<span class="n">waveform1</span><span class="p">,</span> k<span class="n">waveform2</span><span class="p">,</span> k<span class="n">waveform3</span><span class="p">,</span> k<span class="n">waveform4</span><span class="p">,</span> <span class="w">\</span>
+               i<span class="n">waveamptab</span><span class="p">,</span> a<span class="n">samplepos1</span><span class="p">,</span> a<span class="n">samplepos2</span><span class="p">,</span> a<span class="n">samplepos3</span><span class="p">,</span> a<span class="n">samplepos4</span><span class="p">,</span> <span class="w">\</span>
                k<span class="n">wavekey1</span><span class="p">,</span> k<span class="n">wavekey2</span><span class="p">,</span> k<span class="n">wavekey3</span><span class="p">,</span> k<span class="n">wavekey4</span><span class="p">,</span> i<span class="n">max_grains</span>
 
 <span class="nb">outs</span>	a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
@@ -478,13 +478,13 @@ a<span class="n">sig</span>	<span class="nb">partikkel</span> k<span class="n">g
       Here is another example of the partikkel opcode. It uses the file <a class="ulink" href="examples/partikkel-2.csd.html" target="_top"> (click here to play) <em class="citetitle">partikkel-2.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm158074"></a>
+          <a id="idm156818"></a>
           <p class="title">
             <strong>Example 681. Example 2 of the partikkel opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm158076"></a>
+              <a id="idm156820"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -516,14 +516,14 @@ gi<span class="n">Pan</span>		<span class="nb">ftgen</span>	<span class="mi">0</
 		<span class="kd">instr</span> <span class="nf">1</span>
 
 <span class="cm">/*score parameters*/</span>
-i<span class="n">speed</span>			<span class="o">=</span> <span class="nb">p4</span>		<span class="c1">; 1 = original speed </span>
-i<span class="n">grainrate</span>		<span class="o">=</span> <span class="nb">p5</span>		<span class="c1">; grain rate</span>
-i<span class="n">grainsize</span>		<span class="o">=</span> <span class="nb">p6</span>		<span class="c1">; grain size in ms</span>
-i<span class="n">cent</span>			<span class="o">=</span> <span class="nb">p7</span>		<span class="c1">; transposition in cent</span>
-i<span class="n">posrand</span>		<span class="o">=</span> <span class="nb">p8</span>		<span class="c1">; time position randomness (offset) of the pointer in ms</span>
-i<span class="n">centrand</span>		<span class="o">=</span> <span class="nb">p9</span>		<span class="c1">; transposition randomness in cents</span>
-i<span class="n">pan</span>			<span class="o">=</span> <span class="nb">p10</span>		<span class="c1">; panning narrow (0) to wide (1)</span>
-i<span class="n">dist</span>			<span class="o">=</span> <span class="nb">p11</span>		<span class="c1">; grain distribution (0=periodic, 1=scattered)</span>
+i<span class="n">speed</span>			<span class="o">=</span> <span class="vi">p4</span>		<span class="c1">; 1 = original speed </span>
+i<span class="n">grainrate</span>		<span class="o">=</span> <span class="vi">p5</span>		<span class="c1">; grain rate</span>
+i<span class="n">grainsize</span>		<span class="o">=</span> <span class="vi">p6</span>		<span class="c1">; grain size in ms</span>
+i<span class="n">cent</span>			<span class="o">=</span> <span class="vi">p7</span>		<span class="c1">; transposition in cent</span>
+i<span class="n">posrand</span>		<span class="o">=</span> <span class="vi">p8</span>		<span class="c1">; time position randomness (offset) of the pointer in ms</span>
+i<span class="n">centrand</span>		<span class="o">=</span> <span class="vi">p9</span>		<span class="c1">; transposition randomness in cents</span>
+i<span class="n">pan</span>			<span class="o">=</span> <span class="vi">p10</span>		<span class="c1">; panning narrow (0) to wide (1)</span>
+i<span class="n">dist</span>			<span class="o">=</span> <span class="vi">p11</span>		<span class="c1">; grain distribution (0=periodic, 1=scattered)</span>
 
 <span class="cm">/*get length of source wave file, needed for both transposition and time pointer*/</span>
 i<span class="n">filen</span>			<span class="nb">tableng</span>	gi<span class="n">File</span>
@@ -603,12 +603,12 @@ k<span class="n">wavekey4</span>		<span class="o">=</span> k<span class="n">wave
 <span class="cm">/* maximum number of grains per k-period*/</span>
 i<span class="n">max_grains</span>		<span class="o">=</span> <span class="mi">100</span>		
 
-a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>		<span class="nb">partikkel</span> i<span class="n">grainrate</span><span class="p">,</span> i<span class="n">dist</span><span class="p">,</span> gi<span class="n">Disttab</span><span class="p">,</span> a<span class="n">sync</span><span class="p">,</span> k<span class="n">env2amt</span><span class="p">,</span> i<span class="n">env2tab</span><span class="p">,</span> \
-		i<span class="n">env_attack</span><span class="p">,</span> i<span class="n">env_decay</span><span class="p">,</span> k<span class="n">sustain_amount</span><span class="p">,</span> k<span class="n">a_d_ratio</span><span class="p">,</span> i<span class="n">grainsize</span><span class="p">,</span> k<span class="n">amp</span><span class="p">,</span> i<span class="n">gainmasks</span><span class="p">,</span> \
-		k<span class="n">wavfreq</span><span class="p">,</span> k<span class="n">sweepshape</span><span class="p">,</span> i<span class="n">wavfreqstarttab</span><span class="p">,</span> i<span class="n">wavfreqendtab</span><span class="p">,</span> a<span class="n">wavfm</span><span class="p">,</span> \
-		i<span class="n">fmamptab</span><span class="p">,</span> k<span class="n">fmenv</span><span class="p">,</span> i<span class="n">cosine</span><span class="p">,</span> k<span class="n">TrainCps</span><span class="p">,</span> k<span class="n">numpartials</span><span class="p">,</span> \
-		k<span class="n">chroma</span><span class="p">,</span> i<span class="n">channelmasks</span><span class="p">,</span> k<span class="n">randommask</span><span class="p">,</span> k<span class="n">waveform1</span><span class="p">,</span> k<span class="n">waveform2</span><span class="p">,</span> k<span class="n">waveform3</span><span class="p">,</span> k<span class="n">waveform4</span><span class="p">,</span> \
-		i<span class="n">waveamptab</span><span class="p">,</span> a<span class="n">samplepos1</span><span class="p">,</span> a<span class="n">samplepos2</span><span class="p">,</span> a<span class="n">samplepos3</span><span class="p">,</span> a<span class="n">samplepos4</span><span class="p">,</span> \
+a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>		<span class="nb">partikkel</span> i<span class="n">grainrate</span><span class="p">,</span> i<span class="n">dist</span><span class="p">,</span> gi<span class="n">Disttab</span><span class="p">,</span> a<span class="n">sync</span><span class="p">,</span> k<span class="n">env2amt</span><span class="p">,</span> i<span class="n">env2tab</span><span class="p">,</span> <span class="w">\</span>
+		i<span class="n">env_attack</span><span class="p">,</span> i<span class="n">env_decay</span><span class="p">,</span> k<span class="n">sustain_amount</span><span class="p">,</span> k<span class="n">a_d_ratio</span><span class="p">,</span> i<span class="n">grainsize</span><span class="p">,</span> k<span class="n">amp</span><span class="p">,</span> i<span class="n">gainmasks</span><span class="p">,</span> <span class="w">\</span>
+		k<span class="n">wavfreq</span><span class="p">,</span> k<span class="n">sweepshape</span><span class="p">,</span> i<span class="n">wavfreqstarttab</span><span class="p">,</span> i<span class="n">wavfreqendtab</span><span class="p">,</span> a<span class="n">wavfm</span><span class="p">,</span> <span class="w">\</span>
+		i<span class="n">fmamptab</span><span class="p">,</span> k<span class="n">fmenv</span><span class="p">,</span> i<span class="n">cosine</span><span class="p">,</span> k<span class="n">TrainCps</span><span class="p">,</span> k<span class="n">numpartials</span><span class="p">,</span> <span class="w">\</span>
+		k<span class="n">chroma</span><span class="p">,</span> i<span class="n">channelmasks</span><span class="p">,</span> k<span class="n">randommask</span><span class="p">,</span> k<span class="n">waveform1</span><span class="p">,</span> k<span class="n">waveform2</span><span class="p">,</span> k<span class="n">waveform3</span><span class="p">,</span> k<span class="n">waveform4</span><span class="p">,</span> <span class="w">\</span>
+		i<span class="n">waveamptab</span><span class="p">,</span> a<span class="n">samplepos1</span><span class="p">,</span> a<span class="n">samplepos2</span><span class="p">,</span> a<span class="n">samplepos3</span><span class="p">,</span> a<span class="n">samplepos4</span><span class="p">,</span> <span class="w">\</span>
 		k<span class="n">wavekey1</span><span class="p">,</span> k<span class="n">wavekey2</span><span class="p">,</span> k<span class="n">wavekey3</span><span class="p">,</span> k<span class="n">wavekey4</span><span class="p">,</span> i<span class="n">max_grains</span>
 
 		<span class="nb">outs</span>			a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>
@@ -647,13 +647,13 @@ a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>		<sp
       Here is an example of using panning laws with channelmasks in partikkel. It uses the file <a class="ulink" href="examples/partikkel-panlaws.csd.html" target="_top"> (click here to play) <em class="citetitle">partikkel-panlaws.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm158652"></a>
+          <a id="idm157402"></a>
           <p class="title">
             <strong>Example 682. Example with panning laws with channel masks.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm158654"></a>
+              <a id="idm157404"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -722,7 +722,7 @@ a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span><span 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm158995"></a>
+        <a id="idm157745"></a>
         <h2>See Also</h2>
         <p><a class="link" href="fof.html" title="fof"><em class="citetitle">fof</em></a>,
       <a class="link" href="fof2.html" title="fof2"><em class="citetitle">fof2</em></a>,
@@ -741,7 +741,7 @@ a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span><span 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm159026"></a>
+        <a id="idm157776"></a>
         <h2>Credits</h2>
         <p>
       </p>

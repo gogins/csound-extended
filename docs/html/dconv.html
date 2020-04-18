@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm50438"></a>
+        <a id="idm49967"></a>
         <h2>Description</h2>
         <p>
       A direct convolution opcode.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm50441"></a>
+        <a id="idm49970"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>dconv</strong></span> asig, isize, ifn</pre>
       </div>
       <div class="refsect1">
-        <a id="idm50445"></a>
+        <a id="idm49974"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>isize</em></span> -- the size of the convolution buffer to use. If the buffer size is smaller than the size of <span class="emphasis"><em>ifn</em></span>, then only the first <span class="emphasis"><em>isize</em></span> values will be used from the table.
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm50453"></a>
+        <a id="idm49982"></a>
         <h2>Performance</h2>
         <p>
       Rather than the analysis/resynthesis method of the <span class="emphasis"><em>convolve</em></span> opcode, <span class="emphasis"><em>dconv</em></span> uses direct convolution to create the result.  For small tables it can do this quite efficiently, however larger table require much more time to run. <span class="emphasis"><em>dconv</em></span> does (<span class="emphasis"><em>isize</em></span> * <span class="emphasis"><em>ksmps</em></span>) multiplies on every k-cycle. Therefore, reverb and delay effects are best done with other opcodes (unless the times are short).
@@ -71,21 +71,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm50463"></a>
+        <a id="idm49992"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the dconv opcode. It uses the file <a class="ulink" href="examples/dconv.csd.html" target="_top"> (click here to play) <em class="citetitle">dconv.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm50468"></a>
+          <a id="idm49997"></a>
           <p class="title">
             <strong>Example 193. Example of the dconv opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm50475"></a>
+              <a id="idm50004"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -102,14 +102,14 @@
 <span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">1</span>
  
-<span class="cp">#define</span> <span class="cp">RANDI</span>(<span class="cp">A</span><span class="p">)</span> <span class="p">#</span><span class="cp">kout  randi   1, kfq, $A*.001+iseed, 1
+<span class="cp">#define</span> <span class="cp">RANDI</span><span class="p">(</span><span class="cp">A</span><span class="p">)</span> <span class="p">#</span><span class="cp">kout  randi   1, kfq, $A*.001+iseed, 1
         tablew  kout, $A, itable</span><span class="p">#</span>
  
 <span class="kd">instr</span> <span class="nf">1</span>
 i<span class="n">table</span>  <span class="nb">init</span>    <span class="mi">1</span>
 i<span class="n">seed</span>   <span class="nb">init</span>    <span class="mf">.6</span>
 i<span class="n">size</span>   <span class="nb">init</span>    <span class="nb">ftlen</span><span class="p">(</span>i<span class="n">table</span><span class="p">)</span>
-k<span class="n">fq</span>     <span class="nb">line</span>    <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">10</span>
+k<span class="n">fq</span>     <span class="nb">line</span>    <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">10</span>
  
 <span class="cp">$RANDI</span><span class="p">(</span><span class="cp">0</span><span class="p">)</span>
 <span class="cp">$RANDI</span><span class="p">(</span><span class="cp">1</span><span class="p">)</span>
@@ -154,7 +154,7 @@ a<span class="n">sig</span>    <span class="nb">dconv</span>   a<span class="n">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm50629"></a>
+        <a id="idm50159"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="pconvolve.html" title="pconvolve"><em class="citetitle">pconvolve</em></a>,
@@ -163,7 +163,7 @@ a<span class="n">sig</span>    <span class="nb">dconv</span>   a<span class="n">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm50638"></a>
+        <a id="idm50168"></a>
         <h2>Credits</h2>
         <p>
       </p>

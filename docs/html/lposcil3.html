@@ -39,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm124094"></a>
+        <a id="idm124208"></a>
         <h2>Description</h2>
         <p>
       Read sampled sound (mono or stereo) from a table, with looping, and high precision. <span class="emphasis"><em>lposcil3</em></span> uses cubic interpolation.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm124098"></a>
+        <a id="idm124212"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>lposcil3</strong></span> kamp, kfreqratio, kloop, kend, ifn [, iphs]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm124102"></a>
+        <a id="idm124216"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- function table number
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm124106"></a>
+        <a id="idm124220"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- amplitude
@@ -77,21 +77,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm124120"></a>
+        <a id="idm124234"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the lposcil3 opcode. It uses the file <a class="ulink" href="examples/lposcil3.csd.html" target="_top"> (click here to play) <em class="citetitle">lposcil3.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm124125"></a>
+          <a id="idm124239"></a>
           <p class="title">
-            <strong>Example 516. Example of the lposcil3 opcode.</strong>
+            <strong>Example 517. Example of the lposcil3 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm124132"></a>
+              <a id="idm124246"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -112,7 +112,7 @@
 
 k<span class="n">cps</span>  <span class="o">=</span> <span class="mf">1.5</span>			<span class="c1">; a fifth up</span>
 k<span class="n">loop</span> <span class="o">=</span> <span class="mi">0</span>			<span class="c1">; loop start time (in samples)</span>
-k<span class="n">end</span> <span class="nb">line</span> <span class="mi">45000</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">10000</span>	<span class="c1">; vary loop end time (in samples)</span>
+k<span class="n">end</span> <span class="nb">line</span> <span class="mi">45000</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">10000</span>	<span class="c1">; vary loop end time (in samples)</span>
 
 a<span class="n">sig</span> <span class="nb">lposcil3</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> k<span class="n">loop</span><span class="p">,</span> k<span class="n">end</span><span class="p">,</span> <span class="mi">1</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
@@ -139,14 +139,14 @@ a<span class="n">sig</span> <span class="nb">lposcil3</span> <span class="mi">1<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm124211"></a>
+        <a id="idm124325"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="lposcil.html" title="lposcil"><em class="citetitle">lposcil</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm124216"></a>
+        <a id="idm124330"></a>
         <h2>Credits</h2>
         <p>
       </p>

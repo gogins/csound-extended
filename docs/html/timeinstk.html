@@ -39,21 +39,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm227705"></a>
+        <a id="idm227326"></a>
         <h2>Description</h2>
         <p>
     	Read absolute time, in k-rate cycles, since the start of an
     	instance of an instrument. Called at both i-time as well as
-    	k-time.
+    	k-time. NB: the returned value at k-time starts at 1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm227708"></a>
+        <a id="idm227329"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kres <span class="command"><strong>timeinstk</strong></span></pre>
       </div>
       <div class="refsect1">
-        <a id="idm227712"></a>
+        <a id="idm227333"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>timeinstk</em></span> is for time in k-rate cycles. So with:
@@ -77,21 +77,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm227731"></a>
+        <a id="idm227352"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the timeinstk opcode. It uses the file <a class="ulink" href="examples/timeinstk.csd.html" target="_top"> (click here to play) <em class="citetitle">timeinstk.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm227736"></a>
+          <a id="idm227357"></a>
           <p class="title">
-            <strong>Example 1029. Example of the timeinstk opcode.</strong>
+            <strong>Example 1032. Example of the timeinstk opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm227743"></a>
+              <a id="idm227364"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -113,7 +113,7 @@
 <span class="kd">instr</span> <span class="nf">1</span>
   <span class="c1">; Print out the value from timeinstk every half-second.</span>
   k<span class="n">1</span> <span class="nb">timeinstk</span>
-  <span class="nb">printks</span> <span class="s">"k1 = %f samples</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> k<span class="n">1</span>
+  <span class="nb">printks</span> <span class="s">"k1 = </span><span class="si">%f</span><span class="s"> samples</span><span class="se">\\n</span><span class="s">"</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> k<span class="n">1</span>
 <span class="kd">endin</span>
 
 
@@ -146,14 +146,17 @@ k1 = 8820.000000 samples
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm227793"></a>
+        <a id="idm227416"></a>
         <h2>See Also</h2>
         <p>
-      <a class="link" href="timeinsts.html" title="timeinsts"><em class="citetitle">timeinsts</em></a>, <a class="link" href="timek.html" title="timek"><em class="citetitle">timek</em></a>, <a class="link" href="times.html" title="times"><em class="citetitle">times</em></a>
+      <a class="link" href="timeinsts.html" title="timeinsts"><em class="citetitle">timeinsts</em></a>, 
+      <a class="link" href="timek.html" title="timek"><em class="citetitle">timek</em></a>, 
+      <a class="link" href="times.html" title="times"><em class="citetitle">times</em></a>,
+      <a class="link" href="lastcycle.html" title="lastcycle"><em class="citetitle">lastcycle</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm227802"></a>
+        <a id="idm227427"></a>
         <h2>Credits</h2>
         <p>
       </p>

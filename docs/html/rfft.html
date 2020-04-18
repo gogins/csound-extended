@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm189053"></a>
+        <a id="idm188345"></a>
         <h2>Description</h2>
         <p>
        Applies a forward Fast Fourier Transform to a real-value input 1-dimensional array. The output is another array 
@@ -50,12 +50,12 @@ position (kin[1] and kin[input_size+1] will be 0].
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm189056"></a>
+        <a id="idm188348"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout[] <span class="command"><strong>rfft</strong></span> kin[]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm189060"></a>
+        <a id="idm188352"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kout[]</em></span> -- output array containing the transform. It will be created if it does not exist.
@@ -65,19 +65,19 @@ position (kin[1] and kin[input_size+1] will be 0].
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm189066"></a>
+        <a id="idm188358"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the rfft opcode. It uses the file <a class="ulink" href="examples/rfft.csd.html" target="_top"> (click here to play) <em class="citetitle">rfft.csd</em></a>.</p>
         <div class="example">
-          <a id="idm189071"></a>
+          <a id="idm188363"></a>
           <p class="title">
-            <strong>Example 854. Example of the rfft opcode.</strong>
+            <strong>Example 856. Example of the rfft opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm189078"></a>
+              <a id="idm188370"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 
@@ -105,7 +105,7 @@ position (kin[1] and kin[input_size+1] will be 0].
  k<span class="n">Out</span><span class="p">[][]</span> <span class="nb">init</span> i<span class="n">olaps</span><span class="p">,</span> i<span class="n">fftsize</span> <span class="c1">; output buffers</span>
 
  a<span class="n">1</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span> <span class="c1">; audio input</span>
- k<span class="n">s</span>  <span class="nb">expon</span>  <span class="mi">100</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1000</span>
+ k<span class="n">s</span>  <span class="nb">expon</span>  <span class="mi">100</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1000</span>
  a<span class="n">sw</span> <span class="nb">vco2</span>  <span class="mf">0.15</span><span class="p">,</span> k<span class="n">s</span>
 
  <span class="cm">/* every hopsize samples */</span>
@@ -163,7 +163,7 @@ position (kin[1] and kin[input_size+1] will be 0].
         <br class="example-break" />
       </div>
       <div class="refsect1">
-        <a id="idm189287"></a>
+        <a id="idm188579"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vectorial.html" title="Vectorial Opcodes"><em class="citetitle"></em>Vectorial opcodes</a>,
@@ -171,7 +171,7 @@ position (kin[1] and kin[input_size+1] will be 0].
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm189294"></a>
+        <a id="idm188586"></a>
         <h2>Credits</h2>
         <p>
       </p>

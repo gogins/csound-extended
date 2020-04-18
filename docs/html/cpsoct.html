@@ -39,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm46275"></a>
+        <a id="idm45786"></a>
         <h2>Description</h2>
         <p>
       Converts an octave-point-decimal value to cycles-per-second.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm46278"></a>
+        <a id="idm45789"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>cpsoct</strong></span> (oct)  (no rate restriction)</pre>
         <p>
@@ -54,7 +54,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm46283"></a>
+        <a id="idm45794"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>cpsoct</em></span> and its related opcodes are really <span class="emphasis"><em>value converters</em></span> with a special function of manipulating pitch data.
@@ -63,7 +63,7 @@
       Data concerning pitch and frequency can exist in any of the following forms:
     </p>
         <div class="table">
-          <a id="idm46289"></a>
+          <a id="idm45800"></a>
           <p class="title">
             <strong>Table 7. Pitch and Frequency Values</strong>
           </p>
@@ -129,21 +129,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm46331"></a>
+        <a id="idm45842"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the cpsoct opcode. It uses the file <a class="ulink" href="examples/cpsoct.csd.html" target="_top"> (click here to play) <em class="citetitle">cpsoct.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm46336"></a>
+          <a id="idm45847"></a>
           <p class="title">
             <strong>Example 167. Example of the cpsoct opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm46343"></a>
+              <a id="idm45854"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -162,7 +162,7 @@
 
 <span class="kd">instr</span> <span class="nf">1</span> <span class="c1">; Convert octave-point-decimal value into Hz</span>
 
-i<span class="n">oct</span> <span class="o">=</span>	<span class="nb">p4</span>
+i<span class="n">oct</span> <span class="o">=</span>	<span class="vi">p4</span>
 i<span class="n">cps</span> <span class="o">=</span>	<span class="nb">cpsoct</span><span class="p">(</span>i<span class="n">oct</span><span class="p">)</span>
 	<span class="nb">print</span> i<span class="n">cps</span>
 a<span class="n">sig</span>	<span class="nb">oscil</span> <span class="mf">0.7</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> <span class="mi">1</span>
@@ -201,7 +201,7 @@ instr 1:  icps = 80.521
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm46425"></a>
+        <a id="idm45936"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cpspch.html" title="cpspch"><em class="citetitle">cpspch</em></a>,

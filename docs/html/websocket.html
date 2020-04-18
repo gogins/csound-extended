@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm251495"></a>
+        <a id="idm251127"></a>
         <h2>Description</h2>
         <p>Plugin opcode in websocketIO.</p>
         <p>
@@ -47,19 +47,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm251501"></a>
+        <a id="idm251133"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">xout1[, xout2, xout3, ..., xoutN] <span class="command"><strong>websocket</strong></span> iport, xin</pre>
       </div>
       <div class="refsect1">
-        <a id="idm251505"></a>
+        <a id="idm251137"></a>
         <h2>Initialization</h2>
         <p>
         <span class="emphasis"><em>iport</em></span> the local web port to read/write data.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm251509"></a>
+        <a id="idm251141"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xout1,... xoutN</em></span> -- The output variables which contain data received from a websocket. On the web side the websocket must send data using a protocol name that matches the output variable name e.g. "ksignal" for a k-rate variable. If an array is intended to be received from a websocket it must be first initialised before being used as an output to the opcode. Otherwise the opcode doesn't know what size data to expect from the websocket. When sending data to a websocket from the web page it must be sent as a 32 or 64 bit array, depending on the build of Csound that is being used. 
@@ -93,21 +93,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm251520"></a>
+        <a id="idm251152"></a>
         <h2>Examples</h2>
         <p>
       Here is a simple example of the websocket opcode. It uses the file <a class="ulink" href="examples/websocket.csd.html" target="_top"> (click here to play) <em class="citetitle">websocket.csd</em></a> and <a class="ulink" href="examples/websocket.html" target="_top"><em class="citetitle">websocket.html</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm251527"></a>
+          <a id="idm251159"></a>
           <p class="title">
-            <strong>Example 1133. Example of the websocket opcode.</strong>
+            <strong>Example 1136. Example of the websocket opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm251534"></a>
+              <a id="idm251166"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -124,7 +124,7 @@
 <span class="kd">instr</span> <span class="nf">1</span>
     k<span class="n">lfo</span> <span class="nb">lfo</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
     i<span class="n">port</span> <span class="nb">init</span> <span class="mi">8888</span>
-    k<span class="n">input</span> w<span class="n">ebsocket</span> i<span class="n">port</span><span class="p">,</span> k<span class="n">lfo</span>
+    k<span class="n">input</span> <span class="nb">websocket</span> i<span class="n">port</span><span class="p">,</span> k<span class="n">lfo</span>
     <span class="nb">printk2</span> k<span class="n">input</span>
 <span class="kd">endin</span>
 
@@ -140,7 +140,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm251581"></a>
+        <a id="idm251213"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="OSClisten.html" title="OSClisten"><em class="citetitle">OSClisten</em></a>
@@ -148,7 +148,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm251588"></a>
+        <a id="idm251220"></a>
         <h2>Credits</h2>
         <p>
       </p>

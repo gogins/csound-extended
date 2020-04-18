@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm156943"></a>
+        <a id="idm155681"></a>
         <h2>Description</h2>
         <p>
       Distribute an audio signal across two channels with a choice of methods.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm156946"></a>
+        <a id="idm155684"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">a1, a2 <span class="command"><strong>pan2</strong></span> asig, xp [, imode]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm156950"></a>
+        <a id="idm155688"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imode</em></span> (optional) -- mode of the stereo
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm156954"></a>
+        <a id="idm155692"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>pan2</em></span> takes an input
@@ -73,20 +73,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm156961"></a>
+        <a id="idm155699"></a>
         <h2>Example</h2>
         <p>
       Here is an example of the pan2 opcodes. It uses the file <a class="ulink" href="examples/pan2.csd.html" target="_top"> (click here to play) <em class="citetitle">pan2.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm156966"></a>
+          <a id="idm155704"></a>
           <p class="title">
             <strong>Example 676. Example of the pan2 opcodes.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm156973"></a>
+              <a id="idm155711"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -107,7 +107,7 @@ gi<span class="n">Sine</span> <span class="nb">ftgen</span> <span class="mi">0</
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">line</span>	<span class="nb">line</span>	<span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>     <span class="c1">; straight line</span>
+k<span class="n">line</span>	<span class="nb">line</span>	<span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1</span>     <span class="c1">; straight line</span>
 a<span class="n">in</span>	<span class="nb">oscili</span>	<span class="mf">.6</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> gi<span class="n">Sine</span> <span class="c1">; audio signal..</span>
 a<span class="n">L</span><span class="p">,</span>a<span class="n">R</span>	<span class="nb">pan2</span>	a<span class="n">in</span><span class="p">,</span> k<span class="n">line</span>   <span class="c1">; sent across image</span>
 	<span class="nb">outs</span>	a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>
@@ -127,7 +127,7 @@ a<span class="n">L</span><span class="p">,</span>a<span class="n">R</span>	<span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm157049"></a>
+        <a id="idm155787"></a>
         <h2>Credits</h2>
         <p>
       </p>

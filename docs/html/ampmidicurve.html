@@ -41,7 +41,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm25399"></a>
+        <a id="idm24479"></a>
         <h2>Description</h2>
         <p>Plugin opcode in ampmidid.</p>
         <p>
@@ -53,13 +53,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm25403"></a>
+        <a id="idm24483"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">igain <span class="command"><strong>ampmidicurve</strong></span> ivelocity, idynamicrange, iexponent</pre>
         <pre class="synopsis">kgain <span class="command"><strong>ampmidicurve</strong></span> kvelocity, kdynamicrange, kexponent</pre>
       </div>
       <div class="refsect1">
-        <a id="idm25409"></a>
+        <a id="idm24489"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imidivelocity </em></span> -- MIDI velocity number, ranging from
@@ -75,7 +75,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm25417"></a>
+        <a id="idm24497"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kmidivelocity </em></span> -- MIDI velocity number, ranging from
@@ -105,20 +105,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm25426"></a>
+        <a id="idm24506"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the ampmidicurve opcode. It uses the file <a class="ulink" href="examples/ampmidicurve.csd.html" target="_top"> (click here to play) <em class="citetitle">ampmidicurve.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm25431"></a>
+          <a id="idm24511"></a>
           <p class="title">
             <strong>Example 55. Example of the ampmidicurve opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm25438"></a>
+              <a id="idm24518"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -142,12 +142,12 @@
 
 i<span class="n">sine</span> <span class="nb">ftgenonce</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">;sine wave</span>
 
-  i<span class="n">hz</span> <span class="o">=</span> <span class="nb">cpsmidinn</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
-  i<span class="n">velocity</span> <span class="o">=</span> <span class="nb">p5</span>
+  i<span class="n">hz</span> <span class="o">=</span> <span class="nb">cpsmidinn</span><span class="p">(</span><span class="vi">p4</span><span class="p">)</span>
+  i<span class="n">velocity</span> <span class="o">=</span> <span class="vi">p5</span>
   <span class="c1">; MIDI velocity to signal amplitude.</span>
   i<span class="n">amplitude</span> <span class="o">=</span> <span class="nb">ampdb</span><span class="p">(</span>i<span class="n">velocity</span><span class="p">)</span>
   <span class="c1">; Gain with compressed dynamic range, soft knee.</span>
-  i<span class="n">gain</span> a<span class="n">mpmidicurve</span> i<span class="n">velocity</span><span class="p">,</span> <span class="mf">.92</span><span class="p">,</span> <span class="mi">3</span>
+  i<span class="n">gain</span> <span class="nb">ampmidicurve</span> i<span class="n">velocity</span><span class="p">,</span> <span class="mf">.92</span><span class="p">,</span> <span class="mi">3</span>
   <span class="nb">print</span> i<span class="n">velocity</span><span class="p">,</span> i<span class="n">amplitude</span><span class="p">,</span> i<span class="n">gain</span>
   a<span class="n">1</span>   <span class="nb">oscili</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">hz</span><span class="p">,</span> i<span class="n">sine</span>
   a<span class="n">env</span> <span class="nb">madsr</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.2</span>
@@ -172,7 +172,7 @@ i<span class="n">sine</span> <span class="nb">ftgenonce</span> <span class="mi">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm25556"></a>
+        <a id="idm24636"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="aftouch.html" title="aftouch"><em class="citetitle">aftouch</em></a>,
@@ -189,7 +189,7 @@ i<span class="n">sine</span> <span class="nb">ftgenonce</span> <span class="mi">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm25581"></a>
+        <a id="idm24661"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -198,7 +198,7 @@ i<span class="n">sine</span> <span class="nb">ftgenonce</span> <span class="mi">
             <td>Author: Michael Gogins</td>
           </tr>
           <tr>
-            <td>2006</td>
+            <td>2019</td>
           </tr>
         </table>
         <p>

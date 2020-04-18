@@ -39,26 +39,26 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm261303"></a>
+        <a id="idm260953"></a>
         <h2>Description</h2>
         <p>
       Writes to a zk variable at k-rate with mixing.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm261306"></a>
+        <a id="idm260956"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>zkwm</strong></span> ksig, kndx [, imix]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm261310"></a>
+        <a id="idm260960"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imix</em></span> (optional, default=1) -- indicates if mixing should occur.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm261314"></a>
+        <a id="idm260964"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ksig</em></span> -- value to be written to the zk location.
@@ -77,21 +77,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm261335"></a>
+        <a id="idm260985"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the zkwm opcode. It uses the file <a class="ulink" href="examples/zkwm.csd.html" target="_top"> (click here to play) <em class="citetitle">zkwm.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm261340"></a>
+          <a id="idm260990"></a>
           <p class="title">
-            <strong>Example 1178. Example of the zkwm opcode.</strong>
+            <strong>Example 1181. Example of the zkwm opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm261347"></a>
+              <a id="idm260997"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -117,7 +117,7 @@
 <span class="kd">instr</span> <span class="nf">1</span>
   <span class="c1">; Generate a k-rate signal.</span>
   <span class="c1">; The signal goes from 30 to 20,000 then back to 30.</span>
-  k<span class="n">ramp</span> <span class="nb">linseg</span> <span class="mi">30</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">20000</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">30</span>
+  k<span class="n">ramp</span> <span class="nb">linseg</span> <span class="mi">30</span><span class="p">,</span> <span class="vi">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">20000</span><span class="p">,</span> <span class="vi">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">30</span>
 
   <span class="c1">; Mix the signal into the zk variable #1.</span>
   <span class="nb">zkwm</span> k<span class="n">ramp</span><span class="p">,</span> <span class="mi">1</span>
@@ -176,7 +176,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm261472"></a>
+        <a id="idm261122"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="zaw.html" title="zaw"><em class="citetitle">zaw</em></a>,
@@ -189,7 +189,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm261489"></a>
+        <a id="idm261139"></a>
         <h2>Credits</h2>
         <p>
       </p>

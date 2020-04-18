@@ -38,19 +38,19 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm28845"></a>
+        <a id="idm27943"></a>
         <h2>Description</h2>
         <p>
             <span class="emphasis"><em>ATSreadnz</em></span> returns the energy (<span class="emphasis"><em>kenergy</em></span>) of a user specified noise band (1-25 bands) at the time indicated by the time pointer <span class="emphasis"><em>ktimepnt</em></span>.
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm28851"></a>
+        <a id="idm27949"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kenergy <span class="command"><strong>ATSreadnz</strong></span> ktimepnt, iatsfile, iband</pre>
       </div>
       <div class="refsect1">
-        <a id="idm28855"></a>
+        <a id="idm27953"></a>
         <h2>Initialization</h2>
         <p>
             <span class="emphasis"><em>iatsfile</em></span> – the ATS number (n in ats.n) or the name in quotes of the analysis file made using <a class="ulink" href="http://www-ccrma.stanford.edu/~juan/ATS.html" target="_top"><em class="citetitle">ATS</em></a>.
@@ -60,7 +60,7 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm28863"></a>
+        <a id="idm27961"></a>
         <h2>Performance</h2>
         <p>
             <span class="emphasis"><em>kenergy</em></span> outputs the linearly interpolated energy of the noise band indicated in <span class="emphasis"><em>iband</em></span>. The output is dependent on the data in the analysis file and the <span class="emphasis"><em>ktimepnt</em></span>.
@@ -72,7 +72,7 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm28881"></a>
+        <a id="idm27979"></a>
         <h2>Examples</h2>
         <pre class="programlisting">
   ktime   <span class="opc">line</span>      2.5, p3, 0
@@ -87,20 +87,20 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm28897"></a>
+        <a id="idm27995"></a>
         <h2>Examples</h2>
         <p>
       Here is another example of the ATSreadnz opcode. It uses the file <a class="ulink" href="examples/ATSreadnz.csd.html" target="_top"> (click here to play) <em class="citetitle">ATSreadnz.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm28902"></a>
+          <a id="idm28000"></a>
           <p class="title">
             <strong>Example 73. Another example of the ATSreadnz opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm28904"></a>
+              <a id="idm28002"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -119,7 +119,7 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; "beats.ats" is created by atsa</span>
 
-k<span class="n">time</span>	<span class="nb">line</span>	<span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">2</span>
+k<span class="n">time</span>	<span class="nb">line</span>	<span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">2</span>
 k<span class="n">energy</span>	<span class="nb">ATSreadnz</span> k<span class="n">time</span><span class="p">,</span> <span class="s">"beats.ats"</span><span class="p">,</span> <span class="mi">2</span>
 a<span class="n">noise</span>	<span class="nb">randi</span>	k<span class="n">energy</span><span class="p">,</span> <span class="mi">500</span>
 a<span class="n">out</span>	<span class="nb">oscili</span>	<span class="mf">0.005</span><span class="p">,</span> <span class="mi">455</span><span class="p">,</span> <span class="mi">1</span>
@@ -145,7 +145,7 @@ a<span class="n">out</span>	<span class="o">=</span>	a<span class="n">out</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm28983"></a>
+        <a id="idm28081"></a>
         <h2>See also</h2>
         <p><a class="link" href="ATSread.html" title="ATSread"><em class="citetitle">ATSread</em></a>, 
             <a class="link" href="ATSinfo.html" title="ATSinfo"><em class="citetitle">ATSinfo</em></a>, 
@@ -158,7 +158,7 @@ a<span class="n">out</span>	<span class="o">=</span>	a<span class="n">out</span>
             <a class="link" href="ATSsinnoi.html" title="ATSsinnoi"><em class="citetitle">ATSsinnoi</em></a></p>
       </div>
       <div class="refsect1">
-        <a id="idm29004"></a>
+        <a id="idm28102"></a>
         <h2>Credits</h2>
         <p>
             </p>

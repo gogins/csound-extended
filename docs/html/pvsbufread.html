@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm175846"></a>
+        <a id="idm174994"></a>
         <h2>Description</h2>
         <p>
       This opcode reads from a circular buffer of length ilen (secs),
@@ -50,12 +50,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm175850"></a>
+        <a id="idm174998"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>pvsbufread</strong></span>  ktime, khandle[, ilo, ihi, iclear] </pre>
       </div>
       <div class="refsect1">
-        <a id="idm175854"></a>
+        <a id="idm175002"></a>
         <h2>Initialisation</h2>
         <p>
       <span class="emphasis"><em>ilo, ihi</em></span> -- set the lowest and highest freqs to be read from the buffer (defaults to 0, Nyquist).
@@ -66,7 +66,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm175862"></a>
+        <a id="idm175010"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>fsig</em></span> -- output pv stream
@@ -115,15 +115,15 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm175885"></a>
+        <a id="idm175033"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the pvsbufread opcode. It does 'brassage' by switching between two buffers.
       </p>
         <div class="example">
-          <a id="idm175888"></a>
+          <a id="idm175036"></a>
           <p class="title">
-            <strong>Example 763. Example of the pvsbufread opcode</strong>
+            <strong>Example 765. Example of the pvsbufread opcode</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
@@ -152,14 +152,14 @@ fsb         <span class="opc">pvsbufread</span>  kt1, khan   <span class="commen
       Here is an example of the pvsbufread opcode. It uses the file <a class="ulink" href="examples/pvsbufread.csd.html" target="_top"> (click here to play) <em class="citetitle">pvsbufread.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm175917"></a>
+          <a id="idm175065"></a>
           <p class="title">
-            <strong>Example 764. Example of the pvsbufread opcode.</strong>
+            <strong>Example 766. Example of the pvsbufread opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm175924"></a>
+              <a id="idm175072"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -188,9 +188,9 @@ k<span class="n">cycles</span>	<span class="o">=</span>		i<span class="n">len</s
 k<span class="n">count</span>		<span class="nb">init</span>		<span class="mi">0</span>
 <span class="nl">loop</span><span class="p">:</span>
 a<span class="n">in</span>		<span class="nb">soundin</span>	S<span class="n">file</span>
-<span class="n">fftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span>
-i<span class="n">buf</span><span class="p">,</span> k<span class="n">tim</span>	<span class="nb">pvsbuffer</span>	<span class="n">fftin</span><span class="p">,</span> i<span class="n">len</span> <span class="o">+</span> <span class="p">(</span>i<span class="n">fftsize</span> <span class="o">/</span> <span class="vg">sr</span><span class="p">)</span>
-		<span class="k">loop_lt</span>	k<span class="n">count</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">cycles</span><span class="p">,</span> <span class="nl">loop</span>
+f<span class="n">ftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span>
+i<span class="n">buf</span><span class="p">,</span> k<span class="n">tim</span>	<span class="nb">pvsbuffer</span>	f<span class="n">ftin</span><span class="p">,</span> i<span class="n">len</span> <span class="o">+</span> <span class="p">(</span>i<span class="n">fftsize</span> <span class="o">/</span> <span class="vg">sr</span><span class="p">)</span>
+		<span class="kp">loop_lt</span>	k<span class="n">count</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">cycles</span><span class="p">,</span> <span class="nl">loop</span>
 		<span class="nb">xout</span>		i<span class="n">buf</span><span class="p">,</span> i<span class="n">len</span><span class="p">,</span> k<span class="n">tim</span>
 <span class="k">endif</span>
 <span class="kd">endop</span>
@@ -202,9 +202,9 @@ i<span class="n">overlap</span>	<span class="o">=</span>		i<span class="n">fftsi
 i<span class="n">winsize</span>	<span class="o">=</span>		i<span class="n">fftsize</span>
 i<span class="n">winshape</span>	<span class="o">=</span>		<span class="mi">1</span><span class="c1">; von-Hann window</span>
 i<span class="n">buffer</span><span class="p">,</span> i<span class="n">len</span><span class="p">,</span> k<span class="n">0</span>		<span class="nf">FileToPvsBuf</span>	<span class="s">"fox.wav"</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span>
-k<span class="n">tmpnt</span>		<span class="nb">linseg</span>		i<span class="n">len</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">0</span><span class="c1">; reads the buffer backwards in p3 seconds</span>
-<span class="n">fread</span> 		<span class="nb">pvsbufread</span>  	k<span class="n">tmpnt</span><span class="p">,</span> i<span class="n">buffer</span>
-a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fread</span>
+k<span class="n">tmpnt</span>		<span class="nb">linseg</span>		i<span class="n">len</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">0</span><span class="c1">; reads the buffer backwards in p3 seconds</span>
+f<span class="n">read</span> 		<span class="nb">pvsbufread</span>  	k<span class="n">tmpnt</span><span class="p">,</span> i<span class="n">buffer</span>
+a<span class="n">out</span>		<span class="nb">pvsynth</span>	f<span class="n">read</span>
 		<span class="nb">out</span>		a<span class="n">out</span>
 <span class="kd">endin</span>
 
@@ -222,7 +222,7 @@ a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fre
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm176089"></a>
+        <a id="idm175237"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvsanal.html" title="pvsanal"><em class="citetitle">pvsanal</em></a>,
@@ -232,7 +232,7 @@ a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fre
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm176100"></a>
+        <a id="idm175248"></a>
         <h2>Credits</h2>
         <p>
       </p>

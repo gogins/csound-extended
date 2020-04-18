@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm163425"></a>
+        <a id="idm162201"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>pdhalfy</em></span> opcode is a variation on the phase distortion synthesis method of the <a class="link" href="pdhalf.html" title="pdhalf"><em class="citetitle">pdhalf</em></a> opcode.  It is useful for distorting a phasor in order to read two unequal portions of a table in the same number of samples.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm163431"></a>
+        <a id="idm162207"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout <span class="command"><strong>pdhalfy</strong></span> ain, kShapeAmount [, ibipolar [, ifullscale]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm163435"></a>
+        <a id="idm162211"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ibipolar</em></span> -- an optional parameter specifying either unipolar (0) or bipolar (1) mode.  Defaults to unipolar mode.
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm163443"></a>
+        <a id="idm162219"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ain</em></span> --  the input signal to be distorted.
@@ -107,20 +107,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm163484"></a>
+        <a id="idm162260"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the pdhalfy opcode. It uses the file <a class="ulink" href="examples/pdhalfy.csd.html" target="_top"> (click here to play) <em class="citetitle">pdhalfy.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm163489"></a>
+          <a id="idm162265"></a>
           <p class="title">
             <strong>Example 699. Example of the pdhalfy opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm163496"></a>
+              <a id="idm162272"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -139,14 +139,14 @@
 
 <span class="kd">instr</span> <span class="nf">5</span>
 
-    i<span class="n">dur</span>        <span class="o">=</span> <span class="nb">p3</span>
-    i<span class="n">amp</span>        <span class="o">=</span> <span class="nb">p4</span>
-    i<span class="n">freq</span>       <span class="o">=</span> <span class="nb">p5</span>
-    i<span class="n">amtinit</span>    <span class="o">=</span> <span class="nb">p6</span>      <span class="c1">; initial amount of phase distortion</span>
-    i<span class="n">att</span>        <span class="o">=</span> <span class="nb">p7</span>      <span class="c1">; attack time</span>
-    i<span class="n">suslvl</span>     <span class="o">=</span> <span class="nb">p8</span>      <span class="c1">; sustain amplitude</span>
-    i<span class="n">distdec</span>    <span class="o">=</span> <span class="nb">p9</span>      <span class="c1">; time for distortion amount to reach zero</span>
-    i<span class="n">table</span>      <span class="o">=</span> <span class="nb">p10</span>
+    i<span class="n">dur</span>        <span class="o">=</span> <span class="vi">p3</span>
+    i<span class="n">amp</span>        <span class="o">=</span> <span class="vi">p4</span>
+    i<span class="n">freq</span>       <span class="o">=</span> <span class="vi">p5</span>
+    i<span class="n">amtinit</span>    <span class="o">=</span> <span class="vi">p6</span>      <span class="c1">; initial amount of phase distortion</span>
+    i<span class="n">att</span>        <span class="o">=</span> <span class="vi">p7</span>      <span class="c1">; attack time</span>
+    i<span class="n">suslvl</span>     <span class="o">=</span> <span class="vi">p8</span>      <span class="c1">; sustain amplitude</span>
+    i<span class="n">distdec</span>    <span class="o">=</span> <span class="vi">p9</span>      <span class="c1">; time for distortion amount to reach zero</span>
+    i<span class="n">table</span>      <span class="o">=</span> <span class="vi">p10</span>
     
     i<span class="n">dec</span>        <span class="o">=</span>  i<span class="n">distdec</span> <span class="o">-</span> i<span class="n">att</span>
     i<span class="n">rel</span>        <span class="o">=</span>  <span class="mf">.05</span>
@@ -199,7 +199,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm163768"></a>
+        <a id="idm162544"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pdhalf.html" title="pdhalf"><em class="citetitle">pdhalf</em></a>,
@@ -208,7 +208,7 @@
         <p> More information about phase distortion on Wikipedia: <a class="ulink" href="http://en.wikipedia.org/wiki/Phase_distortion_synthesis" target="_top"><em class="citetitle">http://en.wikipedia.org/wiki/Phase_distortion_synthesis</em></a></p>
       </div>
       <div class="refsect1">
-        <a id="idm163778"></a>
+        <a id="idm162554"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm88994"></a>
+        <a id="idm88642"></a>
         <h2>Description</h2>
         <p>Plugin opcode in framebuffer.</p>
         <p>
@@ -47,23 +47,23 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm88999"></a>
+        <a id="idm88647"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout[] <span class="command"><strong>framebuffer</strong></span> ain, isize</pre>
       </div>
       <div class="refsect1">
-        <a id="idm89003"></a>
+        <a id="idm88651"></a>
         <pre class="synopsis">aout <span class="command"><strong>framebuffer</strong></span> kin, isize</pre>
       </div>
       <div class="refsect1">
-        <a id="idm89006"></a>
+        <a id="idm88654"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>isize</em></span> -- The amount of samples that the buffer will contain.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm89010"></a>
+        <a id="idm88658"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kout[]</em></span> -- The k-rate array output from the framebuffer.
@@ -75,21 +75,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm89018"></a>
+        <a id="idm88666"></a>
         <h2>Examples</h2>
         <p>
       Here is a simple example of the framebuffer opcode. It uses the file <a class="ulink" href="examples/framebuffer.csd.html" target="_top"> (click here to play) <em class="citetitle">framebuffer.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm89023"></a>
+          <a id="idm88671"></a>
           <p class="title">
             <strong>Example 361. Example of the framebuffer opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm89030"></a>
+              <a id="idm88678"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -106,10 +106,10 @@
     i<span class="n">overlaps</span> <span class="nb">init</span> <span class="mi">4</span>
 
     a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
-    k<span class="n">frame</span><span class="p">[]</span> <span class="n">framebuffer</span> a<span class="n">sig</span><span class="p">,</span> i<span class="n">size</span>
+    k<span class="n">frame</span><span class="p">[]</span> <span class="nb">framebuffer</span> a<span class="n">sig</span><span class="p">,</span> i<span class="n">size</span>
     k<span class="n">windowedFrame</span><span class="p">[]</span> <span class="nb">window</span> k<span class="n">frame</span><span class="p">,</span> i<span class="n">size</span>
 
-    a<span class="n">out</span> <span class="n">olabuffer</span> k<span class="n">windowedFrame</span><span class="p">,</span> i<span class="n">overlaps</span>
+    a<span class="n">out</span> <span class="nb">olabuffer</span> k<span class="n">windowedFrame</span><span class="p">,</span> i<span class="n">overlaps</span>
     a<span class="n">out</span> <span class="o">=</span> a<span class="n">out</span> <span class="o">/</span> <span class="mi">2</span>
 
     <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
@@ -128,7 +128,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm89100"></a>
+        <a id="idm88748"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="olabuffer.html" title="olabuffer"><em class="citetitle">olabuffer</em></a>
@@ -137,7 +137,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm89109"></a>
+        <a id="idm88757"></a>
         <h2>Credits</h2>
         <p>
       </p>

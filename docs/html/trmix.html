@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm232123"></a>
+        <a id="idm231753"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>trmix</em></span> opcode takes two inputs containg TRACKS pv streaming signals (as generated,
@@ -50,12 +50,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm232128"></a>
+        <a id="idm231758"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>trmix</strong></span> fin1, fin2 </pre>
       </div>
       <div class="refsect1">
-        <a id="idm232132"></a>
+        <a id="idm231762"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>fsig</em></span> -- output pv stream in TRACKS format 
@@ -68,20 +68,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm232140"></a>
+        <a id="idm231770"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the trmix opcode. It uses the file <a class="ulink" href="examples/trmix.csd.html" target="_top"> (click here to play) <em class="citetitle">trmix.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm232145"></a>
+          <a id="idm231775"></a>
           <p class="title">
-            <strong>Example 1052. Example of the trmix opcode.</strong>
+            <strong>Example 1055. Example of the trmix opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm232152"></a>
+              <a id="idm231782"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -101,12 +101,12 @@
 <span class="kd">instr</span> <span class="nf">1</span>
 
 a<span class="n">in</span>	<span class="nb">diskin2</span>	<span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span>
-<span class="n">fs1</span><span class="p">,</span><span class="n">fsi2</span> <span class="nb">pvsifd</span> a<span class="n">in</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; ifd analysis</span>
-<span class="n">fst</span>	<span class="nb">partials</span> <span class="n">fs1</span><span class="p">,</span> <span class="n">fsi2</span><span class="p">,</span> <span class="mf">.003</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">500</span>	<span class="c1">; partial tracking</span>
-<span class="n">fslo</span><span class="p">,</span><span class="n">fshi</span> <span class="nb">trsplit</span> <span class="n">fst</span><span class="p">,</span> <span class="mi">1000</span>			<span class="c1">; split partial tracks at 1000 Hz</span>
-<span class="n">fscl</span>	<span class="nb">trscale</span>	<span class="n">fshi</span><span class="p">,</span> <span class="mf">1.3</span>			<span class="c1">; shift the upper tracks</span>
-<span class="n">fmix</span>	<span class="nb">trmix</span>	<span class="n">fslo</span><span class="p">,</span><span class="n">fscl</span>			<span class="c1">; mix the shifted and unshifted tracks</span>
-a<span class="n">out</span>	<span class="nb">tradsyn</span>	<span class="n">fmix</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; resynthesis of tracks</span>
+f<span class="n">s1</span><span class="p">,</span>f<span class="n">si2</span> <span class="nb">pvsifd</span> a<span class="n">in</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; ifd analysis</span>
+f<span class="n">st</span>	<span class="nb">partials</span> f<span class="n">s1</span><span class="p">,</span> f<span class="n">si2</span><span class="p">,</span> <span class="mf">.003</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">500</span>	<span class="c1">; partial tracking</span>
+f<span class="n">slo</span><span class="p">,</span>f<span class="n">shi</span> <span class="nb">trsplit</span> f<span class="n">st</span><span class="p">,</span> <span class="mi">1000</span>			<span class="c1">; split partial tracks at 1000 Hz</span>
+f<span class="n">scl</span>	<span class="nb">trscale</span>	f<span class="n">shi</span><span class="p">,</span> <span class="mf">1.3</span>			<span class="c1">; shift the upper tracks</span>
+f<span class="n">mix</span>	<span class="nb">trmix</span>	f<span class="n">slo</span><span class="p">,</span>f<span class="n">scl</span>			<span class="c1">; mix the shifted and unshifted tracks</span>
+a<span class="n">out</span>	<span class="nb">tradsyn</span>	f<span class="n">mix</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; resynthesis of tracks</span>
 	<span class="nb">outs</span>    a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
 <span class="kd">endin</span>
@@ -131,7 +131,7 @@ a<span class="n">out</span>	<span class="nb">tradsyn</span>	<span class="n">fmix
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm232262"></a>
+        <a id="idm231892"></a>
         <h2>Credits</h2>
         <p>
       </p>

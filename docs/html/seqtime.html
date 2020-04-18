@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm196216"></a>
+        <a id="idm195596"></a>
         <h2>Description</h2>
         <p>
       Generates a trigger signal according to the values stored in a table.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm196219"></a>
+        <a id="idm195599"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ktrig_out <span class="command"><strong>seqtime</strong></span> ktime_unit, kstart, kloop, kinitndx, kfn_times</pre>
       </div>
       <div class="refsect1">
-        <a id="idm196223"></a>
+        <a id="idm195603"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktrig_out</em></span> -- output trigger signal
@@ -117,21 +117,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm196268"></a>
+        <a id="idm195648"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the seqtime opcode. It uses the file <a class="ulink" href="examples/seqtime.csd.html" target="_top"> (click here to play) <em class="citetitle">seqtime.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm196273"></a>
+          <a id="idm195653"></a>
           <p class="title">
-            <strong>Example 894. Example of the seqtime opcode.</strong>
+            <strong>Example 896. Example of the seqtime opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm196280"></a>
+              <a id="idm195660"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 
@@ -166,8 +166,8 @@ k<span class="n">ndx</span> <span class="nb">init</span> <span class="mi">0</spa
 k<span class="n">trigger</span> <span class="nb">init</span> <span class="mi">0</span>
 
 k<span class="n">time_unit</span> <span class="nb">init</span> <span class="mi">1</span>
-k<span class="n">start</span> <span class="nb">init</span> <span class="nb">p4</span>
-k<span class="n">loop</span> <span class="nb">init</span> <span class="nb">p5</span>
+k<span class="n">start</span> <span class="nb">init</span> <span class="vi">p4</span>
+k<span class="n">loop</span> <span class="nb">init</span> <span class="vi">p5</span>
 k<span class="n">initndx</span> <span class="nb">init</span> <span class="mi">0</span>
 k<span class="n">fn_times</span> <span class="nb">init</span> gi<span class="n">delta</span>
 
@@ -187,9 +187,9 @@ k<span class="n">trigger</span> <span class="nb">seqtime</span> k<span class="n"
 
 
   <span class="kd">instr</span> <span class="nf">2</span>
-i<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span> <span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
+i<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span> <span class="p">(</span><span class="vi">p4</span><span class="p">)</span>
 a<span class="n">1</span>    <span class="nb">buzz</span>    <span class="mi">1</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> gi<span class="n">sine</span>
-a<span class="n">amp</span> <span class="nb">expseg</span>    <span class="mf">0.00003</span><span class="p">,</span><span class="mf">.02</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="nb">p3</span><span class="o">-</span><span class="mf">.02</span><span class="p">,</span><span class="mf">0.00003</span>
+a<span class="n">amp</span> <span class="nb">expseg</span>    <span class="mf">0.00003</span><span class="p">,</span><span class="mf">.02</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="vi">p3</span><span class="o">-</span><span class="mf">.02</span><span class="p">,</span><span class="mf">0.00003</span>
 
 a<span class="n">1</span> <span class="o">=</span> a<span class="n">1</span> <span class="o">*</span> a<span class="n">amp</span> <span class="o">*</span> <span class="mf">0.5</span>
 
@@ -215,7 +215,7 @@ a<span class="n">1</span> <span class="o">=</span> a<span class="n">1</span> <sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm196486"></a>
+        <a id="idm195866"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="GEN02.html" title="GEN02"><em class="citetitle">GEN02</em></a>,
@@ -225,7 +225,7 @@ a<span class="n">1</span> <span class="o">=</span> a<span class="n">1</span> <sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm196497"></a>
+        <a id="idm195877"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>November 2002. Added a note about the <span class="emphasis"><em>kinitndx</em></span> parameter, thanks to Rasmus Ekman.</p>

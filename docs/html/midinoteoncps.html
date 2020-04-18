@@ -39,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm134580"></a>
+        <a id="idm133151"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>midinoteoncps</em></span> is designed to simplify writing instruments that can be used interchangeably for either score or MIDI input, and to make it easier to adapt instruments originally written for score input to work with MIDI input.
@@ -53,12 +53,12 @@ and MIDI, including both MIDI files and real-time MIDI input, without using any 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm134588"></a>
+        <a id="idm133159"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>midinoteoncps</strong></span> xcps, xvelocity</pre>
       </div>
       <div class="refsect1">
-        <a id="idm134592"></a>
+        <a id="idm133163"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xcps</em></span> -- returns MIDI key translated to cycles per second during MIDI activation, remains unchanged otherwise.
@@ -89,20 +89,20 @@ and MIDI, including both MIDI files and real-time MIDI input, without using any 
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm134610"></a>
+        <a id="idm133181"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the midinoteoncps opcode. It uses the file <a class="ulink" href="examples/midinoteoncps.csd.html" target="_top"> (click here to play) <em class="citetitle">midinoteoncps.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm134615"></a>
+          <a id="idm133186"></a>
           <p class="title">
             <strong>Example 560. Example of the midinoteoncps opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm134622"></a>
+              <a id="idm133193"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -121,12 +121,12 @@ and MIDI, including both MIDI files and real-time MIDI input, without using any 
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-<span class="nb">midinoteoncps</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>				<span class="c1">;puts MIDI key translated to cycles per second into p4, and MIDI velocity into p5</span>
+<span class="nb">midinoteoncps</span> <span class="vi">p4</span><span class="p">,</span> <span class="vi">p5</span>				<span class="c1">;puts MIDI key translated to cycles per second into p4, and MIDI velocity into p5</span>
 
-<span class="nb">print</span> <span class="nb">p4</span>					<span class="c1">;display the key value when it changes and when key is pressed </span>
-k<span class="n">vel</span> <span class="o">=</span> <span class="nb">p5</span><span class="o">/</span><span class="mi">127</span>					<span class="c1">;scale midi velocity to 0-1</span>
+<span class="nb">print</span> <span class="vi">p4</span>					<span class="c1">;display the key value when it changes and when key is pressed </span>
+k<span class="n">vel</span> <span class="o">=</span> <span class="vi">p5</span><span class="o">/</span><span class="mi">127</span>					<span class="c1">;scale midi velocity to 0-1</span>
 k<span class="n">env</span> <span class="nb">madsr</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.5</span>			<span class="c1">;amplitude envelope multiplied by</span>
-a<span class="n">sig</span> <span class="nb">pluck</span> k<span class="n">env</span><span class="o">*</span>k<span class="n">vel</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;velocity value			</span>
+a<span class="n">sig</span> <span class="nb">pluck</span> k<span class="n">env</span><span class="o">*</span>k<span class="n">vel</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;velocity value			</span>
      <span class="nb">outs</span>  a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
 <span class="kd">endin</span>
@@ -156,7 +156,7 @@ a<span class="n">sig</span> <span class="nb">pluck</span> k<span class="n">env</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm134719"></a>
+        <a id="idm133290"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="midichannelaftertouch.html" title="midichannelaftertouch"><em class="citetitle">midichannelaftertouch</em></a>, 
@@ -172,7 +172,7 @@ a<span class="n">sig</span> <span class="nb">pluck</span> k<span class="n">env</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm134742"></a>
+        <a id="idm133313"></a>
         <h2>Credits</h2>
         <p>Author: Michael Gogins</p>
         <p>New in version 4.20</p>

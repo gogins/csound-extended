@@ -39,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169056"></a>
+        <a id="idm167837"></a>
         <h2>Description</h2>
         <p>
       High precision oscillator with cubic interpolation.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169059"></a>
+        <a id="idm167840"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>poscil3</strong></span> aamp, acps [, ifn, iphs]</pre>
         <pre class="synopsis">ares <span class="command"><strong>poscil3</strong></span> aamp, kcps [, ifn, iphs]</pre>
@@ -56,7 +56,7 @@
         <pre class="synopsis">kres <span class="command"><strong>poscil3</strong></span> kamp, kcps [, ifn, iphs]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm169073"></a>
+        <a id="idm167854"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- (optional) function table number.  This
@@ -68,7 +68,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169079"></a>
+        <a id="idm167860"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ares</em></span> -- output signal
@@ -85,13 +85,13 @@
         <p>Note that <span class="emphasis"><em>poscil3</em></span> can use defered (non-power of two) length tables.</p>
       </div>
       <div class="refsect1">
-        <a id="idm169095"></a>
+        <a id="idm167876"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the poscil3 opcode. It uses the file <a class="ulink" href="examples/poscil3.csd.html" target="_top"> (click here to play) <em class="citetitle">poscil3.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm169100"></a>
+          <a id="idm167881"></a>
           <p class="title">
             <strong>Example 725. Example of the poscil3 opcode.</strong>
           </p>
@@ -103,7 +103,7 @@
           command line flags.
         </p>
             <div class="refsect1">
-              <a id="idm169107"></a>
+              <a id="idm167888"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -126,7 +126,7 @@ gi<span class="n">Sine</span> <span class="nb">ftgen</span> <span class="mi">0</
 
 k<span class="n">rnd</span>  <span class="nb">randomh</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; produce random values</span>
 a<span class="n">in</span>   <span class="nb">poscil3</span> <span class="mf">.6</span><span class="p">,</span> k<span class="n">rnd</span><span class="p">,</span> gi<span class="n">Sine</span>
-k<span class="n">line</span> <span class="nb">line</span>    <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">0</span>    	<span class="c1">; straight line</span>
+k<span class="n">line</span> <span class="nb">line</span>    <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">0</span>    	<span class="c1">; straight line</span>
 a<span class="n">L</span><span class="p">,</span>a<span class="n">R</span> <span class="nb">pan2</span>    a<span class="n">in</span><span class="p">,</span> k<span class="n">line</span>	<span class="c1">; sent across image</span>
       <span class="nb">outs</span>    a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>
 
@@ -151,13 +151,13 @@ a<span class="n">L</span><span class="p">,</span>a<span class="n">R</span> <span
         </a>.
         </p>
         <div class="example">
-          <a id="idm169193"></a>
+          <a id="idm167974"></a>
           <p class="title">
             <strong>Example 726. Another example of the poscil3 opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm169195"></a>
+              <a id="idm167976"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -181,10 +181,10 @@ gi<span class="n">File</span>	<span class="nb">ftgen</span> <span class="mi">1</
 
 <span class="c1">; Instrument #1 - uses poscil3 for playing samples from a function table</span>
 <span class="kd">instr</span> <span class="nf">1</span>
-k<span class="n">amp</span> <span class="o">=</span> <span class="nb">p4</span>
-k<span class="n">speed</span>	<span class="o">=</span> <span class="nb">p5</span>
+k<span class="n">amp</span> <span class="o">=</span> <span class="vi">p4</span>
+k<span class="n">speed</span>	<span class="o">=</span> <span class="vi">p5</span>
 i<span class="n">fn</span> <span class="o">=</span> <span class="mi">1</span>
-i<span class="n">skip</span> <span class="o">=</span> <span class="nb">p6</span>
+i<span class="n">skip</span> <span class="o">=</span> <span class="vi">p6</span>
 k<span class="n">cps</span>	<span class="o">=</span> k<span class="n">speed</span> <span class="o">/</span> <span class="p">(</span><span class="nb">ftlen</span><span class="p">(</span>i<span class="n">fn</span><span class="p">)</span> <span class="o">/</span> <span class="nb">ftsr</span><span class="p">(</span>i<span class="n">fn</span><span class="p">))</span><span class="c1">; frequency of the oscillator</span>
 i<span class="n">phs</span>	<span class="o">=</span> i<span class="n">skip</span> <span class="o">/</span> <span class="p">(</span><span class="nb">ftlen</span><span class="p">(</span>i<span class="n">fn</span><span class="p">)</span> <span class="o">/</span> <span class="nb">ftsr</span><span class="p">(</span>i<span class="n">fn</span><span class="p">))</span><span class="c1">; calculates skiptime to phase values (0-1)</span>
   
@@ -207,14 +207,14 @@ i<span class="n">phs</span>	<span class="o">=</span> i<span class="n">skip</span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169322"></a>
+        <a id="idm168103"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="poscil.html" title="poscil"><em class="citetitle">poscil</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169327"></a>
+        <a id="idm168108"></a>
         <h2>Credits</h2>
         <p>
       </p>

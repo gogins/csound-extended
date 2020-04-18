@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm137890"></a>
+        <a id="idm136458"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>minarray</em></span> opcode returns the minimum value
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm137894"></a>
+        <a id="idm136462"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kmin [,kindx] <span class="command"><strong>minarray</strong></span> karray</pre>
       </div>
       <div class="refsect1">
-        <a id="idm137898"></a>
+        <a id="idm136466"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kmin</em></span> --  variable for result.
@@ -65,20 +65,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm137906"></a>
+        <a id="idm136474"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the minarray opcode. It uses the file <a class="ulink" href="examples/minarray.csd.html" target="_top"> (click here to play) <em class="citetitle">minarray.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm137911"></a>
+          <a id="idm136479"></a>
           <p class="title">
             <strong>Example 579. Example of the minarray opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm137918"></a>
+              <a id="idm136486"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -99,12 +99,12 @@ k<span class="n">Indx</span>      <span class="o">=</span>          <span class=
   <span class="k">until</span> k<span class="n">Indx</span> <span class="o">==</span> <span class="mi">10</span> <span class="k">do</span>
 k<span class="n">Num</span>       <span class="nb">random</span>     <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span>
 k<span class="n">Arr</span><span class="p">[</span>k<span class="n">Indx</span><span class="p">]</span> <span class="o">=</span>         k<span class="n">Num</span>
-           <span class="nb">printf</span>     <span class="s">"kArr[</span><span class="si">%d</span><span class="s">] = %10f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Indx</span><span class="p">,</span> k<span class="n">Num</span>
+           <span class="nb">printf</span>     <span class="s">"kArr[</span><span class="si">%d</span><span class="s">] = </span><span class="si">%10f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Indx</span><span class="p">,</span> k<span class="n">Num</span>
 k<span class="n">Indx</span>      <span class="o">+=</span>         <span class="mi">1</span>
   <span class="k">od</span>
 <span class="c1">;investigate minimum number and print it out</span>
 k<span class="n">Min</span><span class="p">,</span> k<span class="n">MinIndx</span> <span class="nb">minarray</span> k<span class="n">Arr</span>
-           <span class="nb">printf</span>     <span class="s">"Minimum of kArr = %f at index </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Min</span><span class="p">,</span> k<span class="n">MinIndx</span>
+           <span class="nb">printf</span>     <span class="s">"Minimum of kArr = </span><span class="si">%f</span><span class="s"> at index </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Min</span><span class="p">,</span> k<span class="n">MinIndx</span>
            <span class="nb">turnoff</span>
 <span class="kd">endin</span>
 <span class="nt">&lt;/CsInstruments&gt;</span>
@@ -121,7 +121,7 @@ k<span class="n">Min</span><span class="p">,</span> k<span class="n">MinIndx</sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm138007"></a>
+        <a id="idm136578"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="maxarray.html" title="maxarray"><em class="citetitle">maxarray</em></a>, 
@@ -130,7 +130,7 @@ k<span class="n">Min</span><span class="p">,</span> k<span class="n">MinIndx</sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm138016"></a>
+        <a id="idm136587"></a>
         <h2>Credits</h2>
         <p>
       </p>

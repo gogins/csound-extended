@@ -40,7 +40,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm222289"></a>
+        <a id="idm221907"></a>
         <h2>Description</h2>
         <p>
       This opcode can be used in order to shuffle the content of
@@ -52,13 +52,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm222292"></a>
+        <a id="idm221910"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>tableshuffle</strong></span> ktablenum</pre>
         <pre class="synopsis"><span class="command"><strong>tableshufflei</strong></span> itablenum</pre>
       </div>
       <div class="refsect1">
-        <a id="idm222298"></a>
+        <a id="idm221916"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktablenum</em></span> or <span class="emphasis"><em>itablenum</em></span>
@@ -66,21 +66,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm222303"></a>
+        <a id="idm221921"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the tableshuffle opcode. It uses the file <a class="ulink" href="examples/farey7shuffled.csd.html" target="_top"> (click here to play) <em class="citetitle">farey7shuffled.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm222308"></a>
+          <a id="idm221926"></a>
           <p class="title">
-            <strong>Example 1005. Example of the tableshuffle opcode.</strong>
+            <strong>Example 1008. Example of the tableshuffle opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm222315"></a>
+              <a id="idm221933"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -100,14 +100,14 @@ gi<span class="n">mult</span> <span class="nb">init</span> <span class="mi">101<
 k<span class="n">indx</span> <span class="nb">init</span> <span class="mi">0</span>
 k<span class="n">indx2</span> <span class="nb">init</span> <span class="mi">0</span>
 k<span class="n">trigger</span> <span class="nb">init</span> <span class="mi">0</span>
-k<span class="n">time_unit</span> <span class="nb">init</span> <span class="nb">p6</span>
-k<span class="n">start</span> <span class="nb">init</span> <span class="nb">p4</span>
-k<span class="n">loop</span> <span class="nb">init</span> <span class="nb">p5</span>
+k<span class="n">time_unit</span> <span class="nb">init</span> <span class="vi">p6</span>
+k<span class="n">start</span> <span class="nb">init</span> <span class="vi">p4</span>
+k<span class="n">loop</span> <span class="nb">init</span> <span class="vi">p5</span>
 k<span class="n">initndx</span> <span class="nb">init</span> <span class="mi">0</span>
 k<span class="n">fn_times</span> <span class="nb">init</span> gi<span class="n">delta</span>
 k<span class="n">note</span> <span class="nb">init</span> <span class="mi">60</span>
-k<span class="n">basenote</span> <span class="nb">init</span> <span class="nb">p8</span>
-i<span class="n">fundam</span> <span class="nb">init</span> <span class="nb">p7</span>
+k<span class="n">basenote</span> <span class="nb">init</span> <span class="vi">p8</span>
+i<span class="n">fundam</span> <span class="nb">init</span> <span class="vi">p7</span>
 k<span class="n">trigger</span> <span class="nb">seqtime</span> k<span class="n">time_unit</span><span class="p">,</span> k<span class="n">start</span><span class="p">,</span> k<span class="n">loop</span><span class="p">,</span> k<span class="n">initndx</span><span class="p">,</span> k<span class="n">fn_times</span>
 <span class="k">if</span> <span class="p">(</span>k<span class="n">trigger</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">)</span> <span class="k">then</span>
      k<span class="n">pitch</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span>i<span class="n">fundam</span><span class="p">)</span>
@@ -128,15 +128,15 @@ k<span class="n">trigger</span> <span class="nb">seqtime</span> k<span class="n"
 
 <span class="c1">;------ basic 2 Operators FM algorithm ----------------</span>
 	<span class="kd">instr</span> <span class="nf">901</span>
-i<span class="n">notedur</span>	<span class="o">=</span>		<span class="nb">p3</span>
-i<span class="n">maxamp</span>		<span class="o">=</span>		<span class="nb">p4</span> <span class="c1">;ampdb(p4)</span>
-i<span class="n">carrfreq</span>	<span class="o">=</span>		<span class="nb">p5</span>
-i<span class="n">modfreq</span>	<span class="o">=</span>		<span class="nb">p6</span>
-i<span class="n">lowndx</span>		<span class="o">=</span>		<span class="nb">p7</span>
-i<span class="n">ndxdiff</span>	<span class="o">=</span>		<span class="nb">p8</span><span class="o">-</span><span class="nb">p7</span>
-k<span class="n">note</span>	        <span class="o">=</span>		<span class="nb">p27</span>
-a<span class="n">ampenv</span>		<span class="nb">linseg</span>	<span class="nb">p9</span><span class="p">,</span> <span class="nb">p14</span><span class="o">*</span><span class="nb">p3</span><span class="p">,</span> <span class="nb">p10</span><span class="p">,</span> <span class="nb">p15</span><span class="o">*</span><span class="nb">p3</span><span class="p">,</span> <span class="nb">p11</span><span class="p">,</span> <span class="nb">p16</span><span class="o">*</span><span class="nb">p3</span><span class="p">,</span> <span class="nb">p12</span><span class="p">,</span> <span class="nb">p17</span><span class="o">*</span><span class="nb">p3</span><span class="p">,</span> <span class="nb">p13</span> 
-a<span class="n">devenv</span>		<span class="nb">linseg</span>	<span class="nb">p18</span><span class="p">,</span> <span class="nb">p23</span><span class="o">*</span><span class="nb">p3</span><span class="p">,</span> <span class="nb">p19</span><span class="p">,</span> <span class="nb">p24</span><span class="o">*</span><span class="nb">p3</span><span class="p">,</span> <span class="nb">p20</span><span class="p">,</span> <span class="nb">p25</span><span class="o">*</span><span class="nb">p3</span><span class="p">,</span> <span class="nb">p21</span><span class="p">,</span> <span class="nb">p26</span><span class="o">*</span><span class="nb">p3</span><span class="p">,</span> <span class="nb">p22</span>
+i<span class="n">notedur</span>	<span class="o">=</span>		<span class="vi">p3</span>
+i<span class="n">maxamp</span>		<span class="o">=</span>		<span class="vi">p4</span> <span class="c1">;ampdb(p4)</span>
+i<span class="n">carrfreq</span>	<span class="o">=</span>		<span class="vi">p5</span>
+i<span class="n">modfreq</span>	<span class="o">=</span>		<span class="vi">p6</span>
+i<span class="n">lowndx</span>		<span class="o">=</span>		<span class="vi">p7</span>
+i<span class="n">ndxdiff</span>	<span class="o">=</span>		<span class="vi">p8</span><span class="o">-</span><span class="vi">p7</span>
+k<span class="n">note</span>	        <span class="o">=</span>		<span class="vi">p27</span>
+a<span class="n">ampenv</span>		<span class="nb">linseg</span>	<span class="vi">p9</span><span class="p">,</span> <span class="vi">p14</span><span class="o">*</span><span class="vi">p3</span><span class="p">,</span> <span class="vi">p10</span><span class="p">,</span> <span class="vi">p15</span><span class="o">*</span><span class="vi">p3</span><span class="p">,</span> <span class="vi">p11</span><span class="p">,</span> <span class="vi">p16</span><span class="o">*</span><span class="vi">p3</span><span class="p">,</span> <span class="vi">p12</span><span class="p">,</span> <span class="vi">p17</span><span class="o">*</span><span class="vi">p3</span><span class="p">,</span> <span class="vi">p13</span> 
+a<span class="n">devenv</span>		<span class="nb">linseg</span>	<span class="vi">p18</span><span class="p">,</span> <span class="vi">p23</span><span class="o">*</span><span class="vi">p3</span><span class="p">,</span> <span class="vi">p19</span><span class="p">,</span> <span class="vi">p24</span><span class="o">*</span><span class="vi">p3</span><span class="p">,</span> <span class="vi">p20</span><span class="p">,</span> <span class="vi">p25</span><span class="o">*</span><span class="vi">p3</span><span class="p">,</span> <span class="vi">p21</span><span class="p">,</span> <span class="vi">p26</span><span class="o">*</span><span class="vi">p3</span><span class="p">,</span> <span class="vi">p22</span>
 a<span class="n">modosc</span>		<span class="nb">oscili</span>	<span class="p">(</span>i<span class="n">lowndx</span><span class="o">+</span>i<span class="n">ndxdiff</span><span class="o">*</span>a<span class="n">devenv</span><span class="p">)</span><span class="o">*</span>i<span class="n">modfreq</span><span class="p">,</span> i<span class="n">modfreq</span><span class="p">,</span> <span class="mi">10</span> 
 a<span class="n">carosc</span>		<span class="nb">oscili</span>	i<span class="n">maxamp</span><span class="o">*</span>a<span class="n">ampenv</span><span class="p">,</span> i<span class="n">carrfreq</span><span class="o">+</span>a<span class="n">modosc</span><span class="p">,</span> <span class="mi">10</span> 
 			<span class="nb">out</span>		a<span class="n">carosc</span> 
@@ -177,7 +177,7 @@ a<span class="n">carosc</span>		<span class="nb">oscili</span>	i<span class="n">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm222703"></a>
+        <a id="idm222321"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="GENfarey.html" title="GENfarey"><em class="citetitle">GEN farey</em></a>,
@@ -186,7 +186,7 @@ a<span class="n">carosc</span>		<span class="nb">oscili</span>	i<span class="n">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm222712"></a>
+        <a id="idm222330"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm238457"></a>
+        <a id="idm238089"></a>
         <h2>Description</h2>
         <p>
       Configures VBAP output according to loudspeaker parameters.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm238460"></a>
+        <a id="idm238092"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vbaplsinit</strong></span> idim, ilsnum [, idir1] [, idir2] [...] [, idir32]</pre>
         <pre class="synopsis"><span class="command"><strong>vbaplsinit</strong></span> idim, ilsnum, ilsarray</pre>
       </div>
       <div class="refsect1">
-        <a id="idm238466"></a>
+        <a id="idm238098"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idim</em></span> -- dimensionality of loudspeaker
@@ -103,27 +103,27 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm238487"></a>
+        <a id="idm238119"></a>
         <h2>Performance</h2>
         <p>
       VBAP distributes the signal using loudspeaker data configured with <span class="emphasis"><em>vbaplsinit</em></span>. The signal is applied to, at most, two loudspeakers in 2-D loudspeaker configurations, and three loudspeakers in 3-D loudspeaker configurations. If the virtual source is panned outside the region spanned by loudspeakers, the nearest loudspeakers are used in panning.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm238491"></a>
+        <a id="idm238123"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the vbaplsinit opcode. It uses the file <a class="ulink" href="examples/vbaplsinit.csd.html" target="_top"> (click here to play) <em class="citetitle">vbaplsinit.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm238496"></a>
+          <a id="idm238128"></a>
           <p class="title">
-            <strong>Example 1082. Example of the vbaplsinit opcode.</strong>
+            <strong>Example 1085. Example of the vbaplsinit opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm238503"></a>
+              <a id="idm238135"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -145,7 +145,7 @@
 <span class="kd">instr</span> <span class="nf">1</span>
 
 a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;loop beats.wav</span>
-k<span class="n">azim</span> <span class="nb">line</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">355</span>				
+k<span class="n">azim</span> <span class="nb">line</span> <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">355</span>				
 a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span><span class="p">,</span>a<span class="n">3</span><span class="p">,</span>a<span class="n">4</span><span class="p">,</span>a<span class="n">5</span><span class="p">,</span>a<span class="n">6</span><span class="p">,</span>a<span class="n">7</span><span class="p">,</span>a<span class="n">8</span> <span class="nb">vbap8</span>  a<span class="n">sig</span><span class="p">,</span> k<span class="n">azim</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">;change azimuth of soundsource</span>
 <span class="c1">; Speaker mapping</span>
 a<span class="n">FL</span> <span class="o">=</span> a<span class="n">1</span> 						<span class="c1">; Front Left</span>
@@ -173,14 +173,14 @@ a<span class="n">BR</span> <span class="o">=</span> a<span class="n">4</span> 		
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm238638"></a>
+        <a id="idm238270"></a>
         <h2>Reference</h2>
         <p>
       Ville Pulkki: <span class="quote">“<span class="quote">Virtual Sound Source Positioning Using Vector Base Amplitude Panning</span>”</span> <span class="emphasis"><em>Journal of the Audio Engineering Society</em></span>, 1997 June, Vol. 45/6, p. 456.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm238643"></a>
+        <a id="idm238275"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vbap.html" title="vbap"><em class="citetitle">vbap</em></a>,
@@ -196,7 +196,7 @@ a<span class="n">BR</span> <span class="o">=</span> a<span class="n">4</span> 		
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm238666"></a>
+        <a id="idm238298"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -38,20 +38,20 @@
                     </p>
       </div>
       <div class="refsect1">
-        <a id="idm27320"></a>
+        <a id="idm26400"></a>
         <h2>Description</h2>
         <p>
             <span class="emphasis"><em>ATSbufread</em></span> reads data from and ATS data file and stores it in an internal data table of frequency, amplitude pairs.
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm27324"></a>
+        <a id="idm26404"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>ATSbufread</strong></span> ktimepnt, kfmod, iatsfile, ipartials[, ipartialoffset, \
           ipartialincr]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm27328"></a>
+        <a id="idm26408"></a>
         <h2>Initialization</h2>
         <p>
         <span class="emphasis"><em>iatsfile</em></span> – the ATS number (n in ats.n) or the name in quotes of the analysis file made using <a class="ulink" href="http://www-ccrma.stanford.edu/~juan/ATS.html" target="_top"><em class="citetitle">ATS</em></a>.
@@ -64,7 +64,7 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm27341"></a>
+        <a id="idm26421"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>ktimepnt</em></span> – The time pointer in seconds used to index the ATS file. Used for <span class="emphasis"><em>ATSbufread</em></span> exactly the same as for <a class="link" href="pvoc.html" title="pvoc"><em class="citetitle">pvoc</em></a>.</p>
         <p>
@@ -74,20 +74,20 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm27376"></a>
+        <a id="idm26456"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the ATSbufread opcode. It uses the file <a class="ulink" href="examples/ATSbufread.csd.html" target="_top"> (click here to play) <em class="citetitle">ATSbufread.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm27381"></a>
+          <a id="idm26461"></a>
           <p class="title">
             <strong>Example 66. Example of the ATSbufread opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm27383"></a>
+              <a id="idm26463"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -106,10 +106,10 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; "beats.ats" and  "fox.ats" are created by atsa</span>
 
-k<span class="n">time</span>	<span class="nb">line</span>	<span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">4</span>
-k<span class="n">time2</span>	<span class="nb">line</span>	<span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">4</span>
-k<span class="n">line</span>	<span class="nb">expseg</span>	<span class="mf">0.001</span><span class="p">,</span> <span class="mf">.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="o">-</span><span class="mf">.3</span><span class="p">,</span> <span class="mi">1</span>
-k<span class="n">line2</span>	<span class="nb">expseg</span>	<span class="mf">0.001</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">3</span>
+k<span class="n">time</span>	<span class="nb">line</span>	<span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">4</span>
+k<span class="n">time2</span>	<span class="nb">line</span>	<span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">4</span>
+k<span class="n">line</span>	<span class="nb">expseg</span>	<span class="mf">0.001</span><span class="p">,</span> <span class="mf">.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="o">-</span><span class="mf">.3</span><span class="p">,</span> <span class="mi">1</span>
+k<span class="n">line2</span>	<span class="nb">expseg</span>	<span class="mf">0.001</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">3</span>
   	<span class="nb">ATSbufread</span> k<span class="n">time2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"fox.ats"</span><span class="p">,</span> <span class="mi">20</span>
 a<span class="n">out</span>	<span class="nb">ATScross</span>   k<span class="n">time</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s">"beats.ats"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">line</span><span class="p">,</span> <span class="mf">0.001</span> <span class="o">*</span> <span class="p">(</span><span class="mi">4</span> <span class="o">-</span> k<span class="n">line2</span><span class="p">),</span> <span class="mi">180</span>
 	<span class="nb">outs</span> a<span class="n">out</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> a<span class="n">out</span><span class="o">*</span><span class="mi">2</span>
@@ -134,7 +134,7 @@ a<span class="n">out</span>	<span class="nb">ATScross</span>   k<span class="n">
         <p>See also the examples for <a class="link" href="ATScross.html" title="ATScross"><em class="citetitle">ATScross</em></a>, <a class="link" href="ATSinterpread.html" title="ATSinterpread"><em class="citetitle">ATSinterpread</em></a> and <a class="link" href="ATSpartialtap.html" title="ATSpartialtap"><em class="citetitle">ATSpartialtap</em></a></p>
       </div>
       <div class="refsect1">
-        <a id="idm27503"></a>
+        <a id="idm26583"></a>
         <h2>See also</h2>
         <p><a class="link" href="ATSread.html" title="ATSread"><em class="citetitle">ATSread</em></a>, 
             <a class="link" href="ATSreadnz.html" title="ATSreadnz"><em class="citetitle">ATSreadnz</em></a>, 
@@ -147,7 +147,7 @@ a<span class="n">out</span>	<span class="nb">ATScross</span>   k<span class="n">
             <a class="link" href="ATSaddnz.html" title="ATSaddnz"><em class="citetitle">ATSaddnz</em></a></p>
       </div>
       <div class="refsect1">
-        <a id="idm27524"></a>
+        <a id="idm26604"></a>
         <h2>Credits</h2>
         <p>
             </p>

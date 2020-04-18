@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm270398"></a>
+        <a id="idm270052"></a>
         <h2>Description</h2>
         <p>
       This generates tables of different random distributions. (See also <a class="link" href="betarand.html" title="betarand"><em class="citetitle">betarand</em></a>, <a class="link" href="bexprnd.html" title="bexprnd"><em class="citetitle">bexprnd</em></a>, <a class="link" href="cauchy.html" title="cauchy"><em class="citetitle">cauchy</em></a>, <a class="link" href="exprand.html" title="exprand"><em class="citetitle">exprand</em></a>, <a class="link" href="gauss.html" title="gauss"><em class="citetitle">gauss</em></a>, <a class="link" href="linrand.html" title="linrand"><em class="citetitle">linrand</em></a>, <a class="link" href="pcauchy.html" title="pcauchy"><em class="citetitle">pcauchy</em></a>, <a class="link" href="poisson.html" title="poisson"><em class="citetitle">poisson</em></a>, <a class="link" href="trirand.html" title="trirand"><em class="citetitle">trirand</em></a>, <a class="link" href="unirand.html" title="unirand"><em class="citetitle">unirand</em></a>, and <a class="link" href="weibull.html" title="weibull"><em class="citetitle">weibull</em></a>)
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm270423"></a>
+        <a id="idm270077"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size 21 type level [arg1  [arg2]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm270427"></a>
+        <a id="idm270081"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>time</em></span> and <span class="emphasis"><em>size</em></span> are the usual GEN function arguments. <span class="emphasis"><em>level</em></span> defines the amplitude. Note that GEN21 is not self-normalizing as are most other GEN functions. <span class="emphasis"><em>type</em></span> defines the distribution to be used as follow:
@@ -107,7 +107,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm270463"></a>
+        <a id="idm270117"></a>
         <h2>Examples</h2>
         <p>
       </p>
@@ -127,14 +127,14 @@
       Here is a complete example of the GEN21 routine. It uses the file <a class="ulink" href="examples/gen21.csd.html" target="_top"> (click here to play) <em class="citetitle">gen21.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm270481"></a>
+          <a id="idm270135"></a>
           <p class="title">
-            <strong>Example 1216. Example of the GEN21 routine.</strong>
+            <strong>Example 1219. Example of the GEN21 routine.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm270488"></a>
+              <a id="idm270142"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -153,7 +153,7 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">fn</span>    <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">fn</span>    <span class="o">=</span> <span class="vi">p4</span>
 i<span class="n">size</span>  <span class="o">=</span> <span class="nb">ftlen</span><span class="p">(</span>i<span class="n">fn</span><span class="p">)</span> 
 <span class="nb">prints</span> <span class="s">"TABLE NUMBER: </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">fn</span>   
 <span class="nb">prints</span> <span class="s">"Index</span><span class="se">\t</span><span class="s">Value</span><span class="se">\n</span><span class="s">"</span>
@@ -161,14 +161,14 @@ i<span class="n">size</span>  <span class="o">=</span> <span class="nb">ftlen</s
 i<span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>				<span class="c1">;start loop</span>
 <span class="nl">begin_loop</span><span class="p">:</span>
      i<span class="n">value</span> <span class="nb">tab_i</span> i<span class="n">index</span><span class="p">,</span> i<span class="n">fn</span>
-     <span class="nb">prints</span> <span class="s">"</span><span class="si">%d</span><span class="s">:</span><span class="se">\t</span><span class="s">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">index</span><span class="p">,</span> i<span class="n">value</span>
+     <span class="nb">prints</span> <span class="s">"</span><span class="si">%d</span><span class="s">:</span><span class="se">\t</span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">index</span><span class="p">,</span> i<span class="n">value</span>
      i<span class="n">index</span> <span class="o">=</span> i<span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
   <span class="k">if</span> <span class="p">(</span>i<span class="n">index</span> <span class="o">&lt;</span> i<span class="n">size</span><span class="p">)</span> <span class="k">igoto</span> <span class="nl">begin_loop</span>
   
 <span class="c1">;produce sound - and repeat it 10 times so you can hear the patterns:   </span>
 a<span class="n">phase</span> <span class="nb">phasor</span> <span class="mi">10</span><span class="o">/</span><span class="mi">10</span>			<span class="c1">;play all 32 values 10x over 10 seconds</span>
 a<span class="n">phase</span> <span class="o">=</span> a<span class="n">phase</span><span class="o">*</span>i<span class="n">size</span>			<span class="c1">;step through table</span>
-a<span class="n">frq</span>   <span class="nb">table</span> a<span class="n">phase</span><span class="p">,</span> <span class="nb">p4</span>			<span class="c1">;read table number</span>
+a<span class="n">frq</span>   <span class="nb">table</span> a<span class="n">phase</span><span class="p">,</span> <span class="vi">p4</span>			<span class="c1">;read table number</span>
 a<span class="n">sig</span>   <span class="nb">poscil</span> <span class="mf">.5</span><span class="p">,</span> <span class="p">(</span>a<span class="n">frq</span><span class="o">*</span><span class="mi">500</span><span class="p">)</span><span class="o">+</span><span class="mi">1000</span><span class="p">,</span><span class="mi">10</span>	<span class="c1">;scale values of table 500 times, add 1000 Hz</span>
        <span class="nb">outs</span> a<span class="n">sig</span> <span class="p">,</span> a<span class="n">sig</span>			<span class="c1">;so we can distinguish the different tables </span>
 <span class="kd">endin</span>
@@ -244,7 +244,7 @@ a<span class="n">sig</span>   <span class="nb">poscil</span> <span class="mf">.5
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm270725"></a>
+        <a id="idm270379"></a>
         <h2>Credits</h2>
         <p>
       </p>

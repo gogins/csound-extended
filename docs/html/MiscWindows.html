@@ -35,17 +35,24 @@
         </div>
       </div>
       <p>
-    Windowing functions are used for analysis, and as waveform envelopes, particularly in granular synthesis. Window functions are built in to some opcodes, but others require a function table to generate the window. <a class="link" href="GEN20.html" title="GEN20"><em class="citetitle">GEN20</em></a> is used for this purpose. The diagram of each window below, is accompanied by the f statement used to generate the it.
+    Windowing functions are used for analysis, and as waveform
+    envelopes, particularly in granular synthesis. Window functions
+    are built in to some opcodes, but others require a function table
+    to generate the window. <a class="link" href="GEN20.html" title="GEN20"><em class="citetitle">GEN20</em></a> is used for
+    this purpose. The diagram of each window below, is accompanied by
+    the f score statement and ftgen orchestra opcode used to generate
+    it.
   </p>
       <p><strong>Hamming. </strong>
       </p>
       <div class="example">
-        <a id="idm296908"></a>
+        <a id="idm296744"></a>
         <p class="title">
           <strong>Example F.1. Hamming window function statement</strong>
         </p>
         <div class="example-contents">
           <pre class="programlisting"><span class="stamnt">f</span>81   0   8192   20   1   1</pre>
+          <pre class="programlisting">i0 <span class="nb">ftgen</span> 81, 0, 8192, 20, 1, 1</pre>
         </div>
       </div>
       <p><br class="example-break" />
@@ -62,12 +69,13 @@
       <p><strong>Hanning. </strong>
       </p>
       <div class="example">
-        <a id="idm296922"></a>
+        <a id="idm296760"></a>
         <p class="title">
           <strong>Example F.2. Hanning window function statement</strong>
         </p>
         <div class="example-contents">
           <pre class="programlisting"><span class="stamnt">f</span>82   0   8192   20   2   1</pre>
+          <pre class="programlisting">i0 <span class="nb">ftgen</span> 82, 0, 8192, 20, 2, 1</pre>
         </div>
       </div>
       <p><br class="example-break" />
@@ -84,12 +92,13 @@
       <p><strong>Bartlett. </strong>
       </p>
       <div class="example">
-        <a id="idm296936"></a>
+        <a id="idm296776"></a>
         <p class="title">
           <strong>Example F.3. Bartlett window function statement</strong>
         </p>
         <div class="example-contents">
           <pre class="programlisting"><span class="stamnt">f</span>83   0   8192   20   3   1</pre>
+          <pre class="programlisting">i0 <span class="nb">ftgen</span> 83, 0, 8192, 20, 3, 1</pre>
         </div>
       </div>
       <p><br class="example-break" />
@@ -106,12 +115,13 @@
       <p><strong>Blackman. </strong>
       </p>
       <div class="example">
-        <a id="idm296950"></a>
+        <a id="idm296792"></a>
         <p class="title">
           <strong>Example F.4. Blackman window function statement</strong>
         </p>
         <div class="example-contents">
           <pre class="programlisting"><span class="stamnt">f</span>84   0   8192   20   4   1</pre>
+          <pre class="programlisting">i0 <span class="nb">ftgen</span> 84, 0, 8192, 20, 4, 1</pre>
         </div>
       </div>
       <p><br class="example-break" />
@@ -128,12 +138,13 @@
       <p><strong>Blackman-Harris. </strong>
       </p>
       <div class="example">
-        <a id="idm296964"></a>
+        <a id="idm296808"></a>
         <p class="title">
           <strong>Example F.5. Blackman-Harris window function statement</strong>
         </p>
         <div class="example-contents">
           <pre class="programlisting"><span class="stamnt">f</span>85   0   8192   20   5   1</pre>
+          <pre class="programlisting">i0 <span class="nb">ftgen</span> 85, 0, 8192, 20, 5, 1</pre>
         </div>
       </div>
       <p><br class="example-break" />
@@ -150,21 +161,102 @@
       <p><strong>Gaussian. </strong>
       </p>
       <div class="example">
-        <a id="idm296978"></a>
+        <a id="idm296824"></a>
         <p class="title">
           <strong>Example F.6. Gaussian window function statement</strong>
         </p>
         <div class="example-contents">
           <pre class="programlisting"><span class="stamnt">f</span>86   0   8192   20   6   1</pre>
+          <pre class="programlisting">i0 <span class="nb">ftgen</span> 86, 0, 8192, 20, 6, 1</pre>
         </div>
       </div>
       <p><br class="example-break" />
  
       </p>
       <div class="mediaobject">
-        <img src="images/image6.png" alt="Gaussian Window Function" />
+        <img src="images/image6.png" />
+      </div>
+      <p>
+
+      </p>
+      <div class="example">
+        <a id="idm296833"></a>
+        <p class="title">
+          <strong>Example F.7. Gaussian window function statement with extra parameter</strong>
+        </p>
+        <div class="example-contents">
+          <pre class="programlisting"><span class="stamnt">f</span>61 0 8192   20   6   1 2</pre>
+          <pre class="programlisting">i0 <span class="nb">ftgen</span> 61, 0, 8192, 20, 6, 1, 2</pre>
+        </div>
+      </div>
+      <p><br class="example-break" />
+ 
+      </p>
+      <div class="mediaobject">
+        <img src="images/image6a.png" alt="Gaussian Window Function" />
         <div class="caption">
           <p>Gaussian Window Function</p>
+        </div>
+      </div>
+      <p>
+    </p>
+      <p><strong>Kaiser. </strong>
+      </p>
+      <div class="example">
+        <a id="idm296849"></a>
+        <p class="title">
+          <strong>Example F.8. Kaiser window function statement as default (alpha=0)</strong>
+        </p>
+        <div class="example-contents">
+          <pre class="programlisting"><span class="stamnt">f</span>87  0   8192   20   7   1</pre>
+          <pre class="programlisting">i0 <span class="nb">ftgen</span> 87, 0, 8192, 20, 7, 1</pre>
+        </div>
+      </div>
+      <p><br class="example-break" />
+
+      </p>
+      <div class="mediaobject">
+        <img src="images/image7.png" />
+      </div>
+      <p>
+
+      </p>
+      <div class="example">
+        <a id="idm296858"></a>
+        <p class="title">
+          <strong>Example F.9. Kaiser window function statement with alpha=5</strong>
+        </p>
+        <div class="example-contents">
+          <pre class="programlisting"><span class="stamnt">f</span>71  0   8192   20  7   1  5</pre>
+          <pre class="programlisting">i0 <span class="nb">ftgen</span> 71, 0, 8192, 20, 7, 1, 5</pre>
+        </div>
+      </div>
+      <p><br class="example-break" />
+
+      </p>
+      <div class="mediaobject">
+        <img src="images/image7a.png" />
+      </div>
+      <p>
+
+      </p>
+      <div class="example">
+        <a id="idm296867"></a>
+        <p class="title">
+          <strong>Example F.10. Kaiser window function statement with alpha=10</strong>
+        </p>
+        <div class="example-contents">
+          <pre class="programlisting"><span class="stamnt">f</span>72  0   8192   20   7   1  10</pre>
+          <pre class="programlisting">i0 <span class="nb">ftgen</span> 72, 0, 8192, 20, 7, 1, 10</pre>
+        </div>
+      </div>
+      <p><br class="example-break" />
+
+      </p>
+      <div class="mediaobject">
+        <img src="images/image7b.png" alt="Kaiser Window Function" />
+        <div class="caption">
+          <p>Kaiser Window Function</p>
         </div>
       </div>
       <p>
@@ -172,45 +264,64 @@
       <p><strong>Rectangle. </strong>
       </p>
       <div class="example">
-        <a id="idm296992"></a>
+        <a id="idm296883"></a>
         <p class="title">
-          <strong>Example F.7. Rectangle window function statement</strong>
+          <strong>Example F.11. Rectangle window function statement</strong>
         </p>
         <div class="example-contents">
-          <pre class="programlisting"><span class="stamnt">f</span>88   0   8192   -20   8   .1</pre>
+          <pre class="programlisting"><span class="stamnt">f</span>88   0   8192   -20   8   .3</pre>
+          <pre class="programlisting">i0 <span class="nb">ftgen</span> 88, 0, 8192, -20, 8, .3</pre>
         </div>
       </div>
       <p><br class="example-break" />
 
-      <span class="emphasis"><em>Note</em></span>: Vertical scale is exaggerated in this diagram.
-
       </p>
       <div class="mediaobject">
-        <img src="images/image7.png" alt="Rectangle Window Function" />
+        <img src="images/image8.png" alt="Rectangle Window Function" />
         <div class="caption">
           <p>Rectangle Window Function</p>
         </div>
       </div>
       <p>
     </p>
-      <p><strong>Sync. </strong>
+      <p><strong>Sinc. </strong>
       </p>
       <div class="example">
-        <a id="idm297007"></a>
+        <a id="idm296899"></a>
         <p class="title">
-          <strong>Example F.8. Sync window function statement</strong>
+          <strong>Example F.12. Sinc window function statement (default and max=0.8)</strong>
         </p>
         <div class="example-contents">
-          <pre class="programlisting"><span class="stamnt">f</span>89   0   4096   -20   9   .75</pre>
+          <pre class="programlisting"><span class="stamnt">f</span>89  0   8192   -20   9   .8</pre>
+          <pre class="programlisting">i0 <span class="nb">ftgen</span> 89, 0, 8192, -20, 9, .8</pre>
         </div>
       </div>
       <p><br class="example-break" />
 
       </p>
       <div class="mediaobject">
-        <img src="images/image8.png" alt="Sync Window Function" />
+        <img src="images/image9.png" />
+      </div>
+      <p>
+
+      </p>
+      <div class="example">
+        <a id="idm296908"></a>
+        <p class="title">
+          <strong>Example F.13. Sinc window function statement (-3π to +3π and normalized)</strong>
+        </p>
+        <div class="example-contents">
+          <pre class="programlisting"><span class="stamnt">f</span>89  0   8192   20   9   1  3</pre>
+          <pre class="programlisting">i0 <span class="nb">ftgen</span> 89, 0, 8192, 20, 9, 1, 3</pre>
+        </div>
+      </div>
+      <p><br class="example-break" />
+
+      </p>
+      <div class="mediaobject">
+        <img src="images/image9a.png" alt="Sinc Window Function" />
         <div class="caption">
-          <p>Sync Window Function</p>
+          <p>Sinc Window Function</p>
         </div>
       </div>
       <p>

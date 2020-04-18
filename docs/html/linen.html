@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm114114"></a>
+        <a id="idm114097"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>linen</em></span> -- apply a straight line rise and decay pattern to an input amp signal.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm114118"></a>
+        <a id="idm114101"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>linen</strong></span> xamp, irise, idur, idec</pre>
         <pre class="synopsis">kres <span class="command"><strong>linen</strong></span> kamp, irise, idur, idec</pre>
       </div>
       <div class="refsect1">
-        <a id="idm114124"></a>
+        <a id="idm114107"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>irise</em></span> -- rise time in seconds. A zero or negative value signifies no rise modification.
@@ -65,7 +65,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm114134"></a>
+        <a id="idm114117"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp, xamp</em></span> -- input amplitude signal.
@@ -113,21 +113,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm114163"></a>
+        <a id="idm114146"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the linen opcode. It uses the file <a class="ulink" href="examples/linen.csd.html" target="_top"> (click here to play) <em class="citetitle">linen.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm114168"></a>
+          <a id="idm114151"></a>
           <p class="title">
-            <strong>Example 472. Example of the linen opcode.</strong>
+            <strong>Example 473. Example of the linen opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm114175"></a>
+              <a id="idm114158"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -149,8 +149,8 @@
 <span class="c1">; p5=freq</span>
 <span class="c1">; p6=attack time</span>
 <span class="c1">; p7=release time</span>
-a<span class="n">res</span> <span class="nb">linen</span>  <span class="nb">p4</span><span class="p">,</span> <span class="nb">p6</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p7</span> 
-a<span class="n">sig</span> <span class="nb">poscil</span> a<span class="n">res</span><span class="p">,</span> <span class="nb">p5</span><span class="p">,</span> <span class="mi">1</span>    
+a<span class="n">res</span> <span class="nb">linen</span>  <span class="vi">p4</span><span class="p">,</span> <span class="vi">p6</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p7</span> 
+a<span class="n">sig</span> <span class="nb">poscil</span> a<span class="n">res</span><span class="p">,</span> <span class="vi">p5</span><span class="p">,</span> <span class="mi">1</span>    
      <span class="nb">outs</span>   a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>     
                                          
 <span class="kd">endin</span>
@@ -175,7 +175,7 @@ a<span class="n">sig</span> <span class="nb">poscil</span> a<span class="n">res<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm114278"></a>
+        <a id="idm114261"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="envlpx.html" title="envlpx"><em class="citetitle">envlpx</em></a>,

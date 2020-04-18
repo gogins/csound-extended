@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm204835"></a>
+        <a id="idm204235"></a>
         <h2>Description</h2>
         <p>
       Takes a numeric array (k or i-rate) and returns it sorted in
@@ -47,25 +47,25 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm204838"></a>
+        <a id="idm204238"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">k/i[]<span class="command"><strong>sortd</strong></span> k/i[]  (k- or i-arrays )</pre>
       </div>
       <div class="refsect1">
-        <a id="idm204842"></a>
+        <a id="idm204242"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the sortd opcode. It uses the file <a class="ulink" href="examples/sortd.csd.html" target="_top"> (click here to play) <em class="citetitle">sortd.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm204847"></a>
+          <a id="idm204247"></a>
           <p class="title">
-            <strong>Example 925. Example of the sortd opcode.</strong>
+            <strong>Example 927. Example of the sortd opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm204854"></a>
+              <a id="idm204254"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -75,7 +75,7 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
  k<span class="n">Arr</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span>
- k<span class="n">Sorted</span><span class="p">[]</span> <span class="n">sortd</span> k<span class="n">Arr</span>
+ k<span class="n">Sorted</span><span class="p">[]</span> <span class="nb">sortd</span> k<span class="n">Arr</span>
  k<span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
  <span class="k">while</span> k<span class="n">n</span> <span class="o">&lt;</span> <span class="nb">lenarray</span><span class="p">(</span>k<span class="n">Sorted</span><span class="p">)</span> <span class="k">do</span>
   <span class="nb">printk2</span> k<span class="n">Sorted</span><span class="p">[</span>k<span class="n">n</span><span class="p">]</span>
@@ -98,14 +98,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm204908"></a>
+        <a id="idm204308"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="sorta.html" title="sorta"><em class="citetitle">sorta</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm204913"></a>
+        <a id="idm204313"></a>
         <h2>Credits</h2>
         <p>Author: Victor Lazzarini</p>
         <p>New in version 6.09</p>

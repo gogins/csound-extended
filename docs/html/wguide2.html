@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm253163"></a>
+        <a id="idm252795"></a>
         <h2>Description</h2>
         <p>
       A model of beaten plate consisting of two parallel delay-lines and two first-order lowpass filters.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm253166"></a>
+        <a id="idm252798"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>wguide2</strong></span> asig, xfreq1, xfreq2, kcutoff1, kcutoff2, \
       kfeedback1, kfeedback2</pre>
       </div>
       <div class="refsect1">
-        <a id="idm253170"></a>
+        <a id="idm252802"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- the input of excitation noise
@@ -101,20 +101,20 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm253196"></a>
+        <a id="idm252828"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the wguide2 opcode. It uses the file <a class="ulink" href="examples/wguide2.csd.html" target="_top"> (click here to play) <em class="citetitle">wguide2.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm253201"></a>
+          <a id="idm252833"></a>
           <p class="title">
-            <strong>Example 1144. Example of the wguide2 opcode.</strong>
+            <strong>Example 1147. Example of the wguide2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm253208"></a>
+              <a id="idm252840"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -134,8 +134,8 @@
 <span class="kd">instr</span>	<span class="nf">1</span>
 
 a<span class="n">out</span> <span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>				<span class="c1">;in signal</span>
-a<span class="n">freq1</span> <span class="nb">line</span> <span class="mi">100</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">2000</span>						
-a<span class="n">freq2</span> <span class="nb">line</span> <span class="mi">1200</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p4</span>					<span class="c1">;vary second frequency in the score	</span>
+a<span class="n">freq1</span> <span class="nb">line</span> <span class="mi">100</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">2000</span>						
+a<span class="n">freq2</span> <span class="nb">line</span> <span class="mi">1200</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p4</span>					<span class="c1">;vary second frequency in the score	</span>
 k<span class="n">cutoff1</span>   <span class="o">=</span> <span class="mi">3000</span>
 k<span class="n">cutoff2</span>   <span class="o">=</span> <span class="mi">1500</span>
 k<span class="n">feedback1</span> <span class="o">=</span> <span class="mf">0.25</span>						<span class="c1">;the sum of the two feedback</span>
@@ -160,14 +160,14 @@ a<span class="n">sig</span> <span class="nb">dcblock2</span> a<span class="n">si
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm253313"></a>
+        <a id="idm252945"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="wguide1.html" title="wguide1"><em class="citetitle">wguide1</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm253318"></a>
+        <a id="idm252950"></a>
         <h2>Credits</h2>
         <p>
       </p>

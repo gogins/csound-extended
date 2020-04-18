@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm259394"></a>
+        <a id="idm259044"></a>
         <h2>Description</h2>
         <p>
       Zero-delay feedback implementation of a 2 pole (12 dB/oct) filter. Offers low-pass (default), high-pass, and allpass output modes.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm259397"></a>
+        <a id="idm259047"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asig <span class="command"><strong>zdf_2pole</strong></span> ain, xcf, xQ [, kmode, istor]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm259401"></a>
+        <a id="idm259051"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>istor</em></span> --initial disposition of internal data space.
@@ -62,7 +62,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm259405"></a>
+        <a id="idm259055"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- output signal.
@@ -111,19 +111,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm259432"></a>
+        <a id="idm259082"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the zdf_2pole opcode. It uses the file <a class="ulink" href="examples/zdf_2pole.csd.html" target="_top"> (click here to play) <em class="citetitle">zdf_2pole.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm259437"></a>
+          <a id="idm259087"></a>
           <p class="title">
-            <strong>Example 1168. Example of the zdf_2pole opcode.</strong>
+            <strong>Example 1171. Example of the zdf_2pole opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm259439"></a>
+              <a id="idm259089"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -137,15 +137,15 @@
 <span class="vg">0dbfs</span>	<span class="o">=</span>	<span class="mi">1</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>	
-  a<span class="n">sig</span> <span class="o">=</span> <span class="nb">random</span><span class="p">:</span><span class="nb">a</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> 
-  a<span class="n">sig</span> <span class="o">=</span> <span class="n">zdf_2pole</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="nb">line</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">10000</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="nb">p4</span><span class="p">)</span>
+  a<span class="n">sig</span> <span class="o">=</span> <span class="nb">random</span><span class="p">:</span><span class="kt">a</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> 
+  a<span class="n">sig</span> <span class="o">=</span> <span class="nb">zdf_2pole</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="nb">line</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">10000</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="vi">p4</span><span class="p">)</span>
 
   <span class="nb">outc</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span><span class="p">)</span>
 <span class="kd">endin</span>
 
 <span class="kd">instr</span> <span class="nf">2</span>	
   a<span class="n">sig</span> <span class="o">=</span> <span class="nb">vco2</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">220</span><span class="p">)</span> 
-  a<span class="n">sig</span> <span class="o">=</span> <span class="n">zdf_2pole</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="nb">line</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">10000</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="nb">p4</span><span class="p">)</span>
+  a<span class="n">sig</span> <span class="o">=</span> <span class="nb">zdf_2pole</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="nb">line</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">10000</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="vi">p4</span><span class="p">)</span>
   <span class="nb">outc</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span><span class="p">)</span>
 <span class="kd">endin</span>
 
@@ -177,7 +177,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm259604"></a>
+        <a id="idm259254"></a>
         <h2>References</h2>
         <p> This filter is based on the work of Will Pirkle that employs Vadim
       Zavalishin's work with bilinear tranforms to create topology-preserving
@@ -208,7 +208,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm259615"></a>
+        <a id="idm259265"></a>
         <h2>Credits</h2>
         <p>
       </p>

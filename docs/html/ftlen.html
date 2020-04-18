@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm91049"></a>
+        <a id="idm90820"></a>
         <h2>Description</h2>
         <p>
       Returns the size of a stored function table.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm91052"></a>
+        <a id="idm90823"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>ftlen</strong></span>(x) (init-rate args only)</pre>
       </div>
       <div class="refsect1">
-        <a id="idm91056"></a>
+        <a id="idm90827"></a>
         <h2>Performance</h2>
         <p>
       Returns the size (number of points, excluding guard point) of stored function table, number <span class="emphasis"><em>x</em></span>. While most units referencing a stored table will automatically take its size into account (so tables can be of arbitrary length), this function reports the actual size if that is needed. Note that <span class="emphasis"><em>ftlen</em></span> will always return a power-of-2 value, i.e. the function table guard point (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f Statement</em></a>) is not included.As of Csound version 3.53, <span class="emphasis"><em>ftlen</em></span> works with deferred function tables (see <a class="link" href="GEN01.html" title="GEN01"><em class="citetitle">GEN01</em></a>).
@@ -61,21 +61,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm91071"></a>
+        <a id="idm90842"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the ftlen opcode. It uses the file <a class="ulink" href="examples/ftlen.csd.html" target="_top"> (click here to play) <em class="citetitle">ftlen.csd</em></a>, <a class="ulink" href="examples/fox.wav" target="_top"><em class="citetitle">fox.wav</em></a> and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm91080"></a>
+          <a id="idm90851"></a>
           <p class="title">
-            <strong>Example 372. Example of the ftlen opcode.</strong>
+            <strong>Example 373. Example of the ftlen opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm91087"></a>
+              <a id="idm90858"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -94,9 +94,9 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">ft</span>  <span class="o">=</span> <span class="nb">ftlen</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
+i<span class="n">ft</span>  <span class="o">=</span> <span class="nb">ftlen</span><span class="p">(</span><span class="vi">p4</span><span class="p">)</span>
      <span class="nb">print</span> i<span class="n">ft</span>
-a<span class="n">out</span> <span class="nb">loscil3</span> <span class="mf">.8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="nb">p4</span>
+a<span class="n">out</span> <span class="nb">loscil3</span> <span class="mf">.8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="vi">p4</span>
      <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
 <span class="kd">endin</span> 
@@ -127,17 +127,19 @@ instr 1:  ift = 88199.000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm91172"></a>
+        <a id="idm90943"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="ftchnls.html" title="ftchnls"><em class="citetitle">ftchnls</em></a>, 
       <a class="link" href="ftlptim.html" title="ftlptim"><em class="citetitle">ftlptim</em></a>, 
       <a class="link" href="ftsr.html" title="ftsr"><em class="citetitle">ftsr</em></a>, 
       <a class="link" href="nsamp.html" title="nsamp"><em class="citetitle">nsamp</em></a>
+      <a class="link" href="ftexists.html" title="ftexists"><em class="citetitle">ftexists</em></a>
+
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm91183"></a>
+        <a id="idm90956"></a>
         <h2>Credits</h2>
         <p>
       </p>

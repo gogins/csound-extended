@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm112146"></a>
+        <a id="idm112125"></a>
         <h2>Description</h2>
         <p>
       Zero-delay feedback implementation of Korg35 resonant low-pass filter. This filter design is found in the Korg MS10, early MS20, and Monotron series. 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm112149"></a>
+        <a id="idm112128"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asig <span class="command"><strong>K35_lpf</strong></span> ain, xcf, xQ [, inlp, isaturation, istor]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm112153"></a>
+        <a id="idm112132"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>istor</em></span> --initial disposition of internal data space.
@@ -62,7 +62,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm112157"></a>
+        <a id="idm112136"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- output signal.
@@ -83,19 +83,19 @@
       <span class="emphasis"><em>ksaturation</em></span> (optional, default=1) -- saturation amount to use for non-linear processing. Values &gt; 1 increase the steepness of the NLP curve.</p>
       </div>
       <div class="refsect1">
-        <a id="idm112171"></a>
+        <a id="idm112150"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the K35_lpf opcode. It uses the file <a class="ulink" href="examples/k35.csd.html" target="_top"> (click here to play) <em class="citetitle">k35.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm112176"></a>
+          <a id="idm112155"></a>
           <p class="title">
-            <strong>Example 465. Example of the K35_lpf opcode.</strong>
+            <strong>Example 466. Example of the K35_lpf opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm112178"></a>
+              <a id="idm112157"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -113,7 +113,7 @@
 <span class="kd">instr</span> <span class="nf">1</span>	
 
 a<span class="n">sig</span> <span class="o">=</span> <span class="nb">vco2</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">cps2pch</span><span class="p">(</span><span class="mf">6.00</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
-a<span class="n">sig</span> <span class="o">=</span> <span class="n">K35_lpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="nb">expseg</span><span class="p">:</span><span class="nb">a</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="mf">9.9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+a<span class="n">sig</span> <span class="o">=</span> <span class="nb">K35_lpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="nb">expseg</span><span class="p">:</span><span class="kt">a</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="mf">9.9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 a<span class="n">sig</span> <span class="o">*=</span> <span class="mf">0.25</span>
 a<span class="n">sig</span>  <span class="o">=</span> <span class="nb">limit</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
@@ -125,7 +125,7 @@ a<span class="n">sig</span>  <span class="o">=</span> <span class="nb">limit</sp
 <span class="kd">instr</span> <span class="nf">2</span>	
 
 a<span class="n">sig</span> <span class="o">=</span> <span class="nb">vco2</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">cps2pch</span><span class="p">(</span><span class="mf">6.00</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
-a<span class="n">sig</span> <span class="o">=</span> <span class="n">K35_lpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="nb">expseg</span><span class="p">:</span><span class="nb">k</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="mf">9.9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+a<span class="n">sig</span> <span class="o">=</span> <span class="nb">K35_lpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="nb">expseg</span><span class="p">:</span><span class="kt">k</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="mf">9.9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 a<span class="n">sig</span> <span class="o">*=</span> <span class="mf">0.25</span>
 a<span class="n">sig</span>  <span class="o">=</span> <span class="nb">limit</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
@@ -136,7 +136,7 @@ a<span class="n">sig</span>  <span class="o">=</span> <span class="nb">limit</sp
 <span class="kd">instr</span> <span class="nf">3</span>	
 
 a<span class="n">sig</span> <span class="o">=</span> <span class="nb">vco2</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">cps2pch</span><span class="p">(</span><span class="mf">6.00</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
-a<span class="n">sig</span> <span class="o">=</span> <span class="n">K35_hpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="nb">expseg</span><span class="p">:</span><span class="nb">a</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="mf">9.9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+a<span class="n">sig</span> <span class="o">=</span> <span class="nb">K35_hpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="nb">expseg</span><span class="p">:</span><span class="kt">a</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="mf">9.9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 a<span class="n">sig</span> <span class="o">*=</span> <span class="mf">0.25</span>
 a<span class="n">sig</span>  <span class="o">=</span> <span class="nb">limit</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
@@ -148,7 +148,7 @@ a<span class="n">sig</span>  <span class="o">=</span> <span class="nb">limit</sp
 <span class="kd">instr</span> <span class="nf">4</span>	
 
 a<span class="n">sig</span> <span class="o">=</span> <span class="nb">vco2</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">cps2pch</span><span class="p">(</span><span class="mf">6.00</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
-a<span class="n">sig</span> <span class="o">=</span> <span class="n">K35_hpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="nb">expseg</span><span class="p">:</span><span class="nb">k</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="mf">9.9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+a<span class="n">sig</span> <span class="o">=</span> <span class="nb">K35_hpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="nb">expseg</span><span class="p">:</span><span class="kt">k</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="mf">9.9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 a<span class="n">sig</span> <span class="o">*=</span> <span class="mf">0.25</span>
 a<span class="n">sig</span>  <span class="o">=</span> <span class="nb">limit</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
@@ -160,32 +160,32 @@ a<span class="n">sig</span>  <span class="o">=</span> <span class="nb">limit</sp
 
 <span class="kd">instr</span> <span class="nf">ms20_drum</span>
 
-  i<span class="n">pch</span> <span class="o">=</span> <span class="nb">cps2pch</span><span class="p">(</span><span class="nb">p4</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
-  i<span class="n">amp</span> <span class="o">=</span> <span class="nb">ampdbfs</span><span class="p">(</span><span class="nb">p5</span><span class="p">)</span>
-  a<span class="n">env</span> <span class="o">=</span> <span class="nb">expseg</span><span class="p">:</span><span class="nb">a</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> i<span class="n">pch</span><span class="p">,</span> <span class="nb">p3</span> <span class="o">-</span> <span class="mf">.05</span><span class="p">,</span> i<span class="n">pch</span><span class="p">)</span>
+  i<span class="n">pch</span> <span class="o">=</span> <span class="nb">cps2pch</span><span class="p">(</span><span class="vi">p4</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+  i<span class="n">amp</span> <span class="o">=</span> <span class="nb">ampdbfs</span><span class="p">(</span><span class="vi">p5</span><span class="p">)</span>
+  a<span class="n">env</span> <span class="o">=</span> <span class="nb">expseg</span><span class="p">:</span><span class="kt">a</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> i<span class="n">pch</span><span class="p">,</span> <span class="vi">p3</span> <span class="o">-</span> <span class="mf">.05</span><span class="p">,</span> i<span class="n">pch</span><span class="p">)</span>
 
-  a<span class="n">sig</span> <span class="o">=</span> <span class="nb">rand</span><span class="p">:</span><span class="nb">a</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-  a<span class="n">sig</span> <span class="o">=</span> <span class="n">K35_hpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-  a<span class="n">sig</span> <span class="o">=</span> <span class="n">K35_lpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> a<span class="n">env</span><span class="p">,</span> <span class="mf">9.8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+  a<span class="n">sig</span> <span class="o">=</span> <span class="nb">rand</span><span class="p">:</span><span class="kt">a</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+  a<span class="n">sig</span> <span class="o">=</span> <span class="nb">K35_hpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+  a<span class="n">sig</span> <span class="o">=</span> <span class="nb">K35_lpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> a<span class="n">env</span><span class="p">,</span> <span class="mf">9.8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
   a<span class="n">sig</span> <span class="o">=</span> <span class="nb">tanh</span><span class="p">(</span>a<span class="n">sig</span> <span class="o">*</span> <span class="mi">16</span><span class="p">)</span>
 
-  a<span class="n">sig</span> <span class="o">*=</span> <span class="nb">expon</span><span class="p">(</span>i<span class="n">amp</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">)</span>
+  a<span class="n">sig</span> <span class="o">*=</span> <span class="nb">expon</span><span class="p">(</span>i<span class="n">amp</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">)</span>
 
   <span class="nb">outc</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span><span class="p">)</span>
 
 <span class="kd">endin</span>
 
 <span class="kd">instr</span> <span class="nf">ms20_bass</span> 
-  i<span class="n">pch</span> <span class="o">=</span> <span class="nb">cps2pch</span><span class="p">(</span><span class="nb">p4</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
-  i<span class="n">amp</span> <span class="o">=</span> <span class="nb">ampdbfs</span><span class="p">(</span><span class="nb">p5</span><span class="p">)</span>
-  a<span class="n">env</span> <span class="o">=</span> <span class="nb">expseg</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> i<span class="n">pch</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">p3</span> <span class="o">-</span> <span class="mf">.05</span><span class="p">,</span> i<span class="n">pch</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+  i<span class="n">pch</span> <span class="o">=</span> <span class="nb">cps2pch</span><span class="p">(</span><span class="vi">p4</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+  i<span class="n">amp</span> <span class="o">=</span> <span class="nb">ampdbfs</span><span class="p">(</span><span class="vi">p5</span><span class="p">)</span>
+  a<span class="n">env</span> <span class="o">=</span> <span class="nb">expseg</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> i<span class="n">pch</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="vi">p3</span> <span class="o">-</span> <span class="mf">.05</span><span class="p">,</span> i<span class="n">pch</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
 
   a<span class="n">sig</span> <span class="o">=</span> <span class="nb">vco2</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> i<span class="n">pch</span><span class="p">)</span>
-  a<span class="n">sig</span> <span class="o">=</span> <span class="n">K35_hpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> i<span class="n">pch</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-  a<span class="n">sig</span> <span class="o">=</span> <span class="n">K35_lpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> a<span class="n">env</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+  a<span class="n">sig</span> <span class="o">=</span> <span class="nb">K35_hpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> i<span class="n">pch</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+  a<span class="n">sig</span> <span class="o">=</span> <span class="nb">K35_lpf</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> a<span class="n">env</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-  a<span class="n">sig</span> <span class="o">*=</span> <span class="nb">expon</span><span class="p">:</span><span class="nb">a</span><span class="p">(</span>i<span class="n">amp</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.8</span>
+  a<span class="n">sig</span> <span class="o">*=</span> <span class="nb">expon</span><span class="p">:</span><span class="kt">a</span><span class="p">(</span>i<span class="n">amp</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.8</span>
 
   <span class="nb">outc</span><span class="p">(</span>a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span><span class="p">)</span>
 <span class="kd">endin</span>
@@ -204,26 +204,26 @@ gk<span class="n">tempo</span> <span class="nb">init</span> <span class="mi">122
 
   <span class="nb">schedule</span><span class="p">(</span><span class="s">"ms20_bass"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> i<span class="n">pch</span><span class="p">,</span> <span class="o">-</span><span class="mi">11</span><span class="p">)</span> 
 
-  <span class="k">if</span><span class="p">(</span><span class="nb">p2</span> <span class="o">&lt;</span> <span class="mf">37.5</span><span class="p">)</span> <span class="k">then</span>
+  <span class="k">if</span><span class="p">(</span><span class="vi">p2</span> <span class="o">&lt;</span> <span class="mf">37.5</span><span class="p">)</span> <span class="k">then</span>
     <span class="nb">schedule</span><span class="p">(</span><span class="s">"bass_player"</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
   <span class="k">endif</span>
   <span class="nb">turnoff</span>
 <span class="kd">endin</span>
 
 <span class="kd">instr</span> <span class="nf">beat_player</span> 
-  i<span class="n">step_total</span> <span class="o">=</span> <span class="nb">p4</span> 
+  i<span class="n">step_total</span> <span class="o">=</span> <span class="vi">p4</span> 
   i<span class="n">step</span> <span class="o">=</span> i<span class="n">step_total</span> <span class="o">%</span> <span class="mi">16</span>
 
   <span class="k">if</span><span class="p">(</span>i<span class="n">step</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span>
-    i<span class="n">pch</span> <span class="o">=</span> <span class="p">((</span>i<span class="n">step_total</span> <span class="o">%</span> <span class="mi">128</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">112</span><span class="p">)</span> <span class="p">?</span> <span class="mf">4.00</span> <span class="p">:</span> <span class="mf">8.00</span>
-    i<span class="n">amp</span> <span class="o">=</span> <span class="p">(</span>i<span class="n">step</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>  <span class="p">?</span> <span class="o">-</span><span class="mi">9</span> <span class="p">:</span> <span class="o">-</span><span class="mi">12</span>
+    i<span class="n">pch</span> <span class="o">=</span> <span class="p">((</span>i<span class="n">step_total</span> <span class="o">%</span> <span class="mi">128</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">112</span><span class="p">)</span> <span class="o">?</span> <span class="mf">4.00</span> <span class="o">:</span> <span class="mf">8.00</span>
+    i<span class="n">amp</span> <span class="o">=</span> <span class="p">(</span>i<span class="n">step</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>  <span class="o">?</span> <span class="o">-</span><span class="mi">9</span> <span class="o">:</span> <span class="o">-</span><span class="mi">12</span>
     <span class="nb">schedule</span><span class="p">(</span><span class="s">"ms20_drum"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> i<span class="n">pch</span><span class="p">,</span> i<span class="n">amp</span><span class="p">)</span>
   <span class="k">endif</span>
 
   <span class="nb">schedule</span><span class="p">(</span><span class="s">"ms20_drum"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">,</span> <span class="mf">14.00</span><span class="p">,</span> 
-           <span class="p">(</span>i<span class="n">step</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">?</span> <span class="o">-</span><span class="mi">12</span> <span class="p">:</span> <span class="o">-</span><span class="mi">18</span><span class="p">)</span>
+           <span class="p">(</span>i<span class="n">step</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="o">-</span><span class="mi">12</span> <span class="o">:</span> <span class="o">-</span><span class="mi">18</span><span class="p">)</span>
 
-  <span class="k">if</span><span class="p">(</span><span class="nb">p2</span> <span class="o">&lt;</span> <span class="mf">37.5</span><span class="p">)</span> <span class="k">then</span>
+  <span class="k">if</span><span class="p">(</span><span class="vi">p2</span> <span class="o">&lt;</span> <span class="mf">37.5</span><span class="p">)</span> <span class="k">then</span>
     <span class="nb">schedule</span><span class="p">(</span><span class="s">"beat_player"</span><span class="p">,</span> <span class="nf">beat_dur</span><span class="p">()</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> i<span class="n">step_total</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
   <span class="k">endif</span>
   <span class="nb">turnoff</span>
@@ -257,7 +257,7 @@ gk<span class="n">tempo</span> <span class="nb">init</span> <span class="mi">122
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm112861"></a>
+        <a id="idm112840"></a>
         <h2>References</h2>
         <p> This filter is based on the work of Will Pirkle that employs Vadim
       Zavalishin's work with bilinear tranforms to create topology-preserving
@@ -288,7 +288,7 @@ gk<span class="n">tempo</span> <span class="nb">init</span> <span class="mi">122
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm112872"></a>
+        <a id="idm112851"></a>
         <h2>Credits</h2>
         <p>
       </p>

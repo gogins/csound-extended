@@ -39,26 +39,26 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm164265"></a>
+        <a id="idm163041"></a>
         <h2>Description</h2>
         <p>
       An implementation of <span class="emphasis"><em>iord</em></span> number of first-order allpass filters in series.
    </p>
       </div>
       <div class="refsect1">
-        <a id="idm164269"></a>
+        <a id="idm163045"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>phaser1</strong></span> asig, kfreq, kord, kfeedback [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm164273"></a>
+        <a id="idm163049"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iskip</em></span> (optional, default=0) -- used to control initial disposition of internal data space. Since filtering incorporates a feedback loop of previous output, the initial status of the storage space used is significant. A zero value will clear the space; a non-zero value will allow previous information to remain. The default value is 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm164277"></a>
+        <a id="idm163053"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kfreq</em></span> -- frequency (in Hz) of the filter(s). This is the frequency at which each filter in the series shifts its input by 90 degrees. 
@@ -102,21 +102,21 @@ y(n) = C * x(n) + x(n-1) - C * y(n-1)<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm164303"></a>
+        <a id="idm163079"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the phaser1 opcode. It uses the file <a class="ulink" href="examples/phaser1.csd.html" target="_top"> (click here to play) <em class="citetitle">phaser1.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm164308"></a>
+          <a id="idm163084"></a>
           <p class="title">
             <strong>Example 704. Example of the phaser1 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm164315"></a>
+              <a id="idm163091"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -137,12 +137,12 @@ y(n) = C * x(n) + x(n-1) - C * y(n-1)<br />
 <span class="kd">instr</span> <span class="nf">1</span>
   <span class="c1">; Input mixed with output of phaser1 to generate notches.</span>
   <span class="c1">; Shows the effects of different iorder values on the sound</span>
-  i<span class="n">dur</span>   <span class="o">=</span> <span class="nb">p3</span> 
-  i<span class="n">amp</span>   <span class="o">=</span> <span class="nb">p4</span> <span class="o">*</span> <span class="mf">.05</span>
-  i<span class="n">order</span> <span class="o">=</span> <span class="nb">p5</span>        <span class="c1">; number of 1st-order stages in phaser1 network.</span>
+  i<span class="n">dur</span>   <span class="o">=</span> <span class="vi">p3</span> 
+  i<span class="n">amp</span>   <span class="o">=</span> <span class="vi">p4</span> <span class="o">*</span> <span class="mf">.05</span>
+  i<span class="n">order</span> <span class="o">=</span> <span class="vi">p5</span>        <span class="c1">; number of 1st-order stages in phaser1 network.</span>
                      <span class="c1">; Divide iorder by 2 to get the number of notches.</span>
-  i<span class="n">freq</span>  <span class="o">=</span> <span class="nb">p6</span>        <span class="c1">; frequency of modulation of phaser1</span>
-  i<span class="n">feed</span>  <span class="o">=</span> <span class="nb">p7</span>        <span class="c1">; amount of feedback for phaser1</span>
+  i<span class="n">freq</span>  <span class="o">=</span> <span class="vi">p6</span>        <span class="c1">; frequency of modulation of phaser1</span>
+  i<span class="n">feed</span>  <span class="o">=</span> <span class="vi">p7</span>        <span class="c1">; amount of feedback for phaser1</span>
 
   k<span class="n">amp</span>   <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">.2</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> i<span class="n">dur</span> <span class="o">-</span> <span class="mf">.2</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> <span class="mf">.2</span><span class="p">,</span> <span class="mi">0</span>
 
@@ -186,14 +186,14 @@ y(n) = C * x(n) + x(n-1) - C * y(n-1)<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm164507"></a>
+        <a id="idm163283"></a>
         <h2>Technical History</h2>
         <p>
       A general description of the differences between flanging and phasing can be found in Hartmann [1]. An early implementation of first-order allpass filters connected in series can be found in Beigel [2], where the bilinear z-transform is used for determining the phase shift frequency of each stage. Cronin [3] presents a similar implementation for a four-stage phase shifting network. Chamberlin [4] and Smith [5] both discuss using second-order allpass sections for greater control over notch depth, width, and frequency.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm164510"></a>
+        <a id="idm163286"></a>
         <h2>References</h2>
         <p>
       </p>
@@ -230,7 +230,7 @@ y(n) = C * x(n) + x(n-1) - C * y(n-1)<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm164524"></a>
+        <a id="idm163300"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="phaser2.html" title="phaser2"><em class="citetitle">phaser2</em></a>
@@ -240,7 +240,7 @@ y(n) = C * x(n) + x(n-1) - C * y(n-1)<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm164532"></a>
+        <a id="idm163308"></a>
         <h2>Credits</h2>
         <p>
       </p>

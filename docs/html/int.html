@@ -39,14 +39,14 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm108568"></a>
+        <a id="idm108544"></a>
         <h2>Description</h2>
         <p>
       Returns the integer part of <span class="emphasis"><em>x</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm108572"></a>
+        <a id="idm108548"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>int</strong></span>(x)  (init-rate or control-rate; also works at audio rate in Csound5)</pre>
         <p>
@@ -54,21 +54,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm108577"></a>
+        <a id="idm108553"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the int opcode. It uses the file <a class="ulink" href="examples/int.csd.html" target="_top"> (click here to play) <em class="citetitle">int.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm108582"></a>
+          <a id="idm108558"></a>
           <p class="title">
-            <strong>Example 450. Example of the int opcode.</strong>
+            <strong>Example 451. Example of the int opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm108589"></a>
+              <a id="idm108565"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -91,8 +91,8 @@ i<span class="n">count</span> <span class="nb">init</span> <span class="mi">0</s
 <span class="nl">loop</span><span class="p">:</span>
   i<span class="n">num</span> <span class="o">=</span> i<span class="n">count</span> <span class="o">/</span> <span class="mi">3</span>
   i<span class="n">nm</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>i<span class="n">num</span><span class="p">)</span>
-  <span class="nb">prints</span> <span class="s">"integer (%f/3) = %f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> i<span class="n">count</span><span class="p">,</span> i<span class="n">nm</span>
-<span class="k">loop_lt</span> i<span class="n">count</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="nl">loop</span>
+  <span class="nb">prints</span> <span class="s">"integer (</span><span class="si">%f</span><span class="s">/3) = </span><span class="si">%f</span><span class="se">\\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">count</span><span class="p">,</span> i<span class="n">nm</span>
+<span class="kp">loop_lt</span> i<span class="n">count</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="nl">loop</span>
 
 <span class="kd">endin</span>
 <span class="nt">&lt;/CsInstruments&gt;</span>
@@ -125,7 +125,7 @@ integer (9.000000/3) = 3.000000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm108657"></a>
+        <a id="idm108636"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="abs.html" title="abs"><em class="citetitle">abs</em></a>,
@@ -138,7 +138,7 @@ integer (9.000000/3) = 3.000000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm108674"></a>
+        <a id="idm108653"></a>
         <h2>Credits</h2>
       </div>
     </div>

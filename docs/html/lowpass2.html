@@ -39,26 +39,26 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm122822"></a>
+        <a id="idm122934"></a>
         <h2>Description</h2>
         <p>
       Implementation of a resonant second-order lowpass filter.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm122825"></a>
+        <a id="idm122937"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>lowpass2</strong></span> asig, kcf, kq [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm122829"></a>
+        <a id="idm122941"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iskip</em></span> -- initial disposition of internal data space. A zero value will clear the space; a non-zero value will allow previous information to remain. The default value is 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm122833"></a>
+        <a id="idm122945"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- input signal to be filtered
@@ -74,21 +74,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm122849"></a>
+        <a id="idm122961"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the lowpass2 opcode. It uses the file <a class="ulink" href="examples/lowpass2.csd.html" target="_top"> (click here to play) <em class="citetitle">lowpass2.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm122854"></a>
+          <a id="idm122966"></a>
           <p class="title">
-            <strong>Example 509. Example of the lowpass2 opcode.</strong>
+            <strong>Example 510. Example of the lowpass2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm122861"></a>
+              <a id="idm122973"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -109,9 +109,9 @@
 
           <span class="kd">instr</span> <span class="nf">1</span>
 
-  i<span class="n">dur</span>    <span class="o">=</span>          <span class="nb">p3</span>
-  i<span class="n">freq</span>   <span class="o">=</span>          <span class="nb">p4</span>
-  i<span class="n">amp</span>    <span class="o">=</span>          <span class="nb">p5</span> <span class="o">*</span> <span class="mf">.5</span>
+  i<span class="n">dur</span>    <span class="o">=</span>          <span class="vi">p3</span>
+  i<span class="n">freq</span>   <span class="o">=</span>          <span class="vi">p4</span>
+  i<span class="n">amp</span>    <span class="o">=</span>          <span class="vi">p5</span> <span class="o">*</span> <span class="mf">.5</span>
   i<span class="n">harms</span>  <span class="o">=</span>          <span class="p">(</span><span class="vg">sr</span><span class="o">*</span><span class="mf">.4</span><span class="p">)</span> <span class="o">/</span> i<span class="n">freq</span>
 
 <span class="c1">; Sawtooth-like waveform</span>
@@ -150,7 +150,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm122994"></a>
+        <a id="idm123106"></a>
         <h2>Credits</h2>
         <p>
       </p>

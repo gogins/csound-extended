@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm149165"></a>
+        <a id="idm147898"></a>
         <h2>Description</h2>
         <p>
       Accesses table values by incremental sampling.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm149168"></a>
+        <a id="idm147901"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kres <span class="command"><strong>oscil1</strong></span> idel, kamp, idur [, ifn]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm149172"></a>
+        <a id="idm147905"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idel</em></span> -- delay in seconds before <span class="emphasis"><em>oscil1</em></span> incremental sampling begins.
@@ -69,7 +69,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm149183"></a>
+        <a id="idm147916"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- amplitude factor.
@@ -79,20 +79,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm149195"></a>
+        <a id="idm147928"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the oscil1 opcode. It uses the file <a class="ulink" href="examples/oscil1.csd.html" target="_top"> (click here to play) <em class="citetitle">oscil1.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm149200"></a>
+          <a id="idm147933"></a>
           <p class="title">
             <strong>Example 636. Example of the oscil1 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm149207"></a>
+              <a id="idm147940"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -111,9 +111,9 @@
 
 <span class="kd">instr</span>     <span class="nf">1</span>   
 
-i<span class="n">panfn</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">panfn</span> <span class="o">=</span> <span class="vi">p4</span>
 a<span class="n">sig</span>   <span class="nb">vco2</span> <span class="mf">.3</span><span class="p">,</span> <span class="mi">220</span>
-k<span class="n">pan</span>   <span class="nb">oscil1i</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> i<span class="n">panfn</span>	<span class="c1">;create panning &amp;</span>
+k<span class="n">pan</span>   <span class="nb">oscil1i</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> i<span class="n">panfn</span>	<span class="c1">;create panning &amp;</span>
 k<span class="n">left</span>  <span class="o">=</span> <span class="nb">sqrt</span><span class="p">(</span>k<span class="n">pan</span><span class="p">)</span>		<span class="c1">;start right away</span>
 k<span class="n">right</span> <span class="o">=</span> <span class="nb">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span>k<span class="n">pan</span><span class="p">)</span>     
        <span class="nb">outs</span> k<span class="n">left</span><span class="o">*</span>a<span class="n">sig</span><span class="p">,</span> k<span class="n">right</span><span class="o">*</span>a<span class="n">sig</span>
@@ -155,7 +155,7 @@ k<span class="n">right</span> <span class="o">=</span> <span class="nb">sqrt</sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm149331"></a>
+        <a id="idm148064"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="table.html" title="table"><em class="citetitle">table</em></a>,

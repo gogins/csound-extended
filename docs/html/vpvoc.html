@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm248911"></a>
+        <a id="idm248543"></a>
         <h2>Description</h2>
         <p>
       Implements signal reconstruction using an fft-based phase vocoder and an extra envelope.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm248914"></a>
+        <a id="idm248546"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>vpvoc</strong></span> ktimpnt, kfmod, ifile [, ispecwp] [, ifn]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm248918"></a>
+        <a id="idm248550"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifile</em></span> -- the pvoc number (n in pvoc.n) or the name in quotes of the analysis file made using <a class="link" href="pvanal.html" title="pvanal"><em class="citetitle">pvanal</em></a>. (See <a class="link" href="pvoc.html" title="pvoc"><em class="citetitle">pvoc</em></a>.)
@@ -64,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm248935"></a>
+        <a id="idm248567"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktimpnt</em></span> -- The passage of time, in seconds, through the analysis file. <span class="emphasis"><em>ktimpnt</em></span> must always be positive, but can move forwards or backwards in time, be stationary or discontinuous, as a pointer into the analysis file. 
@@ -83,7 +83,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm248965"></a>
+        <a id="idm248597"></a>
         <h2>Examples</h2>
         <p>
       The following example, using <span class="emphasis"><em>vpvoc</em></span>, shows the use of functions such as
@@ -116,14 +116,14 @@ apv     <span class="opc">vpvoc</span>        ktime, 1, "pvoc.file"</pre>
       Here is a complete example of the vpvoc opcode. It uses the file <a class="ulink" href="examples/vpvoc.csd.html" target="_top"> (click here to play) <em class="citetitle">vpvoc.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm248988"></a>
+          <a id="idm248620"></a>
           <p class="title">
-            <strong>Example 1123. </strong>
+            <strong>Example 1126. </strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm248994"></a>
+              <a id="idm248626"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -142,9 +142,9 @@ apv     <span class="opc">vpvoc</span>        ktime, 1, "pvoc.file"</pre>
 
 <span class="kd">instr</span> <span class="nf">1</span>
 <span class="c1">; analyze "fox.wav" with PVANAL first</span>
-i<span class="n">end</span>  <span class="o">=</span> <span class="nb">p4</span>
-k<span class="n">time</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> i<span class="n">end</span>
-      <span class="nb">tablexseg</span> <span class="nb">p5</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p6</span>		<span class="c1">;morph from table 1</span>
+i<span class="n">end</span>  <span class="o">=</span> <span class="vi">p4</span>
+k<span class="n">time</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> i<span class="n">end</span>
+      <span class="nb">tablexseg</span> <span class="vi">p5</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p6</span>		<span class="c1">;morph from table 1</span>
 a<span class="n">sig</span>  <span class="nb">vpvoc</span> k<span class="n">time</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"fox.pvx"</span>		<span class="c1">;to table 2</span>
       <span class="nb">outs</span> a<span class="n">sig</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> a<span class="n">sig</span><span class="o">*</span><span class="mi">3</span>
 
@@ -166,14 +166,14 @@ a<span class="n">sig</span>  <span class="nb">vpvoc</span> k<span class="n">time
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm249086"></a>
+        <a id="idm248718"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvoc.html" title="pvoc"><em class="citetitle">pvoc</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm249091"></a>
+        <a id="idm248723"></a>
         <h2>Credits</h2>
         <p>
       </p>

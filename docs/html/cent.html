@@ -39,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm36922"></a>
+        <a id="idm36313"></a>
         <h2>Description</h2>
         <p>
       Calculates a factor to raise/lower a frequency by a given amount of cents.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm36925"></a>
+        <a id="idm36316"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>cent</strong></span>(x) </pre>
         <p>
@@ -54,35 +54,35 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm36930"></a>
+        <a id="idm36321"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>x</em></span> -- a value expressed in cents.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm36934"></a>
+        <a id="idm36325"></a>
         <h2>Performance</h2>
         <p>
       The value returned by the <span class="emphasis"><em>cent</em></span> function is a factor. You can multiply a frequency by this factor to raise/lower it by the given amount of cents.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm36938"></a>
+        <a id="idm36329"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the cent opcode. It uses the file <a class="ulink" href="examples/cent.csd.html" target="_top"> (click here to play) <em class="citetitle">cent.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm36943"></a>
+          <a id="idm36334"></a>
           <p class="title">
             <strong>Example 115. Example of the cent opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm36950"></a>
+              <a id="idm36341"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -113,7 +113,7 @@ a<span class="n">sig</span> <span class="nb">oscili</span> <span class="mf">0.6<
 <span class="kd">instr</span> <span class="nf">2</span>
   
 i<span class="n">root</span>   <span class="o">=</span> <span class="mi">440</span>	<span class="c1">; root note = A (440 Hz)</span>
-i<span class="n">cents</span>  <span class="o">=</span> <span class="nb">p4</span>	<span class="c1">; change root note by 300 and 1200 cents</span>
+i<span class="n">cents</span>  <span class="o">=</span> <span class="vi">p4</span>	<span class="c1">; change root note by 300 and 1200 cents</span>
 
 i<span class="n">factor</span> <span class="o">=</span> <span class="nb">cent</span><span class="p">(</span>i<span class="n">cents</span><span class="p">)</span> <span class="c1">; calculate new note</span>
 i<span class="n">new</span>    <span class="o">=</span> i<span class="n">root</span> <span class="o">*</span> i<span class="n">factor</span>
@@ -162,7 +162,7 @@ instr 2:  inew = 880.000</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm37066"></a>
+        <a id="idm36457"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="db.html" title="db"><em class="citetitle">db</em></a>,
@@ -171,7 +171,7 @@ instr 2:  inew = 880.000</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm37075"></a>
+        <a id="idm36466"></a>
         <p>New in version 4.16</p>
       </div>
     </div>

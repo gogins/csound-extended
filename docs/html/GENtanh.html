@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm275138"></a>
+        <a id="idm274800"></a>
         <h2>Description</h2>
         <p>
       Creates an ftable with values of the tanh function.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm275141"></a>
+        <a id="idm274803"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size "tanh" start end rescale</pre>
       </div>
       <div class="refsect1">
-        <a id="idm275145"></a>
+        <a id="idm274807"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>size</em></span> -- number of points in the table. Must
@@ -65,20 +65,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm275155"></a>
+        <a id="idm274817"></a>
         <h2>Examples</h2>
         <p>
       Here is a simple example of the GENtanh routine. It uses the file <a class="ulink" href="examples/gentanh.csd.html" target="_top"> (click here to play) <em class="citetitle">gentanh.csd</em></a>.
            </p>
         <div class="example">
-          <a id="idm275160"></a>
+          <a id="idm274822"></a>
           <p class="title">
-            <strong>Example 1234. Example of the GENtanh routine.</strong>
+            <strong>Example 1237. Example of the GENtanh routine.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm275167"></a>
+              <a id="idm274829"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -97,11 +97,11 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-a<span class="n">swp</span>	<span class="nb">linseg</span>	<span class="mf">0.01</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">.49</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">0.01</span>		<span class="c1">;index sweep function</span>
+a<span class="n">swp</span>	<span class="nb">linseg</span>	<span class="mf">0.01</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">.49</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">0.01</span>		<span class="c1">;index sweep function</span>
 a<span class="n">index</span>	<span class="nb">poscil</span>	a<span class="n">swp</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">1</span>				<span class="c1">;sound to waveshape</span>
-a<span class="n">table</span>	<span class="nb">tablei</span>	a<span class="n">index</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.5</span>			<span class="c1">;waveshape index</span>
-a<span class="n">env</span>	<span class="nb">linen</span>	<span class="mf">0.8</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.02</span>			<span class="c1">;amplitude envelope</span>
-a<span class="n">sig</span>	<span class="o">=</span> <span class="p">(</span>a<span class="n">table</span><span class="o">*</span>a<span class="n">env</span><span class="p">)</span><span class="o">*</span><span class="nb">p5</span>				<span class="c1">;impose envelope and scale</span>
+a<span class="n">table</span>	<span class="nb">tablei</span>	a<span class="n">index</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.5</span>			<span class="c1">;waveshape index</span>
+a<span class="n">env</span>	<span class="nb">linen</span>	<span class="mf">0.8</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">.02</span>			<span class="c1">;amplitude envelope</span>
+a<span class="n">sig</span>	<span class="o">=</span> <span class="p">(</span>a<span class="n">table</span><span class="o">*</span>a<span class="n">env</span><span class="p">)</span><span class="o">*</span><span class="vi">p5</span>				<span class="c1">;impose envelope and scale</span>
 a<span class="n">sig</span>    <span class="nb">dcblock2</span> a<span class="n">sig</span>					<span class="c1">;get rid of DC</span>
 	<span class="nb">outs</span>    a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
@@ -156,7 +156,7 @@ a<span class="n">sig</span>    <span class="nb">dcblock2</span> a<span class="n"
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm275337"></a>
+        <a id="idm274999"></a>
         <h2>See Also</h2>
         <p>
        <a class="link" href="GENexp.html" title="GENexp"><em class="citetitle">GENexp</em></a> and
@@ -167,7 +167,7 @@ a<span class="n">sig</span>    <span class="nb">dcblock2</span> a<span class="n"
      </p>
       </div>
       <div class="refsect1">
-        <a id="idm275347"></a>
+        <a id="idm275009"></a>
         <h2>Credits</h2>
         <p>Written by John ffitch</p>
       </div>

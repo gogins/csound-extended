@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm40035"></a>
+        <a id="idm39488"></a>
         <h2>Description</h2>
         <p>Plugin opcode in chua</p>
         <p>
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm40039"></a>
+        <a id="idm39492"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aI3, aV2, aV1 <span class="command"><strong>chuap</strong></span> kL, kR0, kC1, kG, kGa, kGb, kE, kC2, iI3, iV2, iV1, ktime_step</pre>
       </div>
       <div class="refsect1">
-        <a id="idm40043"></a>
+        <a id="idm39496"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iI3</em></span> -- Initial current at G
@@ -65,7 +65,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm40051"></a>
+        <a id="idm39504"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kL</em></span> -- Inductor L
@@ -165,19 +165,19 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm40088"></a>
+        <a id="idm39541"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the chuap opcode. It uses the file <a class="ulink" href="examples/chuap.csd.html" target="_top"> (click here to play) <em class="citetitle">chuap.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm40093"></a>
+          <a id="idm39546"></a>
           <p class="title">
             <strong>Example 131. Example of the chuap opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm40095"></a>
+              <a id="idm39548"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -199,27 +199,27 @@ gi<span class="n">buzztable</span> <span class="nb">ftgen</span> <span class="mi
 <span class="kd">instr</span> <span class="nf">1</span>
 <span class="c1">; sys_variables = system_vars(5:12); % L,R0,C2,G,Ga,Gb,E,C1 or p8:p15</span>
 <span class="c1">; integ_variables = [system_vars(14:16),system_vars(1:2)]; % x0,y0,z0,dataset_size,step_size or p17:p19, p4:p5</span>
-i<span class="n">step_size</span>    <span class="o">=</span>       <span class="nb">p5</span>
-i<span class="n">L</span>            <span class="o">=</span>       <span class="nb">p8</span>
-i<span class="n">R0</span>           <span class="o">=</span>       <span class="nb">p9</span>
-i<span class="n">C2</span>           <span class="o">=</span>       <span class="nb">p10</span>
-i<span class="n">G</span>            <span class="o">=</span>       <span class="nb">p11</span>
-i<span class="n">Ga</span>           <span class="o">=</span>       <span class="nb">p12</span>
-i<span class="n">Gb</span>           <span class="o">=</span>       <span class="nb">p13</span>
-i<span class="n">E</span>            <span class="o">=</span>       <span class="nb">p14</span>
-i<span class="n">C1</span>           <span class="o">=</span>       <span class="nb">p15</span>
-i<span class="n">I3</span>           <span class="o">=</span>       <span class="nb">p17</span>
-i<span class="n">V2</span>           <span class="o">=</span>       <span class="nb">p18</span>
-i<span class="n">V1</span>           <span class="o">=</span>       <span class="nb">p19</span>
-i<span class="n">gnore</span>        <span class="o">=</span>       <span class="nb">p21</span>
-i<span class="n">gnore</span>        <span class="o">=</span>       <span class="nb">p22</span>
-i<span class="n">gnore</span>        <span class="o">=</span>       <span class="nb">p23</span>
-i<span class="n">gnore</span>        <span class="o">=</span>       <span class="nb">p24</span>
-i<span class="n">gnore</span>        <span class="o">=</span>       <span class="nb">p25</span>
+i<span class="n">step_size</span>    <span class="o">=</span>       <span class="vi">p5</span>
+i<span class="n">L</span>            <span class="o">=</span>       <span class="vi">p8</span>
+i<span class="n">R0</span>           <span class="o">=</span>       <span class="vi">p9</span>
+i<span class="n">C2</span>           <span class="o">=</span>       <span class="vi">p10</span>
+i<span class="n">G</span>            <span class="o">=</span>       <span class="vi">p11</span>
+i<span class="n">Ga</span>           <span class="o">=</span>       <span class="vi">p12</span>
+i<span class="n">Gb</span>           <span class="o">=</span>       <span class="vi">p13</span>
+i<span class="n">E</span>            <span class="o">=</span>       <span class="vi">p14</span>
+i<span class="n">C1</span>           <span class="o">=</span>       <span class="vi">p15</span>
+i<span class="n">I3</span>           <span class="o">=</span>       <span class="vi">p17</span>
+i<span class="n">V2</span>           <span class="o">=</span>       <span class="vi">p18</span>
+i<span class="n">V1</span>           <span class="o">=</span>       <span class="vi">p19</span>
+i<span class="n">gnore</span>        <span class="o">=</span>       <span class="vi">p21</span>
+i<span class="n">gnore</span>        <span class="o">=</span>       <span class="vi">p22</span>
+i<span class="n">gnore</span>        <span class="o">=</span>       <span class="vi">p23</span>
+i<span class="n">gnore</span>        <span class="o">=</span>       <span class="vi">p24</span>
+i<span class="n">gnore</span>        <span class="o">=</span>       <span class="vi">p25</span>
 i<span class="n">attack</span>       <span class="o">=</span>       <span class="mf">0.02</span>
-i<span class="n">sustain</span>      <span class="o">=</span>       <span class="nb">p3</span>
+i<span class="n">sustain</span>      <span class="o">=</span>       <span class="vi">p3</span>
 i<span class="n">release</span>      <span class="o">=</span>       <span class="mf">0.02</span>
-<span class="nb">p3</span>            <span class="o">=</span>       i<span class="n">attack</span> <span class="o">+</span> i<span class="n">sustain</span> <span class="o">+</span> i<span class="n">release</span>
+<span class="vi">p3</span>            <span class="o">=</span>       i<span class="n">attack</span> <span class="o">+</span> i<span class="n">sustain</span> <span class="o">+</span> i<span class="n">release</span>
 i<span class="n">scale</span>        <span class="o">=</span>       <span class="mf">1.0</span>
 a<span class="n">damping</span>      <span class="nb">linseg</span>  <span class="mf">0.0</span><span class="p">,</span> i<span class="n">attack</span><span class="p">,</span> i<span class="n">scale</span><span class="p">,</span> i<span class="n">sustain</span><span class="p">,</span> i<span class="n">scale</span><span class="p">,</span> i<span class="n">release</span><span class="p">,</span> <span class="mf">0.0</span>
 a<span class="n">guide</span>        <span class="nb">buzz</span>    <span class="mf">0.5</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="vg">sr</span><span class="o">/</span><span class="mi">440</span><span class="p">,</span> gi<span class="n">buzztable</span>
@@ -244,7 +244,7 @@ a<span class="n">signal</span>       <span class="nb">balance</span> a<span clas
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm40405"></a>
+        <a id="idm39858"></a>
         <h2>Credits</h2>
         <p>
       </p>

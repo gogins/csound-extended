@@ -39,7 +39,7 @@ Phase vocoder analysis processing with onset detection/processing.
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm180790"></a>
+        <a id="idm179968"></a>
         <h2>Description</h2>
         <p>
 <span class="emphasis"><em>pvstanal</em></span> implements phase vocoder analysis by reading function tables
@@ -54,13 +54,13 @@ This opcode allows for time and frequency-independent scaling. Time is advanced 
   </p>
       </div>
       <div class="refsect1">
-        <a id="idm180800"></a>
+        <a id="idm179978"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>pvstanal</strong></span> ktimescal, kamp, kpitch, ktab, [kdetect, kwrap, ioffset,ifftsize, ihop, idbthresh]
       </pre>
       </div>
       <div class="refsect1">
-        <a id="idm180804"></a>
+        <a id="idm179982"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifftsize</em></span> -- FFT size (power-of-two), defaults to 2048.
@@ -77,7 +77,7 @@ This opcode allows for time and frequency-independent scaling. Time is advanced 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm180814"></a>
+        <a id="idm179992"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktimescal</em></span> -- timescaling ratio, &lt; 1 stretch, &gt; 1 contract.
@@ -102,20 +102,20 @@ It suspends timescaling momentarily so the onsets are not modified.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm180830"></a>
+        <a id="idm180008"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the pvstanal opcode. It uses the file <a class="ulink" href="examples/pvstanal.csd.html" target="_top"> (click here to play) <em class="citetitle">pvstanal.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm180835"></a>
+          <a id="idm180013"></a>
           <p class="title">
-            <strong>Example 798. Example of the pvstanal opcode.</strong>
+            <strong>Example 800. Example of the pvstanal opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm180842"></a>
+              <a id="idm180020"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -136,8 +136,8 @@ gi<span class="n">fil</span>     <span class="nb">ftgen</span>     <span class="
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-<span class="n">fsig</span>      <span class="nb">pvstanal</span>  <span class="nb">p4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p5</span><span class="p">,</span> gi<span class="n">fil</span><span class="p">,</span> <span class="nb">p6</span><span class="p">,</span> <span class="nb">p7</span>
-a<span class="n">out</span>      <span class="nb">pvsynth</span>   <span class="n">fsig</span>
+f<span class="n">sig</span>      <span class="nb">pvstanal</span>  <span class="vi">p4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="vi">p5</span><span class="p">,</span> gi<span class="n">fil</span><span class="p">,</span> <span class="vi">p6</span><span class="p">,</span> <span class="vi">p7</span>
+a<span class="n">out</span>      <span class="nb">pvsynth</span>   f<span class="n">sig</span>
           <span class="nb">outs</span>      a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 <span class="kd">endin</span>
 
@@ -145,8 +145,8 @@ a<span class="n">out</span>      <span class="nb">pvsynth</span>   <span class="
 
 k<span class="n">speed</span>    <span class="nb">randi</span>     <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span> <span class="c1">;speed randomly between -2 and 2</span>
 k<span class="n">pitch</span>    <span class="nb">randi</span>     <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span> <span class="c1">;pitch between 2 octaves lower or higher</span>
-<span class="n">fsig</span>      <span class="nb">pvstanal</span>  k<span class="n">speed</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">octave</span><span class="p">(</span>k<span class="n">pitch</span><span class="p">),</span> gi<span class="n">fil</span>
-a<span class="n">out</span>      <span class="nb">pvsynth</span>   <span class="n">fsig</span>
+f<span class="n">sig</span>      <span class="nb">pvstanal</span>  k<span class="n">speed</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">octave</span><span class="p">(</span>k<span class="n">pitch</span><span class="p">),</span> gi<span class="n">fil</span>
+a<span class="n">out</span>      <span class="nb">pvsynth</span>   f<span class="n">sig</span>
           <span class="nb">outs</span>      a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 <span class="kd">endin</span>
 
@@ -169,7 +169,7 @@ a<span class="n">out</span>      <span class="nb">pvsynth</span>   <span class="
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm180983"></a>
+        <a id="idm180161"></a>
         <h2>Credits</h2>
         <p>
       </p>

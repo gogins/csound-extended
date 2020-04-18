@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm176517"></a>
+        <a id="idm175665"></a>
         <h2>Description</h2>
         <p>
       Calculate the spectral centroid of a signal from its discrete Fourier transform.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm176520"></a>
+        <a id="idm175668"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kcent <span class="command"><strong>pvscent</strong></span> fsig</pre>
         <pre class="synopsis">acent <span class="command"><strong>pvscent</strong></span> fsig</pre>
       </div>
       <div class="refsect1">
-        <a id="idm176526"></a>
+        <a id="idm175674"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kcent</em></span> -- the spectral centroid
@@ -65,20 +65,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm176534"></a>
+        <a id="idm175682"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the use of the <span class="emphasis"><em>pvscent</em></span> opcode. It uses the file <a class="ulink" href="examples/pvscent.csd.html" target="_top"> (click here to play) <em class="citetitle">pvscent.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm176540"></a>
+          <a id="idm175688"></a>
           <p class="title">
-            <strong>Example 768. Example of the <span class="emphasis"><em>pvscent</em></span> opcode.</strong>
+            <strong>Example 770. Example of the <span class="emphasis"><em>pvscent</em></span> opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm176548"></a>
+              <a id="idm175696"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -96,7 +96,7 @@
 gi<span class="n">Sine</span>		<span class="nb">ftgen</span>		<span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
-i<span class="n">refrtm</span>	<span class="o">=</span>		<span class="nb">p4</span><span class="c1">; time for generating new values for the spectral centroid</span>
+i<span class="n">refrtm</span>	<span class="o">=</span>		<span class="vi">p4</span><span class="c1">; time for generating new values for the spectral centroid</span>
 i<span class="n">fftsize</span>	<span class="o">=</span>		<span class="mi">1024</span>
 i<span class="n">overlap</span>	<span class="o">=</span>		i<span class="n">fftsize</span> <span class="o">/</span> <span class="mi">4</span>
 i<span class="n">winsize</span>	<span class="o">=</span>		i<span class="n">fftsize</span>
@@ -104,10 +104,10 @@ i<span class="n">winshape</span>	<span class="o">=</span>		<span class="mi">1</s
 <span class="c1">;Sfile		=		"flute-C-octave0.wav"</span>
 S<span class="n">file</span>		<span class="o">=</span>		<span class="s">"fox.wav"</span>
 a<span class="n">in</span>		<span class="nb">soundin</span>	S<span class="n">file</span>
-<span class="n">fftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="c1">; fft-analysis of the audio-signal</span>
+f<span class="n">ftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="c1">; fft-analysis of the audio-signal</span>
 k<span class="n">trig</span>		<span class="nb">metro</span>		<span class="mi">1</span> <span class="o">/</span> i<span class="n">refrtm</span>
 <span class="k">if</span> k<span class="n">trig</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">then</span>
-k<span class="n">center</span>	<span class="nb">pvscent</span>	<span class="n">fftin</span><span class="c1">; spectral center</span>
+k<span class="n">center</span>	<span class="nb">pvscent</span>	f<span class="n">ftin</span><span class="c1">; spectral center</span>
 <span class="k">endif</span>
 a<span class="n">out</span>		<span class="nb">oscil</span>		<span class="mf">.2</span><span class="p">,</span> k<span class="n">center</span><span class="p">,</span> gi<span class="n">Sine</span>
 		<span class="nb">out</span>		a<span class="n">out</span>
@@ -130,7 +130,7 @@ a<span class="n">out</span>		<span class="nb">oscil</span>		<span class="mf">.2<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm176668"></a>
+        <a id="idm175816"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvsanal.html" title="pvsanal"><em class="citetitle">pvsanal</em></a>,
@@ -140,7 +140,7 @@ a<span class="n">out</span>		<span class="nb">oscil</span>		<span class="mf">.2<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm176679"></a>
+        <a id="idm175827"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,21 +39,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm37087"></a>
+        <a id="idm36478"></a>
         <h2>Description</h2>
         <p>
       Calculate the spectral centroid of an audio signal on a given trigger.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm37090"></a>
+        <a id="idm36481"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kcent <span class="command"><strong>centroid</strong></span> asig, ktrig, ifftsize</pre>
       </div>
-      <div class="refsect1"><a id="idm37094"></a><h2>Initialization</h2><span class="emphasis"><em>ifftsize</em></span>  -- fftsize. Non pow-of-two values are converted to the next pow-of-two not smaller than ifftsize. 
+      <div class="refsect1"><a id="idm36485"></a><h2>Initialization</h2><span class="emphasis"><em>ifftsize</em></span>  -- fftsize. Non pow-of-two values are converted to the next pow-of-two not smaller than ifftsize. 
   </div>
       <div class="refsect1">
-        <a id="idm37097"></a>
+        <a id="idm36488"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kcent</em></span> -- the spectral centroid in Hz
@@ -66,20 +66,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm37105"></a>
+        <a id="idm36496"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the centroid opcode. It uses the file <a class="ulink" href="examples/centroid.csd.html" target="_top"> (click here to play) <em class="citetitle">centroid.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm37110"></a>
+          <a id="idm36501"></a>
           <p class="title">
             <strong>Example 116. Example of the centroid opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm37117"></a>
+              <a id="idm36508"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -101,7 +101,7 @@ gi<span class="n">Sine</span> <span class="nb">ftgen</span> <span class="mi">0</
 <span class="kd">instr</span> <span class="nf">1</span>
 
 k<span class="n">trig</span> <span class="nb">init</span> <span class="mi">1</span>				<span class="c1">;calculate centroid</span>
-a<span class="n">1</span>   <span class="nb">oscil3</span> <span class="mf">0.5</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> gi<span class="n">Sine</span>		<span class="c1">;of the sine wave</span>
+a<span class="n">1</span>   <span class="nb">oscil3</span> <span class="mf">0.5</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> gi<span class="n">Sine</span>		<span class="c1">;of the sine wave</span>
 k<span class="n">1</span>   <span class="nb">centroid</span> a<span class="n">1</span><span class="p">,</span> k<span class="n">trig</span><span class="p">,</span> <span class="mi">16384</span>
 a<span class="n">sig</span> <span class="nb">oscil3</span> <span class="mf">0.5</span><span class="p">,</span> k<span class="n">1</span><span class="p">,</span> gi<span class="n">Sine</span>
      <span class="nb">printk2</span> k<span class="n">1</span>				<span class="c1">;print &amp; compare:</span>
@@ -126,14 +126,14 @@ a<span class="n">sig</span> <span class="nb">oscil3</span> <span class="mf">0.5<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm37208"></a>
+        <a id="idm36599"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvscent.html" title="pvscent"><em class="citetitle">pvscent</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm37213"></a>
+        <a id="idm36604"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm31802"></a>
+        <a id="idm30904"></a>
         <h2>Description</h2>
         <p>Plugin opcode in beosc.</p>
         <p>
@@ -57,12 +57,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm31806"></a>
+        <a id="idm30908"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout <span class="command"><strong>beosc</strong></span> xfreq, kbw [, ifn, iphs, inoisetype ]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm31810"></a>
+        <a id="idm30912"></a>
         <h2>Initialization</h2>
         <p>
 	  <span class="emphasis"><em>ifn</em></span> - A table holding a sine wave (default = -1)
@@ -95,7 +95,7 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm31820"></a>
+        <a id="idm30922"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>aout</em></span> - The generated sound
@@ -109,13 +109,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm31828"></a>
+        <a id="idm30930"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the beosc opcode. It uses the file <a class="ulink" href="examples/beosc.csd.html" target="_top"> (click here to play) <em class="citetitle">beosc.csd</em></a>.
       </p>
         <div class="figure">
-          <a id="idm31833"></a>
+          <a id="idm30935"></a>
           <p class="title">
             <strong>Figure 1. </strong>
           </p>
@@ -129,14 +129,14 @@
 
       </p>
         <div class="example">
-          <a id="idm31837"></a>
+          <a id="idm30939"></a>
           <p class="title">
             <strong>Example 90. Example of the beosc opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm31844"></a>
+              <a id="idm30946"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -192,7 +192,7 @@ NB: watch the output of this example with a freq. scope
   k<span class="n">freq</span> <span class="nb">linseg</span> i<span class="n">freq</span><span class="p">,</span> i<span class="n">dur1</span><span class="p">,</span> i<span class="n">freq</span><span class="p">,</span> i<span class="n">dur1</span><span class="p">,</span> i<span class="n">freq</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> i<span class="n">dur1</span><span class="p">,</span> i<span class="n">freq</span>
   k<span class="n">bw</span>   <span class="nb">cosseg</span>     <span class="mi">0</span><span class="p">,</span> i<span class="n">dur1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>     i<span class="n">dur1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>       i<span class="n">dur1</span><span class="p">,</span> <span class="mi">0</span>
   <span class="c1">;          freq   bw   fn  phs              noisetype(0=uniform)</span>
-  a<span class="n">out</span>  <span class="n">beosc</span> k<span class="n">freq</span><span class="p">,</span> k<span class="n">bw</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">unirand</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="mf">6.28</span><span class="p">),</span> <span class="mi">0</span>
+  a<span class="n">out</span>  <span class="nb">beosc</span> k<span class="n">freq</span><span class="p">,</span> k<span class="n">bw</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">unirand</span><span class="p">:</span><span class="kt">i</span><span class="p">(</span><span class="mf">6.28</span><span class="p">),</span> <span class="mi">0</span>
   a<span class="n">env</span>  <span class="nb">linsegr</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span>
   a<span class="n">out</span> <span class="o">*=</span> <span class="p">(</span>a<span class="n">env</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)</span>
   <span class="nb">outch</span> <span class="mi">1</span><span class="p">,</span> a<span class="n">out</span>
@@ -211,14 +211,14 @@ NB: watch the output of this example with a freq. scope
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm31956"></a>
+        <a id="idm31058"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="beadsynt.html" title="beadsynt"><em class="citetitle">beadsynt</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm31961"></a>
+        <a id="idm31063"></a>
         <h2>Credits</h2>
         <p>By: Eduardo Moguillansky 2018</p>
         <p>New plugin in version 6.12</p>

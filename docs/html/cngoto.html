@@ -39,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm42124"></a>
+        <a id="idm41614"></a>
         <h2>Description</h2>
         <p>
       Transfers control on every pass when the condition is <span class="emphasis"><em>not</em></span> true.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm42128"></a>
+        <a id="idm41618"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>cngoto</strong></span> condition, label</pre>
         <p>
@@ -54,21 +54,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm42143"></a>
+        <a id="idm41633"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the cngoto opcode. It uses the file <a class="ulink" href="examples/cngoto.csd.html" target="_top"> (click here to play) <em class="citetitle">cngoto.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm42148"></a>
+          <a id="idm41638"></a>
           <p class="title">
             <strong>Example 142. Example of the cngoto opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm42155"></a>
+              <a id="idm41645"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -87,11 +87,11 @@
 <span class="kd">instr</span> <span class="nf">1</span>
   <span class="c1">; Change kval linearly from 0 to 2 over</span>
   <span class="c1">; the period set by the third p-field.</span>
-  k<span class="n">val</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">2</span>
+  k<span class="n">val</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">2</span>
 
   <span class="c1">; If kval *is not* greater than or equal to 1 then play</span>
   <span class="c1">; the high note. Otherwise, play the low note.</span>
-  <span class="k">cngoto</span> <span class="p">(</span>k<span class="n">val</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">),</span> <span class="nl">highnote</span>
+  <span class="kp">cngoto</span> <span class="p">(</span>k<span class="n">val</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">),</span> <span class="nl">highnote</span>
     <span class="k">kgoto</span> <span class="nl">lownote</span>
 
 <span class="nl">highnote</span><span class="p">:</span>
@@ -104,7 +104,7 @@
 
 <span class="nl">playit</span><span class="p">:</span>
   <span class="c1">; Print the values of kval and kfreq.</span>
-  <span class="nb">printks</span> <span class="s">"kval = %f, kfreq = %f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">val</span><span class="p">,</span> k<span class="n">freq</span>
+  <span class="nb">printks</span> <span class="s">"kval = </span><span class="si">%f</span><span class="s">, kfreq = </span><span class="si">%f</span><span class="se">\\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">val</span><span class="p">,</span> k<span class="n">freq</span>
 
   a<span class="n">1</span> <span class="nb">oscil</span> <span class="mi">10000</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> <span class="mi">1</span>
   <span class="nb">out</span> a<span class="n">1</span>
@@ -139,7 +139,7 @@ kval = 1.999639, kfreq = 440.000000</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm42252"></a>
+        <a id="idm41745"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cggoto.html" title="cggoto"><em class="citetitle">cggoto</em></a>,
@@ -153,7 +153,7 @@ kval = 1.999639, kfreq = 440.000000</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm42271"></a>
+        <a id="idm41764"></a>
         <h2>Credits</h2>
         <p>Example written by Kevin Conder.</p>
         <p>New in version 4.21</p>

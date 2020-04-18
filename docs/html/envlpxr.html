@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm59696"></a>
+        <a id="idm59292"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>envlpxr</em></span> is the same as <a class="link" href="envlpx.html" title="envlpx"><em class="citetitle">envlpx</em></a> except that the final segment is entered only on sensing a MIDI note release. The note is then extended by the decay time.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm59702"></a>
+        <a id="idm59298"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>envlpxr</strong></span> xamp, irise, idec, ifn, iatss, iatdec [, ixmod] [,irind]</pre>
         <pre class="synopsis">kres <span class="command"><strong>envlpxr</strong></span> kamp, irise, idec, ifn, iatss, iatdec [, ixmod] [,irind]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm59708"></a>
+        <a id="idm59304"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>irise</em></span> -- rise time in seconds. A zero or negative value signifies no rise modification.
@@ -64,10 +64,21 @@
       <span class="emphasis"><em>ifn</em></span> -- function table number of stored rise shape with extended guard point.
     </p>
         <p>
-      <span class="emphasis"><em>iatss</em></span> -- attenuation factor, by which the last value of the <span class="emphasis"><em>envlpxr</em></span> rise is modified during the note's pseudo steady state. A factor greater than 1 causes an exponential growth and a factor less than 1 creates an exponential decay. A factor of 1 will maintain a true steady state at the last rise value.  Note that this attenuation is not by fixed rate (as in a piano), but is sensitive to a note's duration. However, if <span class="emphasis"><em>iatss</em></span> is negative (or if steady state &lt; 4 k-periods) a fixed attenuation rate of <span class="emphasis"><em>abs</em></span>(<span class="emphasis"><em>iatss</em></span>) per second will be used. 0 is illegal.
+      <span class="emphasis"><em>iatss</em></span> --  attenuation factor determining the
+      exponential change in value over time during the pseudo steady state
+      period between the end of the rise and the beginning of the decay
+      (at the note's release).  A factor greater than 1 causes an exponential
+      growth and a factor less than 1 creates an exponential decay. A factor
+      of 1 will maintain a true steady state at the last rise value; 0 is illegal.
+      The value will change by
+      <span class="emphasis"><em>abs</em></span>(<span class="emphasis"><em>iatss</em></span>) per second.
     </p>
         <p>
-      <span class="emphasis"><em>iatdec</em></span> -- attenuation factor by which the closing steady state value is reduced exponentially over the decay period. This value must be positive and is normally of the order of .01. A large or excessively small value is apt to produce a cutoff which is audible. A zero or negative value is illegal.
+      <span class="emphasis"><em>iatdec</em></span> --  the ratio of the value
+      at the end of the decay period to the value at its beginning (when
+      the note is released). It must be positive and is normally of the
+      order of .01. A large or excessively small value is apt to produce
+      a cutoff which is audible. A zero or negative value is illegal.
     </p>
         <p>
       <span class="emphasis"><em>ixmod</em></span> (optional, between +- .9 or so) -- exponential curve modifier, influencing the steepness of the exponential trajectory during the steady state. Values less than zero will cause an accelerated growth or decay towards the target (e.g. <span class="emphasis"><em>subito piano</em></span>). Values greater than zero will cause a retarded growth or decay. The default value is zero (unmodified exponential).
@@ -77,7 +88,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm59731"></a>
+        <a id="idm59325"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp, xamp</em></span> -- input amplitude signal.
@@ -88,28 +99,25 @@
         <p>
       You can use other pre-made envelopes which start a release segment upon receiving a note off message, like <a class="link" href="linsegr.html" title="linsegr"><em class="citetitle">linsegr</em></a> and <a class="link" href="expsegr.html" title="expsegr"><em class="citetitle">expsegr</em></a>, or you can construct more complex envelopes using <a class="link" href="xtratim.html" title="xtratim"><em class="citetitle">xtratim</em></a> and <a class="link" href="release.html" title="release"><em class="citetitle">release</em></a>. Note that you don't need to use <a class="link" href="xtratim.html" title="xtratim"><em class="citetitle">xtratim</em></a> if you are using <span class="emphasis"><em>envlpxr</em></span>, since the time is extended automatically.
     </p>
-        <p>
-      These <span class="quote">“<span class="quote">r</span>”</span> units can also be modified by MIDI noteoff velocities (see veloffs). If the <span class="emphasis"><em>irind</em></span> flag is on (non-zero), the overall performance time is unaffected by note-off and veloff data.
-    </p>
         <p><strong>Multiple <span class="quote">“<span class="quote">r</span>”</span> units. </strong>
          When two or more <span class="quote">“<span class="quote">r</span>”</span> units occur in the same instrument it is usual to have only one of them influence the overall note duration. This is normally the master amplitude unit. Other units controlling, say, filter motion can still be sensitive to note-off commands while not affecting the duration by making them independent (<span class="emphasis"><em>irind</em></span> non-zero). Depending on their own <span class="emphasis"><em>idec</em></span> (release time) values, independent <span class="quote">“<span class="quote">r</span>”</span> units may or may not reach their final destinations before the instrument terminates. If they do, they will simply hold their target values until termination. If two or more <span class="quote">“<span class="quote">r</span>”</span> units are simultaneously master, note extension is by the greatest <span class="emphasis"><em>idec</em></span>.
       </p>
       </div>
       <div class="refsect1">
-        <a id="idm59765"></a>
+        <a id="idm59356"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the envlpxr opcode. It uses the file <a class="ulink" href="examples/envlpxr.csd.html" target="_top"> (click here to play) <em class="citetitle">envlpxr.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm59770"></a>
+          <a id="idm59361"></a>
           <p class="title">
             <strong>Example 249. Example of the envlpxr opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm59772"></a>
+              <a id="idm59363"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -153,7 +161,7 @@ a<span class="n">sig</span>	<span class="nb">pluck</span>	k<span class="n">env</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm59855"></a>
+        <a id="idm59446"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="envlpx.html" title="envlpx"><em class="citetitle">envlpx</em></a>,
@@ -162,7 +170,7 @@ a<span class="n">sig</span>	<span class="nb">pluck</span>	k<span class="n">env</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm59864"></a>
+        <a id="idm59455"></a>
         <h2>Credits</h2>
         <p>Thanks goes to Luis Jure for pointing out a mistake with <span class="emphasis"><em>iatss</em></span>.</p>
       </div>

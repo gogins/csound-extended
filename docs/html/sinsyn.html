@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm201679"></a>
+        <a id="idm201062"></a>
         <h2>Description</h2>
         <p>
   The <span class="emphasis"><em>sinsyn</em></span> opcode takes an input containg a TRACKS pv streaming signal (as generated,
@@ -50,12 +50,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm201685"></a>
+        <a id="idm201068"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asig <span class="command"><strong>sinsyn</strong></span> fin, kscal, kmaxtracks, ifn</pre>
       </div>
       <div class="refsect1">
-        <a id="idm201689"></a>
+        <a id="idm201072"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- output audio rate signal
@@ -76,20 +76,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm201701"></a>
+        <a id="idm201084"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the sinsyn opcode. It uses the file <a class="ulink" href="examples/sinsyn.csd.html" target="_top"> (click here to play) <em class="citetitle">sinsyn.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm201706"></a>
+          <a id="idm201089"></a>
           <p class="title">
-            <strong>Example 918. Example of the sinsyn opcode.</strong>
+            <strong>Example 920. Example of the sinsyn opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm201713"></a>
+              <a id="idm201096"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -108,11 +108,11 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">mxtr</span> <span class="nb">init</span> <span class="nb">p4</span>
+k<span class="n">mxtr</span> <span class="nb">init</span> <span class="vi">p4</span>
 a<span class="n">in</span>   <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span>
-<span class="n">fs1</span><span class="p">,</span><span class="n">fsi2</span> <span class="nb">pvsifd</span> a<span class="n">in</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span><span class="mi">1</span>	<span class="c1">; ifd analysis</span>
-<span class="n">fst</span>   <span class="nb">partials</span> <span class="n">fs1</span><span class="p">,</span> <span class="n">fsi2</span><span class="p">,</span> <span class="mf">.03</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">500</span> <span class="c1">; partial tracking</span>
-a<span class="n">out</span>  <span class="nb">sinsyn</span> <span class="n">fst</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> k<span class="n">mxtr</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; scale amplitude down</span>
+f<span class="n">s1</span><span class="p">,</span>f<span class="n">si2</span> <span class="nb">pvsifd</span> a<span class="n">in</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span><span class="mi">1</span>	<span class="c1">; ifd analysis</span>
+f<span class="n">st</span>   <span class="nb">partials</span> f<span class="n">s1</span><span class="p">,</span> f<span class="n">si2</span><span class="p">,</span> <span class="mf">.03</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">500</span> <span class="c1">; partial tracking</span>
+a<span class="n">out</span>  <span class="nb">sinsyn</span> f<span class="n">st</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> k<span class="n">mxtr</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; scale amplitude down</span>
       <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
 <span class="kd">endin</span>
@@ -134,7 +134,7 @@ a<span class="n">out</span>  <span class="nb">sinsyn</span> <span class="n">fst<
         <p>The example above shows partial tracking of an ifd-analysis signal and cubic-phase additive resynthesis.</p>
       </div>
       <div class="refsect1">
-        <a id="idm201811"></a>
+        <a id="idm201194"></a>
         <h2>Credits</h2>
         <p>
       </p>

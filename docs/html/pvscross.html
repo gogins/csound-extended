@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm176843"></a>
+        <a id="idm175991"></a>
         <h2>Description</h2>
         <p>
       Performs cross-synthesis between two source fsigs.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm176846"></a>
+        <a id="idm175994"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>pvscross</strong></span> fsrc, fdest, kamp1, kamp2</pre>
       </div>
       <div class="refsect1">
-        <a id="idm176850"></a>
+        <a id="idm175998"></a>
         <h2>Performance</h2>
         <p>
       The operation of this opcode is identical to that of <a class="link" href="pvcross.html" title="pvcross"><em class="citetitle">pvcross</em></a> (q.v.), except in using <span class="emphasis"><em>fsig</em></span>s rather than analysis files, and the absence of spectral envelope preservation. The amplitudes from <span class="emphasis"><em>fsrc</em></span> and <span class="emphasis"><em>fdest</em></span> (using scale factors <span class="emphasis"><em>kamp1</em></span> for <span class="emphasis"><em>fsrc</em></span> and <span class="emphasis"><em>kamp2</em></span> for <span class="emphasis"><em>fdest</em></span>) are applied to the frequencies of <span class="emphasis"><em>fsrc</em></span>. <span class="emphasis"><em>kamp1</em></span> and <span class="emphasis"><em>kamp2</em></span> must not exceed the range 0 to 1.
@@ -78,20 +78,20 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm176872"></a>
+        <a id="idm176020"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the use of the <span class="emphasis"><em>pvscross</em></span> opcode. It uses the file <a class="ulink" href="examples/pvscross.csd.html" target="_top"> (click here to play) <em class="citetitle">pvscross.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm176878"></a>
+          <a id="idm176026"></a>
           <p class="title">
-            <strong>Example 770. Example of the <span class="emphasis"><em>pvscross</em></span> opcode.</strong>
+            <strong>Example 772. Example of the <span class="emphasis"><em>pvscross</em></span> opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm176886"></a>
+              <a id="idm176034"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -107,31 +107,31 @@
 <span class="c1">;; example written by joachim heintz 2009</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
-i<span class="n">permut</span>	<span class="o">=</span>		<span class="nb">p4</span><span class="c1">; 1 = change order of soundfiles </span>
-i<span class="n">fftsize</span>	<span class="o">=</span>		<span class="mi">1024</span>
-i<span class="n">overlap</span>	<span class="o">=</span>		i<span class="n">fftsize</span> <span class="o">/</span> <span class="mi">4</span>
-i<span class="n">winsize</span>	<span class="o">=</span>		i<span class="n">fftsize</span>
-i<span class="n">winshape</span>	<span class="o">=</span>		<span class="mi">1</span><span class="c1">; von-Hann window</span>
-S<span class="n">file1</span>		<span class="o">=</span>		<span class="s">"fox.wav"</span>
-S<span class="n">file2</span>		<span class="o">=</span>		<span class="s">"wave.wav"</span>
-a<span class="n">in1</span>		<span class="nb">soundin</span>	S<span class="n">file1</span>
-a<span class="n">in2</span>		<span class="nb">soundin</span>	S<span class="n">file2</span>
-<span class="n">fftin1</span>		<span class="nb">pvsanal</span>	a<span class="n">in1</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="c1">; fft-analysis of file 1</span>
-<span class="n">fftin2</span>		<span class="nb">pvsanal</span>	a<span class="n">in2</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="c1">; fft-analysis of file 2</span>
-k<span class="n">trans</span>		<span class="nb">linseg</span>		<span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span><span class="c1">; linear transition </span>
-<span class="k">if</span> i<span class="n">permut</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">then</span>
-<span class="n">fcross</span>		<span class="nb">pvscross</span>	<span class="n">fftin2</span><span class="p">,</span> <span class="n">fftin1</span><span class="p">,</span> k<span class="n">trans</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span>k<span class="n">trans</span>
-<span class="k">else</span>
-<span class="n">fcross</span>		<span class="nb">pvscross</span>	<span class="n">fftin1</span><span class="p">,</span> <span class="n">fftin2</span><span class="p">,</span> k<span class="n">trans</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span>k<span class="n">trans</span>
-<span class="k">endif</span>
-a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fcross</span>
-		<span class="nb">out</span>		a<span class="n">out</span>
+  i<span class="n">permut</span> <span class="o">=</span> <span class="vi">p4</span> <span class="c1">; 1 = change order of soundfiles</span>
+  i<span class="n">fftsize</span> <span class="o">=</span> <span class="mi">1024</span>
+  i<span class="n">overlap</span> <span class="o">=</span> i<span class="n">fftsize</span> <span class="o">/</span> <span class="mi">4</span>
+  i<span class="n">winsize</span> <span class="o">=</span> i<span class="n">fftsize</span>
+  i<span class="n">winshape</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">; von-Hann window</span>
+  S<span class="n">file1</span> <span class="o">=</span> <span class="s">"fox.wav"</span>
+  S<span class="n">file2</span> <span class="o">=</span> <span class="s">"wave.wav"</span>
+  a<span class="n">in1</span> <span class="o">=</span> <span class="nb">soundin</span><span class="p">:</span><span class="kt">a</span><span class="p">(</span>S<span class="n">file1</span><span class="p">)</span>
+  a<span class="n">in2</span> <span class="o">=</span> <span class="nb">soundin</span><span class="p">:</span><span class="kt">a</span><span class="p">(</span>S<span class="n">file2</span><span class="p">)</span>
+  f<span class="n">ftin1</span> <span class="o">=</span> <span class="nb">pvsanal</span><span class="p">(</span>a<span class="n">in1</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="p">)</span> <span class="c1">; fft-analysis of file 1</span>
+  f<span class="n">ftin2</span> <span class="o">=</span> <span class="nb">pvsanal</span><span class="p">(</span>a<span class="n">in2</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="p">)</span> <span class="c1">; fft-analysis of file 2</span>
+  k<span class="n">trans</span> <span class="o">=</span> <span class="nb">linseg</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">; linear transition</span>
+  <span class="k">if</span> i<span class="n">permut</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">then</span>
+    f<span class="n">cross</span> <span class="o">=</span> <span class="nb">pvscross</span><span class="p">(</span>f<span class="n">ftin2</span><span class="p">,</span> f<span class="n">ftin1</span><span class="p">,</span> k<span class="n">trans</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> k<span class="n">trans</span><span class="p">)</span>
+  <span class="k">else</span>
+    f<span class="n">cross</span> <span class="o">=</span> <span class="nb">pvscross</span><span class="p">(</span>f<span class="n">ftin1</span><span class="p">,</span> f<span class="n">ftin2</span><span class="p">,</span> k<span class="n">trans</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> k<span class="n">trans</span><span class="p">)</span>
+  <span class="k">endif</span>
+  a<span class="n">out</span> <span class="o">=</span> <span class="nb">pvsynth</span><span class="p">(</span>f<span class="n">cross</span><span class="p">)</span>
+  <span class="nb">out</span><span class="p">(</span>a<span class="n">out</span><span class="p">)</span>
 <span class="kd">endin</span>
 
 <span class="nt">&lt;/CsInstruments&gt;</span>
 <span class="nt">&lt;CsScore&gt;</span>
-<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mf">2.757</span> <span class="mi">0</span><span class="c1">; frequencies from fox. wav; amplitudes moving from wave to fox</span>
-<span class="nb">i</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mf">2.757</span> <span class="mi">1</span><span class="c1">; frequencies from wave.wav, amplitudes moving from fox to wave</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mf">2.757</span> <span class="mi">0</span> <span class="c1">; frequencies from fox.wav, amplitudes moving from wave to fox</span>
+<span class="nb">i</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mf">2.757</span> <span class="mi">1</span> <span class="c1">; frequencies from wav.wav, amplitudes moving from fox to wave</span>
 <span class="nb">e</span>
 <span class="nt">&lt;/CsScore&gt;</span>
 <span class="nt">&lt;/CsoundSynthesizer&gt;</span>
@@ -143,7 +143,7 @@ a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fcr
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm177022"></a>
+        <a id="idm176200"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvsanal.html" title="pvsanal"><em class="citetitle">pvsanal</em></a>,
@@ -152,7 +152,7 @@ a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fcr
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm177031"></a>
+        <a id="idm176209"></a>
         <h2>Credits</h2>
         <p>
       </p>

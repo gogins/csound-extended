@@ -39,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm38475"></a>
+        <a id="idm37866"></a>
         <h2>Description</h2>
         <p>Plugin opcode in control.</p>
         <p>
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm38479"></a>
+        <a id="idm37870"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kres <span class="command"><strong>checkbox</strong></span> knum</pre>
       </div>
       <div class="refsect1">
-        <a id="idm38483"></a>
+        <a id="idm37874"></a>
         <h2>Performance</h2>
         <p>
       Note that this opcode is not available on Windows due to the implimentation of pipes on that system 
@@ -65,21 +65,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm38490"></a>
+        <a id="idm37881"></a>
         <h2>Examples</h2>
         <p>
       Here is a simple example of the checkbox opcode. It uses the file <a class="ulink" href="examples/checkbox.csd.html" target="_top"> (click here to play) <em class="citetitle">checkbox.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm38495"></a>
+          <a id="idm37886"></a>
           <p class="title">
             <strong>Example 126. Simple example of the checkbox opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm38502"></a>
+              <a id="idm37893"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -96,18 +96,21 @@
 <span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
  
 <span class="kd">instr</span> <span class="nf">1</span>
+  k<span class="n">q</span> <span class="nb">init</span> <span class="mi">0</span>
   <span class="c1">; Get the value from the checkbox.</span>
   k<span class="n">1</span> <span class="nb">checkbox</span> <span class="mi">1</span>
 
   <span class="c1">; If the checkbox is selected then k2=440, otherwise k2=880.</span>
-  k<span class="n">2</span> <span class="o">=</span> <span class="p">(</span>k<span class="n">1</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">?</span> <span class="mi">440</span> <span class="p">:</span> <span class="mi">880</span><span class="p">)</span>
+  k<span class="n">2</span> <span class="o">=</span> <span class="p">(</span>k<span class="n">1</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">440</span> <span class="o">:</span> <span class="mi">880</span><span class="p">)</span>
 
   a<span class="n">1</span> <span class="nb">oscil</span> <span class="mi">10000</span><span class="p">,</span> k<span class="n">2</span><span class="p">,</span> <span class="mi">1</span>
   <span class="nb">outs</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">1</span>
   k<span class="n">q</span> <span class="nb">button</span> <span class="mi">1</span>
-  <span class="k">if</span> k<span class="n">q</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">then</span>
-     <span class="nb">exitnow</span>
-  <span class="k">endif</span>
+  <span class="nb">schedkwhen</span> k<span class="n">q</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+<span class="kd">endin</span>
+
+<span class="kd">instr</span> <span class="nf">2</span>
+  <span class="nb">exitnow</span>
 <span class="kd">endin</span>
 
 <span class="nt">&lt;/CsInstruments&gt;</span>
@@ -129,14 +132,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm38578"></a>
+        <a id="idm37981"></a>
         <h2>See Also</h2>
         <p>
         <a class="link" href="button.html" title="button"><em class="citetitle">button</em></a>
       </p>
       </div>
       <div class="refsect1">
-        <a id="idm38583"></a>
+        <a id="idm37986"></a>
         <h2>Credits</h2>
         <p>
       </p>

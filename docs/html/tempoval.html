@@ -39,40 +39,40 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm227050"></a>
+        <a id="idm226670"></a>
         <h2>Description</h2>
         <p>
       Reads the current value of the tempo.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm227053"></a>
+        <a id="idm226673"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kres <span class="command"><strong>tempoval</strong></span></pre>
       </div>
       <div class="refsect1">
-        <a id="idm227057"></a>
+        <a id="idm226677"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kres</em></span> -- the value of the tempo. If you use a positive value with the <a class="link" href="CommandFlags.html#FlagsMinusLowerT"><em class="citetitle">-t command-line flag</em></a>, <span class="emphasis"><em>tempoval</em></span> returns the percentage increase/decrease from the original tempo of 60 beats per minute. If you don't, its value will be 60 (for 60 beats per minute).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm227064"></a>
+        <a id="idm226684"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the tempoval opcode. Remember, it only works if you use the <a class="link" href="CommandFlags.html#FlagsMinusLowerT"><em class="citetitle">-t</em></a> flag with Csound. It uses the file <a class="ulink" href="examples/tempoval.csd.html" target="_top"> (click here to play) <em class="citetitle">tempoval.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm227071"></a>
+          <a id="idm226691"></a>
           <p class="title">
-            <strong>Example 1026. Example of the tempoval opcode.</strong>
+            <strong>Example 1029. Example of the tempoval opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm227078"></a>
+              <a id="idm226698"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -98,7 +98,7 @@
   <span class="c1">; Get the tempo value.</span>
   k<span class="n">val</span> <span class="nb">tempoval</span>
 
-  <span class="nb">printks</span> <span class="s">"kval = %f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">val</span>
+  <span class="nb">printks</span> <span class="s">"kval = </span><span class="si">%f</span><span class="se">\\n</span><span class="s">"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">val</span>
 <span class="kd">endin</span>
 
 
@@ -127,14 +127,14 @@ kval = 0.500000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm227133"></a>
+        <a id="idm226754"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="tempo.html" title="tempo"><em class="citetitle">tempo</em></a> and <a class="link" href="miditempo.html" title="miditempo"><em class="citetitle">miditempo</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm227140"></a>
+        <a id="idm226761"></a>
         <h2>Credits</h2>
         <p>Example written by Kevin Conder.</p>
         <p>New in version 4.15</p>

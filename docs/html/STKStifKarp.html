@@ -39,7 +39,7 @@
       </p>
       </div>
       <div class="refsect1">
-        <a id="idm213970"></a>
+        <a id="idm213488"></a>
         <h2>Description</h2>
         <p>Plugin opcode in stkopd.</p>
         <p>
@@ -48,12 +48,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm213974"></a>
+        <a id="idm213492"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asignal <span class="command"><strong>STKStifKarp</strong></span> ifrequency, iamplitude, [kpos, kv1[, ksus, kv2[, kstretch, kv3]]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm213978"></a>
+        <a id="idm213496"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifrequency</em></span> -- Frequency of note played, in Hertz.
@@ -63,14 +63,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm213984"></a>
+        <a id="idm213502"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>kpos</em></span> -- controller 4, pickup position. Value range of kv1 is 0-127.</p>
         <p><span class="emphasis"><em>ksus</em></span> -- controller11, string sustain. Value range of kv2 is 0-127.</p>
         <p><span class="emphasis"><em>kstretch</em></span> -- controller 1, string stretch. Value range of kv3 is 0-127.</p>
       </div>
       <div class="refsect1">
-        <a id="idm213992"></a>
+        <a id="idm213510"></a>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note: Note">
             <tr>
@@ -96,20 +96,20 @@ The order of the controller pair is arbitrary, as long as they are after <span c
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm214001"></a>
+        <a id="idm213519"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the STKStifKarp opcode. It uses the file <a class="ulink" href="examples/STKStifKarp.csd.html" target="_top"> (click here to play) <em class="citetitle">STKStifKarp.csd</em></a>.
      
       </p>
         <div class="example">
-          <a id="idm214006"></a>
+          <a id="idm213524"></a>
           <p class="title">
-            <strong>Example 964. Example of the STKStifKarp opcode.</strong>
+            <strong>Example 966. Example of the STKStifKarp opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm214008"></a>
+              <a id="idm213526"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -128,11 +128,11 @@ The order of the controller pair is arbitrary, as long as they are after <span c
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">frq</span>	<span class="o">=</span>	<span class="nb">p4</span>
-k<span class="n">v1</span>	<span class="nb">line</span>	<span class="nb">p6</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p7</span>				<span class="c1">;Pickup Position</span>
-k<span class="n">v2</span>	<span class="o">=</span>	<span class="nb">p5</span>					<span class="c1">;String Sustain</span>
+i<span class="n">frq</span>	<span class="o">=</span>	<span class="vi">p4</span>
+k<span class="n">v1</span>	<span class="nb">line</span>	<span class="vi">p6</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p7</span>				<span class="c1">;Pickup Position</span>
+k<span class="n">v2</span>	<span class="o">=</span>	<span class="vi">p5</span>					<span class="c1">;String Sustain</span>
 
-a<span class="n">sig</span>	S<span class="n">TKStifKarp</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> k<span class="n">v1</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> k<span class="n">v2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span>
+a<span class="n">sig</span>	<span class="nb">STKStifKarp</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p4</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> k<span class="n">v1</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> k<span class="n">v2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span>
 	<span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 <span class="kd">endin</span>
 
@@ -153,7 +153,7 @@ a<span class="n">sig</span>	S<span class="n">TKStifKarp</span> <span class="nb">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm214101"></a>
+        <a id="idm213619"></a>
         <h2>Credits</h2>
         <p>
       </p>

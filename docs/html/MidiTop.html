@@ -35,43 +35,35 @@
         </div>
       </div>
       <p>
-    Csound supports realtime MIDI input and output, as well as input from MIDI files. Realtime MIDI input is activated using the <a class="link" href="CommandFlagsCategory.html#FlagsCatMinusUpperM"><em class="citetitle">-M</em></a> (or <span class="emphasis"><em>--midi-device</em></span>=DEVICE) command line flag. You must specify the device number or name after the <span class="emphasis"><em>-M</em></span>. For example to use device number 2, you would use something like:
+    Csound supports realtime MIDI input and output, as well as input
+    from MIDI files. Realtime MIDI input is activated using the <a class="link" href="CommandFlagsCategory.html#FlagsCatMinusUpperM"><em class="citetitle">-M</em></a> (or
+    <span class="emphasis"><em>--midi-device</em></span>=DEVICE) command line flag. For
+    single port input, you
+    must specify the device number or name after the
+    <span class="emphasis"><em>-M</em></span>. For multiport input (currently
+    implemented only in the PortMIDI module),  use 'a' or 'm'.
+    For example to use device number 2, you would use something like:
   </p>
       <div class="literallayout">
         <p>csound -M2 myrtmidi.csd</p>
       </div>
       <p>
-    You can find out the available devices by using an out of range device:
+    You can find out the available devices by running Csound with
+    --midi-devices option:
   </p>
       <div class="literallayout">
-        <p>csound -M99 myrtmidi.csd</p>
+        <p>csound --midi-devices</p>
       </div>
-      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
-        <table border="0" summary="Note">
-          <tr>
-            <td rowspan="2" align="center" valign="top" width="25">
-              <img alt="[Note]" src="images/note.png" />
-            </td>
-            <th align="left">Note</th>
-          </tr>
-          <tr>
-            <td align="left" valign="top">
-              <p>
-    This will only work if the MIDI module can be accessed by device number. For alsa, you must first find the device name using:
-    </p>
-              <div class="literallayout">
-                <p>cat /proc/asound/cards</p>
-              </div>
-              <p>
-    You must then use something like:
-    </p>
-              <div class="literallayout">
-                <p>csound -+rtmidi=alsa -M hw:3 myrtmidi.csd</p>
-              </div>
-            </td>
-          </tr>
-        </table>
-      </div>
+      <p>
+Starting from version 6.14, the PortMIDI module (see below for a list
+of all modules) allows multiple ports to be mapped to higher-order
+channels. By using the 'm' device name, Csound will take inputs from
+any existing MIDI device in the system and map it according to
+(N+1)*channel, where N is the device number as listed by PortMIDI and
+channel is the original device input channel. Alternatively, the 'a'
+device name listens to all inputs but does not map to higher-order
+channels.
+</p>
       <p>
     Realtime MIDI output is activated using <a class="link" href="CommandFlagsCategory.html#FlagsCatMinusUpperQ"><em class="citetitle">-Q</em></a>, using device number or names as shown above.
   </p>
@@ -85,7 +77,7 @@
     When MIDI input is enabled (with -M or -F), each incoming <span class="emphasis"><em>noteon</em></span> message will generate a note event for an instrument which has the same number as the channel of the event  (This means that MIDI controlled instruments are polyphonic by default, since each note will generate a new instance of the instrument.)
 If you have 1 instrument only, Csound works in omni mode, ie. it responds to all channels into that single instrument.
 If you have more than one instrument and instrs 1 - 16 , then by default  instr 1 -&gt; chn 1, instr 2 -&gt; chn 2, unless you alter the mapping (see <a class="link" href="massign.html" title="massign"><em class="citetitle">massign</em></a> and <a class="link" href="pgmassign.html" title="pgmassign"><em class="citetitle">pgmassign</em></a> to change this behavior).
-If you have more than one instrument, but instr N in between 1 - 16 is missing, then chn N will be routed by default to the lowest order instrument.
+For a single port input, if you have more than one instrument, but instr N in between 1 - 16 is missing, then chn N will be routed by default to the lowest order instrument.
   </p>
       <p>
     See the <a class="link" href="MidiInterop.html" title="MIDI/Score Interoperability opcodes"><em class="citetitle">MIDI/Score Interoperability</em></a> opcodes for information on designing instruments which can be used from the score or driven by MIDI.
@@ -99,6 +91,11 @@ If you have more than one instrument, but instr N in between 1 - 16 is missing, 
       <div class="itemizedlist">
         <ul class="itemizedlist" style="list-style-type: disc; ">
           <li class="listitem">
+            <p><span class="emphasis"><em>portmidi</em></span> - To use the
+      PortMIDI system (all platforms). This is the default setting and
+      it allows multiple-port inputs (with 'm' or 'a' device names).</p>
+          </li>
+          <li class="listitem">
             <p><span class="emphasis"><em>alsa</em></span> - To use the ALSA midi system (Linux only)</p>
           </li>
           <li class="listitem">
@@ -106,9 +103,6 @@ If you have more than one instrument, but instr N in between 1 - 16 is missing, 
           </li>
           <li class="listitem">
             <p><span class="emphasis"><em>winmme</em></span> - To use the windows MME system (Windows only)</p>
-          </li>
-          <li class="listitem">
-            <p><span class="emphasis"><em>portmidi</em></span> - To use the portmidi system (all platforms). This is the default setting.</p>
           </li>
           <li class="listitem">
             <p><span class="emphasis"><em>virtual</em></span> - To use a virtual graphical keyboard (See below) as MIDI input (all platforms)</p>
@@ -125,7 +119,11 @@ If you have more than one instrument, but instr N in between 1 - 16 is missing, 
           </tr>
           <tr>
             <td align="left" valign="top">
-              <p>When csound runs, it will process the score and then quit. If there are no events in the score, Csound will exit immediately. If you want to use only MIDI events instead of score events, you need to tell Csound to run for a certain amount of time. This can be done with a dummy <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f-statement</em></a> like "f 0 3600".
+              <p>When csound runs, it will process the score and then
+    quit. If there are no events in the score, Csound will run
+    forever. If you want to use only MIDI events instead of score
+    events and you know how long you wish to run, you can tell Csound
+    to run that amount of time by using the dummy <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f-statement</em></a> like "f 0 360".
     </p>
             </td>
           </tr>
@@ -242,7 +240,7 @@ If you have more than one instrument, but instr N in between 1 - 16 is missing, 
     The ASCII keyboard MIDI note values are given in the following table.
   </p>
         <div class="table">
-          <a id="idm13861"></a>
+          <a id="idm14253"></a>
           <p class="title">
             <strong>Table 5. ASCII Keyboard MIDI Note Values</strong>
           </p>
@@ -384,7 +382,7 @@ If you have more than one instrument, but instr N in between 1 - 16 is missing, 
       Here's an example of usage of the virtual MIDI keyboard. It uses the file <a class="ulink" href="examples/virtual.csd.html" target="_top"> (click here to play) <em class="citetitle">virtual.csd</em></a>.
  </p>
         <div class="refsect1">
-          <a id="idm13959"></a>
+          <a id="idm14351"></a>
           <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span><span class="c1">; Select audio/midi flags here according to platform</span>

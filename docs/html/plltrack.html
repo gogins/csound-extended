@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm167227"></a>
+        <a id="idm166008"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>plltrack</em></span>, a pitch tracker based on a phase-locked loop algorithm, described in Zolzer, U, Sankarababu, S.V. and Moller, S, "PLL-based Pitch Detection and Tracking for Audio Signals. Proc. of IIH-MSP 2012".
       </p>
       </div>
       <div class="refsect1">
-        <a id="idm167231"></a>
+        <a id="idm166012"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">acps, alock <span class="command"><strong>plltrack</strong></span> asig, kd [, kloopf, kloopq, klf, khf, kthresh]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm167235"></a>
+        <a id="idm166016"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>acps</em></span> -- estimated pitch in Hz.
@@ -84,20 +84,20 @@ indicate good tracking
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm167256"></a>
+        <a id="idm166037"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the plltrack operator. It uses the file <a class="ulink" href="examples/plltrack.csd.html" target="_top"> (click here to play) <em class="citetitle">plltrack.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm167261"></a>
+          <a id="idm166042"></a>
           <p class="title">
             <strong>Example 717. Example of the plltrack operator.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm167268"></a>
+              <a id="idm166049"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -116,7 +116,7 @@ indicate good tracking
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">d</span> <span class="o">=</span> <span class="nb">p4</span>
+k<span class="n">d</span> <span class="o">=</span> <span class="vi">p4</span>
 a<span class="n">1</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span>
 a<span class="n">pitch</span><span class="p">,</span> a<span class="n">loc</span> <span class="nb">plltrack</span> a<span class="n">1</span><span class="p">,</span> k<span class="n">d</span>
 k<span class="n">rms</span> <span class="nb">rms</span> a<span class="n">1</span>
@@ -143,7 +143,7 @@ a<span class="n">sig</span> <span class="nb">buzz</span> k<span class="n">rms</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm167358"></a>
+        <a id="idm166139"></a>
         <h2>Credits</h2>
         <p>
       </p>

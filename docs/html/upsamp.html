@@ -39,38 +39,38 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm234155"></a>
+        <a id="idm233785"></a>
         <h2>Description</h2>
         <p>
       Modify a signal by up-sampling.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm234158"></a>
+        <a id="idm233788"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>upsamp</strong></span> ksig</pre>
       </div>
       <div class="refsect1">
-        <a id="idm234162"></a>
+        <a id="idm233792"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>upsamp</em></span> converts a control signal to an audio signal. It does it by simple repetition of the kval. <span class="emphasis"><em>upsamp</em></span> is a slightly more efficient form of the assignment, <span class="emphasis"><em>asig</em></span> = <span class="emphasis"><em>ksig</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm234169"></a>
+        <a id="idm233799"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the upsamp opcode. It uses the file <a class="ulink" href="examples/upsamp.csd.html" target="_top"> (click here to play) <em class="citetitle">upsamp.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm234174"></a>
+          <a id="idm233804"></a>
           <p class="title">
-            <strong>Example 1062. Example of the upsamp opcode.</strong>
+            <strong>Example 1065. Example of the upsamp opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm234176"></a>
+              <a id="idm233806"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -110,12 +110,12 @@ a<span class="n">0ut</span>     <span class="nb">fold</span>     a<span class="n
 		
 <span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">;avoid playing this too loud</span>
 
-k<span class="n">bit</span>     <span class="o">=</span>        <span class="nb">p4</span>
+k<span class="n">bit</span>     <span class="o">=</span>        <span class="vi">p4</span>
 k<span class="n">sr</span>      <span class="o">=</span>        <span class="mi">44100</span>
 a<span class="n">sig</span>     <span class="nb">diskin</span>   <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span>
 a<span class="n">out</span>     <span class="nf">Decimator</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">bit</span><span class="p">,</span> k<span class="n">sr</span>
          <span class="nb">printks</span>  <span class="s">"bitrate = </span><span class="si">%d</span><span class="s">, "</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> k<span class="n">bit</span>
-         <span class="nb">printks</span>  <span class="s">"with samplerate = </span><span class="si">%d</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> k<span class="n">sr</span>
+         <span class="nb">printks</span>  <span class="s">"with samplerate = </span><span class="si">%d</span><span class="se">\\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> k<span class="n">sr</span>
          <span class="nb">outs</span>     a<span class="n">out</span><span class="o">*</span><span class="mf">.7</span><span class="p">,</span> a<span class="n">out</span><span class="o">*</span><span class="mf">.7</span>
 <span class="kd">endin</span>
 
@@ -125,7 +125,7 @@ a<span class="n">out</span>     <span class="nf">Decimator</span> a<span class="
 k<span class="n">bit</span>     <span class="nb">randomi</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">1</span>
 a<span class="n">sig</span>     <span class="nb">diskin</span>   <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">;loop play</span>
 a<span class="n">out</span>     <span class="nf">Decimator</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">bit</span><span class="p">,</span> <span class="mi">44100</span>
-         <span class="nb">printks</span>  <span class="s">"bitrate = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mf">.3</span><span class="p">,</span> k<span class="n">bit</span>
+         <span class="nb">printks</span>  <span class="s">"bitrate = </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mf">.3</span><span class="p">,</span> k<span class="n">bit</span>
          <span class="nb">outs</span>     a<span class="n">out</span><span class="o">*</span><span class="mf">.7</span><span class="p">,</span> a<span class="n">out</span><span class="o">*</span><span class="mf">.7</span>
 
 <span class="kd">endin</span>
@@ -147,7 +147,7 @@ a<span class="n">out</span>     <span class="nf">Decimator</span> a<span class="
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm234410"></a>
+        <a id="idm234041"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="diff.html" title="diff"><em class="citetitle">diff</em></a>,

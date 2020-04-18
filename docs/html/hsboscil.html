@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm101207"></a>
+        <a id="idm101141"></a>
         <h2>Description</h2>
         <p>
       An oscillator which takes tonality and brightness as arguments, relative to a base frequency.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm101210"></a>
+        <a id="idm101144"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>hsboscil</strong></span> kamp, ktone, kbrite, ibasfreq, iwfn, ioctfn \
                [, ioctcnt] [, iphs]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm101214"></a>
+        <a id="idm101148"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ibasfreq</em></span> -- base frequency to which tonality and brighness are relative
@@ -76,7 +76,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm101229"></a>
+        <a id="idm101163"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- amplitude of note
@@ -98,21 +98,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm101256"></a>
+        <a id="idm101190"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the hsboscil opcode. It uses the file <a class="ulink" href="examples/hsboscil.csd.html" target="_top"> (click here to play) <em class="citetitle">hsboscil.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm101261"></a>
+          <a id="idm101195"></a>
           <p class="title">
-            <strong>Example 421. Example of the hsboscil opcode.</strong>
+            <strong>Example 422. Example of the hsboscil opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm101268"></a>
+              <a id="idm101202"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -143,7 +143,7 @@ gi<span class="n">blend</span> <span class="nb">ftgen</span> <span class="mi">2<
 
   <span class="c1">; Change ktone linearly from 0 to 1, </span>
   <span class="c1">; over the period defined by p3.</span>
-  k<span class="n">tone</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>
+  k<span class="n">tone</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1</span>
 
 a<span class="n">sig</span> <span class="nb">hsboscil</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">tone</span><span class="p">,</span> k<span class="n">brite</span><span class="p">,</span> i<span class="n">basfreq</span><span class="p">,</span> gi<span class="n">wave</span><span class="p">,</span> gi<span class="n">blend</span><span class="p">,</span> i<span class="n">octcnt</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
@@ -167,14 +167,14 @@ a<span class="n">sig</span> <span class="nb">hsboscil</span> k<span class="n">am
 
       </p>
         <div class="example">
-          <a id="idm101384"></a>
+          <a id="idm101318"></a>
           <p class="title">
-            <strong>Example 422. Example of the hsboscil opcode in a MIDI instrument.</strong>
+            <strong>Example 423. Example of the hsboscil opcode in a MIDI instrument.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm101391"></a>
+              <a id="idm101325"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -227,7 +227,7 @@ a<span class="n">sig</span> <span class="nb">hsboscil</span> k<span class="n">en
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm101507"></a>
+        <a id="idm101441"></a>
         <h2>Credits</h2>
         <p>
       </p>

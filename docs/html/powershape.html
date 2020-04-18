@@ -39,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169696"></a>
+        <a id="idm168477"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>powershape</em></span> opcode raises an input signal to a power with pre- and post-scaling of the signal so that the output will be in a predictable range.  It also processes negative inputs in a symmetrical way to positive inputs, calculating a dynamic transfer function that is useful for waveshaping.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169700"></a>
+        <a id="idm168481"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout <span class="command"><strong>powershape</strong></span> ain, kShapeAmount [, ifullscale]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm169704"></a>
+        <a id="idm168485"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifullscale</em></span> -- optional parameter specifying the range of input values from -<span class="emphasis"><em>ifullscale</em></span> to <span class="emphasis"><em>ifullscale</em></span>.  Defaults to 1.0 -- you should set this parameter to the maximum expected input value.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169710"></a>
+        <a id="idm168491"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ain</em></span> --  the input signal to be shaped.
@@ -80,7 +80,7 @@ The other adaptation involves the <span class="emphasis"><em>ifullscale</em></sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169731"></a>
+        <a id="idm168512"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pow.html" title="pow"><em class="citetitle">pow</em></a>, 
@@ -88,20 +88,20 @@ The other adaptation involves the <span class="emphasis"><em>ifullscale</em></sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169738"></a>
+        <a id="idm168519"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the powershape opcode. It uses the file <a class="ulink" href="examples/powershape.csd.html" target="_top"> (click here to play) <em class="citetitle">powershape.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm169743"></a>
+          <a id="idm168524"></a>
           <p class="title">
             <strong>Example 729. Example of the powershape opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm169750"></a>
+              <a id="idm168531"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -114,10 +114,10 @@ The other adaptation involves the <span class="emphasis"><em>ifullscale</em></sp
 <span class="nt">&lt;CsInstruments&gt;</span>
 <span class="kd">instr</span> <span class="nf">1</span>
 	i<span class="n">maxamp</span>    <span class="o">=</span>           <span class="mi">10000</span>
-	k<span class="n">shapeamt</span>  <span class="nb">line</span>        <span class="nb">p5</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p6</span>
-	a<span class="n">osc</span>       <span class="nb">oscili</span>      <span class="mf">1.0</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">),</span> <span class="mi">1</span>
+	k<span class="n">shapeamt</span>  <span class="nb">line</span>        <span class="vi">p5</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p6</span>
+	a<span class="n">osc</span>       <span class="nb">oscili</span>      <span class="mf">1.0</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p4</span><span class="p">),</span> <span class="mi">1</span>
 	a<span class="n">out</span>       <span class="nb">powershape</span>  a<span class="n">osc</span><span class="p">,</span> k<span class="n">shapeamt</span>
-	a<span class="n">declick</span>   <span class="nb">linseg</span>      <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">p3</span> <span class="o">-</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.0</span>
+	a<span class="n">declick</span>   <span class="nb">linseg</span>      <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="vi">p3</span> <span class="o">-</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.0</span>
 	
 		     <span class="nb">out</span>         a<span class="n">out</span> <span class="o">*</span> a<span class="n">declick</span> <span class="o">*</span> i<span class="n">maxamp</span>
 <span class="kd">endin</span>
@@ -145,7 +145,7 @@ The other adaptation involves the <span class="emphasis"><em>ifullscale</em></sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169864"></a>
+        <a id="idm168645"></a>
         <h2>Credits</h2>
         <p>
       </p>

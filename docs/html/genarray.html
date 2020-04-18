@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm93789"></a>
+        <a id="idm93695"></a>
         <h2>Description</h2>
         <p>
       Generate a vector (one-dimensional k-rate or i-rate array) with an arithmetic sequence.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm93792"></a>
+        <a id="idm93698"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">karray <span class="command"><strong>genarray</strong></span> kstart, kens[, inc]</pre>
         <pre class="synopsis">iarray <span class="command"><strong>genarray</strong></span> istart, iens[, inc]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm93798"></a>
+        <a id="idm93704"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>istart</em></span> -- value to place in first element.
@@ -66,20 +66,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm93806"></a>
+        <a id="idm93712"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the genarray opcode. It uses the file <a class="ulink" href="examples/genarray.csd.html" target="_top"> (click here to play) <em class="citetitle">genarray.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm93811"></a>
+          <a id="idm93717"></a>
           <p class="title">
-            <strong>Example 388. Example of the genarray opcode.</strong>
+            <strong>Example 389. Example of the genarray opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm93818"></a>
+              <a id="idm93724"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -100,18 +100,18 @@ i<span class="n">Arr1</span><span class="p">[]</span> <span class="nb">genarray<
 i<span class="n">Arr2</span><span class="p">[]</span> <span class="nb">genarray</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="o">/</span><span class="mi">3</span>
 
 <span class="c1">;print the content of iArr1</span>
-        <span class="nb">printf</span>  <span class="s">"%s"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"iArr1: start=1, end=6, step=default</span><span class="se">\n</span><span class="s">"</span>
+        <span class="nb">printf</span>  <span class="s">"</span><span class="si">%s</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"iArr1: start=1, end=6, step=default</span><span class="se">\n</span><span class="s">"</span>
 k<span class="n">ndx</span>    <span class="o">=</span>       <span class="mi">0</span>
   <span class="k">until</span> k<span class="n">ndx</span> <span class="o">==</span> <span class="nb">lenarray</span><span class="p">(</span>i<span class="n">Arr1</span><span class="p">)</span> <span class="k">do</span>
-        <span class="nb">printf</span>  <span class="s">"iArr[</span><span class="si">%d</span><span class="s">] = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> i<span class="n">Arr1</span><span class="p">[</span>k<span class="n">ndx</span><span class="p">]</span>
+        <span class="nb">printf</span>  <span class="s">"iArr[</span><span class="si">%d</span><span class="s">] = </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> i<span class="n">Arr1</span><span class="p">[</span>k<span class="n">ndx</span><span class="p">]</span>
 k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1</span>
   <span class="k">od</span>
 
 <span class="c1">;print the content of iArr2</span>
-        <span class="nb">printf</span>  <span class="s">"%s"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"iArr2: start=1, end=6, step=2/3</span><span class="se">\n</span><span class="s">"</span>
+        <span class="nb">printf</span>  <span class="s">"</span><span class="si">%s</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"iArr2: start=1, end=6, step=2/3</span><span class="se">\n</span><span class="s">"</span>
 k<span class="n">ndx</span>    <span class="o">=</span>       <span class="mi">0</span>
   <span class="k">until</span> k<span class="n">ndx</span> <span class="o">==</span> <span class="nb">lenarray</span><span class="p">(</span>i<span class="n">Arr2</span><span class="p">)</span> <span class="k">do</span>
-        <span class="nb">printf</span>  <span class="s">"iArr[</span><span class="si">%d</span><span class="s">] = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> i<span class="n">Arr2</span><span class="p">[</span>k<span class="n">ndx</span><span class="p">]</span>
+        <span class="nb">printf</span>  <span class="s">"iArr[</span><span class="si">%d</span><span class="s">] = </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> i<span class="n">Arr2</span><span class="p">[</span>k<span class="n">ndx</span><span class="p">]</span>
 k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1</span>
   <span class="k">od</span>
 
@@ -131,14 +131,14 @@ k<span class="n">ndx</span>    <span class="o">+=</span>      <span class="mi">1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm93948"></a>
+        <a id="idm93860"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vectorial.html" title="Vectorial Opcodes"><em class="citetitle"></em>Vectorial opcodes</a>
 </p>
       </div>
       <div class="refsect1">
-        <a id="idm93953"></a>
+        <a id="idm93865"></a>
         <h2>Credits</h2>
         <p>
       </p>

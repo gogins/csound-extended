@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm57574"></a>
+        <a id="idm57147"></a>
         <h2>Description</h2>
         <p>
       Periodically writes three orchestra control-signal values to a named external file in a specific format.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm57577"></a>
+        <a id="idm57150"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>dumpk3</strong></span> ksig1, ksig2, ksig3, ifilname, iformat, iprd</pre>
       </div>
       <div class="refsect1">
-        <a id="idm57581"></a>
+        <a id="idm57154"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifilname</em></span> -- character string (in double quotes, spaces permitted) denoting the external file name. May either be a full path name with target directory specified or a simple filename to be created within the current directory
@@ -91,7 +91,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm57604"></a>
+        <a id="idm57177"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ksig1, ksig2, ksig3</em></span> -- control-rate signals
@@ -101,7 +101,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm57610"></a>
+        <a id="idm57183"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the dumpk3 opcode. It uses the file <a class="ulink" href="examples/dumpk3.csd.html" target="_top"> (click here to play) <em class="citetitle">dumpk3.csd</em></a>.
@@ -110,14 +110,14 @@
 
       </p>
         <div class="example">
-          <a id="idm57615"></a>
+          <a id="idm57188"></a>
           <p class="title">
             <strong>Example 238. Example of the dumpk3 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm57622"></a>
+              <a id="idm57195"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -142,13 +142,13 @@ k<span class="n">db</span>       <span class="nb">randh</span>     <span class="
 k<span class="n">pan</span>      <span class="nb">randh</span>     <span class="mf">.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.5</span> <span class="c1">;panning between 0 and 1</span>
           <span class="nb">dumpk3</span>    k<span class="n">freq</span><span class="p">,</span> k<span class="n">db</span><span class="p">,</span> k<span class="n">pan</span><span class="p">,</span> <span class="s">"dumpk3.txt"</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">;writes the control signals</span>
           <span class="nb">prints</span>    <span class="s">"WRITING:</span><span class="se">\n</span><span class="s">"</span>
-          <span class="nb">printks</span>   <span class="s">"kfreq = %f, kdb = %f, kpan = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> k<span class="n">db</span><span class="p">,</span> k<span class="n">pan</span>  <span class="c1">;prints them</span>
+          <span class="nb">printks</span>   <span class="s">"kfreq = </span><span class="si">%f</span><span class="s">, kdb = </span><span class="si">%f</span><span class="s">, kpan = </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> k<span class="n">db</span><span class="p">,</span> k<span class="n">pan</span>  <span class="c1">;prints them</span>
 <span class="kd">endin</span>
 
 <span class="kd">instr</span> <span class="nf">2</span> <span class="c1">;reads the file written by instr 1</span>
 k<span class="n">f</span><span class="p">,</span>k<span class="n">db</span><span class="p">,</span>k<span class="n">p</span> <span class="nb">readk3</span>    <span class="s">"dumpk3.txt"</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span>
           <span class="nb">prints</span>    <span class="s">"READING:</span><span class="se">\n</span><span class="s">"</span>
-          <span class="nb">printks</span>   <span class="s">"kfreq = %f, kdb = %f, kpan = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">f</span><span class="p">,</span> k<span class="n">db</span><span class="p">,</span> k<span class="n">p</span>  <span class="c1">;prints again</span>
+          <span class="nb">printks</span>   <span class="s">"kfreq = </span><span class="si">%f</span><span class="s">, kdb = </span><span class="si">%f</span><span class="s">, kpan = </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">f</span><span class="p">,</span> k<span class="n">db</span><span class="p">,</span> k<span class="n">p</span>  <span class="c1">;prints again</span>
 k<span class="n">db</span>       <span class="nb">lineto</span>    k<span class="n">db</span><span class="p">,</span> <span class="mf">.1</span> <span class="c1">;smoothing amp transition</span>
 k<span class="n">p</span>        <span class="nb">lineto</span>    k<span class="n">p</span><span class="p">,</span> <span class="mf">.1</span> <span class="c1">;smoothing pan transition</span>
 a<span class="n">out</span>      <span class="nb">poscil</span>    <span class="nb">ampdb</span><span class="p">(</span>k<span class="n">db</span><span class="p">),</span> k<span class="n">f</span><span class="p">,</span> gi<span class="n">Sine</span>
@@ -192,7 +192,7 @@ kfreq = 482.056800, kdb = -4.046700, kpan = 0.876500
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm57807"></a>
+        <a id="idm57390"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="dumpk.html" title="dumpk"><em class="citetitle">dumpk</em></a>,
@@ -205,7 +205,7 @@ kfreq = 482.056800, kdb = -4.046700, kpan = 0.876500
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm57824"></a>
+        <a id="idm57407"></a>
         <h2>Credits</h2>
         <p>By: John ffitch and Barry L. Vercoe</p>
         <p>1999 or earlier</p>

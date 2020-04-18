@@ -39,14 +39,14 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm59180"></a>
+        <a id="idm58777"></a>
         <h2>Description</h2>
         <p>
       Marks the end of an user-defined opcode block.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm59183"></a>
+        <a id="idm58780"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">
           <span class="command">
@@ -55,7 +55,7 @@
         </pre>
       </div>
       <div class="refsect1">
-        <a id="idm59187"></a>
+        <a id="idm58784"></a>
         <h2>Performance</h2>
         <p>
       The syntax of a user-defined opcode block is as follows:
@@ -80,20 +80,20 @@ xinarg1 [, xinarg2] [, xinarg3] ... [xinargN]  <span class="opc">xin</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm59200"></a>
+        <a id="idm58797"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the endop opcode. It uses the file <a class="ulink" href="examples/endop.csd.html" target="_top"> (click here to play) <em class="citetitle">endop.csd</em></a>.
             </p>
         <div class="example">
-          <a id="idm59205"></a>
+          <a id="idm58802"></a>
           <p class="title">
             <strong>Example 247. Example of the endop opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm59212"></a>
+              <a id="idm58809"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -150,7 +150,7 @@ a<span class="n">out</span>    <span class="nf">Lowpass</span> a<span class="n">
         <span class="kd">opcode</span> <span class="nf">DeClick</span><span class="p">,</span> <span class="kt">a</span><span class="p">,</span> <span class="kt">a</span>
 
 a<span class="n">in</span>     <span class="nb">xin</span>
-a<span class="n">env</span>    <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">0</span>
+a<span class="n">env</span>    <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">0</span>
         <span class="nb">xout</span> a<span class="n">in</span> <span class="o">*</span> a<span class="n">env</span>         <span class="c1">; apply envelope and write output</span>
 
         <span class="kd">endop</span>
@@ -160,7 +160,7 @@ a<span class="n">env</span>    <span class="nb">linseg</span> <span class="mi">0
         <span class="kd">instr</span> <span class="nf">1</span>
 
 k<span class="n">amp</span>    <span class="o">=</span>  <span class="mf">.6</span>                <span class="c1">; amplitude</span>
-k<span class="n">cps</span>    <span class="nb">expon</span> <span class="mi">50</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">500</span>       <span class="c1">; pitch</span>
+k<span class="n">cps</span>    <span class="nb">expon</span> <span class="mi">50</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">500</span>       <span class="c1">; pitch</span>
 a<span class="n">1</span>      <span class="nf">Oscillator</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">cps</span>                   <span class="c1">; call oscillator</span>
 k<span class="n">flt</span>    <span class="nb">linseg</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.8</span>  <span class="c1">; filter envelope</span>
 a<span class="n">1</span>      <span class="nf">RecursiveLowpass</span> a<span class="n">1</span><span class="p">,</span> k<span class="n">flt</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> k<span class="n">flt</span><span class="p">,</span> <span class="mi">10</span> <span class="c1">; 10th order lowpass</span>
@@ -184,7 +184,7 @@ a<span class="n">1</span>      <span class="nf">DeClick</span> a<span class="n">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm59448"></a>
+        <a id="idm59045"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="opcode.html" title="opcode"><em class="citetitle">opcode</em></a>, 
@@ -196,7 +196,7 @@ a<span class="n">1</span>      <span class="nf">DeClick</span> a<span class="n">
         <p> The user-defined opcode page: <a class="ulink" href="http://www.csounds.com/udo/" target="_top"><em class="citetitle">http://www.csounds.com/udo/</em></a>  , maintained by Steven Yi </p>
       </div>
       <div class="refsect1">
-        <a id="idm59465"></a>
+        <a id="idm59062"></a>
         <h2>Credits</h2>
         <p>Author: Istvan Varga, 2002; based on code by Matt J. Ingalls</p>
         <p>New in version 4.22</p>

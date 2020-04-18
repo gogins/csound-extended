@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm267134"></a>
+        <a id="idm266784"></a>
         <h2>Description</h2>
         <p>
       This generates the log of a modified Bessel function of the second kind, order 0, suitable for use in amplitude-modulated FM.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm267137"></a>
+        <a id="idm266787"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size 12 xint</pre>
       </div>
       <div class="refsect1">
-        <a id="idm267141"></a>
+        <a id="idm266791"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>size </em></span> -- number of points in the table. Must be a power of 2 or a power-of-2 plus 1 (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f statement</em></a>). The normal value is power-of-2 plus 1.
@@ -93,20 +93,20 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm267165"></a>
+        <a id="idm266815"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the GEN12 generator. It uses the file <a class="ulink" href="examples/gen12.csd.html" target="_top"> (click here to play) <em class="citetitle">gen12.csd</em></a>.
            </p>
         <div class="example">
-          <a id="idm267170"></a>
+          <a id="idm266820"></a>
           <p class="title">
-            <strong>Example 1207. Example of the GEN12 generator.</strong>
+            <strong>Example 1210. Example of the GEN12 generator.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm267177"></a>
+              <a id="idm266827"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -125,17 +125,17 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">dur</span>    <span class="o">=</span>       <span class="nb">p3</span>
-i<span class="n">amp</span>    <span class="o">=</span>       <span class="nb">p4</span>
-i<span class="n">carfrq</span> <span class="o">=</span>       <span class="nb">p5</span>
-i<span class="n">modfrq</span> <span class="o">=</span>       <span class="nb">p6</span>          
+i<span class="n">dur</span>    <span class="o">=</span>       <span class="vi">p3</span>
+i<span class="n">amp</span>    <span class="o">=</span>       <span class="vi">p4</span>
+i<span class="n">carfrq</span> <span class="o">=</span>       <span class="vi">p5</span>
+i<span class="n">modfrq</span> <span class="o">=</span>       <span class="vi">p6</span>          
 a<span class="n">env</span>    <span class="nb">expseg</span>  <span class="mf">.01</span><span class="p">,</span> i<span class="n">dur</span><span class="o">*</span><span class="mf">.1</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> i<span class="n">dur</span><span class="o">*</span><span class="mf">.8</span><span class="p">,</span> i<span class="n">amp</span><span class="o">*</span><span class="mf">.75</span><span class="p">,</span> i<span class="n">dur</span><span class="o">*</span><span class="mf">.1</span><span class="p">,</span> <span class="mf">.01</span>
-i<span class="n">1</span>      <span class="o">=</span>       <span class="nb">p7</span><span class="o">*</span>i<span class="n">modfrq</span>			<span class="c1">;p7=modulation index start</span>
-i<span class="n">2</span>      <span class="o">=</span>       <span class="nb">p8</span><span class="o">*</span>i<span class="n">modfrq</span>			<span class="c1">;p8=modulation index end</span>
+i<span class="n">1</span>      <span class="o">=</span>       <span class="vi">p7</span><span class="o">*</span>i<span class="n">modfrq</span>			<span class="c1">;p7=modulation index start</span>
+i<span class="n">2</span>      <span class="o">=</span>       <span class="vi">p8</span><span class="o">*</span>i<span class="n">modfrq</span>			<span class="c1">;p8=modulation index end</span>
 a<span class="n">dev</span>    <span class="nb">line</span>    i<span class="n">1</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> i<span class="n">2</span>			<span class="c1">;modulation frequency</span>
-a<span class="n">index</span>  <span class="nb">line</span>    <span class="nb">p7</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> <span class="nb">p8</span>			<span class="c1">;modulation index</span>
+a<span class="n">index</span>  <span class="nb">line</span>    <span class="vi">p7</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> <span class="vi">p8</span>			<span class="c1">;modulation index</span>
 
-a<span class="n">r</span>      <span class="nb">linseg</span>  <span class="mi">1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="nb">p9</span><span class="p">,</span> <span class="nb">p3</span><span class="o">-</span><span class="mf">.2</span><span class="p">,</span> <span class="nb">p10</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; r value envelope: p9-p10 =exp. partial strength parameter start and end</span>
+a<span class="n">r</span>      <span class="nb">linseg</span>  <span class="mi">1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="vi">p9</span><span class="p">,</span> <span class="vi">p3</span><span class="o">-</span><span class="mf">.2</span><span class="p">,</span> <span class="vi">p10</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; r value envelope: p9-p10 =exp. partial strength parameter start and end</span>
 a<span class="n">mp1</span>    <span class="o">=</span>       <span class="p">(</span>a<span class="n">index</span><span class="o">*</span><span class="p">(</span>a<span class="n">r</span><span class="o">+</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span>a<span class="n">r</span><span class="p">)))</span><span class="o">/</span><span class="mi">2</span>
 a<span class="n">fmod</span>   <span class="nb">oscili</span>  a<span class="n">mp1</span><span class="p">,</span> i<span class="n">modfrq</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;FM modulator (sine)</span>
 a<span class="n">tab</span>    <span class="o">=</span>       <span class="p">(</span>a<span class="n">index</span><span class="o">*</span><span class="p">(</span>a<span class="n">r</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span>a<span class="n">r</span><span class="p">)))</span><span class="o">/</span><span class="mi">2</span>		<span class="c1">;index to table</span>
@@ -196,7 +196,7 @@ a<span class="n">sig</span>    <span class="nb">balance</span> a<span class="n">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm267604"></a>
+        <a id="idm267254"></a>
         <h2>Credits</h2>
         <p>
       Example is, with minor modifications, taken from The Csound Book (page 87).

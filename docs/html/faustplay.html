@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm63266"></a>
+        <a id="idm62861"></a>
         <h2>Description</h2>
         <p>Plugin opcode in faustcsound.</p>
         <p>
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm63270"></a>
+        <a id="idm62865"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>a1[, a2,...] faustplay</strong></span> ihandle[, ain1,...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm63274"></a>
+        <a id="idm62869"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em><span class="quote">“<span class="quote">ihandle</span>”</span></em></span> -- a handle to the
@@ -60,7 +60,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm63279"></a>
+        <a id="idm62874"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em><span class="quote">“<span class="quote">ain1,...</span>”</span></em></span> -- input signals
@@ -70,20 +70,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm63287"></a>
+        <a id="idm62882"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the faustplay opcode. It uses the file <a class="ulink" href="examples/faustplay.csd.html" target="_top"> (click here to play) <em class="citetitle">faustplay.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm63292"></a>
+          <a id="idm62887"></a>
           <p class="title">
             <strong>Example 273. Example of the faustplay opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm63299"></a>
+              <a id="idm62894"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -103,11 +103,11 @@ process = phasor(freq,0);
 }}</span><span class="p">,</span> <span class="s">"-vec -lv 1"</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
-k<span class="n">b1</span> <span class="o">=</span> <span class="nb">p5</span>
-i<span class="n">b</span> <span class="n">faustdsp</span> gi<span class="n">ph</span>
+k<span class="n">b1</span> <span class="o">=</span> <span class="vi">p5</span>
+i<span class="n">b</span> <span class="nb">faustdsp</span> gi<span class="n">ph</span>
 <span class="nb">faustctl</span> i<span class="n">b</span><span class="p">,</span><span class="s">"freq"</span><span class="p">,</span>k<span class="n">b1</span>
-a<span class="n">sig</span> <span class="n">faustplay</span> i<span class="n">b</span>
-<span class="nb">out</span> <span class="nb">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="cp">$M_PI</span><span class="o">*</span>a<span class="n">sig</span><span class="p">)</span><span class="o">*</span><span class="nb">p4</span><span class="o">*</span><span class="vg">0dbfs</span>
+a<span class="n">sig</span> <span class="nb">faustplay</span> i<span class="n">b</span>
+<span class="nb">out</span> <span class="nb">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="cp">$M_PI</span><span class="o">*</span>a<span class="n">sig</span><span class="p">)</span><span class="o">*</span><span class="vi">p4</span><span class="o">*</span><span class="vg">0dbfs</span>
 <span class="kd">endin</span>
 
 
@@ -124,7 +124,7 @@ a<span class="n">sig</span> <span class="n">faustplay</span> i<span class="n">b<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm63354"></a>
+        <a id="idm62949"></a>
         <h2>Credits</h2>
         <p>Author: Victor Lazzarini, 2018 </p>
       </div>

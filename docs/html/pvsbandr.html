@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm175358"></a>
+        <a id="idm174506"></a>
         <h2>Description</h2>
         <p>
       Filter the pvoc frames, rejecting bins whose frequency is within a
@@ -47,13 +47,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm175361"></a>
+        <a id="idm174509"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>pvsbandr</strong></span> fsigin, xlowcut, xlowfull, \
       xhighfull, xhighcut[, ktype]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm175365"></a>
+        <a id="idm174513"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>fsig</em></span> -- output pv stream
@@ -101,21 +101,21 @@ ________                                    
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm175380"></a>
+        <a id="idm174528"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the pvsbandr opcode. It uses the file <a class="ulink" href="examples/pvsbandr.csd.html" target="_top"> (click here to play) <em class="citetitle">pvsbandr.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm175385"></a>
+          <a id="idm174533"></a>
           <p class="title">
-            <strong>Example 760. Example of the pvsbandr opcode.</strong>
+            <strong>Example 762. Example of the pvsbandr opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm175392"></a>
+              <a id="idm174540"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -141,9 +141,9 @@ k<span class="n">lowfull</span> <span class="o">=</span> <span class="mi">200</s
 k<span class="n">highfull</span> <span class="o">=</span> <span class="mi">1900</span>
 k<span class="n">highcut</span> <span class="o">=</span> <span class="mi">2000</span>
 a<span class="n">in</span>		<span class="nb">soundin</span>	S<span class="n">file</span>
-<span class="n">fftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">1</span><span class="c1">; fft-analysis of the audio-signal</span>
-<span class="n">fftbp</span>		<span class="nb">pvsbandr</span>	<span class="n">fftin</span><span class="p">,</span> k<span class="n">lowcut</span><span class="p">,</span> k<span class="n">lowfull</span><span class="p">,</span> k<span class="n">highfull</span><span class="p">,</span> k<span class="n">highcut</span> <span class="c1">; band reject</span>
-a<span class="n">bp</span>		<span class="nb">pvsynth</span>	<span class="n">fftbp</span><span class="c1">; resynthesis</span>
+f<span class="n">ftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">1</span><span class="c1">; fft-analysis of the audio-signal</span>
+f<span class="n">ftbp</span>		<span class="nb">pvsbandr</span>	f<span class="n">ftin</span><span class="p">,</span> k<span class="n">lowcut</span><span class="p">,</span> k<span class="n">lowfull</span><span class="p">,</span> k<span class="n">highfull</span><span class="p">,</span> k<span class="n">highcut</span> <span class="c1">; band reject</span>
+a<span class="n">bp</span>		<span class="nb">pvsynth</span>	f<span class="n">ftbp</span><span class="c1">; resynthesis</span>
 		<span class="nb">out</span>		a<span class="n">bp</span>
 <span class="kd">endin</span>
 
@@ -162,7 +162,7 @@ a<span class="n">bp</span>		<span class="nb">pvsynth</span>	<span class="n">fftb
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm175476"></a>
+        <a id="idm174624"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvsanal.html" title="pvsanal"><em class="citetitle">pvsanal</em></a>,
@@ -172,7 +172,7 @@ a<span class="n">bp</span>		<span class="nb">pvsynth</span>	<span class="n">fftb
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm175487"></a>
+        <a id="idm174635"></a>
         <h2>Credits</h2>
         <p>
       </p>

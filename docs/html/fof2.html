@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm84075"></a>
+        <a id="idm83720"></a>
         <h2>Description</h2>
         <p>
       Audio output is a succession of sinusoid bursts initiated at frequency <span class="emphasis"><em>xfund</em></span> with a spectral peak at <span class="emphasis"><em>xform</em></span>. For <span class="emphasis"><em>xfund</em></span> above 25 Hz these bursts produce a speech-like formant with spectral characteristics determined by the k-input parameters. For lower fundamentals this generator provides a special form of granular synthesis.
@@ -49,13 +49,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm84084"></a>
+        <a id="idm83729"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>fof2</strong></span> xamp, xfund, xform, koct, kband, kris, kdur, kdec, iolaps, \
       ifna, ifnb, itotdur, kphs, kgliss [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm84088"></a>
+        <a id="idm83733"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iolaps</em></span> -- number of preallocated spaces needed to hold overlapping burst data. Overlaps are frequency dependent, and the space required depends on the maximum value of <span class="emphasis"><em>xfund * kdur</em></span>. Can be over-estimated at no computation cost. Uses less than 50 bytes of memory per <span class="emphasis"><em>iolap</em></span>.
@@ -71,7 +71,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm84107"></a>
+        <a id="idm83752"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xamp</em></span> -- peak amplitude of each sineburst, observed at the true end of its rise pattern. The rise may exceed this value given a large bandwidth (say, Q &lt; 10) and/or when the bursts are overlapping.
@@ -117,21 +117,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm84154"></a>
+        <a id="idm83799"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the fof2 opcode. It uses the file <a class="ulink" href="examples/fof2.csd.html" target="_top"> (click here to play) <em class="citetitle">fof2.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm84159"></a>
+          <a id="idm83804"></a>
           <p class="title">
             <strong>Example 342. Example of the fof2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm84166"></a>
+              <a id="idm83811"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -151,30 +151,30 @@
 
     <span class="kd">instr</span> <span class="nf">1</span>            <span class="c1">;table-lookup vocal synthesis</span>
 
-k<span class="n">ris</span> <span class="nb">init</span> <span class="nb">p12</span>
-k<span class="n">dur</span> <span class="nb">init</span> <span class="nb">p13</span>
-k<span class="n">dec</span> <span class="nb">init</span> <span class="nb">p14</span>
+k<span class="n">ris</span> <span class="nb">init</span> <span class="vi">p12</span>
+k<span class="n">dur</span> <span class="nb">init</span> <span class="vi">p13</span>
+k<span class="n">dec</span> <span class="nb">init</span> <span class="vi">p14</span>
 
-i<span class="n">olaps</span> <span class="nb">init</span> <span class="nb">p15</span>
+i<span class="n">olaps</span> <span class="nb">init</span> <span class="vi">p15</span>
 
 i<span class="n">fna</span> <span class="nb">init</span> <span class="mi">1</span>  <span class="c1">; Sine wave</span>
 i<span class="n">fnb</span> <span class="nb">init</span> <span class="mi">2</span>  <span class="c1">; Straight line rise shape</span>
 
-i<span class="n">totdur</span> <span class="nb">init</span> <span class="nb">p3</span>
+i<span class="n">totdur</span> <span class="nb">init</span> <span class="vi">p3</span>
 
 k<span class="n">phs</span> <span class="nb">init</span> <span class="mi">0</span>  <span class="c1">; No phase modulation (constant kphs)</span>
 
 
-k<span class="n">fund</span> <span class="nb">line</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p5</span>
-k<span class="n">form</span> <span class="nb">line</span> <span class="nb">p6</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p7</span>
-k<span class="n">oct</span> <span class="nb">line</span> <span class="nb">p8</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p9</span>
-k<span class="n">band</span> <span class="nb">line</span> <span class="nb">p10</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p11</span>
-k<span class="n">gliss</span> <span class="nb">line</span> <span class="nb">p16</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p17</span>
+k<span class="n">fund</span> <span class="nb">line</span> <span class="vi">p4</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p5</span>
+k<span class="n">form</span> <span class="nb">line</span> <span class="vi">p6</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p7</span>
+k<span class="n">oct</span> <span class="nb">line</span> <span class="vi">p8</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p9</span>
+k<span class="n">band</span> <span class="nb">line</span> <span class="vi">p10</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p11</span>
+k<span class="n">gliss</span> <span class="nb">line</span> <span class="vi">p16</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p17</span>
 
-k<span class="n">env</span> <span class="nb">linen</span> <span class="mi">5000</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.03</span>  <span class="c1">;to avoid clicking</span>
+k<span class="n">env</span> <span class="nb">linen</span> <span class="mi">5000</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">0.03</span>  <span class="c1">;to avoid clicking</span>
 
 
-a<span class="n">out</span>    <span class="nb">fof2</span>    k<span class="n">env</span><span class="p">,</span> k<span class="n">fund</span><span class="p">,</span> k<span class="n">form</span><span class="p">,</span> k<span class="n">oct</span><span class="p">,</span> k<span class="n">band</span><span class="p">,</span> k<span class="n">ris</span><span class="p">,</span> k<span class="n">dur</span><span class="p">,</span> k<span class="n">dec</span><span class="p">,</span> i<span class="n">olaps</span><span class="p">,</span> \
+a<span class="n">out</span>    <span class="nb">fof2</span>    k<span class="n">env</span><span class="p">,</span> k<span class="n">fund</span><span class="p">,</span> k<span class="n">form</span><span class="p">,</span> k<span class="n">oct</span><span class="p">,</span> k<span class="n">band</span><span class="p">,</span> k<span class="n">ris</span><span class="p">,</span> k<span class="n">dur</span><span class="p">,</span> k<span class="n">dec</span><span class="p">,</span> i<span class="n">olaps</span><span class="p">,</span> <span class="w">\</span>
       i<span class="n">fna</span><span class="p">,</span> i<span class="n">fnb</span><span class="p">,</span> i<span class="n">totdur</span><span class="p">,</span> k<span class="n">phs</span><span class="p">,</span> k<span class="n">gliss</span>
 
 
@@ -211,13 +211,13 @@ a<span class="n">out</span>    <span class="nb">fof2</span>    k<span class="n">
 
       </p>
         <div class="example">
-          <a id="idm84465"></a>
+          <a id="idm84111"></a>
           <p class="title">
             <strong>Example 343. Example of the fof2 opcode to produce vowel sounds.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm84467"></a>
+              <a id="idm84113"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -240,10 +240,10 @@ a<span class="n">out</span>    <span class="nb">fof2</span>    k<span class="n">
 i<span class="n">olaps</span>    <span class="o">=</span>    <span class="mi">120</span>
 i<span class="n">fna</span>    <span class="o">=</span>    <span class="mi">1</span>        <span class="c1">;f1 - sine wave</span>
 i<span class="n">fnb</span>    <span class="o">=</span>    <span class="mi">2</span>        <span class="c1">;f2 - linear rise shape</span>
-i<span class="n">totdur</span>    <span class="o">=</span>    <span class="nb">p3</span>
-i<span class="n">amp</span>    <span class="o">=</span>    <span class="nb">p4</span> <span class="o">*</span> <span class="vg">0dbfs</span>
-i<span class="n">freq1</span>    <span class="o">=</span>    <span class="nb">p5</span>        <span class="c1">;starting frequency</span>
-i<span class="n">freq2</span>    <span class="o">=</span>    <span class="nb">p6</span>        <span class="c1">;ending frequency</span>
+i<span class="n">totdur</span>    <span class="o">=</span>    <span class="vi">p3</span>
+i<span class="n">amp</span>    <span class="o">=</span>    <span class="vi">p4</span> <span class="o">*</span> <span class="vg">0dbfs</span>
+i<span class="n">freq1</span>    <span class="o">=</span>    <span class="vi">p5</span>        <span class="c1">;starting frequency</span>
+i<span class="n">freq2</span>    <span class="o">=</span>    <span class="vi">p6</span>        <span class="c1">;ending frequency</span>
 
 k<span class="n">amp</span>    <span class="nb">linseg</span>    <span class="mi">0</span><span class="p">,</span> <span class="mf">.003</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> i<span class="n">totdur</span><span class="o">-</span><span class="mf">.007</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> <span class="mf">.003</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">.001</span><span class="p">,</span> <span class="mi">0</span>
 k<span class="n">fund</span>    <span class="nb">expseg</span>    i<span class="n">freq1</span><span class="p">,</span> i<span class="n">totdur</span><span class="p">,</span> i<span class="n">freq2</span>
@@ -254,8 +254,8 @@ k<span class="n">dec</span>    <span class="nb">init</span>    <span class="mf">
 k<span class="n">phs</span>    <span class="nb">init</span>    <span class="mi">0</span>
 k<span class="n">gliss</span>    <span class="nb">init</span>    <span class="mi">0</span>
 
-i<span class="n">forma</span>    <span class="o">=</span>    <span class="nb">p7</span>        <span class="c1">;starting spectrum</span>
-i<span class="n">formb</span>    <span class="o">=</span>    <span class="nb">p8</span>        <span class="c1">;ending spectrum</span>
+i<span class="n">forma</span>    <span class="o">=</span>    <span class="vi">p7</span>        <span class="c1">;starting spectrum</span>
+i<span class="n">formb</span>    <span class="o">=</span>    <span class="vi">p8</span>        <span class="c1">;ending spectrum</span>
 
 i<span class="n">form1a</span>    <span class="nb">tab_i</span>    <span class="mi">0</span><span class="p">,</span> i<span class="n">forma</span>        <span class="c1">;read values of 5 formants for 1st spectrum</span>
 i<span class="n">form2a</span>    <span class="nb">tab_i</span>    <span class="mi">1</span><span class="p">,</span> i<span class="n">forma</span>
@@ -324,7 +324,7 @@ a<span class="n">5</span>    <span class="nb">fof2</span>    k<span class="n">am
 
 a<span class="n">out</span>    <span class="o">=</span>    <span class="p">(</span>a<span class="n">1</span><span class="o">+</span>a<span class="n">2</span><span class="o">+</span>a<span class="n">3</span><span class="o">+</span>a<span class="n">4</span><span class="o">+</span>a<span class="n">5</span><span class="p">)</span> <span class="o">*</span> k<span class="n">amp</span><span class="o">/</span><span class="mi">5</span>    <span class="c1">;sum and scale</span>
 
-a<span class="n">env</span> <span class="nb">linen</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.05</span>  <span class="c1">;to avoid clicking</span>
+a<span class="n">env</span> <span class="nb">linen</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">0.05</span>  <span class="c1">;to avoid clicking</span>
 
     <span class="nb">outs</span>    a<span class="n">out</span><span class="o">*</span>a<span class="n">env</span><span class="p">,</span> a<span class="n">out</span><span class="o">*</span>a<span class="n">env</span>
     <span class="kd">endin</span>
@@ -405,14 +405,14 @@ a<span class="n">env</span> <span class="nb">linen</span> <span class="mi">1</sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm85875"></a>
+        <a id="idm85521"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="fof.html" title="fof"><em class="citetitle">fof</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm85880"></a>
+        <a id="idm85526"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm231052"></a>
+        <a id="idm230682"></a>
         <h2>Description</h2>
         <p>
       Accepts a trigger signal as input and outputs a group of values.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm231055"></a>
+        <a id="idm230685"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>trigseq</strong></span> ktrig_in, kstart, kloop, kinitndx, kfn_values, kout1 [, kout2] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm231059"></a>
+        <a id="idm230689"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktrig_in</em></span> -- input trigger signal
@@ -108,20 +108,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm231103"></a>
+        <a id="idm230733"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the trigseq opcode. It uses the file <a class="ulink" href="examples/trigseq.csd.html" target="_top"> (click here to play) <em class="citetitle">trigseq.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm231108"></a>
+          <a id="idm230738"></a>
           <p class="title">
-            <strong>Example 1048. Example of the trigseq opcode.</strong>
+            <strong>Example 1051. Example of the trigseq opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm231115"></a>
+              <a id="idm230745"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -144,20 +144,20 @@ gi<span class="n">Seq</span>	<span class="nb">ftgen</span> 	<span class="mi">90<
 	
 <span class="kd">instr</span>	<span class="nf">1</span>
 
-i<span class="n">cps</span>	<span class="nb">init</span>	<span class="nb">p4</span>
+i<span class="n">cps</span>	<span class="nb">init</span>	<span class="vi">p4</span>
 i<span class="n">amp</span>	<span class="nb">init</span>	<span class="mf">.3</span>
 
-k<span class="n">loop</span>	<span class="nb">init</span>	<span class="nb">p5</span>
-i<span class="n">nitndx</span>	<span class="nb">init</span>	<span class="nb">p6</span>
-k<span class="n">loop2</span>	<span class="nb">init</span>	<span class="nb">p7</span>
-i<span class="n">nitndx2</span> <span class="nb">init</span>	<span class="nb">p8</span>
-k<span class="n">dur</span>	<span class="nb">init</span>	<span class="nb">p9</span>
-i<span class="n">minTime</span> <span class="nb">init</span>	<span class="nb">p10</span>
-i<span class="n">maxTime</span> <span class="nb">init</span>	<span class="nb">p11</span>
+k<span class="n">loop</span>	<span class="nb">init</span>	<span class="vi">p5</span>
+i<span class="n">nitndx</span>	<span class="nb">init</span>	<span class="vi">p6</span>
+k<span class="n">loop2</span>	<span class="nb">init</span>	<span class="vi">p7</span>
+i<span class="n">nitndx2</span> <span class="nb">init</span>	<span class="vi">p8</span>
+k<span class="n">dur</span>	<span class="nb">init</span>	<span class="vi">p9</span>
+i<span class="n">minTime</span> <span class="nb">init</span>	<span class="vi">p10</span>
+i<span class="n">maxTime</span> <span class="nb">init</span>	<span class="vi">p11</span>
 k<span class="n">ampratio</span> <span class="nb">init</span>  <span class="mi">1</span>
 k<span class="n">freqratio</span> <span class="nb">init</span> <span class="mi">1</span>
 
-k<span class="n">time_unit</span> <span class="nb">expseg</span> i<span class="n">minTime</span><span class="p">,</span><span class="nb">p3</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span>i<span class="n">minTime</span><span class="p">,</span><span class="nb">p3</span><span class="o">*</span> <span class="mi">3</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span>i<span class="n">maxTime</span><span class="p">,</span><span class="nb">p3</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span>i<span class="n">maxTime</span>
+k<span class="n">time_unit</span> <span class="nb">expseg</span> i<span class="n">minTime</span><span class="p">,</span><span class="vi">p3</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span>i<span class="n">minTime</span><span class="p">,</span><span class="vi">p3</span><span class="o">*</span> <span class="mi">3</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span>i<span class="n">maxTime</span><span class="p">,</span><span class="vi">p3</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span>i<span class="n">maxTime</span>
 
 
 <span class="c1">;**ktrig	seqtime	ktime_unit, kstart, kloop, initndx, kfn_times </span>
@@ -175,20 +175,20 @@ k<span class="n">trig</span>	<span class="nb">metro</span>	k<span class="n">time
 
 <span class="kd">instr</span>	<span class="nf">2</span>
 
-i<span class="n">cps</span>	<span class="nb">init</span>	<span class="nb">p4</span>
+i<span class="n">cps</span>	<span class="nb">init</span>	<span class="vi">p4</span>
 i<span class="n">amp</span>	<span class="nb">init</span> <span class="mf">.2</span>	
 
-k<span class="n">loop</span>	<span class="nb">init</span>	<span class="nb">p5</span>
-i<span class="n">nitndx</span>	<span class="nb">init</span>	<span class="nb">p6</span>
-k<span class="n">loop2</span>	<span class="nb">init</span>	<span class="nb">p7</span>
-i<span class="n">nitndx2</span> <span class="nb">init</span>	<span class="nb">p8</span>
-k<span class="n">dur</span>	<span class="nb">init</span>	<span class="nb">p9</span>
-i<span class="n">minTime</span> <span class="nb">init</span>	<span class="nb">p10</span>
-i<span class="n">maxTime</span> <span class="nb">init</span>	<span class="nb">p11</span>
+k<span class="n">loop</span>	<span class="nb">init</span>	<span class="vi">p5</span>
+i<span class="n">nitndx</span>	<span class="nb">init</span>	<span class="vi">p6</span>
+k<span class="n">loop2</span>	<span class="nb">init</span>	<span class="vi">p7</span>
+i<span class="n">nitndx2</span> <span class="nb">init</span>	<span class="vi">p8</span>
+k<span class="n">dur</span>	<span class="nb">init</span>	<span class="vi">p9</span>
+i<span class="n">minTime</span> <span class="nb">init</span>	<span class="vi">p10</span>
+i<span class="n">maxTime</span> <span class="nb">init</span>	<span class="vi">p11</span>
 k<span class="n">ampratio</span> <span class="nb">init</span>  <span class="mi">1</span>
 k<span class="n">freqratio</span> <span class="nb">init</span> <span class="mi">1</span>
 
-k<span class="n">time_unit</span> <span class="nb">expseg</span> i<span class="n">minTime</span><span class="p">,</span><span class="nb">p3</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span>i<span class="n">minTime</span><span class="p">,</span><span class="nb">p3</span><span class="o">*</span> <span class="mi">3</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span>i<span class="n">maxTime</span><span class="p">,</span><span class="nb">p3</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span>i<span class="n">maxTime</span>
+k<span class="n">time_unit</span> <span class="nb">expseg</span> i<span class="n">minTime</span><span class="p">,</span><span class="vi">p3</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span>i<span class="n">minTime</span><span class="p">,</span><span class="vi">p3</span><span class="o">*</span> <span class="mi">3</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span>i<span class="n">maxTime</span><span class="p">,</span><span class="vi">p3</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span>i<span class="n">maxTime</span>
 
 
 <span class="c1">;**ktrig	seqtime	ktime_unit, kstart, kloop, initndx, kfn_times </span>
@@ -206,9 +206,9 @@ k<span class="n">trig</span>	<span class="nb">seqtime</span>	<span class="mi">1<
 
 <span class="kd">instr</span>	<span class="nf">3</span>
 
-<span class="nb">print</span> <span class="nb">p3</span>
-k<span class="n">env</span>	<span class="nb">expseg</span>	 <span class="mf">1.04</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span><span class="mf">.04</span>
-a<span class="n">1</span>	<span class="nb">foscili</span>	<span class="nb">p4</span><span class="o">*</span><span class="nb">a</span><span class="p">(</span>k<span class="n">env</span><span class="o">-</span><span class="mf">0.04</span><span class="p">),</span> <span class="nb">p5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>k<span class="n">env</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span>
+<span class="nb">print</span> <span class="vi">p3</span>
+k<span class="n">env</span>	<span class="nb">expseg</span>	 <span class="mf">1.04</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span><span class="mf">.04</span>
+a<span class="n">1</span>	<span class="nb">foscili</span>	<span class="vi">p4</span><span class="o">*</span><span class="nb">a</span><span class="p">(</span>k<span class="n">env</span><span class="o">-</span><span class="mf">0.04</span><span class="p">),</span> <span class="vi">p5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>k<span class="n">env</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span>
 	<span class="nb">outs</span>	a<span class="n">1</span><span class="p">,</span> a<span class="n">1</span>
 <span class="kd">endin</span>
 
@@ -241,7 +241,7 @@ a<span class="n">1</span>	<span class="nb">foscili</span>	<span class="nb">p4</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm231602"></a>
+        <a id="idm231232"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="seqtime.html" title="seqtime"><em class="citetitle">seqtime</em></a>,
@@ -249,7 +249,7 @@ a<span class="n">1</span>	<span class="nb">foscili</span>	<span class="nb">p4</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm231609"></a>
+        <a id="idm231239"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>November 2002. Added a note about the <span class="emphasis"><em>kinitndx</em></span> parameter, thanks to Rasmus Ekman.</p>

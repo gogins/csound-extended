@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm249357"></a>
+        <a id="idm248989"></a>
         <h2>Description</h2>
         <p>
       Generate a sort of 'vectorial band-limited noise'
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm249360"></a>
+        <a id="idm248992"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vrandi</strong></span>  ifn,  krange, kcps, ielements [, idstoffset] [, iseed] \
       [, isize] [, ioffset]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm249364"></a>
+        <a id="idm248996"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> - number of the table where the vectorial signal will be generated
@@ -74,7 +74,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm249380"></a>
+        <a id="idm249012"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>krange</em></span> - range of random elements (from -<span class="emphasis"><em>krange</em></span> to <span class="emphasis"><em>krange</em></span>)
@@ -96,20 +96,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm249398"></a>
+        <a id="idm249030"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the vrandi opcode. It uses the file <a class="ulink" href="examples/vrandi.csd.html" target="_top"> (click here to play) <em class="citetitle">vrandi.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm249403"></a>
+          <a id="idm249035"></a>
           <p class="title">
-            <strong>Example 1125. Example of the vrandi opcode.</strong>
+            <strong>Example 1128. Example of the vrandi opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm249410"></a>
+              <a id="idm249042"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -130,9 +130,9 @@
 gi<span class="n">tab</span> <span class="nb">ftgen</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">0</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
-  k<span class="n">range</span> <span class="nb">init</span> <span class="nb">p4</span>
-  k<span class="n">cps</span> <span class="nb">init</span> <span class="nb">p5</span>
-  i<span class="n">offset</span> <span class="nb">init</span> <span class="nb">p6</span>
+  k<span class="n">range</span> <span class="nb">init</span> <span class="vi">p4</span>
+  k<span class="n">cps</span> <span class="nb">init</span> <span class="vi">p5</span>
+  i<span class="n">offset</span> <span class="nb">init</span> <span class="vi">p6</span>
   <span class="c1">;       table   krange  kcps  ielements   idstoffset  iseed  isize ioffset</span>
   <span class="nb">vrandi</span>  gi<span class="n">tab</span><span class="p">,</span>  k<span class="n">range</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span>     <span class="mi">3</span><span class="p">,</span>         <span class="mi">3</span><span class="p">,</span>         <span class="mi">2</span><span class="p">,</span>   <span class="mi">1</span><span class="p">,</span>    i<span class="n">offset</span>
 
@@ -173,7 +173,7 @@ gi<span class="n">tab</span> <span class="nb">ftgen</span> <span class="mi">0</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm249575"></a>
+        <a id="idm249207"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="vrandh.html" title="vrandh"><em class="citetitle">vrandh</em></a>, 
@@ -181,7 +181,7 @@ gi<span class="n">tab</span> <span class="nb">ftgen</span> <span class="mi">0</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm249582"></a>
+        <a id="idm249214"></a>
         <h2>Credits</h2>
         <p>Written by Gabriel Maldonado.</p>
         <p>New in Csound 5 (Previously available only on CsoundAV)</p>

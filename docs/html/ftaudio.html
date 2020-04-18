@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm89284"></a>
+        <a id="idm88932"></a>
         <h2>Description</h2>
         <p>
       Write a previously-allocated table to an audio file in a variety
@@ -47,13 +47,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm89287"></a>
+        <a id="idm88935"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ians <span class="command"><strong>ftaudio</strong></span> ifn, "filename", iformat[, ibeg, iend]</pre>
         <pre class="synopsis">kans <span class="command"><strong>ftaudio</strong></span> ktrig, kfn, "filename", kformat [, isync, kbeg, kend]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm89293"></a>
+        <a id="idm88941"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn, kfn</em></span> -- Number of table to write.
@@ -137,7 +137,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm89337"></a>
+        <a id="idm88985"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktrig</em></span> -- the k-rate version only happens on
@@ -145,21 +145,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm89341"></a>
+        <a id="idm88989"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the ftaudio opcode. It uses the file <a class="ulink" href="examples/ftaudio.csd.html" target="_top"> (click here to play) <em class="citetitle">ftaudio.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm89346"></a>
+          <a id="idm88994"></a>
           <p class="title">
             <strong>Example 363. Example of the ftaudio opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm89353"></a>
+              <a id="idm89001"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -182,13 +182,13 @@ gi<span class="n">Sine</span> <span class="nb">ftgen</span> <span class="mi">0</
 <span class="kd">instr</span> <span class="nf">1</span>
      k<span class="n">trig</span> <span class="nb">init</span>    <span class="mi">1</span>
      a<span class="n">sig</span>  <span class="nb">poscil3</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">880</span><span class="p">,</span> gi<span class="n">Sine</span>
-     k<span class="n">ans</span>  <span class="n">ftaudio</span> k<span class="n">trig</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s">"k_ftaudio.wav"</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">1</span>
+     k<span class="n">ans</span>  <span class="nb">ftaudio</span> k<span class="n">trig</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s">"k_ftaudio.wav"</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">1</span>
      k<span class="n">trig</span> <span class="o">=</span>       <span class="mi">0</span>
            <span class="nb">outs</span>    a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 <span class="kd">endin</span>
 
 <span class="kd">instr</span> <span class="nf">2</span>
-     i<span class="n">ans</span>  <span class="n">ftaudio</span> <span class="mi">100</span><span class="p">,</span> <span class="s">"i_ftaudio.wav"</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>
+     i<span class="n">ans</span>  <span class="nb">ftaudio</span> <span class="mi">100</span><span class="p">,</span> <span class="s">"i_ftaudio.wav"</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> <span class="vi">p5</span>
            <span class="nb">turnoff</span>
 <span class="kd">endin</span>
 
@@ -208,7 +208,7 @@ gi<span class="n">Sine</span> <span class="nb">ftgen</span> <span class="mi">0</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm89462"></a>
+        <a id="idm89110"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="ftloadk.html" title="ftloadk"><em class="citetitle">ftloadk</em></a>,
@@ -217,7 +217,7 @@ gi<span class="n">Sine</span> <span class="nb">ftgen</span> <span class="mi">0</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm89471"></a>
+        <a id="idm89119"></a>
         <h2>Credits</h2>
         <p>Author: John ffitch</p>
         <p>Example written by John ffitch.</p>

@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm244207"></a>
+        <a id="idm243839"></a>
         <h2>Description</h2>
         <p>
       Audio output is a tone related to the striking of a metal block as found in a vibraphone. The method is a physical model developed from Perry Cook, but re-coded for Csound.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm244210"></a>
+        <a id="idm243842"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>vibes</strong></span> kamp, kfreq, ihrd, ipos, imp, kvibf, kvamp, ivibfn, idec</pre>
       </div>
       <div class="refsect1">
-        <a id="idm244214"></a>
+        <a id="idm243846"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihrd</em></span> -- the hardness of the stick used in the strike. A range of 0 to 1 is used. 0.5 is a suitable value.
@@ -70,7 +70,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm244232"></a>
+        <a id="idm243864"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- Amplitude of note.
@@ -86,21 +86,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm244242"></a>
+        <a id="idm243874"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the vibes opcode. It uses the file <a class="ulink" href="examples/vibes.csd.html" target="_top"> (click here to play) <em class="citetitle">vibes.csd</em></a>, and <a class="ulink" href="examples/marmstk1.wav" target="_top"><em class="citetitle">marmstk1.wav</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm244249"></a>
+          <a id="idm243881"></a>
           <p class="title">
-            <strong>Example 1104. Example of the vibes opcode.</strong>
+            <strong>Example 1107. Example of the vibes opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm244256"></a>
+              <a id="idm243888"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -128,7 +128,7 @@
   <span class="c1">; kvamp = 0.05</span>
   <span class="c1">; ivibfn = 2</span>
   <span class="c1">; idec = 0.1</span>
-a<span class="n">sig</span>	<span class="nb">vibes</span>	<span class="mi">20000</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="nb">p4</span> <span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.1</span>
+a<span class="n">sig</span>	<span class="nb">vibes</span>	<span class="mi">20000</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="vi">p4</span> <span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.1</span>
 	<span class="nb">outs</span>		a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 <span class="kd">endin</span>
 
@@ -156,14 +156,14 @@ a<span class="n">sig</span>	<span class="nb">vibes</span>	<span class="mi">20000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm244346"></a>
+        <a id="idm243978"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="marimba.html" title="marimba"><em class="citetitle">marimba</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm244351"></a>
+        <a id="idm243983"></a>
         <h2>Credits</h2>
         <p>
       </p>

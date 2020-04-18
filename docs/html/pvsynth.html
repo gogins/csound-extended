@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm181383"></a>
+        <a id="idm180561"></a>
         <h2>Description</h2>
         <p>
       Resynthesise phase vocoder data (f-signal) using a FFT overlap-add.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm181386"></a>
+        <a id="idm180564"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>pvsynth</strong></span> fsrc, [iinit]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm181390"></a>
+        <a id="idm180568"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ares</em></span> -- output audio signal
@@ -64,14 +64,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm181398"></a>
+        <a id="idm180576"></a>
         <h2>Examples</h2>
         <p>
       </p>
         <div class="example">
-          <a id="idm181401"></a>
+          <a id="idm180579"></a>
           <p class="title">
-            <strong>Example 802. Example (using score-supplied f-table, assuming fsig <span class="emphasis"><em>fftsize = 1024</em></span>)</strong>
+            <strong>Example 804. Example (using score-supplied f-table, assuming fsig <span class="emphasis"><em>fftsize = 1024</em></span>)</strong>
           </p>
           <div class="example-contents">
             <pre class="programlisting">
@@ -94,14 +94,14 @@ aout    <span class="opc">pvsynth</span>  fsigout                   <span class=
 
       </p>
         <div class="example">
-          <a id="idm181422"></a>
+          <a id="idm180600"></a>
           <p class="title">
-            <strong>Example 803. Example of the pvsynth opcode.</strong>
+            <strong>Example 805. Example of the pvsynth opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm181429"></a>
+              <a id="idm180607"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -127,8 +127,8 @@ i<span class="n">winsize</span>	<span class="o">=</span>		i<span class="n">fftsi
 i<span class="n">winshape</span>	<span class="o">=</span>		<span class="mi">1</span>  <span class="c1">; von-Hann window</span>
 S<span class="n">file</span>		<span class="o">=</span>		<span class="s">"fox.wav"</span>
 a<span class="n">in</span>		<span class="nb">soundin</span>	S<span class="n">file</span>
-<span class="n">fftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="c1">; fft-analysis of the audio-signal</span>
-a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fftin</span><span class="c1">; resynthesis</span>
+f<span class="n">ftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="c1">; fft-analysis of the audio-signal</span>
+a<span class="n">out</span>		<span class="nb">pvsynth</span>	f<span class="n">ftin</span><span class="c1">; resynthesis</span>
 		<span class="nb">out</span>		a<span class="n">out</span>
 <span class="kd">endin</span>
 
@@ -146,7 +146,7 @@ a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fft
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm181504"></a>
+        <a id="idm180682"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvsanal.html" title="pvsanal"><em class="citetitle">pvsanal</em></a>,
@@ -154,7 +154,7 @@ a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fft
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm181511"></a>
+        <a id="idm180689"></a>
         <h2>Credits</h2>
         <p>
       </p>

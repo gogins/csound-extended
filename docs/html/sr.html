@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm209981"></a>
+        <a id="idm209499"></a>
         <h2>Description</h2>
         <p>
       These statements are global value <a class="link" href="assign.html" title="="><em class="citetitle">assignments</em></a>, made
@@ -51,12 +51,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm209988"></a>
+        <a id="idm209506"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>sr</strong></span> = iarg</pre>
       </div>
       <div class="refsect1">
-        <a id="idm209992"></a>
+        <a id="idm209510"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>sr</em></span>  = (optional) -- set sampling rate to <span class="emphasis"><em>iarg</em></span> samples per second per channel. The default value is 44100.
@@ -69,7 +69,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm210009"></a>
+        <a id="idm209527"></a>
         <h2>Examples</h2>
         <p>
       </p>
@@ -88,14 +88,14 @@ itranspose <span class="op">=</span> <span class="opc">octpch</span>(.0l)</pre>
       Here is another example of the sr opcode. It uses the file <a class="ulink" href="examples/sr.csd.html" target="_top"> (click here to play) <em class="citetitle">sr.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm210029"></a>
+          <a id="idm209547"></a>
           <p class="title">
-            <strong>Example 939. Example of the sr opcode.</strong>
+            <strong>Example 941. Example of the sr opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm210036"></a>
+              <a id="idm209554"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -114,10 +114,10 @@ itranspose <span class="op">=</span> <span class="opc">octpch</span>(.0l)</pre>
 
 <span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">;use sr to find maximum harmonics</span>
 
-i<span class="n">har</span>	<span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="vg">sr</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="nb">p4</span><span class="p">)</span>		<span class="c1">; maximum possible number of harmonics w/o aliasing</span>
-<span class="nb">prints</span>  <span class="s">"maximum number of harmonics = </span><span class="si">%d</span><span class="s"> </span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> i<span class="n">har</span>
-k<span class="n">env</span>	<span class="nb">linen</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.2</span>	<span class="c1">; envelope</span>
-a<span class="n">sig</span>	<span class="nb">buzz</span>  k<span class="n">env</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> i<span class="n">har</span><span class="p">,</span> <span class="mi">1</span>
+i<span class="n">har</span>	<span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="vg">sr</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="vi">p4</span><span class="p">)</span>		<span class="c1">; maximum possible number of harmonics w/o aliasing</span>
+<span class="nb">prints</span>  <span class="s">"maximum number of harmonics = </span><span class="si">%d</span><span class="s"> </span><span class="se">\\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">har</span>
+k<span class="n">env</span>	<span class="nb">linen</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">.2</span>	<span class="c1">; envelope</span>
+a<span class="n">sig</span>	<span class="nb">buzz</span>  k<span class="n">env</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> i<span class="n">har</span><span class="p">,</span> <span class="mi">1</span>
 	<span class="nb">outs</span>  a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
 <span class="kd">endin</span>
@@ -147,7 +147,7 @@ maximum number of harmonics = 2
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm210134"></a>
+        <a id="idm209652"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="kr.html" title="kr"><em class="citetitle">kr</em></a>,

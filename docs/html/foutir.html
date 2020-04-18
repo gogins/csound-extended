@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm87540"></a>
+        <a id="idm87186"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>foutir</em></span> output <span class="emphasis"><em>N</em></span> i-rate signals to a specified file of <span class="emphasis"><em>N</em></span> channels.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm87546"></a>
+        <a id="idm87192"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>foutir</strong></span> ihandle, iformat, iflag, iout1 [, iout2, iout3,....,ioutN]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm87550"></a>
+        <a id="idm87196"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihandle</em></span> -- a number which specifies this file.
@@ -94,7 +94,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm87574"></a>
+        <a id="idm87220"></a>
         <h2>Performance</h2>
         <p>
       <a class="link" href="fouti.html" title="fouti"><em class="citetitle">fouti</em></a> and <span class="emphasis"><em>foutir</em></span> write i-rate values to a file. The main use of these opcodes is to generate a score file during a realtime session. For this purpose, the user should set <span class="emphasis"><em>iformat</em></span> to 0 (text file output) and <span class="emphasis"><em>iflag</em></span> to 1, which enable the output of a prefix consisting of the strings <span class="emphasis"><em>inum</em></span>, <span class="emphasis"><em>actiontime</em></span>, and <span class="emphasis"><em>duration</em></span>, before the values of <span class="emphasis"><em>iout1...ioutN</em></span> arguments. The arguments in the prefix refer to instrument number, action time and duration of current note.
@@ -107,20 +107,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm87608"></a>
+        <a id="idm87254"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the foutir opcode. It uses the file <a class="ulink" href="examples/foutir.csd.html" target="_top"> (click here to play) <em class="citetitle">foutir.csd</em></a>and creates a list "foutir.sco". It can be used as a score file.
       </p>
         <div class="example">
-          <a id="idm87613"></a>
+          <a id="idm87259"></a>
           <p class="title">
             <strong>Example 354. Example of the foutir opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm87620"></a>
+              <a id="idm87266"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span> 
 <span class="nt">&lt;CsOptions&gt;</span> 
@@ -147,7 +147,7 @@ i<span class="n">amp</span>  <span class="nb">ampmidi</span> <span class="mi">1<
 
       <span class="nb">foutir</span>  gi<span class="n">hand</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> i<span class="n">amp</span> 
       <span class="nb">prints</span>  <span class="s">"WRITING:</span><span class="se">\n</span><span class="s">"</span>
-      <span class="nb">prints</span>  <span class="s">"note = %f,velocity = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> i<span class="n">amp</span>  <span class="c1">;prints them</span>
+      <span class="nb">prints</span>  <span class="s">"note = </span><span class="si">%f</span><span class="s">,velocity = </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> i<span class="n">amp</span>  <span class="c1">;prints them</span>
       <span class="nb">ficlose</span> gi<span class="n">hand</span>
 a<span class="n">sig</span>  <span class="nb">pluck</span>   i<span class="n">amp</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
       <span class="nb">outs</span>    a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
@@ -169,7 +169,7 @@ a<span class="n">sig</span>  <span class="nb">pluck</span>   i<span class="n">am
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm87708"></a>
+        <a id="idm87357"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="fiopen.html" title="fiopen"><em class="citetitle">fiopen</em></a>,
@@ -179,7 +179,7 @@ a<span class="n">sig</span>  <span class="nb">pluck</span>   i<span class="n">am
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm87719"></a>
+        <a id="idm87368"></a>
         <h2>Credits</h2>
         <p>
       </p>

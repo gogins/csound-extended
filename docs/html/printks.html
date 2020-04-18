@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm170973"></a>
+        <a id="idm169754"></a>
         <h2>Description</h2>
         <p>
       Prints at k-rate using a printf() style syntax.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm170976"></a>
+        <a id="idm169757"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>printks</strong></span> "string", itime [, xval1] [, xval2] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm170980"></a>
+        <a id="idm169761"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>"string"</em></span> -- the text string to be printed. Can be up to 8192 characters and must be in double quotes.
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm170986"></a>
+        <a id="idm169767"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xval1, xval2, ...</em></span> (optional) -- The k-rate
@@ -86,7 +86,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm171005"></a>
+        <a id="idm169786"></a>
         <h2>Print Output Formatting</h2>
         <p>
       All standard C language printf() control characters may be used. For example, if <span class="emphasis"><em>kval1</em></span> = 153.26789 then some common formatting options are:
@@ -186,21 +186,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm171056"></a>
+        <a id="idm169837"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the printks opcode. It uses the file <a class="ulink" href="examples/printks.csd.html" target="_top"> (click here to play) <em class="citetitle">printks.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm171061"></a>
+          <a id="idm169842"></a>
           <p class="title">
             <strong>Example 737. Example of the printks opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm171068"></a>
+              <a id="idm169849"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -222,13 +222,13 @@
 <span class="kd">instr</span> <span class="nf">1</span>
   <span class="c1">; Change a value linearly from 0 to 100,</span>
   <span class="c1">; over the period defined by p3.</span>
-  k<span class="n">up</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">100</span>
+  k<span class="n">up</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">100</span>
   <span class="c1">; Change a value linearly from 30 to 10, </span>
   <span class="c1">; over the period defined by p3.</span>
-  k<span class="n">down</span> <span class="nb">line</span> <span class="mi">30</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">10</span>
+  k<span class="n">down</span> <span class="nb">line</span> <span class="mi">30</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">10</span>
 
   <span class="c1">; Print the value of kup and kdown, once per second.</span>
-  <span class="nb">printks</span> <span class="s">"kup = %f, kdown = %f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">up</span><span class="p">,</span> k<span class="n">down</span>
+  <span class="nb">printks</span> <span class="s">"kup = </span><span class="si">%f</span><span class="s">, kdown = </span><span class="si">%f</span><span class="se">\\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">up</span><span class="p">,</span> k<span class="n">down</span>
 <span class="kd">endin</span>
 
 
@@ -262,7 +262,7 @@ kup = 79.933266, kdown = 13.872493
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm171136"></a>
+        <a id="idm169920"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="printk2.html" title="printk2"><em class="citetitle">printk2</em></a> and 
@@ -270,7 +270,7 @@ kup = 79.933266, kdown = 13.872493
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm171143"></a>
+        <a id="idm169927"></a>
         <h2>Credits</h2>
         <p>
       </p>

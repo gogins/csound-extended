@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm281009"></a>
+        <a id="idm280684"></a>
         <h2>Description</h2>
         <p>Plugin opcode in stackops.</p>
         <p>
@@ -47,19 +47,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm281013"></a>
+        <a id="idm280688"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>stack</strong></span>  iStackSize</pre>
       </div>
       <div class="refsect1">
-        <a id="idm281017"></a>
+        <a id="idm280692"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iStackSize</em></span>  - size of the stack in bytes.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm281021"></a>
+        <a id="idm280696"></a>
         <h2>Performance</h2>
         <p>
       Csound implements a single global stack. Initializing the stack with the <span class="emphasis"><em>stack</em></span> opcode is not required - it is optional, and if not done, the first use of <a class="link" href="push.html" title="push"><em class="citetitle">push</em></a> or <a class="link" href="push_f.html" title="push_f"><em class="citetitle">push_f</em></a> will automatically create a stack of 32768 bytes. Otherwise, <span class="emphasis"><em>stack</em></span> is normally called from the orchestra header, and takes a stack size parameter in bytes (there is an upper limit of about 16 MB). Once set, the stack size is fixed and cannot be changed during performance.
@@ -81,20 +81,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm281059"></a>
+        <a id="idm280734"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the stack opcode. It uses the file <a class="ulink" href="examples/stack.csd.html" target="_top"> (click here to play) <em class="citetitle">stack.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm281064"></a>
+          <a id="idm280739"></a>
           <p class="title">
-            <strong>Example 1251. Example of the stack opcode.</strong>
+            <strong>Example 1254. Example of the stack opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm281071"></a>
+              <a id="idm280746"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span> 
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -116,15 +116,15 @@
 <span class="kd">instr</span> <span class="nf">1</span> 
 
 a<span class="n">1</span>	<span class="nb">oscils</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">0</span> 
-k<span class="n">1</span>	<span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span> 
+k<span class="n">1</span>	<span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1</span> 
         <span class="nb">push</span> <span class="s">"blah"</span><span class="p">,</span> <span class="mf">123.45</span><span class="p">,</span> a<span class="n">1</span><span class="p">,</span> k<span class="n">1</span> 
         <span class="nb">push</span> <span class="nb">rnd</span><span class="p">(</span>k<span class="n">1</span><span class="p">)</span> 
 
 k<span class="n">_rnd</span>	<span class="nb">pop</span> 
 S<span class="n">01</span><span class="p">,</span> i<span class="n">01</span><span class="p">,</span> a<span class="n">01</span><span class="p">,</span> k<span class="n">01</span> <span class="nb">pop</span> 
-        <span class="nb">printf_i</span> <span class="s">"S01 = '%s', i01 = %g</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> S<span class="n">01</span><span class="p">,</span> i<span class="n">01</span> 
+        <span class="nb">printf_i</span> <span class="s">"S01 = '</span><span class="si">%s</span><span class="s">', i01 = </span><span class="si">%g</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> S<span class="n">01</span><span class="p">,</span> i<span class="n">01</span> 
 k<span class="n">trig</span>	<span class="nb">metro</span> <span class="mf">5.0</span> 
-        <span class="nb">printf</span> <span class="s">"k01 = %.3f, k_rnd = %.3f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">trig</span><span class="p">,</span> k<span class="n">01</span><span class="p">,</span> k<span class="n">_rnd</span> 
+        <span class="nb">printf</span> <span class="s">"k01 = </span><span class="si">%.3f</span><span class="s">, k_rnd = </span><span class="si">%.3f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">trig</span><span class="p">,</span> k<span class="n">01</span><span class="p">,</span> k<span class="n">_rnd</span> 
         <span class="nb">outs</span> a<span class="n">01</span><span class="p">,</span> a<span class="n">01</span> 
 
 <span class="kd">endin</span> 
@@ -143,7 +143,7 @@ k<span class="n">trig</span>	<span class="nb">metro</span> <span class="mf">5.0<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm281172"></a>
+        <a id="idm280853"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="pop.html" title="pop"><em class="citetitle">pop</em></a>,
@@ -154,7 +154,7 @@ k<span class="n">trig</span>	<span class="nb">metro</span> <span class="mf">5.0<
         <p>Using this opcode is somewhat hackish, as you can read here: <a class="ulink" href="http://csound.1045644.n5.nabble.com/passing-a-string-to-a-UDO-td1099284.html" target="_top">http://csound.1045644.n5.nabble.com/passing-a-string-to-a-UDO-td1099284.html</a></p>
       </div>
       <div class="refsect1">
-        <a id="idm281185"></a>
+        <a id="idm280866"></a>
         <h2>Credits</h2>
         <p>By: Istvan Varga.</p>
         <p>2006</p>

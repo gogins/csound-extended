@@ -39,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm40428"></a>
+        <a id="idm39881"></a>
         <h2>Description</h2>
         <p>
       During the i-time pass only, conditionally transfer control to the statement labeled by <span class="emphasis"><em>label</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm40432"></a>
+        <a id="idm39885"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>cigoto</strong></span> condition, label</pre>
         <p>
@@ -54,21 +54,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm40447"></a>
+        <a id="idm39900"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the cigoto opcode. It uses the file <a class="ulink" href="examples/cigoto.csd.html" target="_top"> (click here to play) <em class="citetitle">cigoto.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm40452"></a>
+          <a id="idm39905"></a>
           <p class="title">
             <strong>Example 132. Example of the cigoto opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm40459"></a>
+              <a id="idm39912"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -89,11 +89,11 @@
 <span class="c1">; Instrument #1.</span>
 <span class="kd">instr</span> <span class="nf">1</span>
   <span class="c1">; Get the value of the 4th p-field from the score.</span>
-  i<span class="n">param</span> <span class="o">=</span> <span class="nb">p4</span>
+  i<span class="n">param</span> <span class="o">=</span> <span class="vi">p4</span>
 
   <span class="c1">; If iparam is 1 then play the high note.</span>
   <span class="c1">; If not then play the low note.</span>
-  <span class="k">cigoto</span> <span class="p">(</span>i<span class="n">param</span> <span class="o">==</span><span class="mi">1</span><span class="p">),</span> <span class="nl">highnote</span>
+  <span class="kp">cigoto</span> <span class="p">(</span>i<span class="n">param</span> <span class="o">==</span><span class="mi">1</span><span class="p">),</span> <span class="nl">highnote</span>
     <span class="k">igoto</span> <span class="nl">lownote</span>
 
 <span class="nl">highnote</span><span class="p">:</span>
@@ -147,7 +147,7 @@ instr 1:  ifreq = 880.000</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm40558"></a>
+        <a id="idm40011"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cggoto.html" title="cggoto"><em class="citetitle">cggoto</em></a>,
@@ -162,7 +162,7 @@ instr 1:  ifreq = 880.000</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm40579"></a>
+        <a id="idm40032"></a>
         <h2>Credits</h2>
         <p>Example written by Kevin Conder.</p>
       </div>

@@ -57,7 +57,11 @@
       <p>
   </p>
       <p>
-    where the arguments are of 2 types: <span class="emphasis"><em>flags</em></span> arguments (beginning with a <span class="quote">“<span class="quote">-</span>”</span>,<span class="quote">“<span class="quote">--</span>”</span> or <span class="quote">“<span class="quote">-+</span>”</span>), and <span class="emphasis"><em>name</em></span> arguments (such as filenames). Certain flag arguments take a following name or numeric argument. Flags that start with <span class="quote">“<span class="quote">--</span>”</span> and <span class="quote">“<span class="quote">-+</span>”</span> usually take an argument themselves using <span class="quote">“<span class="quote">=</span>”</span>.
+    where the arguments are of 2 types: <span class="emphasis"><em>flags</em></span> arguments (beginning with a
+    <span class="quote">“<span class="quote">-</span>”</span>,<span class="quote">“<span class="quote">--</span>”</span> or <span class="quote">“<span class="quote">-+</span>”</span>), and <span class="emphasis"><em>name</em></span>
+    arguments (such as filenames). Certain flag arguments take a following name or numeric
+    argument. Flags that start with <span class="quote">“<span class="quote">--</span>”</span> and <span class="quote">“<span class="quote">-+</span>”</span> usually take an
+    argument themselves using <span class="quote">“<span class="quote">=</span>”</span>.
   </p>
       <div class="variablelist">
         <p class="title">
@@ -268,8 +272,8 @@
           <dd>
             <p>
           Switch on dithering of audio conversion from internal
-          floating point to 32, 16 and 8-bit formats.  The default 
-          form of the dither is triangular. 
+          floating point to 32, 16 and 8-bit formats.  The default
+          form of the dither is triangular.
         </p>
           </dd>
           <dt>
@@ -602,7 +606,22 @@ csound5:output2             (playback right)</pre>
           </dt>
           <dd>
             <p>
-          Read MIDI events from device <span class="emphasis"><em>DEVICE</em></span>. If using ALSA MIDI (<a class="link" href="CommandFlagsCategory.html#FlagsCatMinusPlusRtmidi"><em class="citetitle">-+rtmidi</em></a>=alsa), devices are selected by name and not number. So, you need to use an option like -M hw:CARD,DEVICE where CARD and DEVICE are the card and device numbers (e.g. -M hw:1,0). In the case of PortMidi and MME, DEVICE should be a number, and if it is out of range, an error occurs and the valid device numbers are printed. When using PortMidi, you can use '-Ma' to enable all devices. This is also convenient when you don't have devices as it will not generate an error.
+          Read MIDI events from device
+          <span class="emphasis"><em>DEVICE</em></span>. If using ALSA MIDI
+          (-+rtmidi=alsa), devices are selected by name and not
+          number. So, you need to use an option like -M
+          hw:CARD,DEVICE where CARD and DEVICE are the card and
+          device numbers (e.g. -M hw:1,0). In the case of
+          CoreMIDI and MME, DEVICE should be a number, and if it
+          is out of range, an error occurs and the valid device
+          numbers are printed.
+          With PortMIDI, DEVICE is either a number for single port
+          input, 'a' for listening to all input ports, or 'm'
+          for mapping ports to MIDI channels above 16. In this
+          case, device 0 uses 1-16, device 1 uses 17-32, ...
+          device N uses (N+1)*channel.
+          The options 'a' and 'm' are also convenient when you
+          don't have devices as they will not generate an error.
         </p>
           </dd>
           <dt>
@@ -680,8 +699,9 @@ csound5:output2             (playback right)</pre>
           </dt>
           <dd>
             <p>
-          (max. length = 20 characters) Real time MIDI module name.
-          Defaults to PortMidi, other options (depending on build options): Linux: alsa; Windows: mme, winmm. In addition, null can be used on all platforms, to disable the use of any real time MIDI plugin.
+          (max. length = 20 characters) Real time MIDI module name. Defaults to PortMidi, other
+          options (depending on build options): Linux: alsa; Windows: mme, winmm. In addition,
+          null can be used on all platforms, to disable the use of any real time MIDI plugin.
         </p>
             <p>ALSA MIDI devices are selected by name and not number. So, you
           need to use an option like -M hw:CARD,DEVICE where CARD and
@@ -694,10 +714,19 @@ csound5:output2             (playback right)</pre>
           </dt>
           <dd>
             <p>
-          Enables MIDI OUT operations to device id <span class="emphasis"><em>DEVICE</em></span>. This flag allows parallel MIDI OUT and DAC performance. Unfortunately the real-time timing implemented in Csound is completely managed by DAC buffer sample flow. So MIDI OUT operations can present some time irregularities. These irregularities can be reduced by using a lower value for the <a class="link" href="CommandFlagsCategory.html#FlagsCatMinusLowerB"><em class="citetitle">-b</em></a> flag.
+          Enables MIDI OUT operations to device id <span class="emphasis"><em>DEVICE</em></span>. This flag allows
+          parallel MIDI OUT and DAC performance. Unfortunately the real-time timing implemented
+          in Csound is completely managed by DAC buffer sample flow. So MIDI OUT operations can
+          present some time irregularities. These irregularities can be reduced by using a lower
+          value for the <a class="link" href="CommandFlagsCategory.html#FlagsCatMinusLowerB"><em class="citetitle">-b</em></a>
+          flag.
         </p>
             <p>
-          If using ALSA MIDI (<a class="link" href="CommandFlagsCategory.html#FlagsCatMinusPlusRtmidi"><em class="citetitle">-+rtmidi</em></a>=alsa), devices are selected by name and not number. So, you need to use an option like -Q hw:CARD,DEVICE where CARD and DEVICE are the card and device numbers (e.g. -Q hw:1,0). In the case of PortMidi and MME, DEVICE should be a number, and if it is out of range, an error occurs and the valid device numbers are printed.
+          If using ALSA MIDI (<a class="link" href="CommandFlagsCategory.html#FlagsCatMinusPlusRtmidi"><em class="citetitle">-+rtmidi</em></a>=alsa),
+          devices are selected by name and not number. So, you need to use an option like -Q
+          hw:CARD,DEVICE where CARD and DEVICE are the card and device numbers (e.g. -Q hw:1,0).
+          In the case of PortMidi and MME, DEVICE should be a number, and if it is out of range,
+          an error occurs and the valid device numbers are printed.
         </p>
           </dd>
         </dl>
@@ -713,7 +742,9 @@ csound5:output2             (playback right)</pre>
           </dt>
           <dd>
             <p>
-            Determines how line numbers are counted and displayed for error messages when processing a Csound Unified Document file (.csd).  This flag has no effect if separate orchestra and score files are used.  (Csound 5.08 and later).
+            Determines how line numbers are counted and displayed for error messages when
+            processing a Csound Unified Document file (.csd). This flag has no effect if
+            separate orchestra and score files are used. (Csound 5.08 and later).
             </p>
             <div class="itemizedlist">
               <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -735,7 +766,7 @@ csound5:output2             (playback right)</pre>
           <dd>
             <p>
           Suppress all displays. See <a class="link" href="CommandFlagsCategory.html#FlagsCatMinusUpperO"><em class="citetitle">-O</em></a>
-          if you want to save the log to a file.  </p>
+          if you want to save the log to a file. </p>
             <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
               <table border="0" summary="Note">
                 <tr>
@@ -745,15 +776,24 @@ csound5:output2             (playback right)</pre>
                   <th align="left">Note</th>
                 </tr>
                 <tr>
-                  <td align="left" valign="top">This option
-          only works from the command line and not from .csound6rc or
-          a CsOptions section of a  csd file.  It needs to be acted
-          upon before sound proper starts.  It is ignored in .csound6rc
-        and CsOptions.</td>
+                  <td align="left" valign="top">This option disables all features depending on the opcodes "display" and "dispfft"</td>
                 </tr>
               </table>
             </div>
-            <p>
+            <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+              <table border="0" summary="Note">
+                <tr>
+                  <td rowspan="2" align="center" valign="top" width="25">
+                    <img alt="[Note]" src="images/note.png" />
+                  </td>
+                  <th align="left">Note</th>
+                </tr>
+                <tr>
+                  <td align="left" valign="top">This option is ignored in .csound6rc.</td>
+                </tr>
+              </table>
+            </div>
+            <p> 
         </p>
           </dd>
           <dt>
@@ -835,6 +875,9 @@ csound5:output2             (playback right)</pre>
                 <li class="listitem">
                   <p>128 = print benchmark information</p>
                 </li>
+                <li class="listitem">
+                  <p>1024 = suppress deprecated messages</p>
+                </li>
               </ul>
             </div>
             <p>
@@ -866,7 +909,7 @@ csound5:output2             (playback right)</pre>
           The default is 135 (128+4+2+1), which means all messages, raw
           amplitude values, and printing elapsed time at the end of
           performance.  The coloring of raw amplitudes was introduced
-          in version 5.04
+          in version 5.04. Suppression of deprecated messages new in 6.14.
         </p>
           </dd>
           <dt>
@@ -875,7 +918,7 @@ csound5:output2             (playback right)</pre>
           </dt>
           <dd>
             <p>
-          Message level for amplitudes on standard (terminal) output. 
+          Message level for amplitudes on standard (terminal) output.
           </p>
             <div class="itemizedlist">
               <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -896,7 +939,7 @@ csound5:output2             (playback right)</pre>
           </dt>
           <dd>
             <p>
-          Message level for out of range messages on standard (terminal) output. 
+          Message level for out of range messages on standard (terminal) output.
           </p>
             <div class="itemizedlist">
               <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -917,7 +960,7 @@ csound5:output2             (playback right)</pre>
           </dt>
           <dd>
             <p>
-          Message level for warnings on standard (terminal) output. 
+          Message level for warnings on standard (terminal) output.
           </p>
             <div class="itemizedlist">
               <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -938,7 +981,7 @@ csound5:output2             (playback right)</pre>
           </dt>
           <dd>
             <p>
-          Message level for amplitude format on standard (terminal) output. 
+          Message level for amplitude format on standard (terminal) output.
           </p>
             <div class="itemizedlist">
               <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -959,7 +1002,7 @@ csound5:output2             (playback right)</pre>
           </dt>
           <dd>
             <p>
-          Message level for amplitude format on standard (terminal) output. 
+          Message level for amplitude format on standard (terminal) output.
           </p>
             <div class="itemizedlist">
               <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -980,7 +1023,7 @@ csound5:output2             (playback right)</pre>
           </dt>
           <dd>
             <p>
-          Message level for benchmark information on standard (terminal) output. 
+          Message level for benchmark information on standard (terminal) output.
           </p>
             <div class="itemizedlist">
               <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -1131,12 +1174,12 @@ csound5:output2             (playback right)</pre>
           </dd>
           <dt>
             <a id="FlagsCatMinusPort"></a>
-            <span class="term">--port=N<a id="IndexCatMinusPprt" class="indexterm"></a></span>
+            <span class="term">--port=N<a id="IndexCatMinusPort" class="indexterm"></a></span>
           </dt>
           <dd>
             <p>
             Set UDP port on which to listen for commands and instruments/orchestra code
-            (implies --daemon)
+            (implies --daemon).   See <a class="link" href="udpserver.html" title="UDP Server"><em class="citetitle">UDP Server</em></a>.
           </p>
           </dd>
           <dt>
@@ -1262,16 +1305,16 @@ csound5:output2             (playback right)</pre>
           <dt>
             <a id="FlagsCatMinusLowerJ"></a>
             <span class="term">-j NUM<a id="IndexCatMinusLowerJ" class="indexterm"></a>,
-          --num-threads=NUM<a id="IndexCatMinusNumthread" class="indexterm"></a></span>
+      --num-threads=NUM<a id="IndexCatMinusNumthread" class="indexterm"></a></span>
           </dt>
           <dd>
             <p>
-              Make <span class="emphasis"><em>NUM</em></span> processes available for
-              rendering.  This is only advantageous if the number of
-              processors on the computer is the same or more that the number
-              of requested processes.  It also may slow rendering down
-              if ksmps is too small. 
-            </p>
+          Make <span class="emphasis"><em>NUM</em></span> processes available for
+          rendering.  This is only advantageous if the number of
+          processors on the computer is the same or more that the number
+          of requested processes.  It also may slow rendering down
+          if ksmps is too small.
+        </p>
           </dd>
         </dl>
       </div>
@@ -1342,6 +1385,16 @@ csound5:output2             (playback right)</pre>
         </p>
           </dd>
           <dt>
+            <a id="FlagsCatMinusMinusSinesize"></a>
+            <span class="term">--sinesize=integer<a id="IndexCatMinusMinusSinesize" class="indexterm"></a></span>
+          </dt>
+          <dd>
+            <p>
+          Set size of internal sine wave (table -1).  Should be a
+          power of two, and defaults to 16384.
+        </p>
+          </dd>
+          <dt>
             <a id="FlagsCatMinusExpressionOpt"></a>
             <span class="term">--expression-opt<a id="IndexCatMinusExpressionOpt" class="indexterm"></a></span>
           </dt>
@@ -1349,7 +1402,7 @@ csound5:output2             (playback right)</pre>
             <p>
           <span class="emphasis"><em>Note that this option has no affect in
           csound6.</em></span>
-
+          
           <span class="emphasis"><em>In Csound 5 only.</em></span>
           Turns on some optimizations in expressions:
           </p>
@@ -1375,31 +1428,31 @@ csound5:output2             (playback right)</pre>
                   <p>number of a- and k-rate temporary
             variables is significantly reduced. This expression</p>
                   <pre class="programlisting">
-(a1 + a2 + a3 + a4)</pre>
+            (a1 + a2 + a3 + a4)</pre>
                   <p>will compile as</p>
                   <pre class="programlisting">
-#a0 Add a1, a2
-#a0 Add #a0, a3
-#a0 Add #a0, a4       ; (the result is in #a0)</pre>
+              #a0 Add a1, a2
+              #a0 Add #a0, a3
+            #a0 Add #a0, a4       ; (the result is in #a0)</pre>
                   <p>instead of</p>
                   <pre class="programlisting">
-#a0 Add a1, a2
-#a1 Add #a0, a3
-#a2 Add #a1, a4       ; (the result is in #a2)</pre>
+              #a0 Add a1, a2
+              #a1 Add #a0, a3
+            #a2 Add #a1, a4       ; (the result is in #a2)</pre>
                   <p>The advantages of less temporary variables are:</p>
                   <div class="itemizedlist">
                     <ul class="itemizedlist" style="list-style-type: circle; ">
                       <li class="listitem">less cache memory is used, which may improve performance
-                  of orchestras with many a-rate expressions and a low
+              of orchestras with many a-rate expressions and a low
                   control rate (e.g. ksmps = 100)</li>
                       <li class="listitem">large orchestras may load faster due to less different
                   identifier names</li>
                       <li class="listitem">index overflow errors (i.e. when messages like this
-                  Case2: indx=-56004 (ffff253c); (short)indx = 9532 (253c)
-                  are printed and odd behavior or a Csound crash occurs) may
-                  be fixed, because such errors are triggered by too many
-                  different (especially a-rate) variable names in a single
-                  instrument.</li>
+                    Case2: indx=-56004 (ffff253c); (short)indx = 9532 (253c)
+                    are printed and odd behavior or a Csound crash occurs) may
+                    be fixed, because such errors are triggered by too many
+                    different (especially a-rate) variable names in a single
+                    instrument.</li>
                     </ul>
                   </div>
                   <p>Note that this optimization (due to technical reasons) is not
@@ -1579,8 +1632,8 @@ csound5:output2             (playback right)</pre>
           </dt>
           <dd>
             <p>
-	    Set the argument as the orchestra file.  Used when not
-            score is required&gt;.  (Csound 5.18 and later).
+	    Set the argument as the orchestra file.  Used when no
+            score is required.  (Csound 5.18 and later).
 	  </p>
           </dd>
           <dt>
@@ -1594,11 +1647,12 @@ csound5:output2             (playback right)</pre>
           </dd>
           <dt>
             <a id="FlagsCatMinusLowerT0"></a>
-            <span class="term">-t0<a id="IndexCatMinusLowerT0" class="indexterm"></a>, --keep-sorted-score<a id="IndexCatMinusKeepsortedscore" class="indexterm"></a></span>
+            <span class="term">--simple-sorted-score<a id="IndexCatMinusSimplesortedscore" class="indexterm"></a></span>
           </dt>
           <dd>
             <p>
-          Prevents Csound from deleting the sorted score file, score.srt, upon exit.
+          Retains the sorted score file score.srt in a simple readable
+          format upon exit.  (New in version 6.14).
         </p>
           </dd>
           <dt>

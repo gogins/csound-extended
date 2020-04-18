@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm172029"></a>
+        <a id="idm171177"></a>
         <h2>Description</h2>
         <p>
       Defines and initializes numeric arrays at orchestra load time.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm172032"></a>
+        <a id="idm171180"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>pset</strong></span> icon1 [, icon2] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm172036"></a>
+        <a id="idm171184"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>icon1, icon2, ...</em></span> -- preset values for a MIDI instrument
@@ -61,20 +61,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm172042"></a>
+        <a id="idm171190"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the pset opcode. It uses the file <a class="ulink" href="examples/pset.csd.html" target="_top"> (click here to play) <em class="citetitle">pset.csd</em></a>
       </p>
         <div class="example">
-          <a id="idm172047"></a>
+          <a id="idm171195"></a>
           <p class="title">
-            <strong>Example 743. Example of the pset opcode.</strong>
+            <strong>Example 745. Example of the pset opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm172054"></a>
+              <a id="idm171202"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span> 
 <span class="nt">&lt;CsOptions&gt;</span> 
@@ -94,7 +94,7 @@
 <span class="kd">instr</span> <span class="nf">1</span> <span class="c1">;this shows an example with non-midi use</span>
 
 <span class="nb">pset</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mf">0.5</span> 
-a<span class="n">sig</span> <span class="nb">poscil</span> <span class="nb">p5</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="mi">1</span> 
+a<span class="n">sig</span> <span class="nb">poscil</span> <span class="vi">p5</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> <span class="mi">1</span> 
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
  
 <span class="kd">endin</span> 
@@ -118,13 +118,13 @@ a<span class="n">sig</span> <span class="nb">poscil</span> <span class="nb">p5</
         <p>
       </p>
         <div class="example">
-          <a id="idm172132"></a>
+          <a id="idm171280"></a>
           <p class="title">
-            <strong>Example 744. Second example of the pset opcode.</strong>
+            <strong>Example 746. Second example of the pset opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm172134"></a>
+              <a id="idm171282"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span> 
 <span class="nt">&lt;CsOptions&gt;</span> 
@@ -144,20 +144,20 @@ a<span class="n">sig</span> <span class="nb">poscil</span> <span class="nb">p5</
 <span class="kd">instr</span> <span class="nf">1</span>
 
             <span class="nb">pset</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
-i<span class="n">instrument</span> <span class="o">=</span> <span class="nb">p1</span>
-i<span class="n">starttime</span>  <span class="o">=</span> <span class="nb">p2</span>
+i<span class="n">instrument</span> <span class="o">=</span> <span class="vi">p1</span>
+i<span class="n">starttime</span>  <span class="o">=</span> <span class="vi">p2</span>
 i<span class="n">attack</span>     <span class="o">=</span> <span class="mf">0.005</span>
-i<span class="n">sustain</span>    <span class="o">=</span> <span class="nb">p3</span>
+i<span class="n">sustain</span>    <span class="o">=</span> <span class="vi">p3</span>
 i<span class="n">release</span>    <span class="o">=</span> <span class="mf">0.06</span>
-<span class="nb">p3</span>          <span class="o">=</span> i<span class="n">sustain</span> <span class="o">+</span> i<span class="n">attack</span> <span class="o">+</span> i<span class="n">release</span>
+<span class="vi">p3</span>          <span class="o">=</span> i<span class="n">sustain</span> <span class="o">+</span> i<span class="n">attack</span> <span class="o">+</span> i<span class="n">release</span>
 k<span class="n">damping</span>    <span class="nb">linsegr</span> <span class="mf">0.0</span><span class="p">,</span> i<span class="n">attack</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> i<span class="n">sustain</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> i<span class="n">release</span><span class="p">,</span> <span class="mf">0.0</span>
 
-i<span class="n">octave</span>     <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">octave</span>     <span class="o">=</span> <span class="vi">p4</span>
 i<span class="n">frequency</span>  <span class="o">=</span> <span class="nb">cpsoct</span><span class="p">(</span>i<span class="n">octave</span><span class="p">)</span>
-i<span class="n">amplitude</span>  <span class="o">=</span> <span class="nb">p5</span><span class="o">*</span><span class="mf">.15</span>			<span class="c1">;lower volume</span>
+i<span class="n">amplitude</span>  <span class="o">=</span> <span class="vi">p5</span><span class="o">*</span><span class="mf">.15</span>			<span class="c1">;lower volume</span>
 
-<span class="nb">print</span> <span class="nb">p1</span><span class="p">,</span> <span class="nb">p2</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>
-a<span class="n">sig</span> S<span class="n">TKBandedWG</span> i<span class="n">frequency</span><span class="p">,</span> i<span class="n">amplitude</span>
+<span class="nb">print</span> <span class="vi">p1</span><span class="p">,</span> <span class="vi">p2</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> <span class="vi">p5</span>
+a<span class="n">sig</span> <span class="nb">STKBandedWG</span> i<span class="n">frequency</span><span class="p">,</span> i<span class="n">amplitude</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
 <span class="kd">endin</span>
@@ -175,7 +175,7 @@ a<span class="n">sig</span> S<span class="n">TKBandedWG</span> i<span class="n">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm172252"></a>
+        <a id="idm171400"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="strset.html" title="strset"><em class="citetitle">strset</em></a>

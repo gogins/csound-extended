@@ -40,7 +40,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm108859"></a>
+        <a id="idm108838"></a>
         <h2>Description</h2>
         <p>
       Takes input arrays, a and b and interleaves their data
@@ -48,12 +48,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm108862"></a>
+        <a id="idm108841"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout[] <span class="command"><strong>interleave</strong></span> kin1[], kin2[]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm108866"></a>
+        <a id="idm108845"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kout[]</em></span> -- output array containing the
@@ -65,19 +65,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm108872"></a>
+        <a id="idm108851"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the interleave opcode. It uses the file <a class="ulink" href="examples/interleave.csd.html" target="_top"> (click here to play) <em class="citetitle">interleave.csd</em></a>.</p>
         <div class="example">
-          <a id="idm108877"></a>
+          <a id="idm108856"></a>
           <p class="title">
-            <strong>Example 452. Example of the interleave opcode.</strong>
+            <strong>Example 453. Example of the interleave opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm108884"></a>
+              <a id="idm108863"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -91,7 +91,7 @@
 k<span class="n">in1</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span>
 k<span class="n">in2</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span>
 
-k<span class="n">Int</span><span class="p">[]</span> i<span class="n">nterleave</span> k<span class="n">in1</span><span class="p">,</span> k<span class="n">in2</span>
+k<span class="n">Int</span><span class="p">[]</span> <span class="nb">interleave</span> k<span class="n">in1</span><span class="p">,</span> k<span class="n">in2</span>
 
 <span class="nb">printf</span> <span class="s">"inputs: </span><span class="se">\n</span><span class="si">%d</span><span class="s"> </span><span class="si">%d</span><span class="s"> </span><span class="si">%d</span><span class="s"> </span><span class="si">%d</span><span class="s"> </span><span class="se">\n</span><span class="si">%d</span><span class="s"> </span><span class="si">%d</span><span class="s"> </span><span class="si">%d</span><span class="s"> </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
          k<span class="n">in1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> k<span class="n">in1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> k<span class="n">in1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> k<span class="n">in1</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
@@ -115,7 +115,7 @@ k<span class="n">Int</span><span class="p">[]</span> i<span class="n">nterleave<
         <br class="example-break" />
       </div>
       <div class="refsect1">
-        <a id="idm109039"></a>
+        <a id="idm109018"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vectorial.html" title="Vectorial Opcodes"><em class="citetitle"></em>Vectorial opcodes</a>,
@@ -123,7 +123,7 @@ k<span class="n">Int</span><span class="p">[]</span> i<span class="n">nterleave<
 </p>
       </div>
       <div class="refsect1">
-        <a id="idm109046"></a>
+        <a id="idm109025"></a>
         <h2>Credits</h2>
         <p>
       </p>

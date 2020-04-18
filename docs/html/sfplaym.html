@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm200065"></a>
+        <a id="idm199448"></a>
         <h2>Description</h2>
         <p>
       Plays a SoundFont2 (SF2) sample preset, generating a mono sound. These opcodes allow management the sample-structure of SF2 files. In order to understand the usage of these opcodes, the user must have some knowledge of the SF2 format, so a brief description of this format can be found in the <a class="link" href="MiscSf2.html" title="Appendix G. SoundFont2 File Format"><em class="citetitle">SoundFont2 File Format Appendix</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm200070"></a>
+        <a id="idm199453"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>sfplaym</strong></span> ivel, inotenum, xamp, xfreq, ipreindex [, iflag] [, ioffset] [, ienv]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm200074"></a>
+        <a id="idm199457"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ivel</em></span> -- velocity value
@@ -73,7 +73,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm200090"></a>
+        <a id="idm199473"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xamp</em></span> -- amplitude correction factor
@@ -104,20 +104,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm200126"></a>
+        <a id="idm199509"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the sfplaym opcode. It uses the file <a class="ulink" href="examples/sfplaym.csd.html" target="_top"> (click here to play) <em class="citetitle">sfplaym.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm200131"></a>
+          <a id="idm199514"></a>
           <p class="title">
-            <strong>Example 908. Example of the sfplaym opcode.</strong>
+            <strong>Example 910. Example of the sfplaym opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm200138"></a>
+              <a id="idm199521"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -141,10 +141,10 @@ gi<span class="n">sf</span>	<span class="nb">sfload</span>	<span class="s">"07Ac
 
 <span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; play from score and midi keyboard</span>
 
-	<span class="nb">mididefault</span>	<span class="mi">60</span><span class="p">,</span> <span class="nb">p3</span>
-	<span class="nb">midinoteonkey</span>	<span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>
-i<span class="n">num</span>	<span class="nb">init</span>	<span class="nb">p4</span>
-i<span class="n">vel</span>	<span class="nb">init</span>	<span class="nb">p5</span>
+	<span class="nb">mididefault</span>	<span class="mi">60</span><span class="p">,</span> <span class="vi">p3</span>
+	<span class="nb">midinoteonkey</span>	<span class="vi">p4</span><span class="p">,</span> <span class="vi">p5</span>
+i<span class="n">num</span>	<span class="nb">init</span>	<span class="vi">p4</span>
+i<span class="n">vel</span>	<span class="nb">init</span>	<span class="vi">p5</span>
 i<span class="n">vel</span>	<span class="nb">init</span>	i<span class="n">vel</span><span class="o">/</span><span class="mi">127</span>					<span class="c1">;make velocity dependent</span>
 k<span class="n">amp</span>	<span class="nb">linsegr</span>	<span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mi">0</span>
 k<span class="n">amp</span>	<span class="o">=</span> k<span class="n">amp</span><span class="o">/</span><span class="mi">7000</span>						<span class="c1">;scale amplitude</span>
@@ -174,7 +174,7 @@ a<span class="n">out</span>	<span class="nb">sfplaym</span> i<span class="n">vel
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm200266"></a>
+        <a id="idm199649"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="sfilist.html" title="sfilist"><em class="citetitle">sfilist</em></a>,
@@ -190,7 +190,7 @@ a<span class="n">out</span>	<span class="nb">sfplaym</span> i<span class="n">vel
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm200289"></a>
+        <a id="idm199672"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,26 +39,26 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm245280"></a>
+        <a id="idm244912"></a>
         <h2>Description</h2>
         <p>
       A bank of filters in which the cutoff frequency can be separated under user control
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm245283"></a>
+        <a id="idm244915"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>vlowres</strong></span> asig, kfco, kres, iord, ksep</pre>
       </div>
       <div class="refsect1">
-        <a id="idm245287"></a>
+        <a id="idm244919"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iord</em></span> -- total number of filters (1 to 10)
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm245291"></a>
+        <a id="idm244923"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- input signal
@@ -77,20 +77,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm245305"></a>
+        <a id="idm244937"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the vlowres opcode. It uses the file <a class="ulink" href="examples/vlowres.csd.html" target="_top"> (click here to play) <em class="citetitle">vlowres.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm245310"></a>
+          <a id="idm244942"></a>
           <p class="title">
-            <strong>Example 1110. Example of the vlowres opcode.</strong>
+            <strong>Example 1113. Example of the vlowres opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm245317"></a>
+              <a id="idm244949"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -110,12 +110,12 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">amp</span> <span class="nb">init</span> <span class="nb">p4</span>
+k<span class="n">amp</span> <span class="nb">init</span> <span class="vi">p4</span>
 a<span class="n">sig</span> <span class="nb">vco2</span>  k<span class="n">amp</span><span class="p">,</span> <span class="mi">110</span>			<span class="c1">;saw wave</span>
-k<span class="n">fco</span> <span class="nb">line</span> <span class="mi">30</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">300</span>			<span class="c1">;vary the cutoff frequency from 30 to 300 Hz.</span>
+k<span class="n">fco</span> <span class="nb">line</span> <span class="mi">30</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">300</span>			<span class="c1">;vary the cutoff frequency from 30 to 300 Hz.</span>
 k<span class="n">res</span> <span class="o">=</span> <span class="mi">20</span>	
-k<span class="n">sep</span> <span class="o">=</span> <span class="nb">p5</span>				<span class="c1">;different resonance values</span>
-i<span class="n">ord</span> <span class="o">=</span> <span class="nb">p6</span>				<span class="c1">;and different number of filters</span>
+k<span class="n">sep</span> <span class="o">=</span> <span class="vi">p5</span>				<span class="c1">;different resonance values</span>
+i<span class="n">ord</span> <span class="o">=</span> <span class="vi">p6</span>				<span class="c1">;and different number of filters</span>
 a<span class="n">out</span> <span class="nb">vlowres</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">fco</span><span class="p">,</span> k<span class="n">res</span><span class="p">,</span> i<span class="n">ord</span><span class="p">,</span> k<span class="n">sep</span>
 a<span class="n">clp</span> <span class="nb">clip</span> a<span class="n">out</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;avoid distortion</span>
      <span class="nb">outs</span> a<span class="n">clp</span><span class="p">,</span> a<span class="n">clp</span>
@@ -143,7 +143,7 @@ a<span class="n">clp</span> <span class="nb">clip</span> a<span class="n">out</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm245440"></a>
+        <a id="idm245072"></a>
         <h2>Credits</h2>
         <p>
       </p>

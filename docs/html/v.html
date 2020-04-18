@@ -39,33 +39,33 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm263610"></a>
+        <a id="idm263260"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>v statement</em></span> provides for locally variable time warping of score events.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm263614"></a>
+        <a id="idm263264"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>v</strong></span> p1</pre>
       </div>
       <div class="refsect1">
-        <a id="idm263618"></a>
+        <a id="idm263268"></a>
         <h2>Initialization</h2>
         <p>
       <span class="command"><strong>p1</strong></span> -- Time warp factor (must be positive).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm263622"></a>
+        <a id="idm263272"></a>
         <h2>Performance</h2>
         <p>
       The <span class="emphasis"><em>v statement</em></span> takes effect with the following <a class="link" href="i.html" title="i Statement (Instrument or Note Statement)"><em class="citetitle">i statement</em></a>, and remains in effect until the next <a class="link" href="v.html" title="v Statement"><em class="citetitle">v statement</em></a>, <a class="link" href="s.html" title="s Statement"><em class="citetitle">s statement</em></a>, or <a class="link" href="e.html" title="e Statement"><em class="citetitle">e statement</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm263634"></a>
+        <a id="idm263284"></a>
         <h2>Examples</h2>
         <p>
       The value of p1 is used as a multiplier for the start times (p2) of subsequent <a class="link" href="i.html" title="i Statement (Instrument or Note Statement)"><em class="citetitle">i statements</em></a>.
@@ -103,19 +103,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm263666"></a>
+        <a id="idm263316"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the v statement. It uses the file <a class="ulink" href="examples/v.csd.html" target="_top"> (click here to play) <em class="citetitle">v.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm263671"></a>
+          <a id="idm263321"></a>
           <p class="title">
-            <strong>Example 1190. Example of the v statement.</strong>
+            <strong>Example 1193. Example of the v statement.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm263673"></a>
+              <a id="idm263323"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -134,8 +134,8 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-a<span class="n">env</span> <span class="nb">expseg</span> <span class="mf">.01</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.01</span>
-a<span class="n">sig</span> <span class="nb">poscil3</span> <span class="mf">.4</span><span class="o">*</span>a<span class="n">env</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">env</span> <span class="nb">expseg</span> <span class="mf">.01</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.01</span>
+a<span class="n">sig</span> <span class="nb">poscil3</span> <span class="mf">.4</span><span class="o">*</span>a<span class="n">env</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> <span class="mi">1</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
 <span class="kd">endin</span>

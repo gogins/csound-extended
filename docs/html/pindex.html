@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm165727"></a>
+        <a id="idm164503"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>pindex</em></span> returns the value of a specified pfield.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm165731"></a>
+        <a id="idm164507"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ivalue <span class="command"><strong>pindex</strong></span> ipfieldIndex</pre>
       </div>
       <div class="refsect1">
-        <a id="idm165735"></a>
+        <a id="idm164511"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ipfieldIndex</em></span> - pfield number to query.
@@ -61,21 +61,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm165741"></a>
+        <a id="idm164517"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the pindex opcode. It uses the file <a class="ulink" href="examples/pindex.csd.html" target="_top"> (click here to play) <em class="citetitle">pindex.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm165746"></a>
+          <a id="idm164522"></a>
           <p class="title">
             <strong>Example 709. Example of the pindex opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm165753"></a>
+              <a id="idm164529"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -93,7 +93,7 @@
     i<span class="n">ndex</span>   <span class="nb">init</span> <span class="mi">1</span>
     <span class="nl">loop1</span><span class="p">:</span>
         i<span class="n">value</span> <span class="nb">pindex</span> i<span class="n">ndex</span>
-        <span class="nb">printf_i</span> <span class="s">"p</span><span class="si">%d</span><span class="s"> = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">ndex</span><span class="p">,</span> i<span class="n">value</span>
+        <span class="nb">printf_i</span> <span class="s">"p</span><span class="si">%d</span><span class="s"> = </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">ndex</span><span class="p">,</span> i<span class="n">value</span>
         i<span class="n">ndex</span>   <span class="o">=</span> i<span class="n">ndex</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="k">if</span>  <span class="p">(</span>i<span class="n">ndex</span> <span class="o">&lt;=</span> i<span class="n">num</span><span class="p">)</span> <span class="k">igoto</span> <span class="nl">loop1</span>
     <span class="nb">print</span> i<span class="n">num</span>
@@ -154,13 +154,13 @@ instr 1:  inum = 7.000
 
       </p>
         <div class="example">
-          <a id="idm165837"></a>
+          <a id="idm164614"></a>
           <p class="title">
             <strong>Example 710. Second example of the pindex opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm165839"></a>
+              <a id="idm164616"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -221,8 +221,8 @@ instr 1:  inum = 7.000
 	i<span class="n">epk</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">19</span>
 	i<span class="n">epl</span>   <span class="nf">mypvalue</span>	i<span class="n">pstart</span> <span class="o">+</span> <span class="mi">20</span>
 
-	k<span class="n">env</span>   <span class="nb">linseg</span>	 i<span class="n">ep1</span><span class="p">,</span> i<span class="n">ep2</span><span class="p">,</span> i<span class="n">ep3</span><span class="p">,</span> i<span class="n">ep4</span><span class="p">,</span> i<span class="n">ep5</span><span class="p">,</span> i<span class="n">ep6</span><span class="p">,</span> i<span class="n">ep7</span><span class="p">,</span> i<span class="n">ep8</span><span class="p">,</span> \
-	                   i<span class="n">ep9</span><span class="p">,</span> i<span class="n">epa</span><span class="p">,</span> i<span class="n">epb</span><span class="p">,</span> i<span class="n">epc</span><span class="p">,</span> i<span class="n">epd</span><span class="p">,</span> i<span class="n">epe</span><span class="p">,</span> i<span class="n">epf</span><span class="p">,</span> i<span class="n">epg</span><span class="p">,</span> \
+	k<span class="n">env</span>   <span class="nb">linseg</span>	 i<span class="n">ep1</span><span class="p">,</span> i<span class="n">ep2</span><span class="p">,</span> i<span class="n">ep3</span><span class="p">,</span> i<span class="n">ep4</span><span class="p">,</span> i<span class="n">ep5</span><span class="p">,</span> i<span class="n">ep6</span><span class="p">,</span> i<span class="n">ep7</span><span class="p">,</span> i<span class="n">ep8</span><span class="p">,</span> <span class="w">\</span>
+	                   i<span class="n">ep9</span><span class="p">,</span> i<span class="n">epa</span><span class="p">,</span> i<span class="n">epb</span><span class="p">,</span> i<span class="n">epc</span><span class="p">,</span> i<span class="n">epd</span><span class="p">,</span> i<span class="n">epe</span><span class="p">,</span> i<span class="n">epf</span><span class="p">,</span> i<span class="n">epg</span><span class="p">,</span> <span class="w">\</span>
 	                   i<span class="n">eph</span><span class="p">,</span> i<span class="n">epi</span><span class="p">,</span> i<span class="n">epj</span><span class="p">,</span> i<span class="n">epk</span><span class="p">,</span> i<span class="n">epl</span>	
 	<span class="nb">xout</span>   k<span class="n">env</span>
 <span class="kd">endop</span>
@@ -273,14 +273,14 @@ B  8.000 .. 18.000 T 18.000 TT 18.000 M:  0.49994  0.49994
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm166146"></a>
+        <a id="idm164925"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pcount.html" title="pcount"><em class="citetitle">pcount</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm166151"></a>
+        <a id="idm164930"></a>
         <h2>Credits</h2>
         <p>Example by: Anthony Kozar</p>
         <p>Dec. 2006</p>

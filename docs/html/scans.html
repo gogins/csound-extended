@@ -39,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm191721"></a>
+        <a id="idm191016"></a>
         <h2>Description</h2>
         <p>Plugin opcode in scansyn.</p>
         <p>
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm191725"></a>
+        <a id="idm191020"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>scans</strong></span> kamp, kfreq, ifn, id [, iorder]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm191729"></a>
+        <a id="idm191024"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- ftable containing the scanning trajectory.  This is a series of numbers that contains addresses of masses.  The order of these addresses is used as the scan path.  It should not contain values greater than the number of masses, or negative numbers. See the <a class="link" href="SiggenScanTop.html" title="Scanned Synthesis"><em class="citetitle">introduction to the scanned synthesis section</em></a>.
@@ -70,7 +70,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm191741"></a>
+        <a id="idm191036"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- output amplitude.  Note that the resulting amplitude is also dependent on instantaneous value in the wavetable.  This number is effectively the scaling factor of the wavetable.
@@ -86,14 +86,14 @@
       Here is an example of the scanned synthesis. It uses the file <a class="ulink" href="examples/scans.csd.html" target="_top"> (click here to play) <em class="citetitle">scans.csd</em></a>, and <a class="ulink" href="examples/string-128.matrix" target="_top"><em class="citetitle">string-128.matrix</em></a>.
       </p>
         <div class="example">
-          <a id="idm191754"></a>
+          <a id="idm191049"></a>
           <p class="title">
-            <strong>Example 870. Example of the scans opcode.</strong>
+            <strong>Example 872. Example of the scans opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm191761"></a>
+              <a id="idm191056"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -114,7 +114,7 @@ a<span class="n">0</span>  <span class="o">=</span> <span class="mi">0</span>
 <span class="c1">;   scanu init, irate, ifnvel, ifnmass, ifnstif, ifncentr, ifndamp, kmass, kstif, kcentr, kdamp, ileft, iright, kpos, kstrngth, ain, idisp, id</span>
     <span class="nb">scanu</span> <span class="mi">1</span><span class="p">,</span>     <span class="mf">.01</span><span class="p">,</span>    <span class="mi">6</span><span class="p">,</span>       <span class="mi">2</span><span class="p">,</span>       <span class="mi">3</span><span class="p">,</span>     <span class="mi">4</span><span class="p">,</span>        <span class="mi">5</span><span class="p">,</span>       <span class="mi">2</span><span class="p">,</span>     <span class="mf">.1</span><span class="p">,</span>    <span class="mf">.1</span><span class="p">,</span>     <span class="o">-</span><span class="mf">.01</span><span class="p">,</span>  <span class="mf">.1</span><span class="p">,</span>    <span class="mf">.5</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>        a<span class="n">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>     <span class="mi">2</span>
 <span class="c1">;ar scans kamp,      kfreq,      ifntraj, id</span>
-a<span class="n">1</span>  <span class="nb">scans</span> <span class="nb">ampdb</span><span class="p">(</span><span class="nb">p4</span><span class="p">),</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p5</span><span class="p">),</span> <span class="mi">7</span><span class="p">,</span>       <span class="mi">2</span>
+a<span class="n">1</span>  <span class="nb">scans</span> <span class="nb">ampdb</span><span class="p">(</span><span class="vi">p4</span><span class="p">),</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p5</span><span class="p">),</span> <span class="mi">7</span><span class="p">,</span>       <span class="mi">2</span>
     <span class="nb">out</span> a<span class="n">1</span>
     <span class="kd">endin</span>
 
@@ -162,13 +162,13 @@ a<span class="n">1</span>  <span class="nb">scans</span> <span class="nb">ampdb<
       Here is another example of the scanned synthesis, using samples as excitation signal. It uses the file <a class="ulink" href="examples/scans-2.csd.html" target="_top"> (click here to play) <em class="citetitle">scans-2.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm191937"></a>
+          <a id="idm191232"></a>
           <p class="title">
-            <strong>Example 871. Second example of the scans opcode.</strong>
+            <strong>Example 873. Second example of the scans opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm191939"></a>
+              <a id="idm191234"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -190,15 +190,15 @@ a<span class="n">1</span>  <span class="nb">scans</span> <span class="nb">ampdb<
 
 <span class="kd">instr</span> 	<span class="nf">2</span>	<span class="c1">;show 2 different trajectories, with samples as excitation signal</span>
 
-i<span class="n">smp</span> <span class="o">=</span> <span class="nb">p6</span>		
-i<span class="n">amp</span> <span class="o">=</span> <span class="nb">p7</span>
-i<span class="n">trj</span> <span class="o">=</span> <span class="nb">p8</span>
-a<span class="n">out</span> <span class="nb">soundin</span> <span class="nb">p6</span>				<span class="c1">;choose wave file</span>
+i<span class="n">smp</span> <span class="o">=</span> <span class="vi">p6</span>
+i<span class="n">amp</span> <span class="o">=</span> <span class="vi">p7</span>
+i<span class="n">trj</span> <span class="o">=</span> <span class="vi">p8</span>
+a<span class="n">out</span> <span class="nb">soundin</span> <span class="vi">p6</span>				<span class="c1">;choose wave file</span>
      <span class="nb">scanu</span> i<span class="n">smp</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">44</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mf">.05</span><span class="p">,</span> <span class="o">-</span><span class="mf">.05</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> a<span class="n">out</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
-a<span class="n">sig</span> <span class="nb">scans</span> i<span class="n">amp</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p5</span><span class="p">),</span> i<span class="n">trj</span> <span class="p">,</span> <span class="mi">0</span>
+a<span class="n">sig</span> <span class="nb">scans</span> i<span class="n">amp</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p5</span><span class="p">),</span> i<span class="n">trj</span> <span class="p">,</span> <span class="mi">0</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
-<span class="kd">endin</span>	
+<span class="kd">endin</span>
 <span class="nt">&lt;/CsInstruments&gt;</span>
 <span class="nt">&lt;CsScore&gt;</span>
 <span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">128</span> <span class="mi">7</span> <span class="mi">0</span> <span class="mi">64</span> <span class="mi">1</span> <span class="mi">64</span> <span class="mi">0</span>			<span class="c1">; Initial condition</span>
@@ -208,7 +208,7 @@ a<span class="n">sig</span> <span class="nb">scans</span> i<span class="n">amp</
 <span class="nb">f</span><span class="mi">5</span> <span class="mi">0</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">7</span> <span class="mi">1</span> <span class="mi">128</span> <span class="mi">0</span>			<span class="c1">; Damping</span>
 <span class="nb">f</span><span class="mi">6</span> <span class="mi">0</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">7</span> <span class="o">-</span><span class="mf">.0</span> <span class="mi">128</span> <span class="mi">0</span>			<span class="c1">; Initial velocity</span>
 <span class="nb">f</span><span class="mi">7</span> <span class="mi">0</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">5</span> <span class="mf">.001</span> <span class="mi">128</span> <span class="mi">128</span>		<span class="c1">; Trajectories</span>
-<span class="nb">f</span><span class="mi">77</span> <span class="mi">0</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">23</span> <span class="s">"spiral-8,16,128,2,1over2"</span>
+<span class="nb">f</span><span class="mi">77</span> <span class="mi">0</span> <span class="mi">128</span> <span class="o">-</span><span class="mi">23</span> <span class="s">"128-spiral-8,16,128,2,1over2"</span>
 
 <span class="nb">s</span>
 <span class="nb">i</span><span class="mi">2</span> <span class="mi">0</span>  <span class="mi">5</span>  <span class="mi">63</span> <span class="mf">6.00</span> <span class="mi">1</span> <span class="mf">.9</span> <span class="mi">7</span>			<span class="c1">;"mary.wav" &amp;</span>
@@ -240,7 +240,7 @@ a<span class="n">sig</span> <span class="nb">scans</span> i<span class="n">amp</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm192217"></a>
+        <a id="idm191512"></a>
         <h2>See Also</h2>
         <p>
       The matrix file <span class="quote">“<span class="quote">string-128.matrix</span>”</span>, as well as several other matrices, is also available in a <a class="ulink" href="http://www.csounds.com/scanned/zip/scanmatrices.zip" target="_top"><em class="citetitle">zipped file</em></a> from the <a class="ulink" href="http://www.csounds.com/scanned/" target="_top"><em class="citetitle">Scanned Synthesis page</em></a> at cSounds.com.
@@ -248,7 +248,7 @@ a<span class="n">sig</span> <span class="nb">scans</span> i<span class="n">amp</
         <p> More information on this opcode: <a class="ulink" href="http://www.csounds.com/stevenyi/scanned/yi_scannedSynthesis.html" target="_top"><em class="citetitle">http://www.csounds.com/stevenyi/scanned/yi_scannedSynthesis.html</em></a>  , written by Steven Yi </p>
       </div>
       <div class="refsect1">
-        <a id="idm192228"></a>
+        <a id="idm191523"></a>
         <h2>Credits</h2>
         <p>
       </p>

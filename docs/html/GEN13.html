@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm267615"></a>
+        <a id="idm267265"></a>
         <h2>Description</h2>
         <p>
       Uses Chebyshev coefficients to generate stored polynomial functions which, under waveshaping, can be used to split a sinusoid into harmonic partials having a pre-definable spectrum.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm267618"></a>
+        <a id="idm267268"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size 13 xint xamp h0 h1 h2 ...</pre>
       </div>
       <div class="refsect1">
-        <a id="idm267622"></a>
+        <a id="idm267272"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>size</em></span> -- number of points in the table. Must be a power of 2 or a power-of-2 plus 1 (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f statement</em></a>). The normal value is power-of-2 plus 1.
@@ -80,20 +80,20 @@ xamp * int(size/2)/xint<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm267649"></a>
+        <a id="idm267299"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the GEN13 generator. It uses the file <a class="ulink" href="examples/gen13.csd.html" target="_top"> (click here to play) <em class="citetitle">gen13.csd</em></a>.
            </p>
         <div class="example">
-          <a id="idm267654"></a>
+          <a id="idm267304"></a>
           <p class="title">
-            <strong>Example 1208. Example of the GEN13 generator.</strong>
+            <strong>Example 1211. Example of the GEN13 generator.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm267661"></a>
+              <a id="idm267311"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -115,12 +115,12 @@ gi<span class="n">sine</span>   <span class="nb">ftgen</span> <span class="mi">0
 
 <span class="kd">instr</span>   <span class="nf">1</span>
 
-i<span class="n">hertz</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
-i<span class="n">pkamp</span> <span class="o">=</span> <span class="nb">p5</span>
-i<span class="n">wsfn</span>  <span class="o">=</span> <span class="nb">p6</span>										<span class="c1">;waveshaping function</span>
-i<span class="n">nmfn</span>  <span class="o">=</span> <span class="nb">p7</span>										<span class="c1">;normalization function</span>
-a<span class="n">gate</span>   <span class="nb">linen</span>  <span class="mi">1</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.1</span>            					 	<span class="c1">;overall amp envelope</span>
-k<span class="n">ctrl</span>   <span class="nb">linen</span>  <span class="mf">.99</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">2</span>								<span class="c1">;waveshaping index control</span>
+i<span class="n">hertz</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p4</span><span class="p">)</span>
+i<span class="n">pkamp</span> <span class="o">=</span> <span class="vi">p5</span>
+i<span class="n">wsfn</span>  <span class="o">=</span> <span class="vi">p6</span>										<span class="c1">;waveshaping function</span>
+i<span class="n">nmfn</span>  <span class="o">=</span> <span class="vi">p7</span>										<span class="c1">;normalization function</span>
+a<span class="n">gate</span>   <span class="nb">linen</span>  <span class="mi">1</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">.1</span>            					 	<span class="c1">;overall amp envelope</span>
+k<span class="n">ctrl</span>   <span class="nb">linen</span>  <span class="mf">.99</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">2</span>								<span class="c1">;waveshaping index control</span>
 a<span class="n">index</span>  <span class="nb">poscil</span> k<span class="n">ctrl</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> i<span class="n">hertz</span><span class="p">,</span> gi<span class="n">sine</span>							<span class="c1">;sine wave to be distorted</span>
 a<span class="n">signal</span> <span class="nb">tablei</span> <span class="mf">.5</span><span class="o">+</span>a<span class="n">index</span><span class="p">,</span> i<span class="n">wsfn</span><span class="p">,</span> <span class="mi">1</span>							<span class="c1">;waveshaping</span>
 k<span class="n">normal</span> <span class="nb">tablei</span> k<span class="n">ctrl</span><span class="p">,</span> i<span class="n">nmfn</span><span class="p">,</span> <span class="mi">1</span>								<span class="c1">;amplitude normalization</span>
@@ -281,7 +281,7 @@ a<span class="n">sig</span>    <span class="o">=</span>      a<span class="n">si
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm268272"></a>
+        <a id="idm267922"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="GEN03.html" title="GEN03"><em class="citetitle">GEN03</em></a>,

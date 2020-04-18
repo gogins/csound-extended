@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm208837"></a>
+        <a id="idm208263"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>sprintfk</em></span> writes printf-style formatted output to a string variable, similarly to the C function sprintf(). <span class="emphasis"><em>sprintfk</em></span> runs both at initialization and performance time.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm208842"></a>
+        <a id="idm208268"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">Sdst <span class="command"><strong>sprintfk</strong></span> Sfmt, xarg1[, xarg2[, ... ]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm208846"></a>
+        <a id="idm208272"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>Sfmt</em></span> -- format string, has the same format as in printf() and other similar C functions, except length modifiers (l, ll, h, etc.) are not supported. The following conversion specifiers are allowed:
@@ -70,27 +70,27 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm208855"></a>
+        <a id="idm208281"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>Sdst</em></span> -- output string variable
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm208859"></a>
+        <a id="idm208285"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the sprintfk opcode. It uses the file <a class="ulink" href="examples/sprintfk.csd.html" target="_top"> (click here to play) <em class="citetitle">sprintfk.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm208864"></a>
+          <a id="idm208290"></a>
           <p class="title">
-            <strong>Example 935. Example of the sprintfk opcode.</strong>
+            <strong>Example 937. Example of the sprintfk opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm208871"></a>
+              <a id="idm208297"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -119,7 +119,7 @@
   S<span class="n">1</span>	    <span class="nb">strcatk</span>   S<span class="n">1</span><span class="p">,</span> S<span class="n">2</span>
   k<span class="n">val</span>	    <span class="o">=</span>  k<span class="n">val</span> <span class="o">+</span> <span class="mi">1</span>
 <span class="k">endif</span>
-  S<span class="n">tring</span>    <span class="nb">sprintfk</span>  <span class="s">"%s = </span><span class="si">%d</span><span class="s">"</span><span class="p">,</span> S<span class="n">1</span><span class="p">,</span> k<span class="n">val</span>
+  S<span class="n">tring</span>    <span class="nb">sprintfk</span>  <span class="s">"</span><span class="si">%s</span><span class="s"> = </span><span class="si">%d</span><span class="s">"</span><span class="p">,</span> S<span class="n">1</span><span class="p">,</span> k<span class="n">val</span>
 	    <span class="nb">puts</span>      S<span class="n">tring</span><span class="p">,</span> k<span class="n">val</span>
   k<span class="n">trig</span>	    <span class="nb">metro</span>     <span class="mi">1</span>
 
@@ -154,7 +154,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm208954"></a>
+        <a id="idm208382"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="sprintf.html" title="sprintf"><em class="citetitle">sprintf</em></a>,
@@ -163,7 +163,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm208963"></a>
+        <a id="idm208391"></a>
         <h2>Credits</h2>
         <p>
       </p>

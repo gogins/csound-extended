@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm156148"></a>
+        <a id="idm154886"></a>
         <h2>Description</h2>
         <p>
       Writes stereo audio data to an external device or stream.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm156151"></a>
+        <a id="idm154889"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>outs</strong></span> asig1, asig2</pre>
       </div>
       <div class="refsect1">
-        <a id="idm156155"></a>
+        <a id="idm154893"></a>
         <h2>Performance</h2>
         <p>
       Sends stereo audio samples to an accumulating output buffer (created at the beginning of performance) which serves to collect the output of all active instruments before the sound is written to disk. There can be any number of these output units in an instrument.
@@ -61,20 +61,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm156164"></a>
+        <a id="idm154902"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the outs opcode. It uses the file <a class="ulink" href="examples/outs.csd.html" target="_top"> (click here to play) <em class="citetitle">outs.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm156169"></a>
+          <a id="idm154907"></a>
           <p class="title">
             <strong>Example 672. Example of the outs opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm156176"></a>
+              <a id="idm154914"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -95,12 +95,12 @@
 
 a<span class="n">sig</span> <span class="nb">vco2</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">110</span>	<span class="c1">; sawtooth waveform at low volume</span>
 <span class="c1">;filter a channel</span>
-k<span class="n">cut1</span> <span class="nb">line</span> <span class="mi">60</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">300</span>	<span class="c1">; Vary cutoff frequency</span>
+k<span class="n">cut1</span> <span class="nb">line</span> <span class="mi">60</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">300</span>	<span class="c1">; Vary cutoff frequency</span>
 k<span class="n">resonance1</span> <span class="o">=</span> <span class="mi">3</span>
 i<span class="n">numlayer1</span> <span class="o">=</span> <span class="mi">3</span>
 a<span class="n">sig1</span> <span class="nb">lowresx</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">cut1</span><span class="p">,</span> k<span class="n">resonance1</span><span class="p">,</span> i<span class="n">numlayer1</span>
 <span class="c1">;filter the other channel</span>
-k<span class="n">cut2</span> <span class="nb">line</span> <span class="mi">300</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">60</span>	<span class="c1">; Vary cutoff frequency</span>
+k<span class="n">cut2</span> <span class="nb">line</span> <span class="mi">300</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">60</span>	<span class="c1">; Vary cutoff frequency</span>
 k<span class="n">resonance2</span> <span class="o">=</span> <span class="mi">3</span>
 i<span class="n">numlayer2</span> <span class="o">=</span> <span class="mi">3</span>
 a<span class="n">sig2</span> <span class="nb">lowresx</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">cut2</span><span class="p">,</span> k<span class="n">resonance2</span><span class="p">,</span> i<span class="n">numlayer2</span>
@@ -123,7 +123,7 @@ a<span class="n">sig2</span> <span class="nb">lowresx</span> a<span class="n">si
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm156270"></a>
+        <a id="idm155008"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="out.html" title="out"><em class="citetitle">out</em></a>,
@@ -140,7 +140,7 @@ a<span class="n">sig2</span> <span class="nb">lowresx</span> a<span class="n">si
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm156295"></a>
+        <a id="idm155033"></a>
         <h2>Credits</h2>
         <p>
       </p>

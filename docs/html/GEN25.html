@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm271079"></a>
+        <a id="idm270733"></a>
         <h2>Description</h2>
         <p>
       These subroutines are used to construct functions from segments of exponential curves in breakpoint fashion.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm271082"></a>
+        <a id="idm270736"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size 25 x1 y1 x2 y2 x3  ...</pre>
       </div>
       <div class="refsect1">
-        <a id="idm271086"></a>
+        <a id="idm270740"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>size </em></span> -- number of points in the table. Must be a power of 2 or power-of-2 plus 1 (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f statement</em></a>).
@@ -81,20 +81,20 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm271099"></a>
+        <a id="idm270753"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the GEN25 generator. It uses the file <a class="ulink" href="examples/gen25.csd.html" target="_top"> (click here to play) <em class="citetitle">gen25.csd</em></a>.
            </p>
         <div class="example">
-          <a id="idm271104"></a>
+          <a id="idm270758"></a>
           <p class="title">
-            <strong>Example 1219. Example of the GEN25 generator.</strong>
+            <strong>Example 1222. Example of the GEN25 generator.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm271111"></a>
+              <a id="idm270765"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -117,7 +117,7 @@ gi<span class="n">env</span> <span class="nb">ftgen</span> <span class="mi">2</s
   
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">cps</span> <span class="nb">init</span> <span class="mi">3</span><span class="o">/</span><span class="nb">p3</span>			<span class="c1">;play 3x over duration of note</span>
+k<span class="n">cps</span> <span class="nb">init</span> <span class="mi">3</span><span class="o">/</span><span class="vi">p3</span>			<span class="c1">;play 3x over duration of note</span>
 k<span class="n">ndx</span> <span class="nb">phasor</span> k<span class="n">cps</span>
 i<span class="n">xmode</span> <span class="o">=</span> <span class="mi">1</span>			<span class="c1">;normalize to 0-1</span>
 k<span class="n">val</span> <span class="nb">table</span> k<span class="n">ndx</span><span class="p">,</span> gi<span class="n">env</span><span class="p">,</span> i<span class="n">xmode</span>
@@ -153,7 +153,7 @@ a<span class="n">sig</span> <span class="nb">poscil</span> <span class="mi">1</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm271232"></a>
+        <a id="idm270886"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f statement</em></a>,
@@ -161,7 +161,7 @@ a<span class="n">sig</span> <span class="nb">poscil</span> <span class="mi">1</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm271239"></a>
+        <a id="idm270893"></a>
         <h2>Credits</h2>
         <p>
       </p>

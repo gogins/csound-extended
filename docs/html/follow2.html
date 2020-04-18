@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm86577"></a>
+        <a id="idm86223"></a>
         <h2>Description</h2>
         <p>
       A controllable envelope extractor using the algorithm attributed to Jean-Marc Jot.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm86580"></a>
+        <a id="idm86226"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>follow2</strong></span> asig, katt, krel</pre>
       </div>
       <div class="refsect1">
-        <a id="idm86584"></a>
+        <a id="idm86230"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- the input signal whose envelope is followed
@@ -67,20 +67,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm86596"></a>
+        <a id="idm86242"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the follow2 opcode. It uses the file <a class="ulink" href="examples/follow2.csd.html" target="_top"> (click here to play) <em class="citetitle">follow2.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
       </p>
         <div class="example">
-          <a id="idm86603"></a>
+          <a id="idm86249"></a>
           <p class="title">
             <strong>Example 348. Example of the follow2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm86610"></a>
+              <a id="idm86256"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -106,7 +106,7 @@ a<span class="n">sig</span> <span class="nb">soundin</span> <span class="s">"bea
 <span class="kd">instr</span> <span class="nf">2</span> <span class="c1">;using follow2</span>
 
 a<span class="n">s</span> <span class="nb">soundin</span> <span class="s">"beats.wav"</span>
-a<span class="n">f</span> <span class="nb">follow2</span> a<span class="n">s</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>
+a<span class="n">f</span> <span class="nb">follow2</span> a<span class="n">s</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> <span class="vi">p5</span>
 a<span class="n">r</span> <span class="nb">rand</span> <span class="mi">44100</span>	<span class="c1">;noise</span>
 <span class="c1">; "beats.wav" provides amplitude for noise</span>
 a<span class="n">sig</span> <span class="nb">balance</span> a<span class="n">r</span><span class="p">,</span> a<span class="n">f</span>
@@ -131,7 +131,7 @@ a<span class="n">sig</span> <span class="nb">balance</span> a<span class="n">r</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm86694"></a>
+        <a id="idm86340"></a>
         <h2>Credits</h2>
         <p>
       </p>

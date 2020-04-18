@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm252483"></a>
+        <a id="idm252115"></a>
         <h2>Description</h2>
         <p>
       Audio output is a tone similar to a flute, using a physical model developed from Perry Cook, but re-coded for Csound.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm252486"></a>
+        <a id="idm252118"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>wgflute</strong></span> kamp, kfreq, kjet, iatt,
     idetk, kngain, kvibf, kvamp [, ifn] [, iminfreq] [, ijetrf] [, iendrf]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm252490"></a>
+        <a id="idm252122"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iatt</em></span> -- time in seconds to reach full blowing pressure. 0.1 seems to correspond to reasonable playing.
@@ -75,7 +75,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm252507"></a>
+        <a id="idm252139"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- Amplitude of note.
@@ -97,21 +97,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm252521"></a>
+        <a id="idm252153"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the wgflute opcode. It uses the file <a class="ulink" href="examples/wgflute.csd.html" target="_top"> (click here to play) <em class="citetitle">wgflute.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm252526"></a>
+          <a id="idm252158"></a>
           <p class="title">
-            <strong>Example 1139. Example of the wgflute opcode.</strong>
+            <strong>Example 1142. Example of the wgflute opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm252533"></a>
+              <a id="idm252165"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -131,7 +131,7 @@
 <span class="kd">instr</span> <span class="nf">1</span>
 
 k<span class="n">freq</span> <span class="o">=</span> <span class="mi">440</span>
-k<span class="n">jet</span> <span class="nb">init</span> <span class="nb">p4</span>			<span class="c1">;vary air jet</span>
+k<span class="n">jet</span> <span class="nb">init</span> <span class="vi">p4</span>			<span class="c1">;vary air jet</span>
 i<span class="n">att</span> <span class="o">=</span> <span class="mf">0.1</span>
 i<span class="n">detk</span> <span class="o">=</span> <span class="mf">0.1</span>
 k<span class="n">ngain</span> <span class="o">=</span> <span class="mf">0.15</span>
@@ -159,7 +159,7 @@ a<span class="n">sig</span> <span class="nb">wgflute</span> <span class="mf">.8<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm252627"></a>
+        <a id="idm252259"></a>
         <h2>Credits</h2>
         <p>
       </p>

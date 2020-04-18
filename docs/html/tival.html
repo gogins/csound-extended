@@ -39,39 +39,39 @@
            </p>
       </div>
       <div class="refsect1">
-        <a id="idm228631"></a>
+        <a id="idm228261"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ir <span class="command"><strong>tival</strong></span></pre>
       </div>
       <div class="refsect1">
-        <a id="idm228635"></a>
+        <a id="idm228265"></a>
         <h2>Description</h2>
         <p> 
       Puts the value of the instrument's internal <span class="quote">“<span class="quote">tie-in</span>”</span> flag into the named i-rate variable.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm228639"></a>
+        <a id="idm228269"></a>
         <h2>Initialization</h2>
         <p>
       Puts the value of the instrument's internal <span class="quote">“<span class="quote">tie-in</span>”</span> flag into the named i-rate variable. Assigns 1 if this note has been <span class="quote">“<span class="quote">tied</span>”</span> onto a previously held note (see <a class="link" href="i.html" title="i Statement (Instrument or Note Statement)"><em class="citetitle">i statement</em></a>); assigns 0 if no tie actually took place. (See also <a class="link" href="tigoto.html" title="tigoto"><em class="citetitle">tigoto</em></a>.)
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm228648"></a>
+        <a id="idm228278"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the tival opcode. It uses the file <a class="ulink" href="examples/tival.csd.html" target="_top"> (click here to play) <em class="citetitle">tival.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm228653"></a>
+          <a id="idm228283"></a>
           <p class="title">
-            <strong>Example 1034. Example of the tival opcode.</strong>
+            <strong>Example 1037. Example of the tival opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm228660"></a>
+              <a id="idm228290"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -90,20 +90,20 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">dur</span>  <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">p3</span><span class="p">)</span>				<span class="c1">;make p3 positive even if p3 is negative in score</span>
+i<span class="n">dur</span>  <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="vi">p3</span><span class="p">)</span>				<span class="c1">;make p3 positive even if p3 is negative in score</span>
 i<span class="n">tiv</span>  <span class="nb">tival</span>
 i<span class="n">1</span>    <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>				<span class="c1">;assume this is tied note, so keep fase of oscili</span>
-      <span class="k">tigoto</span> <span class="nl">slur</span>			<span class="c1">;no reinitialisation on tied notes</span>
+      <span class="kp">tigoto</span> <span class="nl">slur</span>			<span class="c1">;no reinitialisation on tied notes</span>
 i<span class="n">1</span>    <span class="o">=</span> <span class="mi">0</span>				<span class="c1">;first note, so reset phase</span>
-a<span class="n">att</span>  <span class="nb">line</span> <span class="nb">p4</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> <span class="mi">0</span>			<span class="c1">;primary envelope</span>
+a<span class="n">att</span>  <span class="nb">line</span> <span class="vi">p4</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> <span class="mi">0</span>			<span class="c1">;primary envelope</span>
 
 <span class="nl">slur</span><span class="p">:</span>
       <span class="k">if</span> i<span class="n">tiv</span><span class="o">==</span><span class="mi">0</span> <span class="k">kgoto</span> <span class="nl">note</span>		<span class="c1">;no expression on first and second note</span>
-a<span class="n">slur</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">dur</span><span class="o">*</span><span class="mf">.3</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> i<span class="n">dur</span><span class="o">*</span><span class="mf">.7</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">;envelope for slurred note</span>
+a<span class="n">slur</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">dur</span><span class="o">*</span><span class="mf">.3</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> i<span class="n">dur</span><span class="o">*</span><span class="mf">.7</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">;envelope for slurred note</span>
 a<span class="n">att</span>  <span class="o">=</span> a<span class="n">att</span> <span class="o">+</span> a<span class="n">slur</span>
 
 <span class="nl">note</span><span class="p">:</span>
-a<span class="n">sig</span>  <span class="nb">oscili</span> a<span class="n">att</span><span class="p">,</span> <span class="nb">p5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">1</span>
+a<span class="n">sig</span>  <span class="nb">oscili</span> a<span class="n">att</span><span class="p">,</span> <span class="vi">p5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">1</span>
       <span class="nb">outs</span>   a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
 <span class="kd">endin</span>
@@ -126,7 +126,7 @@ a<span class="n">sig</span>  <span class="nb">oscili</span> a<span class="n">att
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm228794"></a>
+        <a id="idm228424"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="assign.html" title="="><em class="citetitle">=</em></a>,

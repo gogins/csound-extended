@@ -37,20 +37,20 @@
         <p>csound</p>
       </div>
       <div class="refsect1">
-        <a id="idm4472"></a>
+        <a id="idm4825"></a>
         <h2>Description</h2>
         <p>
         The <span class="emphasis"><em>csound</em></span> command executes Csound.
       </p>
       </div>
       <div class="refsect1">
-        <a id="idm4476"></a>
+        <a id="idm4829"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>csound</strong></span>  [<code class="option">flags</code>]  [orchname]  [scorename]</pre>
         <pre class="synopsis"><span class="command"><strong>csound</strong></span>  [<code class="option">flags</code>]  [csdfilename]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm4489"></a>
+        <a id="idm4842"></a>
         <h2>Csound command line flags</h2>
         <p>
         Listed below are the command line flags available in Csound6 in alphabetical order. Various platform
@@ -646,7 +646,7 @@
               rendering.  This is only advantageous if the number of
               processors on the computer is the same or more that the number
               of requested processes.  It also may slow rendering
-              down if ksmps is too small. 
+              down if ksmps is too small.
             </p>
             </dd>
             <dt>
@@ -744,7 +744,22 @@
             </dt>
             <dd>
               <p>
-                Read MIDI events from device <span class="emphasis"><em>DEVICE</em></span>. If using ALSA MIDI (-+rtmidi=alsa), devices are selected by name and not number. So, you need to use an option like -M hw:CARD,DEVICE where CARD and DEVICE are the card and device numbers (e.g. -M hw:1,0). In the case of PortMidi and MME, DEVICE should be a number, and if it is out of range, an error occurs and the valid device numbers are printed.When using PortMidi, you can use '-Ma' to enable all devices. This is also convenient when you don't have devices as it will not generate an error.
+                Read MIDI events from device
+                <span class="emphasis"><em>DEVICE</em></span>. If using ALSA MIDI
+                (-+rtmidi=alsa), devices are selected by name and not
+                number. So, you need to use an option like -M
+                hw:CARD,DEVICE where CARD and DEVICE are the card and
+                device numbers (e.g. -M hw:1,0). In the case of
+                CoreMIDI and MME, DEVICE should be a number, and if it
+                is out of range, an error occurs and the valid device
+                numbers are printed.
+                With PortMIDI, DEVICE is either a number for single port
+                input, 'a' for listening to all input ports, or 'm'
+                for mapping ports to MIDI channels above 16. In this
+                case, device 0 uses 1-16, device 1 uses 17-32, ...
+                device N uses (N+1)*channel.
+                The options 'a' and 'm' are also convenient when you
+                don't have devices as they will not generate an error.
             </p>
             </dd>
             <dt>
@@ -754,7 +769,7 @@
             <dd>
               <p>
               Message level for standard (terminal) output. Takes the <span class="emphasis"><em>sum</em></span> of any of the following values:
-              
+
               </p>
               <div class="itemizedlist">
                 <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -770,12 +785,15 @@
                   <li class="listitem">
                     <p>128 = print benchmark information</p>
                   </li>
+                  <li class="listitem">
+                    <p>1024 = suppress deprecated messages</p>
+                  </li>
                 </ul>
               </div>
               <p>
-              
+
               And exactly one of these to select note amplitude format:
-              
+
               </p>
               <div class="itemizedlist">
                 <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -800,12 +818,13 @@
                 </ul>
               </div>
               <p>
-              
+
               The default is 135 (128+4+2+1), which means all messages, raw
               amplitude values, and printing elapsed time at the end of
               performance.  The coloring of raw amplitudes was introduced
-              in version 5.04.
-              
+              in version 5.04. The supression of deprecated messages
+              new in 6.14.
+
             </p>
             </dd>
             <dt>
@@ -814,7 +833,7 @@
             </dt>
             <dd>
               <p>
-              Message level for amplitudes on standard (terminal) output. 
+              Message level for amplitudes on standard (terminal) output.
               </p>
               <div class="itemizedlist">
                 <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -835,7 +854,7 @@
             </dt>
             <dd>
               <p>
-              Message level for out of range messages on standard (terminal) output. 
+              Message level for out of range messages on standard (terminal) output.
               </p>
               <div class="itemizedlist">
                 <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -856,7 +875,7 @@
             </dt>
             <dd>
               <p>
-              Message level for warnings on standard (terminal) output. 
+              Message level for warnings on standard (terminal) output.
               </p>
               <div class="itemizedlist">
                 <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -877,7 +896,7 @@
             </dt>
             <dd>
               <p>
-              Message level for amplitude format on standard (terminal) output. 
+              Message level for amplitude format on standard (terminal) output.
               </p>
               <div class="itemizedlist">
                 <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -898,7 +917,7 @@
             </dt>
             <dd>
               <p>
-              Message level for amplitude format on standard (terminal) output. 
+              Message level for amplitude format on standard (terminal) output.
               </p>
               <div class="itemizedlist">
                 <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -919,7 +938,7 @@
             </dt>
             <dd>
               <p>
-              Message level for benchmark information on standard (terminal) output. 
+              Message level for benchmark information on standard (terminal) output.
               </p>
               <div class="itemizedlist">
                 <ul class="itemizedlist" style="list-style-type: disc; ">
@@ -1073,7 +1092,7 @@
               rendering.  This is only advantageous if the number of
               processors on the computer is more that the number
               of requested processes.  It also may slow rendering
-              down if ksmps is too small. 
+              down if ksmps is too small.
             </p>
             </dd>
             <dt>
@@ -1170,8 +1189,8 @@
             </dt>
             <dd>
               <p>
-      Set the argument as the orchestrra file.  Used when not
-            score is required&gt;.  (Csound 5.18 and later).
+      Set the argument as the orchestra file.  Used when no
+            score is required.  (Csound 5.18 and later).
     </p>
             </dd>
             <dt>
@@ -1194,12 +1213,12 @@
             </dd>
             <dt>
               <a id="FlagsMinusPort"></a>
-              <span class="term">--port=N<a id="IndexMinusPprt" class="indexterm"></a></span>
+              <span class="term">--port=N<a id="IndexMinusPort" class="indexterm"></a></span>
             </dt>
             <dd>
               <p>
             Set UDP port on which to listen for commands and instruments/orchestra code
-            (implies --daemon) 
+            (implies --daemon).  See <a class="link" href="udpserver.html" title="UDP Server"><em class="citetitle">UDP Server</em></a>.
           </p>
             </dd>
             <dt>
@@ -1246,10 +1265,16 @@
             buffer sample flow. So MIDI OUT operations can present
             some time irregularities. These irregularities can be
             reduced by using a lower value for the <a class="link" href="CommandFlags.html#FlagsMinusLowerB"><em class="citetitle">-b</em></a>
-            flag. 
+            flag.
             </p>
               <p>
-              If using ALSA MIDI (-+rtmidi=alsa), devices are selected by name and not number. So, you need to use an option like -Q hw:CARD,DEVICE where CARD and DEVICE are the card and device numbers (e.g. -Q hw:1,0). In the case of PortMidi and MME, DEVICE should be a number, and if it is out of range, an error occurs and the valid device numbers are printed.
+              If using ALSA MIDI (-+rtmidi=alsa), devices are selected
+              by name and not number. So, you need to use an option
+              like -Q hw:CARD,DEVICE where CARD and DEVICE are the
+              card and device numbers (e.g. -Q hw:1,0). In the case of
+              PortMIDI, CoreMIDI and MME, DEVICE should be a number, and if it
+              is out of range, an error occurs and the valid device
+              numbers are printed.
             </p>
             </dd>
             <dt>
@@ -1317,11 +1342,16 @@
             <dd>
               <p>
               (max. length = 20 characters) Real time MIDI module name.
-              Defaults to PortMidi, other options (depending on build options): Linux: alsa; Windows: mme, winmm. In addition, null can be used on all platforms, to disable the use of any real time MIDI plugin.
+              Defaults to PortMIDI (if present). Other options
+              (depending on platform and build) are Linux: alsa;
+              MacOS: cmidi; Windows: mme, winmm.
+              In addition, null can be used on all platforms, to disable the use of any real time MIDI plugin.
             </p>
               <p>ALSA MIDI devices are selected by name and not number. So, you
               need to use an option like -M hw:CARD,DEVICE where CARD and
-              DEVICE are the card and device numbers (e.g. -M hw:1,0).
+              DEVICE are the card and device numbers (e.g. -M
+              hw:1,0). PortMIDI allows multiple port inputs with
+              either -Ma or -Mm.
             </p>
             </dd>
             <dt>
@@ -1382,13 +1412,23 @@
             </p>
             </dd>
             <dt>
-              <a id="FlagsMinusPlusSkipSeconds"></a>
-              <span class="term">-+skip_seconds=float<a id="IndexMinusSkipSecons" class="indexterm"></a></span>
+              <a id="FlagsSimpleScore"></a>
+              <span class="term">--simple-sorted-score<a id="IndexMinusSimplesortedscore" class="indexterm"></a></span>
             </dt>
             <dd>
               <p>
-              (min: 0) Start playback at the specified time (in seconds),
-              skipping earlier events in the score and MIDI file.
+              Retains the sorted score file score.srt in a simple readable
+              format upon exit.  (New in version 6.14).
+            </p>
+            </dd>
+            <dt>
+              <a id="FlagsMinusMinusSinesize"></a>
+              <span class="term">--sinesize=integer<a id="IndexMinusMinusSinesize" class="indexterm"></a></span>
+            </dt>
+            <dd>
+              <p>
+              Set size of internal sine wave (table -1).  Should be a
+              power of two, and defaults to 16384.
             </p>
             </dd>
             <dt>
@@ -1522,7 +1562,7 @@
               <p>
               Switch on dithering of audio conversion from internal
               floating point to 32, 16 and 8-bit formats.  The default
-              form of the dither is triangular.  
+              form of the dither is triangular.
             </p>
             </dd>
             <dt>

@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm129431"></a>
+        <a id="idm127576"></a>
         <h2>Description</h2>
         <p>
       An emulation of a mandolin.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm129434"></a>
+        <a id="idm127579"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>mandol</strong></span> kamp, kfreq, kpluck, kdetune, kgain, ksize \
     [, ifn] [, iminfreq]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm129438"></a>
+        <a id="idm127583"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- table number containing the pluck wave form. The file <a class="ulink" href="examples/mandpluk.aiff" target="_top"><em class="citetitle">mandpluk.aiff</em></a> is suitable for this. It is also available at <a class="ulink" href="ftp://ftp.cs.bath.ac.uk/pub/dream/documentation/sounds/modelling/" target="_top"><em class="citetitle">ftp://ftp.cs.bath.ac.uk/pub/dream/documentation/sounds/modelling/</em></a>.
@@ -62,7 +62,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm129449"></a>
+        <a id="idm127594"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- Amplitude of note.
@@ -84,21 +84,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm129463"></a>
+        <a id="idm127608"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the mandol opcode. It uses the file <a class="ulink" href="examples/mandol.csd.html" target="_top"> (click here to play) <em class="citetitle">mandol.csd</em></a>, and <a class="ulink" href="examples/mandpluk.aiff" target="_top"><em class="citetitle">mandpluk.aiff</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm129470"></a>
+          <a id="idm127615"></a>
           <p class="title">
-            <strong>Example 532. Example of the mandol opcode.</strong>
+            <strong>Example 531. Example of the mandol opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm129477"></a>
+              <a id="idm127622"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -117,9 +117,9 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">amp</span>    <span class="o">=</span> <span class="nb">p4</span>
-k<span class="n">size</span>   <span class="o">=</span> <span class="nb">p5</span>
-k<span class="n">detune</span> <span class="o">=</span> <span class="nb">p6</span>
+k<span class="n">amp</span>    <span class="o">=</span> <span class="vi">p4</span>
+k<span class="n">size</span>   <span class="o">=</span> <span class="vi">p5</span>
+k<span class="n">detune</span> <span class="o">=</span> <span class="vi">p6</span>
 a<span class="n">sig</span> <span class="nb">mandol</span> k<span class="n">amp</span><span class="p">,</span> <span class="mi">880</span><span class="p">,</span> <span class="mf">.4</span><span class="p">,</span> k<span class="n">detune</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> k<span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">220</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
@@ -147,7 +147,7 @@ a<span class="n">sig</span> <span class="nb">mandol</span> k<span class="n">amp<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm129593"></a>
+        <a id="idm127738"></a>
         <h2>Credits</h2>
         <p>
       </p>

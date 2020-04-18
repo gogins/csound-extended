@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm61379"></a>
+        <a id="idm60971"></a>
         <h2>Description</h2>
         <p>
       Generates an exponential curve in range 0 to 1 of arbitrary steepness.
@@ -57,12 +57,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm61386"></a>
+        <a id="idm60978"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout <span class="command"><strong>expcurve</strong></span> kindex, ksteepness</pre>
       </div>
       <div class="refsect1">
-        <a id="idm61390"></a>
+        <a id="idm60982"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kindex</em></span> -- Index value. Expected range 0 to 1.
@@ -77,21 +77,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm61398"></a>
+        <a id="idm60990"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the expcurve opcode. It uses the file <a class="ulink" href="examples/expcurve.csd.html" target="_top"> (click here to play) <em class="citetitle">expcurve.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm61403"></a>
+          <a id="idm60995"></a>
           <p class="title">
             <strong>Example 259. Example of the expcurve opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm61410"></a>
+              <a id="idm61002"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -107,10 +107,10 @@
 
 		<span class="kd">instr</span>	<span class="nf">1</span>	<span class="c1">; logcurve test</span>
 
-k<span class="n">mod</span>	<span class="nb">phasor</span>	<span class="mi">1</span><span class="o">/</span><span class="nb">p3</span>
-k<span class="n">out</span>	<span class="nb">expcurve</span> k<span class="n">mod</span><span class="p">,</span> <span class="nb">p4</span>
+k<span class="n">mod</span>	<span class="nb">phasor</span>	<span class="mi">1</span><span class="o">/</span><span class="vi">p3</span>
+k<span class="n">out</span>	<span class="nb">expcurve</span> k<span class="n">mod</span><span class="p">,</span> <span class="vi">p4</span>
 
-<span class="nb">printks</span> <span class="s">"mod = %f  out= %f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> k<span class="n">mod</span><span class="p">,</span> k<span class="n">out</span>
+<span class="nb">printks</span> <span class="s">"mod = </span><span class="si">%f</span><span class="s">  out= </span><span class="si">%f</span><span class="se">\\n</span><span class="s">"</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> k<span class="n">mod</span><span class="p">,</span> k<span class="n">out</span>
 
 		<span class="kd">endin</span>
 
@@ -134,7 +134,7 @@ k<span class="n">out</span>	<span class="nb">expcurve</span> k<span class="n">mo
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm61478"></a>
+        <a id="idm61073"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="scale.html" title="scale"><em class="citetitle">scale</em></a>,
@@ -143,7 +143,7 @@ k<span class="n">out</span>	<span class="nb">expcurve</span> k<span class="n">mo
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm61487"></a>
+        <a id="idm61082"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm87822"></a>
+        <a id="idm87471"></a>
         <h2>Description</h2>
         <p>
       Similar to <a class="link" href="printks.html" title="printks"><em class="citetitle">printks</em></a> but prints to a file.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm87827"></a>
+        <a id="idm87476"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>fprintks</strong></span> "filename", "string", [, kval1] [, kval2] [...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm87831"></a>
+        <a id="idm87480"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>"filename"</em></span> -- name of the output file.
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm87837"></a>
+        <a id="idm87486"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kval1, kval2, ...</em></span> (optional) -- The k-rate values to be printed. These are specified in <span class="emphasis"><em><span class="quote">“<span class="quote">string</span>”</span></em></span> with the standard C value specifier (%f, %d, etc.) in the order given.
@@ -71,21 +71,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm87849"></a>
+        <a id="idm87498"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the fprintks opcode. It uses the file <a class="ulink" href="examples/fprintks.csd.html" target="_top"> (click here to play) <em class="citetitle">fprintks.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm87854"></a>
+          <a id="idm87503"></a>
           <p class="title">
             <strong>Example 355. Example of the fprintks opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm87861"></a>
+              <a id="idm87510"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -112,7 +112,7 @@
   k<span class="n">pitch</span> <span class="nb">linrand</span> <span class="mi">8</span>
 
   <span class="c1">; Printing to to a file called "my.sco".</span>
-  <span class="nb">fprintks</span> <span class="s">"my.sco"</span><span class="p">,</span> <span class="s">"i1</span><span class="se">\\</span><span class="s">t%2.2f</span><span class="se">\\</span><span class="s">t%2.2f</span><span class="se">\\</span><span class="s">t%2.2f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> k<span class="n">start</span><span class="p">,</span> k<span class="n">dur</span><span class="p">,</span> <span class="mi">4</span><span class="o">+</span>k<span class="n">pitch</span>
+  <span class="nb">fprintks</span> <span class="s">"my.sco"</span><span class="p">,</span> <span class="s">"i1</span><span class="se">\\</span><span class="s">t</span><span class="si">%2.2f</span><span class="se">\\</span><span class="s">t</span><span class="si">%2.2f</span><span class="se">\\</span><span class="s">t</span><span class="si">%2.2f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> k<span class="n">start</span><span class="p">,</span> k<span class="n">dur</span><span class="p">,</span> <span class="mi">4</span><span class="o">+</span>k<span class="n">pitch</span>
 
   k<span class="n">next</span> <span class="nb">linrand</span> <span class="mi">1</span>
   k<span class="n">start</span> <span class="o">=</span> k<span class="n">start</span> <span class="o">+</span> k<span class="n">next</span>
@@ -151,13 +151,13 @@ i1      1.31    1.42    4.13
 
       </p>
         <div class="example">
-          <a id="idm87944"></a>
+          <a id="idm87596"></a>
           <p class="title">
             <strong>Example 356. Example of the fprintks opcode to convert a MIDI file to a csound score.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm87946"></a>
+              <a id="idm87598"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -187,7 +187,7 @@ i1      1.31    1.42    4.13
   k<span class="n">st</span><span class="p">,</span> k<span class="n">ch</span><span class="p">,</span> k<span class="n">d1</span><span class="p">,</span> k<span class="n">d2</span>  <span class="nb">midiin</span>
 <span class="k">if</span> <span class="p">(</span>k<span class="n">st</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span>
 <span class="c1">;  p4 = MIDI event type   p5 = channel   p6= data1    p7= data2</span>
-	    <span class="nb">fprintks</span>  <span class="s">"MIDI2cs.sco"</span><span class="p">,</span> <span class="s">"i1</span><span class="se">\\</span><span class="s">t%f</span><span class="se">\\</span><span class="s">t%f</span><span class="se">\\</span><span class="s">t</span><span class="si">%d</span><span class="se">\\</span><span class="s">t</span><span class="si">%d</span><span class="se">\\</span><span class="s">t</span><span class="si">%d</span><span class="se">\\</span><span class="s">t</span><span class="si">%d</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> k<span class="n">tim</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="vg">kr</span><span class="p">,</span> k<span class="n">st</span><span class="p">,</span> k<span class="n">ch</span><span class="p">,</span> k<span class="n">d1</span><span class="p">,</span> k<span class="n">d2</span>
+	    <span class="nb">fprintks</span>  <span class="s">"MIDI2cs.sco"</span><span class="p">,</span> <span class="s">"i1</span><span class="se">\\</span><span class="s">t</span><span class="si">%f</span><span class="se">\\</span><span class="s">t</span><span class="si">%f</span><span class="se">\\</span><span class="s">t</span><span class="si">%d</span><span class="se">\\</span><span class="s">t</span><span class="si">%d</span><span class="se">\\</span><span class="s">t</span><span class="si">%d</span><span class="se">\\</span><span class="s">t</span><span class="si">%d</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> k<span class="n">tim</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="vg">kr</span><span class="p">,</span> k<span class="n">st</span><span class="p">,</span> k<span class="n">ch</span><span class="p">,</span> k<span class="n">d1</span><span class="p">,</span> k<span class="n">d2</span>
 <span class="k">endif</span>
 
     <span class="kd">endin</span>
@@ -213,13 +213,13 @@ i1      1.31    1.42    4.13
 
       </p>
         <div class="example">
-          <a id="idm88047"></a>
+          <a id="idm87701"></a>
           <p class="title">
             <strong>Example 357. Example of the fprintks opcode to create a Csound score file generator using Csound.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm88049"></a>
+              <a id="idm87703"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -264,15 +264,15 @@ gS<span class="n">coName</span> <span class="o">=</span> <span class="s">"/Users
 
 <span class="kd">opcode</span> <span class="nf">PrintFloat</span><span class="p">,</span> <span class="kt">0</span><span class="p">,</span> <span class="kt">k</span>
     k<span class="n">val</span>    <span class="nb">xin</span>
-        <span class="nb">fprintks</span>    gS<span class="n">coName</span><span class="p">,</span> <span class="s">"%f"</span><span class="p">,</span> k<span class="n">val</span>
+        <span class="nb">fprintks</span>    gS<span class="n">coName</span><span class="p">,</span> <span class="s">"</span><span class="si">%f</span><span class="s">"</span><span class="p">,</span> k<span class="n">val</span>
 <span class="kd">endop</span>
 
 <span class="kd">opcode</span> <span class="nf">PrintTab</span><span class="p">,</span> <span class="kt">0</span><span class="p">,</span> <span class="kt">0</span>
-    <span class="nb">fprintks</span>    gS<span class="n">coName</span><span class="p">,</span> <span class="s">"</span><span class="se">%n</span><span class="s">"</span>
+    <span class="nb">fprintks</span>    gS<span class="n">coName</span><span class="p">,</span> <span class="s">"%n"</span>
 <span class="kd">endop</span>
 
 <span class="kd">opcode</span> <span class="nf">PrintReturn</span><span class="p">,</span> <span class="kt">0</span><span class="p">,</span> <span class="kt">0</span>
-    <span class="nb">fprintks</span>    gS<span class="n">coName</span><span class="p">,</span> <span class="s">"</span><span class="se">%r</span><span class="s">"</span>
+    <span class="nb">fprintks</span>    gS<span class="n">coName</span><span class="p">,</span> <span class="s">"%r"</span>
 <span class="kd">endop</span>
 
 
@@ -281,7 +281,7 @@ gS<span class="n">coName</span> <span class="o">=</span> <span class="s">"/Users
     i<span class="n">Ptable</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> i<span class="n">NumPfields</span><span class="p">,</span> i<span class="n">Pfield</span> <span class="nb">xin</span>
 
     <span class="c1">; additional pfields start at 5, we use a default 0 to identify the first call</span>
-    i<span class="n">Pfield</span> <span class="o">=</span> <span class="p">(</span>i<span class="n">Pfield</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">?</span> <span class="mi">5</span> <span class="p">:</span> i<span class="n">Pfield</span><span class="p">)</span>
+    i<span class="n">Pfield</span> <span class="o">=</span> <span class="p">(</span>i<span class="n">Pfield</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">5</span> <span class="o">:</span> i<span class="n">Pfield</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="p">(</span>i<span class="n">Pfield</span> <span class="o">&gt;</span> i<span class="n">NumPfields</span><span class="p">)</span> <span class="k">goto</span> <span class="nl">endloop</span>
         <span class="c1">; find our tables</span>
@@ -293,7 +293,7 @@ gS<span class="n">coName</span> <span class="o">=</span> <span class="s">"/Users
         k<span class="n">Max</span> <span class="nb">tablei</span>    k<span class="n">ndx</span><span class="p">,</span> i<span class="n">MaxTable</span>
 
         <span class="c1">; find a random value in the range and write it to the score</span>
-        <span class="nb">fprintks</span> gS<span class="n">coName</span><span class="p">,</span> <span class="s">"</span><span class="se">%t</span><span class="s">%f"</span><span class="p">,</span> k<span class="n">Min</span> <span class="o">+</span> <span class="nb">rnd</span><span class="p">(</span>k<span class="n">Max</span><span class="o">-</span>k<span class="n">Min</span><span class="p">)</span>
+        <span class="nb">fprintks</span> gS<span class="n">coName</span><span class="p">,</span> <span class="s">"%t</span><span class="si">%f</span><span class="s">"</span><span class="p">,</span> k<span class="n">Min</span> <span class="o">+</span> <span class="nb">rnd</span><span class="p">(</span>k<span class="n">Max</span><span class="o">-</span>k<span class="n">Min</span><span class="p">)</span>
 
         <span class="c1">; recursively call for any additional pfields.</span>
         <span class="nf">ProcessAdditionalPfields</span> i<span class="n">Ptable</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> i<span class="n">NumPfields</span><span class="p">,</span> i<span class="n">Pfield</span> <span class="o">+</span> <span class="mi">1</span>
@@ -320,18 +320,18 @@ gS<span class="n">coName</span> <span class="o">=</span> <span class="s">"/Users
     <span class="c1">; initialize</span>
     i<span class="n">Resolution</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="vg">sr</span>
 
-    k<span class="n">NextStart</span> <span class="nb">init</span> <span class="nb">p2</span>
-    k<span class="n">CurrentTime</span> <span class="nb">init</span> <span class="nb">p2</span>
+    k<span class="n">NextStart</span> <span class="nb">init</span> <span class="vi">p2</span>
+    k<span class="n">CurrentTime</span> <span class="nb">init</span> <span class="vi">p2</span>
 
-    i<span class="n">NumPfields</span> <span class="nb">table</span>        <span class="mi">0</span><span class="p">,</span> <span class="nb">p4</span>
-    i<span class="n">InstrMinTable</span> <span class="nb">table</span>    <span class="mi">1</span><span class="p">,</span> <span class="nb">p4</span>
-    i<span class="n">InstrMaxTable</span> <span class="nb">table</span>    <span class="mi">2</span><span class="p">,</span> <span class="nb">p4</span>
-    i<span class="n">DensityMinTable</span> <span class="nb">table</span>    <span class="mi">3</span><span class="p">,</span> <span class="nb">p4</span>
-    i<span class="n">DensityMaxTable</span> <span class="nb">table</span>    <span class="mi">4</span><span class="p">,</span> <span class="nb">p4</span>
-    i<span class="n">DurMinTable</span> <span class="nb">table</span>    <span class="mi">5</span><span class="p">,</span> <span class="nb">p4</span>
-    i<span class="n">DurMaxTable</span> <span class="nb">table</span>    <span class="mi">6</span><span class="p">,</span> <span class="nb">p4</span>
-    i<span class="n">AmpMinTable</span> <span class="nb">table</span>    <span class="mi">7</span><span class="p">,</span> <span class="nb">p4</span>
-    i<span class="n">AmpMaxTable</span> <span class="nb">table</span>    <span class="mi">8</span><span class="p">,</span> <span class="nb">p4</span>
+    i<span class="n">NumPfields</span> <span class="nb">table</span>        <span class="mi">0</span><span class="p">,</span> <span class="vi">p4</span>
+    i<span class="n">InstrMinTable</span> <span class="nb">table</span>    <span class="mi">1</span><span class="p">,</span> <span class="vi">p4</span>
+    i<span class="n">InstrMaxTable</span> <span class="nb">table</span>    <span class="mi">2</span><span class="p">,</span> <span class="vi">p4</span>
+    i<span class="n">DensityMinTable</span> <span class="nb">table</span>    <span class="mi">3</span><span class="p">,</span> <span class="vi">p4</span>
+    i<span class="n">DensityMaxTable</span> <span class="nb">table</span>    <span class="mi">4</span><span class="p">,</span> <span class="vi">p4</span>
+    i<span class="n">DurMinTable</span> <span class="nb">table</span>    <span class="mi">5</span><span class="p">,</span> <span class="vi">p4</span>
+    i<span class="n">DurMaxTable</span> <span class="nb">table</span>    <span class="mi">6</span><span class="p">,</span> <span class="vi">p4</span>
+    i<span class="n">AmpMinTable</span> <span class="nb">table</span>    <span class="mi">7</span><span class="p">,</span> <span class="vi">p4</span>
+    i<span class="n">AmpMaxTable</span> <span class="nb">table</span>    <span class="mi">8</span><span class="p">,</span> <span class="vi">p4</span>
 
     <span class="c1">; check to make sure there is enough data</span>
     <span class="nb">print</span> i<span class="n">NumPfields</span>
@@ -341,12 +341,12 @@ gS<span class="n">coName</span> <span class="o">=</span> <span class="s">"/Users
     <span class="k">endif</span>
 
     <span class="c1">; initial comment</span>
-    <span class="nb">fprints</span>    gS<span class="n">coName</span><span class="p">,</span> <span class="s">"</span><span class="se">%!</span><span class="s">Generated Gesture from %f to %f seconds</span><span class="se">%n</span><span class="s"> </span><span class="se">%!%t%t</span><span class="s">with a p-max of </span><span class="si">%d</span><span class="se">%n%n</span><span class="s">"</span><span class="p">,</span> <span class="nb">p2</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> i<span class="n">NumPfields</span>
+    <span class="nb">fprints</span>    gS<span class="n">coName</span><span class="p">,</span> <span class="s">"%!Generated Gesture from </span><span class="si">%f</span><span class="s"> to </span><span class="si">%f</span><span class="s"> seconds%n %!%t%twith a p-max of </span><span class="si">%d</span><span class="s">%n%n"</span><span class="p">,</span> <span class="vi">p2</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> i<span class="n">NumPfields</span>
 
     <span class="c1">; k-rate stuff</span>
     <span class="k">if</span> <span class="p">(</span>k<span class="n">CurrentTime</span> <span class="o">&gt;=</span> k<span class="n">NextStart</span><span class="p">)</span> <span class="k">then</span> <span class="c1">; write a new note!</span>
 
-        k<span class="n">ndx</span> <span class="o">=</span> <span class="p">(</span>k<span class="n">CurrentTime</span><span class="o">-</span><span class="nb">p2</span><span class="p">)</span><span class="o">/</span><span class="nb">p3</span>
+        k<span class="n">ndx</span> <span class="o">=</span> <span class="p">(</span>k<span class="n">CurrentTime</span><span class="o">-</span><span class="vi">p2</span><span class="p">)</span><span class="o">/</span><span class="vi">p3</span>
 
         <span class="c1">; get the required pfield ranges</span>
         k<span class="n">InstMin</span> <span class="nb">tablei</span>    k<span class="n">ndx</span><span class="p">,</span> i<span class="n">InstrMinTable</span>
@@ -359,10 +359,10 @@ gS<span class="n">coName</span> <span class="o">=</span> <span class="s">"/Users
         k<span class="n">AmpMax</span> <span class="nb">tablei</span>    k<span class="n">ndx</span><span class="p">,</span> i<span class="n">AmpMaxTable</span>
 
         <span class="c1">; find random values for all our required parameters and print the i-statement</span>
-        <span class="nb">fprintks</span> gS<span class="n">coName</span><span class="p">,</span> <span class="s">"i</span><span class="si">%d</span><span class="se">%t</span><span class="s">%f</span><span class="se">%t</span><span class="s">%f</span><span class="se">%t</span><span class="s">%f"</span><span class="p">,</span> k<span class="n">InstMin</span> <span class="o">+</span> <span class="nb">rnd</span><span class="p">(</span>k<span class="n">InstMax</span><span class="o">-</span>k<span class="n">InstMin</span><span class="p">),</span> k<span class="n">NextStart</span><span class="p">,</span> k<span class="n">DurMin</span> <span class="o">+</span> <span class="nb">rnd</span><span class="p">(</span>k<span class="n">DurMax</span><span class="o">-</span>k<span class="n">DurMin</span><span class="p">),</span> k<span class="n">AmpMin</span> <span class="o">+</span> <span class="nb">rnd</span><span class="p">(</span>k<span class="n">AmpMax</span><span class="o">-</span>k<span class="n">AmpMin</span><span class="p">)</span>
+        <span class="nb">fprintks</span> gS<span class="n">coName</span><span class="p">,</span> <span class="s">"i</span><span class="si">%d</span><span class="s">%t</span><span class="si">%f</span><span class="s">%t</span><span class="si">%f</span><span class="s">%t</span><span class="si">%f</span><span class="s">"</span><span class="p">,</span> k<span class="n">InstMin</span> <span class="o">+</span> <span class="nb">rnd</span><span class="p">(</span>k<span class="n">InstMax</span><span class="o">-</span>k<span class="n">InstMin</span><span class="p">),</span> k<span class="n">NextStart</span><span class="p">,</span> k<span class="n">DurMin</span> <span class="o">+</span> <span class="nb">rnd</span><span class="p">(</span>k<span class="n">DurMax</span><span class="o">-</span>k<span class="n">DurMin</span><span class="p">),</span> k<span class="n">AmpMin</span> <span class="o">+</span> <span class="nb">rnd</span><span class="p">(</span>k<span class="n">AmpMax</span><span class="o">-</span>k<span class="n">AmpMin</span><span class="p">)</span>
 
         <span class="c1">; now any additional pfields</span>
-        <span class="nf">ProcessAdditionalPfields</span> <span class="nb">p4</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> i<span class="n">NumPfields</span>
+        <span class="nf">ProcessAdditionalPfields</span> <span class="vi">p4</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> i<span class="n">NumPfields</span>
 
         <span class="nf">PrintReturn</span>
 
@@ -450,14 +450,14 @@ gS<span class="n">coName</span> <span class="o">=</span> <span class="s">"/Users
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm88623"></a>
+        <a id="idm88273"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="printks.html" title="printks"><em class="citetitle">printks</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm88628"></a>
+        <a id="idm88278"></a>
         <h2>Credits</h2>
         <p>
       </p>

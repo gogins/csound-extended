@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm174407"></a>
+        <a id="idm173555"></a>
         <h2>Description</h2>
         <p>
       Resynthesize using a fast oscillator-bank.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm174410"></a>
+        <a id="idm173558"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>pvsadsyn</strong></span> fsrc, inoscs, kfmod [, ibinoffset] [, ibinincr] [, iinit]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm174414"></a>
+        <a id="idm173562"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>inoscs</em></span> -- The number of analysis bins to synthesise. Cannot be larger than the size of fsrc (see <a class="link" href="pvsinfo.html" title="pvsinfo"><em class="citetitle">pvsinfo</em></a>), e.g. as created by <a class="link" href="pvsanal.html" title="pvsanal"><em class="citetitle">pvsanal</em></a>.  Processing time is directly proportional to inoscs.
@@ -67,7 +67,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm174428"></a>
+        <a id="idm173576"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kfmod</em></span> -- Scale all frequencies by factor kfmod. 1.0 = no change, 2 =  up one octave.
@@ -80,20 +80,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm174439"></a>
+        <a id="idm173587"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the pvsadsyn opcode. It uses the file <a class="ulink" href="examples/pvsadsyn.csd.html" target="_top"> (click here to play) <em class="citetitle">pvsadsyn.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm174444"></a>
+          <a id="idm173592"></a>
           <p class="title">
-            <strong>Example 755. Example of the pvsadsyn opcode.</strong>
+            <strong>Example 757. Example of the pvsadsyn opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm174451"></a>
+              <a id="idm173599"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -122,25 +122,25 @@ k<span class="n">cycles</span>	<span class="o">=</span>		i<span class="n">len</s
 k<span class="n">count</span>		<span class="nb">init</span>		<span class="mi">0</span>
 <span class="nl">loop</span><span class="p">:</span>
 a<span class="n">in</span>		<span class="nb">soundin</span>	S<span class="n">file</span>
-<span class="n">fftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span>
-i<span class="n">buf</span><span class="p">,</span> k<span class="n">tim</span>	<span class="nb">pvsbuffer</span>	<span class="n">fftin</span><span class="p">,</span> i<span class="n">len</span> <span class="o">+</span> <span class="p">(</span>i<span class="n">fftsize</span> <span class="o">/</span> <span class="vg">sr</span><span class="p">)</span>
-		<span class="k">loop_lt</span>	k<span class="n">count</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">cycles</span><span class="p">,</span> <span class="nl">loop</span>
+f<span class="n">ftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span>
+i<span class="n">buf</span><span class="p">,</span> k<span class="n">tim</span>	<span class="nb">pvsbuffer</span>	f<span class="n">ftin</span><span class="p">,</span> i<span class="n">len</span> <span class="o">+</span> <span class="p">(</span>i<span class="n">fftsize</span> <span class="o">/</span> <span class="vg">sr</span><span class="p">)</span>
+		<span class="kp">loop_lt</span>	k<span class="n">count</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">cycles</span><span class="p">,</span> <span class="nl">loop</span>
 		<span class="nb">xout</span>		i<span class="n">buf</span><span class="p">,</span> i<span class="n">len</span><span class="p">,</span> k<span class="n">tim</span>
 <span class="k">endif</span>
 <span class="kd">endop</span>
 
 
 <span class="kd">instr</span> <span class="nf">1</span>
-i<span class="n">stretch</span>	<span class="o">=</span>		<span class="nb">p4</span><span class="c1">; time stretching factor</span>
+i<span class="n">stretch</span>	<span class="o">=</span>		<span class="vi">p4</span><span class="c1">; time stretching factor</span>
 i<span class="n">fftsize</span>	<span class="o">=</span>		<span class="mi">1024</span>
 i<span class="n">overlap</span>	<span class="o">=</span>		i<span class="n">fftsize</span> <span class="o">/</span> <span class="mi">4</span>
 i<span class="n">winsize</span>	<span class="o">=</span>		i<span class="n">fftsize</span>
 i<span class="n">winshape</span>	<span class="o">=</span>		<span class="mi">1</span><span class="c1">; von-Hann window</span>
 i<span class="n">buffer</span><span class="p">,</span> i<span class="n">len</span><span class="p">,</span> k<span class="n">0</span>		<span class="nf">FileToPvsBuf</span>	<span class="s">"fox.wav"</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span>
-<span class="nb">p3</span>		<span class="o">=</span>		i<span class="n">stretch</span> <span class="o">*</span> i<span class="n">len</span><span class="c1">; set p3 to the correct value</span>
-k<span class="n">tmpnt</span>		<span class="nb">linseg</span>		<span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> i<span class="n">len</span><span class="c1">; time pointer</span>
-<span class="n">fread</span> 		<span class="nb">pvsbufread</span>  	k<span class="n">tmpnt</span><span class="p">,</span> i<span class="n">buffer</span><span class="c1">; read the buffer</span>
-a<span class="n">out</span>		<span class="nb">pvsadsyn</span>	<span class="n">fread</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="c1">; resynthesis with the first 10 bins</span>
+<span class="vi">p3</span>		<span class="o">=</span>		i<span class="n">stretch</span> <span class="o">*</span> i<span class="n">len</span><span class="c1">; set p3 to the correct value</span>
+k<span class="n">tmpnt</span>		<span class="nb">linseg</span>		<span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> i<span class="n">len</span><span class="c1">; time pointer</span>
+f<span class="n">read</span> 		<span class="nb">pvsbufread</span>  	k<span class="n">tmpnt</span><span class="p">,</span> i<span class="n">buffer</span><span class="c1">; read the buffer</span>
+a<span class="n">out</span>		<span class="nb">pvsadsyn</span>	f<span class="n">read</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="c1">; resynthesis with the first 10 bins</span>
 		<span class="nb">out</span>		a<span class="n">out</span>
 <span class="kd">endin</span>
 
@@ -158,7 +158,7 @@ a<span class="n">out</span>		<span class="nb">pvsadsyn</span>	<span class="n">fr
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm174633"></a>
+        <a id="idm173781"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvsanal.html" title="pvsanal"><em class="citetitle">pvsanal</em></a>,
@@ -167,7 +167,7 @@ a<span class="n">out</span>		<span class="nb">pvsadsyn</span>	<span class="n">fr
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm174642"></a>
+        <a id="idm173790"></a>
         <h2>Credits</h2>
         <p>
       </p>

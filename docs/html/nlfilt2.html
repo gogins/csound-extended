@@ -39,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm144246"></a>
+        <a id="idm142890"></a>
         <h2>Description</h2>
         <p>
       Implements the filter:
@@ -54,12 +54,12 @@ Y{n} =tanh(a Y{n-1} + b Y{n-2} + d Y^2{n-L} + X{n} - C)<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm144250"></a>
+        <a id="idm142894"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>nlfilt2</strong></span> ain, ka, kb, kd, kC, kL</pre>
       </div>
       <div class="refsect1">
-        <a id="idm144254"></a>
+        <a id="idm142898"></a>
         <h2>Performance</h2>
         <p>
       </p>
@@ -154,20 +154,20 @@ Y{n} =tanh(a Y{n-1} + b Y{n-2} + d Y^2{n-L} + X{n} - C)<br />
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm144275"></a>
+        <a id="idm142919"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the nlfilt2 opcode. It uses the file <a class="ulink" href="examples/nlfilt2.csd.html" target="_top"> (click here to play) <em class="citetitle">nlfilt2.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm144280"></a>
+          <a id="idm142924"></a>
           <p class="title">
             <strong>Example 613. Example of the nlfilt2 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm144287"></a>
+              <a id="idm142931"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -193,11 +193,11 @@ a<span class="n">sig</span> <span class="nb">rand</span> <span class="mf">.7</sp
 
 <span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">;filtered noise</span>
 
-k<span class="n">a</span> <span class="o">=</span> <span class="nb">p4</span>
-k<span class="n">b</span> <span class="o">=</span> <span class="nb">p5</span>
-k<span class="n">d</span> <span class="o">=</span> <span class="nb">p6</span>
-k<span class="n">C</span> <span class="o">=</span> <span class="nb">p7</span>
-k<span class="n">L</span> <span class="o">=</span> <span class="nb">p8</span>
+k<span class="n">a</span> <span class="o">=</span> <span class="vi">p4</span>
+k<span class="n">b</span> <span class="o">=</span> <span class="vi">p5</span>
+k<span class="n">d</span> <span class="o">=</span> <span class="vi">p6</span>
+k<span class="n">C</span> <span class="o">=</span> <span class="vi">p7</span>
+k<span class="n">L</span> <span class="o">=</span> <span class="vi">p8</span>
 a<span class="n">sig</span>  <span class="nb">rand</span> <span class="mf">.3</span>
 a<span class="n">filt</span> <span class="nb">nlfilt2</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">a</span><span class="p">,</span> k<span class="n">b</span><span class="p">,</span> k<span class="n">d</span><span class="p">,</span> k<span class="n">C</span><span class="p">,</span> k<span class="n">L</span>
       <span class="nb">outs</span>    a<span class="n">filt</span><span class="p">,</span> a<span class="n">filt</span>
@@ -224,7 +224,7 @@ a<span class="n">filt</span> <span class="nb">nlfilt2</span> a<span class="n">si
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm144413"></a>
+        <a id="idm143057"></a>
         <h2>Credits</h2>
         <p>
       </p>

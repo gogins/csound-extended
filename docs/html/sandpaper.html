@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm191259"></a>
+        <a id="idm190552"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>sandpaper</em></span> is a semi-physical model of a sandpaper sound. It is one of the PhISEM percussion opcodes. PhISEM (Physically Informed Stochastic Event Modeling) is an algorithmic approach for simulating collisions of multiple independent sound producing objects.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm191263"></a>
+        <a id="idm190556"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>sandpaper</strong></span> iamp, idettack [, inum] [, idamp] [, imaxshake]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm191267"></a>
+        <a id="idm190560"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iamp</em></span> -- Amplitude of output.  Note: As these instruments are stochastic, this is only a approximation.
@@ -81,21 +81,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm191287"></a>
+        <a id="idm190580"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the sandpaper opcode. It uses the file <a class="ulink" href="examples/sandpaper.csd.html" target="_top"> (click here to play) <em class="citetitle">sandpaper.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm191292"></a>
+          <a id="idm190585"></a>
           <p class="title">
-            <strong>Example 867. Example of the sandpaper opcode.</strong>
+            <strong>Example 869. Example of the sandpaper opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm191299"></a>
+              <a id="idm190592"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -114,8 +114,8 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">dmp</span> <span class="o">=</span> <span class="nb">p4</span>
-a<span class="n">1</span>   <span class="nb">line</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">2</span>			<span class="c1">;preset amplitude increase</span>
+i<span class="n">dmp</span> <span class="o">=</span> <span class="vi">p4</span>
+a<span class="n">1</span>   <span class="nb">line</span> <span class="mi">2</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">2</span>			<span class="c1">;preset amplitude increase</span>
 a<span class="n">2</span>   <span class="nb">sandpaper</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> i<span class="n">dmp</span>	<span class="c1">;sandpaper needs a little amp help at these settings</span>
 a<span class="n">sig</span> <span class="nb">product</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">2</span>			<span class="c1">;increase amplitude</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
@@ -137,7 +137,7 @@ a<span class="n">sig</span> <span class="nb">product</span> a<span class="n">1</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm191371"></a>
+        <a id="idm190664"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cabasa.html" title="cabasa"><em class="citetitle">cabasa</em></a>,
@@ -147,7 +147,7 @@ a<span class="n">sig</span> <span class="nb">product</span> a<span class="n">1</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm191382"></a>
+        <a id="idm190675"></a>
         <h2>Credits</h2>
         <p>
       </p>

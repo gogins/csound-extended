@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm149772"></a>
+        <a id="idm148505"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>oscil</em></span> reads table <span class="emphasis"><em>ifn</em></span> sequentially and repeatedly at a frequency <span class="emphasis"><em>xcps</em></span>. The amplitude is scaled by <span class="emphasis"><em>xamp</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm149779"></a>
+        <a id="idm148512"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>oscil</strong></span> xamp, xcps [, ifn, iphs]</pre>
         <pre class="synopsis">kres <span class="command"><strong>oscil</strong></span> kamp, kcps [, ifn, iphs]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm149785"></a>
+        <a id="idm148518"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- (optional) function table
@@ -64,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm149791"></a>
+        <a id="idm148524"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp, xamp</em></span> -- amplitude
@@ -83,21 +83,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm149809"></a>
+        <a id="idm148542"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the oscil opcode. It uses the file <a class="ulink" href="examples/oscil.csd.html" target="_top"> (click here to play) <em class="citetitle">oscil.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm149814"></a>
+          <a id="idm148547"></a>
           <p class="title">
             <strong>Example 639. Example of the oscil opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm149821"></a>
+              <a id="idm148554"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -118,7 +118,7 @@
 
 k<span class="n">amp</span> <span class="o">=</span> <span class="mf">.6</span>
 k<span class="n">cps</span> <span class="o">=</span> <span class="mi">440</span>
-i<span class="n">fn</span>  <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">fn</span>  <span class="o">=</span> <span class="vi">p4</span>
 
 a<span class="n">sig</span> <span class="nb">oscil</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> i<span class="n">fn</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span>a<span class="n">sig</span>
@@ -147,7 +147,7 @@ a<span class="n">sig</span> <span class="nb">oscil</span> k<span class="n">amp</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm149943"></a>
+        <a id="idm148676"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="oscili.html" title="oscili"><em class="citetitle">oscili</em></a>,

@@ -40,14 +40,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm98679"></a>
+        <a id="idm98613"></a>
         <h2>Description</h2>
         <p>
       Generate harmonizing voices with formants preserved.
    </p>
       </div>
       <div class="refsect1">
-        <a id="idm98682"></a>
+        <a id="idm98616"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>harmon2</strong></span> asig, koct, kfrq1, kfrq2, icpsmode, ilowest[, ipolarity]</pre>
         <pre class="synopsis">ares <span class="command"><strong>harmon3</strong></span> asig, koct, kfrq1, \
@@ -56,7 +56,7 @@
     kfrq2, kfrq3, kfrq4, icpsmode, ilowest[, ipolarity]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm98690"></a>
+        <a id="idm98624"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>icpsmode</em></span> -- interpreting mode for the
@@ -72,7 +72,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm98705"></a>
+        <a id="idm98639"></a>
         <h2>Performance</h2>
         <p>
       <span class="command"><strong>Harmon2</strong></span>, <span class="command"><strong>harmon3</strong></span>
@@ -123,16 +123,16 @@
      </p>
       </div>
       <div class="refsect1">
-        <a id="idm98737"></a>
+        <a id="idm98671"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the harmon2 opcode. It uses the file <a class="ulink" href="examples/harmon.csd.html" target="_top"> (click here to play) <em class="citetitle">harmon.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm98742"></a>
+          <a id="idm98676"></a>
           <p class="title">
-            <strong>Example 408. Example of the harmon2 opcode.</strong>
+            <strong>Example 409. Example of the harmon2 opcode.</strong>
           </p>
           <div class="example-contents">
             <pre class="programlisting">
@@ -150,14 +150,14 @@ a4         <span class="opc">harmon2</span>   a3, koct, 1.25, 0.75, 0, 6.9  <spa
       Here is a complete example of the harmon3 opcode. It uses the file <a class="ulink" href="examples/harmon3.csd.html" target="_top"> (click here to play) <em class="citetitle">harmon3.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm98759"></a>
+          <a id="idm98693"></a>
           <p class="title">
-            <strong>Example 409. Example of the harmon3 opcode.</strong>
+            <strong>Example 410. Example of the harmon3 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm98766"></a>
+              <a id="idm98700"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -176,7 +176,7 @@ a4         <span class="opc">harmon2</span>   a3, koct, 1.25, 0.75, 0, 6.9  <spa
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">low</span> <span class="o">=</span> <span class="nb">p4</span>					<span class="c1">;lowest value to harmonize			</span>
+i<span class="n">low</span> <span class="o">=</span> <span class="vi">p4</span>					<span class="c1">;lowest value to harmonize			</span>
 a<span class="n">out</span> <span class="nb">diskin2</span> <span class="s">"sing.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
 k<span class="n">oct</span><span class="p">,</span> k<span class="n">amp</span> <span class="nb">pitch</span> a<span class="n">out</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span>		<span class="c1">;track pitch</span>
 a<span class="n">sig</span> <span class="nb">harmon3</span> a<span class="n">out</span><span class="p">,</span> k<span class="n">oct</span><span class="p">,</span> <span class="mf">.9</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> i<span class="n">low</span>
@@ -201,7 +201,7 @@ a<span class="n">sig</span> <span class="nb">harmon3</span> a<span class="n">out
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm98871"></a>
+        <a id="idm98805"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -40,7 +40,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm178614"></a>
+        <a id="idm177792"></a>
         <h2>Description</h2>
         <p>
       Shift the frequency components of a pv stream, stretching/compressing
@@ -48,12 +48,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm178617"></a>
+        <a id="idm177795"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>pvshift</strong></span> fsigin, kshift, klowest[, kkeepform, igain, kcoefs]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm178621"></a>
+        <a id="idm177799"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>fsig</em></span> -- output pv stream
@@ -106,14 +106,14 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm178641"></a>
+        <a id="idm177819"></a>
         <h2>Examples</h2>
         <p>
       </p>
         <div class="example">
-          <a id="idm178644"></a>
+          <a id="idm177822"></a>
           <p class="title">
-            <strong>Example 783. Example</strong>
+            <strong>Example 785. Example</strong>
           </p>
           <div class="example-contents">
             <pre class="programlisting">
@@ -134,14 +134,14 @@ atps  <span class="opc">pvsynth</span>   ftps                     <span class="c
       Here is an example of the use of the <span class="emphasis"><em>pvshift</em></span> opcode. It uses the file <a class="ulink" href="examples/pvshift.csd.html" target="_top"> (click here to play) <em class="citetitle">pvshift.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm178660"></a>
+          <a id="idm177838"></a>
           <p class="title">
-            <strong>Example 784. Example of the <span class="emphasis"><em>pvshift</em></span> opcode.</strong>
+            <strong>Example 786. Example of the <span class="emphasis"><em>pvshift</em></span> opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm178668"></a>
+              <a id="idm177846"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -157,18 +157,18 @@ atps  <span class="opc">pvsynth</span>   ftps                     <span class="c
 <span class="c1">;; example written by joachim heintz 2009</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
-i<span class="n">shift</span>		<span class="o">=</span>		<span class="nb">p4</span><span class="c1">; shift amount in Hz</span>
-i<span class="n">lowest</span>	<span class="o">=</span>		<span class="nb">p5</span><span class="c1">; lowest frequency to be shifted</span>
-i<span class="n">keepform</span>	<span class="o">=</span>		<span class="nb">p6</span><span class="c1">; 0=no formant keeping, 1=keep by amps, 2=keep by spectral envelope</span>
+i<span class="n">shift</span>		<span class="o">=</span>		<span class="vi">p4</span><span class="c1">; shift amount in Hz</span>
+i<span class="n">lowest</span>	<span class="o">=</span>		<span class="vi">p5</span><span class="c1">; lowest frequency to be shifted</span>
+i<span class="n">keepform</span>	<span class="o">=</span>		<span class="vi">p6</span><span class="c1">; 0=no formant keeping, 1=keep by amps, 2=keep by spectral envelope</span>
 i<span class="n">fftsize</span>	<span class="o">=</span>		<span class="mi">1024</span>
 i<span class="n">overlap</span>	<span class="o">=</span>		i<span class="n">fftsize</span> <span class="o">/</span> <span class="mi">4</span>
 i<span class="n">winsize</span>	<span class="o">=</span>		i<span class="n">fftsize</span>
 i<span class="n">winshape</span>	<span class="o">=</span>		<span class="mi">1</span><span class="c1">; von-Hann window</span>
 S<span class="n">file</span>		<span class="o">=</span>		<span class="s">"fox.wav"</span>
 a<span class="n">in</span>		<span class="nb">soundin</span>	S<span class="n">file</span>
-<span class="n">fftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="c1">; fft-analysis of file</span>
-<span class="n">fshift</span>		<span class="nb">pvshift</span>  	<span class="n">fftin</span><span class="p">,</span> i<span class="n">shift</span><span class="p">,</span> i<span class="n">lowest</span><span class="p">,</span> i<span class="n">keepform</span><span class="c1">; shift frequencies</span>
-a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fshift</span><span class="c1">; resynthesize</span>
+f<span class="n">ftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="c1">; fft-analysis of file</span>
+f<span class="n">shift</span>		<span class="nb">pvshift</span>  	f<span class="n">ftin</span><span class="p">,</span> i<span class="n">shift</span><span class="p">,</span> i<span class="n">lowest</span><span class="p">,</span> i<span class="n">keepform</span><span class="c1">; shift frequencies</span>
+a<span class="n">out</span>		<span class="nb">pvsynth</span>	f<span class="n">shift</span><span class="c1">; resynthesize</span>
 		<span class="nb">out</span>		a<span class="n">out</span>
 <span class="kd">endin</span>
 
@@ -193,7 +193,7 @@ a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fsh
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm178820"></a>
+        <a id="idm177998"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvsanal.html" title="pvsanal"><em class="citetitle">pvsanal</em></a>,
@@ -202,7 +202,7 @@ a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fsh
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm178829"></a>
+        <a id="idm178007"></a>
         <h2>Credits</h2>
         <p>
       </p>

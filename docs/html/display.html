@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm54896"></a>
+        <a id="idm54458"></a>
         <h2>Description</h2>
         <p>
       These units will print orchestra init-values, or produce graphic display of orchestra control signals and audio signals. Uses X11 windows if enabled, else (or if <a class="link" href="CommandFlags.html#FlagsMinusLowerG"><em class="citetitle">-g</em></a> flag is set) displays are approximated in ASCII characters.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm54901"></a>
+        <a id="idm54463"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>display</strong></span> xsig, iprd [, inprds] [, iwtflg]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm54905"></a>
+        <a id="idm54467"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iprd</em></span> -- the period of display in seconds.
@@ -65,28 +65,28 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm54917"></a>
+        <a id="idm54479"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>display</em></span> -- displays the audio or control signal <span class="emphasis"><em>xsig</em></span> every <span class="emphasis"><em>iprd</em></span> seconds, as an amplitude vs. time graph.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm54923"></a>
+        <a id="idm54485"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the display opcode. It uses the file <a class="ulink" href="examples/display.csd.html" target="_top"> (click here to play) <em class="citetitle">display.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm54928"></a>
+          <a id="idm54490"></a>
           <p class="title">
             <strong>Example 222. Example of the display opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm54935"></a>
+              <a id="idm54497"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -108,7 +108,7 @@
 k<span class="n">cps</span> <span class="o">=</span> <span class="mi">110</span>
 i<span class="n">fn</span>  <span class="o">=</span> <span class="mi">1</span>
 
-k<span class="n">nh</span>	<span class="nb">line</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p5</span>
+k<span class="n">nh</span>	<span class="nb">line</span> <span class="vi">p4</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p5</span>
 a<span class="n">sig</span>	<span class="nb">buzz</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> k<span class="n">nh</span><span class="p">,</span> i<span class="n">fn</span>
 	<span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
@@ -135,7 +135,7 @@ a<span class="n">sig</span>	<span class="nb">buzz</span> <span class="mi">1</spa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm55024"></a>
+        <a id="idm54586"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="dispfft.html" title="dispfft"><em class="citetitle">dispfft</em></a>,
@@ -143,7 +143,7 @@ a<span class="n">sig</span>	<span class="nb">buzz</span> <span class="mi">1</spa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm55031"></a>
+        <a id="idm54593"></a>
         <h2>Credits</h2>
         <p>Comments about the <span class="emphasis"><em>inprds</em></span> parameter contributed by Rasmus Ekman.</p>
       </div>

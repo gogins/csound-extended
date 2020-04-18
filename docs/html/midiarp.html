@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm132565"></a>
+        <a id="idm131121"></a>
         <h2>Description</h2>
         <p>
       midiarp constructs arpeggios based currently held MIDI notes. The opcode will output notes in the form of MIDI note numbers, and a metronomic signal that can be used to sequence the notes. Users can choose the rate at which the notes are generated, and may also choose from a set of arpeggio patterns. 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm132568"></a>
+        <a id="idm131124"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kMidiNoteNum, kCounter<span class="command"><strong>midiarp</strong></span> kRate[, kMode]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm132572"></a>
+        <a id="idm131128"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>kRate</em></span> -- sets the rate at which new notes will be generated and controls the frequency of the metronomic pulse signal.  
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm132578"></a>
+        <a id="idm131134"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kMideNoteNum</em></span> -- the current note number in the arpeggio pattern. 
@@ -88,19 +88,19 @@
         </table>
       </div>
       <div class="refsect1">
-        <a id="idm132588"></a>
+        <a id="idm131144"></a>
         <h2>Example</h2>
         <p>
       This example shows how midiarp can be used to trigger arpeggios using a secondary instrument for playback. Instrument 100 listens to incoming MIDI notes, and then triggers playback using instrument 200. <span class="emphasis"><em>massign</em></span> is used to prevent instrument 100 from being triggered each time a new MIDI note is pressed. This examples uses the file <a class="ulink" href="examples/midiarp.csd.html" target="_top"> (click here to play) <em class="citetitle">midiarp.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm132594"></a>
+          <a id="idm131150"></a>
           <p class="title">
             <strong>Example 550. Example of the midiarp opcode</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm132596"></a>
+              <a id="idm131152"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -122,7 +122,7 @@
 <span class="kd">instr</span> <span class="nf">100</span>
 k<span class="n">Mode</span> <span class="o">=</span> <span class="mi">3</span>
 k<span class="n">Tempo</span> <span class="o">=</span> <span class="mi">6</span>
-k<span class="n">Note</span><span class="p">,</span> k<span class="n">Counter</span> <span class="n">midiarp</span> k<span class="n">Tempo</span>
+k<span class="n">Note</span><span class="p">,</span> k<span class="n">Counter</span> <span class="nb">midiarp</span> k<span class="n">Tempo</span>
 
 k<span class="n">FilterFreq</span> <span class="nb">oscil</span> <span class="mi">2000</span><span class="p">,</span> <span class="mf">.05</span>
 <span class="c1">;if kCounter is 1 trigger instrument 2 to play</span>
@@ -133,9 +133,9 @@ k<span class="n">FilterFreq</span> <span class="nb">oscil</span> <span class="mi
 <span class="kd">endin</span>
 
 <span class="kd">instr</span> <span class="nf">200</span>
-k<span class="n">Env</span> <span class="nb">expon</span> <span class="mf">.4</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.001</span>
-a<span class="n">Out</span> <span class="nb">vco2</span> k<span class="n">Env</span><span class="p">,</span> <span class="nb">cpsmidinn</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span>		<span class="c1">;convert note number to cps</span>
-a<span class="n">Filter</span> <span class="nb">moogladder</span> a<span class="n">Out</span><span class="p">,</span> <span class="nb">p5</span><span class="p">,</span> <span class="mi">0</span>
+k<span class="n">Env</span> <span class="nb">expon</span> <span class="mf">.4</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">.001</span>
+a<span class="n">Out</span> <span class="nb">vco2</span> k<span class="n">Env</span><span class="p">,</span> <span class="nb">cpsmidinn</span><span class="p">(</span><span class="vi">p4</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span>		<span class="c1">;convert note number to cps</span>
+a<span class="n">Filter</span> <span class="nb">moogladder</span> a<span class="n">Out</span><span class="p">,</span> <span class="vi">p5</span><span class="p">,</span> <span class="mi">0</span>
 <span class="nb">outs</span> a<span class="n">Filter</span><span class="p">,</span> a<span class="n">Filter</span>
 <span class="kd">endin</span>
 
@@ -152,7 +152,7 @@ a<span class="n">Filter</span> <span class="nb">moogladder</span> a<span class="
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm132705"></a>
+        <a id="idm131261"></a>
         <h2>Credits</h2>
         <p>
       </p>

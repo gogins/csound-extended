@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm232588"></a>
+        <a id="idm232218"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>trsplit</em></span> opcode takes an input containg a TRACKS pv streaming signal (as generated,
@@ -51,12 +51,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm232593"></a>
+        <a id="idm232223"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsiglow, fsighi <span class="command"><strong>trsplit</strong></span> fin, ksplit[, kgainlow, kgainhigh]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm232597"></a>
+        <a id="idm232227"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>fsiglow</em></span> -- output pv stream in TRACKS format containing the tracks below
@@ -78,20 +78,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm232609"></a>
+        <a id="idm232239"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the trsplit opcode. It uses the file <a class="ulink" href="examples/trsplit.csd.html" target="_top"> (click here to play) <em class="citetitle">trsplit.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm232614"></a>
+          <a id="idm232244"></a>
           <p class="title">
-            <strong>Example 1055. Example of the trsplit opcode.</strong>
+            <strong>Example 1058. Example of the trsplit opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm232621"></a>
+              <a id="idm232251"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -111,10 +111,10 @@
 <span class="kd">instr</span> <span class="nf">1</span>
 
 a<span class="n">in</span>	 <span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span>
-<span class="n">fs1</span><span class="p">,</span><span class="n">fsi2</span> <span class="nb">pvsifd</span>  a<span class="n">in</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; ifd analysis</span>
-<span class="n">fst</span>	 <span class="nb">partials</span> <span class="n">fs1</span><span class="p">,</span> <span class="n">fsi2</span><span class="p">,</span> <span class="mf">.003</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">500</span>	<span class="c1">; partial tracking</span>
-<span class="n">fslo</span><span class="p">,</span><span class="n">fshi</span> <span class="nb">trsplit</span> <span class="n">fst</span><span class="p">,</span> <span class="mi">1500</span>			<span class="c1">; split partial tracks at 1500 Hz</span>
-a<span class="n">out</span>	 <span class="nb">tradsyn</span> <span class="n">fshi</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; resynthesis of tracks above 1500Hz</span>
+f<span class="n">s1</span><span class="p">,</span>f<span class="n">si2</span> <span class="nb">pvsifd</span>  a<span class="n">in</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; ifd analysis</span>
+f<span class="n">st</span>	 <span class="nb">partials</span> f<span class="n">s1</span><span class="p">,</span> f<span class="n">si2</span><span class="p">,</span> <span class="mf">.003</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">500</span>	<span class="c1">; partial tracking</span>
+f<span class="n">slo</span><span class="p">,</span>f<span class="n">shi</span> <span class="nb">trsplit</span> f<span class="n">st</span><span class="p">,</span> <span class="mi">1500</span>			<span class="c1">; split partial tracks at 1500 Hz</span>
+a<span class="n">out</span>	 <span class="nb">tradsyn</span> f<span class="n">shi</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; resynthesis of tracks above 1500Hz</span>
          <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
 <span class="kd">endin</span>
@@ -138,7 +138,7 @@ a<span class="n">out</span>	 <span class="nb">tradsyn</span> <span class="n">fsh
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm232719"></a>
+        <a id="idm232349"></a>
         <h2>Credits</h2>
         <p>
       </p>

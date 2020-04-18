@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm166379"></a>
+        <a id="idm165158"></a>
         <h2>Description</h2>
         <p>
       Using the same techniques as <a class="link" href="spectrum.html" title="spectrum"><em class="citetitle">spectrum</em></a> and <a class="link" href="specptrk.html" title="specptrk"><em class="citetitle">specptrk</em></a>, pitch tracks the pitch of the signal in octave point decimal form, and amplitude in dB.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm166386"></a>
+        <a id="idm165165"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">koct, kamp <span class="command"><strong>pitch</strong></span> asig, iupdte, ilo, ihi, idbthresh [, ifrqs] [, iconf] \
       [, istrt] [, iocts] [, iq] [, inptls] [, irolloff] [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm166390"></a>
+        <a id="idm165169"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iupdte</em></span> -- length of period, in seconds, that outputs are updated
@@ -89,7 +89,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm166417"></a>
+        <a id="idm165196"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>koct</em></span> -- The pitch output, given in the octave point decimal format.
@@ -105,21 +105,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm166428"></a>
+        <a id="idm165207"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the pitch opcode. It uses the file <a class="ulink" href="examples/pitch.csd.html" target="_top"> (click here to play) <em class="citetitle">pitch.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm166433"></a>
+          <a id="idm165212"></a>
           <p class="title">
             <strong>Example 713. Example of the pitch opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm166440"></a>
+              <a id="idm165219"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -138,7 +138,7 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">;clean audio</span>
 
-a<span class="n">sig</span> <span class="nb">soundin</span> <span class="nb">p4</span>
+a<span class="n">sig</span> <span class="nb">soundin</span> <span class="vi">p4</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 <span class="kd">endin</span>
 
@@ -152,7 +152,7 @@ i<span class="n">frqs</span> <span class="o">=</span> <span class="mi">12</span>
 i<span class="n">conf</span> <span class="o">=</span> <span class="mi">10</span>
 i<span class="n">strt</span> <span class="o">=</span> <span class="mi">8</span>
 
-a<span class="n">sig</span> <span class="nb">soundin</span> <span class="nb">p4</span>
+a<span class="n">sig</span> <span class="nb">soundin</span> <span class="vi">p4</span>
 k<span class="n">oct</span><span class="p">,</span> k<span class="n">amp</span> <span class="nb">pitch</span> a<span class="n">sig</span><span class="p">,</span> i<span class="n">updte</span><span class="p">,</span> i<span class="n">lo</span><span class="p">,</span> i<span class="n">hi</span><span class="p">,</span> i<span class="n">dbthresh</span><span class="p">,</span> i<span class="n">frqs</span><span class="p">,</span> i<span class="n">conf</span><span class="p">,</span> i<span class="n">strt</span>
 k<span class="n">amp</span> <span class="o">=</span> k<span class="n">amp</span><span class="o">*</span><span class="mf">.00005</span>		<span class="c1">;lower volume</span>
 k<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpsoct</span><span class="p">(</span>k<span class="n">oct</span><span class="p">)</span>
@@ -181,7 +181,7 @@ a<span class="n">sig</span> <span class="nb">poscil</span> k<span class="n">amp<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm166596"></a>
+        <a id="idm165375"></a>
         <h2>Credits</h2>
         <p>
       </p>

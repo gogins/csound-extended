@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm277047"></a>
+        <a id="idm276710"></a>
         <h2>Description</h2>
         <p>Plugin gen in padsynth.</p>
         <p>
@@ -91,14 +91,14 @@ to generate the desired pitch from an oscillator using the function table, e.g.
     </code>
       </div>
       <div class="refsect1">
-        <a id="idm277057"></a>
+        <a id="idm276720"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # score_time table_size "padsynth" fundamental_frequency
     partial_bandwidth partial_scale harmonic_stretch profile_shape profile_shape_parameter
     partial1_amplitude [partial2_amplitude ...]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm277061"></a>
+        <a id="idm276724"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>table_size</em></span> -- Function table size. Should be large,
@@ -130,19 +130,19 @@ to generate the desired pitch from an oscillator using the function table, e.g.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm277081"></a>
+        <a id="idm276744"></a>
         <h2>Examples</h2>
         <p>
 	    Here is an example of the GENpadsynth routine. It uses the files <a class="ulink" href="examples/padsynth_gen.csd.html" target="_top"> (click here to play) <em class="citetitle">padsynth_gen.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm277086"></a>
+          <a id="idm276749"></a>
           <p class="title">
-            <strong>Example 1241. An example of the GENpadsynth routine.</strong>
+            <strong>Example 1244. An example of the GENpadsynth routine.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm277088"></a>
+              <a id="idm276751"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -164,8 +164,8 @@ to generate the desired pitch from an oscillator using the function table, e.g.
     i<span class="n">sustain</span> <span class="o">=</span> <span class="mf">0.25</span>
     i<span class="n">release</span> <span class="o">=</span> <span class="mf">0.2</span>
     a<span class="n">env</span> <span class="nb">madsr</span> i<span class="n">attack</span><span class="p">,</span> i<span class="n">decay</span><span class="p">,</span> i<span class="n">sustain</span><span class="p">,</span> i<span class="n">release</span>
-    i<span class="n">freq</span> <span class="nb">cpsmidinn</span> <span class="nb">p4</span>
-    i<span class="n">amp</span> <span class="nb">ampdb</span> <span class="nb">p5</span>
+    i<span class="n">freq</span> <span class="nb">cpsmidinn</span> <span class="vi">p4</span>
+    i<span class="n">amp</span> <span class="nb">ampdb</span> <span class="vi">p5</span>
     i<span class="n">basefreq</span> <span class="o">=</span> <span class="mi">440</span> <span class="c1">; can be lower or higher frequency; close to played frequency is said to be best</span>
     i<span class="n">bw_cents</span> <span class="o">=</span> <span class="mf">56.96943</span> <span class="c1">; width of the peaks, 100 is semitone</span>
 	a<span class="n">sig</span> <span class="nb">poscil</span> i<span class="n">amp</span><span class="p">,</span> i<span class="n">freq</span><span class="p">,</span> gi<span class="n">_padsynth_1</span>
@@ -178,14 +178,14 @@ to generate the desired pitch from an oscillator using the function table, e.g.
     <span class="nb">prints</span> <span class="s">"PadSynth with sine tone.</span><span class="se">\n</span><span class="s">"</span>
     i<span class="n">basehz</span> <span class="o">=</span> <span class="mf">261.625565</span>
     <span class="c1">;                       p1 p2 p3          p4           p5       p6  p7    p8 p9  p10  p11</span>
-	gi<span class="n">_padsynth_1</span> <span class="nb">ftgenonce</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> gi<span class="n">spec_len</span><span class="p">,</span> <span class="s">"padsynth"</span><span class="p">,</span> i<span class="n">basehz</span><span class="p">,</span> <span class="nb">p6</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>  <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span>
+	gi<span class="n">_padsynth_1</span> <span class="nb">ftgenonce</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> gi<span class="n">spec_len</span><span class="p">,</span> <span class="s">"padsynth"</span><span class="p">,</span> i<span class="n">basehz</span><span class="p">,</span> <span class="vi">p6</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>  <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span>
     i<span class="n">attack</span> <span class="o">=</span> <span class="mf">0.08</span>
     i<span class="n">decay</span> <span class="o">=</span> <span class="mf">0.1</span>
     i<span class="n">sustain</span> <span class="o">=</span> <span class="mf">0.25</span>
     i<span class="n">release</span> <span class="o">=</span> <span class="mf">0.2</span>
     a<span class="n">env</span> <span class="nb">madsr</span> i<span class="n">attack</span><span class="p">,</span> i<span class="n">decay</span><span class="p">,</span> i<span class="n">sustain</span><span class="p">,</span> i<span class="n">release</span>
-    i<span class="n">freq</span> <span class="nb">cpsmidinn</span> <span class="nb">p4</span>
-    i<span class="n">amp</span> <span class="nb">ampdb</span> <span class="nb">p5</span>
+    i<span class="n">freq</span> <span class="nb">cpsmidinn</span> <span class="vi">p4</span>
+    i<span class="n">amp</span> <span class="nb">ampdb</span> <span class="vi">p5</span>
 	a<span class="n">sig</span> <span class="nb">poscil</span> i<span class="n">amp</span><span class="p">,</span> i<span class="n">freq</span><span class="o">*</span><span class="p">(</span><span class="vg">sr</span><span class="o">/</span>gi<span class="n">spec_len</span><span class="o">/</span>i<span class="n">basehz</span><span class="p">),</span> gi<span class="n">_padsynth_1</span>
     a<span class="n">sig</span> <span class="o">=</span> a<span class="n">env</span> <span class="o">*</span> a<span class="n">sig</span>
 	a<span class="n">left</span><span class="p">,</span> a<span class="n">right</span> <span class="nb">pan2</span> a<span class="n">sig</span><span class="p">,</span> <span class="mf">0.5</span>
@@ -196,14 +196,14 @@ to generate the desired pitch from an oscillator using the function table, e.g.
     <span class="nb">prints</span> <span class="s">"PadSynth with harmonics.</span><span class="se">\n</span><span class="s">"</span>
     i<span class="n">basehz</span> <span class="o">=</span> <span class="mf">261.625565</span>
     <span class="c1">;                       p1 p2 p3          p4           p5       p6  p7 p8 p9  p10  p11</span>
-	gi<span class="n">_padsynth_1</span> <span class="nb">ftgenonce</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> gi<span class="n">spec_len</span><span class="p">,</span> <span class="s">"padsynth"</span><span class="p">,</span> i<span class="n">basehz</span><span class="p">,</span> <span class="nb">p6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="mf">0.7600046992</span><span class="p">,</span> <span class="mf">0.6199994683</span><span class="p">,</span> <span class="mf">0.9399998784</span><span class="p">,</span> <span class="mf">0.4400023818</span><span class="p">,</span> <span class="mf">0.0600003302</span><span class="p">,</span> <span class="mf">0.8499968648</span><span class="p">,</span> <span class="mf">0.0899999291</span><span class="p">,</span> <span class="mf">0.8199964762</span><span class="p">,</span> <span class="mf">0.3199984133</span><span class="p">,</span> <span class="mf">0.9400014281</span><span class="p">,</span> <span class="mf">0.3000001907</span><span class="p">,</span> <span class="mf">0.120003365</span><span class="p">,</span> <span class="mf">0.1799997687</span><span class="p">,</span> <span class="mf">0.5200006366</span><span class="p">,</span> <span class="mf">0.9300042987</span>
+	gi<span class="n">_padsynth_1</span> <span class="nb">ftgenonce</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> gi<span class="n">spec_len</span><span class="p">,</span> <span class="s">"padsynth"</span><span class="p">,</span> i<span class="n">basehz</span><span class="p">,</span> <span class="vi">p6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="mf">0.7600046992</span><span class="p">,</span> <span class="mf">0.6199994683</span><span class="p">,</span> <span class="mf">0.9399998784</span><span class="p">,</span> <span class="mf">0.4400023818</span><span class="p">,</span> <span class="mf">0.0600003302</span><span class="p">,</span> <span class="mf">0.8499968648</span><span class="p">,</span> <span class="mf">0.0899999291</span><span class="p">,</span> <span class="mf">0.8199964762</span><span class="p">,</span> <span class="mf">0.3199984133</span><span class="p">,</span> <span class="mf">0.9400014281</span><span class="p">,</span> <span class="mf">0.3000001907</span><span class="p">,</span> <span class="mf">0.120003365</span><span class="p">,</span> <span class="mf">0.1799997687</span><span class="p">,</span> <span class="mf">0.5200006366</span><span class="p">,</span> <span class="mf">0.9300042987</span>
     i<span class="n">attack</span> <span class="o">=</span> <span class="mf">0.08</span>
     i<span class="n">decay</span> <span class="o">=</span> <span class="mf">0.1</span>
     i<span class="n">sustain</span> <span class="o">=</span> <span class="mf">0.25</span>
     i<span class="n">release</span> <span class="o">=</span> <span class="mf">0.2</span>
     a<span class="n">env</span> <span class="nb">madsr</span> i<span class="n">attack</span><span class="p">,</span> i<span class="n">decay</span><span class="p">,</span> i<span class="n">sustain</span><span class="p">,</span> i<span class="n">release</span>
-    i<span class="n">freq</span> <span class="nb">cpsmidinn</span> <span class="nb">p4</span>
-    i<span class="n">amp</span> <span class="nb">ampdb</span> <span class="nb">p5</span>
+    i<span class="n">freq</span> <span class="nb">cpsmidinn</span> <span class="vi">p4</span>
+    i<span class="n">amp</span> <span class="nb">ampdb</span> <span class="vi">p5</span>
 	a<span class="n">sig</span> <span class="nb">poscil</span> i<span class="n">amp</span><span class="p">,</span> i<span class="n">freq</span><span class="o">*</span><span class="p">(</span><span class="vg">sr</span><span class="o">/</span>gi<span class="n">spec_len</span><span class="o">/</span>i<span class="n">basehz</span><span class="p">),</span> gi<span class="n">_padsynth_1</span>
     a<span class="n">sig</span> <span class="o">=</span> a<span class="n">env</span> <span class="o">*</span> a<span class="n">sig</span>
 	a<span class="n">left</span><span class="p">,</span> a<span class="n">right</span> <span class="nb">pan2</span> a<span class="n">sig</span><span class="p">,</span> <span class="mf">0.5</span>
@@ -214,14 +214,14 @@ to generate the desired pitch from an oscillator using the function table, e.g.
     <span class="nb">prints</span> <span class="s">"PadSynth with inharmonic partials.</span><span class="se">\n</span><span class="s">"</span>
     i<span class="n">basehz</span> <span class="o">=</span> <span class="mf">261.625565</span>
     <span class="c1">;                       p1 p2 p3          p4           p5       p6  p7 p8 p9  p10  p11</span>
-	gi<span class="n">_padsynth_1</span> <span class="nb">ftgenonce</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> gi<span class="n">spec_len</span><span class="p">,</span> <span class="s">"padsynth"</span><span class="p">,</span> i<span class="n">basehz</span><span class="p">,</span> <span class="nb">p6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="mf">0.7600046992</span><span class="p">,</span> <span class="mf">0.6199994683</span><span class="p">,</span> <span class="mf">0.9399998784</span><span class="p">,</span> <span class="mf">0.4400023818</span><span class="p">,</span> <span class="mf">0.0600003302</span><span class="p">,</span> <span class="mf">0.8499968648</span><span class="p">,</span> <span class="mf">0.0899999291</span><span class="p">,</span> <span class="mf">0.8199964762</span><span class="p">,</span> <span class="mf">0.3199984133</span><span class="p">,</span> <span class="mf">0.9400014281</span><span class="p">,</span> <span class="mf">0.3000001907</span><span class="p">,</span> <span class="mf">0.120003365</span><span class="p">,</span> <span class="mf">0.1799997687</span><span class="p">,</span> <span class="mf">0.5200006366</span><span class="p">,</span> <span class="mf">0.9300042987</span>
+	gi<span class="n">_padsynth_1</span> <span class="nb">ftgenonce</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> gi<span class="n">spec_len</span><span class="p">,</span> <span class="s">"padsynth"</span><span class="p">,</span> i<span class="n">basehz</span><span class="p">,</span> <span class="vi">p6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="mf">0.7600046992</span><span class="p">,</span> <span class="mf">0.6199994683</span><span class="p">,</span> <span class="mf">0.9399998784</span><span class="p">,</span> <span class="mf">0.4400023818</span><span class="p">,</span> <span class="mf">0.0600003302</span><span class="p">,</span> <span class="mf">0.8499968648</span><span class="p">,</span> <span class="mf">0.0899999291</span><span class="p">,</span> <span class="mf">0.8199964762</span><span class="p">,</span> <span class="mf">0.3199984133</span><span class="p">,</span> <span class="mf">0.9400014281</span><span class="p">,</span> <span class="mf">0.3000001907</span><span class="p">,</span> <span class="mf">0.120003365</span><span class="p">,</span> <span class="mf">0.1799997687</span><span class="p">,</span> <span class="mf">0.5200006366</span><span class="p">,</span> <span class="mf">0.9300042987</span>
     i<span class="n">attack</span> <span class="o">=</span> <span class="mf">0.08</span>
     i<span class="n">decay</span> <span class="o">=</span> <span class="mf">0.1</span>
     i<span class="n">sustain</span> <span class="o">=</span> <span class="mf">0.25</span>
     i<span class="n">release</span> <span class="o">=</span> <span class="mf">0.2</span>
     a<span class="n">env</span> <span class="nb">madsr</span> i<span class="n">attack</span><span class="p">,</span> i<span class="n">decay</span><span class="p">,</span> i<span class="n">sustain</span><span class="p">,</span> i<span class="n">release</span>
-    i<span class="n">freq</span> <span class="nb">cpsmidinn</span> <span class="nb">p4</span>
-    i<span class="n">amp</span> <span class="nb">ampdb</span> <span class="nb">p5</span>
+    i<span class="n">freq</span> <span class="nb">cpsmidinn</span> <span class="vi">p4</span>
+    i<span class="n">amp</span> <span class="nb">ampdb</span> <span class="vi">p5</span>
 	a<span class="n">sig</span> <span class="nb">poscil</span> i<span class="n">amp</span><span class="p">,</span> i<span class="n">freq</span><span class="o">*</span><span class="p">(</span><span class="vg">sr</span><span class="o">/</span>gi<span class="n">spec_len</span><span class="o">/</span>i<span class="n">basehz</span><span class="p">),</span> gi<span class="n">_padsynth_1</span>
     a<span class="n">sig</span> <span class="o">=</span> a<span class="n">env</span> <span class="o">*</span> a<span class="n">sig</span>
 	a<span class="n">left</span><span class="p">,</span> a<span class="n">right</span> <span class="nb">pan2</span> a<span class="n">sig</span><span class="p">,</span> <span class="mf">0.5</span>
@@ -280,12 +280,12 @@ to generate the desired pitch from an oscillator using the function table, e.g.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm277728"></a>
+        <a id="idm277391"></a>
         <h2>See Also</h2>
         <p> More information on Padsynth: <a class="ulink" href="www.paulnasca.com/algorithms-created-by-me" target="_top"><em class="citetitle">www.paulnasca.com/algorithms-created-by-me</em></a></p>
       </div>
       <div class="refsect1">
-        <a id="idm277733"></a>
+        <a id="idm277396"></a>
         <h2>Credits</h2>
         <p>Written by Michael Gogins</p>
         <p>New in version 6.05</p>

@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm189710"></a>
+        <a id="idm189002"></a>
         <h2>Description</h2>
         <p>
       Determines the root-mean-square amplitude of an audio signal. It low-pass filters the actual value, to average in the manner of a VU meter.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm189713"></a>
+        <a id="idm189005"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kres <span class="command"><strong>rms</strong></span> asig [, ihp] [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm189717"></a>
+        <a id="idm189009"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihp</em></span> (optional, default=10) -- half-power point (in Hz) of a special internal low-pass filter. The default value is 10.
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm189725"></a>
+        <a id="idm189017"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- input audio signal
@@ -80,7 +80,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm189743"></a>
+        <a id="idm189035"></a>
         <h2>Examples</h2>
         <p>
       </p>
@@ -96,14 +96,14 @@ arms <span class="opc">rms</span>    asig <span class="comment">; get rms value 
 
       </p>
         <div class="example">
-          <a id="idm189753"></a>
+          <a id="idm189045"></a>
           <p class="title">
-            <strong>Example 857. Example of the rms opcode.</strong>
+            <strong>Example 859. Example of the rms opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm189760"></a>
+              <a id="idm189052"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -140,7 +140,7 @@ arms <span class="opc">rms</span>    asig <span class="comment">; get rms value 
 
 <span class="nl">label</span><span class="p">:</span>
   k<span class="n">val</span> <span class="nb">rms</span> a<span class="n">1</span><span class="p">,</span> <span class="nb">i</span><span class="p">(</span>gk<span class="n">ihp</span><span class="p">)</span>  <span class="c1">;measures rms of input channel 1</span>
-<span class="nb">rireturn</span>
+<span class="kp">rireturn</span>
 
   k<span class="n">val</span> <span class="o">=</span> <span class="nb">dbamp</span><span class="p">(</span>k<span class="n">val</span><span class="p">)</span> <span class="c1">; convert to db full scale</span>
   <span class="nb">printk</span> <span class="mf">0.5</span><span class="p">,</span> k<span class="n">val</span>
@@ -148,7 +148,7 @@ arms <span class="opc">rms</span>    asig <span class="comment">; get rms value 
   <span class="nb">FLsetVal</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">val</span><span class="p">,</span> gi<span class="n">hrmstext</span>
   k<span class="n">newihp</span> <span class="nb">changed</span> gk<span class="n">ihp</span>   <span class="c1">; reinit when ihp text has changed</span>
   <span class="k">if</span> <span class="p">(</span>k<span class="n">newihp</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">then</span>
-    <span class="nb">reinit</span> <span class="n">label</span>  <span class="c1">;needed because ihp is an i-rate parameter</span>
+    <span class="kp">reinit</span> <span class="nl">label</span>  <span class="c1">;needed because ihp is an i-rate parameter</span>
   <span class="k">endif</span>
 <span class="kd">endin</span>
 
@@ -172,7 +172,7 @@ arms <span class="opc">rms</span>    asig <span class="comment">; get rms value 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm189939"></a>
+        <a id="idm189231"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="balance.html" title="balance"><em class="citetitle">balance</em></a>,

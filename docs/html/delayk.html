@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm51412"></a>
+        <a id="idm50972"></a>
         <h2>Description</h2>
         <p>
       k-rate delay opcodes
    </p>
       </div>
       <div class="refsect1">
-        <a id="idm51415"></a>
+        <a id="idm50975"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kr <span class="command"><strong>delayk </strong></span>  ksig, idel[, imode]</pre>
         <pre class="synopsis">kr <span class="command"><strong>vdel_k </strong></span>  ksig, kdel, imdel[, imode]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm51421"></a>
+        <a id="idm50981"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idel</em></span> -- delay time (in seconds) for
@@ -77,7 +77,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm51433"></a>
+        <a id="idm50993"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kr</em></span> -- the output signal. Note: neither of the
@@ -93,21 +93,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm51441"></a>
+        <a id="idm51001"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the delayk opcode. It uses the file <a class="ulink" href="examples/delayk.csd.html" target="_top"> (click here to play) <em class="citetitle">delayk.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm51446"></a>
+          <a id="idm51006"></a>
           <p class="title">
             <strong>Example 199. Example of the delayk opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm51453"></a>
+              <a id="idm51013"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -131,7 +131,7 @@ gi<span class="n">sin</span> <span class="nb">ftgen</span> <span class="mi">0</s
 
 k<span class="n">env1</span> <span class="nb">transeg</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">.02</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">3.98</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">0</span> <span class="c1">;envelope</span>
 k<span class="n">env2</span> <span class="nb">delayk</span> k<span class="n">env1</span><span class="p">,</span> <span class="mi">2</span>			<span class="c1">;delayed by two seconds</span>
-k<span class="n">indx</span> <span class="nb">expon</span> <span class="mi">5</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;fm index decreasing over p3</span>
+k<span class="n">indx</span> <span class="nb">expon</span> <span class="mi">5</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;fm index decreasing over p3</span>
 a<span class="n">sig</span>  <span class="nb">foscili</span> <span class="mf">.6</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> k<span class="n">indx</span><span class="p">,</span> gi<span class="n">sin</span>
 k<span class="n">pan1</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">;panning for first sound</span>
 k<span class="n">pan2</span> <span class="nb">linseg</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span>			<span class="c1">;panning for second sound ...</span>
@@ -159,7 +159,7 @@ a<span class="n">L2</span><span class="p">,</span>a<span class="n">R2</span> <sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm51603"></a>
+        <a id="idm51163"></a>
         <h2>Credits</h2>
         <p>Istvan Varga.</p>
       </div>

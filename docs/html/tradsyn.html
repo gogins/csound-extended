@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm229595"></a>
+        <a id="idm229225"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>tradsyn</em></span> opcode takes an input containg a TRACKS pv streaming signal (as generated,
@@ -49,12 +49,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm229600"></a>
+        <a id="idm229230"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asig <span class="command"><strong>tradsyn</strong></span> fin, kscal, kpitch, kmaxtracks, ifn</pre>
       </div>
       <div class="refsect1">
-        <a id="idm229604"></a>
+        <a id="idm229234"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- output audio rate signal
@@ -78,20 +78,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm229618"></a>
+        <a id="idm229248"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the tradsyn opcode. It uses the file <a class="ulink" href="examples/tradsyn.csd.html" target="_top"> (click here to play) <em class="citetitle">tradsyn.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm229623"></a>
+          <a id="idm229253"></a>
           <p class="title">
-            <strong>Example 1040. Example of the tradsyn opcode.</strong>
+            <strong>Example 1043. Example of the tradsyn opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm229630"></a>
+              <a id="idm229260"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -110,11 +110,11 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">pch</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">pch</span> <span class="o">=</span> <span class="vi">p4</span>
 a<span class="n">in</span>  <span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span>
-<span class="n">fs1</span><span class="p">,</span><span class="n">fsi2</span> <span class="nb">pvsifd</span> a<span class="n">in</span><span class="p">,</span><span class="mi">2048</span><span class="p">,</span><span class="mi">512</span><span class="p">,</span><span class="mi">1</span>		<span class="c1">; ifd analysis</span>
-<span class="n">fst</span>  <span class="nb">partials</span> <span class="n">fs1</span><span class="p">,</span><span class="n">fsi2</span><span class="p">,</span><span class="mf">.003</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">500</span>	<span class="c1">; partial tracking</span>
-a<span class="n">out</span> <span class="nb">tradsyn</span> <span class="n">fst</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">pch</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; resynthesis</span>
+f<span class="n">s1</span><span class="p">,</span>f<span class="n">si2</span> <span class="nb">pvsifd</span> a<span class="n">in</span><span class="p">,</span><span class="mi">2048</span><span class="p">,</span><span class="mi">512</span><span class="p">,</span><span class="mi">1</span>		<span class="c1">; ifd analysis</span>
+f<span class="n">st</span>  <span class="nb">partials</span> f<span class="n">s1</span><span class="p">,</span>f<span class="n">si2</span><span class="p">,</span><span class="mf">.003</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">500</span>	<span class="c1">; partial tracking</span>
+a<span class="n">out</span> <span class="nb">tradsyn</span> f<span class="n">st</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">pch</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">; resynthesis</span>
      <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
 <span class="kd">endin</span>
@@ -139,7 +139,7 @@ a<span class="n">out</span> <span class="nb">tradsyn</span> <span class="n">fst<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm229730"></a>
+        <a id="idm229360"></a>
         <h2>Credits</h2>
         <p>
       </p>

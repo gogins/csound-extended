@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm177641"></a>
+        <a id="idm176819"></a>
         <h2>Description</h2>
         <p>
       Create an fsig stream by reading a selected channel from a PVOC-EX analysis file loaded into memory, with frame interpolation. Only format 0 files (amplitude+frequency) are currently supported. The operation of this opcode mirrors that of pvoc, but outputs an fsig instead of a resynthesized signal.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm177644"></a>
+        <a id="idm176822"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>pvsfread</strong></span> ktimpt, ifn [, ichan]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm177648"></a>
+        <a id="idm176826"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- Name of the analysis file. This must have the .pvx file extension.
@@ -64,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm177657"></a>
+        <a id="idm176835"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktimpt</em></span> -- Time pointer into analysis file, in seconds. See the description of the same parameter of <a class="link" href="pvoc.html" title="pvoc"><em class="citetitle">pvoc</em></a> for usage.
@@ -74,20 +74,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm177664"></a>
+        <a id="idm176842"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the pvsfread opcode. It uses the file <a class="ulink" href="examples/pvsfread.csd.html" target="_top"> (click here to play) <em class="citetitle">pvsfread.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm177669"></a>
+          <a id="idm176847"></a>
           <p class="title">
-            <strong>Example 776. Example of the pvsfread opcode.</strong>
+            <strong>Example 778. Example of the pvsfread opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm177676"></a>
+              <a id="idm176854"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -107,9 +107,9 @@
 <span class="kd">instr</span> <span class="nf">1</span>
 <span class="c1">; create a PVOC-EX (*.pvx) file with PVANAL first</span>
 i<span class="n">dur</span>  <span class="nb">filelen</span>   <span class="s">"kickroll.pvx"</span>		<span class="c1">;find duration of (stereo) analysis file</span>
-k<span class="n">pos</span>  <span class="nb">line</span>      <span class="mi">0</span><span class="p">,</span><span class="nb">p3</span><span class="p">,</span>i<span class="n">dur</span>		<span class="c1">;to ensure we process whole file</span>
-<span class="n">fsigr</span> <span class="nb">pvsfread</span>  k<span class="n">pos</span><span class="p">,</span><span class="s">"kickroll.pvx"</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">;create fsig from right channel</span>
-a<span class="n">out</span>  <span class="nb">pvsynth</span>	<span class="n">fsigr</span>			<span class="c1">;resynthesise it</span>
+k<span class="n">pos</span>  <span class="nb">line</span>      <span class="mi">0</span><span class="p">,</span><span class="vi">p3</span><span class="p">,</span>i<span class="n">dur</span>		<span class="c1">;to ensure we process whole file</span>
+f<span class="n">sigr</span> <span class="nb">pvsfread</span>  k<span class="n">pos</span><span class="p">,</span><span class="s">"kickroll.pvx"</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">;create fsig from right channel</span>
+a<span class="n">out</span>  <span class="nb">pvsynth</span>	f<span class="n">sigr</span>			<span class="c1">;resynthesise it</span>
       <span class="nb">outs</span>	a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
 <span class="kd">endin</span>
@@ -129,7 +129,7 @@ a<span class="n">out</span>  <span class="nb">pvsynth</span>	<span class="n">fsi
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm177744"></a>
+        <a id="idm176922"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm185872"></a>
+        <a id="idm185108"></a>
         <h2>Description</h2>
         <p>
       Suspends a performance while a special initialization pass is executed.
@@ -49,26 +49,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm185879"></a>
+        <a id="idm185115"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>reinit</strong></span> label</pre>
       </div>
       <div class="refsect1">
-        <a id="idm185883"></a>
+        <a id="idm185119"></a>
         <h2>Examples</h2>
         <p>
       The following statements will generate an exponential control signal whose value moves from 440 to 880 exactly ten times over the duration p3. They use the file <a class="ulink" href="examples/reinit.csd.html" target="_top"> (click here to play) <em class="citetitle">reinit.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm185888"></a>
+          <a id="idm185124"></a>
           <p class="title">
-            <strong>Example 838. Example of the reinit opcode.</strong>
+            <strong>Example 840. Example of the reinit opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm185895"></a>
+              <a id="idm185131"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -88,14 +88,14 @@
 <span class="kd">instr</span> <span class="nf">1</span>
 
 <span class="nl">reset</span><span class="p">:</span>
-        <span class="k">timout</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span> <span class="n">contin</span>
-        <span class="nb">reinit</span> <span class="n">reset</span>
+        <span class="kp">timout</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span> <span class="nl">contin</span>
+        <span class="kp">reinit</span> <span class="nl">reset</span>
 
 <span class="nl">contin</span><span class="p">:</span>
-        k<span class="n">Line</span> <span class="nb">expon</span> <span class="mi">440</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span> <span class="mi">880</span>
+        k<span class="n">Line</span> <span class="nb">expon</span> <span class="mi">440</span><span class="p">,</span> <span class="vi">p3</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span> <span class="mi">880</span>
         a<span class="n">Sig</span> <span class="nb">oscil</span> <span class="mi">10000</span><span class="p">,</span> k<span class="n">Line</span><span class="p">,</span> <span class="mi">1</span>
         <span class="nb">out</span> a<span class="n">Sig</span>
-        <span class="nb">rireturn</span>
+        <span class="kp">rireturn</span>
 
 <span class="kd">endin</span>
 
@@ -119,7 +119,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm185969"></a>
+        <a id="idm185205"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="rigoto.html" title="rigoto"><em class="citetitle">rigoto</em></a>, 

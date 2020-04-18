@@ -40,26 +40,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm262736"></a>
+        <a id="idm262384"></a>
         <h2>Description</h2>
         <p>
       Sets a named mark in the score, which can be used by an <a class="link" href="n.html" title="n Statement"><em class="citetitle">n statement</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm262741"></a>
+        <a id="idm262389"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>m</strong></span> p1</pre>
       </div>
       <div class="refsect1">
-        <a id="idm262745"></a>
+        <a id="idm262393"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>p1</em></span> -- Name of mark.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm262749"></a>
+        <a id="idm262397"></a>
         <h2>Performance</h2>
         <p>
       This can be helpful in setting a up verse and chorus structure in the score. Names may contain letters and numerals.
@@ -98,19 +98,19 @@
 </pre>
       </div>
       <div class="refsect1">
-        <a id="idm262778"></a>
+        <a id="idm262426"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the m statement. It uses the file <a class="ulink" href="examples/m.csd.html" target="_top"> (click here to play) <em class="citetitle">m.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm262783"></a>
+          <a id="idm262431"></a>
           <p class="title">
-            <strong>Example 1185. Example of the m statement.</strong>
+            <strong>Example 1188. Example of the m statement.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm262785"></a>
+              <a id="idm262433"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -129,8 +129,8 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-a<span class="n">env</span> <span class="nb">expseg</span> <span class="mf">.01</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.01</span>
-a<span class="n">sig</span> <span class="nb">poscil3</span> <span class="mf">.8</span><span class="o">*</span>a<span class="n">env</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">env</span> <span class="nb">expseg</span> <span class="mf">.01</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.01</span>
+a<span class="n">sig</span> <span class="nb">poscil3</span> <span class="mf">.8</span><span class="o">*</span>a<span class="n">env</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> <span class="mi">1</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
 <span class="kd">endin</span>
@@ -138,7 +138,7 @@ a<span class="n">sig</span> <span class="nb">poscil3</span> <span class="mf">.8<
 <span class="nt">&lt;CsScore&gt;</span>
 <span class="nb">f</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">16384</span> <span class="mi">10</span> <span class="mi">1</span>	<span class="c1">;sine wave</span>
 
-<span class="nb">m</span> <span class="cp">foo</span>			<span class="c1">;mark section</span>
+<span class="k">m</span> <span class="nl">foo</span>			<span class="c1">;mark section</span>
 <span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span>   <span class="mi">1</span> <span class="mi">110</span>
 <span class="nb">i</span> <span class="mi">1</span> <span class="mf">1.5</span> <span class="mi">1</span> <span class="mi">220</span>
 <span class="nb">i</span> <span class="mi">1</span> <span class="mi">3</span>   <span class="mi">1</span> <span class="mi">440</span>
@@ -147,7 +147,7 @@ a<span class="n">sig</span> <span class="nb">poscil3</span> <span class="mf">.8<
 <span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mi">110</span>
 <span class="nb">i</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">220</span>
 <span class="nb">s</span>
-<span class="nb">n</span> <span class="cp">foo</span>			<span class="c1">;repeat marked section</span>
+<span class="k">n</span> <span class="nl">foo</span>			<span class="c1">;repeat marked section</span>
 <span class="nb">e</span>
 <span class="nt">&lt;/CsScore&gt;</span>
 <span class="nt">&lt;/CsoundSynthesizer&gt;</span>
@@ -159,7 +159,7 @@ a<span class="n">sig</span> <span class="nb">poscil3</span> <span class="mf">.8<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm262890"></a>
+        <a id="idm262538"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm54118"></a>
+        <a id="idm53680"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>diskgrain</em></span> implements synchronous granular synthesis. The source sound for the grains is obtained by reading a soundfile containing the samples of the source waveform. 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm54122"></a>
+        <a id="idm53684"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asig <span class="command"><strong>diskgrain</strong></span> Sfname, kamp, kfreq, kpitch, kgrsize, kprate, \
       ifun, iolaps [,imaxgrsize , ioffset]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm54126"></a>
+        <a id="idm53688"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>Sfilename</em></span> -- source soundfile.
@@ -73,7 +73,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm54138"></a>
+        <a id="idm53700"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- amplitude scaling
@@ -157,20 +157,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm54160"></a>
+        <a id="idm53722"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the diskgrain opcode. It uses the file <a class="ulink" href="examples/diskgrain.csd.html" target="_top"> (click here to play) <em class="citetitle">diskgrain.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm54165"></a>
+          <a id="idm53727"></a>
           <p class="title">
             <strong>Example 218. Example of the diskgrain opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm54172"></a>
+              <a id="idm53734"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -194,8 +194,8 @@ i<span class="n">grsize</span> <span class="o">=</span> <span class="mf">0.04</s
 i<span class="n">freq</span>   <span class="o">=</span> i<span class="n">olaps</span><span class="o">/</span>i<span class="n">grsize</span>
 i<span class="n">ps</span>     <span class="o">=</span> <span class="mi">1</span><span class="o">/</span>i<span class="n">olaps</span>
 
-i<span class="n">str</span> <span class="o">=</span> <span class="nb">p4</span>  <span class="cm">/* timescale */</span>
-i<span class="n">pitch</span> <span class="o">=</span> <span class="nb">p5</span> <span class="cm">/* pitchscale */</span>
+i<span class="n">str</span> <span class="o">=</span> <span class="vi">p4</span>  <span class="cm">/* timescale */</span>
+i<span class="n">pitch</span> <span class="o">=</span> <span class="vi">p5</span> <span class="cm">/* pitchscale */</span>
 
 a<span class="n">1</span> <span class="nb">diskgrain</span> <span class="s">"mary.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">freq</span><span class="p">,</span> i<span class="n">pitch</span><span class="p">,</span> i<span class="n">grsize</span><span class="p">,</span> i<span class="n">ps</span><span class="o">*</span>i<span class="n">str</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">olaps</span>
    <span class="nb">outs</span>   a<span class="n">1</span><span class="p">,</span> a<span class="n">1</span>
@@ -224,7 +224,7 @@ a<span class="n">1</span> <span class="nb">diskgrain</span> <span class="s">"mar
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm54289"></a>
+        <a id="idm53851"></a>
         <h2>Credits</h2>
         <p>
       </p>

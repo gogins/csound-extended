@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm51995"></a>
+        <a id="idm51555"></a>
         <h2>Description</h2>
         <p>
       Tap a delay line at variable offset times. 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm51998"></a>
+        <a id="idm51558"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>deltap</strong></span> kdlt</pre>
       </div>
       <div class="refsect1">
-        <a id="idm52002"></a>
+        <a id="idm51562"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kdlt</em></span> -- specifies the tapped delay time in seconds. Each can range from 1 control period to the full delay time of the read/write pair; however, since there is no internal check for adherence to this range, the user is wholly responsible. Each argument can be a constant, a variable, or a time-varying signal.
@@ -73,12 +73,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm52029"></a>
+        <a id="idm51589"></a>
         <h2>Examples</h2>
         <p>
       </p>
         <div class="example">
-          <a id="idm52032"></a>
+          <a id="idm51592"></a>
           <p class="title">
             <strong>Example 202. deltap example #1</strong>
           </p>
@@ -98,7 +98,7 @@
         <p>
       </p>
         <div class="example">
-          <a id="idm52053"></a>
+          <a id="idm51613"></a>
           <p class="title">
             <strong>Example 203. deltap example #2</strong>
           </p>
@@ -136,14 +136,14 @@
 
       </p>
         <div class="example">
-          <a id="idm52087"></a>
+          <a id="idm51647"></a>
           <p class="title">
             <strong>Example 204. Example of the deltap opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm52094"></a>
+              <a id="idm51654"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -173,7 +173,7 @@ a<span class="n">in</span>  <span class="nb">pluck</span> <span class="mf">.7</s
 
 <span class="kd">instr</span> <span class="nf">2</span>	
 
-i<span class="n">feedback</span> <span class="o">=</span> <span class="nb">p4</span>	
+i<span class="n">feedback</span> <span class="o">=</span> <span class="vi">p4</span>	
 
 a<span class="n">buf2</span>	<span class="nb">delayr</span>	gi<span class="n">del</span>
 a<span class="n">delL</span> 	<span class="nb">deltap</span>	<span class="mf">.4</span>		<span class="c1">;first tap (on left channel)</span>
@@ -181,7 +181,7 @@ a<span class="n">delM</span> 	<span class="nb">deltap</span>	<span class="mi">1<
 	<span class="nb">delayw</span>	ga<span class="n">sig</span> <span class="o">+</span> <span class="p">(</span>a<span class="n">delL</span> <span class="o">*</span> i<span class="n">feedback</span><span class="p">)</span>
 
 a<span class="n">buf3</span>	<span class="nb">delayr</span>	gi<span class="n">del</span>
-k<span class="n">del</span>	<span class="nb">line</span>    <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.01</span>	<span class="c1">;vary delay time</span>
+k<span class="n">del</span>	<span class="nb">line</span>    <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">.01</span>	<span class="c1">;vary delay time</span>
 a<span class="n">delR</span> 	<span class="nb">deltap</span>  <span class="mf">.65</span> <span class="o">*</span> k<span class="n">del</span>	<span class="c1">;one pitch changing tap (on the right chn.)</span>
 	<span class="nb">delayw</span>	ga<span class="n">sig</span> <span class="o">+</span> <span class="p">(</span>a<span class="n">delR</span> <span class="o">*</span> i<span class="n">feedback</span><span class="p">)</span>
 <span class="c1">;make a mix of all deayed signals	</span>
@@ -208,7 +208,7 @@ a<span class="n">delR</span> 	<span class="nb">deltap</span>  <span class="mf">.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm52233"></a>
+        <a id="idm51793"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="deltap3.html" title="deltap3"><em class="citetitle">deltap3</em></a>,

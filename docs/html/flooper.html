@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm70075"></a>
+        <a id="idm69692"></a>
         <h2>Description</h2>
         <p>
    This opcode reads audio from a function table and plays it back in a loop with user-defined
@@ -49,12 +49,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm70078"></a>
+        <a id="idm69695"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asig1[, asig2] <span class="command"><strong>flooper</strong></span> kamp, kpitch, istart, idur, ifad, ifn</pre>
       </div>
       <div class="refsect1">
-        <a id="idm70082"></a>
+        <a id="idm69699"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>istart </em></span> -- loop start pos in seconds
@@ -70,7 +70,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm70092"></a>
+        <a id="idm69709"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig[,asig2]</em></span> -- output sig (mono or stereo)
@@ -82,12 +82,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm70100"></a>
+        <a id="idm69717"></a>
         <h2>Examples</h2>
         <p>
       </p>
         <div class="example">
-          <a id="idm70103"></a>
+          <a id="idm69720"></a>
           <p class="title">
             <strong>Example 302. </strong>
           </p>
@@ -110,14 +110,14 @@ crossfade).
       Here is another example of the flooper opcode. It uses the file <a class="ulink" href="examples/flooper.csd.html" target="_top"> (click here to play) <em class="citetitle">flooper.csd</em></a> and <a class="ulink" href="examples/fox.wav" target="_top"><em class="citetitle">fox.wav</em></a>.
       </p>
         <div class="example">
-          <a id="idm70115"></a>
+          <a id="idm69732"></a>
           <p class="title">
             <strong>Example 303. </strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm70121"></a>
+              <a id="idm69738"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -136,7 +136,7 @@ crossfade).
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">pitch</span>	<span class="nb">line</span>	<span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.9</span> <span class="c1">;lower pitch a bit during the note</span>
+k<span class="n">pitch</span>	<span class="nb">line</span>	<span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">.9</span> <span class="c1">;lower pitch a bit during the note</span>
 a<span class="n">out</span>	<span class="nb">flooper</span>	<span class="mf">.9</span><span class="p">,</span> k<span class="n">pitch</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.53</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span>  <span class="c1">; loop starts at 1 sec, for .53 secs, 0.05 crossfade</span>
 	<span class="nb">outs</span>	a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
@@ -159,7 +159,7 @@ a<span class="n">out</span>	<span class="nb">flooper</span>	<span class="mf">.9<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm70193"></a>
+        <a id="idm69810"></a>
         <h2>Credits</h2>
         <p>
       </p>

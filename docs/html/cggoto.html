@@ -39,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm37517"></a>
+        <a id="idm36908"></a>
         <h2>Description</h2>
         <p>
       Transfer control to <span class="emphasis"><em>label</em></span> on every pass. (Combination of <a class="link" href="cigoto.html" title="cigoto"><em class="citetitle">cigoto</em></a> and <a class="link" href="ckgoto.html" title="ckgoto"><em class="citetitle">ckgoto</em></a>) 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm37525"></a>
+        <a id="idm36916"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>cggoto</strong></span> condition, label</pre>
         <p>
@@ -54,21 +54,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm37540"></a>
+        <a id="idm36931"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the cggoto opcode. It uses the file <a class="ulink" href="examples/cggoto.csd.html" target="_top"> (click here to play) <em class="citetitle">cggoto.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm37545"></a>
+          <a id="idm36936"></a>
           <p class="title">
             <strong>Example 119. Example of the cggoto opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm37552"></a>
+              <a id="idm36943"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -85,11 +85,11 @@
 
 <span class="c1">; Instrument #1.</span>
 <span class="kd">instr</span> <span class="nf">1</span>
-  i<span class="n">1</span> <span class="o">=</span> <span class="nb">p4</span>
+  i<span class="n">1</span> <span class="o">=</span> <span class="vi">p4</span>
 
   <span class="c1">; If i1 is equal to one, play a high note.</span>
   <span class="c1">; Otherwise play a low note.</span>
-  <span class="k">cggoto</span> <span class="p">(</span>i<span class="n">1</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span> <span class="nl">highnote</span>
+  <span class="kp">cggoto</span> <span class="p">(</span>i<span class="n">1</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span> <span class="nl">highnote</span>
 
 <span class="nl">lownote</span><span class="p">:</span>
   a<span class="n">1</span> <span class="nb">oscil</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">1</span>
@@ -126,7 +126,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm37637"></a>
+        <a id="idm37028"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cigoto.html" title="cigoto"><em class="citetitle">cigoto</em></a>, 
@@ -140,7 +140,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm37656"></a>
+        <a id="idm37047"></a>
         <h2>Credits</h2>
         <p>Example written by Kevin Conder.</p>
       </div>

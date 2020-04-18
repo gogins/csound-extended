@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm233561"></a>
+        <a id="idm233191"></a>
         <h2>Description</h2>
         <p>
       A syntactic looping construction.
    </p>
       </div>
       <div class="refsect1">
-        <a id="idm233564"></a>
+        <a id="idm233194"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>until</strong></span>  condition <span class="command"><strong>do</strong></span>
     ... <span class="command"><strong>od</strong></span></pre>
       </div>
       <div class="refsect1">
-        <a id="idm233570"></a>
+        <a id="idm233200"></a>
         <h2>Performance</h2>
         <p>
       The statements between the <span class="emphasis"><em>do</em></span> and
@@ -61,20 +61,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm233575"></a>
+        <a id="idm233205"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the until construction. It uses the file <a class="ulink" href="examples/until.csd.html" target="_top"> (click here to play) <em class="citetitle">until.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm233580"></a>
+          <a id="idm233210"></a>
           <p class="title">
-            <strong>Example 1060. Example of the until opcode.</strong>
+            <strong>Example 1063. Example of the until opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm233587"></a>
+              <a id="idm233217"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -93,17 +93,17 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 <span class="nl">lab99</span><span class="p">:</span>
-<span class="k">if</span> <span class="nb">p4</span><span class="o">&lt;</span><span class="mi">0</span> <span class="k">goto</span> <span class="nl">lab100</span>
-  <span class="nb">p4</span> <span class="o">=</span> <span class="nb">p4</span><span class="o">-</span><span class="mi">1</span>
-  <span class="nb">print</span> <span class="nb">p4</span>
+<span class="k">if</span> <span class="vi">p4</span><span class="o">&lt;</span><span class="mi">0</span> <span class="k">goto</span> <span class="nl">lab100</span>
+  <span class="vi">p4</span> <span class="o">=</span> <span class="vi">p4</span><span class="o">-</span><span class="mi">1</span>
+  <span class="nb">print</span> <span class="vi">p4</span>
   <span class="k">goto</span> <span class="nl">lab99</span>
 <span class="nl">lab100</span><span class="p">:</span>
 <span class="kd">endin</span>
 
 <span class="kd">instr</span> <span class="nf">2</span>
-  <span class="k">until</span> <span class="nb">p4</span><span class="o">&lt;</span><span class="mi">0</span> <span class="k">do</span>
-    <span class="nb">p4</span> <span class="o">=</span> <span class="nb">p4</span><span class="o">-</span><span class="mi">1</span>
-    <span class="nb">print</span> <span class="nb">p4</span>
+  <span class="k">until</span> <span class="vi">p4</span><span class="o">&lt;</span><span class="mi">0</span> <span class="k">do</span>
+    <span class="vi">p4</span> <span class="o">=</span> <span class="vi">p4</span><span class="o">-</span><span class="mi">1</span>
+    <span class="nb">print</span> <span class="vi">p4</span>
   <span class="k">od</span>
 <span class="kd">endin</span>
 <span class="nt">&lt;/CsInstruments&gt;</span>
@@ -142,7 +142,7 @@ B  2.000 ..  3.000 T  3.000 TT  3.000 M:      0.0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm233664"></a>
+        <a id="idm233294"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="loop_ge.html" title="loop_ge"><em class="citetitle">loop_ge</em></a>,
@@ -153,7 +153,7 @@ B  2.000 ..  3.000 T  3.000 TT  3.000 M:      0.0
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm233677"></a>
+        <a id="idm233307"></a>
         <h2>Credits</h2>
         <p>John ffitch.</p>
         <p>New in Csound version 5.14 with new parser</p>

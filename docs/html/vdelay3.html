@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm241229"></a>
+        <a id="idm240861"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>vdelay3</em></span> is experimental. It is the same as <a class="link" href="vdelay.html" title="vdelay"><em class="citetitle">vdelay</em></a> except that it uses cubic interpolation. (New in Version 3.50.)
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm241235"></a>
+        <a id="idm240867"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>vdelay3</strong></span> asig, adel, imaxdel [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm241239"></a>
+        <a id="idm240871"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imaxdel</em></span> -- Maximum value of delay in milliseconds. If <span class="emphasis"><em>adel</em></span> gains a value greater than <span class="emphasis"><em>imaxdel</em></span> it is folded around <span class="emphasis"><em>imaxdel</em></span>. This should not happen.
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm241248"></a>
+        <a id="idm240880"></a>
         <h2>Performance</h2>
         <p>
       With this unit generator it is possible to do Doppler effects or chorusing and flanging.
@@ -74,20 +74,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm241256"></a>
+        <a id="idm240888"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the vdelay3 opcode. It uses the file <a class="ulink" href="examples/vdelay3.csd.html" target="_top"> (click here to play) <em class="citetitle">vdelay3.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm241261"></a>
+          <a id="idm240893"></a>
           <p class="title">
-            <strong>Example 1091. Example of the vdelay3 opcode.</strong>
+            <strong>Example 1094. Example of the vdelay3 opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm241268"></a>
+              <a id="idm240900"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -108,7 +108,7 @@
 
 i<span class="n">ms</span>  <span class="o">=</span> <span class="mi">100</span>			<span class="c1">;maximum delay time in msec</span>
 a<span class="n">out</span> <span class="nb">poscil</span> <span class="mf">.8</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;make a signal</span>
-a<span class="n">2</span>   <span class="nb">poscil</span> i<span class="n">ms</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">;make an LFO</span>
+a<span class="n">2</span>   <span class="nb">poscil</span> i<span class="n">ms</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="vi">p3</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">;make an LFO</span>
 a<span class="n">2</span>   <span class="o">=</span> a<span class="n">2</span> <span class="o">+</span> i<span class="n">ms</span><span class="o">/</span><span class="mi">2</span>		<span class="c1">;offset the LFO so that it is positive</span>
 a<span class="n">sig</span> <span class="nb">vdelay3</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">2</span><span class="p">,</span> i<span class="n">ms</span>	<span class="c1">;use the LFO to control delay time</span>
      <span class="nb">outs</span>  a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
@@ -134,14 +134,14 @@ a<span class="n">sig</span> <span class="nb">vdelay3</span> a<span class="n">out
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm241353"></a>
+        <a id="idm240985"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vdelay.html" title="vdelay"><em class="citetitle">vdelay</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm241358"></a>
+        <a id="idm240990"></a>
         <h2>Credits</h2>
         <p>
       </p>

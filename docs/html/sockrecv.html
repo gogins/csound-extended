@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm204619"></a>
+        <a id="idm204014"></a>
         <h2>Description</h2>
         <p>
       Receives directly using the UDP (<span class="emphasis"><em>sockrecv</em></span> and
@@ -50,16 +50,16 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm204626"></a>
+        <a id="idm204021"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asig <span class="command"><strong>sockrecv</strong></span> iport, ilength</pre>
         <pre class="synopsis">ksig <span class="command"><strong>sockrecv</strong></span> iport, ilength</pre>
         <pre class="synopsis">asigl, asigr <span class="command"><strong>sockrecvs</strong></span> iport, ilength</pre>
         <pre class="synopsis">String <span class="command"><strong>sockrecv</strong></span> iport, ilength</pre>
-        <pre class="synopsis">asig <span class="command"><strong>strecv</strong></span> Sipaddr, iport</pre>
+        <pre class="synopsis">asig[,kstate] <span class="command"><strong>strecv</strong></span> Sipaddr, iport</pre>
       </div>
       <div class="refsect1">
-        <a id="idm204638"></a>
+        <a id="idm204033"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>Sipaddr</em></span>
@@ -79,17 +79,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm204646"></a>
+        <a id="idm204041"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig, asigl, asigr</em></span> -- audio data to be
       received.
+    </p>
+        <p>
       <span class="emphasis"><em>ksig</em></span> -- control data to be received.
+    </p>
+        <p>
       <span class="emphasis"><em>String</em></span> -- string data to be received.
+    </p>
+        <p>
+      <span class="emphasis"><em>kstate</em></span> -- optional output to give the state
+      of the receipt.  Gives the number of bytes transferred in the
+      current performance cycle or -1 if the sender has ceased writing.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm204652"></a>
+        <a id="idm204051"></a>
         <h2>Example</h2>
         <p>
       The example shows a mono signal being received on port 7777 using UDP.
@@ -108,7 +117,7 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm204667"></a>
+        <a id="idm204066"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -122,6 +131,7 @@
         </table>
         <p>
     </p>
+        <p>kstate optional output new in 6.14</p>
       </div>
     </div>
     <div class="navfooter">

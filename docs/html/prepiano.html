@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm170189"></a>
+        <a id="idm168970"></a>
         <h2>Description</h2>
         <p>
       Audio output is a tone similar to a piano string, prepared with
@@ -49,7 +49,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm170192"></a>
+        <a id="idm168973"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>prepiano</strong></span> ifreq, iNS, iD, iK, \
     iT30,iB, kbcl, kbcr, imass, ihvfreq, iinit, ipos, ivel, isfreq, \
@@ -59,7 +59,7 @@
     isspread[, irattles, irubbers]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm170198"></a>
+        <a id="idm168979"></a>
         <h2>Initialization</h2>
         <p>
     <span class="emphasis"><em>ifreq</em></span> -- The base frequency of the string.
@@ -122,7 +122,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm170231"></a>
+        <a id="idm169012"></a>
         <h2>Performance</h2>
         <p>
       A note is played on a piano string, with the arguments as below.
@@ -141,21 +141,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm170239"></a>
+        <a id="idm169020"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the prepiano opcode. It uses the file <a class="ulink" href="examples/prepiano.csd.html" target="_top"> (click here to play) <em class="citetitle">prepiano.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm170244"></a>
+          <a id="idm169025"></a>
           <p class="title">
             <strong>Example 732. Example of the prepiano opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm170251"></a>
+              <a id="idm169032"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -174,7 +174,7 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 <span class="c1">;;          fund NS detune stiffness decay loss (bndry) (hammer) scan prep</span>
-a<span class="n">a</span><span class="p">,</span>a<span class="n">b</span> <span class="nb">prepiano</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="nb">p5</span><span class="p">,</span> <span class="nb">p6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+a<span class="n">a</span><span class="p">,</span>a<span class="n">b</span> <span class="nb">prepiano</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="vi">p5</span><span class="p">,</span> <span class="vi">p6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
       <span class="nb">outs</span> a<span class="n">a</span><span class="o">*</span><span class="mf">.2</span><span class="p">,</span> a<span class="n">b</span><span class="o">*</span><span class="mf">.2</span>
 
 <span class="kd">endin</span>
@@ -198,7 +198,7 @@ a<span class="n">a</span><span class="p">,</span>a<span class="n">b</span> <span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm170391"></a>
+        <a id="idm169172"></a>
         <h2>Credits</h2>
         <p>
       </p>

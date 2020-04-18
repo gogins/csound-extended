@@ -5,8 +5,9 @@ Copyright (c) 2017 by Michael Gogins.
 Licensed under the terms of the GNU Lesser Public License version 2
 
 This Python script creates a modified version of the Csound Reference Manual
-in which the example CSDs will play online in Google Chrome using the WebAssembly
-build of Csound. The target is the docs directory of the csound-extended repository.
+in which the example CSDs will play online in standard Web browsersome using 
+the WebAssembly build of Csound. The target is the docs directory of the 
+csound-extended repository.
 
 Customize the source and target directories, run this Python script, and then
 add the target directory to the csound-extended Git repository and push your
@@ -24,7 +25,7 @@ import traceback
 
 '''
 The usr must customize these variables. No additional configuration should be
-required.
+required. The manual must already have been cloned and built in the usual way.
 '''
 source_home = r'''/home/mkg/manual'''
 target_home = r'''/home/mkg/csound-extended/docs'''
@@ -53,49 +54,57 @@ def format_playable_example(filename, text):
 <head>
     <title>Minimal Example using Csound for WebAssembly</title>
  </head>
-<body>
+<body style="background-color:LightGrey;">
     <script src="CsoundAudioNode.js"></script>
     <script src="csound_loader.js"></script>
     <script>
     var handleMessage = function(message) {
         var messages_textarea = document.getElementById("console");
         var existing = messages_textarea.value;
-        messages_textarea.value = existing + '\\n' + message;
+        messages_textarea.value = existing + message;
         messages_textarea.scrollTop = messages_textarea.scrollHeight;
     }
-    var onPlayClick = function() {
+    var onPlayClick = async function() {
         var csd = document.getElementById('csd').value;
-        csound = get_csound(handleMessage);
+        let csound = get_csound(handleMessage);
         if (csound == null) {
-            handleMessage("Still loading, try again in a bit...");
+            return;
         }
         csound.CompileCsdText(csd);
         csound.Start();
         csound.Perform();
     }
-    var onPlayStop = function() {
-        csound = get_csound(handleMessage);
+    var onPlayStop = async function() {
+        let csound = get_csound(handleMessage);
         csound.Stop();
     }
   </script>
-<h1>'''
+<h1 style="font-family:sans-serif;">'''
         fout.write(chunk)
         fout.write(html_filename)
         chunk = '''</h1>
 <p>
-This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
+This should play if your Web browser has WebAssembly enabled (most do). You can edit and replay the code. At this time, most examples will play in WebAssembly unless they need to load files. The first time you click <i>Play</i>, Csound will load. After that, clicking on <i>Play</i> will actually play.
 </p>
 <p>
 <input type="button" value="Play" onclick="onPlayClick()"/>
 <input type="button" value="Stop" onclick="onPlayStop()"/>
 <p>
-<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;">'''
+<textarea id="csd" style="width:98vw;height:45vh;font-family:monospace;background-color:#050570;color:#F0F090;">'''
         fout.write(chunk)
-        text = text.replace('nchnls ', 'nchnls = 2 ; Changed for WebAssembly output from: ')
+        text = text.replace('\nsr ',     '\nsr =     48000 ; Changed for WebAssembly from: ')
+        text = text.replace('\nsr=',     '\nsr =     48000 ; Changed for WebAssembly from: ')
+        text = text.replace('\nkr ',     '\n; kr ; Changed for WebAssembly from: ')
+        text = text.replace('\nkr=',     '\n; kr=     48000 ; Changed for WebAssembly from: ')
+        text = text.replace('ksmps ',  'ksmps =  128 ; Changed for WebAssembly from: ')
+        text = text.replace('ksmps=',  'ksmps =  128 ; Changed for WebAssembly from: ')
+        text = text.replace('nchnls ', 'nchnls = 2 ; Changed for WebAssembly from: ')
+        text = text.replace('nchnls=', 'nchnls = 2 ; Changed for WebAssembly from: ')
+        text = text.replace('nchnls_i ', 'nchnls_i = 1 ; Changed for WebAssembly from: ')
+        text = text.replace('nchnls_i=', 'nchnls_i = 1 ; Changed for WebAssembly from: ')
         fout.write(text)
         chunk = '''</textarea>
-<h3>Csound Messages</h3>
-<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+<textarea id="console" readonly style="width:98vw;height:40vh;font-family:monospace;background-color:DarkSlateGrey;color:LawnGreen;">
 </textarea>
 </body>
 </html>'''

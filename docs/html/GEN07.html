@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm266057"></a>
+        <a id="idm265707"></a>
         <h2>Description</h2>
         <p>
       Constructs functions from segments of straight lines.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm266060"></a>
+        <a id="idm265710"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span>  #    time    size   7   a   n1   b   n2   c  ...</pre>
       </div>
       <div class="refsect1">
-        <a id="idm266064"></a>
+        <a id="idm265714"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>size </em></span> -- number of points in the table. Must be a power of 2 or power-of-2 plus 1 (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f statement</em></a>).
@@ -96,19 +96,19 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm266089"></a>
+        <a id="idm265739"></a>
         <h2>Examples</h2>
         <p>
 	    Here is an example of the GEN07 routine. It uses the files <a class="ulink" href="examples/gen07.csd.html" target="_top"> (click here to play) <em class="citetitle">gen07.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm266094"></a>
+          <a id="idm265744"></a>
           <p class="title">
-            <strong>Example 1202. An example of the GEN07 routine.</strong>
+            <strong>Example 1205. An example of the GEN07 routine.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm266096"></a>
+              <a id="idm265746"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -127,8 +127,8 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">;use GEN07 to alter frequency</span>
 
-i<span class="n">fn</span>  <span class="o">=</span> <span class="nb">p4</span>						<span class="c1">;use different GEN07 tables</span>
-k<span class="n">cps</span> <span class="nb">init</span> <span class="mi">10</span><span class="o">/</span><span class="nb">p3</span>						<span class="c1">;index ftable 10 times over the duration of entire note</span>
+i<span class="n">fn</span>  <span class="o">=</span> <span class="vi">p4</span>						<span class="c1">;use different GEN07 tables</span>
+k<span class="n">cps</span> <span class="nb">init</span> <span class="mi">10</span><span class="o">/</span><span class="vi">p3</span>						<span class="c1">;index ftable 10 times over the duration of entire note</span>
 k<span class="n">ndx</span> <span class="nb">phasor</span> k<span class="n">cps</span>
 i<span class="n">xmode</span> <span class="o">=</span> <span class="mi">1</span>						<span class="c1">;normalize index data</span>
 k<span class="n">frq</span> <span class="nb">tablei</span> k<span class="n">ndx</span><span class="p">,</span> i<span class="n">fn</span><span class="p">,</span> i<span class="n">xmode</span>
@@ -188,7 +188,7 @@ a<span class="n">sig</span> <span class="nb">poscil</span> <span class="mf">.8</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm266256"></a>
+        <a id="idm265906"></a>
         <h2>See Also</h2>
         <p>
        <a class="link" href="GEN05.html" title="GEN05"><em class="citetitle">GEN05</em></a>,

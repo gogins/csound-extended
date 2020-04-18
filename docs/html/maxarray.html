@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm131562"></a>
+        <a id="idm129722"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>maxarray</em></span> opcode returns the maximum value
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm131566"></a>
+        <a id="idm129726"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kmax [,kindx] <span class="command"><strong>maxarray</strong></span> karray</pre>
       </div>
       <div class="refsect1">
-        <a id="idm131570"></a>
+        <a id="idm129730"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kmax</em></span> --  variable for result.
@@ -65,20 +65,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm131578"></a>
+        <a id="idm129738"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the maxarray opcode. It uses the file <a class="ulink" href="examples/maxarray.csd.html" target="_top"> (click here to play) <em class="citetitle">maxarray.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm131583"></a>
+          <a id="idm129743"></a>
           <p class="title">
-            <strong>Example 542. Example of the maxarray opcode.</strong>
+            <strong>Example 541. Example of the maxarray opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm131590"></a>
+              <a id="idm129750"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -99,12 +99,12 @@ k<span class="n">Indx</span>      <span class="o">=</span>          <span class=
   <span class="k">until</span> k<span class="n">Indx</span> <span class="o">==</span> <span class="mi">10</span> <span class="k">do</span>
 k<span class="n">Num</span>       <span class="nb">random</span>     <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span>
 k<span class="n">Arr</span><span class="p">[</span>k<span class="n">Indx</span><span class="p">]</span> <span class="o">=</span>         k<span class="n">Num</span>
-           <span class="nb">printf</span>     <span class="s">"kArr[</span><span class="si">%d</span><span class="s">] = %10f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Indx</span><span class="p">,</span> k<span class="n">Num</span>
+           <span class="nb">printf</span>     <span class="s">"kArr[</span><span class="si">%d</span><span class="s">] = </span><span class="si">%10f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Indx</span><span class="p">,</span> k<span class="n">Num</span>
 k<span class="n">Indx</span>      <span class="o">+=</span>         <span class="mi">1</span>
   <span class="k">od</span>
 <span class="c1">;investigate maximum number and print it out</span>
 k<span class="n">Max</span><span class="p">,</span> k<span class="n">MaxIndx</span> <span class="nb">maxarray</span> k<span class="n">Arr</span>
-           <span class="nb">printf</span>     <span class="s">"Maximum of kArr = %f at index </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Max</span><span class="p">,</span> k<span class="n">MaxIndx</span>
+           <span class="nb">printf</span>     <span class="s">"Maximum of kArr = </span><span class="si">%f</span><span class="s"> at index </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Max</span><span class="p">,</span> k<span class="n">MaxIndx</span>
            <span class="nb">turnoff</span>
 <span class="kd">endin</span>
 
@@ -123,7 +123,7 @@ k<span class="n">Max</span><span class="p">,</span> k<span class="n">MaxIndx</sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm131679"></a>
+        <a id="idm129842"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="minarray.html" title="minarray"><em class="citetitle">minarray</em></a>, 
@@ -132,7 +132,7 @@ k<span class="n">Max</span><span class="p">,</span> k<span class="n">MaxIndx</sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm131688"></a>
+        <a id="idm129851"></a>
         <h2>Credits</h2>
         <p>
       </p>

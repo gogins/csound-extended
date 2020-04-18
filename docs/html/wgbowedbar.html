@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm251992"></a>
+        <a id="idm251624"></a>
         <h2>Description</h2>
         <p>
       A physical model of a bowed bar, belonging to the Perry Cook family of waveguide instruments.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm251995"></a>
+        <a id="idm251627"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>wgbowedbar</strong></span> kamp, kfreq, kpos, kbowpres, kgain [, iconst] [, itvel] \
       [, ibowpos] [, ilow]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm251999"></a>
+        <a id="idm251631"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iconst</em></span> (optional, default=0) -- an integration constant. Default is zero.
@@ -68,7 +68,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm252011"></a>
+        <a id="idm251643"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- amplitude of signal
@@ -87,21 +87,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm252024"></a>
+        <a id="idm251656"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the wgbowedbar opcode. It uses the file <a class="ulink" href="examples/wgbowedbar.csd.html" target="_top"> (click here to play) <em class="citetitle">wgbowedbar.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm252029"></a>
+          <a id="idm251661"></a>
           <p class="title">
-            <strong>Example 1136. Example of the wgbowedbar opcode.</strong>
+            <strong>Example 1139. Example of the wgbowedbar opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm252036"></a>
+              <a id="idm251668"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -120,8 +120,8 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">p</span>   <span class="o">=</span> <span class="nb">p6</span>
-a<span class="n">sig</span> <span class="nb">wgbowedbar</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p5</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">p</span><span class="p">,</span> <span class="mf">0.995</span>
+k<span class="n">p</span>   <span class="o">=</span> <span class="vi">p6</span>
+a<span class="n">sig</span> <span class="nb">wgbowedbar</span> <span class="vi">p4</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p5</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">p</span><span class="p">,</span> <span class="mf">0.995</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
 <span class="kd">endin</span>
@@ -147,7 +147,7 @@ a<span class="n">sig</span> <span class="nb">wgbowedbar</span> <span class="nb">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm252133"></a>
+        <a id="idm251765"></a>
         <h2>Credits</h2>
         <p>
       </p>

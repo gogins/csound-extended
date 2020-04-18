@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm239247"></a>
+        <a id="idm238879"></a>
         <h2>Description</h2>
         <p>
       Implementation of a band limited, analog modeled oscillator, based on integration of band limited impulses. <span class="emphasis"><em>vco</em></span> can be used to simulate a variety of analog wave forms.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm239251"></a>
+        <a id="idm238883"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>vco</strong></span> xamp, xcps, iwave, kpw [, ifn] [, imaxd] [, ileak] [, inyx] \
       [, iphs] [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm239255"></a>
+        <a id="idm238887"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iwave</em></span> -- determines the waveform:
@@ -94,7 +94,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm239297"></a>
+        <a id="idm238929"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kpw</em></span> -- determines either the pulse width (if <span class="emphasis"><em>iwave</em></span> is 2) or the saw/ramp character (if <span class="emphasis"><em>iwave</em></span> is 3) The value of <span class="emphasis"><em>kpw</em></span> should be greater than 0 and less than 1. A value of 0.5 will generate either a square wave (if <span class="emphasis"><em>iwave</em></span> is 2) or a triangle wave (if <span class="emphasis"><em>iwave</em></span> is 3).
@@ -108,21 +108,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm239310"></a>
+        <a id="idm238942"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the vco opcode. It uses the file <a class="ulink" href="examples/vco.csd.html" target="_top"> (click here to play) <em class="citetitle">vco.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm239315"></a>
+          <a id="idm238947"></a>
           <p class="title">
-            <strong>Example 1084. Example of the vco opcode.</strong>
+            <strong>Example 1087. Example of the vco opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm239322"></a>
+              <a id="idm238954"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -143,13 +143,13 @@
 <span class="c1">; Instrument #1</span>
 <span class="kd">instr</span> <span class="nf">1</span>
   <span class="c1">; Set the amplitude.</span>
-  k<span class="n">amp</span> <span class="o">=</span> <span class="nb">p4</span> 
+  k<span class="n">amp</span> <span class="o">=</span> <span class="vi">p4</span> 
 
   <span class="c1">; Set the frequency.</span>
-  k<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p5</span><span class="p">)</span> 
+  k<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p5</span><span class="p">)</span> 
 
   <span class="c1">; Select the wave form.</span>
-  i<span class="n">wave</span> <span class="o">=</span> <span class="nb">p6</span>
+  i<span class="n">wave</span> <span class="o">=</span> <span class="vi">p6</span>
 
   <span class="c1">; Set the pulse-width/saw-ramp character.</span>
   k<span class="n">pw</span> <span class="nb">init</span> <span class="mf">0.5</span>
@@ -203,14 +203,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm239488"></a>
+        <a id="idm239120"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="vco2.html" title="vco2"><em class="citetitle">vco2</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm239493"></a>
+        <a id="idm239125"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm71351"></a>
+        <a id="idm70968"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>FLsavesnap</em></span> saves all snapshots currently created (i.e. the entire memory bank) into a file.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm71355"></a>
+        <a id="idm70972"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>FLsavesnap</strong></span> "filename" [, igroup]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm71359"></a>
+        <a id="idm70976"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em><span class="quote">“<span class="quote">filename</span>”</span></em></span> -- a double-quoted string corresponding to a file to store a bank of snapshots.
@@ -78,7 +78,7 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm71371"></a>
+        <a id="idm70988"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>FLsavesnap</em></span> saves all snapshots currently created (i.e. the entire memory bank) into a file whose name is <span class="emphasis"><em>filename</em></span>. Since the file is a text file, snapshot values can also be edited manually by means of a text editor. The format of the data stored in the file is the following (at present time, this could be changed in next Csound version):
@@ -151,21 +151,21 @@ FLbox 0 0 1 0 ""
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm71392"></a>
+        <a id="idm71009"></a>
         <h2>Examples</h2>
         <p>
       Here is a simple example of the FLTK snapshot saving. It uses the file <a class="ulink" href="examples/FLsavesnap_simple.csd.html" target="_top"> (click here to play) <em class="citetitle">FLsavesnap_simple.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm71397"></a>
+          <a id="idm71014"></a>
           <p class="title">
             <strong>Example 309. Example of FLTK snapshot saving.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm71404"></a>
+              <a id="idm71021"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -213,7 +213,7 @@ FLbox 0 0 1 0 ""
 
 <span class="kd">instr</span> <span class="nf">3</span> <span class="c1">; Save snapshot</span>
 i<span class="n">ndex</span> <span class="nb">init</span> <span class="mi">0</span>
-i<span class="n">pstno</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">pstno</span> <span class="o">=</span> <span class="vi">p4</span>
 S<span class="n">file</span> <span class="nb">sprintf</span> <span class="s">"snapshot_simple.</span><span class="si">%d</span><span class="s">.snap"</span><span class="p">,</span> i<span class="n">pstno</span> 
 
 
@@ -225,7 +225,7 @@ i<span class="n">numsnap</span><span class="p">,</span> i<span class="n">numval<
 
 <span class="kd">instr</span> <span class="nf">4</span> <span class="c1">;Load snapshot</span>
 i<span class="n">ndex</span> <span class="nb">init</span> <span class="mi">0</span>
-i<span class="n">pstno</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">pstno</span> <span class="o">=</span> <span class="vi">p4</span>
 S<span class="n">file</span> <span class="nb">sprintf</span> <span class="s">"snapshot_simple.</span><span class="si">%d</span><span class="s">.snap"</span><span class="p">,</span> i<span class="n">pstno</span>
 
 <span class="nb">FLloadsnap</span> S<span class="n">file</span>
@@ -255,14 +255,14 @@ i<span class="n">numload</span> <span class="nb">FLgetsnap</span> i<span class="
 
       </p>
         <div class="example">
-          <a id="idm71849"></a>
+          <a id="idm71466"></a>
           <p class="title">
             <strong>Example 310. Example of FLTK snapshot saving using snapshot groups.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm71856"></a>
+              <a id="idm71473"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -342,7 +342,7 @@ i<span class="n">numload</span> <span class="nb">FLgetsnap</span> i<span class="
 
 <span class="kd">instr</span> <span class="nf">3</span> <span class="c1">; Save snapshot</span>
 i<span class="n">ndex</span> <span class="nb">init</span> <span class="mi">0</span>
-i<span class="n">pstno</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">pstno</span> <span class="o">=</span> <span class="vi">p4</span>
 i<span class="n">group</span> <span class="o">=</span> <span class="mi">0</span>
 S<span class="n">file</span> <span class="nb">sprintf</span> <span class="s">"PVCsynth.</span><span class="si">%d</span><span class="s">.snap"</span><span class="p">,</span> i<span class="n">pstno</span> 
 <span class="k">if</span> i<span class="n">pstno</span> <span class="o">&gt;</span> <span class="mi">4</span> <span class="k">then</span>
@@ -358,7 +358,7 @@ S<span class="n">file</span> <span class="nb">sprintf</span> <span class="s">"PV
 
 <span class="kd">instr</span> <span class="nf">4</span> <span class="c1">;Load snapshot</span>
 i<span class="n">ndex</span> <span class="nb">init</span> <span class="mi">0</span>
-i<span class="n">pstno</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">pstno</span> <span class="o">=</span> <span class="vi">p4</span>
 i<span class="n">group</span> <span class="o">=</span> <span class="mi">0</span>
 S<span class="n">file</span> <span class="nb">sprintf</span> <span class="s">"PVCsynth.</span><span class="si">%d</span><span class="s">.snap"</span><span class="p">,</span> i<span class="n">pstno</span>
 <span class="k">if</span> i<span class="n">pstno</span> <span class="o">&gt;</span> <span class="mi">4</span> <span class="k">then</span>
@@ -391,7 +391,7 @@ S<span class="n">file</span> <span class="nb">sprintf</span> <span class="s">"PV
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm72861"></a>
+        <a id="idm72478"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="FLgetsnap.html" title="FLgetsnap"><em class="citetitle">FLgetsnap</em></a>,
@@ -403,7 +403,7 @@ S<span class="n">file</span> <span class="nb">sprintf</span> <span class="s">"PV
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm72876"></a>
+        <a id="idm72493"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 4.22</p>

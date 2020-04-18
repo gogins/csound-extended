@@ -39,40 +39,40 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm133236"></a>
+        <a id="idm131792"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>midichn</em></span> returns the MIDI channel number (1 - 16) from which the note was activated. In the case of score notes, it returns 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm133240"></a>
+        <a id="idm131796"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ichn <span class="command"><strong>midichn</strong></span></pre>
       </div>
       <div class="refsect1">
-        <a id="idm133244"></a>
+        <a id="idm131800"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ichn</em></span> -- channel number. If the current note was activated from score, it is set to zero.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm133248"></a>
+        <a id="idm131804"></a>
         <h2>Examples</h2>
         <p>
       Here is a simple example of the midichn opcode. It uses the file <a class="ulink" href="examples/midichn.csd.html" target="_top"> (click here to play) <em class="citetitle">midichn.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm133253"></a>
+          <a id="idm131809"></a>
           <p class="title">
             <strong>Example 553. Example of the midichn opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm133260"></a>
+              <a id="idm131816"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -114,13 +114,13 @@ i<span class="n">1</span> <span class="nb">midichn</span>
         <p>
       </p>
         <div class="example">
-          <a id="idm133305"></a>
+          <a id="idm131861"></a>
           <p class="title">
             <strong>Example 554. An advanced example of the midichn opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm133307"></a>
+              <a id="idm131863"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -163,11 +163,11 @@ i<span class="n">chn</span>	<span class="nb">midichn</span>		<span class="c1">; 
 i<span class="n">stime</span>	<span class="nb">times</span>		<span class="c1">; note-on time</span>
 
 	<span class="k">if</span> <span class="p">(</span>i<span class="n">chn</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span> <span class="k">goto</span> <span class="nl">l2</span>		<span class="c1">; MIDI note</span>
-	<span class="nb">printks</span> <span class="s">"note %.0f (time = %.2f) was activated from the score</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> \
+	<span class="nb">printks</span> <span class="s">"note </span><span class="si">%.0f</span><span class="s"> (time = </span><span class="si">%.2f</span><span class="s">) was activated from the score</span><span class="se">\\n</span><span class="s">"</span><span class="p">,</span> <span class="w">\</span>
 		<span class="mi">3600</span><span class="p">,</span> k<span class="n">cnt</span><span class="p">,</span> i<span class="n">stime</span>
 	<span class="k">goto</span> <span class="nl">l1</span>
 <span class="nl">l2</span><span class="p">:</span>
-	<span class="nb">printks</span> <span class="s">"note %.0f (time = %.2f) was activated from channel %.0f</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> \
+	<span class="nb">printks</span> <span class="s">"note </span><span class="si">%.0f</span><span class="s"> (time = </span><span class="si">%.2f</span><span class="s">) was activated from channel </span><span class="si">%.0f</span><span class="se">\\n</span><span class="s">"</span><span class="p">,</span> <span class="w">\</span>
 		<span class="mi">3600</span><span class="p">,</span> k<span class="n">cnt</span><span class="p">,</span> i<span class="n">stime</span><span class="p">,</span> i<span class="n">chn</span>
 <span class="nl">l1</span><span class="p">:</span>
 
@@ -205,14 +205,14 @@ note 4 (time = 5.00) was activated from channel 3
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm133502"></a>
+        <a id="idm132069"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pgmassign.html" title="pgmassign"><em class="citetitle">pgmassign</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm133507"></a>
+        <a id="idm132074"></a>
         <h2>Credits</h2>
         <p>
       </p>

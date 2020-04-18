@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm66556"></a>
+        <a id="idm66169"></a>
         <h2>Description</h2>
         <p>
       A FLTK widget opcode that creates a bank of buttons.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm66559"></a>
+        <a id="idm66172"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout, ihandle <span class="command"><strong>FLbutBank</strong></span> itype, inumx, inumy, iwidth, iheight, ix, iy, \
       iopcode [, kp1] [, kp2] [, kp3] [, kp4] [, kp5] [....] [, kpN]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm66563"></a>
+        <a id="idm66176"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ihandle</em></span> -- a handle value (an integer number) that unequivocally references a corresponding widget. This is used by other opcodes that modify a widget's properties (see <a class="link" href="ControlFltkAppearance.html" title="Modifying FLTK Widget Appearance"><em class="citetitle">Modifying FLTK Widget Appearance</em></a>). It is automatically output by <span class="emphasis"><em>FLbutBank</em></span> and must not be set by the user label. (The user label is a double-quoted string containing some user-provided text placed near the widget.)
@@ -96,7 +96,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm66595"></a>
+        <a id="idm66208"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kout</em></span> -- output value
@@ -139,21 +139,21 @@ gkButton,ihb1  FLbutBank  22, 8, 8, 380, 180, 50, 350, 0, 7, 0, 0, 5000, 6000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm66635"></a>
+        <a id="idm66248"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the FLbutBank opcode. It uses the file <a class="ulink" href="examples/FLbutBank.csd.html" target="_top"> (click here to play) <em class="citetitle">FLbutBank.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm66640"></a>
+          <a id="idm66253"></a>
           <p class="title">
             <strong>Example 293. Example of the FLbutBank opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm66647"></a>
+              <a id="idm66260"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -188,7 +188,7 @@ gkButton,ihb1  FLbutBank  22, 8, 8, 380, 180, 50, 350, 0, 7, 0, 0, 5000, 6000
 
 <span class="kd">instr</span> <span class="nf">1</span>
   i<span class="n">button</span> <span class="o">=</span> <span class="nb">i</span><span class="p">(</span>gk<span class="n">button</span><span class="p">)</span>
-  <span class="nb">prints</span> <span class="s">"Button </span><span class="si">%i</span><span class="s"> pushed!</span><span class="se">\\</span><span class="s">n"</span><span class="p">,</span> i<span class="n">button</span>  
+  <span class="nb">prints</span> <span class="s">"Button </span><span class="si">%i</span><span class="s"> pushed!</span><span class="se">\\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">button</span>  
 <span class="kd">endin</span>
 
 <span class="nt">&lt;/CsInstruments&gt;</span>
@@ -209,7 +209,7 @@ gkButton,ihb1  FLbutBank  22, 8, 8, 380, 180, 50, 350, 0, 7, 0, 0, 5000, 6000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm66759"></a>
+        <a id="idm66372"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="FLbox.html" title="FLbox"><em class="citetitle">FLbox</em></a>,
@@ -220,7 +220,7 @@ gkButton,ihb1  FLbutBank  22, 8, 8, 380, 180, 50, 350, 0, 7, 0, 0, 5000, 6000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm66772"></a>
+        <a id="idm66385"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 4.22</p>

@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm181716"></a>
+        <a id="idm180894"></a>
         <h2>Description</h2>
         <p>
        Copies a pvs frame to a t-variable. Currently only AMP+FREQ and AMP+PHASE formats allowed. Since t-vars are an earlier version of k-rate arrays, the opcode also works with these. The opcode pvs2array is an alias of this one.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm181719"></a>
+        <a id="idm180897"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kframe <span class="command"><strong>pvs2tab</strong></span> tvar|kvar[], fsig</pre>
         <pre class="synopsis">kframe <span class="command"><strong>pvs2tab</strong></span> kmags[], kfreqs[], fsig</pre>
       </div>
       <div class="refsect1">
-        <a id="idm181725"></a>
+        <a id="idm180903"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kframe</em></span> -- current copied frame number. It can be used to detect when a new frame has been copied.
@@ -68,28 +68,28 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm181735"></a>
+        <a id="idm180913"></a>
         <h2>Examples</h2>
         <p>
       </p>
         <div class="example">
-          <a id="idm181738"></a>
+          <a id="idm180916"></a>
           <p class="title">
-            <strong>Example 805. Example</strong>
+            <strong>Example 807. Example</strong>
           </p>
           <div class="example-contents">
             <pre class="programlisting">
 karr[] init 1026
 a1 inch 1
 fsig1   pvsanal a1, 1024,256,1024, 1
-kframe  <span class="opc">pvs2tab</span>karr, fsig1</pre>
+kframe  <span class="opc">pvs2tab</span> karr, fsig1</pre>
           </div>
         </div>
         <p><br class="example-break" />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm181742"></a>
+        <a id="idm180920"></a>
         <h2>Credits</h2>
         <p>
       </p>

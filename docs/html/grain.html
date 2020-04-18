@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm96383"></a>
+        <a id="idm96303"></a>
         <h2>Description</h2>
         <p>
       Generates granular synthesis textures.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm96386"></a>
+        <a id="idm96306"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>grain</strong></span> xamp, xpitch, xdens, kampoff, kpitchoff, kgdur, igfn, \
       iwfn, imgdur [, igrnd]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm96390"></a>
+        <a id="idm96310"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>igfn</em></span> -- The ftable number of the grain waveform. This can be just a sine wave or a sampled sound.
@@ -68,7 +68,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm96405"></a>
+        <a id="idm96325"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xamp</em></span> -- Amplitude of each grain.
@@ -101,21 +101,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm96438"></a>
+        <a id="idm96358"></a>
         <h2>Examples</h2>
         <p>
       This example generates a texture with gradually shorter grains and wider amp and pitch spread. It uses the file <a class="ulink" href="examples/grain.csd.html" target="_top"> (click here to play) <em class="citetitle">grain.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm96445"></a>
+          <a id="idm96365"></a>
           <p class="title">
-            <strong>Example 402. Example of the grain opcode.</strong>
+            <strong>Example 403. Example of the grain opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm96452"></a>
+              <a id="idm96372"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span> 
 <span class="nt">&lt;CsOptions&gt;</span> 
@@ -137,12 +137,12 @@
 i<span class="n">nsnd</span>   <span class="o">=</span> <span class="mi">10</span> 
 i<span class="n">basfrq</span> <span class="o">=</span> <span class="mi">44100</span> <span class="o">/</span> <span class="nb">ftlen</span><span class="p">(</span>i<span class="n">nsnd</span><span class="p">)</span> <span class="c1">; Use original sample rate of insnd file </span>
 
-k<span class="n">amp</span>   <span class="nb">expseg</span> <span class="mf">.001</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">.01</span> <span class="c1">;a swell in amplitude</span>
-k<span class="n">pitch</span> <span class="nb">line</span> i<span class="n">basfrq</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> i<span class="n">basfrq</span> <span class="o">*</span> <span class="mf">.8</span> 
-k<span class="n">dens</span>  <span class="nb">line</span> <span class="mi">600</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">100</span> 
-k<span class="n">aoff</span>  <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.1</span>
-k<span class="n">poff</span>  <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> i<span class="n">basfrq</span> <span class="o">*</span> <span class="mf">.5</span> 
-k<span class="n">gdur</span>  <span class="nb">line</span> <span class="mf">.4</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.01</span>
+k<span class="n">amp</span>   <span class="nb">expseg</span> <span class="mf">.001</span><span class="p">,</span> <span class="vi">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="vi">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mf">.01</span> <span class="c1">;a swell in amplitude</span>
+k<span class="n">pitch</span> <span class="nb">line</span> i<span class="n">basfrq</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> i<span class="n">basfrq</span> <span class="o">*</span> <span class="mf">.8</span> 
+k<span class="n">dens</span>  <span class="nb">line</span> <span class="mi">600</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">100</span> 
+k<span class="n">aoff</span>  <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">.1</span>
+k<span class="n">poff</span>  <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> i<span class="n">basfrq</span> <span class="o">*</span> <span class="mf">.5</span> 
+k<span class="n">gdur</span>  <span class="nb">line</span> <span class="mf">.4</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">.01</span>
 i<span class="n">maxgdur</span> <span class="o">=</span>  <span class="mf">.5</span> 
 
 a<span class="n">sigL</span>  <span class="nb">grain</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">pitch</span><span class="p">,</span> k<span class="n">dens</span><span class="p">,</span> k<span class="n">aoff</span><span class="p">,</span> k<span class="n">poff</span><span class="p">,</span> k<span class="n">gdur</span><span class="p">,</span> i<span class="n">nsnd</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> i<span class="n">maxgdur</span><span class="p">,</span> <span class="mf">0.0</span> 
@@ -167,7 +167,7 @@ a<span class="n">sigR</span>  <span class="nb">grain</span> k<span class="n">amp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm96619"></a>
+        <a id="idm96539"></a>
         <h2>Credits</h2>
         <p>
       </p>

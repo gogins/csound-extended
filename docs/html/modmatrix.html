@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm139755"></a>
+        <a id="idm138326"></a>
         <h2>Description</h2>
         <p>
       The opcode can be used to let a large number of k-rate modulator
@@ -51,13 +51,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm139758"></a>
+        <a id="idm138329"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>modmatrix</strong></span> iresfn, isrcmodfn, isrcparmfn, imodscale, inum_mod, \\
 inum_parm, kupdate</pre>
       </div>
       <div class="refsect1">
-        <a id="idm139762"></a>
+        <a id="idm138333"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iresfn</em></span> --  ftable number for the parameter output variables
@@ -87,7 +87,7 @@ inum_parm, kupdate</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm139779"></a>
+        <a id="idm138350"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kupdate</em></span> -- flag to update the scaling
@@ -326,20 +326,20 @@ inum_parm, kupdate</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm139875"></a>
+        <a id="idm138446"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the modmatrix opcode. It uses the file <a class="ulink" href="examples/modmatrix.csd.html" target="_top"> (click here to play) <em class="citetitle">modmatrix.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm139880"></a>
+          <a id="idm138451"></a>
           <p class="title">
             <strong>Example 587. Example of the modmatrix opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm139887"></a>
+              <a id="idm138458"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -398,9 +398,9 @@ k<span class="n">LFO2</span>	<span class="o">=</span> k<span class="n">LFO2</spa
 	<span class="kd">instr</span> <span class="nf">2</span>
 
 <span class="c1">; Here we can set the parameter values</span>
-i<span class="n">cps1</span>	<span class="o">=</span> <span class="nb">p4</span>
-i<span class="n">cps2</span>	<span class="o">=</span> <span class="nb">p5</span>
-i<span class="n">cutoff</span>	<span class="o">=</span> <span class="nb">p6</span>
+i<span class="n">cps1</span>	<span class="o">=</span> <span class="vi">p4</span>
+i<span class="n">cps2</span>	<span class="o">=</span> <span class="vi">p5</span>
+i<span class="n">cutoff</span>	<span class="o">=</span> <span class="vi">p6</span>
 	
 <span class="c1">; write parameters to table</span>
 	<span class="nb">tableiw</span>	i<span class="n">cps1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> gi<span class="n">Param_In</span>
@@ -416,12 +416,12 @@ i<span class="n">cutoff</span>	<span class="o">=</span> <span class="nb">p6</spa
 
 <span class="c1">; Here we can write to the modmatrix table by using tablew or tableiw</span>
 
-i<span class="n">Lfo1ToCps1</span>	<span class="o">=</span> <span class="nb">p4</span>
-i<span class="n">Lfo1ToCps2</span>	<span class="o">=</span> <span class="nb">p5</span>
-i<span class="n">Lfo1ToCutoff</span>	<span class="o">=</span> <span class="nb">p6</span>
-i<span class="n">Lfo2ToCps1</span>	<span class="o">=</span> <span class="nb">p7</span>
-i<span class="n">Lfo2ToCps2</span>	<span class="o">=</span> <span class="nb">p8</span>
-i<span class="n">Lfo2ToCutoff</span>	<span class="o">=</span> <span class="nb">p9</span>
+i<span class="n">Lfo1ToCps1</span>	<span class="o">=</span> <span class="vi">p4</span>
+i<span class="n">Lfo1ToCps2</span>	<span class="o">=</span> <span class="vi">p5</span>
+i<span class="n">Lfo1ToCutoff</span>	<span class="o">=</span> <span class="vi">p6</span>
+i<span class="n">Lfo2ToCps1</span>	<span class="o">=</span> <span class="vi">p7</span>
+i<span class="n">Lfo2ToCps2</span>	<span class="o">=</span> <span class="vi">p8</span>
+i<span class="n">Lfo2ToCutoff</span>	<span class="o">=</span> <span class="vi">p9</span>
 
 	<span class="nb">tableiw</span>	i<span class="n">Lfo1ToCps1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> gi<span class="n">ModScale</span>
 	<span class="nb">tableiw</span>	i<span class="n">Lfo1ToCps2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> gi<span class="n">ModScale</span>
@@ -449,7 +449,7 @@ k<span class="n">update</span>	<span class="nb">chnget</span>	<span class="s">"m
 <span class="c1">; run the mod matrix </span>
 i<span class="n">num_mod</span>	<span class="o">=</span> <span class="mi">2</span>
 i<span class="n">num_parm</span>	<span class="o">=</span> <span class="mi">3</span>
-	<span class="nb">modmatrix</span> gi<span class="n">Param_Out</span><span class="p">,</span> gi<span class="n">Modulators</span><span class="p">,</span> gi<span class="n">Param_In</span><span class="p">,</span> \
+	<span class="nb">modmatrix</span> gi<span class="n">Param_Out</span><span class="p">,</span> gi<span class="n">Modulators</span><span class="p">,</span> gi<span class="n">Param_In</span><span class="p">,</span> <span class="w">\</span>
 	gi<span class="n">ModScale</span><span class="p">,</span> i<span class="n">num_mod</span><span class="p">,</span> i<span class="n">num_parm</span><span class="p">,</span> k<span class="n">update</span>
 
 <span class="c1">; and reset the update flag</span>
@@ -502,7 +502,7 @@ i<span class="n">num_parm</span>	<span class="o">=</span> <span class="mi">3</sp
 
 <span class="c1">;********************************************</span>
 <span class="c1">; start "always on" instruments</span>
-<span class="err">#d</span><span class="nb">e</span><span class="cp">fine</span> <span class="cp">SCORELEN</span> <span class="o">#</span> <span class="mi">20</span> <span class="o">#</span>	 <span class="c1">; set length of score</span>
+<span class="cp">#define</span> <span class="cp">SCORELEN</span> <span class="p">#</span><span class="cp"> 20 </span><span class="p">#</span>	 <span class="c1">; set length of score</span>
 
 <span class="nb">i</span><span class="mi">1</span> <span class="mi">0</span> <span class="cp">$SCORELEN</span>			<span class="c1">; start modulators</span>
 <span class="nb">i</span><span class="mi">4</span> <span class="mi">0</span> <span class="cp">$SCORELEN</span>			<span class="c1">; start mod matrix</span>
@@ -520,7 +520,7 @@ i<span class="n">num_parm</span>	<span class="o">=</span> <span class="mi">3</sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm140350"></a>
+        <a id="idm138920"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="linearalgebraopcodes.html" title="Linear Algebra Opcodes"><em class="citetitle">Linear Algebra
@@ -531,7 +531,7 @@ i<span class="n">num_parm</span>	<span class="o">=</span> <span class="mi">3</sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm140359"></a>
+        <a id="idm138929"></a>
         <h2>Credits</h2>
         <p>By:</p>
         <p>Oeyvind Brandtsegg and Thom Johansen</p>

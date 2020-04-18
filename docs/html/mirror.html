@@ -39,21 +39,21 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm138034"></a>
+        <a id="idm136605"></a>
         <h2>Description</h2>
         <p>
       Reflects the signal that exceeds the low and high thresholds.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm138037"></a>
+        <a id="idm136608"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>mirror</strong></span> asig, klow, khigh</pre>
         <pre class="synopsis">ires <span class="command"><strong>mirror</strong></span> isig, ilow, ihigh</pre>
         <pre class="synopsis">kres <span class="command"><strong>mirror</strong></span> ksig, klow, khigh</pre>
       </div>
       <div class="refsect1">
-        <a id="idm138045"></a>
+        <a id="idm136616"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>isig</em></span> -- input signal
@@ -66,7 +66,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm138053"></a>
+        <a id="idm136624"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xsig</em></span> -- input signal
@@ -85,20 +85,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm138065"></a>
+        <a id="idm136636"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the mirror opcode. It uses the file <a class="ulink" href="examples/mirror.csd.html" target="_top"> (click here to play) <em class="citetitle">mirror.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm138070"></a>
+          <a id="idm136641"></a>
           <p class="title">
             <strong>Example 580. Example of the mirror opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm138077"></a>
+              <a id="idm136648"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -117,10 +117,10 @@
 
 <span class="kd">instr</span>    <span class="nf">1</span> <span class="c1">; Limit / Mirror / Wrap</span>
 
-i<span class="n">gain</span>    <span class="o">=</span> <span class="nb">p4</span>				<span class="c1">;gain</span>
-i<span class="n">levl1</span>   <span class="o">=</span> <span class="nb">p5</span>				<span class="c1">; + level</span>
-i<span class="n">levl2</span>   <span class="o">=</span> <span class="nb">p6</span>				<span class="c1">; - level</span>
-i<span class="n">mode</span>    <span class="o">=</span> <span class="nb">p7</span>				<span class="c1">;1 = limit, 2 = mirror, 3 = wrap</span>
+i<span class="n">gain</span>    <span class="o">=</span> <span class="vi">p4</span>				<span class="c1">;gain</span>
+i<span class="n">levl1</span>   <span class="o">=</span> <span class="vi">p5</span>				<span class="c1">; + level</span>
+i<span class="n">levl2</span>   <span class="o">=</span> <span class="vi">p6</span>				<span class="c1">; - level</span>
+i<span class="n">mode</span>    <span class="o">=</span> <span class="vi">p7</span>				<span class="c1">;1 = limit, 2 = mirror, 3 = wrap</span>
 
 a<span class="n">in</span>   <span class="nb">soundin</span>  <span class="s">"fox.wav"</span>
 a<span class="n">in</span>   <span class="o">=</span> a<span class="n">in</span><span class="o">*</span>i<span class="n">gain</span>
@@ -161,7 +161,7 @@ a<span class="n">sig</span>  <span class="nb">mirror</span>  a<span class="n">in
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm138216"></a>
+        <a id="idm136787"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="limit.html" title="limit"><em class="citetitle">limit</em></a>,
@@ -169,7 +169,7 @@ a<span class="n">sig</span>  <span class="nb">mirror</span>  a<span class="n">in
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm138223"></a>
+        <a id="idm136794"></a>
         <h2>Credits</h2>
         <p>
       </p>

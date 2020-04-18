@@ -39,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm256238"></a>
+        <a id="idm255873"></a>
         <h2>Description</h2>
         <p>Plugin opcode in scansyn.</p>
         <p>
@@ -47,13 +47,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm256244"></a>
+        <a id="idm255879"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>xscanu</strong></span> init, irate, ifnvel, ifnmass, ifnstif, ifncentr, ifndamp, kmass, \
       kstif, kcentr, kdamp, ileft, iright, kpos, kstrngth, ain, idisp, id</pre>
       </div>
       <div class="refsect1">
-        <a id="idm256248"></a>
+        <a id="idm255883"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>init</em></span> -- the initial position of the masses. If this is a negative number, then the absolute of init signifies the table to use as a hammer shape. If init &gt; 0, the length of it should be the same as the intended mass number, otherwise it can be anything.
@@ -102,7 +102,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm256279"></a>
+        <a id="idm255914"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kmass</em></span> -- scales the masses
@@ -127,7 +127,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm256295"></a>
+        <a id="idm255930"></a>
         <h2>Matrix Format</h2>
         <p>
       The new matrix format is a list of connections, one per line linking point x to point y.   There is no weight given to the link; it is assumed to be unity.  The list is proceeded by the line &lt;MATRIX&gt; and ends with a &lt;/MATRIX&gt; line
@@ -161,20 +161,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm256301"></a>
+        <a id="idm255936"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the xscanu opcode. It uses the file <a class="ulink" href="examples/xscanu.csd.html" target="_top"> (click here to play) <em class="citetitle">xscanu.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm256306"></a>
+          <a id="idm255941"></a>
           <p class="title">
-            <strong>Example 1154. Example of the xscanu opcode.</strong>
+            <strong>Example 1157. Example of the xscanu opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm256313"></a>
+              <a id="idm255948"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -196,7 +196,7 @@
 	<span class="c1">; Note Also that I am using quadratic interpolation on these.</span>
   a<span class="n">0</span>	<span class="o">=</span>           <span class="mi">0</span>
 	<span class="nb">xscanu</span>      <span class="mi">1</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s">"128,8-gridX"</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">.01</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> a<span class="n">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
-  a<span class="n">1</span>	<span class="nb">xscans</span>      <span class="mf">.5</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">),</span> <span class="mi">333</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p6</span>			<span class="c1">; NOTE LEFT RIGHT TRAJECTORY (f333) IS CLEAN!</span>
+  a<span class="n">1</span>	<span class="nb">xscans</span>      <span class="mf">.5</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p4</span><span class="p">),</span> <span class="mi">333</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p6</span>			<span class="c1">; NOTE LEFT RIGHT TRAJECTORY (f333) IS CLEAN!</span>
   a<span class="n">1</span>	<span class="nb">dcblock</span> a<span class="n">1</span>
 	<span class="nb">outs</span>        a<span class="n">1</span><span class="p">,</span> a<span class="n">1</span>
 <span class="kd">endin</span>
@@ -286,7 +286,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm256898"></a>
+        <a id="idm256533"></a>
         <h2>See Also</h2>
         <p>
 More information on Scanned Synthesis (as well as several other matrices) is available on the <a class="ulink" href="http://www.csounds.com/scanned/" target="_top"><em class="citetitle">Scanned Synthesis page</em></a> at cSounds.com.
@@ -298,7 +298,7 @@ More information on Scanned Synthesis (as well as several other matrices) is ava
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm256911"></a>
+        <a id="idm256546"></a>
         <h2>Credits</h2>
         <p>Written by John ffitch.</p>
         <p>New in version 4.20</p>

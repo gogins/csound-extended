@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm91645"></a>
+        <a id="idm91418"></a>
         <h2>Description</h2>
         <p>Plugin opcode in emugens.</p>
         <p>
@@ -48,7 +48,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm91649"></a>
+        <a id="idm91422"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">imidi <span class="command"><strong>ftom</strong></span> ifreq [,irnd]</pre>
         <pre class="synopsis">kmidi <span class="command"><strong>ftom</strong></span> kfreq [,irnd]</pre>
@@ -56,7 +56,7 @@
         <pre class="synopsis">kmidis[] <span class="command"><strong>ftom</strong></span> kfreqs[] [,irnd]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm91659"></a>
+        <a id="idm91432"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kfreq</em></span> / <span class="emphasis"><em>ifreq</em></span> -- Frequency 
@@ -89,19 +89,19 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm91673"></a>
+        <a id="idm91446"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the ftom opcode. It uses the file <a class="ulink" href="examples/mtof-ftom.csd.html" target="_top"> (click here to play) <em class="citetitle">mtof-ftom.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm91678"></a>
+          <a id="idm91451"></a>
           <p class="title">
-            <strong>Example 375. Example of the ftom opcode.</strong>
+            <strong>Example 376. Example of the ftom opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm91680"></a>
+              <a id="idm91453"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -112,25 +112,25 @@
 <span class="vg">ksmps</span> <span class="o">=</span> <span class="mi">128</span>
 <span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="vg">0dbfs</span> <span class="o">=</span> <span class="mf">1.0</span>
-<span class="n">A4</span> <span class="o">=</span> <span class="mi">440</span>
+<span class="vg">A4</span> <span class="o">=</span> <span class="mi">440</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
-  k<span class="n">freq</span> <span class="o">=</span> <span class="n">mtof</span><span class="p">(</span><span class="mi">69</span><span class="p">)</span>
-  <span class="nb">printks2</span> <span class="s">"midi 69   -&gt; %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">freq</span>
+  k<span class="n">freq</span> <span class="o">=</span> <span class="nb">mtof</span><span class="p">(</span><span class="mi">69</span><span class="p">)</span>
+  <span class="nb">printks2</span> <span class="s">"midi 69   -&gt; </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">freq</span>
   
-  k<span class="n">midi</span> <span class="o">=</span> <span class="n">ftom</span><span class="p">(</span><span class="mi">442</span><span class="p">)</span>
-  <span class="nb">printks2</span> <span class="s">"freq 442  -&gt; %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">midi</span>
+  k<span class="n">midi</span> <span class="o">=</span> <span class="nb">ftom</span><span class="p">(</span><span class="mi">442</span><span class="p">)</span>
+  <span class="nb">printks2</span> <span class="s">"freq 442  -&gt; </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">midi</span>
   
-  k<span class="n">midi</span> <span class="o">=</span> <span class="n">ftom</span><span class="p">(</span><span class="mi">442</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-  <span class="nb">printks2</span> <span class="s">"freq 442  -&gt; %f rounded</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">midi</span>
+  k<span class="n">midi</span> <span class="o">=</span> <span class="nb">ftom</span><span class="p">(</span><span class="mi">442</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+  <span class="nb">printks2</span> <span class="s">"freq 442  -&gt; </span><span class="si">%f</span><span class="s"> rounded</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">midi</span>
   
-  k<span class="n">freq</span> <span class="o">=</span> <span class="n">mtof</span><span class="p">(</span>k<span class="n">midi</span><span class="p">)</span>
-  <span class="nb">printks</span> <span class="s">"midi %f -&gt; %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">midi</span><span class="p">,</span> k<span class="n">freq</span>
+  k<span class="n">freq</span> <span class="o">=</span> <span class="nb">mtof</span><span class="p">(</span>k<span class="n">midi</span><span class="p">)</span>
+  <span class="nb">printks</span> <span class="s">"midi </span><span class="si">%f</span><span class="s"> -&gt; </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">midi</span><span class="p">,</span> k<span class="n">freq</span>
   
-  i<span class="n">midi</span> <span class="o">=</span> <span class="n">ftom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
+  i<span class="n">midi</span> <span class="o">=</span> <span class="nb">ftom</span><span class="p">:</span><span class="kt">i</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
   <span class="nb">print</span> i<span class="n">midi</span>
   
-  i<span class="n">freq</span> <span class="o">=</span> <span class="n">mtof</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+  i<span class="n">freq</span> <span class="o">=</span> <span class="nb">mtof</span><span class="p">:</span><span class="kt">i</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
   <span class="nb">print</span> i<span class="n">freq</span>
   
   <span class="nb">turnoff</span>
@@ -138,13 +138,13 @@
 
 <span class="kd">instr</span> <span class="nf">2</span>
   i<span class="n">midis0</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">62</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">69</span>
-  i<span class="n">freqs0</span><span class="p">[]</span> <span class="n">mtof</span> i<span class="n">midis0</span>
-  <span class="n">printarray</span> i<span class="n">freqs0</span><span class="p">,</span> <span class="s">""</span><span class="p">,</span> <span class="s">"ifreqs0"</span>
+  i<span class="n">freqs0</span><span class="p">[]</span> <span class="nb">mtof</span> i<span class="n">midis0</span>
+  <span class="nb">printarray</span> i<span class="n">freqs0</span><span class="p">,</span> <span class="s">""</span><span class="p">,</span> <span class="s">"ifreqs0"</span>
   
   k<span class="n">freqs</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">880</span>
-  k<span class="n">midis</span><span class="p">[]</span> <span class="n">ftom</span> k<span class="n">freqs</span>
+  k<span class="n">midis</span><span class="p">[]</span> <span class="nb">ftom</span> k<span class="n">freqs</span>
   <span class="nb">puts</span> <span class="s">"kfreqs"</span><span class="p">,</span> <span class="mi">1</span>
-  <span class="n">printarray</span> k<span class="n">midis</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"%.2f"</span><span class="p">,</span> <span class="s">"kmidis"</span>
+  <span class="nb">printarray</span> k<span class="n">midis</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"</span><span class="si">%.2f</span><span class="s">"</span><span class="p">,</span> <span class="s">"kmidis"</span>
   <span class="nb">turnoff</span>
 <span class="kd">endin</span>
 
@@ -162,7 +162,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm91839"></a>
+        <a id="idm91621"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cpsmidinn.html" title="cpsmidinn"><em class="citetitle">cpsmidinn</em></a>, 
@@ -171,7 +171,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm91846"></a>
+        <a id="idm91628"></a>
         <h2>Credits</h2>
         <p>By: Eduardo Moguillansky 2017</p>
         <p>New in version 6.09</p>

@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm264969"></a>
+        <a id="idm264619"></a>
         <h2>Description</h2>
         <p>
       This subroutine generates a stored function table by evaluating a polynomial in x over a fixed interval and with specified coefficients.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm264972"></a>
+        <a id="idm264622"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span>  #  time  size  3  xval1  xval2  c0  c1  c2  ...  cn</pre>
       </div>
       <div class="refsect1">
-        <a id="idm264976"></a>
+        <a id="idm264626"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>size </em></span> -- number of points in the table. Must be a power of 2 or a power-of-2 plus 1.
@@ -104,20 +104,20 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm265015"></a>
+        <a id="idm264665"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the GEN03 generator. It uses the file <a class="ulink" href="examples/gen03.csd.html" target="_top"> (click here to play) <em class="citetitle">gen03.csd</em></a>.
            </p>
         <div class="example">
-          <a id="idm265020"></a>
+          <a id="idm264670"></a>
           <p class="title">
-            <strong>Example 1198. Example of the GEN03 generator.</strong>
+            <strong>Example 1201. Example of the GEN03 generator.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm265027"></a>
+              <a id="idm264677"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -139,12 +139,12 @@ gi<span class="n">sine</span>   <span class="nb">ftgen</span> <span class="mi">1
 
 <span class="kd">instr</span>   <span class="nf">1</span>
 
-i<span class="n">hertz</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
-i<span class="n">pkamp</span> <span class="o">=</span> <span class="nb">p5</span>
-i<span class="n">wsfn</span>  <span class="o">=</span> <span class="nb">p6</span>									<span class="c1">;waveshaping function</span>
-i<span class="n">nmfn</span>  <span class="o">=</span> <span class="nb">p7</span>									<span class="c1">;normalization function</span>
-a<span class="n">env</span>    <span class="nb">linen</span>  <span class="mi">1</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.1</span>        						<span class="c1">;overall amp envelope</span>
-a<span class="n">ctrl</span>   <span class="nb">linen</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">2</span>							<span class="c1">;waveshaping index control</span>
+i<span class="n">hertz</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p4</span><span class="p">)</span>
+i<span class="n">pkamp</span> <span class="o">=</span> <span class="vi">p5</span>
+i<span class="n">wsfn</span>  <span class="o">=</span> <span class="vi">p6</span>									<span class="c1">;waveshaping function</span>
+i<span class="n">nmfn</span>  <span class="o">=</span> <span class="vi">p7</span>									<span class="c1">;normalization function</span>
+a<span class="n">env</span>    <span class="nb">linen</span>  <span class="mi">1</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">.1</span>        						<span class="c1">;overall amp envelope</span>
+a<span class="n">ctrl</span>   <span class="nb">linen</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">2</span>							<span class="c1">;waveshaping index control</span>
 a<span class="n">index</span>  <span class="nb">poscil</span> a<span class="n">ctrl</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> i<span class="n">hertz</span><span class="p">,</span> gi<span class="n">sine</span>						<span class="c1">;sine wave to be distorted</span>
 a<span class="n">signal</span> <span class="nb">tablei</span> <span class="mf">.5</span><span class="o">+</span>a<span class="n">index</span><span class="p">,</span> i<span class="n">wsfn</span><span class="p">,</span> <span class="mi">1</span>						<span class="c1">;waveshaping</span>
 a<span class="n">normal</span> <span class="nb">tablei</span> a<span class="n">ctrl</span><span class="p">,</span> i<span class="n">nmfn</span><span class="p">,</span><span class="mi">1</span>							<span class="c1">;amplitude normalization</span>
@@ -238,7 +238,7 @@ a<span class="n">sig</span>    <span class="nb">dcblock2</span>  a<span class="n
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm265345"></a>
+        <a id="idm264995"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="GEN13.html" title="GEN13"><em class="citetitle">GEN13</em></a>,

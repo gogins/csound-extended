@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm120104"></a>
+        <a id="idm120211"></a>
         <h2>Description</h2>
         <p>
     Generate control signal consisiting of linear segments delimited
@@ -49,13 +49,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm120107"></a>
+        <a id="idm120214"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ksig <span class="command"><strong>loopsegp</strong></span>  kphase, kvalue0, kdur0, kvalue1 \
       [, kdur1, ... , kdurN-1, kvalueN]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm120111"></a>
+        <a id="idm120218"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ksig</em></span> - output signal
@@ -74,19 +74,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm120134"></a>
+        <a id="idm120241"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the loopsegp opcode. It uses the file <a class="ulink" href="examples/loopsegp.csd.html" target="_top"> (click here to play) <em class="citetitle">loopsegp.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm120139"></a>
+          <a id="idm120246"></a>
           <p class="title">
-            <strong>Example 499. Example of the loopsegp opcode.</strong>
+            <strong>Example 500. Example of the loopsegp opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm120141"></a>
+              <a id="idm120248"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -110,7 +110,7 @@ k<span class="n">dir</span>  <span class="o">=</span>       <span class="mf">0.5
 <span class="c1">; kphase - looping pointer</span>
 k<span class="n">phase</span> <span class="nb">phasor</span> k<span class="n">dir</span>
 <span class="c1">; a loop sequence of midi note numbers and durations</span>
-k<span class="n">note</span> <span class="nb">loopsegp</span>  k<span class="n">phase</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">43</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">48</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> \
+k<span class="n">note</span> <span class="nb">loopsegp</span>  k<span class="n">phase</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">43</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">48</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="w">\</span>
  <span class="mi">47</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">47</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">46</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">46</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">46</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">47</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">49</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">43</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">46</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">46</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">39</span><span class="p">,</span><span class="mi">0</span>    
 k<span class="n">mul</span>  <span class="nb">rspline</span> <span class="mf">0.1</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">5</span>                         <span class="c1">; modulation of buzz tone</span>
 a<span class="n">sig</span>  <span class="nb">gbuzz</span>   <span class="mf">0.2</span><span class="p">,</span> <span class="nb">cpsmidinn</span><span class="p">(</span>k<span class="n">note</span><span class="p">),</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> k<span class="n">mul</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">; buzz tone</span>
@@ -120,8 +120,8 @@ a<span class="n">sig</span>  <span class="nb">gbuzz</span>   <span class="mf">0.
 <span class="kd">endin</span>
 
 <span class="kd">instr</span> <span class="nf">2</span> <span class="c1">; metronome</span>
-a<span class="n">cps</span>  <span class="nb">expon</span>   <span class="mi">180</span><span class="o">+</span><span class="nb">rnd</span><span class="p">(</span><span class="mi">40</span><span class="p">),</span><span class="nb">p3</span><span class="p">,</span><span class="mi">50</span>
-a<span class="n">amp</span>  <span class="nb">expon</span>   <span class="mf">0.05</span><span class="o">+</span><span class="nb">rnd</span><span class="p">(</span><span class="mf">0.05</span><span class="p">),</span><span class="nb">p3</span><span class="p">,</span><span class="mf">0.001</span>
+a<span class="n">cps</span>  <span class="nb">expon</span>   <span class="mi">180</span><span class="o">+</span><span class="nb">rnd</span><span class="p">(</span><span class="mi">40</span><span class="p">),</span><span class="vi">p3</span><span class="p">,</span><span class="mi">50</span>
+a<span class="n">amp</span>  <span class="nb">expon</span>   <span class="mf">0.05</span><span class="o">+</span><span class="nb">rnd</span><span class="p">(</span><span class="mf">0.05</span><span class="p">),</span><span class="vi">p3</span><span class="p">,</span><span class="mf">0.001</span>
 a<span class="n">sig</span>  <span class="nb">poscil</span>  a<span class="n">amp</span><span class="o">-</span><span class="mf">0.001</span><span class="p">,</span>a<span class="n">cps</span><span class="p">,</span><span class="mi">2</span>
       <span class="nb">outs</span>    a<span class="n">sig</span><span class="p">,</span>a<span class="n">sig</span>
 <span class="kd">endin</span>
@@ -146,7 +146,7 @@ a<span class="n">sig</span>  <span class="nb">poscil</span>  a<span class="n">am
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm120384"></a>
+        <a id="idm120492"></a>
         <h2>Credits</h2>
         <p>Written by Gabriel Maldonado.</p>
         <p>New in Csound 5. (Previously available only on CsoundAV)</p>

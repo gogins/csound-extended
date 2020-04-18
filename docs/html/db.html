@@ -39,14 +39,14 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm49823"></a>
+        <a id="idm49352"></a>
         <h2>Description</h2>
         <p>
       Returns the amplitude equivalent for a given decibel amount. This opcode is the same as <a class="link" href="ampdb.html" title="ampdb"><em class="citetitle">ampdb</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm49828"></a>
+        <a id="idm49357"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>db</strong></span>(x)</pre>
         <p>
@@ -54,35 +54,35 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm49833"></a>
+        <a id="idm49362"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>x</em></span> -- a value expressed in decibels.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm49837"></a>
+        <a id="idm49366"></a>
         <h2>Performance</h2>
         <p>
       Returns the amplitude for a given decibel amount.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm49840"></a>
+        <a id="idm49369"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the db opcode. It uses the file <a class="ulink" href="examples/db.csd.html" target="_top"> (click here to play) <em class="citetitle">db.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm49845"></a>
+          <a id="idm49374"></a>
           <p class="title">
             <strong>Example 188. Example of the db opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm49852"></a>
+              <a id="idm49381"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -100,7 +100,7 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">dec</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">dec</span> <span class="o">=</span> <span class="vi">p4</span>
 i<span class="n">amp</span> <span class="o">=</span> <span class="nb">db</span><span class="p">(</span>i<span class="n">dec</span><span class="p">)</span>
      <span class="nb">print</span> i<span class="n">amp</span>
 a<span class="n">sig</span> <span class="nb">vco2</span> i<span class="n">amp</span><span class="p">,</span> <span class="mi">110</span>			<span class="c1">;sawtooth</span>
@@ -135,7 +135,7 @@ instr 1:  iamp = 17782.420</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm49922"></a>
+        <a id="idm49451"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="ampdb.html" title="ampdb"><em class="citetitle">ampdb</em></a>,
@@ -145,7 +145,7 @@ instr 1:  iamp = 17782.420</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm49933"></a>
+        <a id="idm49462"></a>
         <p>New in version 4.16</p>
       </div>
     </div>

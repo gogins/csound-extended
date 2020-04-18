@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm36661"></a>
+        <a id="idm36052"></a>
         <h2>Description</h2>
         <p>Plugin opcode in cellular</p>
         <p>
@@ -48,12 +48,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm36666"></a>
+        <a id="idm36057"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>cell</strong></span> ktrig, kreinit, ioutFunc, initStateFunc, iRuleFunc, ielements</pre>
       </div>
       <div class="refsect1">
-        <a id="idm36670"></a>
+        <a id="idm36061"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ioutFunc</em></span> -- number of the table where the state of each cell is stored.
@@ -71,7 +71,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm36680"></a>
+        <a id="idm36071"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktri</em></span> -- trigger signal. Each time it is
@@ -108,21 +108,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm36697"></a>
+        <a id="idm36088"></a>
         <h2>Examples</h2>
         <p>
       Here is a simple example of the cell opcode. It uses the file
       <a class="ulink" href="examples/cell.csd.html" target="_top"> (click here to play) <em class="citetitle">cell.csd</em></a>. 
       </p>
         <div class="example">
-          <a id="idm36702"></a>
+          <a id="idm36093"></a>
           <p class="title">
             <strong>Example 114. A simple example of the cell opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm36709"></a>
+              <a id="idm36100"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -143,16 +143,16 @@
 <span class="c1">; Cellular automaton-driven synthesis in spectral domain</span>
 <span class="kd">instr</span> <span class="nf">1</span>
 
-  i<span class="n">att</span>      <span class="o">=</span> <span class="nb">p4</span>                                <span class="c1">; envelope attack time</span>
-  i<span class="n">sus</span>      <span class="o">=</span> <span class="nb">p5</span>                                <span class="c1">; envelope sustain time</span>
-  i<span class="n">rel</span>      <span class="o">=</span> <span class="nb">p6</span>                                <span class="c1">; envelope release time</span>
-  i<span class="n">vol</span>      <span class="o">=</span> <span class="nb">p7</span>                                <span class="c1">; overall volume</span>
+  i<span class="n">att</span>      <span class="o">=</span> <span class="vi">p4</span>                                <span class="c1">; envelope attack time</span>
+  i<span class="n">sus</span>      <span class="o">=</span> <span class="vi">p5</span>                                <span class="c1">; envelope sustain time</span>
+  i<span class="n">rel</span>      <span class="o">=</span> <span class="vi">p6</span>                                <span class="c1">; envelope release time</span>
+  i<span class="n">vol</span>      <span class="o">=</span> <span class="vi">p7</span>                                <span class="c1">; overall volume</span>
   
   <span class="c1">; create some white noise</span>
   a<span class="n">sig</span>      <span class="nb">rand</span>      <span class="mf">0.8</span>                      
   
   <span class="c1">; spectral analysis of asig</span>
-  <span class="n">fsig</span>      <span class="nb">pvsanal</span>   a<span class="n">sig</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">0</span>  <span class="c1">; get a vector of magnitudes</span>
+  f<span class="n">sig</span>      <span class="nb">pvsanal</span>   a<span class="n">sig</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">0</span>  <span class="c1">; get a vector of magnitudes</span>
            
   <span class="c1">; calculate cellular automaton state</span>
   k<span class="n">freq</span>     <span class="nb">line</span>      <span class="mi">50</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span>                  <span class="c1">; variable CA triggering frequency</span>
@@ -161,8 +161,8 @@
                                                                         
                                                                          
   <span class="c1">; use current row of cells in spectral domain</span>
-  <span class="n">fmas</span>      <span class="nb">pvstencil</span> <span class="n">fsig</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span>             <span class="c1">; apply spectral mask </span>
-  a<span class="n">out</span>      <span class="nb">pvsynth</span>   <span class="n">fmas</span>                      <span class="c1">; reconstruct time signal </span>
+  f<span class="n">mas</span>      <span class="nb">pvstencil</span> f<span class="n">sig</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span>             <span class="c1">; apply spectral mask </span>
+  a<span class="n">out</span>      <span class="nb">pvsynth</span>   f<span class="n">mas</span>                      <span class="c1">; reconstruct time signal </span>
   
   <span class="c1">; apply envelope and out signal</span>
   k<span class="n">env</span>      <span class="nb">expseg</span>    <span class="mf">.001</span><span class="p">,</span> i<span class="n">att</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">sus</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">rel</span><span class="p">,</span> <span class="mf">.001</span>
@@ -207,7 +207,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm36905"></a>
+        <a id="idm36296"></a>
         <h2>Credits</h2>
         <p>
       </p>

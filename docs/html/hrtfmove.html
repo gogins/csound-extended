@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm100047"></a>
+        <a id="idm99981"></a>
         <h2>Description</h2>
         <p>
       This opcode takes a source signal and spatialises it in the 3 dimensional space around a listener
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm100050"></a>
+        <a id="idm99984"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aleft, aright <span class="command"><strong>hrtfmove</strong></span> asrc, kAz, kElev, ifilel, ifiler [, imode, ifade, isr]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm100054"></a>
+        <a id="idm99988"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifilel </em></span> -- left HRTF spectral data file
@@ -143,19 +143,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm100092"></a>
+        <a id="idm100026"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the hrtfmove opcode. It uses the file <a class="ulink" href="examples/hrtfmove.csd.html" target="_top"> (click here to play) <em class="citetitle">hrtfmove.csd</em></a>. 
     </p>
         <div class="example">
-          <a id="idm100097"></a>
+          <a id="idm100031"></a>
           <p class="title">
-            <strong>Example 416. Example of the htrfmove opcode.</strong>
+            <strong>Example 417. Example of the htrfmove opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm100099"></a>
+              <a id="idm100033"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -176,9 +176,9 @@ ga<span class="n">src</span> <span class="nb">init</span> <span class="mi">0</sp
 
 <span class="kd">instr</span> <span class="nf">1</span>		<span class="c1">;a plucked string</span>
 
-  k<span class="n">amp</span> <span class="o">=</span> <span class="nb">p4</span>
-  k<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p5</span><span class="p">)</span>
-  i<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p5</span><span class="p">)</span>
+  k<span class="n">amp</span> <span class="o">=</span> <span class="vi">p4</span>
+  k<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p5</span><span class="p">)</span>
+  i<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p5</span><span class="p">)</span>
 
   a<span class="n">1</span> <span class="nb">pluck</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
 
@@ -188,7 +188,7 @@ ga<span class="n">src</span> <span class="nb">init</span> <span class="mi">0</sp
 
 <span class="kd">instr</span> <span class="nf">10</span>	<span class="c1">;uses output from instr1 as source</span>
 
- k<span class="n">az</span>	<span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">720</span>		<span class="c1">;2 full rotations</span>
+ k<span class="n">az</span>	<span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">720</span>		<span class="c1">;2 full rotations</span>
 
  a<span class="n">left</span><span class="p">,</span>a<span class="n">right</span> <span class="nb">hrtfmove</span> ga<span class="n">src</span><span class="p">,</span> k<span class="n">az</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="s">"hrtf-44100-left.dat"</span><span class="p">,</span><span class="s">"hrtf-44100-right.dat"</span>
 
@@ -224,7 +224,7 @@ ga<span class="n">src</span> <span class="nb">init</span> <span class="mi">0</sp
         <br class="example-break" />
       </div>
       <div class="refsect1">
-        <a id="idm100262"></a>
+        <a id="idm100196"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="hrtfmove2.html" title="hrtfmove2"><em class="citetitle">hrtfmove2</em></a>,
@@ -234,7 +234,7 @@ ga<span class="n">src</span> <span class="nb">init</span> <span class="mi">0</sp
         <p> More information on this opcode: <a class="ulink" href="http://www.csoundjournal.com/issue9/newHRTFOpcodes.html" target="_top"><em class="citetitle">http://www.csoundjournal.com/issue9/newHRTFOpcodes.html</em></a>  , written by Brian Carty </p>
       </div>
       <div class="refsect1">
-        <a id="idm100274"></a>
+        <a id="idm100208"></a>
         <h2>Credits</h2>
         <p>
       </p>

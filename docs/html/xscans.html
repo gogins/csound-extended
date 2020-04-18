@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm255451"></a>
+        <a id="idm255086"></a>
         <h2>Description</h2>
         <p>Plugin opcode in scansyn.</p>
         <p>
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm255457"></a>
+        <a id="idm255092"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>xscans</strong></span> kamp, kfreq, ifntraj, id [, iorder]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm255461"></a>
+        <a id="idm255096"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifntraj</em></span> --  table containing the scanning trajectory. This is a series of numbers that contains addresses of masses. The order of these addresses is used as the scan path. It should not contain values greater than the number of masses, or negative numbers. See the <a class="link" href="SiggenScanTop.html" title="Scanned Synthesis"><em class="citetitle">introduction to the scanned synthesis section</em></a>.
@@ -65,7 +65,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm255471"></a>
+        <a id="idm255106"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span>  -- output amplitude. Note that the resulting amplitude is also dependent on instantaneous value in the wavetable. This number is effectively the scaling factor of the wavetable.
@@ -75,7 +75,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm255477"></a>
+        <a id="idm255112"></a>
         <h2>Matrix Format</h2>
         <p>
       The new matrix format is a list of connections, one per line linking point x to point y.   There is no weight given to the link; it is assumed to be unity.  The list is preceded by the line &lt;MATRIX&gt; and ends with a &lt;/MATRIX&gt; line
@@ -109,20 +109,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm255483"></a>
+        <a id="idm255118"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the xscans opcode. It uses the file <a class="ulink" href="examples/xscans.csd.html" target="_top"> (click here to play) <em class="citetitle">xscans.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm255488"></a>
+          <a id="idm255123"></a>
           <p class="title">
-            <strong>Example 1153. Example of the xscans opcode.</strong>
+            <strong>Example 1156. Example of the xscans opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm255495"></a>
+              <a id="idm255130"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -144,7 +144,7 @@
 
   a<span class="n">0</span>       <span class="o">=</span>           <span class="mi">0</span>
            <span class="nb">xscanu</span>      <span class="mi">1</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s">"128,8-cylinderX"</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">.01</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> a<span class="n">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
-  a<span class="n">1</span>       <span class="nb">xscans</span>      <span class="mf">.7</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">),</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+  a<span class="n">1</span>       <span class="nb">xscans</span>      <span class="mf">.7</span><span class="p">,</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p4</span><span class="p">),</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
            <span class="nb">outs</span>        a<span class="n">1</span><span class="p">,</span> a<span class="n">1</span>
 <span class="kd">endin</span>
 
@@ -175,12 +175,12 @@
   i<span class="n">1</span>       <span class="nb">bexprnd</span>     <span class="mi">5</span>
   i<span class="n">2</span>       <span class="nb">bexprnd</span>     <span class="mi">1</span>
   k<span class="n">o</span>       <span class="nb">oscil</span>       i<span class="n">1</span><span class="p">,</span> i<span class="n">2</span><span class="p">,</span> <span class="mi">9</span>
-  k<span class="n">a1</span>      <span class="nb">oscili</span>      <span class="mf">.5</span><span class="p">,</span> <span class="mf">.15</span><span class="o">*</span><span class="mi">8</span><span class="p">,</span> <span class="nb">p7</span>
-  k<span class="n">a2</span>      <span class="nb">oscili</span>      <span class="mf">.5</span><span class="p">,</span> <span class="mf">.15</span><span class="o">*</span><span class="mi">8</span><span class="p">,</span> <span class="nb">p8</span>
-  k<span class="n">f</span>       <span class="nb">oscili</span>      <span class="mi">1</span><span class="p">,</span> <span class="mf">.15</span><span class="p">,</span> <span class="nb">p4</span>
-  k<span class="n">f</span>       <span class="o">=</span>           <span class="mi">2</span><span class="o">^</span><span class="p">(</span>k<span class="n">f</span><span class="o">/</span><span class="mi">12</span><span class="p">)</span><span class="o">*</span><span class="nb">p6</span><span class="o">*</span><span class="mi">440</span><span class="o">+</span>k<span class="n">o</span>
-  a<span class="n">1</span>       <span class="nb">xscans</span>      <span class="nb">p9</span><span class="o">*</span>k<span class="n">a1</span><span class="p">,</span> k<span class="n">f</span><span class="o">+</span>i<span class="n">1</span><span class="p">,</span> <span class="mi">777</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
-  a<span class="n">2</span>       <span class="nb">xscans</span>      <span class="nb">p9</span><span class="o">*</span>k<span class="n">a2</span><span class="p">,</span> <span class="p">(</span>k<span class="n">f</span><span class="o">+</span>i<span class="n">1</span><span class="p">)</span><span class="o">*</span><span class="mf">2.1</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+  k<span class="n">a1</span>      <span class="nb">oscili</span>      <span class="mf">.5</span><span class="p">,</span> <span class="mf">.15</span><span class="o">*</span><span class="mi">8</span><span class="p">,</span> <span class="vi">p7</span>
+  k<span class="n">a2</span>      <span class="nb">oscili</span>      <span class="mf">.5</span><span class="p">,</span> <span class="mf">.15</span><span class="o">*</span><span class="mi">8</span><span class="p">,</span> <span class="vi">p8</span>
+  k<span class="n">f</span>       <span class="nb">oscili</span>      <span class="mi">1</span><span class="p">,</span> <span class="mf">.15</span><span class="p">,</span> <span class="vi">p4</span>
+  k<span class="n">f</span>       <span class="o">=</span>           <span class="mi">2</span><span class="o">^</span><span class="p">(</span>k<span class="n">f</span><span class="o">/</span><span class="mi">12</span><span class="p">)</span><span class="o">*</span><span class="vi">p6</span><span class="o">*</span><span class="mi">440</span><span class="o">+</span>k<span class="n">o</span>
+  a<span class="n">1</span>       <span class="nb">xscans</span>      <span class="vi">p9</span><span class="o">*</span>k<span class="n">a1</span><span class="p">,</span> k<span class="n">f</span><span class="o">+</span>i<span class="n">1</span><span class="p">,</span> <span class="mi">777</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+  a<span class="n">2</span>       <span class="nb">xscans</span>      <span class="vi">p9</span><span class="o">*</span>k<span class="n">a2</span><span class="p">,</span> <span class="p">(</span>k<span class="n">f</span><span class="o">+</span>i<span class="n">1</span><span class="p">)</span><span class="o">*</span><span class="mf">2.1</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
            <span class="nb">outs</span>        a<span class="n">1</span><span class="o">+</span>a<span class="n">2</span><span class="p">,</span> a<span class="n">1</span><span class="o">+</span>a<span class="n">2</span>
 <span class="kd">endin</span>
 
@@ -244,7 +244,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm256211"></a>
+        <a id="idm255846"></a>
         <h2>See Also</h2>
         <p>
 More information on Scanned Synthesis (as well as several other matrices) is available on the <a class="ulink" href="http://www.csounds.com/scanned/" target="_top"><em class="citetitle">Scanned Synthesis page</em></a> at cSounds.com.
@@ -256,7 +256,7 @@ More information on Scanned Synthesis (as well as several other matrices) is ava
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm256224"></a>
+        <a id="idm255859"></a>
         <h2>Credits</h2>
         <p>Written by John ffitch.</p>
         <p>New in version 4.20</p>

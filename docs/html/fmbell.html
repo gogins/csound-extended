@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm82110"></a>
+        <a id="idm81750"></a>
         <h2>Description</h2>
         <p>
       Uses FM synthesis to create a tublar bell sound. It comes from a family of FM sounds, all using 4 basic oscillators and various architectures, as used in the TX81Z synthesizer.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm82113"></a>
+        <a id="idm81753"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>fmbell</strong></span> kamp, kfreq, kc1, kc2, kvdepth, kvrate[, ifn1, ifn2, ifn3, \
       ifn4, ivfn, isus]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm82117"></a>
+        <a id="idm81757"></a>
         <h2>Initialization</h2>
         <p>
       All these opcodes take 5 tables for initialization. The first 4
@@ -87,7 +87,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm82136"></a>
+        <a id="idm81776"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- Amplitude of note.
@@ -121,21 +121,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm82158"></a>
+        <a id="idm81798"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the fmbell opcode. It uses the file <a class="ulink" href="examples/fmbell.csd.html" target="_top"> (click here to play) <em class="citetitle">fmbell.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm82163"></a>
+          <a id="idm81803"></a>
           <p class="title">
             <strong>Example 333. Example of the fmbell opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm82170"></a>
+              <a id="idm81810"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -154,10 +154,10 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">amp</span> <span class="o">=</span> <span class="nb">p4</span>
+k<span class="n">amp</span> <span class="o">=</span> <span class="vi">p4</span>
 k<span class="n">freq</span> <span class="o">=</span> <span class="mi">880</span>
-k<span class="n">c1</span> <span class="o">=</span> <span class="nb">p5</span>
-k<span class="n">c2</span> <span class="o">=</span> <span class="nb">p6</span>
+k<span class="n">c1</span> <span class="o">=</span> <span class="vi">p5</span>
+k<span class="n">c2</span> <span class="o">=</span> <span class="vi">p6</span>
 k<span class="n">vdepth</span> <span class="o">=</span> <span class="mf">0.005</span>
 k<span class="n">vrate</span> <span class="o">=</span> <span class="mi">6</span>
 
@@ -167,14 +167,14 @@ a<span class="n">sig</span> <span class="nb">fmbell</span> k<span class="n">amp<
 
 <span class="kd">instr</span> <span class="nf">2</span>
 
-k<span class="n">amp</span> <span class="o">=</span> <span class="nb">p4</span>
+k<span class="n">amp</span> <span class="o">=</span> <span class="vi">p4</span>
 k<span class="n">freq</span> <span class="o">=</span> <span class="mi">880</span>
-k<span class="n">c1</span> <span class="o">=</span> <span class="nb">p5</span>
-k<span class="n">c2</span> <span class="o">=</span> <span class="nb">p6</span>
+k<span class="n">c1</span> <span class="o">=</span> <span class="vi">p5</span>
+k<span class="n">c2</span> <span class="o">=</span> <span class="vi">p6</span>
 k<span class="n">vdepth</span> <span class="o">=</span> <span class="mf">0.005</span>
 k<span class="n">vrate</span> <span class="o">=</span> <span class="mi">6</span>
 
-a<span class="n">sig</span> <span class="nb">fmbell</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> k<span class="n">c1</span><span class="p">,</span> k<span class="n">c2</span><span class="p">,</span> k<span class="n">vdepth</span><span class="p">,</span> k<span class="n">vrate</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p7</span>
+a<span class="n">sig</span> <span class="nb">fmbell</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> k<span class="n">c1</span><span class="p">,</span> k<span class="n">c2</span><span class="p">,</span> k<span class="n">vdepth</span><span class="p">,</span> k<span class="n">vrate</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="vi">p7</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 <span class="kd">endin</span>
 
@@ -201,7 +201,7 @@ a<span class="n">sig</span> <span class="nb">fmbell</span> k<span class="n">amp<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm82324"></a>
+        <a id="idm81964"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="fmb3.html" title="fmb3"><em class="citetitle">fmb3</em></a>,
@@ -212,7 +212,7 @@ a<span class="n">sig</span> <span class="nb">fmbell</span> k<span class="n">amp<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm82337"></a>
+        <a id="idm81977"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,7 +39,7 @@
       </p>
       </div>
       <div class="refsect1">
-        <a id="idm213858"></a>
+        <a id="idm213376"></a>
         <h2>Description</h2>
         <p>Plugin opcode in stkopd.</p>
         <p>
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm213862"></a>
+        <a id="idm213380"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asignal <span class="command"><strong>STKSitar</strong></span> ifrequency, iamplitude</pre>
       </div>
       <div class="refsect1">
-        <a id="idm213866"></a>
+        <a id="idm213384"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifrequency</em></span> -- Frequency of note played, in Hertz.
@@ -62,7 +62,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm213872"></a>
+        <a id="idm213390"></a>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note: Note">
             <tr>
@@ -83,20 +83,20 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm213878"></a>
+        <a id="idm213396"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the STKSitar opcode. It uses the file <a class="ulink" href="examples/STKSitar.csd.html" target="_top"> (click here to play) <em class="citetitle">STKSitar.csd</em></a>.
      
       </p>
         <div class="example">
-          <a id="idm213883"></a>
+          <a id="idm213401"></a>
           <p class="title">
-            <strong>Example 963. Example of the STKSitar opcode.</strong>
+            <strong>Example 965. Example of the STKSitar opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm213885"></a>
+              <a id="idm213403"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -115,9 +115,9 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>  <span class="c1">;STKSitar - has no controllers</span>
 
-i<span class="n">frq</span>	<span class="o">=</span>	<span class="nb">p4</span>
+i<span class="n">frq</span>	<span class="o">=</span>	<span class="vi">p4</span>
 
-a<span class="n">sig</span>	S<span class="n">TKSitar</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">),</span> <span class="mi">1</span>
+a<span class="n">sig</span>	<span class="nb">STKSitar</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p4</span><span class="p">),</span> <span class="mi">1</span>
 a<span class="n">sig</span>	<span class="o">=</span>	a<span class="n">sig</span> <span class="o">*</span> <span class="mi">2</span>			<span class="c1">;amplify</span>
 	<span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 <span class="kd">endin</span>
@@ -139,7 +139,7 @@ a<span class="n">sig</span>	<span class="o">=</span>	a<span class="n">sig</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm213952"></a>
+        <a id="idm213470"></a>
         <h2>Credits</h2>
         <p>
       </p>

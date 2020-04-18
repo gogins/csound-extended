@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm100539"></a>
+        <a id="idm100473"></a>
         <h2>Description</h2>
         <p>
      A frequency-dependent, efficient reverberant field is created based on low and high frequency desired reverb times. The opcode is designed to work with <a class="link" href="hrtfearly.html" title="hrtfearly"><em class="citetitle">hrtfearly</em></a>, ideally using its outputs as inputs. However, <a class="link" href="hrtfreverb.html" title="hrtfreverb"><em class="citetitle">hrtfreverb</em></a> can be used as a standalone tool. Stability is enforced.
@@ -49,12 +49,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm100549"></a>
+        <a id="idm100483"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aleft, aright, idel <span class="command"><strong>hrtfreverb</strong></span> asrc, ilowrt60, ihighrt60, ifilel, ifiler [,isr, imfp, iorder]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm100553"></a>
+        <a id="idm100487"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ilowrt60</em></span> - low frequency reverb time. 
@@ -123,19 +123,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm100599"></a>
+        <a id="idm100533"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the hrtfearly and hrtfreverb opcodes. It uses the file <a class="ulink" href="examples/hrtfearly.csd.html" target="_top"> (click here to play) <em class="citetitle">hrtfearly.csd</em></a>. 
     </p>
         <div class="example">
-          <a id="idm100604"></a>
+          <a id="idm100538"></a>
           <p class="title">
-            <strong>Example 418. Example of the htrfearly opcode.</strong>
+            <strong>Example 419. Example of the htrfearly opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm100606"></a>
+              <a id="idm100540"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -156,12 +156,12 @@ ga<span class="n">src</span> <span class="nb">init</span> <span class="mi">0</sp
 <span class="kd">instr</span> <span class="nf">1</span>		<span class="c1">;a plucked string, distorted and filtered</span>
 
   i<span class="n">amp</span> <span class="o">=</span> <span class="mi">15000</span>
-  i<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
+  i<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p4</span><span class="p">)</span>
 
   a<span class="n">1</span> <span class="nb">pluck</span> i<span class="n">amp</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
   a<span class="n">dist</span> <span class="nb">distort1</span> a<span class="n">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
   a<span class="n">filt</span> <span class="nb">moogvcf2</span> a<span class="n">dist</span><span class="p">,</span> <span class="mi">8000</span><span class="p">,</span> <span class="mf">.5</span> 
-  a<span class="n">out</span> <span class="nb">linen</span> a<span class="n">filt</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.01</span>
+  a<span class="n">out</span> <span class="nb">linen</span> a<span class="n">filt</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">.01</span>
   
   ga<span class="n">src</span> <span class="o">=</span> ga<span class="n">src</span> <span class="o">+</span> a<span class="n">out</span>
 
@@ -170,7 +170,7 @@ ga<span class="n">src</span> <span class="nb">init</span> <span class="mi">0</sp
 <span class="kd">instr</span> <span class="nf">10</span>	<span class="c1">;uses output from instr1 as source</span>
   
   <span class="c1">;simple path for source</span>
-  k<span class="n">x</span> <span class="nb">line</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">9</span>
+  k<span class="n">x</span> <span class="nb">line</span> <span class="mi">2</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">9</span>
 
   <span class="c1">;early reflections, room default 1</span>
   a<span class="n">earlyl</span><span class="p">,</span>a<span class="n">earlyr</span><span class="p">,</span> i<span class="n">rt60low</span><span class="p">,</span> i<span class="n">rt60high</span><span class="p">,</span> i<span class="n">mfp</span> <span class="nb">hrtfearly</span> ga<span class="n">src</span><span class="p">,</span> k<span class="n">x</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"hrtf-44100-left.dat"</span><span class="p">,</span> <span class="s">"hrtf-44100-right.dat"</span><span class="p">,</span> <span class="mi">1</span>
@@ -216,7 +216,7 @@ ga<span class="n">src</span> <span class="nb">init</span> <span class="mi">0</sp
         <br class="example-break" />
       </div>
       <div class="refsect1">
-        <a id="idm100832"></a>
+        <a id="idm100766"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="hrtfearly.html" title="hrtfearly"><em class="citetitle">hrtfearly</em></a>
@@ -227,7 +227,7 @@ ga<span class="n">src</span> <span class="nb">init</span> <span class="mi">0</sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm100845"></a>
+        <a id="idm100779"></a>
         <h2>Credits</h2>
         <p>
       </p>

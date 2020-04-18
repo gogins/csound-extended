@@ -39,26 +39,26 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm229137"></a>
+        <a id="idm228767"></a>
         <h2>Description</h2>
         <p>
       A first-order recursive low-pass filter with variable frequency response.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm229140"></a>
+        <a id="idm228770"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kres <span class="command"><strong>tonek</strong></span> ksig, khp [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm229144"></a>
+        <a id="idm228774"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iskip</em></span> (optional, default=0) -- initial disposition of internal data space. Since filtering incorporates a feedback loop of previous output, the initial status of the storage space used is significant. A zero value will clear the space; a non-zero value will allow previous information to remain. The default value is 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm229148"></a>
+        <a id="idm228778"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kres</em></span> -- the output signal at control-rate.
@@ -75,20 +75,20 @@ output is at control-rate rather than audio rate.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm229160"></a>
+        <a id="idm228790"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the tonek opcode. It uses the file <a class="ulink" href="examples/tonek.csd.html" target="_top"> (click here to play) <em class="citetitle">tonek.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm229165"></a>
+          <a id="idm228795"></a>
           <p class="title">
-            <strong>Example 1037. Example of the tonek opcode.</strong>
+            <strong>Example 1040. Example of the tonek opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm229172"></a>
+              <a id="idm228802"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -117,7 +117,7 @@ a<span class="n">out</span>	<span class="nb">poscil</span>	<span class="mf">.2</
 <span class="kd">instr</span> <span class="nf">2</span>
 
 k<span class="n">sig</span>	<span class="nb">randomh</span>	<span class="mi">400</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">150</span>
-k<span class="n">hp</span>	<span class="nb">line</span>	<span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">100</span>	<span class="c1">;vary high-pass</span>
+k<span class="n">hp</span>	<span class="nb">line</span>	<span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">100</span>	<span class="c1">;vary high-pass</span>
 k<span class="n">sig</span>	<span class="nb">tonek</span>	k<span class="n">sig</span><span class="p">,</span> k<span class="n">hp</span>
 a<span class="n">out</span>	<span class="nb">poscil</span>	<span class="mf">.2</span><span class="p">,</span> <span class="mi">100</span><span class="o">+</span>k<span class="n">sig</span><span class="p">,</span> gi<span class="n">sin</span>
 	<span class="nb">outs</span>	a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
@@ -139,7 +139,7 @@ a<span class="n">out</span>	<span class="nb">poscil</span>	<span class="mf">.2</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm229280"></a>
+        <a id="idm228910"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="areson.html" title="areson"><em class="citetitle">areson</em></a>,
@@ -154,7 +154,7 @@ a<span class="n">out</span>	<span class="nb">poscil</span>	<span class="mf">.2</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm229301"></a>
+        <a id="idm228931"></a>
         <h2>Credits</h2>
         <p>
       </p>

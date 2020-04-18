@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm85899"></a>
+        <a id="idm85545"></a>
         <h2>Description</h2>
         <p>
 Fofilter generates a stream of overlapping sinewave grains, when fed with 
@@ -53,12 +53,12 @@ in SuperCollider, but this is possibly implemented differently(?).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm85902"></a>
+        <a id="idm85548"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asig <span class="command"><strong>fofilter</strong></span> ain, xcf, xris, xdec[, istor]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm85906"></a>
+        <a id="idm85552"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>istor</em></span> --initial disposition of internal data space. Since 
@@ -69,7 +69,7 @@ previous information to remain. The default value is 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm85910"></a>
+        <a id="idm85556"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- input signal.
@@ -85,21 +85,21 @@ previous information to remain. The default value is 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm85920"></a>
+        <a id="idm85566"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the fofilter opcode. It uses the file <a class="ulink" href="examples/fofilter.csd.html" target="_top"> (click here to play) <em class="citetitle">fofilter.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm85925"></a>
+          <a id="idm85571"></a>
           <p class="title">
             <strong>Example 344. Example of the fofilter opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm85932"></a>
+              <a id="idm85578"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -118,8 +118,8 @@ previous information to remain. The default value is 0.
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">fe</span>  <span class="nb">expseg</span> <span class="mi">10</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.9</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">175</span>
-k<span class="n">env</span> <span class="nb">linen</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.05</span>
+k<span class="n">fe</span>  <span class="nb">expseg</span> <span class="mi">10</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span><span class="mf">0.9</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">175</span>
+k<span class="n">env</span> <span class="nb">linen</span> <span class="mf">.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">0.05</span>
 a<span class="n">sig</span> <span class="nb">buzz</span>  k<span class="n">env</span><span class="p">,</span> k<span class="n">fe</span><span class="p">,</span> <span class="vg">sr</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span>k<span class="n">fe</span><span class="p">),</span> <span class="mi">1</span>
 a<span class="n">fil</span> <span class="nb">fofilter</span> a<span class="n">sig</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="mf">0.04</span>
      <span class="nb">outs</span>  a<span class="n">fil</span><span class="p">,</span> a<span class="n">fil</span> 
@@ -142,7 +142,7 @@ a<span class="n">fil</span> <span class="nb">fofilter</span> a<span class="n">si
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm86025"></a>
+        <a id="idm85671"></a>
         <h2>Credits</h2>
         <p>
       </p>

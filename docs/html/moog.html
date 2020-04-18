@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm140549"></a>
+        <a id="idm139119"></a>
         <h2>Description</h2>
         <p>
       An emulation of a mini-Moog synthesizer.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm140552"></a>
+        <a id="idm139122"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>moog</strong></span> kamp, kfreq, kfiltq, kfiltrate, kvibf, kvamp, iafn, iwfn, ivfn</pre>
       </div>
       <div class="refsect1">
-        <a id="idm140556"></a>
+        <a id="idm139126"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iafn, iwfn, ivfn</em></span> -- three table numbers containing the attack waveform (unlooped), the main looping wave form, and the vibrato waveform. The files <a class="ulink" href="examples/mandpluk.aiff" target="_top"><em class="citetitle">mandpluk.aiff</em></a> and <a class="ulink" href="examples/impuls20.aiff" target="_top"><em class="citetitle">impuls20.aiff</em></a> are suitable for the first two, and a sine wave for the last. 
@@ -75,7 +75,7 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm140571"></a>
+        <a id="idm139141"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp</em></span> -- Amplitude of note.
@@ -97,21 +97,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm140585"></a>
+        <a id="idm139155"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the moog opcode. It uses the file <a class="ulink" href="examples/moog.csd.html" target="_top"> (click here to play) <em class="citetitle">moog.csd</em></a>, <a class="ulink" href="examples/mandpluk.aiff" target="_top"><em class="citetitle">mandpluk.aiff</em></a>, and <a class="ulink" href="examples/impuls20.aiff" target="_top"><em class="citetitle">impuls20.aiff</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm140594"></a>
+          <a id="idm139164"></a>
           <p class="title">
             <strong>Example 589. Example of the moog opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm140601"></a>
+              <a id="idm139171"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -130,8 +130,8 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">freq</span>  <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
-k<span class="n">filtq</span> <span class="o">=</span> <span class="nb">p5</span>
+k<span class="n">freq</span>  <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p4</span><span class="p">)</span>
+k<span class="n">filtq</span> <span class="o">=</span> <span class="vi">p5</span>
 k<span class="n">filtrate</span> <span class="o">=</span> <span class="mf">0.0002</span>
 k<span class="n">vibf</span>  <span class="o">=</span> <span class="mi">5</span>
 k<span class="n">vamp</span>  <span class="o">=</span> <span class="mf">.01</span>
@@ -161,7 +161,7 @@ a<span class="n">sig</span> <span class="nb">moog</span> <span class="mf">.15</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm140717"></a>
+        <a id="idm139287"></a>
         <h2>Credits</h2>
         <p>
       </p>

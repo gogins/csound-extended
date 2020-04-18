@@ -40,7 +40,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm183777"></a>
+        <a id="idm182956"></a>
         <h2>Description</h2>
         <p>
     	Parametric equalizer and filter opcode with 7 filter types,
@@ -48,12 +48,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm183780"></a>
+        <a id="idm182959"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ar <span class="command"><strong>rbjeq</strong></span> asig, kfco, klvl, kQ, kS[, imode]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm183784"></a>
+        <a id="idm182963"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imode (</em></span>
@@ -188,7 +188,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm183809"></a>
+        <a id="idm182988"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ar</em></span>
@@ -255,20 +255,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm183826"></a>
+        <a id="idm183005"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the <span class="emphasis"><em>rbjeq</em></span> opcode. It uses the file <a class="ulink" href="examples/rbjeq.csd.html" target="_top"> (click here to play) <em class="citetitle">rbjeq.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm183832"></a>
+          <a id="idm183011"></a>
           <p class="title">
-            <strong>Example 826. An example of the rbjeq opcode.</strong>
+            <strong>Example 828. An example of the rbjeq opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm183839"></a>
+              <a id="idm183018"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -287,9 +287,9 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">mode</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">mode</span> <span class="o">=</span> <span class="vi">p4</span>
 a<span class="n">1</span>    <span class="nb">vco2</span>    <span class="mf">.3</span><span class="p">,</span> <span class="mf">155.6</span>			<span class="c1">; sawtooth wave</span>
-k<span class="n">fco</span>  <span class="nb">expon</span>   <span class="mi">8000</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">200</span>		<span class="c1">; filter frequency</span>
+k<span class="n">fco</span>  <span class="nb">expon</span>   <span class="mi">8000</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">200</span>		<span class="c1">; filter frequency</span>
 a<span class="n">sig</span>  <span class="nb">rbjeq</span>   a<span class="n">1</span><span class="p">,</span> k<span class="n">fco</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">fco</span> <span class="o">*</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">mode</span>
       <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
@@ -313,7 +313,7 @@ a<span class="n">sig</span>  <span class="nb">rbjeq</span>   a<span class="n">1<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm183930"></a>
+        <a id="idm183109"></a>
         <h2>Credits</h2>
         <p>
 	  </p>

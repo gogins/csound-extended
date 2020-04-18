@@ -39,14 +39,14 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm45965"></a>
+        <a id="idm45471"></a>
         <h2>Description</h2>
         <p>
       Converts a Midi note number value to cycles-per-second.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45968"></a>
+        <a id="idm45474"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>cpsmidinn</strong></span> (MidiNoteNumber)  (init- or control-rate args only)</pre>
         <p>
@@ -54,7 +54,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm45973"></a>
+        <a id="idm45479"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>cpsmidinn</em></span> is a function that takes an i-rate or k-rate value representing a Midi note number and returns the equivalent frequency value in cycles-per-second (Hertz). This conversion assumes that Middle C is Midi note number 60 and that Middle A is tuned to 440 Hz. Midi note number values are typically integers in the range from 0 to 127 but fractional values or values outside of this range will be interpreted consistently.
@@ -83,7 +83,7 @@
       Data concerning pitch and frequency can exist in any of the following forms:
     </p>
         <div class="table">
-          <a id="idm45992"></a>
+          <a id="idm45498"></a>
           <p class="title">
             <strong>Table 6. Pitch and Frequency Values</strong>
           </p>
@@ -149,21 +149,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm46034"></a>
+        <a id="idm45540"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the cpsmidinn opcode. It uses the file <a class="ulink" href="examples/cpsmidinn.csd.html" target="_top"> (click here to play) <em class="citetitle">cpsmidinn.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm46039"></a>
+          <a id="idm45545"></a>
           <p class="title">
             <strong>Example 165. Example of the cpsmidinn opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm46046"></a>
+              <a id="idm45552"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="c1">; Prints a table showing the equivalents of all Midi</span>
@@ -199,7 +199,7 @@
   k<span class="n">oct</span>  <span class="o">=</span> <span class="nb">octmidinn</span><span class="p">(</span>k<span class="n">MiddleC</span><span class="p">)</span>
   k<span class="n">pch</span>  <span class="o">=</span> <span class="nb">pchmidinn</span><span class="p">(</span>k<span class="n">MiddleC</span><span class="p">)</span>
             
-  <span class="nb">printks</span> <span class="s">"</span><span class="si">%d</span><span class="s"> %f %f %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> k<span class="n">MiddleC</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> k<span class="n">oct</span><span class="p">,</span> k<span class="n">pch</span>
+  <span class="nb">printks</span> <span class="s">"</span><span class="si">%d</span><span class="s"> </span><span class="si">%f</span><span class="s"> </span><span class="si">%f</span><span class="s"> </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> k<span class="n">MiddleC</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> k<span class="n">oct</span><span class="p">,</span> k<span class="n">pch</span>
 <span class="kd">endin</span>
 
 <span class="nt">&lt;/CsInstruments&gt;</span>
@@ -221,13 +221,13 @@
 
       </p>
         <div class="example">
-          <a id="idm46163"></a>
+          <a id="idm45674"></a>
           <p class="title">
             <strong>Example 166. Second example of the cpsmidinn opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm46165"></a>
+              <a id="idm45676"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -249,7 +249,7 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">;play virtual keyboard</span>
 
-i<span class="n">note</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">note</span> <span class="o">=</span> <span class="vi">p4</span>
 i<span class="n">cps</span>  <span class="o">=</span> <span class="nb">cpsmidinn</span><span class="p">(</span>i<span class="n">note</span><span class="p">)</span>
 a<span class="n">sig</span>	<span class="nb">oscil</span> <span class="mf">0.6</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> <span class="mi">1</span>
 	<span class="nb">print</span> i<span class="n">cps</span>
@@ -275,7 +275,7 @@ a<span class="n">sig</span>	<span class="nb">oscil</span> <span class="mf">0.6</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm46240"></a>
+        <a id="idm45751"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="octmidinn.html" title="octmidinn"><em class="citetitle">octmidinn</em></a>,
@@ -290,7 +290,7 @@ a<span class="n">sig</span>	<span class="nb">oscil</span> <span class="mf">0.6</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm46261"></a>
+        <a id="idm45772"></a>
         <h2>Credits</h2>
         <p>Derived from original value converters by Barry Vercoe.</p>
         <p>New in version 5.07</p>

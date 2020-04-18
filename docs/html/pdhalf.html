@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm163059"></a>
+        <a id="idm161835"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>pdhalf</em></span> opcode is designed to emulate the "classic" phase distortion synthesis method of the Casio CZ-series of synthesizers from the mid-1980's.  This technique reads the first and second halves of a function table at different rates in order to warp the waveform.  For example, <span class="emphasis"><em>pdhalf</em></span> can smoothly transform a sine wave into something approximating the shape of a saw wave.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm163064"></a>
+        <a id="idm161840"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout <span class="command"><strong>pdhalf</strong></span> ain, kShapeAmount [, ibipolar [, ifullscale]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm163068"></a>
+        <a id="idm161844"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ibipolar</em></span> -- an optional parameter specifying either unipolar (0) or bipolar (1) mode.  Defaults to unipolar mode.
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm163076"></a>
+        <a id="idm161852"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ain</em></span> --  the input signal to be distorted.
@@ -104,20 +104,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm163110"></a>
+        <a id="idm161886"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the pdhalf opcode. It uses the file <a class="ulink" href="examples/pdhalf.csd.html" target="_top"> (click here to play) <em class="citetitle">pdhalf.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm163115"></a>
+          <a id="idm161891"></a>
           <p class="title">
             <strong>Example 698. Example of the pdhalf opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm163122"></a>
+              <a id="idm161898"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -136,10 +136,10 @@
 
 <span class="kd">instr</span> <span class="nf">4</span>
 
-    i<span class="n">dur</span>        <span class="o">=</span> <span class="nb">p3</span>
-    i<span class="n">amp</span>        <span class="o">=</span> <span class="nb">p4</span>
-    i<span class="n">freq</span>       <span class="o">=</span> <span class="nb">p5</span>
-    i<span class="n">table</span>      <span class="o">=</span> <span class="nb">p6</span>
+    i<span class="n">dur</span>        <span class="o">=</span> <span class="vi">p3</span>
+    i<span class="n">amp</span>        <span class="o">=</span> <span class="vi">p4</span>
+    i<span class="n">freq</span>       <span class="o">=</span> <span class="vi">p5</span>
+    i<span class="n">table</span>      <span class="o">=</span> <span class="vi">p6</span>
     
     a<span class="n">env</span>        <span class="nb">linseg</span>      <span class="mi">0</span><span class="p">,</span> <span class="mf">.001</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> i<span class="n">dur</span> <span class="o">-</span> <span class="mf">.051</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">.05</span><span class="p">,</span> <span class="mi">0</span>
     a<span class="n">osc</span>        <span class="nb">phasor</span>      i<span class="n">freq</span>
@@ -199,7 +199,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm163398"></a>
+        <a id="idm162174"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pdhalfy.html" title="pdhalfy"><em class="citetitle">pdhalfy</em></a>,
@@ -208,7 +208,7 @@
         <p> More information about phase distortion on Wikipedia: <a class="ulink" href="http://en.wikipedia.org/wiki/Phase_distortion_synthesis" target="_top"><em class="citetitle">http://en.wikipedia.org/wiki/Phase_distortion_synthesis</em></a></p>
       </div>
       <div class="refsect1">
-        <a id="idm163408"></a>
+        <a id="idm162184"></a>
         <h2>Credits</h2>
         <p>
       </p>

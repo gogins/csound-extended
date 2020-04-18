@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm193769"></a>
+        <a id="idm193141"></a>
         <h2>Description</h2>
         <p>Plugin opcode in scugens.</p>
         <p>
@@ -48,13 +48,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm193773"></a>
+        <a id="idm193145"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout <span class="command"><strong>sc_lagud</strong></span> ain, klagup, klagdown</pre>
         <pre class="synopsis">kout <span class="command"><strong>sc_lagud</strong></span> kin, klagup, klagdown</pre>
       </div>
       <div class="refsect1">
-        <a id="idm193779"></a>
+        <a id="idm193151"></a>
         <h2>Initialization</h2>
         <p>
           <span class="emphasis"><em>initialvalue</em></span> If given, sets the internal
@@ -62,7 +62,7 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm193783"></a>
+        <a id="idm193155"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ain</em></span> -- input signal
@@ -82,20 +82,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm193792"></a>
+        <a id="idm193164"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the sc_lagud opcode. It uses the file <a class="ulink" href="examples/sc_lagud.csd.html" target="_top"> (click here to play) <em class="citetitle">sc_lagud.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm193797"></a>
+          <a id="idm193169"></a>
           <p class="title">
-            <strong>Example 880. Example of the sc_lagud opcode.</strong>
+            <strong>Example 882. Example of the sc_lagud opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm193804"></a>
+              <a id="idm193176"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -109,18 +109,18 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
   k<span class="n">x</span> <span class="o">=</span> <span class="nb">randh</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-  k<span class="n">x2</span> <span class="o">=</span> <span class="n">sc_lagud</span><span class="p">(</span>k<span class="n">x</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-  <span class="nb">printks</span> <span class="s">"x %f  x2 %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">x</span><span class="p">,</span> k<span class="n">x2</span>
+  k<span class="n">x2</span> <span class="o">=</span> <span class="nb">sc_lagud</span><span class="p">(</span>k<span class="n">x</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="nb">printks</span> <span class="s">"x </span><span class="si">%f</span><span class="s">  x2 </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> k<span class="n">x</span><span class="p">,</span> k<span class="n">x2</span>
 <span class="kd">endin</span>
 
 <span class="kd">instr</span> <span class="nf">2</span>
-  k<span class="n">midis</span><span class="p">[]</span> <span class="nb">array</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">60</span>
+  k<span class="n">midis</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">60</span>
   i<span class="n">len</span> <span class="o">=</span> <span class="nb">lenarray</span><span class="p">(</span>k<span class="n">midis</span><span class="p">)</span>
   k<span class="n">idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">linseg</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> i<span class="n">len</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> i<span class="n">len</span><span class="o">-</span><span class="mf">0.00000001</span><span class="p">))</span>
-  k<span class="n">midi</span> <span class="o">=</span> <span class="n">mtof</span><span class="p">(</span>k<span class="n">midis</span><span class="p">[</span>k<span class="n">idx</span><span class="p">])</span>
-  a<span class="n">freq</span> <span class="o">=</span> <span class="n">sc_lagud</span><span class="p">(</span><span class="nb">a</span><span class="p">(</span>k<span class="n">midi</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+  k<span class="n">midi</span> <span class="o">=</span> <span class="nb">mtof</span><span class="p">(</span>k<span class="n">midis</span><span class="p">[</span>k<span class="n">idx</span><span class="p">])</span>
+  a<span class="n">freq</span> <span class="o">=</span> <span class="nb">sc_lagud</span><span class="p">(</span><span class="nb">a</span><span class="p">(</span>k<span class="n">midi</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
   a<span class="n">0</span> <span class="o">=</span> <span class="nb">oscili</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> a<span class="n">freq</span><span class="p">)</span>
-  k<span class="n">freq</span> <span class="o">=</span> <span class="n">sc_lagud</span><span class="p">(</span>k<span class="n">midi</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+  k<span class="n">freq</span> <span class="o">=</span> <span class="nb">sc_lagud</span><span class="p">(</span>k<span class="n">midi</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
   a<span class="n">1</span> <span class="o">=</span> <span class="nb">oscili</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> k<span class="n">freq</span><span class="p">)</span>
   <span class="nb">outch</span> <span class="mi">1</span><span class="p">,</span> a<span class="n">0</span>
   <span class="nb">outch</span> <span class="mi">2</span><span class="p">,</span> a<span class="n">1</span>
@@ -141,7 +141,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm193955"></a>
+        <a id="idm193330"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="sc_lag.html" title="sc_lag"><em class="citetitle">sc_lag</em></a>, 
@@ -151,7 +151,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm193964"></a>
+        <a id="idm193339"></a>
         <h2>Credits</h2>
         <p>By: Eduardo Moguillansky 2017</p>
       </div>

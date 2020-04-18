@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm168171"></a>
+        <a id="idm166952"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>polynomial</em></span> opcode calculates a polynomial with a single a-rate input variable.  The polynomial is a sum of any number of terms in the form <span class="emphasis"><em>kn*x^n</em></span> where <span class="emphasis"><em>kn</em></span> is the nth coefficient of the expression.  These coefficients are k-rate values.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm168177"></a>
+        <a id="idm166958"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout <span class="command"><strong>polynomial</strong></span> ain, k0 [, k1 [, k2 [...]]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm168181"></a>
+        <a id="idm166962"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ain</em></span> --  the input signal used as the independent variable of the polynomial ("x").
@@ -74,20 +74,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm168194"></a>
+        <a id="idm166975"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the polynomial opcode. It uses the file <a class="ulink" href="examples/polynomial.csd.html" target="_top"> (click here to play) <em class="citetitle">polynomial.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm168199"></a>
+          <a id="idm166980"></a>
           <p class="title">
             <strong>Example 722. Example of the polynomial opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm168206"></a>
+              <a id="idm166987"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -113,10 +113,10 @@
 
 <span class="kd">instr</span> <span class="nf">4</span>	<span class="c1">; This instrument demonstrates phase distortion with x^3</span>
 
-i<span class="n">dur</span>   <span class="o">=</span> <span class="nb">p3</span>
-i<span class="n">amp</span>   <span class="o">=</span> <span class="nb">p4</span>
-i<span class="n">freq</span>  <span class="o">=</span> <span class="nb">p5</span>
-i<span class="n">table</span> <span class="o">=</span> <span class="nb">p6</span>
+i<span class="n">dur</span>   <span class="o">=</span> <span class="vi">p3</span>
+i<span class="n">amp</span>   <span class="o">=</span> <span class="vi">p4</span>
+i<span class="n">freq</span>  <span class="o">=</span> <span class="vi">p5</span>
+i<span class="n">table</span> <span class="o">=</span> <span class="vi">p6</span>
 	
 a<span class="n">env</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">.001</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> i<span class="n">dur</span> <span class="o">-</span> <span class="mf">.051</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">.05</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">; declicking envelope</span>
 a<span class="n">osc</span> <span class="nb">phasor</span> i<span class="n">freq</span>					<span class="c1">; create a linear phasor</span>
@@ -128,10 +128,10 @@ a<span class="n">out</span> <span class="nb">tablei</span> a<span class="n">pd</
 
 <span class="kd">instr</span> <span class="nf">5</span>	<span class="c1">; This instrument demonstrates phase distortion with x^11</span>
 
-i<span class="n">dur</span>   <span class="o">=</span> <span class="nb">p3</span>
-i<span class="n">amp</span>   <span class="o">=</span> <span class="nb">p4</span>
-i<span class="n">freq</span>  <span class="o">=</span> <span class="nb">p5</span>
-i<span class="n">table</span> <span class="o">=</span> <span class="nb">p6</span>
+i<span class="n">dur</span>   <span class="o">=</span> <span class="vi">p3</span>
+i<span class="n">amp</span>   <span class="o">=</span> <span class="vi">p4</span>
+i<span class="n">freq</span>  <span class="o">=</span> <span class="vi">p5</span>
+i<span class="n">table</span> <span class="o">=</span> <span class="vi">p6</span>
 
 a<span class="n">env</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">.001</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> i<span class="n">dur</span> <span class="o">-</span> <span class="mf">.051</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">.05</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">; declicking envelope</span>
 a<span class="n">osc</span> <span class="nb">phasor</span> i<span class="n">freq</span>					<span class="c1">; create a linear phasor</span>
@@ -143,10 +143,10 @@ a<span class="n">out</span> <span class="nb">tablei</span> a<span class="n">pd</
 
 <span class="kd">instr</span> <span class="nf">6</span> <span class="c1">; This instrument crossfades between a pure sine and one distorted with x^11</span>
 
-i<span class="n">dur</span>   <span class="o">=</span> <span class="nb">p3</span>
-i<span class="n">amp</span>   <span class="o">=</span> <span class="nb">p4</span>
-i<span class="n">freq</span>  <span class="o">=</span> <span class="nb">p5</span>
-i<span class="n">table</span> <span class="o">=</span> <span class="nb">p6</span>
+i<span class="n">dur</span>   <span class="o">=</span> <span class="vi">p3</span>
+i<span class="n">amp</span>   <span class="o">=</span> <span class="vi">p4</span>
+i<span class="n">freq</span>  <span class="o">=</span> <span class="vi">p5</span>
+i<span class="n">table</span> <span class="o">=</span> <span class="vi">p6</span>
 	
 a<span class="n">env</span>	<span class="nb">linseg</span>	<span class="mi">0</span><span class="p">,</span> <span class="mf">.001</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> i<span class="n">dur</span> <span class="o">-</span> <span class="mf">.051</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">.05</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">; declicking envelope</span>
 a<span class="n">osc</span>	<span class="nb">phasor</span>	i<span class="n">freq</span>					<span class="c1">; create a linear phasor</span>
@@ -205,7 +205,7 @@ a<span class="n">out</span>	<span class="o">=</span> a<span class="n">out3</span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm168663"></a>
+        <a id="idm167444"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="chebyshevpoly.html" title="chebyshevpoly"><em class="citetitle">chebyshevpoly</em></a>, 
@@ -214,7 +214,7 @@ a<span class="n">out</span>	<span class="o">=</span> a<span class="n">out3</span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm168672"></a>
+        <a id="idm167453"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm143388"></a>
+        <a id="idm142032"></a>
         <h2>Description</h2>
         <p> 
       These statements are global value <a class="link" href="assign.html" title="="><em class="citetitle">assignments</em></a>, made at the beginning of an orchestra, before any instrument block is defined. Their function is to set certain <a class="link" href="OrchKvar.html#VariableTypes" title="Table 3. Types of Variables"><em class="citetitle">reserved symbol variables</em></a> that are required for performance. Once set, these reserved symbols can be used in expressions anywhere in the orchestra.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm143395"></a>
+        <a id="idm142039"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>nchnls</strong></span> = iarg</pre>
       </div>
       <div class="refsect1">
-        <a id="idm143399"></a>
+        <a id="idm142043"></a>
         <h2>Initialization</h2>
         <p>
 <span class="emphasis"><em>nchnls</em></span> = (optional) -- set number of channels of audio output to <span class="emphasis"><em>iarg</em></span>. (1 = mono, 2 = stereo, 4 = quadraphonic.) The default value is 1 (mono).
@@ -61,20 +61,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm143410"></a>
+        <a id="idm142054"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the nchnls opcode. It uses the file <a class="ulink" href="examples/nchnls.csd.html" target="_top"> (click here to play) <em class="citetitle">nchnls.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm143415"></a>
+          <a id="idm142059"></a>
           <p class="title">
             <strong>Example 609. Example of the nchnls opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm143422"></a>
+              <a id="idm142066"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -93,7 +93,7 @@
 <span class="kd">instr</span> <span class="nf">1</span> 
 
 a<span class="n">in1</span><span class="p">,</span> a<span class="n">inr</span> <span class="nb">ins</span>				<span class="c1">;grab your mic and sing</span>
-a<span class="n">del</span>  <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">;max delay time = 20ms</span>
+a<span class="n">del</span>  <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">;max delay time = 20ms</span>
 a<span class="n">outl</span> <span class="nb">flanger</span> a<span class="n">in1</span><span class="p">,</span> a<span class="n">del</span><span class="p">,</span> <span class="mf">.7</span>
 a<span class="n">outr</span> <span class="nb">flanger</span> a<span class="n">in1</span><span class="p">,</span> a<span class="n">del</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mf">.8</span>
       <span class="nb">fout</span> <span class="s">"in_s.wav"</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> a<span class="n">outl</span><span class="p">,</span> a<span class="n">outr</span> <span class="c1">;write to stereo file,</span>
@@ -115,7 +115,7 @@ a<span class="n">outr</span> <span class="nb">flanger</span> a<span class="n">in
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm143508"></a>
+        <a id="idm142152"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="kr.html" title="kr"><em class="citetitle">kr</em></a>,

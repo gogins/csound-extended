@@ -39,39 +39,39 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm92548"></a>
+        <a id="idm92408"></a>
         <h2>Description</h2>
         <p>
       Returns the sampling-rate of a stored function table.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm92551"></a>
+        <a id="idm92411"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>ftsr</strong></span>(x) (init-rate args only)</pre>
       </div>
       <div class="refsect1">
-        <a id="idm92555"></a>
+        <a id="idm92415"></a>
         <h2>Performance</h2>
         <p>
       Returns the sampling-rate of a <a class="link" href="GEN01.html" title="GEN01"><em class="citetitle">GEN01</em></a> generated table. The sampling-rate is determined from the header of the original file. If the original file has no header or the table was not created by these GEN01, <span class="emphasis"><em>ftsr</em></span> returns 0. New in Csound version 3.49.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm92561"></a>
+        <a id="idm92421"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the ftsr opcode. It uses the file <a class="ulink" href="examples/ftsr.csd.html" target="_top"> (click here to play) <em class="citetitle">ftsr.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm92566"></a>
+          <a id="idm92426"></a>
           <p class="title">
-            <strong>Example 380. Example of the ftsr opcode.</strong>
+            <strong>Example 381. Example of the ftsr opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm92573"></a>
+              <a id="idm92433"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span> 
 <span class="nt">&lt;CsOptions&gt;</span> 
@@ -90,7 +90,7 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">tab</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">tab</span> <span class="o">=</span> <span class="vi">p4</span>
 i<span class="n">sr</span> <span class="o">=</span> <span class="nb">ftsr</span><span class="p">(</span>i<span class="n">tab</span><span class="p">)</span>
 <span class="nb">prints</span> <span class="s">"sampling-rate of table number </span><span class="si">%d</span><span class="s"> = </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">tab</span><span class="p">,</span> i<span class="n">sr</span>
     
@@ -126,7 +126,7 @@ sampling-rate of table number 4 = 44100
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm92683"></a>
+        <a id="idm92543"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="ftchnls.html" title="ftchnls"><em class="citetitle">ftchnls</em></a>,
@@ -136,7 +136,7 @@ sampling-rate of table number 4 = 44100
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm92694"></a>
+        <a id="idm92554"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm268642"></a>
+        <a id="idm268292"></a>
         <h2>Description</h2>
         <p>
       This subroutine creates two tables of stored polynomial functions, suitable for use in phase quadrature operations.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm268645"></a>
+        <a id="idm268295"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size 15 xint xamp h0 phs0 h1 phs1 h2 phs2 ...</pre>
       </div>
       <div class="refsect1">
-        <a id="idm268649"></a>
+        <a id="idm268299"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>size</em></span> -- number of points in the table. Must be a power of 2 or a power-of-2 plus 1 (see <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f statement</em></a>). The normal value is power-of-2 plus 1.
@@ -103,19 +103,19 @@ xamp * int(size/2)/xint<br />
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm268686"></a>
+        <a id="idm268336"></a>
         <h2>Examples</h2>
         <p>
 	    Here is an example of the GEN15 routine. It uses the files <a class="ulink" href="examples/gen15.csd.html" target="_top"> (click here to play) <em class="citetitle">gen15.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm268691"></a>
+          <a id="idm268341"></a>
           <p class="title">
-            <strong>Example 1210. An example of the GEN15 routine.</strong>
+            <strong>Example 1213. An example of the GEN15 routine.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm268693"></a>
+              <a id="idm268343"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -134,12 +134,12 @@ xamp * int(size/2)/xint<br />
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">dur</span>  <span class="o">=</span> <span class="nb">p3</span>
-i<span class="n">amp</span>  <span class="o">=</span> <span class="nb">p4</span>
-i<span class="n">frq</span>  <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p5</span><span class="p">)</span>        <span class="c1">;pitch</span>
-i<span class="n">swp1</span> <span class="o">=</span> <span class="nb">p6</span>
-i<span class="n">swp2</span> <span class="o">=</span> <span class="nb">p7</span>
-k<span class="n">swp</span>  <span class="nb">line</span>   i<span class="n">swp1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> i<span class="n">swp2</span>      <span class="c1">;amplitude sweep values</span>
+i<span class="n">dur</span>  <span class="o">=</span> <span class="vi">p3</span>
+i<span class="n">amp</span>  <span class="o">=</span> <span class="vi">p4</span>
+i<span class="n">frq</span>  <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p5</span><span class="p">)</span>        <span class="c1">;pitch</span>
+i<span class="n">swp1</span> <span class="o">=</span> <span class="vi">p6</span>
+i<span class="n">swp2</span> <span class="o">=</span> <span class="vi">p7</span>
+k<span class="n">swp</span>  <span class="nb">line</span>   i<span class="n">swp1</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> i<span class="n">swp2</span>      <span class="c1">;amplitude sweep values</span>
 a<span class="n">cosi</span> <span class="nb">oscili</span> k<span class="n">swp</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> i<span class="n">frq</span><span class="p">,</span> <span class="mi">2</span>      <span class="c1">;f2=cosine wave</span>
 a<span class="n">sine</span> <span class="nb">oscili</span> k<span class="n">swp</span><span class="p">,</span> i<span class="n">frq</span><span class="p">,</span> <span class="mi">1</span>         <span class="c1">;f1=sine wave</span>
 a<span class="n">tab1</span> <span class="nb">tablei</span> a<span class="n">cosi</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.5</span>      <span class="c1">;tables a1 to GEN13</span>
@@ -261,7 +261,7 @@ a<span class="n">sig</span>  <span class="o">=</span> a<span class="n">mix</span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm269226"></a>
+        <a id="idm268876"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="GEN13.html" title="GEN13"><em class="citetitle">GEN13</em></a>, and

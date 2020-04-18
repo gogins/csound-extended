@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm205596"></a>
+        <a id="idm204996"></a>
         <h2>Description</h2>
         <p>
       This opcode positions the input sound in a 3D space, with optional simulation of room acoustics, in various output formats. <span class="emphasis"><em>spat3d</em></span> allows moving the sound at k-rate (this movement is interpolated internally to eliminate "zipper noise" if sr not equal to kr).
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm205600"></a>
+        <a id="idm205000"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aW, aX, aY, aZ <span class="command"><strong>spat3d</strong></span> ain, kX, kY, kZ, idist, ift, imode, imdel, iovr [, istor]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm205604"></a>
+        <a id="idm205004"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idist</em></span> -- For modes 0 to 3, <span class="emphasis"><em>idist</em></span> is the unit circle distance in meters. For mode 4, <span class="emphasis"><em>idist</em></span> is the distance between microphones. 
@@ -284,7 +284,7 @@ imdel = (R + 1) * sqrt(W*W + H*H + D*D) / 340.0<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm205706"></a>
+        <a id="idm205106"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>aW, aX, aY, aZ</em></span> -- Output signals
@@ -385,21 +385,21 @@ imdel = (R + 1) * sqrt(W*W + H*H + D*D) / 340.0<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm205777"></a>
+        <a id="idm205177"></a>
         <h2>Examples</h2>
         <p>
       Here is a example of the spat3d opcode that outputs a stereo file. It uses the file <a class="ulink" href="examples/spat3d_stereo.csd.html" target="_top"> (click here to play) <em class="citetitle">spat3d_stereo.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm205782"></a>
+          <a id="idm205182"></a>
           <p class="title">
-            <strong>Example 929. Stereo example of the spat3d opcode.</strong>
+            <strong>Example 931. Stereo example of the spat3d opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm205789"></a>
+              <a id="idm205189"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -421,14 +421,14 @@ imdel = (R + 1) * sqrt(W*W + H*H + D*D) / 340.0<br />
 
 i<span class="n">dep</span>    <span class="o">=</span>  <span class="mi">3</span>    <span class="cm">/* early reflection depth       */</span>
 
-i<span class="n">tmp</span>    <span class="nb">ftgen</span>   <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>                                           \
-		<span class="cm">/* depth1, depth2, max delay, IR length, idist, seed */</span> \
-		i<span class="n">dep</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span>                          \
-		<span class="mi">1</span><span class="p">,</span> <span class="mf">21.982</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">4000.0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* ceil  */</span> \
-		<span class="mi">1</span><span class="p">,</span>  <span class="mf">1.753</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">3500.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* floor */</span> \
-		<span class="mi">1</span><span class="p">,</span> <span class="mf">15.220</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* front */</span> \
-		<span class="mi">1</span><span class="p">,</span>  <span class="mf">9.317</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* back  */</span> \
-		<span class="mi">1</span><span class="p">,</span> <span class="mf">17.545</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* right */</span> \
+i<span class="n">tmp</span>    <span class="nb">ftgen</span>   <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>                                           <span class="w">\</span>
+		<span class="cm">/* depth1, depth2, max delay, IR length, idist, seed */</span> <span class="w">\</span>
+		i<span class="n">dep</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span>                          <span class="w">\</span>
+		<span class="mi">1</span><span class="p">,</span> <span class="mf">21.982</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">4000.0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* ceil  */</span> <span class="w">\</span>
+		<span class="mi">1</span><span class="p">,</span>  <span class="mf">1.753</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">3500.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* floor */</span> <span class="w">\</span>
+		<span class="mi">1</span><span class="p">,</span> <span class="mf">15.220</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* front */</span> <span class="w">\</span>
+		<span class="mi">1</span><span class="p">,</span>  <span class="mf">9.317</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* back  */</span> <span class="w">\</span>
+		<span class="mi">1</span><span class="p">,</span> <span class="mf">17.545</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* right */</span> <span class="w">\</span>
 		<span class="mi">1</span><span class="p">,</span> <span class="mf">12.156</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span>  <span class="cm">/* left  */</span>
 
 	<span class="kd">instr</span> <span class="nf">1</span>
@@ -509,13 +509,13 @@ a<span class="n">R</span>     <span class="o">=</span>  a<span class="n">W</span
 
       </p>
         <div class="example">
-          <a id="idm206130"></a>
+          <a id="idm205538"></a>
           <p class="title">
-            <strong>Example 930. UHJ example of the spat3d opcode.</strong>
+            <strong>Example 932. UHJ example of the spat3d opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm206132"></a>
+              <a id="idm205540"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -533,22 +533,22 @@ a<span class="n">R</span>     <span class="o">=</span>  a<span class="n">W</span
 <span class="vg">ksmps</span>	<span class="o">=</span>  <span class="mi">64</span>
 <span class="vg">nchnls</span>	<span class="o">=</span>  <span class="mi">2</span>
 
-i<span class="n">tmp</span>    <span class="nb">ftgen</span>   <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>                                           \
-		<span class="cm">/* depth1, depth2, max delay, IR length, idist, seed */</span> \
-		<span class="mi">3</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span>				\
-		<span class="mi">1</span><span class="p">,</span> <span class="mf">21.982</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">4000.0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* ceil  */</span> \
-		<span class="mi">1</span><span class="p">,</span>  <span class="mf">1.753</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">3500.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* floor */</span> \
-		<span class="mi">1</span><span class="p">,</span> <span class="mf">15.220</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* front */</span> \
-		<span class="mi">1</span><span class="p">,</span>  <span class="mf">9.317</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* back  */</span> \
-		<span class="mi">1</span><span class="p">,</span> <span class="mf">17.545</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* right */</span> \
+i<span class="n">tmp</span>    <span class="nb">ftgen</span>   <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>                                           <span class="w">\</span>
+		<span class="cm">/* depth1, depth2, max delay, IR length, idist, seed */</span> <span class="w">\</span>
+		<span class="mi">3</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span>				<span class="w">\</span>
+		<span class="mi">1</span><span class="p">,</span> <span class="mf">21.982</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">4000.0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* ceil  */</span> <span class="w">\</span>
+		<span class="mi">1</span><span class="p">,</span>  <span class="mf">1.753</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">3500.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* floor */</span> <span class="w">\</span>
+		<span class="mi">1</span><span class="p">,</span> <span class="mf">15.220</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* front */</span> <span class="w">\</span>
+		<span class="mi">1</span><span class="p">,</span>  <span class="mf">9.317</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* back  */</span> <span class="w">\</span>
+		<span class="mi">1</span><span class="p">,</span> <span class="mf">17.545</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* right */</span> <span class="w">\</span>
 		<span class="mi">1</span><span class="p">,</span> <span class="mf">12.156</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span>  <span class="cm">/* left  */</span>
 
 	<span class="kd">instr</span> <span class="nf">1</span>
 
-<span class="nb">p3</span>	<span class="o">=</span>  <span class="nb">p3</span> <span class="o">+</span> <span class="mf">1.0</span>
+<span class="vi">p3</span>	<span class="o">=</span>  <span class="vi">p3</span> <span class="o">+</span> <span class="mf">1.0</span>
 
 k<span class="n">azim</span>	<span class="nb">line</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">360.0</span>		<span class="c1">; azimuth</span>
-k<span class="n">elev</span>	<span class="nb">line</span> <span class="mi">40</span><span class="p">,</span> <span class="nb">p3</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span>		<span class="c1">; elevation</span>
+k<span class="n">elev</span>	<span class="nb">line</span> <span class="mi">40</span><span class="p">,</span> <span class="vi">p3</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span>		<span class="c1">; elevation</span>
 k<span class="n">dist</span>	<span class="o">=</span>  <span class="mf">2.0</span>				<span class="c1">; distance</span>
 <span class="c1">; convert coordinates</span>
 k<span class="n">X</span>	<span class="o">=</span>  k<span class="n">dist</span> <span class="o">*</span> <span class="nb">cos</span><span class="p">(</span>k<span class="n">elev</span> <span class="o">*</span> <span class="mf">0.01745329</span><span class="p">)</span> <span class="o">*</span> <span class="nb">sin</span><span class="p">(</span>k<span class="n">azim</span> <span class="o">*</span> <span class="mf">0.01745329</span><span class="p">)</span>
@@ -566,7 +566,7 @@ k<span class="n">ffrq</span>	<span class="nb">downsamp</span> a<span class="n">f
 a<span class="n">env4</span>	<span class="nb">phasor</span> <span class="mf">3.0</span>
 a<span class="n">env4</span>	<span class="nb">limit</span> <span class="mf">2.0</span> <span class="o">-</span> a<span class="n">env4</span> <span class="o">*</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span>
 a<span class="n">1</span>	<span class="nb">butterbp</span> a<span class="n">1</span> <span class="o">*</span> a<span class="n">env4</span><span class="p">,</span> k<span class="n">ffrq</span><span class="p">,</span> <span class="mf">160.0</span>
-a<span class="n">env</span>	<span class="nb">linseg</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">p3</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span>
+a<span class="n">env</span>	<span class="nb">linseg</span> <span class="mf">1.0</span><span class="p">,</span> <span class="vi">p3</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span>
 a<span class="n">_</span>	<span class="o">=</span>  <span class="mi">4000000</span> <span class="o">*</span> a<span class="n">1</span> <span class="o">*</span> a<span class="n">env</span> <span class="o">+</span> <span class="mf">0.00000001</span>
 
 <span class="c1">; spatialize</span>
@@ -611,13 +611,13 @@ a<span class="n">R</span>	<span class="o">=</span>  a<span class="n">WXre</span>
 
       </p>
         <div class="example">
-          <a id="idm206541"></a>
+          <a id="idm205957"></a>
           <p class="title">
-            <strong>Example 931. Quadrophonic example of the spat3d opcode.</strong>
+            <strong>Example 933. Quadrophonic example of the spat3d opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm206543"></a>
+              <a id="idm205959"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -639,14 +639,14 @@ a<span class="n">R</span>	<span class="o">=</span>  a<span class="n">WXre</span>
 
 i<span class="n">dep</span>    <span class="o">=</span>  <span class="mi">3</span>    <span class="cm">/* early reflection depth       */</span>
 
-i<span class="n">tmp</span>    <span class="nb">ftgen</span>   <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>                                           \
-		<span class="cm">/* depth1, depth2, max delay, IR length, idist, seed */</span> \
-		i<span class="n">dep</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span>                          \
-		<span class="mi">1</span><span class="p">,</span> <span class="mf">21.982</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">4000.0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* ceil  */</span> \
-		<span class="mi">1</span><span class="p">,</span>  <span class="mf">1.753</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">3500.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* floor */</span> \
-		<span class="mi">1</span><span class="p">,</span> <span class="mf">15.220</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* front */</span> \
-		<span class="mi">1</span><span class="p">,</span>  <span class="mf">9.317</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* back  */</span> \
-		<span class="mi">1</span><span class="p">,</span> <span class="mf">17.545</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* right */</span> \
+i<span class="n">tmp</span>    <span class="nb">ftgen</span>   <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>                                           <span class="w">\</span>
+		<span class="cm">/* depth1, depth2, max delay, IR length, idist, seed */</span> <span class="w">\</span>
+		i<span class="n">dep</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span>                          <span class="w">\</span>
+		<span class="mi">1</span><span class="p">,</span> <span class="mf">21.982</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">4000.0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* ceil  */</span> <span class="w">\</span>
+		<span class="mi">1</span><span class="p">,</span>  <span class="mf">1.753</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">3500.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* floor */</span> <span class="w">\</span>
+		<span class="mi">1</span><span class="p">,</span> <span class="mf">15.220</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* front */</span> <span class="w">\</span>
+		<span class="mi">1</span><span class="p">,</span>  <span class="mf">9.317</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* back  */</span> <span class="w">\</span>
+		<span class="mi">1</span><span class="p">,</span> <span class="mf">17.545</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="cm">/* right */</span> <span class="w">\</span>
 		<span class="mi">1</span><span class="p">,</span> <span class="mf">12.156</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">5000.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span>  <span class="cm">/* left  */</span>
 
 	<span class="kd">instr</span> <span class="nf">1</span>
@@ -725,7 +725,7 @@ a<span class="n">RR</span>     <span class="o">=</span>  a<span class="n">W</spa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm206906"></a>
+        <a id="idm206330"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="spat3di.html" title="spat3di"><em class="citetitle">spat3di</em></a>,
@@ -733,7 +733,7 @@ a<span class="n">RR</span>     <span class="o">=</span>  a<span class="n">W</spa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm206913"></a>
+        <a id="idm206337"></a>
         <h2>Credits</h2>
         <p>
       </p>

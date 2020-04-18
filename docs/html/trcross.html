@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm230317"></a>
+        <a id="idm229947"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>trcross</em></span> opcode takes two inputs containg TRACKS pv streaming signals (as generated,
@@ -54,12 +54,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm230322"></a>
+        <a id="idm229952"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>trcross</strong></span> fin1, fin2, ksearch, kdepth [, kmode] </pre>
       </div>
       <div class="refsect1">
-        <a id="idm230326"></a>
+        <a id="idm229956"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>fsig</em></span> -- output pv stream in TRACKS format 
@@ -84,20 +84,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm230340"></a>
+        <a id="idm229970"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the trcross opcode. It uses the file <a class="ulink" href="examples/trcross.csd.html" target="_top"> (click here to play) <em class="citetitle">trcross.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm230345"></a>
+          <a id="idm229975"></a>
           <p class="title">
-            <strong>Example 1044. Example of the trcross opcode.</strong>
+            <strong>Example 1047. Example of the trcross opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm230352"></a>
+              <a id="idm229982"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -119,15 +119,15 @@
 a<span class="n">in1</span> <span class="nb">diskin2</span> <span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
 a<span class="n">in2</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span>
 
-i<span class="n">mode</span> <span class="o">=</span> <span class="nb">p4</span>
-<span class="n">fs1</span><span class="p">,</span><span class="n">fsi2</span> <span class="nb">pvsifd</span> a<span class="n">in1</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; ifd analysis</span>
-<span class="n">fst</span>      <span class="nb">partials</span> <span class="n">fs1</span><span class="p">,</span> <span class="n">fsi2</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">500</span>	<span class="c1">; partial tracking</span>
+i<span class="n">mode</span> <span class="o">=</span> <span class="vi">p4</span>
+f<span class="n">s1</span><span class="p">,</span>f<span class="n">si2</span> <span class="nb">pvsifd</span> a<span class="n">in1</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; ifd analysis</span>
+f<span class="n">st</span>      <span class="nb">partials</span> f<span class="n">s1</span><span class="p">,</span> f<span class="n">si2</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">500</span>	<span class="c1">; partial tracking</span>
 
-<span class="n">fs11</span><span class="p">,</span><span class="n">fsi12</span> <span class="nb">pvsifd</span> a<span class="n">in2</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; ifd analysis (second input)</span>
-<span class="n">fst1</span>     <span class="nb">partials</span> <span class="n">fs11</span><span class="p">,</span> <span class="n">fsi12</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">500</span>	<span class="c1">; partial tracking (second input</span>
+f<span class="n">s11</span><span class="p">,</span>f<span class="n">si12</span> <span class="nb">pvsifd</span> a<span class="n">in2</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; ifd analysis (second input)</span>
+f<span class="n">st1</span>     <span class="nb">partials</span> f<span class="n">s11</span><span class="p">,</span> f<span class="n">si12</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">500</span>	<span class="c1">; partial tracking (second input</span>
 
-<span class="n">fcr</span>  <span class="nb">trcross</span> <span class="n">fst</span><span class="p">,</span> <span class="n">fst1</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">mode</span>		<span class="c1">; cross-synthesis (mode 0 and mode 1)</span>
-a<span class="n">out</span> <span class="nb">tradsyn</span> <span class="n">fcr</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">; resynthesis of tracks</span>
+f<span class="n">cr</span>  <span class="nb">trcross</span> f<span class="n">st</span><span class="p">,</span> f<span class="n">st1</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">mode</span>		<span class="c1">; cross-synthesis (mode 0 and mode 1)</span>
+a<span class="n">out</span> <span class="nb">tradsyn</span> f<span class="n">cr</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">; resynthesis of tracks</span>
      <span class="nb">outs</span> a<span class="n">out</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> a<span class="n">out</span><span class="o">*</span><span class="mi">3</span>
 
 <span class="kd">endin</span>
@@ -153,7 +153,7 @@ a<span class="n">out</span> <span class="nb">tradsyn</span> <span class="n">fcr<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm230501"></a>
+        <a id="idm230131"></a>
         <h2>Credits</h2>
         <p>
       </p>

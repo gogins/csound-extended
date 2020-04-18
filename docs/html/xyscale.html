@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm257545"></a>
+        <a id="idm257183"></a>
         <h2>Description</h2>
         <p>Plugin opcode in emugens.</p>
         <p>
@@ -48,12 +48,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm257549"></a>
+        <a id="idm257187"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kout <span class="command"><strong>xyscale</strong></span> kx, ky, k00, k10, k01, k11</pre>
       </div>
       <div class="refsect1">
-        <a id="idm257553"></a>
+        <a id="idm257191"></a>
         <h2>Performance</h2>
         <p>
           <span class="emphasis"><em>kx</em></span>, <span class="emphasis"><em>ky</em></span> -- Coordinates
@@ -87,19 +87,19 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm257568"></a>
+        <a id="idm257206"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the xyscale opcode. It uses the file <a class="ulink" href="examples/xyscale.csd.html" target="_top"> (click here to play) <em class="citetitle">xyscale.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm257573"></a>
+          <a id="idm257211"></a>
           <p class="title">
-            <strong>Example 1158. Example of the xyscale opcode.</strong>
+            <strong>Example 1161. Example of the xyscale opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm257575"></a>
+              <a id="idm257213"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -124,21 +124,21 @@ gi<span class="n">height</span> <span class="o">=</span> <span class="mi">300</s
 <span class="kd">instr</span> <span class="nf">1</span>
   <span class="c1">; We define four chords for bottom-left, bottom-right, top-left and top-right</span>
   <span class="c1">; Use the mouse to interpolate between them</span>
-  i<span class="n">bl</span><span class="p">[]</span> <span class="nb">array</span> <span class="n">ntom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="s">"4C"</span><span class="p">),</span> <span class="n">ntom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="s">"4Eb"</span><span class="p">),</span> <span class="n">ntom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="s">"4G"</span><span class="p">)</span>
-  i<span class="n">tl</span><span class="p">[]</span> <span class="nb">array</span> <span class="n">ntom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="s">"4E"</span><span class="p">),</span> <span class="n">ntom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="s">"4G#"</span><span class="p">),</span> <span class="n">ntom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="s">"4B"</span><span class="p">)</span>
-  i<span class="n">br</span><span class="p">[]</span> <span class="nb">array</span> <span class="n">ntom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="s">"4G"</span><span class="p">),</span> <span class="n">ntom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="s">"4A"</span><span class="p">),</span> <span class="n">ntom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="s">"4B"</span><span class="p">)</span>
-  i<span class="n">tr</span><span class="p">[]</span> <span class="nb">array</span> <span class="n">ntom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="s">"4Eb"</span><span class="p">),</span> <span class="n">ntom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="s">"4Eb+"</span><span class="p">),</span> <span class="n">ntom</span><span class="p">:</span><span class="nb">i</span><span class="p">(</span><span class="s">"4F"</span><span class="p">)</span>
+  i<span class="n">bl</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="nb">ntom</span><span class="p">:</span><span class="kt">i</span><span class="p">(</span><span class="s">"4C"</span><span class="p">),</span> <span class="nb">ntom</span><span class="p">:</span><span class="kt">i</span><span class="p">(</span><span class="s">"4Eb"</span><span class="p">),</span> <span class="nb">ntom</span><span class="p">:</span><span class="kt">i</span><span class="p">(</span><span class="s">"4G"</span><span class="p">)</span>
+  i<span class="n">tl</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="nb">ntom</span><span class="p">:</span><span class="kt">i</span><span class="p">(</span><span class="s">"4E"</span><span class="p">),</span> <span class="nb">ntom</span><span class="p">:</span><span class="kt">i</span><span class="p">(</span><span class="s">"4G#"</span><span class="p">),</span> <span class="nb">ntom</span><span class="p">:</span><span class="kt">i</span><span class="p">(</span><span class="s">"4B"</span><span class="p">)</span>
+  i<span class="n">br</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="nb">ntom</span><span class="p">:</span><span class="kt">i</span><span class="p">(</span><span class="s">"4G"</span><span class="p">),</span> <span class="nb">ntom</span><span class="p">:</span><span class="kt">i</span><span class="p">(</span><span class="s">"4A"</span><span class="p">),</span> <span class="nb">ntom</span><span class="p">:</span><span class="kt">i</span><span class="p">(</span><span class="s">"4B"</span><span class="p">)</span>
+  i<span class="n">tr</span><span class="p">[]</span> <span class="nb">fillarray</span> <span class="nb">ntom</span><span class="p">:</span><span class="kt">i</span><span class="p">(</span><span class="s">"4Eb"</span><span class="p">),</span> <span class="nb">ntom</span><span class="p">:</span><span class="kt">i</span><span class="p">(</span><span class="s">"4Eb+"</span><span class="p">),</span> <span class="nb">ntom</span><span class="p">:</span><span class="kt">i</span><span class="p">(</span><span class="s">"4F"</span><span class="p">)</span>
  
   k<span class="n">mousex</span><span class="p">,</span> k<span class="n">mousey</span><span class="p">,</span> k<span class="n">b1</span><span class="p">,</span> k<span class="n">b2</span><span class="p">,</span> k<span class="n">b3</span>    <span class="nb">FLmouse</span> <span class="mi">2</span>
   k<span class="n">x</span> <span class="o">=</span> <span class="nb">limit</span><span class="p">(</span>k<span class="n">mousex</span><span class="o">/</span>gi<span class="n">width</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
   k<span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">limit</span><span class="p">(</span>k<span class="n">mousey</span><span class="o">/</span>gi<span class="n">height</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-  <span class="nb">printf</span> <span class="s">"x: %f   y: %f </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="nb">changed</span><span class="p">(</span>k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span><span class="p">),</span> k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span>
+  <span class="nb">printf</span> <span class="s">"x: </span><span class="si">%f</span><span class="s">   y: </span><span class="si">%f</span><span class="s"> </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="nb">changed</span><span class="p">(</span>k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span><span class="p">),</span> k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span>
 
   i<span class="n">amp</span> <span class="o">=</span> <span class="mf">0.1</span>
-  a<span class="n">0</span> <span class="nb">oscili</span> i<span class="n">amp</span><span class="p">,</span> <span class="n">mtof</span><span class="p">(</span><span class="n">xyscale</span><span class="p">(</span>k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span><span class="p">,</span> i<span class="n">bl</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> i<span class="n">tl</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> i<span class="n">br</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> i<span class="n">tr</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-  a<span class="n">1</span> <span class="nb">oscili</span> i<span class="n">amp</span><span class="p">,</span> <span class="n">mtof</span><span class="p">(</span><span class="n">xyscale</span><span class="p">(</span>k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span><span class="p">,</span> i<span class="n">bl</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> i<span class="n">tl</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> i<span class="n">br</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> i<span class="n">tr</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-  a<span class="n">2</span> <span class="nb">oscili</span> i<span class="n">amp</span><span class="p">,</span> <span class="n">mtof</span><span class="p">(</span><span class="n">xyscale</span><span class="p">(</span>k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span><span class="p">,</span> i<span class="n">bl</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> i<span class="n">tl</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> i<span class="n">br</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> i<span class="n">tr</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+  a<span class="n">0</span> <span class="nb">oscili</span> i<span class="n">amp</span><span class="p">,</span> <span class="nb">mtof</span><span class="p">(</span><span class="nb">xyscale</span><span class="p">(</span>k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span><span class="p">,</span> i<span class="n">bl</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> i<span class="n">tl</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> i<span class="n">br</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> i<span class="n">tr</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+  a<span class="n">1</span> <span class="nb">oscili</span> i<span class="n">amp</span><span class="p">,</span> <span class="nb">mtof</span><span class="p">(</span><span class="nb">xyscale</span><span class="p">(</span>k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span><span class="p">,</span> i<span class="n">bl</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> i<span class="n">tl</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> i<span class="n">br</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> i<span class="n">tr</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+  a<span class="n">2</span> <span class="nb">oscili</span> i<span class="n">amp</span><span class="p">,</span> <span class="nb">mtof</span><span class="p">(</span><span class="nb">xyscale</span><span class="p">(</span>k<span class="n">x</span><span class="p">,</span> k<span class="n">y</span><span class="p">,</span> i<span class="n">bl</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> i<span class="n">tl</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> i<span class="n">br</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> i<span class="n">tr</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
   a<span class="n">out</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>a<span class="n">0</span><span class="p">,</span> a<span class="n">1</span><span class="p">,</span> a<span class="n">2</span><span class="p">)</span>
   <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>  
 <span class="kd">endin</span>
@@ -157,7 +157,7 @@ gi<span class="n">height</span> <span class="o">=</span> <span class="mi">300</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm257860"></a>
+        <a id="idm257502"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="scale.html" title="scale"><em class="citetitle">scale</em></a>, 
@@ -166,7 +166,7 @@ gi<span class="n">height</span> <span class="o">=</span> <span class="mi">300</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm257869"></a>
+        <a id="idm257511"></a>
         <h2>Credits</h2>
         <p>By: Eduardo Moguillansky 2017</p>
       </div>

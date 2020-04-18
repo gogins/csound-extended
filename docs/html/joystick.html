@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm110691"></a>
+        <a id="idm110670"></a>
         <h2>Description</h2>
         <p>Plugin opcode in joystick.</p>
         <p>
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm110695"></a>
+        <a id="idm110674"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">kres <span class="command"><strong>joystick</strong></span> kdevice ktab</pre>
       </div>
       <div class="refsect1">
-        <a id="idm110699"></a>
+        <a id="idm110678"></a>
         <h2>Performance</h2>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note">
@@ -88,7 +88,7 @@
    </p>
       </div>
       <div class="refsect1">
-        <a id="idm110709"></a>
+        <a id="idm110688"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the joystick opcode. It uses the file <a class="ulink" href="examples/joystick.csd.html" target="_top"> (click here to play) <em class="citetitle">joystick.csd</em></a>.
@@ -97,7 +97,7 @@
         <p>
     </p>
         <div class="refsect1">
-          <a id="idm110719"></a>
+          <a id="idm110698"></a>
           <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -116,14 +116,14 @@
 
 <span class="kd">instr</span> <span class="nf">1</span> <span class="c1">; gives information about your joystick in real time</span>
   
-k<span class="n">mask</span>    <span class="n">joystick</span>   <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+k<span class="n">mask</span>    <span class="nb">joystick</span>   <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
 k<span class="n">idx</span>     <span class="o">=</span>  <span class="mi">2</span>
 k<span class="n">axes</span>    <span class="nb">tab</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">; number of axes has been stored in position 0</span>
 k<span class="n">buttons</span> <span class="nb">tab</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">; number of buttons has been stored in position 1</span>
          <span class="nb">printf</span> <span class="s">"this joystick has </span><span class="si">%d</span><span class="s"> axes, </span><span class="si">%d</span><span class="s"> buttons</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">idx</span><span class="p">,</span> k<span class="n">axes</span><span class="p">,</span> k<span class="n">buttons</span>
 k<span class="n">uniq</span>    <span class="nb">init</span> <span class="mi">0</span>
 
-<span class="nl">reportaxis</span><span class="p">:</span> <span class="c1">; first we see if we have any x/y input</span>
+<span class="nl">reportaxis</span><span class="p">:</span><span class="c1">; first we see if we have any x/y input</span>
 	k<span class="n">check</span>    <span class="o">=</span>  k<span class="n">mask</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span>k<span class="n">idx</span><span class="p">)</span>
 	<span class="k">if</span> k<span class="n">check</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">kgoto</span> <span class="nl">nexta</span>
 	k<span class="n">res</span>      <span class="nb">tab</span>       k<span class="n">idx</span><span class="p">,</span> <span class="mi">1</span>
@@ -133,7 +133,7 @@ k<span class="n">uniq</span>    <span class="nb">init</span> <span class="mi">0<
 	k<span class="n">idx</span>      <span class="o">=</span>  k<span class="n">idx</span><span class="o">+</span><span class="mi">1</span>
 	<span class="k">if</span> k<span class="n">idx</span> <span class="o">&lt;</span> <span class="p">(</span>k<span class="n">axes</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span> <span class="k">kgoto</span> <span class="nl">reportaxis</span>
 
-<span class="nl">reportbutton</span><span class="p">:</span> <span class="c1">; now we check for any buttons pressed</span>
+<span class="nl">reportbutton</span><span class="p">:</span><span class="c1">; now we check for any buttons pressed</span>
 	k<span class="n">check</span>    <span class="o">=</span>  k<span class="n">mask</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="o">&lt;&lt;</span>k<span class="n">idx</span>
 	<span class="k">if</span> k<span class="n">check</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">kgoto</span> <span class="nl">nextb</span>
 	k<span class="n">res</span>      <span class="nb">tab</span>       k<span class="n">idx</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">; a button has been pressed, get from table</span>
@@ -161,7 +161,7 @@ k<span class="n">uniq</span>    <span class="nb">init</span> <span class="mi">0<
       Here is another example of the joystick opcode. It uses the file <a class="ulink" href="examples/joystick-2.csd.html" target="_top"> (click here to play) <em class="citetitle">joystick-2.csd</em></a>.
     </p>
         <div class="refsect1">
-          <a id="idm110945"></a>
+          <a id="idm110924"></a>
           <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -180,7 +180,7 @@ k<span class="n">uniq</span>    <span class="nb">init</span> <span class="mi">0<
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">mask</span>   <span class="n">joystick</span>   <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+k<span class="n">mask</span>   <span class="nb">joystick</span>   <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
 k<span class="n">axes</span>    <span class="nb">init</span> <span class="mi">0</span>
 k<span class="n">buttons</span> <span class="nb">init</span> <span class="mi">0</span>
 k<span class="n">x0</span>      <span class="nb">init</span> <span class="mi">0</span> <span class="c1">; first two entries are # of axes and # of buttons, </span>
@@ -199,10 +199,10 @@ k<span class="n">idx</span>     <span class="o">=</span>  <span class="mi">2</sp
 
 <span class="kd">instr</span> <span class="nf">2</span> <span class="c1">; play a tone until the button is released</span>
 
-k<span class="n">stop</span>   <span class="nb">tab</span>  <span class="nb">p4</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">; when this button is released, we fade out</span>
-i<span class="n">hz</span>     <span class="nb">init</span> <span class="nb">cpsoct</span><span class="p">(((</span><span class="nb">p5</span><span class="o">+</span><span class="mi">32767</span><span class="p">)</span><span class="o">/</span><span class="mi">9362</span><span class="p">)</span><span class="o">+</span><span class="mi">5</span><span class="p">)</span> <span class="c1">; ~ 30 hz to 4khz</span>
+k<span class="n">stop</span>   <span class="nb">tab</span>  <span class="vi">p4</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">; when this button is released, we fade out</span>
+i<span class="n">hz</span>     <span class="nb">init</span> <span class="nb">cpsoct</span><span class="p">(((</span><span class="vi">p5</span><span class="o">+</span><span class="mi">32767</span><span class="p">)</span><span class="o">/</span><span class="mi">9362</span><span class="p">)</span><span class="o">+</span><span class="mi">5</span><span class="p">)</span> <span class="c1">; ~ 30 hz to 4khz</span>
 <span class="nb">print</span> i<span class="n">hz</span>
-i<span class="n">to</span>     <span class="nb">init</span> <span class="nb">ampdb</span><span class="p">(((</span><span class="nb">p6</span><span class="o">+</span><span class="mi">32767</span><span class="p">)</span><span class="o">/</span><span class="mi">2184</span><span class="p">)</span><span class="o">+</span><span class="mi">60</span><span class="p">)</span> <span class="c1">; ~ 60 - 90 db</span>
+i<span class="n">to</span>     <span class="nb">init</span> <span class="nb">ampdb</span><span class="p">(((</span><span class="vi">p6</span><span class="o">+</span><span class="mi">32767</span><span class="p">)</span><span class="o">/</span><span class="mi">2184</span><span class="p">)</span><span class="o">+</span><span class="mi">60</span><span class="p">)</span> <span class="c1">; ~ 60 - 90 db</span>
 k<span class="n">env</span>    <span class="nb">init</span> <span class="mi">0</span>
 k<span class="n">delta</span>  <span class="nb">init</span> i<span class="n">to</span><span class="o">/</span><span class="p">(</span><span class="vg">kr</span><span class="o">*</span><span class="mi">10</span><span class="p">)</span>
 <span class="k">if</span> k<span class="n">stop</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">kgoto</span> <span class="nl">output</span>
@@ -234,7 +234,7 @@ k<span class="n">delta</span>    <span class="o">=</span>  k<span class="n">delt
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm111192"></a>
+        <a id="idm111171"></a>
         <h2>Credits</h2>
         <p>
       </p>

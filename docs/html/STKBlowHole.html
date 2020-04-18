@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm210955"></a>
+        <a id="idm210473"></a>
         <h2>Description</h2>
         <p>Plugin opcode in stkopd.</p>
         <p>
@@ -49,12 +49,12 @@
       As a result, both the tonehole and register hole will have variable influence on the playing frequency, which is dependent on the length of the air column. In addition, the highest playing freqeuency is limited by these fixed lengths.</p>
       </div>
       <div class="refsect1">
-        <a id="idm210960"></a>
+        <a id="idm210478"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asignal <span class="command"><strong>STKBlowHole</strong></span> ifrequency, iamplitude, [kreed, kv1[, knoise, kv2[, khole, kv3[, kreg, kv4[, kbreath, kv5]]]]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm210964"></a>
+        <a id="idm210482"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifrequency</em></span> -- Frequency of note played, in Hertz.
@@ -64,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm210970"></a>
+        <a id="idm210488"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>kreed</em></span> -- controller 2, stiffness of reed. Value range of kv1 is 0-127.</p>
         <p><span class="emphasis"><em>knoise</em></span> -- controller 4, gain of noise. Value range of kv2 is 0-127.</p>
@@ -73,7 +73,7 @@
         <p><span class="emphasis"><em>kbreath</em></span> -- controller 128, breath pressure. Value range of kv5 is 0-127.</p>
       </div>
       <div class="refsect1">
-        <a id="idm210982"></a>
+        <a id="idm210500"></a>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note: Notes">
             <tr>
@@ -99,20 +99,20 @@ The order of the controller pair is arbitrary, as long as they are after <span c
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm210991"></a>
+        <a id="idm210509"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the STKBlowHole opcode. It uses the file <a class="ulink" href="examples/STKBlowHole.csd.html" target="_top"> (click here to play) <em class="citetitle">STKBlowHole.csd</em></a>.
      
       </p>
         <div class="example">
-          <a id="idm210996"></a>
+          <a id="idm210514"></a>
           <p class="title">
-            <strong>Example 945. Example of the STKBlowHole opcode.</strong>
+            <strong>Example 947. Example of the STKBlowHole opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm210998"></a>
+              <a id="idm210516"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -131,11 +131,11 @@ The order of the controller pair is arbitrary, as long as they are after <span c
 
 <span class="kd">instr</span> <span class="nf">1</span>	
 
-i<span class="n">pch</span>	<span class="o">=</span>	<span class="nb">p4</span>
-k<span class="n">v1</span>	<span class="o">=</span>	<span class="nb">p7</span>						<span class="c1">;stiffness of reed</span>
-k<span class="n">v3</span>	<span class="nb">line</span>	<span class="nb">p5</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p6</span>					<span class="c1">;state of tonehole</span>
+i<span class="n">pch</span>	<span class="o">=</span>	<span class="vi">p4</span>
+k<span class="n">v1</span>	<span class="o">=</span>	<span class="vi">p7</span>						<span class="c1">;stiffness of reed</span>
+k<span class="n">v3</span>	<span class="nb">line</span>	<span class="vi">p5</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p6</span>					<span class="c1">;state of tonehole</span>
 
-a<span class="n">sig</span>	S<span class="n">TKBlowHole</span>	<span class="nb">cpspch</span><span class="p">(</span>i<span class="n">pch</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> k<span class="n">v1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> k<span class="n">v3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">100</span>
+a<span class="n">sig</span>	<span class="nb">STKBlowHole</span>	<span class="nb">cpspch</span><span class="p">(</span>i<span class="n">pch</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> k<span class="n">v1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> k<span class="n">v3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">100</span>
 	<span class="nb">outs</span>	a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 <span class="kd">endin</span>
 
@@ -155,7 +155,7 @@ a<span class="n">sig</span>	S<span class="n">TKBlowHole</span>	<span class="nb">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm211091"></a>
+        <a id="idm210609"></a>
         <h2>Credits</h2>
         <p>
       </p>

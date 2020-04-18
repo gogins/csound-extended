@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm155468"></a>
+        <a id="idm154205"></a>
         <h2>Description</h2>
         <p>
       Writes 4-channel audio data to an external device or stream.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm155471"></a>
+        <a id="idm154208"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>outq</strong></span> asig1, asig2, asig3, asig4</pre>
       </div>
       <div class="refsect1">
-        <a id="idm155475"></a>
+        <a id="idm154212"></a>
         <h2>Performance</h2>
         <p>
       Sends 4-channel audio samples to an accumulating output buffer (created at the beginning of performance) which serves to collect the output of all active instruments before the sound is written to disk. There can be any number of these output units in an instrument.
@@ -61,20 +61,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm155484"></a>
+        <a id="idm154221"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the outq opcode. It uses the file <a class="ulink" href="examples/outq.csd.html" target="_top"> (click here to play) <em class="citetitle">outq.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm155489"></a>
+          <a id="idm154226"></a>
           <p class="title">
             <strong>Example 668. Example of the outq opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm155496"></a>
+              <a id="idm154233"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -96,26 +96,26 @@
 a<span class="n">sig</span> <span class="nb">vco2</span> <span class="mf">.01</span><span class="p">,</span> <span class="mi">110</span>	<span class="c1">; sawtooth waveform at low volume</span>
 
 <span class="c1">;filter the first channel</span>
-k<span class="n">cut1</span> <span class="nb">line</span> <span class="mi">60</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">300</span>	<span class="c1">; Vary cutoff frequency</span>
+k<span class="n">cut1</span> <span class="nb">line</span> <span class="mi">60</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">300</span>	<span class="c1">; Vary cutoff frequency</span>
 k<span class="n">resonance1</span> <span class="o">=</span> <span class="mi">3</span>
 i<span class="n">numlayer1</span> <span class="o">=</span> <span class="mi">3</span>
 a<span class="n">sig1</span> <span class="nb">lowresx</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">cut1</span><span class="p">,</span> k<span class="n">resonance1</span><span class="p">,</span> i<span class="n">numlayer1</span>
 
 <span class="c1">;filter the second channel</span>
-k<span class="n">cut2</span> <span class="nb">line</span> <span class="mi">300</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">60</span>	<span class="c1">; Vary cutoff frequency</span>
+k<span class="n">cut2</span> <span class="nb">line</span> <span class="mi">300</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">60</span>	<span class="c1">; Vary cutoff frequency</span>
 k<span class="n">resonance2</span> <span class="o">=</span> <span class="mi">3</span>
 i<span class="n">numlayer2</span> <span class="o">=</span> <span class="mi">3</span>
 a<span class="n">sig2</span> <span class="nb">lowresx</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">cut2</span><span class="p">,</span> k<span class="n">resonance2</span><span class="p">,</span> i<span class="n">numlayer2</span>
 
 <span class="c1">;filter the third channel</span>
-k<span class="n">cut3</span> <span class="nb">line</span> <span class="mi">30</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">100</span><span class="c1">; Vary cutoff frequency</span>
+k<span class="n">cut3</span> <span class="nb">line</span> <span class="mi">30</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">100</span><span class="c1">; Vary cutoff frequency</span>
 k<span class="n">resonance3</span> <span class="o">=</span> <span class="mi">6</span>
 i<span class="n">numlayer3</span> <span class="o">=</span> <span class="mi">3</span>
 a<span class="n">sig3</span> <span class="nb">lowresx</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">cut3</span><span class="p">,</span> k<span class="n">resonance3</span><span class="p">,</span> i<span class="n">numlayer3</span>
 a<span class="n">sig3</span> <span class="o">=</span> a<span class="n">sig3</span><span class="o">*</span><span class="mf">.1</span>	<span class="c1">; lower volume</span>
 
 <span class="c1">;filter the fourth channel</span>
-k<span class="n">cut4</span> <span class="nb">line</span> <span class="mi">100</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">30</span><span class="c1">; Vary cutoff frequency</span>
+k<span class="n">cut4</span> <span class="nb">line</span> <span class="mi">100</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">30</span><span class="c1">; Vary cutoff frequency</span>
 k<span class="n">resonance4</span> <span class="o">=</span> <span class="mi">6</span>
 i<span class="n">numlayer4</span> <span class="o">=</span> <span class="mi">3</span>
 a<span class="n">sig4</span> <span class="nb">lowresx</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">cut4</span><span class="p">,</span> k<span class="n">resonance4</span><span class="p">,</span> i<span class="n">numlayer4</span>
@@ -139,7 +139,7 @@ a<span class="n">sig4</span> <span class="o">=</span> a<span class="n">sig4</spa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm155654"></a>
+        <a id="idm154391"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="out.html" title="out"><em class="citetitle">out</em></a>,
@@ -156,7 +156,7 @@ a<span class="n">sig4</span> <span class="o">=</span> a<span class="n">sig4</spa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm155679"></a>
+        <a id="idm154416"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm270747"></a>
+        <a id="idm270401"></a>
         <h2>Description</h2>
         <p>
       This subroutine reads numeric values from an external ASCII file.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm270750"></a>
+        <a id="idm270404"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>f</strong></span> # time size -23 "filename.txt"</pre>
       </div>
       <div class="refsect1">
-        <a id="idm270754"></a>
+        <a id="idm270408"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>"filename.txt"</em></span> -- numeric values contained in "filename.txt" (which indicates the complete pathname of the character file to be read), can be separated by spaces, tabs, newline characters or commas.
@@ -79,20 +79,20 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm270765"></a>
+        <a id="idm270419"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the GEN23 generator. It uses the file <a class="ulink" href="examples/gen23.csd.html" target="_top"> (click here to play) <em class="citetitle">gen23.csd</em></a> and <a class="ulink" href="examples/spectrum.txt" target="_top"> <em class="citetitle">spectrum.txt</em></a>.
            </p>
         <div class="example">
-          <a id="idm270772"></a>
+          <a id="idm270426"></a>
           <p class="title">
-            <strong>Example 1217. Example of the GEN23 generator.</strong>
+            <strong>Example 1220. Example of the GEN23 generator.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm270779"></a>
+              <a id="idm270433"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -116,17 +116,17 @@ i<span class="n">ndx</span> <span class="o">=</span><span class="mi">0</span>			
 <span class="nl">loop</span><span class="p">:</span>
 i<span class="n">freq</span> <span class="nb">tab_i</span> i<span class="n">ndx</span><span class="p">,</span> <span class="mi">2</span>				<span class="c1">;take odd values of list (= frequency)</span>
 i<span class="n">amp</span> <span class="nb">tab_i</span> i<span class="n">ndx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>				<span class="c1">;take even values of list (= amplitude)</span>
-<span class="nb">event_i</span> <span class="s">"i"</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> i<span class="n">freq</span>   		<span class="c1">;use "event_i" to trigger instr. 10 </span>
-    <span class="k">loop_lt</span> i<span class="n">ndx</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">126</span><span class="p">,</span> <span class="nl">loop</span>			<span class="c1">;use all 128 frequency and amplitude values</span>
+<span class="nb">event_i</span> <span class="s">"i"</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> i<span class="n">freq</span>   		<span class="c1">;use "event_i" to trigger instr. 10 </span>
+    <span class="kp">loop_lt</span> i<span class="n">ndx</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">126</span><span class="p">,</span> <span class="nl">loop</span>			<span class="c1">;use all 126 frequency and amplitude values</span>
 
 <span class="kd">endin</span>
 
 <span class="kd">instr</span> <span class="nf">10</span> <span class="c1">;generate sound</span>
 
-i<span class="n">amp</span>  <span class="o">=</span> <span class="nb">p4</span>
-i<span class="n">freq</span> <span class="o">=</span> <span class="nb">p5</span>
+i<span class="n">amp</span>  <span class="o">=</span> <span class="vi">p4</span>
+i<span class="n">freq</span> <span class="o">=</span> <span class="vi">p5</span>
 a<span class="n">sig</span>  <span class="nb">poscil</span> <span class="nb">ampdb</span><span class="p">(</span>i<span class="n">amp</span><span class="p">),</span> i<span class="n">freq</span><span class="p">,</span> <span class="mi">1</span>
-a<span class="n">sig</span>  <span class="nb">linen</span> a<span class="n">sig</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p2</span>
+a<span class="n">sig</span>  <span class="nb">linen</span> a<span class="n">sig</span><span class="p">,</span> <span class="mf">.01</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p2</span>
       <span class="nb">outs</span>  a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
 <span class="kd">endin</span>
@@ -144,7 +144,7 @@ a<span class="n">sig</span>  <span class="nb">linen</span> a<span class="n">sig<
             </div>
           </div>
         </div>
-        <p><br class="example-break" />  
+        <p><br class="example-break" />
         <span class="phrase">This is the diagram of the waveform of the GEN23 routine, as used in the example:</span>
 
       </p>
@@ -155,11 +155,11 @@ a<span class="n">sig</span>  <span class="nb">linen</span> a<span class="n">sig<
           </div>
         </div>
         <p>
-   
+
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm270914"></a>
+        <a id="idm270568"></a>
         <h2>Credits</h2>
         <p>
       </p>

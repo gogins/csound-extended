@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm198390"></a>
+        <a id="idm197772"></a>
         <h2>Description</h2>
         <p>
       Loads an entire SoundFont2 (SF2) sample file into memory. These opcodes allow management the sample-structure of SF2 files. In order to understand the usage of these opcodes, the user must have some knowledge of the SF2 format, so a brief description of this format can be found in the <a class="link" href="MiscSf2.html" title="Appendix G. SoundFont2 File Format"><em class="citetitle">SoundFont2 File Format Appendix</em></a>.
@@ -49,12 +49,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm198397"></a>
+        <a id="idm197779"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ir <span class="command"><strong>sfload</strong></span> "filename"</pre>
       </div>
       <div class="refsect1">
-        <a id="idm198401"></a>
+        <a id="idm197783"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ir</em></span> -- output to be used by other SF2 opcodes. For <span class="emphasis"><em>sfload</em></span>, <span class="emphasis"><em>ir</em></span> is <span class="emphasis"><em>ifilhandle</em></span>. 
@@ -72,10 +72,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm198414"></a>
+        <a id="idm197796"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>sfload</em></span> loads an entire SF2 file into memory. It returns a file handle to be used by other opcodes. Several instances of <span class="emphasis"><em>sfload</em></span> can placed in the header section of an orchestra, allowing use of more than one SF2 file in a single orchestra.
+    </p>
+        <p>If there is an attempt to load the same file twice the
+    existing load is used with a warning message (from version 6.14).
     </p>
         <p>
       These opcodes only support the sample structure of SF2 files. The modulator structure of the SoundFont2 format is not supported in Csound. Any modulation or processing to the sample data is left to the Csound user, bypassing all restrictions forced by the SF2 standard.
@@ -86,20 +89,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm198421"></a>
+        <a id="idm197804"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the sfload opcode. It uses the file <a class="ulink" href="examples/sfload.csd.html" target="_top"> (click here to play) <em class="citetitle">sfload.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm198426"></a>
+          <a id="idm197809"></a>
           <p class="title">
-            <strong>Example 903. Example of the sfload opcode.</strong>
+            <strong>Example 905. Example of the sfload opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm198433"></a>
+              <a id="idm197816"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -126,10 +129,10 @@ i<span class="n">r</span>	<span class="nb">sfload</span>	<span class="s">"01hpsc
 
 <span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; play guitar from score and midi keyboard - preset index = 0</span>
 
-	<span class="nb">mididefault</span>	<span class="mi">60</span><span class="p">,</span> <span class="nb">p3</span>
-	<span class="nb">midinoteonkey</span>	<span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>
-i<span class="n">num</span>	<span class="nb">init</span>	<span class="nb">p4</span>
-i<span class="n">vel</span>	<span class="nb">init</span>	<span class="nb">p5</span>
+	<span class="nb">mididefault</span>	<span class="mi">60</span><span class="p">,</span> <span class="vi">p3</span>
+	<span class="nb">midinoteonkey</span>	<span class="vi">p4</span><span class="p">,</span> <span class="vi">p5</span>
+i<span class="n">num</span>	<span class="nb">init</span>	<span class="vi">p4</span>
+i<span class="n">vel</span>	<span class="nb">init</span>	<span class="vi">p5</span>
 i<span class="n">vel</span>	<span class="nb">init</span>	i<span class="n">vel</span><span class="o">/</span><span class="mi">127</span>					<span class="c1">;make velocity dependent</span>
 k<span class="n">amp</span>	<span class="nb">linsegr</span>	<span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mi">0</span>
 k<span class="n">amp</span>	<span class="o">=</span> k<span class="n">amp</span><span class="o">/</span><span class="mi">3000</span>						<span class="c1">;scale amplitude</span>
@@ -141,10 +144,10 @@ a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span>	<span
 	
 <span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">; play harpsichord from score and midi keyboard - preset index = 1</span>
 
-	<span class="nb">mididefault</span>	<span class="mi">60</span><span class="p">,</span> <span class="nb">p3</span>
-	<span class="nb">midinoteonkey</span>	<span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>
-i<span class="n">num</span>	<span class="nb">init</span>	<span class="nb">p4</span>
-i<span class="n">vel</span>	<span class="nb">init</span>	<span class="nb">p5</span>
+	<span class="nb">mididefault</span>	<span class="mi">60</span><span class="p">,</span> <span class="vi">p3</span>
+	<span class="nb">midinoteonkey</span>	<span class="vi">p4</span><span class="p">,</span> <span class="vi">p5</span>
+i<span class="n">num</span>	<span class="nb">init</span>	<span class="vi">p4</span>
+i<span class="n">vel</span>	<span class="nb">init</span>	<span class="vi">p5</span>
 i<span class="n">vel</span>	<span class="nb">init</span>	i<span class="n">vel</span><span class="o">/</span><span class="mi">127</span>					<span class="c1">;make velocity dependent</span>
 k<span class="n">amp</span>	<span class="nb">linsegr</span>	<span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mi">0</span>
 k<span class="n">amp</span>	<span class="o">=</span> k<span class="n">amp</span><span class="o">/</span><span class="mi">1000</span>						<span class="c1">;scale amplitude</span>
@@ -179,7 +182,7 @@ a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span>	<span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm198662"></a>
+        <a id="idm198045"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="sfilist.html" title="sfilist"><em class="citetitle">sfilist</em></a>,
@@ -193,7 +196,7 @@ a<span class="n">1</span><span class="p">,</span>a<span class="n">2</span>	<span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm198681"></a>
+        <a id="idm198064"></a>
         <h2>Credits</h2>
         <p>
       </p>

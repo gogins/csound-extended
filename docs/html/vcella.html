@@ -40,20 +40,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm238860"></a>
+        <a id="idm238492"></a>
         <h2>Description</h2>
         <p>
 	Unidimensional Cellular Automata applied to Csound vectors
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm238863"></a>
+        <a id="idm238495"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vcella</strong></span> ktrig, kreinit, ioutFunc, initStateFunc, \
       iRuleFunc, ielements, irulelen [, iradius]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm238867"></a>
+        <a id="idm238499"></a>
         <h2>Initialization</h2>
         <p>
        <span class="emphasis"><em>ioutFunc</em></span> - number of the table where the state of each cell is stored
@@ -75,7 +75,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm238881"></a>
+        <a id="idm238513"></a>
         <h2>Performance</h2>
         <p>
        <span class="emphasis"><em>ktrig</em></span> - trigger signal. Each time it is non-zero, a new generation of cells is evaluated
@@ -100,7 +100,7 @@ Radius of CA algorithm can be 1 or 2 (optional <span class="emphasis"><em>iradiu
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm238911"></a>
+        <a id="idm238543"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the vcella opcode. It uses the file <a class="ulink" href="examples/vcella.csd.html" target="_top"> (click here to play) <em class="citetitle">vcella.csd</em></a>.</p>
@@ -108,14 +108,14 @@ Radius of CA algorithm can be 1 or 2 (optional <span class="emphasis"><em>iradiu
       The following example uses <span class="emphasis"><em>vcella</em></span>
       </p>
         <div class="example">
-          <a id="idm238918"></a>
+          <a id="idm238550"></a>
           <p class="title">
-            <strong>Example 1083. Example of the vcella opcode.</strong>
+            <strong>Example 1086. Example of the vcella opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm238925"></a>
+              <a id="idm238557"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 
@@ -141,12 +141,12 @@ Radius of CA algorithm can be 1 or 2 (optional <span class="emphasis"><em>iradiu
 
 <span class="c1">; Cellular automata-driven oscillator bank using vcella and adsynt</span>
 <span class="kd">instr</span> <span class="nf">1</span>
-  i<span class="n">dur</span>      <span class="o">=</span> <span class="nb">p3</span>
-  i<span class="n">CArate</span>   <span class="o">=</span> <span class="nb">p4</span>                                <span class="c1">; number of times per second the CA calculates new values</span>
+  i<span class="n">dur</span>      <span class="o">=</span> <span class="vi">p3</span>
+  i<span class="n">CArate</span>   <span class="o">=</span> <span class="vi">p4</span>                                <span class="c1">; number of times per second the CA calculates new values</span>
 	
   <span class="c1">; f-tables for CA parameters</span>
-  i<span class="n">CAinit</span>   <span class="o">=</span> <span class="nb">p5</span>                                <span class="c1">; CA initial states					</span>
-  i<span class="n">CArule</span>   <span class="o">=</span> <span class="nb">p6</span>                                <span class="c1">; CA rule values</span>
+  i<span class="n">CAinit</span>   <span class="o">=</span> <span class="vi">p5</span>                                <span class="c1">; CA initial states					</span>
+  i<span class="n">CArule</span>   <span class="o">=</span> <span class="vi">p6</span>                                <span class="c1">; CA rule values</span>
   <span class="c1">; The rule is used as follows:</span>
   <span class="c1">; the states (values) of each cell are summed with their neighboring cells within</span>
   <span class="c1">; the specied radius (+/- 1 or 2 cells).  Each sum is used as an index to read a </span>
@@ -226,7 +226,7 @@ Radius of CA algorithm can be 1 or 2 (optional <span class="emphasis"><em>iradiu
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm239232"></a>
+        <a id="idm238864"></a>
         <h2>Credits</h2>
         <p>Written by: Gabriel Maldonado.</p>
         <p>New in Csound 5 (Previously available only on CsoundAV)</p>

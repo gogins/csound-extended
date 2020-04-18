@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm51616"></a>
+        <a id="idm51176"></a>
         <h2>Description</h2>
         <p>
       Reads from an automatically established digital delay line.
    </p>
       </div>
       <div class="refsect1">
-        <a id="idm51619"></a>
+        <a id="idm51179"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>delayr</strong></span> idlt [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm51623"></a>
+        <a id="idm51183"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>idlt</em></span> -- requested delay time in seconds. This can be as large as available memory will permit. The space required for n seconds of delay is 4n * <span class="emphasis"><em>sr</em></span> bytes. It is allocated at the time the instrument is first initialized, and returned to the pool at the end of a score section.
@@ -61,28 +61,28 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm51632"></a>
+        <a id="idm51192"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>delayr</em></span> reads from an automatically established digital delay line, in which the signal retrieved has been resident for <span class="emphasis"><em>idlt</em></span> seconds. This unit must be paired with and precede an accompanying <a class="link" href="delayw.html" title="delayw"><em class="citetitle">delayw</em></a> unit. Any other Csound statements can intervene.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm51639"></a>
+        <a id="idm51199"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the delayr opcode. It uses the file <a class="ulink" href="examples/delayr.csd.html" target="_top"> (click here to play) <em class="citetitle">delayr.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm51644"></a>
+          <a id="idm51204"></a>
           <p class="title">
             <strong>Example 200. Example of the delayr opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm51651"></a>
+              <a id="idm51211"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -112,7 +112,7 @@ a<span class="n">in</span>  <span class="nb">pluck</span> <span class="mf">.7</s
 
 <span class="kd">instr</span> <span class="nf">2</span>	
 
-i<span class="n">feedback</span> <span class="o">=</span> <span class="nb">p4</span>	
+i<span class="n">feedback</span> <span class="o">=</span> <span class="vi">p4</span>	
 
 a<span class="n">buf2</span>	<span class="nb">delayr</span>	gi<span class="n">del</span>
 a<span class="n">delL</span> 	<span class="nb">deltap</span>	<span class="mf">.4</span>		<span class="c1">;first tap (on left channel)</span>
@@ -120,7 +120,7 @@ a<span class="n">delM</span> 	<span class="nb">deltap</span>	<span class="mi">1<
 	<span class="nb">delayw</span>	ga<span class="n">sig</span> <span class="o">+</span> <span class="p">(</span>a<span class="n">delL</span> <span class="o">*</span> i<span class="n">feedback</span><span class="p">)</span>
 
 a<span class="n">buf3</span>	<span class="nb">delayr</span>	gi<span class="n">del</span>
-k<span class="n">del</span>	<span class="nb">line</span>    <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">.01</span>	<span class="c1">;vary delay time</span>
+k<span class="n">del</span>	<span class="nb">line</span>    <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">.01</span>	<span class="c1">;vary delay time</span>
 a<span class="n">delR</span> 	<span class="nb">deltap</span>  <span class="mf">.65</span> <span class="o">*</span> k<span class="n">del</span>	<span class="c1">;one pitch changing tap (on the right chn.)</span>
 	<span class="nb">delayw</span>	ga<span class="n">sig</span> <span class="o">+</span> <span class="p">(</span>a<span class="n">delR</span> <span class="o">*</span> i<span class="n">feedback</span><span class="p">)</span>
 <span class="c1">;make a mix of all deayed signals	</span>
@@ -147,7 +147,7 @@ a<span class="n">delR</span> 	<span class="nb">deltap</span>  <span class="mf">.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm51790"></a>
+        <a id="idm51350"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="delay.html" title="delay"><em class="citetitle">delay</em></a>,

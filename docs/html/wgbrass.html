@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm252151"></a>
+        <a id="idm251783"></a>
         <h2>Description</h2>
         <p>
       Audio output is a tone related to a brass instrument, using a physical model developed from Perry Cook, but re-coded for Csound. 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm252154"></a>
+        <a id="idm251786"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>wgbrass</strong></span> kamp, kfreq, ktens, iatt, kvibf, kvamp \
     [, ifn] [, iminfreq]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm252158"></a>
+        <a id="idm251790"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iatt</em></span> -- time taken to reach full pressure
@@ -66,7 +66,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm252168"></a>
+        <a id="idm251800"></a>
         <h2>Performance</h2>
         <p>
       A note is played on a brass-like instrument, with the arguments as below.
@@ -105,21 +105,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm252184"></a>
+        <a id="idm251816"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the wgbrass opcode. It uses the file <a class="ulink" href="examples/wgbrass.csd.html" target="_top"> (click here to play) <em class="citetitle">wgbrass.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm252189"></a>
+          <a id="idm251821"></a>
           <p class="title">
-            <strong>Example 1137. Example of the wgbrass opcode.</strong>
+            <strong>Example 1140. Example of the wgbrass opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm252196"></a>
+              <a id="idm251828"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -140,14 +140,14 @@
 <span class="c1">; Instrument #1.</span>
 <span class="kd">instr</span> <span class="nf">1</span>
   k<span class="n">amp</span> <span class="o">=</span> <span class="mf">0.7</span>
-  k<span class="n">freq</span> <span class="o">=</span> <span class="nb">p4</span>
-  k<span class="n">tens</span> <span class="o">=</span> <span class="nb">p5</span>
-  i<span class="n">att</span> <span class="o">=</span> <span class="nb">p6</span>
-  k<span class="n">vibf</span> <span class="o">=</span> <span class="nb">p7</span>
+  k<span class="n">freq</span> <span class="o">=</span> <span class="vi">p4</span>
+  k<span class="n">tens</span> <span class="o">=</span> <span class="vi">p5</span>
+  i<span class="n">att</span> <span class="o">=</span> <span class="vi">p6</span>
+  k<span class="n">vibf</span> <span class="o">=</span> <span class="vi">p7</span>
   i<span class="n">fn</span> <span class="o">=</span> <span class="mi">1</span>
 
   <span class="c1">; Create an amplitude envelope for the vibrato.</span>
-  k<span class="n">vamp</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.5</span>
+  k<span class="n">vamp</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">0.5</span>
 
   a<span class="n">1</span> <span class="nb">wgbrass</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">freq</span><span class="p">,</span> k<span class="n">tens</span><span class="p">,</span> i<span class="n">att</span><span class="p">,</span> k<span class="n">vibf</span><span class="p">,</span> k<span class="n">vamp</span><span class="p">,</span> i<span class="n">fn</span>
   <span class="nb">out</span> a<span class="n">1</span>
@@ -177,7 +177,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm252304"></a>
+        <a id="idm251936"></a>
         <h2>Credits</h2>
         <p>
       </p>

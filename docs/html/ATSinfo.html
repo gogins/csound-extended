@@ -38,19 +38,19 @@
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm27789"></a>
+        <a id="idm26869"></a>
         <h2>Description</h2>
         <p>
             <span class="emphasis"><em>atsinfo</em></span> reads data out of the header of an ATS file.
         </p>
       </div>
       <div class="refsect1">
-        <a id="idm27793"></a>
+        <a id="idm26873"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">idata <span class="command"><strong>ATSinfo</strong></span> iatsfile, ilocation</pre>
       </div>
       <div class="refsect1">
-        <a id="idm27797"></a>
+        <a id="idm26877"></a>
         <h2>Initialization</h2>
         <p>
             <span class="emphasis"><em>iatsfile</em></span> – the ATS number (n in ats.n) or the name in quotes of the analysis file made using <a class="ulink" href="http://www-ccrma.stanford.edu/~juan/ATS.html" target="_top"><em class="citetitle">ATS</em></a>.
@@ -69,7 +69,7 @@
         <p>  8 - ATS file Type</p>
       </div>
       <div class="refsect1">
-        <a id="idm27815"></a>
+        <a id="idm26895"></a>
         <h2>Performance</h2>
         <p>Macros can really improve the legibility of your csound code, I've provided my Macro Definitions below: </p>
         <pre class="programlisting">
@@ -85,20 +85,20 @@
         <p><span class="emphasis"><em>ATSinfo</em></span> can be useful for writing generic instruments that will work with many ATS files, even if they have different lengths and different numbers of partials etc. Example 2 is a simple application of this.</p>
       </div>
       <div class="refsect1">
-        <a id="idm27821"></a>
+        <a id="idm26901"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the ATSinfo opcode. It uses the file <a class="ulink" href="examples/ATSinfo.csd.html" target="_top"> (click here to play) <em class="citetitle">ATSinfo.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm27826"></a>
+          <a id="idm26906"></a>
           <p class="title">
             <strong>Example 68. Example of the ATSinfo opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm27828"></a>
+              <a id="idm26908"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -134,7 +134,7 @@ i<span class="n">num_partials</span>	<span class="nb">ATSinfo</span>	<span class
         <p>In the example above we use <span class="emphasis"><em>ATSinfo</em></span> to retrieve the number of partials in the ATS file </p>
       </div>
       <div class="refsect1">
-        <a id="idm27867"></a>
+        <a id="idm26947"></a>
         <h2>Other examples</h2>
         <div class="orderedlist">
           <ol class="orderedlist" type="1">
@@ -158,13 +158,13 @@ i<span class="n">num_partials</span>	<span class="nb">ATSinfo</span>	<span class
       Here is another example of the ATSinfo opcode. It uses the file <a class="ulink" href="examples/ATSinfo-2.csd.html" target="_top"> (click here to play) <em class="citetitle">ATSinfo-2.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm27885"></a>
+          <a id="idm26965"></a>
           <p class="title">
             <strong>Example 69. Example 2 of the ATSinfo opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm27887"></a>
+              <a id="idm26967"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -190,15 +190,15 @@ i<span class="n">mf</span>     <span class="nb">ATSinfo</span> S<span class="n">
 i<span class="n">d</span>      <span class="nb">ATSinfo</span> S<span class="n">file</span><span class="p">,</span> <span class="mi">7</span>
 i<span class="n">ft</span>     <span class="nb">ATSinfo</span> S<span class="n">file</span><span class="p">,</span> <span class="mi">8</span>
         <span class="nb">prints</span>  <span class="s">{{
-Sample rate =   %d Hz
-Frame Size =    %d samples
-Window Size =   %d samples
-Number of Partials = %d
-Number of Frames = %d
-Maximum Amplitude = %f
-Maximum Frequency = %f Hz
-Duration =      %f seconds
-ATS file Type = %d
+Sample rate =   </span><span class="si">%d</span><span class="s"> Hz
+Frame Size =    </span><span class="si">%d</span><span class="s"> samples
+Window Size =   </span><span class="si">%d</span><span class="s"> samples
+Number of Partials = </span><span class="si">%d</span><span class="s">
+Number of Frames = </span><span class="si">%d</span><span class="s">
+Maximum Amplitude = </span><span class="si">%f</span><span class="s">
+Maximum Frequency = </span><span class="si">%f</span><span class="s"> Hz
+Duration =      </span><span class="si">%f</span><span class="s"> seconds
+ATS file Type = </span><span class="si">%d</span><span class="s">
 }}</span><span class="p">,</span> i<span class="n">sr</span><span class="p">,</span> i<span class="n">fs</span><span class="p">,</span> i<span class="n">ws</span><span class="p">,</span> i<span class="n">np</span><span class="p">,</span> i<span class="n">nf</span><span class="p">,</span> i<span class="n">ma</span><span class="p">,</span> i<span class="n">mf</span><span class="p">,</span> i<span class="n">d</span><span class="p">,</span> i<span class="n">ft</span>
 <span class="kd">endin</span>
 <span class="nt">&lt;/CsInstruments&gt;</span>
@@ -214,7 +214,7 @@ ATS file Type = %d
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm27988"></a>
+        <a id="idm27086"></a>
         <h2>See also</h2>
         <p><a class="link" href="ATSread.html" title="ATSread"><em class="citetitle">ATSread</em></a>, 
             <a class="link" href="ATSreadnz.html" title="ATSreadnz"><em class="citetitle">ATSreadnz</em></a>, 
@@ -227,7 +227,7 @@ ATS file Type = %d
             <a class="link" href="ATSsinnoi.html" title="ATSsinnoi"><em class="citetitle">ATSsinnoi</em></a></p>
       </div>
       <div class="refsect1">
-        <a id="idm28009"></a>
+        <a id="idm27107"></a>
         <h2>Credits</h2>
         <p>
             </p>

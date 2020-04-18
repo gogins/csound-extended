@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm220848"></a>
+        <a id="idm220466"></a>
         <h2>Description</h2>
         <p>
       k-rate control over table numbers. Function tables are read with linear interpolation.
@@ -49,13 +49,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm220855"></a>
+        <a id="idm220473"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>tableikt</strong></span> xndx, kfn [, ixmode] [, ixoff] [, iwrap]</pre>
         <pre class="synopsis">kres <span class="command"><strong>tableikt</strong></span> kndx, kfn [, ixmode] [, ixoff] [, iwrap]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm220861"></a>
+        <a id="idm220479"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ixmode</em></span> -- if 0, <span class="emphasis"><em>xndx</em></span> and <span class="emphasis"><em>ixoff</em></span> ranges match the length of the table. if non-zero <span class="emphasis"><em>xndx</em></span> and <span class="emphasis"><em>ixoff</em></span> have a 0 to 1 range. Default is 0
@@ -68,7 +68,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm220882"></a>
+        <a id="idm220500"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kndx</em></span> -- Index into table, either a positive number range matching the table length (<span class="emphasis"><em>ixmode</em></span> = 0) or a 0 to 1 range (<span class="emphasis"><em>ixmode</em></span> not equal to 0).
@@ -98,21 +98,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm220903"></a>
+        <a id="idm220521"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the tableikt opcode. It uses the file <a class="ulink" href="examples/tableikt.csd.html" target="_top"> (click here to play) <em class="citetitle">tableikt.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm220908"></a>
+          <a id="idm220526"></a>
           <p class="title">
-            <strong>Example 999. Example of the tableikt opcode.</strong>
+            <strong>Example 1002. Example of the tableikt opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm220915"></a>
+              <a id="idm220533"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -131,10 +131,10 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">lowfn</span>	<span class="o">=</span> <span class="nb">p4</span>					<span class="c1">;lowest ftable wave</span>
-i<span class="n">highfn</span>	<span class="o">=</span> <span class="nb">p5</span>					<span class="c1">;highest ftable wave</span>
+i<span class="n">lowfn</span>	<span class="o">=</span> <span class="vi">p4</span>					<span class="c1">;lowest ftable wave</span>
+i<span class="n">highfn</span>	<span class="o">=</span> <span class="vi">p5</span>					<span class="c1">;highest ftable wave</span>
 
-k<span class="n">swpenv</span>	<span class="nb">line</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">0</span>				<span class="c1">;sweep envelope, calculate current table pair and interpolation amount</span>
+k<span class="n">swpenv</span>	<span class="nb">line</span> <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">0</span>				<span class="c1">;sweep envelope, calculate current table pair and interpolation amount</span>
 i<span class="n">numtables</span> <span class="o">=</span> i<span class="n">highfn</span> <span class="o">-</span> i<span class="n">lowfn</span>			<span class="c1">;1 less than number of tables</span>
 k<span class="n">fn1</span>	<span class="o">=</span> <span class="nb">int</span><span class="p">(</span>k<span class="n">swpenv</span><span class="o">*</span>i<span class="n">numtables</span><span class="p">)</span> <span class="o">+</span> i<span class="n">lowfn</span>
         <span class="nb">printks</span> <span class="s">"play table no: </span><span class="si">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">fn1</span>
@@ -183,14 +183,14 @@ play table no: 1</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm221137"></a>
+        <a id="idm220755"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="tablekt.html" title="tablekt"><em class="citetitle">tablekt</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm221142"></a>
+        <a id="idm220760"></a>
         <h2>Credits</h2>
         <p>
       </p>

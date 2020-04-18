@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm261145"></a>
+        <a id="idm260795"></a>
         <h2>Description</h2>
         <p>
       Writes to a zk variable at k-rate without mixing.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm261148"></a>
+        <a id="idm260798"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>zkw</strong></span> kval, kndx</pre>
       </div>
       <div class="refsect1">
-        <a id="idm261152"></a>
+        <a id="idm260802"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kval</em></span> -- value to be written to the zk location.
@@ -64,21 +64,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm261162"></a>
+        <a id="idm260812"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the zkw opcode. It uses the file <a class="ulink" href="examples/zkw.csd.html" target="_top"> (click here to play) <em class="citetitle">zkw.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm261167"></a>
+          <a id="idm260817"></a>
           <p class="title">
-            <strong>Example 1177. Example of the zkw opcode.</strong>
+            <strong>Example 1180. Example of the zkw opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm261174"></a>
+              <a id="idm260824"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -103,7 +103,7 @@
 <span class="c1">; Instrument #1 -- a simple waveform.</span>
 <span class="kd">instr</span> <span class="nf">1</span>
   <span class="c1">; Linearly vary a k-rate signal from 100 to 1,000.</span>
-  k<span class="n">line</span> <span class="nb">line</span> <span class="mi">100</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1000</span>
+  k<span class="n">line</span> <span class="nb">line</span> <span class="mi">100</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1000</span>
 
   <span class="c1">; Add the linear signal to zk variable #1.</span>
   <span class="nb">zkw</span> k<span class="n">line</span><span class="p">,</span> <span class="mi">1</span>
@@ -150,7 +150,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm261269"></a>
+        <a id="idm260919"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="zaw.html" title="zaw"><em class="citetitle">zaw</em></a>,
@@ -162,7 +162,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm261284"></a>
+        <a id="idm260934"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm36087"></a>
+        <a id="idm35478"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>cabasa</em></span> is a semi-physical model of a cabasa sound. It is one of the PhISEM percussion opcodes. PhISEM (Physically Informed Stochastic Event Modeling) is an algorithmic approach for simulating collisions of multiple independent sound producing objects.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm36091"></a>
+        <a id="idm35482"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>cabasa</strong></span> iamp, idettack [, inum] [, idamp] [, imaxshake]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm36095"></a>
+        <a id="idm35486"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iamp</em></span> -- Amplitude of output.  Note: As these instruments are stochastic, this is only a approximation.
@@ -81,21 +81,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm36115"></a>
+        <a id="idm35506"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the cabasa opcode. It uses the file <a class="ulink" href="examples/cabasa.csd.html" target="_top"> (click here to play) <em class="citetitle">cabasa.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm36120"></a>
+          <a id="idm35511"></a>
           <p class="title">
             <strong>Example 110. Example of the cabasa opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm36127"></a>
+              <a id="idm35518"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -114,8 +114,8 @@
 
 <span class="kd">instr</span> <span class="nf">1</span> 
 
-i<span class="n">num</span>	<span class="o">=</span> <span class="nb">p4</span>
-i<span class="n">damp</span>	<span class="o">=</span> <span class="nb">p5</span>               
+i<span class="n">num</span>	<span class="o">=</span> <span class="vi">p4</span>
+i<span class="n">damp</span>	<span class="o">=</span> <span class="vi">p5</span>               
 a<span class="n">sig</span>	<span class="nb">cabasa</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> i<span class="n">num</span><span class="p">,</span> i<span class="n">damp</span>
 	<span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
@@ -139,7 +139,7 @@ a<span class="n">sig</span>	<span class="nb">cabasa</span> <span class="mf">0.9<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm36189"></a>
+        <a id="idm35580"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="crunch.html" title="crunch"><em class="citetitle">crunch</em></a>, 
@@ -149,7 +149,7 @@ a<span class="n">sig</span>	<span class="nb">cabasa</span> <span class="mf">0.9<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm36200"></a>
+        <a id="idm35591"></a>
         <h2>Credits</h2>
         <p>
       </p>

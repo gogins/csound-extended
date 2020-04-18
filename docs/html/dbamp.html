@@ -39,33 +39,33 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm49946"></a>
+        <a id="idm49475"></a>
         <h2>Description</h2>
         <p>
       Returns the decibel equivalent of the raw amplitude <span class="emphasis"><em>x</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm49950"></a>
+        <a id="idm49479"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>dbamp</strong></span>(x)  (init-rate or control-rate args only)</pre>
       </div>
       <div class="refsect1">
-        <a id="idm49954"></a>
+        <a id="idm49483"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the dbamp opcode. It uses the file <a class="ulink" href="examples/dbamp.csd.html" target="_top"> (click here to play) <em class="citetitle">dbamp.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm49959"></a>
+          <a id="idm49488"></a>
           <p class="title">
             <strong>Example 189. Example of the dbamp opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm49966"></a>
+              <a id="idm49495"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -83,7 +83,7 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">amp</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">amp</span> <span class="o">=</span> <span class="vi">p4</span>
 i<span class="n">db</span>  <span class="o">=</span> <span class="nb">dbamp</span><span class="p">(</span>i<span class="n">amp</span><span class="p">)</span>
      <span class="nb">print</span> i<span class="n">db</span>
 a<span class="n">sig</span> <span class="nb">vco2</span> i<span class="n">amp</span><span class="p">,</span> <span class="mi">110</span>	<span class="c1">;sawtooth</span>
@@ -118,7 +118,7 @@ instr 1:  idb = 86.021</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm50036"></a>
+        <a id="idm49565"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="ampdb.html" title="ampdb"><em class="citetitle">ampdb</em></a>, 

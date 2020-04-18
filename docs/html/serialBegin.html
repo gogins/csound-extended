@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm195219"></a>
+        <a id="idm194599"></a>
         <h2>Description</h2>
         <p>Plugin opcode in serial.</p>
         <p>
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm195223"></a>
+        <a id="idm194603"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">iPort <span class="command"><strong>serialBegin</strong></span> SPortName [, ibaudRate]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm195227"></a>
+        <a id="idm194607"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>SPortName</em></span> -- port name number
@@ -63,20 +63,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm195233"></a>
+        <a id="idm194613"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the serialBegin opcode. It uses the file <a class="ulink" href="examples/serialBegin.csd.html" target="_top"> (click here to play) <em class="citetitle">serialBegin.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm195238"></a>
+          <a id="idm194618"></a>
           <p class="title">
-            <strong>Example 890. Example of the serialBegin opcode.</strong>
+            <strong>Example 892. Example of the serialBegin opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm195245"></a>
+              <a id="idm194625"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -107,7 +107,7 @@ a<span class="n">Sig</span> <span class="nb">in</span>								<span class="c1">;
 k<span class="n">Rms</span> <span class="nb">rms</span> a<span class="n">Sig</span><span class="o">*</span>k<span class="n">Gain</span>
 
 k<span class="n">Rms</span> <span class="o">=</span> k<span class="n">Rms</span><span class="o">*</span>k<span class="n">Rms</span><span class="o">*</span><span class="mi">255</span>						<span class="c1">;scale the rms to a good value for the LED and send it out</span>
-<span class="nb">serialWrite</span> i<span class="n">Port</span><span class="p">,</span> <span class="p">(</span>k<span class="n">Rms</span> <span class="o">&lt;</span> <span class="mi">255</span> <span class="p">?</span> k<span class="n">Rms</span> <span class="p">:</span> <span class="mi">255</span><span class="p">)</span>			<span class="c1">;must be in range: 0-255</span>
+<span class="nb">serialWrite</span> i<span class="n">Port</span><span class="p">,</span> <span class="p">(</span>k<span class="n">Rms</span> <span class="o">&lt;</span> <span class="mi">255</span> <span class="o">?</span> k<span class="n">Rms</span> <span class="o">:</span> <span class="mi">255</span><span class="p">)</span>			<span class="c1">;must be in range: 0-255</span>
 
 <span class="kd">endin</span>
 <span class="nt">&lt;/CsInstruments&gt;</span>
@@ -151,7 +151,7 @@ void loop() {
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm195349"></a>
+        <a id="idm194729"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="serialEnd.html" title="serialEnd"><em class="citetitle"></em>serialEnd</a>,
@@ -163,7 +163,7 @@ void loop() {
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm195364"></a>
+        <a id="idm194744"></a>
         <h2>Credits</h2>
         <p>
       </p>

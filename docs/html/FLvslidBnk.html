@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm81026"></a>
+        <a id="idm80661"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>FLvslidBnk</em></span> is a widget containing a bank of vertical sliders.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm81030"></a>
+        <a id="idm80665"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>FLvslidBnk</strong></span> "names", inumsliders [, ioutable] [, iwidth] [, iheight] [, ix] \
       [, iy] [, itypetable] [, iexptable] [, istart_index] [, iminmaxtable]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm81034"></a>
+        <a id="idm80669"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em><span class="quote">“<span class="quote">names</span>”</span></em></span> -- a double-quoted string containing the names of each slider.  Each slider can have a different name. Separate each name with <span class="quote">“<span class="quote">@</span>”</span> character, for example: <span class="quote">“<span class="quote">frequency@amplitude@cutoff</span>”</span>. It is possible to not provide any name by giving a single space <span class="quote">“<span class="quote"> </span>”</span>. In this case, the opcode will automatically assign a progressive number as a label for each slider.
@@ -134,7 +134,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm81086"></a>
+        <a id="idm80721"></a>
         <h2>Performance</h2>
         <p>
       There are no k-rate arguments, even if cells of the output table (or the zak space) are updated at k-rate.
@@ -170,21 +170,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm81116"></a>
+        <a id="idm80751"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the FLvslidBnk opcode. It uses the file <a class="ulink" href="examples/FLvslidBnk.csd.html" target="_top"> (click here to play) <em class="citetitle">FLvslidBnk.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm81121"></a>
+          <a id="idm80756"></a>
           <p class="title">
             <strong>Example 327. Example of the FLvslidBnk opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm81128"></a>
+              <a id="idm80763"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -219,9 +219,9 @@ gi<span class="n">outtable</span> <span class="nb">ftgen</span> <span class="mi"
     i<span class="n">y</span> <span class="o">=</span> <span class="mi">10</span>
     <span class="c1">; Table containing fader types</span>
     i<span class="n">typetable</span>  <span class="o">=</span> gi<span class="n">typetable</span>
-    <span class="nb">FLvslidBnk</span> <span class="s">"1@2@3@4@5@6@7@8@9@10@11@12@13@14@15@16"</span><span class="p">,</span> <span class="mi">16</span> <span class="p">,</span> i<span class="n">outtable</span> <span class="p">,</span> i<span class="n">width</span> <span class="p">,</span> i<span class="n">height</span> <span class="p">,</span> i<span class="n">x</span> \
+    <span class="nb">FLvslidBnk</span> <span class="s">"1@2@3@4@5@6@7@8@9@10@11@12@13@14@15@16"</span><span class="p">,</span> <span class="mi">16</span> <span class="p">,</span> i<span class="n">outtable</span> <span class="p">,</span> i<span class="n">width</span> <span class="p">,</span> i<span class="n">height</span> <span class="p">,</span> i<span class="n">x</span> <span class="w">\</span>
       <span class="p">,</span> i<span class="n">y</span> <span class="p">,</span> i<span class="n">typetable</span>
-    <span class="nb">FLvslidBnk</span> <span class="s">" "</span><span class="p">,</span> i<span class="n">num</span> <span class="p">,</span> i<span class="n">outtable</span> <span class="p">,</span> i<span class="n">width</span> <span class="p">,</span> i<span class="n">height</span> <span class="p">,</span> i<span class="n">x</span> \
+    <span class="nb">FLvslidBnk</span> <span class="s">" "</span><span class="p">,</span> i<span class="n">num</span> <span class="p">,</span> i<span class="n">outtable</span> <span class="p">,</span> i<span class="n">width</span> <span class="p">,</span> i<span class="n">height</span> <span class="p">,</span> i<span class="n">x</span> <span class="w">\</span>
       <span class="p">,</span> i<span class="n">y</span> <span class="o">+</span> <span class="mi">200</span> <span class="p">,</span> <span class="o">-</span><span class="mi">23</span>
 <span class="c1">; End of panel contents</span>
 <span class="nb">FLpanelEnd</span>
@@ -252,7 +252,7 @@ gi<span class="n">outtable</span> <span class="nb">ftgen</span> <span class="mi"
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm81294"></a>
+        <a id="idm80931"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="FLslider.html" title="FLslider"><em class="citetitle">FLslider</em></a>,
@@ -260,7 +260,7 @@ gi<span class="n">outtable</span> <span class="nb">ftgen</span> <span class="mi"
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm81301"></a>
+        <a id="idm80938"></a>
         <h2>Credits</h2>
         <p>Author: Gabriel Maldonado</p>
         <p>New in version 5.06</p>

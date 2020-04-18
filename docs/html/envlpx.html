@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm59479"></a>
+        <a id="idm59076"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>envlpx</em></span> -- apply an envelope consisting of 3 segments:
@@ -61,13 +61,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm59490"></a>
+        <a id="idm59087"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>envlpx</strong></span> xamp, irise, idur, idec, ifn, iatss, iatdec [, ixmod]</pre>
         <pre class="synopsis">kres <span class="command"><strong>envlpx</strong></span> kamp, irise, idur, idec, ifn, iatss, iatdec [, ixmod]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm59496"></a>
+        <a id="idm59093"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>irise</em></span> -- rise time in seconds. A zero or negative value signifies no rise modification.
@@ -82,25 +82,26 @@
       <span class="emphasis"><em>ifn</em></span> -- function table number of stored rise shape with extended guard point.
     </p>
         <p>
-      <span class="emphasis"><em>iatss</em></span> -- attenuation factor, by which the
-      last value of the <span class="emphasis"><em>envlpx</em></span> rise is modified
-      during the note's pseudo steady state. A factor greater than 1
-      causes an exponential growth and a factor less than 1 creates an
-      exponential decay. A factor of 1 will maintain a true steady
-      state at the last rise value. Note that this attenuation is not
-      by fixed rate (as in a piano), but is sensitive to a note's
-      duration. However, if <span class="emphasis"><em>iatss</em></span> is negative (or
+      <span class="emphasis"><em>iatss</em></span> -- the ratio of the final value
+      of the pseudo-steady-state period to the value at its beginning
+      (i.e the attenuation from the end of the rise segment
+      to the start of the decay).
+      A ratio greater than 1 causes an exponential growth and 
+      a ratio less than 1 creates an exponential decay. A ratio of 1
+      will maintain a true steady state at the last rise value.
+      Note that this attenuation is not at a fixed rate (as in a piano),
+      but is sensitive to a note's duration. 
+      However, if <span class="emphasis"><em>iatss</em></span> is negative (or
       if steady state &lt; 4 k-periods) a fixed attenuation rate of
       <span class="emphasis"><em>abs</em></span>(<span class="emphasis"><em>iatss</em></span>) per second
       will be used. 0 is illegal. 
     </p>
         <p>
-      <span class="emphasis"><em>iatdec</em></span> -- attenuation factor by which the
-      closing steady state value is reduced exponentially over the
-      decay period. This value must be positive and is normally of the
-      order of .01. A large or excessively small value is apt to
-      produce a cutoff which is audible. A zero or negative value is
-      illegal.
+      <span class="emphasis"><em>iatdec</em></span> --  the ratio of the value
+      at the end of the decay period to the value at its beginning (the end
+      of the steady-state segment) . It must be positive and is normally of the
+      order of .01. A large or excessively small value is apt to produce a cutoff
+      which is audible. A zero or negative value is illegal.
     </p>
         <p>
       <span class="emphasis"><em>ixmod</em></span> (optional, between +- .9 or so) --
@@ -113,7 +114,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm59519"></a>
+        <a id="idm59115"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamp, xamp</em></span> -- input amplitude signal.
@@ -133,21 +134,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm59528"></a>
+        <a id="idm59124"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the envlpx opcode. It uses the file <a class="ulink" href="examples/envlpx.csd.html" target="_top"> (click here to play) <em class="citetitle">envlpx.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm59533"></a>
+          <a id="idm59129"></a>
           <p class="title">
             <strong>Example 248. Example of the envlpx opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm59540"></a>
+              <a id="idm59136"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -169,14 +170,14 @@
 
 i<span class="n">rise</span> <span class="o">=</span> <span class="mf">0.2</span>
 i<span class="n">dec</span>  <span class="o">=</span> <span class="mf">0.5</span>
-i<span class="n">dur</span>  <span class="o">=</span> <span class="nb">p3</span> <span class="o">-</span> i<span class="n">dec</span>
+i<span class="n">dur</span>  <span class="o">=</span> <span class="vi">p3</span> <span class="o">-</span> i<span class="n">dec</span>
 
 i<span class="n">fn</span> <span class="o">=</span> <span class="mi">1</span>
-i<span class="n">atss</span> <span class="o">=</span> <span class="nb">p5</span>
+i<span class="n">atss</span> <span class="o">=</span> <span class="vi">p5</span>
 i<span class="n">atdec</span> <span class="o">=</span> <span class="mf">0.01</span>
 
 k<span class="n">env</span> <span class="nb">envlpx</span> <span class="mf">.6</span><span class="p">,</span> i<span class="n">rise</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> i<span class="n">dec</span><span class="p">,</span> i<span class="n">fn</span><span class="p">,</span> i<span class="n">atss</span><span class="p">,</span> i<span class="n">atdec</span>
-k<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
+k<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p4</span><span class="p">)</span>
 a<span class="n">sig</span> <span class="nb">vco2</span> k<span class="n">env</span><span class="p">,</span> k<span class="n">cps</span>
 <span class="c1">;apply envlpx to the filter cut-off frequency</span>
 a<span class="n">sig</span> <span class="nb">moogvcf</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">cps</span> <span class="o">+</span> <span class="p">(</span>k<span class="n">env</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">*</span> k<span class="n">cps</span><span class="p">)</span> <span class="p">,</span> <span class="mf">.5</span> <span class="c1">;the higher the pitch, the higher the filter cut-off frequency</span>
@@ -203,7 +204,7 @@ a<span class="n">sig</span> <span class="nb">moogvcf</span> a<span class="n">sig
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm59672"></a>
+        <a id="idm59268"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="envlpxr.html" title="envlpxr"><em class="citetitle">envlpxr</em></a>, 
@@ -212,7 +213,7 @@ a<span class="n">sig</span> <span class="nb">moogvcf</span> a<span class="n">sig
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm59681"></a>
+        <a id="idm59277"></a>
         <h2>Credits</h2>
         <p>Thanks goes to Luis Jure for pointing out a mistake with <span class="emphasis"><em>iatss</em></span>.</p>
       </div>

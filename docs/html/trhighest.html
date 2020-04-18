@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm230706"></a>
+        <a id="idm230336"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>trhighest</em></span> opcode takes an input containg TRACKS pv streaming signals (as generated,
@@ -49,12 +49,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm230711"></a>
+        <a id="idm230341"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig, kfr, kamp <span class="command"><strong>trhighest</strong></span> fin1, kscal</pre>
       </div>
       <div class="refsect1">
-        <a id="idm230715"></a>
+        <a id="idm230345"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>fsig</em></span> -- output pv stream in TRACKS format 
@@ -73,20 +73,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm230727"></a>
+        <a id="idm230357"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the trhighest opcode. It uses the file <a class="ulink" href="examples/trhighest.csd.html" target="_top"> (click here to play) <em class="citetitle">trhighest.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm230732"></a>
+          <a id="idm230362"></a>
           <p class="title">
-            <strong>Example 1046. Example of the trhighest opcode.</strong>
+            <strong>Example 1049. Example of the trhighest opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm230739"></a>
+              <a id="idm230369"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -106,10 +106,10 @@
 <span class="kd">instr</span> <span class="nf">1</span>
 
 a<span class="n">in</span>     <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span>
-<span class="n">fs1</span><span class="p">,</span><span class="n">fsi2</span> <span class="nb">pvsifd</span> a<span class="n">in</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; ifd analysis</span>
-<span class="n">fst</span>	<span class="nb">partials</span> <span class="n">fs1</span><span class="p">,</span> <span class="n">fsi2</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">500</span>	<span class="c1">; partial tracking</span>
-<span class="n">fhi</span><span class="p">,</span>k<span class="n">fr</span><span class="p">,</span>k<span class="n">amp</span> <span class="nb">trhighest</span> <span class="n">fst</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">; highest freq-track </span>
-a<span class="n">out</span>	<span class="nb">tradsyn</span>	<span class="n">fhi</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">; resynthesis of highest frequency</span>
+f<span class="n">s1</span><span class="p">,</span>f<span class="n">si2</span> <span class="nb">pvsifd</span> a<span class="n">in</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">; ifd analysis</span>
+f<span class="n">st</span>	<span class="nb">partials</span> f<span class="n">s1</span><span class="p">,</span> f<span class="n">si2</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">500</span>	<span class="c1">; partial tracking</span>
+f<span class="n">hi</span><span class="p">,</span>k<span class="n">fr</span><span class="p">,</span>k<span class="n">amp</span> <span class="nb">trhighest</span> f<span class="n">st</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">; highest freq-track </span>
+a<span class="n">out</span>	<span class="nb">tradsyn</span>	f<span class="n">hi</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>			<span class="c1">; resynthesis of highest frequency</span>
 	<span class="nb">outs</span> a<span class="n">out</span><span class="o">*</span><span class="mi">40</span><span class="p">,</span> a<span class="n">out</span><span class="o">*</span><span class="mi">40</span>			<span class="c1">; compensate energy loss</span>
 
 <span class="kd">endin</span>
@@ -134,7 +134,7 @@ a<span class="n">out</span>	<span class="nb">tradsyn</span>	<span class="n">fhi<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm230844"></a>
+        <a id="idm230474"></a>
         <h2>Credits</h2>
         <p>
       </p>

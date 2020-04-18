@@ -39,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm135092"></a>
+        <a id="idm133663"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>midinoteonpch</em></span> is designed to simplify writing instruments that can be used interchangeably for either score or MIDI input, and to make it easier to adapt instruments originally written for score input to work with MIDI input.
@@ -53,12 +53,12 @@ and MIDI, including both MIDI files and real-time MIDI input, without using any 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm135100"></a>
+        <a id="idm133671"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>midinoteonpch</strong></span> xpch, xvelocity</pre>
       </div>
       <div class="refsect1">
-        <a id="idm135104"></a>
+        <a id="idm133675"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xpch</em></span> -- returns MIDI key translated to octave.pch during MIDI activation, remains unchanged otherwise.
@@ -89,20 +89,20 @@ and MIDI, including both MIDI files and real-time MIDI input, without using any 
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm135122"></a>
+        <a id="idm133693"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the midinoteonpch opcode. It uses the file <a class="ulink" href="examples/midinoteonpch.csd.html" target="_top"> (click here to play) <em class="citetitle">midinoteonpch.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm135127"></a>
+          <a id="idm133698"></a>
           <p class="title">
             <strong>Example 563. Example of the midinoteonpch opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm135134"></a>
+              <a id="idm133705"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -121,11 +121,11 @@ and MIDI, including both MIDI files and real-time MIDI input, without using any 
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-<span class="nb">midinoteonpch</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p5</span>				<span class="c1">;gets a MIDI note number value as octave-point-decimal value into p4, and MIDI velocity into p5</span>
+<span class="nb">midinoteonpch</span> <span class="vi">p4</span><span class="p">,</span> <span class="vi">p5</span>				<span class="c1">;gets a MIDI note number value as octave-point-decimal value into p4, and MIDI velocity into p5</span>
 
-<span class="nb">print</span> 	<span class="nb">p4</span>					<span class="c1">;display the pitch value when it changes and when key is pressed </span>
+<span class="nb">print</span> 	<span class="vi">p4</span>					<span class="c1">;display the pitch value when it changes and when key is pressed </span>
 k<span class="n">vel</span> <span class="o">=</span>  k<span class="n">vel</span><span class="o">/</span><span class="mi">127</span>				<span class="c1">;scale midi velocity to 0-1</span>
-i<span class="n">pch</span> <span class="o">=</span>	<span class="nb">p4</span>
+i<span class="n">pch</span> <span class="o">=</span>	<span class="vi">p4</span>
 i<span class="n">cps</span> <span class="o">=</span>	<span class="nb">cpspch</span><span class="p">(</span>i<span class="n">pch</span><span class="p">)</span>				<span class="c1">;convert octave-point-decimal value into Hz</span>
 k<span class="n">env</span> <span class="nb">madsr</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.5</span>			<span class="c1">;amplitude envelope multiplied by</span>
 a<span class="n">sig</span> <span class="nb">pluck</span> k<span class="n">env</span><span class="o">*</span>k<span class="n">vel</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;velocity value			</span>
@@ -158,7 +158,7 @@ a<span class="n">sig</span> <span class="nb">pluck</span> k<span class="n">env</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm135241"></a>
+        <a id="idm133812"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="midichannelaftertouch.html" title="midichannelaftertouch"><em class="citetitle">midichannelaftertouch</em></a>, 
@@ -174,7 +174,7 @@ a<span class="n">sig</span> <span class="nb">pluck</span> k<span class="n">env</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm135264"></a>
+        <a id="idm133835"></a>
         <h2>Credits</h2>
         <p>Author: Michael Gogins</p>
         <p>New in version 4.20</p>

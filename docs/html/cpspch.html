@@ -39,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm46452"></a>
+        <a id="idm45963"></a>
         <h2>Description</h2>
         <p>
       Converts a pitch-class value to cycles-per-second.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm46455"></a>
+        <a id="idm45966"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>cpspch</strong></span> (pch)  (init- or control-rate args only)</pre>
         <p>
@@ -54,7 +54,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm46460"></a>
+        <a id="idm45971"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>cpspch</em></span> and its related opcodes are really <span class="emphasis"><em>value converters</em></span> with a special function of manipulating pitch data.
@@ -63,7 +63,7 @@
       Data concerning pitch and frequency can exist in any of the following forms:
     </p>
         <div class="table">
-          <a id="idm46466"></a>
+          <a id="idm45977"></a>
           <p class="title">
             <strong>Table 8. Pitch and Frequency Values</strong>
           </p>
@@ -135,21 +135,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm46513"></a>
+        <a id="idm46024"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the cpspch opcode. It uses the file <a class="ulink" href="examples/cpspch.csd.html" target="_top"> (click here to play) <em class="citetitle">cpspch.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm46518"></a>
+          <a id="idm46029"></a>
           <p class="title">
             <strong>Example 168. Example of the cpspch opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm46525"></a>
+              <a id="idm46036"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -168,7 +168,7 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>	<span class="c1">; Convert pitch-class value into Hz </span>
   
-i<span class="n">pch</span> <span class="o">=</span>	<span class="nb">p4</span>
+i<span class="n">pch</span> <span class="o">=</span>	<span class="vi">p4</span>
 i<span class="n">cps</span> <span class="o">=</span>	<span class="nb">cpspch</span><span class="p">(</span>i<span class="n">pch</span><span class="p">)</span>
 	<span class="nb">print</span> i<span class="n">cps</span>
 a<span class="n">sig</span>	<span class="nb">oscil</span> <span class="mf">0.7</span><span class="p">,</span> i<span class="n">cps</span><span class="p">,</span> <span class="mi">1</span>
@@ -207,7 +207,7 @@ instr 1:  icps = 54.995
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm46607"></a>
+        <a id="idm46118"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="cps2pch.html" title="cps2pch"><em class="citetitle">cps2pch</em></a>,

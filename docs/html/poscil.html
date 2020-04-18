@@ -39,14 +39,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169347"></a>
+        <a id="idm168128"></a>
         <h2>Description</h2>
         <p>
       High precision oscillator.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169350"></a>
+        <a id="idm168131"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>poscil</strong></span> aamp, acps [, ifn, iphs]</pre>
         <pre class="synopsis">ares <span class="command"><strong>poscil</strong></span> aamp, kcps [, ifn, iphs]</pre>
@@ -56,7 +56,7 @@
         <pre class="synopsis">kres <span class="command"><strong>poscil</strong></span> kamp, kcps [, ifn, iphs]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm169364"></a>
+        <a id="idm168145"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- (optional) function table number.  This
@@ -69,7 +69,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169370"></a>
+        <a id="idm168151"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ares</em></span> -- output signal
@@ -104,13 +104,13 @@
     (non-power of two) length tables.</p>
       </div>
       <div class="refsect1">
-        <a id="idm169395"></a>
+        <a id="idm168176"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the poscil opcode. It uses the file <a class="ulink" href="examples/poscil.csd.html" target="_top"> (click here to play) <em class="citetitle">poscil.csd</em></a>. 
       </p>
         <div class="example">
-          <a id="idm169400"></a>
+          <a id="idm168181"></a>
           <p class="title">
             <strong>Example 727. Example of the poscil opcode.</strong>
           </p>
@@ -120,7 +120,7 @@
         Flags</em></a> for more information on using command
         line flags.</p>
             <div class="refsect1">
-              <a id="idm169407"></a>
+              <a id="idm168188"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -144,7 +144,7 @@ gi<span class="n">sine</span> <span class="nb">ftgen</span> <span class="mi">0</
 
 i<span class="n">peak</span> <span class="nb">random</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> 		<span class="c1">;where is the envelope peak</span>
 a<span class="n">sig</span>  <span class="nb">poscil</span> <span class="mf">.8</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> gi<span class="n">sine</span>
-a<span class="n">env</span>  <span class="nb">transeg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span>i<span class="n">peak</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="o">-</span><span class="nb">p3</span><span class="o">*</span>i<span class="n">peak</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">0</span>
+a<span class="n">env</span>  <span class="nb">transeg</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span>i<span class="n">peak</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="o">-</span><span class="vi">p3</span><span class="o">*</span>i<span class="n">peak</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">0</span>
 a<span class="n">L</span><span class="p">,</span>a<span class="n">R</span> <span class="nb">pan2</span> a<span class="n">sig</span><span class="o">*</span>a<span class="n">env</span><span class="p">,</span> i<span class="n">peak</span>	<span class="c1">;pan according to random value</span>
       <span class="nb">outs</span> a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>
 
@@ -166,14 +166,14 @@ a<span class="n">L</span><span class="p">,</span>a<span class="n">R</span> <span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169514"></a>
+        <a id="idm168295"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="poscil3.html" title="poscil3"><em class="citetitle">poscil3</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm169519"></a>
+        <a id="idm168300"></a>
         <h2>Credits</h2>
         <p>
       </p>

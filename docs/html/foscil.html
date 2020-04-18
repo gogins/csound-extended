@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm86716"></a>
+        <a id="idm86362"></a>
         <h2>Description</h2>
         <p>
       A basic frequency modulated oscillator.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm86719"></a>
+        <a id="idm86365"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>foscil</strong></span> xamp, kcps, xcar, xmod, kndx, ifn [, iphs]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm86723"></a>
+        <a id="idm86369"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- function table number. Requires a wrap-around guard point.
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm86730"></a>
+        <a id="idm86376"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xamp</em></span> -- the amplitude of the output signal.
@@ -110,21 +110,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm86773"></a>
+        <a id="idm86419"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the foscil opcode. It uses the file <a class="ulink" href="examples/foscil.csd.html" target="_top"> (click here to play) <em class="citetitle">foscil.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm86778"></a>
+          <a id="idm86424"></a>
           <p class="title">
             <strong>Example 349. Example of the foscil opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm86785"></a>
+              <a id="idm86431"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -145,8 +145,8 @@
 
 k<span class="n">cps</span> <span class="o">=</span> <span class="mi">440</span>
 k<span class="n">car</span> <span class="o">=</span> <span class="mi">1</span>
-k<span class="n">mod</span> <span class="o">=</span> <span class="nb">p4</span>
-k<span class="n">ndx</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">20</span>	<span class="c1">;intensivy sidebands</span>
+k<span class="n">mod</span> <span class="o">=</span> <span class="vi">p4</span>
+k<span class="n">ndx</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">20</span>	<span class="c1">;intensivy sidebands</span>
 
 a<span class="n">sig</span> <span class="nb">foscil</span> <span class="mf">.5</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> k<span class="n">car</span><span class="p">,</span> k<span class="n">mod</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> <span class="mi">1</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
@@ -172,7 +172,7 @@ a<span class="n">sig</span> <span class="nb">foscil</span> <span class="mf">.5</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm86880"></a>
+        <a id="idm86526"></a>
         <h2>See Also</h2>
         <p> More information about frequency modulation on Wikipedia: <a class="ulink" href="http://en.wikipedia.org/wiki/Frequency_modulation_synthesis" target="_top"><em class="citetitle">http://en.wikipedia.org/wiki/Frequency_modulation_synthesis</em></a></p>
       </div>

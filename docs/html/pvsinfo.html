@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm178994"></a>
+        <a id="idm178172"></a>
         <h2>Description</h2>
         <p>
       Get format information about fsrc, whether created by an opcode such as pvsanal, or obtained from a PVOCEX file by pvsfread. This information is available at init time, and can be used to set parameters for other pvs opcodes, and in particular for creating function tables (e.g. for pvsftw), or setting the number of oscillators for pvsadsyn.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm178997"></a>
+        <a id="idm178175"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ioverlap, inumbins, iwinsize, iformat <span class="command"><strong>pvsinfo</strong></span> fsrc</pre>
       </div>
       <div class="refsect1">
-        <a id="idm179001"></a>
+        <a id="idm178179"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ioverlap</em></span> -- The stream overlap size.
@@ -67,20 +67,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm179011"></a>
+        <a id="idm178189"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the pvsinfo opcode. It uses the file <a class="ulink" href="examples/pvsinfo.csd.html" target="_top"> (click here to play) <em class="citetitle">pvsinfo.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm179016"></a>
+          <a id="idm178194"></a>
           <p class="title">
-            <strong>Example 786. Example of the pvsinfo opcode.</strong>
+            <strong>Example 788. Example of the pvsinfo opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm179023"></a>
+              <a id="idm178201"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -100,13 +100,13 @@
 <span class="kd">instr</span> <span class="nf">1</span>
 <span class="c1">; create a PVOC-EX (*.pvx) file with PVANAL first</span>
 i<span class="n">dur</span> <span class="nb">filelen</span>  <span class="s">"fox.pvx"</span>		<span class="c1">;find duration of analysis file</span>
-k<span class="n">pos</span> <span class="nb">line</span>     <span class="mi">0</span><span class="p">,</span><span class="nb">p3</span><span class="p">,</span>i<span class="n">dur</span>		<span class="c1">;to ensure we process whole file</span>
-<span class="n">fsrc</span> <span class="nb">pvsfread</span> k<span class="n">pos</span><span class="p">,</span> <span class="s">"fox.pvx"</span>	<span class="c1">;create fsig from (mono) file</span>
+k<span class="n">pos</span> <span class="nb">line</span>     <span class="mi">0</span><span class="p">,</span><span class="vi">p3</span><span class="p">,</span>i<span class="n">dur</span>		<span class="c1">;to ensure we process whole file</span>
+f<span class="n">src</span> <span class="nb">pvsfread</span> k<span class="n">pos</span><span class="p">,</span> <span class="s">"fox.pvx"</span>	<span class="c1">;create fsig from (mono) file</span>
 
-i<span class="n">ovl</span><span class="p">,</span>i<span class="n">nb</span><span class="p">,</span>i<span class="n">ws</span><span class="p">,</span>i<span class="n">fmt</span> <span class="nb">pvsinfo</span> <span class="n">fsrc</span>	<span class="c1">;get info</span>
+i<span class="n">ovl</span><span class="p">,</span>i<span class="n">nb</span><span class="p">,</span>i<span class="n">ws</span><span class="p">,</span>i<span class="n">fmt</span> <span class="nb">pvsinfo</span> f<span class="n">src</span>	<span class="c1">;get info</span>
 <span class="nb">print</span> i<span class="n">ovl</span><span class="p">,</span>i<span class="n">nb</span><span class="p">,</span>i<span class="n">ws</span><span class="p">,</span>i<span class="n">fmt</span>		<span class="c1">;print info</span>
 
-a<span class="n">out</span> <span class="nb">pvsynth</span> <span class="n">fsrc</span>
+a<span class="n">out</span> <span class="nb">pvsynth</span> f<span class="n">src</span>
      <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
 
 <span class="kd">endin</span>
@@ -133,7 +133,7 @@ instr 1:  iovl = 256.000  inb = 513.000  iws = 2048.000  ifmt = 0.000
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm179105"></a>
+        <a id="idm178283"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm226015"></a>
+        <a id="idm225636"></a>
         <h2>Description</h2>
         <p>
       This opcode attempts to model some of the filter characteristics of a Roland TB303 voltage-controlled filter. Euler's method is used to approximate the system, rather than traditional filter methods. Cutoff frequency, Q, and distortion are all coupled. Empirical methods were used to try to unentwine,  but frequency is only approximate as a result. Future fixes for some problems with this opcode may break existing orchestras relying on this version of <span class="emphasis"><em>tbvcf</em></span>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm226019"></a>
+        <a id="idm225640"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>tbvcf</strong></span> asig, xfco, xres, kdist, kasym [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm226023"></a>
+        <a id="idm225644"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iskip</em></span> (optional, default=0) -- if non zero
@@ -60,7 +60,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm226027"></a>
+        <a id="idm225648"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- input signal. Should be normalized to ±1.
@@ -79,21 +79,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm226042"></a>
+        <a id="idm225663"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the tbvcf opcode. It uses the file <a class="ulink" href="examples/tbvcf.csd.html" target="_top"> (click here to play) <em class="citetitle">tbvcf.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm226047"></a>
+          <a id="idm225668"></a>
           <p class="title">
-            <strong>Example 1022. Example of the tbvcf opcode.</strong>
+            <strong>Example 1025. Example of the tbvcf opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm226054"></a>
+              <a id="idm225675"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -117,16 +117,16 @@
 
           <span class="kd">instr</span> <span class="nf">10</span>
 
-  i<span class="n">dur</span>	<span class="o">=</span>	<span class="nb">p3</span>			<span class="c1">; Duration</span>
-  i<span class="n">amp</span>	<span class="o">=</span>	<span class="nb">p4</span>			<span class="c1">; Amplitude</span>
-  i<span class="n">fqc</span>	<span class="o">=</span>	<span class="nb">cpspch</span><span class="p">(</span><span class="nb">p5</span><span class="p">)</span>		<span class="c1">; Pitch to frequency</span>
-  i<span class="n">panl</span>	<span class="o">=</span>	<span class="nb">sqrt</span><span class="p">(</span><span class="nb">p6</span><span class="p">)</span>		<span class="c1">; Pan left</span>
-  i<span class="n">panr</span>	<span class="o">=</span>	<span class="nb">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="nb">p6</span><span class="p">)</span>		<span class="c1">; Pan right</span>
-  i<span class="n">q</span>	<span class="o">=</span>	<span class="nb">p7</span>
-  i<span class="n">dist</span>	<span class="o">=</span>	<span class="nb">p8</span>
-  i<span class="n">asym</span> <span class="o">=</span>	<span class="nb">p9</span>
+  i<span class="n">dur</span>	<span class="o">=</span>	<span class="vi">p3</span>			<span class="c1">; Duration</span>
+  i<span class="n">amp</span>	<span class="o">=</span>	<span class="vi">p4</span>			<span class="c1">; Amplitude</span>
+  i<span class="n">fqc</span>	<span class="o">=</span>	<span class="nb">cpspch</span><span class="p">(</span><span class="vi">p5</span><span class="p">)</span>		<span class="c1">; Pitch to frequency</span>
+  i<span class="n">panl</span>	<span class="o">=</span>	<span class="nb">sqrt</span><span class="p">(</span><span class="vi">p6</span><span class="p">)</span>		<span class="c1">; Pan left</span>
+  i<span class="n">panr</span>	<span class="o">=</span>	<span class="nb">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="vi">p6</span><span class="p">)</span>		<span class="c1">; Pan right</span>
+  i<span class="n">q</span>	<span class="o">=</span>	<span class="vi">p7</span>
+  i<span class="n">dist</span>	<span class="o">=</span>	<span class="vi">p8</span>
+  i<span class="n">asym</span> <span class="o">=</span>	<span class="vi">p9</span>
 
-k<span class="n">dclck</span>		<span class="nb">linseg</span>	<span class="mi">0</span><span class="p">,</span> <span class="mf">.002</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">dur</span><span class="o">-</span><span class="mf">.004</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.002</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">; Declick envelope</span>
+k<span class="n">dclck</span>		<span class="nb">linseg</span>	<span class="mi">0</span><span class="p">,</span> <span class="mf">.002</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> i<span class="n">dur</span><span class="o">-</span><span class="mf">.004</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">.002</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">; Declick envelope</span>
 k<span class="n">fco</span>		<span class="nb">expseg</span>	<span class="mi">10000</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> <span class="mi">1000</span>			<span class="c1">; Frequency envelope</span>
 a<span class="n">x</span>		<span class="nb">vco</span>		<span class="mi">1</span><span class="p">,</span> i<span class="n">fqc</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span>			<span class="c1">; Square wave</span>
 a<span class="n">y</span>		<span class="nb">tbvcf</span>		a<span class="n">x</span><span class="p">,</span> k<span class="n">fco</span><span class="p">,</span> i<span class="n">q</span><span class="p">,</span> i<span class="n">dist</span><span class="p">,</span> i<span class="n">asym</span>		<span class="c1">; TB-VCF</span>
@@ -146,33 +146,32 @@ a<span class="n">y</span>		<span class="nb">buthp</span>	a<span class="n">y</spa
 <span class="nb">i</span><span class="mi">10</span> <span class="mi">0</span>    <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">0.0</span>  <span class="mf">2.0</span>   <span class="mf">0.0</span>
 <span class="nb">i</span><span class="mi">10</span> <span class="mf">0.3</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">0.8</span>  <span class="mf">2.0</span>   <span class="mf">0.0</span>
 <span class="nb">i</span><span class="mi">10</span> <span class="mf">0.6</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">1.6</span>  <span class="mf">2.0</span>   <span class="mf">0.0</span>
-<span class="nb">i</span><span class="mi">10</span> <span class="mf">0.9</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">2.4</span>  <span class="mf">2.0</span>   <span class="mf">0.0</span>
-<span class="nb">i</span><span class="mi">10</span> <span class="mf">1.2</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">3.2</span>  <span class="mf">2.0</span>   <span class="mf">0.0</span>
-<span class="c1">;i10 1.5  0.2  0.5    7.00  .5   4.0  2.0   0.0</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mf">0.9</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">1.7</span>  <span class="mf">2.0</span>   <span class="mf">0.0</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mf">1.2</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">1.8</span>  <span class="mf">2.0</span>   <span class="mf">0.0</span>
 <span class="nb">i</span><span class="mi">10</span> <span class="mf">1.8</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">0.0</span>  <span class="mf">2.0</span>   <span class="mf">0.25</span>
 <span class="nb">i</span><span class="mi">10</span> <span class="mf">2.1</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">0.8</span>  <span class="mf">2.0</span>   <span class="mf">0.25</span>
 <span class="nb">i</span><span class="mi">10</span> <span class="mf">2.4</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">1.6</span>  <span class="mf">2.0</span>   <span class="mf">0.25</span>
-<span class="nb">i</span><span class="mi">10</span> <span class="mf">2.7</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">2.4</span>  <span class="mf">2.0</span>   <span class="mf">0.25</span>
-<span class="nb">i</span><span class="mi">10</span> <span class="mf">3.0</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">3.2</span>  <span class="mf">2.0</span>   <span class="mf">0.25</span>
-<span class="nb">i</span><span class="mi">10</span> <span class="mf">3.3</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">4.0</span>  <span class="mf">2.0</span>   <span class="mf">0.25</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mf">2.7</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">1.8</span>  <span class="mf">2.0</span>   <span class="mf">0.25</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mf">3.0</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">1.9</span>  <span class="mf">2.0</span>   <span class="mf">0.25</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mf">3.3</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">2.0</span>  <span class="mf">2.0</span>   <span class="mf">0.25</span>
 <span class="nb">i</span><span class="mi">10</span> <span class="mf">3.6</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">0.0</span>  <span class="mf">2.0</span>   <span class="mf">0.5</span>
 <span class="nb">i</span><span class="mi">10</span> <span class="mf">3.9</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">0.8</span>  <span class="mf">2.0</span>   <span class="mf">0.5</span>
 <span class="nb">i</span><span class="mi">10</span> <span class="mf">4.2</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">1.6</span>  <span class="mf">2.0</span>   <span class="mf">0.5</span>
-<span class="nb">i</span><span class="mi">10</span> <span class="mf">4.5</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">2.4</span>  <span class="mf">2.0</span>   <span class="mf">0.5</span>
-<span class="nb">i</span><span class="mi">10</span> <span class="mf">4.8</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">3.2</span>  <span class="mf">2.0</span>   <span class="mf">0.5</span>
-<span class="nb">i</span><span class="mi">10</span> <span class="mf">5.1</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">4.0</span>  <span class="mf">2.0</span>   <span class="mf">0.5</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mf">4.5</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">1.8</span>  <span class="mf">2.0</span>   <span class="mf">0.5</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mf">4.8</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">1.9</span>  <span class="mf">2.0</span>   <span class="mf">0.5</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mf">5.1</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">2.0</span>  <span class="mf">2.0</span>   <span class="mf">0.5</span>
 <span class="nb">i</span><span class="mi">10</span> <span class="mf">5.4</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">0.0</span>  <span class="mf">2.0</span>   <span class="mf">0.75</span>
 <span class="nb">i</span><span class="mi">10</span> <span class="mf">5.7</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">0.8</span>  <span class="mf">2.0</span>   <span class="mf">0.75</span>
 <span class="nb">i</span><span class="mi">10</span> <span class="mf">6.0</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">1.6</span>  <span class="mf">2.0</span>   <span class="mf">0.75</span>
-<span class="nb">i</span><span class="mi">10</span> <span class="mf">6.3</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">2.4</span>  <span class="mf">2.0</span>   <span class="mf">0.75</span>
-<span class="nb">i</span><span class="mi">10</span> <span class="mf">6.6</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">3.2</span>  <span class="mf">2.0</span>   <span class="mf">0.75</span>
-<span class="nb">i</span><span class="mi">10</span> <span class="mf">6.9</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">4.0</span>  <span class="mf">2.0</span>   <span class="mf">0.75</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mf">6.3</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">1.8</span>  <span class="mf">2.0</span>   <span class="mf">0.75</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mf">6.6</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">1.9</span>  <span class="mf">2.0</span>   <span class="mf">0.75</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mf">6.9</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">2.0</span>  <span class="mf">2.0</span>   <span class="mf">0.75</span>
 <span class="nb">i</span><span class="mi">10</span> <span class="mf">7.2</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">0.0</span>  <span class="mf">2.0</span>   <span class="mf">1.0</span>
 <span class="nb">i</span><span class="mi">10</span> <span class="mf">7.5</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">0.8</span>  <span class="mf">2.0</span>   <span class="mf">1.0</span>
 <span class="nb">i</span><span class="mi">10</span> <span class="mf">7.8</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">1.6</span>  <span class="mf">2.0</span>   <span class="mf">1.0</span>
-<span class="nb">i</span><span class="mi">10</span> <span class="mf">8.1</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">2.4</span>  <span class="mf">2.0</span>   <span class="mf">1.0</span>
-<span class="nb">i</span><span class="mi">10</span> <span class="mf">8.4</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">3.2</span>  <span class="mf">2.0</span>   <span class="mf">1.0</span>
-<span class="nb">i</span><span class="mi">10</span> <span class="mf">8.7</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">4.0</span>  <span class="mf">2.0</span>   <span class="mf">1.0</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mf">8.1</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">1.8</span>  <span class="mf">2.0</span>   <span class="mf">1.0</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mf">8.4</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">1.9</span>  <span class="mf">2.0</span>   <span class="mf">1.0</span>
+<span class="nb">i</span><span class="mi">10</span> <span class="mf">8.7</span>  <span class="mf">0.2</span>  <span class="mf">0.5</span>    <span class="mf">7.00</span>  <span class="mf">.5</span>   <span class="mf">2.0</span>  <span class="mf">2.0</span>   <span class="mf">1.0</span>
 <span class="nb">e</span>
 
 
@@ -186,7 +185,7 @@ a<span class="n">y</span>		<span class="nb">buthp</span>	a<span class="n">y</spa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm226503"></a>
+        <a id="idm226123"></a>
         <h2>Credits</h2>
         <p>
       </p>

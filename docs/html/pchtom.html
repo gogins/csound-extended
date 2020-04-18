@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm162021"></a>
+        <a id="idm160790"></a>
         <h2>Description</h2>
         <p>Plugin opcode in emugens.</p>
         <p>
@@ -58,13 +58,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm162027"></a>
+        <a id="idm160796"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">imidi <span class="command"><strong>pchtom</strong></span> ipch</pre>
         <pre class="synopsis">kmidi <span class="command"><strong>pchtom</strong></span> kpch</pre>
       </div>
       <div class="refsect1">
-        <a id="idm162033"></a>
+        <a id="idm160802"></a>
         <h2>Performance</h2>
         <p>
           <span class="emphasis"><em>kpch</em></span> / <span class="emphasis"><em>ipch</em></span> -- pitch
@@ -94,19 +94,19 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm162045"></a>
+        <a id="idm160814"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the pchtom opcode. It uses the file <a class="ulink" href="examples/pchtom.csd.html" target="_top"> (click here to play) <em class="citetitle">pchtom.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm162050"></a>
+          <a id="idm160819"></a>
           <p class="title">
             <strong>Example 694. Example of the pchtom opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm162052"></a>
+              <a id="idm160821"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -121,15 +121,15 @@
 <span class="c1">; Show some conversions, both at i- and at k-time</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
-  i<span class="n">midi</span> <span class="o">=</span> <span class="n">pchtom</span><span class="p">(</span><span class="mf">8.09</span><span class="p">)</span>
+  i<span class="n">midi</span> <span class="o">=</span> <span class="nb">pchtom</span><span class="p">(</span><span class="mf">8.09</span><span class="p">)</span>
   <span class="nb">print</span> i<span class="n">midi</span>
 
   k<span class="n">idx</span> <span class="nb">init</span> <span class="mi">0</span>
 	
   k<span class="n">pch</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">+</span> k<span class="n">idx</span> <span class="o">/</span> <span class="mi">100</span>
-  k<span class="n">midi</span> <span class="o">=</span> <span class="n">pchtom</span><span class="p">(</span>k<span class="n">pch</span><span class="p">)</span>
+  k<span class="n">midi</span> <span class="o">=</span> <span class="nb">pchtom</span><span class="p">(</span>k<span class="n">pch</span><span class="p">)</span>
   k<span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
-  <span class="nb">printf</span> <span class="s">"kpch: %f    kmidi: %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">pch</span><span class="p">,</span> k<span class="n">midi</span>
+  <span class="nb">printf</span> <span class="s">"kpch: </span><span class="si">%f</span><span class="s">    kmidi: </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">pch</span><span class="p">,</span> k<span class="n">midi</span>
 
   <span class="k">if</span> k<span class="n">idx</span> <span class="o">&gt;=</span> <span class="mi">12</span> <span class="k">then</span>
     <span class="nb">turnoff</span>
@@ -151,7 +151,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm162128"></a>
+        <a id="idm160900"></a>
         <h2>See Also</h2>
         <p>
           <a class="link" href="pchoct.html" title="pchoct"><em class="citetitle">pchoct</em></a>,
@@ -164,7 +164,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm162141"></a>
+        <a id="idm160913"></a>
         <h2>Credits</h2>
         <p>By: Eduardo Moguillansky 2017</p>
       </div>

@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm39722"></a>
+        <a id="idm39152"></a>
         <h2>Description</h2>
         <p>
       Write to a channel of the named software bus. Implies declaring the
@@ -48,30 +48,44 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm39728"></a>
+        <a id="idm39158"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>chnset</strong></span> ival, Sname</pre>
         <pre class="synopsis"><span class="command"><strong>chnset</strong></span> kval, Sname</pre>
         <pre class="synopsis"><span class="command"><strong>chnset</strong></span> aval, Sname</pre>
         <pre class="synopsis"><span class="command"><strong>chnset</strong></span> Sval, Sname</pre>
         <pre class="synopsis"><span class="command"><strong>chnsetks</strong></span> Sval, Sname</pre>
+        <pre class="synopsis"><span class="command"><strong>chnseti</strong></span> ival[], []Sname</pre>
+        <pre class="synopsis"><span class="command"><strong>chnsetk</strong></span> kval[], []Sname</pre>
+        <pre class="synopsis"><span class="command"><strong>chnseta</strong></span> aval[], []Sname</pre>
+        <pre class="synopsis"><span class="command"><strong>chnsets</strong></span> Sval[], []Sname</pre>
       </div>
       <div class="refsect1">
-        <a id="idm39740"></a>
+        <a id="idm39178"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>Sname</em></span> -- a string that indicates which
       named channel of the software bus to write.
     </p>
         <p>
+      <span class="emphasis"><em>Sname[]</em></span> -- an array of string that indicates which
+      named channels of the software bus to write to.
+    </p>
+        <p>
       <span class="emphasis"><em>ival</em></span> -- the control value to write at i-time.
+    </p>
+        <p>
+      <span class="emphasis"><em>ival[]</em></span> -- an array of control values to write at i-time.
     </p>
         <p>
       <span class="emphasis"><em>Sval</em></span> -- the string value to write at i-time.
     </p>
+        <p>
+      <span class="emphasis"><em>Sval[]</em></span> -- an array of string values to write at i-time.
+    </p>
       </div>
       <div class="refsect1">
-        <a id="idm39748"></a>
+        <a id="idm39192"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kval</em></span> -- the control value to write at performance
@@ -87,9 +101,35 @@
       perf-time, whereas chnsetks works only a perf-time. Channel
       contents are only updated if the string variable is modified.
     </p>
+        <p>
+      <span class="emphasis"><em>kval[]</em></span> -- an array of control values to write at performance
+      time.
+    </p>
+        <p>
+      <span class="emphasis"><em>aval[]</em></span> -- an array of audio vectors to write at performance
+      time.
+    </p>
+      </div>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table border="0" summary="Note">
+          <tr>
+            <td rowspan="2" align="center" valign="top" width="25">
+              <img alt="[Note]" src="images/note.png" />
+            </td>
+            <th align="left">Note</th>
+          </tr>
+          <tr>
+            <td align="left" valign="top">
+              <p>
+      Although it is possible to loop through channel names from an array with <span class="emphasis"><em>chnget</em></span> and <span class="emphasis"><em>chnset</em></span>, 
+      using the array based channel opcodes is more efficient.        
+    </p>
+            </td>
+          </tr>
+        </table>
       </div>
       <div class="refsect1">
-        <a id="idm39756"></a>
+        <a id="idm39208"></a>
         <h2>Example</h2>
         <p>
       The example shows the software bus being used to write pitch
@@ -112,13 +152,13 @@
       Here is another example of the chnset opcode. It uses the file <a class="ulink" href="examples/chnset.csd.html" target="_top"> (click here to play) <em class="citetitle">chnset.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm39775"></a>
+          <a id="idm39227"></a>
           <p class="title">
             <strong>Example 130. Example of the chnset opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm39777"></a>
+              <a id="idm39229"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -152,8 +192,8 @@ a<span class="n">nois</span>     <span class="nb">rand</span>      <span class="
           <span class="nb">chnset</span>    a<span class="n">nois</span><span class="p">,</span> <span class="s">"noise"</span>
  <span class="nl">loop</span><span class="p">:</span>
 i<span class="n">dur</span>      <span class="nb">random</span>    <span class="mf">.3</span><span class="p">,</span> <span class="mf">1.5</span>
-          <span class="k">timout</span>    <span class="mi">0</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> <span class="k">do</span>
-          <span class="nb">reinit</span>    <span class="n">loop</span>
+          <span class="kp">timout</span>    <span class="mi">0</span><span class="p">,</span> i<span class="n">dur</span><span class="p">,</span> <span class="nl">do</span>
+          <span class="kp">reinit</span>    <span class="nl">loop</span>
  <span class="nl">do</span><span class="p">:</span>
 i<span class="n">freq</span>     <span class="nb">random</span>    <span class="mi">400</span><span class="p">,</span> <span class="mi">1200</span>
 i<span class="n">amp</span>      <span class="nb">random</span>    <span class="mf">.1</span><span class="p">,</span> <span class="mf">.3</span>
@@ -211,7 +251,7 @@ a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>    <
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm40019"></a>
+        <a id="idm39471"></a>
         <h2>Credits</h2>
         <p>
       </p>
@@ -221,6 +261,9 @@ a<span class="n">L</span><span class="p">,</span> a<span class="n">R</span>    <
           </tr>
           <tr>
             <td>2005</td>
+          </tr>
+          <tr>
+            <td>Array based channel opcodes added in version 6.14 - Rory Walsh</td>
           </tr>
         </table>
         <p>

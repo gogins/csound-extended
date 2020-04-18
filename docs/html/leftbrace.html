@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm264058"></a>
+        <a id="idm263708"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>{</em></span> and <span class="emphasis"><em>} statements</em></span> can be used to repeat a group of score statements.  These loops do not constitute independent score sections and thus may repeat events within the same section.  Multiple loops may overlap in time or be nested within each other.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm264063"></a>
+        <a id="idm263713"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>{</strong></span> p1 p2</pre>
       </div>
       <div class="refsect1">
-        <a id="idm264067"></a>
+        <a id="idm263717"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>p1</em></span> -- Number of times to repeat the loop.
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm264073"></a>
+        <a id="idm263723"></a>
         <h2>Performance</h2>
         <p>
       The <span class="emphasis"><em>{ statement</em></span> is used in conjunction with the <a class="link" href="rightbrace.html" title="} Statement"><em class="citetitle">} statement</em></a> to define repeating groups of other score events.  A score loop begins with the <span class="emphasis"><em>{ statement</em></span> which defines the number of repetitions and a unique macro name that will contain the current loop counter.  The body of a loop can contain any number of other events (including sectional breaks) and is terminated by a <span class="emphasis"><em>} statement</em></span> on its own line.  The <span class="emphasis"><em>} statement</em></span> takes no parameters.
@@ -91,16 +91,16 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm264092"></a>
+        <a id="idm263742"></a>
         <h2>Examples</h2>
         <p>
       Here are some examples of the <span class="emphasis"><em>{</em></span> and <span class="emphasis"><em>} statements</em></span>.
 
       </p>
         <div class="example">
-          <a id="idm264097"></a>
+          <a id="idm263747"></a>
           <p class="title">
-            <strong>Example 1193. Sequentially repeat a three-note phrase four times.</strong>
+            <strong>Example 1196. Sequentially repeat a three-note phrase four times.</strong>
           </p>
           <div class="example-contents"><pre class="programlisting">
 <span class="stamnt">{</span> 4 CNT
@@ -135,9 +135,9 @@
         <p>
       </p>
         <div class="example">
-          <a id="idm264119"></a>
+          <a id="idm263769"></a>
           <p class="title">
-            <strong>Example 1194. Create a group of simultaneous harmonic partials.</strong>
+            <strong>Example 1197. Create a group of simultaneous harmonic partials.</strong>
           </p>
           <div class="example-contents">
         In this example, <span class="emphasis"><em>p4</em></span> is assumed to be the frequency of the note event.
@@ -166,13 +166,13 @@
 
      </p>
         <div class="example">
-          <a id="idm264140"></a>
+          <a id="idm263790"></a>
           <p class="title">
-            <strong>Example 1195. An example of nested loops to create several inharmonic sine clusters.</strong>
+            <strong>Example 1198. An example of nested loops to create several inharmonic sine clusters.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm264142"></a>
+              <a id="idm263792"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -189,9 +189,9 @@ ga<span class="n">ReverbSend</span> <span class="nb">init</span> <span class="mi
 
 <span class="c1">; a simple sine wave partial</span>
 <span class="kd">instr</span> <span class="nf">1</span>
-    i<span class="n">dur</span>   <span class="o">=</span>       <span class="nb">p3</span>
-    i<span class="n">amp</span>   <span class="o">=</span>       <span class="nb">p4</span>
-    i<span class="n">freq</span>  <span class="o">=</span>       <span class="nb">p5</span>
+    i<span class="n">dur</span>   <span class="o">=</span>       <span class="vi">p3</span>
+    i<span class="n">amp</span>   <span class="o">=</span>       <span class="vi">p4</span>
+    i<span class="n">freq</span>  <span class="o">=</span>       <span class="vi">p5</span>
     a<span class="n">env</span>   <span class="nb">linseg</span>  <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="o">*</span>i<span class="n">dur</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> <span class="mf">0.6</span><span class="o">*</span>i<span class="n">dur</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> <span class="mf">0.3</span><span class="o">*</span>i<span class="n">dur</span><span class="p">,</span> <span class="mf">0.0</span>
     a<span class="n">osc</span>   <span class="nb">oscili</span>  a<span class="n">env</span><span class="p">,</span> i<span class="n">freq</span><span class="p">,</span> <span class="mi">1</span>
            <span class="nb">vincr</span>   ga<span class="n">ReverbSend</span><span class="p">,</span> a<span class="n">osc</span>
@@ -208,13 +208,13 @@ ga<span class="n">ReverbSend</span> <span class="nb">init</span> <span class="mi
 <span class="nt">&lt;CsScore&gt;</span>
 <span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="p">{</span> <span class="mi">4</span> <span class="cp">CNT</span>
-  <span class="p">{</span> <span class="mi">8</span> <span class="cp">PARTIAL</span>
+<span class="cp">{</span> <span class="mi">4</span> <span class="cp">CNT</span>
+  <span class="cp">{</span> <span class="mi">8</span> <span class="cp">PARTIAL</span>
       <span class="c1">;   start time     duration            amplitude          frequency</span>
       
       <span class="nb">i</span><span class="mi">1</span>  <span class="p">[</span><span class="mf">0.5</span> <span class="o">*</span> <span class="cp">$CNT.</span><span class="p">]</span>  <span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="cp">$CNT</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)]</span>  <span class="p">[</span><span class="mi">500</span> <span class="o">+</span> <span class="p">(</span><span class="o">~</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)]</span>  <span class="p">[</span><span class="mi">800</span> <span class="o">+</span> <span class="p">(</span><span class="mi">200</span> <span class="o">*</span> <span class="cp">$CNT.</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="cp">$PARTIAL.</span> <span class="o">*</span> <span class="mi">20</span><span class="p">)]</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+  <span class="cp">}</span>
+<span class="cp">}</span>
 
 <span class="nb">i</span><span class="mi">2</span> <span class="mi">0</span> <span class="mi">6</span>
 <span class="nb">e</span>
@@ -229,7 +229,7 @@ ga<span class="n">ReverbSend</span> <span class="nb">init</span> <span class="mi
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm264290"></a>
+        <a id="idm263940"></a>
         <h2>Credits</h2>
         <p>
       </p>

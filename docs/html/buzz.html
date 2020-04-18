@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm35803"></a>
+        <a id="idm35194"></a>
         <h2>Description</h2>
         <p>
       Output is a set of harmonically related sine partials.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm35806"></a>
+        <a id="idm35197"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>buzz</strong></span> xamp, xcps, knh, ifn [, iphs]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm35810"></a>
+        <a id="idm35201"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- table number of a stored function containing a sine wave. A large table of at least 8192 points is recommended.
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm35816"></a>
+        <a id="idm35207"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xamp</em></span> -- amplitude
@@ -86,21 +86,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm35848"></a>
+        <a id="idm35239"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the buzz opcode. It uses the file <a class="ulink" href="examples/buzz.csd.html" target="_top"> (click here to play) <em class="citetitle">buzz.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm35853"></a>
+          <a id="idm35244"></a>
           <p class="title">
             <strong>Example 108. Example of the buzz opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm35860"></a>
+              <a id="idm35251"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -122,7 +122,7 @@
 k<span class="n">cps</span> <span class="o">=</span> <span class="mi">110</span>
 i<span class="n">fn</span>  <span class="o">=</span> <span class="mi">1</span>
 
-k<span class="n">nh</span>	<span class="nb">line</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p5</span>
+k<span class="n">nh</span>	<span class="nb">line</span> <span class="vi">p4</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p5</span>
 a<span class="n">sig</span>	<span class="nb">buzz</span> <span class="mi">1</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> k<span class="n">nh</span><span class="p">,</span> i<span class="n">fn</span>
 	<span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 <span class="kd">endin</span>
@@ -148,14 +148,14 @@ a<span class="n">sig</span>	<span class="nb">buzz</span> <span class="mi">1</spa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm35942"></a>
+        <a id="idm35333"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="gbuzz.html" title="gbuzz"><em class="citetitle">gbuzz</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm35947"></a>
+        <a id="idm35338"></a>
         <h2>Credits</h2>
         <p>September 2003. Thanks to Kanata Motohashi for correcting the mentions of the <span class="emphasis"><em>kmul</em></span> parameter.</p>
       </div>

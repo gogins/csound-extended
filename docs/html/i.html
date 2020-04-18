@@ -41,19 +41,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm262391"></a>
+        <a id="idm262041"></a>
         <h2>Description</h2>
         <p>
       This statement calls for an instrument to be made active at a specific time and for a certain duration. The parameter field values are passed to that instrument prior to its initialization, and remain valid throughout its Performance.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm262394"></a>
+        <a id="idm262044"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>i</strong></span>  p1  p2  p3  p4  ...</pre>
       </div>
       <div class="refsect1">
-        <a id="idm262398"></a>
+        <a id="idm262048"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>p1</em></span> -- Instrument number, usually a
@@ -75,7 +75,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm262415"></a>
+        <a id="idm262065"></a>
         <h2>Performance</h2>
         <p>
       Beats are evaluated as seconds, unless there is a <a class="link" href="t.html" title="t Statement (Tempo Statement)"><em class="citetitle">t statement</em></a> in this score section or a <a class="link" href="CommandFlags.html#FlagsMinusLowerT"><em class="citetitle">-t flag</em></a> in the command-line.
@@ -127,7 +127,7 @@
             </tr>
             <tr>
               <td align="left" valign="top">
-                <p>When turning off notes, bear in mind that i 1.1 == i 1.10 and i 1.1 != i 1.01. The maximum number of decimal places that can be used depends on the precision Csound was compiled with (See <a class="link" href="MiscCsound64.html" title="Appendix H. Csound Double (64-bit) vs. Float (32-bit)"><em class="citetitle">Csound Double (64-bit) vs. Float (32-bit)</em></a>)</p>
+                <p>When turning off notes, bear in mind that i 1.1 == i 1.10 and i 1.1 != i 1.01. The maximum number of decimal places that can be used depends on the precision Csound was compiled with.</p>
               </td>
             </tr>
           </table>
@@ -180,7 +180,7 @@
         <p>
     </p>
         <div class="refsect2">
-          <a id="idm262495"></a>
+          <a id="idm262143"></a>
           <h3>Special Considerations</h3>
           <p>
         The maximum instrument number used to be 200. This has been changed to be limited by memory only (currently there is an internal soft limit of 200; this is automatically extended as required).
@@ -188,19 +188,19 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm262498"></a>
+        <a id="idm262146"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the i statement. It uses the file <a class="ulink" href="examples/i_statement.csd.html" target="_top"> (click here to play) <em class="citetitle">i_statement.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm262503"></a>
+          <a id="idm262151"></a>
           <p class="title">
-            <strong>Example 1184. Example of the i statement.</strong>
+            <strong>Example 1187. Example of the i statement.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm262505"></a>
+              <a id="idm262153"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -219,26 +219,26 @@
 
 <span class="kd">instr</span> <span class="nf">10</span>
         
-  i<span class="n">cps</span>     <span class="nb">init</span>      <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>                  <span class="c1">; Get target pitch from score event</span>
-  i<span class="n">portime</span> <span class="nb">init</span>      <span class="nb">abs</span><span class="p">(</span><span class="nb">p3</span><span class="p">)</span><span class="o">/</span><span class="mi">7</span>                   <span class="c1">; Portamento time dep on note length</span>
-  i<span class="n">amp0</span>    <span class="nb">init</span>      <span class="nb">p5</span>                          <span class="c1">; Set default amps</span>
-  i<span class="n">amp1</span>    <span class="nb">init</span>      <span class="nb">p5</span>
-  i<span class="n">amp2</span>    <span class="nb">init</span>      <span class="nb">p5</span>
+  i<span class="n">cps</span>     <span class="nb">init</span>      <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p4</span><span class="p">)</span>                  <span class="c1">; Get target pitch from score event</span>
+  i<span class="n">portime</span> <span class="nb">init</span>      <span class="nb">abs</span><span class="p">(</span><span class="vi">p3</span><span class="p">)</span><span class="o">/</span><span class="mi">7</span>                   <span class="c1">; Portamento time dep on note length</span>
+  i<span class="n">amp0</span>    <span class="nb">init</span>      <span class="vi">p5</span>                          <span class="c1">; Set default amps</span>
+  i<span class="n">amp1</span>    <span class="nb">init</span>      <span class="vi">p5</span>
+  i<span class="n">amp2</span>    <span class="nb">init</span>      <span class="vi">p5</span>
       
   i<span class="n">tie</span>     <span class="nb">tival</span>                                 <span class="c1">; Check if this note is tied,</span>
   <span class="k">if</span> i<span class="n">tie</span>  <span class="o">==</span>  <span class="mi">1</span>     <span class="k">igoto</span> <span class="nl">nofadein</span>              <span class="c1">; if not fade in</span>
   i<span class="n">amp0</span>    <span class="nb">init</span>      <span class="mi">0</span>
 
 <span class="nl">nofadein</span><span class="p">:</span>
-  <span class="k">if</span> <span class="nb">p3</span>    <span class="o">&lt;</span> <span class="mi">0</span>       <span class="k">igoto</span> <span class="nl">nofadeout</span>             <span class="c1">; Check if this note is held, if not fade out</span>
+  <span class="k">if</span> <span class="vi">p3</span>    <span class="o">&lt;</span> <span class="mi">0</span>       <span class="k">igoto</span> <span class="nl">nofadeout</span>             <span class="c1">; Check if this note is held, if not fade out</span>
   i<span class="n">amp2</span>    <span class="nb">init</span>      <span class="mi">0</span>    
 
 <span class="nl">nofadeout</span><span class="p">:</span>
   <span class="c1">; Now do amp from the set values:</span>
-  k<span class="n">amp</span>     <span class="nb">linseg</span>    i<span class="n">amp0</span><span class="p">,</span> <span class="mf">.03</span><span class="p">,</span> i<span class="n">amp1</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">p3</span><span class="p">)</span><span class="o">-</span><span class="mf">.03</span><span class="p">,</span> i<span class="n">amp2</span>
+  k<span class="n">amp</span>     <span class="nb">linseg</span>    i<span class="n">amp0</span><span class="p">,</span> <span class="mf">.03</span><span class="p">,</span> i<span class="n">amp1</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="vi">p3</span><span class="p">)</span><span class="o">-</span><span class="mf">.03</span><span class="p">,</span> i<span class="n">amp2</span>
         
   <span class="c1">; Skip rest of initialization on tied note:</span>
-           <span class="k">tigoto</span>    <span class="nl">tieskip</span>
+           <span class="kp">tigoto</span>    <span class="nl">tieskip</span>
 
   k<span class="n">cps</span>     <span class="nb">init</span>      i<span class="n">cps</span>                        <span class="c1">; Init pitch for untied note</span>
   k<span class="n">cps</span>     <span class="nb">port</span>      i<span class="n">cps</span><span class="p">,</span> i<span class="n">portime</span><span class="p">,</span> i<span class="n">cps</span>        <span class="c1">; Drift towards target pitch</span>
@@ -252,7 +252,7 @@
 
           <span class="nb">outs</span>        a<span class="n">r</span><span class="p">,</span> a<span class="n">r</span>
 
-<span class="nl">tieskip</span><span class="p">:</span>                                        <span class="c1">; Skip some initialization on tied note</span>
+<span class="nl">tieskip</span><span class="p">:</span><span class="c1">; Skip some initialization on tied note</span>
 
 <span class="kd">endin</span>
 <span class="nt">&lt;/CsInstruments&gt;</span>
@@ -279,7 +279,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm262722"></a>
+        <a id="idm262370"></a>
         <h2>Credits</h2>
         <p>
       Additional text (Csound Version 4.07) explaining tied notes, edited by Rasmus Ekman from a note by David Kirsh, posted to the Csound mailing list. Example instrument by Rasmus Ekman.

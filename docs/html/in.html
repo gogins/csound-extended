@@ -39,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm106027"></a>
+        <a id="idm106003"></a>
         <h2>Description</h2>
         <p>
       Reads audio data from an external device or stream.
@@ -69,13 +69,13 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm106034"></a>
+        <a id="idm106010"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ar1 <span class="command"><strong>in</strong></span></pre>
         <pre class="synopsis">aarray <span class="command"><strong>in</strong></span></pre>
       </div>
       <div class="refsect1">
-        <a id="idm106040"></a>
+        <a id="idm106016"></a>
         <h2>Performance</h2>
         <p>
       Form 1 reads mono audio data from an external device or
@@ -91,19 +91,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm106047"></a>
+        <a id="idm106023"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the in opcode. It uses the file <a class="ulink" href="examples/in.csd.html" target="_top"> (click here to play) <em class="citetitle">in.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm106052"></a>
+          <a id="idm106028"></a>
           <p class="title">
-            <strong>Example 440. Example of the in opcode.</strong>
+            <strong>Example 441. Example of the in opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm106054"></a>
+              <a id="idm106030"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -122,7 +122,7 @@
 <span class="kd">instr</span> <span class="nf">1</span> <span class="c1">;1 channel in, two channels out</span>
 
 a<span class="n">in1</span> <span class="nb">in</span>	<span class="c1">;grab your mic and sing</span>
-a<span class="n">del</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">;max delay time = 20ms</span>
+a<span class="n">del</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span>	<span class="c1">;max delay time = 20ms</span>
 a<span class="n">out</span> <span class="nb">flanger</span> a<span class="n">in1</span><span class="p">,</span> a<span class="n">del</span><span class="p">,</span> <span class="mf">.7</span>
      <span class="nb">fout</span> <span class="s">"in_1.wav"</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>	<span class="c1">;write to stereo file,</span>
      <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>			<span class="c1">;16 bits with header</span>
@@ -143,7 +143,7 @@ a<span class="n">out</span> <span class="nb">flanger</span> a<span class="n">in1
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm106129"></a>
+        <a id="idm106105"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="diskin.html" title="diskin"><em class="citetitle">diskin</em></a>,
@@ -156,7 +156,7 @@ a<span class="n">out</span> <span class="nb">flanger</span> a<span class="n">in1
      </p>
       </div>
       <div class="refsect1">
-        <a id="idm106146"></a>
+        <a id="idm106122"></a>
         <h2>Credits</h2>
         <p>
       </p>

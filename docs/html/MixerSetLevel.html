@@ -39,12 +39,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm138240"></a>
+        <a id="idm136811"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>MixerSetLevel</strong></span> isend, ibuss, kgain</pre>
       </div>
       <div class="refsect1">
-        <a id="idm138244"></a>
+        <a id="idm136815"></a>
         <h2>Description</h2>
         <p>Plugin opcode in mixer</p>
         <p>Sets the level at which signals from the send are added to the buss. The actual sending of the signal to the buss 
@@ -52,14 +52,14 @@ is performed by the <a class="link" href="MixerSend.html" title="MixerSend"><em 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm138250"></a>
+        <a id="idm136821"></a>
         <h2>Initialization</h2>
         <p><span class="emphasis"><em>isend</em></span> -- The number of the send, for example the number of the instrument sending the signal (but any integer can be used).</p>
         <p><span class="emphasis"><em>ibuss</em></span> -- The number of the buss, for example the number of the instrument receiving the signal (but any integer can be used).</p>
         <p>Setting the gain for a buss also creates the buss.</p>
       </div>
       <div class="refsect1">
-        <a id="idm138257"></a>
+        <a id="idm136828"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>kgain</em></span> -- The level (any real number) at which the signal from the send will be mixed onto the buss. The default is 0.</p>
         <p>
@@ -70,7 +70,7 @@ However, an instrument may have any number of sends or receives. After the final
 </p>
       </div>
       <div class="refsect1">
-        <a id="idm138264"></a>
+        <a id="idm136835"></a>
         <h2>Examples</h2>
         <p>In the orchestra, define an instrument to control mixer levels:</p>
         <pre class="programlisting">
@@ -105,13 +105,13 @@ However, an instrument may have any number of sends or receives. After the final
       Here is a complete example of the MixerSetLevel opcode. It uses the file <a class="ulink" href="examples/Mixer.csd.html" target="_top"> (click here to play) <em class="citetitle">Mixer.csd</em></a>
       </p>
         <div class="example">
-          <a id="idm138296"></a>
+          <a id="idm136867"></a>
           <p class="title">
             <strong>Example 581. Complete example of the MixerSetLevel opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm138298"></a>
+              <a id="idm136869"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -130,7 +130,7 @@ However, an instrument may have any number of sends or receives. After the final
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">att</span>	<span class="nb">expon</span> <span class="mf">0.01</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;create an attack</span>
+k<span class="n">att</span>	<span class="nb">expon</span> <span class="mf">0.01</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;create an attack</span>
 a<span class="n">out</span>	<span class="nb">poscil</span> <span class="mf">.7</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span><span class="mi">1</span>
 	<span class="nb">MixerSetLevel</span>	<span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> k<span class="n">att</span>	<span class="c1">;impose attack on the gain level</span>
 	<span class="nb">MixerSend</span> a<span class="n">out</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span>		<span class="c1">;send to channel 0</span>
@@ -174,7 +174,7 @@ a<span class="n">outL</span><span class="p">,</span> a<span class="n">outR</span
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm138459"></a>
+        <a id="idm137030"></a>
         <h2>Credits</h2>
         <p>Michael Gogins (gogins at pipeline dot com).</p>
       </div>

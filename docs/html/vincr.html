@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm244676"></a>
+        <a id="idm244308"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>vincr</em></span> increments one audio variable with another signal, i.e. it accumulates output.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm244680"></a>
+        <a id="idm244312"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vincr</strong></span> accum, aincr</pre>
       </div>
       <div class="refsect1">
-        <a id="idm244684"></a>
+        <a id="idm244316"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>accum</em></span> -- audio-rate accumulator variable to be incremented 
@@ -64,20 +64,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm244699"></a>
+        <a id="idm244331"></a>
         <h2>Examples</h2>
         <p>
       The following example uses the vincr opcode. It uses the file <a class="ulink" href="examples/vincr.csd.html" target="_top"> (click here to play) <em class="citetitle">vincr.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm244704"></a>
+          <a id="idm244336"></a>
           <p class="title">
-            <strong>Example 1107. Example of the vincr opcode.</strong>
+            <strong>Example 1110. Example of the vincr opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm244711"></a>
+              <a id="idm244343"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -98,8 +98,8 @@ ga<span class="n">Reverb</span> <span class="nb">init</span> <span class="mi">0<
 
 <span class="kd">instr</span> <span class="nf">1</span>
     
-i<span class="n">dur</span>	<span class="o">=</span> <span class="nb">p3</span>
-k<span class="n">pitch</span>	<span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">dur</span>	<span class="o">=</span> <span class="vi">p3</span>
+k<span class="n">pitch</span>	<span class="o">=</span> <span class="vi">p4</span>
 a<span class="n">1</span>	<span class="nb">diskin2</span>	<span class="s">"fox.wav"</span><span class="p">,</span> k<span class="n">pitch</span>
 a<span class="n">1</span>	<span class="o">=</span> a<span class="n">1</span><span class="o">*</span><span class="mf">.5</span>			<span class="c1">;reduce volume</span>
 	<span class="nb">vincr</span>	ga<span class="n">Reverb</span><span class="p">,</span> a<span class="n">1</span>
@@ -130,13 +130,13 @@ a<span class="n">l</span><span class="p">,</span> a<span class="n">r</span>	<spa
       This is another example uses the vincr opcode. It uses the file <a class="ulink" href="examples/vincr-complex.csd.html" target="_top"> (click here to play) <em class="citetitle">vincr-complex.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm244802"></a>
+          <a id="idm244434"></a>
           <p class="title">
-            <strong>Example 1108. </strong>
+            <strong>Example 1111. </strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm244803"></a>
+              <a id="idm244435"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -157,9 +157,9 @@ ga<span class="n">ReverbSend</span> <span class="nb">init</span> <span class="mi
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">amp</span>   <span class="o">=</span> <span class="nb">p4</span>
-i<span class="n">freq</span>  <span class="o">=</span> <span class="nb">p5</span>
-a<span class="n">env</span>   <span class="nb">linseg</span>  <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="o">*</span><span class="nb">p3</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> <span class="mf">0.6</span><span class="o">*</span><span class="nb">p3</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> <span class="mf">0.3</span><span class="o">*</span><span class="nb">p3</span><span class="p">,</span> <span class="mf">0.0</span>
+i<span class="n">amp</span>   <span class="o">=</span> <span class="vi">p4</span>
+i<span class="n">freq</span>  <span class="o">=</span> <span class="vi">p5</span>
+a<span class="n">env</span>   <span class="nb">linseg</span>  <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="o">*</span><span class="vi">p3</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> <span class="mf">0.6</span><span class="o">*</span><span class="vi">p3</span><span class="p">,</span> i<span class="n">amp</span><span class="p">,</span> <span class="mf">0.3</span><span class="o">*</span><span class="vi">p3</span><span class="p">,</span> <span class="mf">0.0</span>
 a<span class="n">osc</span>   <span class="nb">poscil</span> a<span class="n">env</span><span class="p">,</span> i<span class="n">freq</span><span class="p">,</span> <span class="mi">1</span>
        <span class="nb">vincr</span>   ga<span class="n">ReverbSend</span><span class="p">,</span> a<span class="n">osc</span>
 <span class="kd">endin</span>
@@ -176,12 +176,12 @@ a<span class="n">l</span><span class="p">,</span> a<span class="n">r</span> <spa
 <span class="nt">&lt;CsScore&gt;</span>
 <span class="nb">f</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">4096</span> <span class="mi">10</span> <span class="mi">1</span>
 
-<span class="p">{</span> <span class="mi">4</span> <span class="cp">CNT</span>
-  <span class="p">{</span> <span class="mi">8</span> <span class="cp">PARTIAL</span>
+<span class="cp">{</span> <span class="mi">4</span> <span class="cp">CNT</span>
+  <span class="cp">{</span> <span class="mi">8</span> <span class="cp">PARTIAL</span>
       <span class="c1">;   start time     duration            amplitude          frequency     </span>
       <span class="nb">i</span><span class="mi">1</span>  <span class="p">[</span><span class="mf">0.5</span> <span class="o">*</span> <span class="cp">$CNT.</span><span class="p">]</span>  <span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="cp">$CNT</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)]</span>  <span class="p">[</span><span class="mf">.04</span> <span class="o">+</span> <span class="p">(</span><span class="o">~</span> <span class="o">*</span> <span class="mf">.02</span><span class="p">)]</span>  <span class="p">[</span><span class="mi">800</span> <span class="o">+</span> <span class="p">(</span><span class="mi">200</span> <span class="o">*</span> <span class="cp">$CNT.</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="cp">$PARTIAL.</span> <span class="o">*</span> <span class="mi">20</span><span class="p">)]</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+  <span class="cp">}</span>
+<span class="cp">}</span>
 
 <span class="nb">i</span><span class="mi">2</span> <span class="mi">0</span> <span class="mi">6</span>
 <span class="nb">e</span>
@@ -195,14 +195,14 @@ a<span class="n">l</span><span class="p">,</span> a<span class="n">r</span> <spa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm244956"></a>
+        <a id="idm244588"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="clear.html" title="clear"><em class="citetitle">clear</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm244961"></a>
+        <a id="idm244593"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -34,23 +34,18 @@
             <h2 class="title"><a href="indexframes.html">Frames Version</a></h2>
           </div>          </div>
           <div>
-            <h2 class="subtitle">Version 6.12.0</h2>
+            <h2 class="subtitle">Version 6.14.0</h2>
           </div>
           <div>
             <div class="authorgroup">
               <div class="author">
-                <h3 class="author"><span class="firstname">Barry</span> <span class="surname">Vercoe</span></h3>
+                <h3 class="author">
+                  <span class="firstname">Csound Community</span>
+                </h3>
                 <div class="affiliation">
-                  <span class="orgname">MIT Media Lab
+                  <span class="orgname">csound.com
           <br /></span>
                 </div>
-              </div>
-              <div class="author">
-                <h3 class="author">
-                  <span class="firstname">
-          et. al.
-        </span>
-                </h3>
               </div>
             </div>
           </div>
@@ -91,7 +86,7 @@
               </dt>
               <dt>
                 <span class="section">
-                  <a href="PrefaceWhatsNew.html">What's new in Csound 6.12.0</a>
+                  <a href="PrefaceWhatsNew.html">What's new in Csound 6.14.0</a>
                 </span>
               </dt>
             </dl>
@@ -407,15 +402,6 @@
                   <a href="OviewFrontEnds.html">Front Ends</a>
                 </span>
               </dt>
-              <dd>
-                <dl>
-                  <dt>
-                    <span class="section">
-                      <a href="OviewFrontEnds.html#CommandCsoundAC">CsoundAC</a>
-                    </span>
-                  </dt>
-                </dl>
-              </dd>
               <dt>
                 <span class="chapter">
                   <a href="BuildingCsound.html">Building Csound</a>
@@ -1073,13 +1059,6 @@
               </dt>
               <dt>
                 <span class="chapter">
-                  <a href="lua.html">
-        Lua Opcodes
-    </a>
-                </span>
-              </dt>
-              <dt>
-                <span class="chapter">
                   <a href="py.html">Python Opcodes</a>
                 </span>
               </dt>
@@ -1215,6 +1194,14 @@
                     <span class="refpurpose"> — 
       Determines if one value is greater than or equal to another.
                             </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="lastcycle.html">lastcycle</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Indicates whether an event is in its last performance cycle.
+    </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -1752,7 +1739,7 @@
                       <a href="bpf.html">bpf</a>
                     </span>
                     <span class="refpurpose"> — 
-          Break point function with linear interpolation
+      Break point function with linear interpolation
     </span>
                   </dt>
                   <dt>
@@ -1760,7 +1747,7 @@
                       <a href="bpfcos.html">bpfcos</a>
                     </span>
                     <span class="refpurpose"> — 
-	  Break point function with cosine (easy-in/easy-out) interpolation
+      Break point function with cosine (easy-in/easy-out) interpolation
     </span>
                   </dt>
                   <dt>
@@ -4204,6 +4191,14 @@
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="ftexists.html">ftexists</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Query if a given table exists
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="ftfree.html">ftfree</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -4344,6 +4339,14 @@
                     </span>
                     <span class="refpurpose"> — 
       An implementation of a logarithmic gain curve which is similar to the gainslider~ object from Cycling 74 Max / MSP.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="gtf.html">gtf</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Apply a gammatone filter to an audio signal.
     </span>
                   </dt>
                   <dt>
@@ -5687,39 +5690,6 @@
                   </dt>
                   <dt>
                     <span class="refentrytitle">
-                      <a href="lua_exec.html">
-            lua_exec
-        </a>
-                    </span>
-                    <span class="refpurpose"> — 
-            Executes an arbitrary block of Lua code from the Csound orchestra.
-        </span>
-                  </dt>
-                  <dt>
-                    <span class="refentrytitle">
-                      <a href="lua_opdef.html">
-            lua_opdef
-        </a>
-                    </span>
-                    <span class="refpurpose"> — 
-             Define an opcode in Lua at i-rate. The opcode can take any 
-             number of output and/or input arguments of any type. 
-        </span>
-                  </dt>
-                  <dt>
-                    <span class="refentrytitle">
-                      <a href="lua_opcall.html">
-            lua_opcall
-        </a>
-                    </span>
-                    <span class="refpurpose"> — 
-            Calls a Lua opcode at i-rate only. Any number of output and/or 
-            input arguments may be passed. All arguments must be passed on 
-            the right-hand side. Outputs are returned in the argument.        
-        </span>
-                  </dt>
-                  <dt>
-                    <span class="refentrytitle">
                       <a href="mac.html">mac</a>
                     </span>
                     <span class="refpurpose"> — 
@@ -5884,6 +5854,14 @@
                     </span>
                     <span class="refpurpose"> — 
      Trigger Metronome
+          </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="metro2.html">metro2</a>
+                    </span>
+                    <span class="refpurpose"> — 
+     Trigger Metronome with Swing and Accents
           </span>
                   </dt>
                   <dt>
@@ -7549,11 +7527,27 @@ Phase-locked vocoder processing.
                   </dt>
                   <dt>
                     <span class="refentrytitle">
+                      <a href="println.html">println</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Prints at k-rate using a printf() style syntax, appends a new line
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
                       <a href="prints.html">prints</a>
                     </span>
                     <span class="refpurpose"> — 
       Prints at init-time using a printf() style syntax.
           </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="printsk.html">printsk</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Prints at k-rate using a printf() style syntax.
+    </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -8605,6 +8599,14 @@ pitch control and support for timescale-modified input
                   <dt>
                     <span class="refentrytitle">
                       <a href="schedule.html">schedule</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Adds a new score event.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="schedulek.html">schedulek</a>
                     </span>
                     <span class="refpurpose"> — 
       Adds a new score event.
@@ -9775,6 +9777,14 @@ pitch control and support for timescale-modified input
                     </span>
                     <span class="refpurpose"> — 
       Allows a string to be linked with a numeric value.
+    </span>
+                  </dt>
+                  <dt>
+                    <span class="refentrytitle">
+                      <a href="strstrip.html">strstrip</a>
+                    </span>
+                    <span class="refpurpose"> — 
+      Strip whitespace from string 
     </span>
                   </dt>
                   <dt>
@@ -11548,7 +11558,7 @@ Synchronous granular synthesis.
                     </span>
                     <span class="refpurpose"> — 
       Clears one or more variables in the za space.
-          </span>
+    </span>
                   </dt>
                   <dt>
                     <span class="refentrytitle">
@@ -13228,11 +13238,6 @@ Synchronous granular synthesis.
           <dt>
             <span class="appendix">
               <a href="MiscSf2.html">G. SoundFont2 File Format</a>
-            </span>
-          </dt>
-          <dt>
-            <span class="appendix">
-              <a href="MiscCsound64.html">H. Csound Double (64-bit) vs. Float (32-bit)</a>
             </span>
           </dt>
           <dt>

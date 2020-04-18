@@ -39,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm33921"></a>
+        <a id="idm33023"></a>
         <h2>Description</h2>
         <p>
       A sweepable general purpose biquadratic digital filter.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm33924"></a>
+        <a id="idm33026"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>biquada</strong></span> asig, ab0, ab1, ab2, aa0, aa1, aa2 [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm33928"></a>
+        <a id="idm33030"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iskip</em></span> (optional, default=0) -- if non-zero, intialization will be skipped. Default value 0. (New in Csound version 3.50)
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm33932"></a>
+        <a id="idm33034"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- input signal
@@ -90,21 +90,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm33946"></a>
+        <a id="idm33048"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the biquada opcode. It uses the file
       <a class="ulink" href="examples/biquada.csd.html" target="_top"> (click here to play) <em class="citetitle">biquad.csd</em></a>. 
       </p>
         <div class="example">
-          <a id="idm33951"></a>
+          <a id="idm33053"></a>
           <p class="title">
             <strong>Example 98. Example of the biquada opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm33958"></a>
+              <a id="idm33060"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -125,11 +125,11 @@
 <span class="c1">; Instrument #1.</span>
 <span class="kd">instr</span> <span class="nf">1</span>
   <span class="c1">; Get the values from the score.</span>
-  i<span class="n">dur</span> <span class="o">=</span> <span class="nb">p3</span>
-  i<span class="n">amp</span> <span class="o">=</span> <span class="nb">p4</span>
-  i<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p5</span><span class="p">)</span>
-  a<span class="n">fco</span>   <span class="nb">expon</span>  <span class="mi">100</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">2000</span>
-  a<span class="n">rez</span>   <span class="nb">line</span>  <span class="mf">0.8</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mf">0.99</span>
+  i<span class="n">dur</span> <span class="o">=</span> <span class="vi">p3</span>
+  i<span class="n">amp</span> <span class="o">=</span> <span class="vi">p4</span>
+  i<span class="n">cps</span> <span class="o">=</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p5</span><span class="p">)</span>
+  a<span class="n">fco</span>   <span class="nb">expon</span>  <span class="mi">100</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">2000</span>
+  a<span class="n">rez</span>   <span class="nb">line</span>  <span class="mf">0.8</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mf">0.99</span>
 
   <span class="c1">; Calculate the biquadratic filter's coefficients </span>
   a<span class="n">fcon</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="mf">3.14159265</span><span class="o">*</span>a<span class="n">fco</span><span class="o">/</span><span class="vg">sr</span>
@@ -176,14 +176,14 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm34216"></a>
+        <a id="idm33318"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="biquad.html" title="biquad"><em class="citetitle">biquad</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm34221"></a>
+        <a id="idm33323"></a>
         <h2>Credits</h2>
         <p>
       </p>

@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm25597"></a>
+        <a id="idm24677"></a>
         <h2>Description</h2>
         <p>Plugin opcode in ampmidid.</p>
         <p>
@@ -47,13 +47,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm25601"></a>
+        <a id="idm24681"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">iamplitude <span class="command"><strong>ampmidid</strong></span> ivelocity, idecibels</pre>
         <pre class="synopsis">kamplitude <span class="command"><strong>ampmidid</strong></span> kvelocity, idecibels</pre>
       </div>
       <div class="refsect1">
-        <a id="idm25607"></a>
+        <a id="idm24687"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iamplitude</em></span> -- Amplitude.
@@ -66,7 +66,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm25615"></a>
+        <a id="idm24695"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kamplitude</em></span> -- Amplitude.
@@ -92,20 +92,20 @@ The International Computer Music Association), pp. 193-196.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm25622"></a>
+        <a id="idm24702"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the ampmidid opcode. It uses the file <a class="ulink" href="examples/ampmidid.csd.html" target="_top"> (click here to play) <em class="citetitle">ampmidid.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm25627"></a>
+          <a id="idm24707"></a>
           <p class="title">
             <strong>Example 56. Example of the ampmidid opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm25634"></a>
+              <a id="idm24714"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -128,8 +128,8 @@ The International Computer Music Association), pp. 193-196.
 
 i<span class="n">sine</span> <span class="nb">ftgenonce</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span> <span class="c1">;sine wave</span>
 
-  i<span class="n">hz</span> <span class="o">=</span> <span class="nb">cpsmidinn</span><span class="p">(</span><span class="nb">p4</span><span class="p">)</span>
-  i<span class="n">velocity</span> <span class="o">=</span> <span class="nb">p5</span>
+  i<span class="n">hz</span> <span class="o">=</span> <span class="nb">cpsmidinn</span><span class="p">(</span><span class="vi">p4</span><span class="p">)</span>
+  i<span class="n">velocity</span> <span class="o">=</span> <span class="vi">p5</span>
   i<span class="n">db</span> <span class="nb">ampmidid</span> i<span class="n">velocity</span><span class="p">,</span> <span class="mi">20</span>	<span class="c1">;map to dynamic range of 20 dB.</span>
   i<span class="n">db</span> <span class="o">=</span> i<span class="n">db</span> <span class="o">+</span> <span class="mi">60</span>		<span class="c1">;limit range to 60 to 80 decibels</span>
   i<span class="n">amplitude</span> <span class="o">=</span> <span class="nb">ampdb</span><span class="p">(</span>i<span class="n">db</span><span class="p">)</span>	<span class="c1">;loudness in dB to signal amplitude</span>
@@ -157,7 +157,7 @@ a<span class="n">sig</span> <span class="o">=</span> a<span class="n">1</span> <
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm25745"></a>
+        <a id="idm24825"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="aftouch.html" title="aftouch"><em class="citetitle">aftouch</em></a>,
@@ -174,7 +174,7 @@ a<span class="n">sig</span> <span class="o">=</span> a<span class="n">1</span> <
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm25770"></a>
+        <a id="idm24850"></a>
         <h2>Credits</h2>
         <p>
       </p>

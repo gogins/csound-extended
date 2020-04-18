@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm156501"></a>
+        <a id="idm155239"></a>
         <h2>Description</h2>
         <p>Plugin opcode in p5g.</p>
         <p>
@@ -47,7 +47,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm156505"></a>
+        <a id="idm155243"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">
           <span class="command">
@@ -56,7 +56,7 @@
         </pre>
       </div>
       <div class="refsect1">
-        <a id="idm156509"></a>
+        <a id="idm155247"></a>
         <h2>Initialization</h2>
         <p>
      The opcode locates a P5 Glove attached to the computer by USB,
@@ -64,7 +64,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm156512"></a>
+        <a id="idm155250"></a>
         <h2>Performance</h2>
         <p>
       Every control cycle the glove is polled for its position, and
@@ -73,21 +73,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm156516"></a>
+        <a id="idm155254"></a>
         <h2>Example</h2>
         <p>
       Here is an example of the p5g opcodes. It uses the file <a class="ulink" href="examples/p5g.csd.html" target="_top"> (click here to play) <em class="citetitle">p5g.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm156521"></a>
+          <a id="idm155259"></a>
           <p class="title">
             <strong>Example 674. Example of the p5g opcodes.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm156528"></a>
+              <a id="idm155266"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -126,16 +126,16 @@ gk<span class="n">a</span>   <span class="nb">init</span> <span class="mi">0</sp
 gk<span class="n">p</span>   <span class="nb">init</span> <span class="mi">0</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>  
-      <span class="n">p5gconnect</span>
-  k<span class="n">a</span>  <span class="n">p5gdata</span>    <span class="cp">$P5G_JUSTPU_A.</span>
-  k<span class="n">c</span>  <span class="n">p5gdata</span>    <span class="cp">$P5G_BUTTON_C.</span>
+      <span class="nb">p5gconnect</span>
+  k<span class="n">a</span>  <span class="nb">p5gdata</span>    <span class="cp">$P5G_JUSTPU_A.</span>
+  k<span class="n">c</span>  <span class="nb">p5gdata</span>    <span class="cp">$P5G_BUTTON_C.</span>
 <span class="c1">; If the A button is just pressed then activate a note</span>
   <span class="k">if</span>  <span class="p">(</span>k<span class="n">a</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>    <span class="k">goto</span> <span class="nl">ee</span>
   <span class="nb">event</span>          <span class="s">"i"</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span>
 
 <span class="nl">ee</span><span class="p">:</span>
-  gk<span class="n">a</span> <span class="n">p5gdata</span>    <span class="cp">$P5G_DELTA_X.</span>
-  gk<span class="n">p</span> <span class="n">p5gdata</span>    <span class="cp">$P5G_DELTA_Y.</span>
+  gk<span class="n">a</span> <span class="nb">p5gdata</span>    <span class="cp">$P5G_DELTA_X.</span>
+  gk<span class="n">p</span> <span class="nb">p5gdata</span>    <span class="cp">$P5G_DELTA_Y.</span>
   <span class="nb">printk2</span> gk<span class="n">a</span>
   <span class="nb">printk2</span> gk<span class="n">p</span>
   <span class="k">if</span>  <span class="p">(</span>k<span class="n">c</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>    <span class="k">goto</span> <span class="nl">ff</span>
@@ -167,14 +167,14 @@ gk<span class="n">p</span>   <span class="nb">init</span> <span class="mi">0</sp
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm156759"></a>
+        <a id="idm155497"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="p5gdata.html" title="p5gdata"><em class="citetitle">p5gdata</em></a>,
      </p>
       </div>
       <div class="refsect1">
-        <a id="idm156764"></a>
+        <a id="idm155502"></a>
         <h2>Credits</h2>
         <p>
       </p>

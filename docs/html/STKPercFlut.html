@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm212727"></a>
+        <a id="idm212245"></a>
         <h2>Description</h2>
         <p>Plugin opcode in stkopd.</p>
         <p>
       STKPercFlut is a percussive flute FM synthesis instrument. The instrument uses an algorithm like the algorithm 4 of the TX81Z.</p>
       </div>
       <div class="refsect1">
-        <a id="idm212731"></a>
+        <a id="idm212249"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asignal <span class="command"><strong>STKPercFlut</strong></span> ifrequency, iamplitude, [kmod, kv1[, kcross, kv2[, klfo, kv3[, klfodepth, kv4[, kadsr, kv5]]]]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm212735"></a>
+        <a id="idm212253"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifrequency</em></span> -- Frequency of note played, in Hertz.
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm212741"></a>
+        <a id="idm212259"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>kmod</em></span> -- controller 2,   total modulator index. Value range of kv1 is 0-127.</p>
         <p><span class="emphasis"><em>kcross</em></span> -- controller 4,   crossfade of modulator. Value range of kv2 is 0-127.</p>
@@ -70,7 +70,7 @@
         <p><span class="emphasis"><em>kadsr</em></span> -- controller 128, ADSR 2 and 4 target. Value range of kv5 is 0-127.</p>
       </div>
       <div class="refsect1">
-        <a id="idm212753"></a>
+        <a id="idm212271"></a>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note: Note">
             <tr>
@@ -96,20 +96,20 @@ The order of the controller pair is arbitrary, as long as they are after <span c
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm212762"></a>
+        <a id="idm212280"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the STKPercFlut opcode. It uses the file <a class="ulink" href="examples/STKPercFlut.csd.html" target="_top"> (click here to play) <em class="citetitle">STKPercFlut.csd</em></a>.
      
       </p>
         <div class="example">
-          <a id="idm212767"></a>
+          <a id="idm212285"></a>
           <p class="title">
-            <strong>Example 956. Example of the STKPercFlut opcode.</strong>
+            <strong>Example 958. Example of the STKPercFlut opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm212769"></a>
+              <a id="idm212287"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -128,11 +128,11 @@ The order of the controller pair is arbitrary, as long as they are after <span c
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">frq</span>	<span class="o">=</span>	<span class="nb">p4</span>
-k<span class="n">v1</span>	<span class="nb">line</span>	<span class="nb">p5</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p6</span>				<span class="c1">;Total Modulator Index</span>
-k<span class="n">v2</span>	<span class="nb">line</span>	<span class="nb">p7</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">0</span>				<span class="c1">;Modulator Crossfade</span>
+i<span class="n">frq</span>	<span class="o">=</span>	<span class="vi">p4</span>
+k<span class="n">v1</span>	<span class="nb">line</span>	<span class="vi">p5</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p6</span>				<span class="c1">;Total Modulator Index</span>
+k<span class="n">v2</span>	<span class="nb">line</span>	<span class="vi">p7</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">0</span>				<span class="c1">;Modulator Crossfade</span>
 
-a<span class="n">sig</span>	S<span class="n">TKPercFlut</span> <span class="nb">cpspch</span><span class="p">(</span>i<span class="n">frq</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> k<span class="n">v1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> k<span class="n">v2</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">40</span>
+a<span class="n">sig</span>	<span class="nb">STKPercFlut</span> <span class="nb">cpspch</span><span class="p">(</span>i<span class="n">frq</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> k<span class="n">v1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> k<span class="n">v2</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">40</span>
 	<span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 <span class="kd">endin</span>
 
@@ -155,7 +155,7 @@ a<span class="n">sig</span>	S<span class="n">TKPercFlut</span> <span class="nb">
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm212890"></a>
+        <a id="idm212408"></a>
         <h2>Credits</h2>
         <p>
       </p>

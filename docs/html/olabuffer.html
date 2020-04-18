@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm147415"></a>
+        <a id="idm146133"></a>
         <h2>Description</h2>
         <p>Plugin opcode in framebuffer.</p>
         <p>
@@ -47,19 +47,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm147420"></a>
+        <a id="idm146138"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout <span class="command"><strong>olabuffer</strong></span> kin, ioverlap</pre>
       </div>
       <div class="refsect1">
-        <a id="idm147424"></a>
+        <a id="idm146142"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ioverlap</em></span> -- The amount of overlaps per k-array input frame sample size. For example for an input window size of 1024, and a hop size of 256 the overlap factor would be 4. The overlap factor must be larger than or equal to ksmps and must also be an integer multiple of the input k-rate array sample count.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm147428"></a>
+        <a id="idm146146"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>aout</em></span> -- The resulting audio signal from the added input frames.
@@ -67,21 +67,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm147433"></a>
+        <a id="idm146151"></a>
         <h2>Examples</h2>
         <p>
       Here is a simple example of the olabuffer opcode. It uses the file <a class="ulink" href="examples/framebuffer.csd.html" target="_top"> (click here to play) <em class="citetitle">framebuffer.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm147438"></a>
+          <a id="idm146156"></a>
           <p class="title">
             <strong>Example 633. Example of the olabuffer opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm147445"></a>
+              <a id="idm146163"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -98,10 +98,10 @@
     i<span class="n">overlaps</span> <span class="nb">init</span> <span class="mi">4</span>
 
     a<span class="n">sig</span> <span class="nb">diskin2</span> <span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
-    k<span class="n">frame</span><span class="p">[]</span> <span class="n">framebuffer</span> a<span class="n">sig</span><span class="p">,</span> i<span class="n">size</span>
+    k<span class="n">frame</span><span class="p">[]</span> <span class="nb">framebuffer</span> a<span class="n">sig</span><span class="p">,</span> i<span class="n">size</span>
     k<span class="n">windowedFrame</span><span class="p">[]</span> <span class="nb">window</span> k<span class="n">frame</span><span class="p">,</span> i<span class="n">size</span>
 
-    a<span class="n">out</span> <span class="n">olabuffer</span> k<span class="n">windowedFrame</span><span class="p">,</span> i<span class="n">overlaps</span>
+    a<span class="n">out</span> <span class="nb">olabuffer</span> k<span class="n">windowedFrame</span><span class="p">,</span> i<span class="n">overlaps</span>
     a<span class="n">out</span> <span class="o">=</span> a<span class="n">out</span> <span class="o">/</span> <span class="mi">2</span>
 
     <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
@@ -120,7 +120,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm147515"></a>
+        <a id="idm146233"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="olabuffer.html" title="olabuffer"><em class="citetitle">olabuffer</em></a>
@@ -129,7 +129,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm147524"></a>
+        <a id="idm146242"></a>
         <h2>Credits</h2>
         <p>
       </p>

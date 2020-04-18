@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm93603"></a>
+        <a id="idm93509"></a>
         <h2>Description</h2>
         <p>
       Output is a set of harmonically related cosine partials.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm93606"></a>
+        <a id="idm93512"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>gbuzz</strong></span> xamp, xcps, knh, klh, kmul, ifn [, iphs]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm93610"></a>
+        <a id="idm93516"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- table number of a stored function containing a cosine wave. A large table of at least 8192 points is recommended.
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm93616"></a>
+        <a id="idm93522"></a>
         <h2>Performance</h2>
         <p>
       The buzz units generate an additive set of harmonically related cosine partials of fundamental frequency <span class="emphasis"><em>xcps</em></span>, and whose amplitudes are scaled so their summation peak equals <span class="emphasis"><em>xamp</em></span>. The selection and strength of partials is determined by the following control parameters:
@@ -86,21 +86,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm93655"></a>
+        <a id="idm93561"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the gbuzz opcode. It uses the file <a class="ulink" href="examples/gbuzz.csd.html" target="_top"> (click here to play) <em class="citetitle">gbuzz.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm93660"></a>
+          <a id="idm93566"></a>
           <p class="title">
-            <strong>Example 387. Example of the gbuzz opcode.</strong>
+            <strong>Example 388. Example of the gbuzz opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm93667"></a>
+              <a id="idm93573"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -120,9 +120,9 @@
 <span class="kd">instr</span> <span class="nf">1</span>
 
 k<span class="n">cps</span> <span class="o">=</span> <span class="mi">220</span>
-k<span class="n">nh</span>  <span class="o">=</span> <span class="nb">p4</span>		<span class="c1">;total no. of harmonics</span>
-k<span class="n">lh</span>  <span class="o">=</span> <span class="nb">p5</span>		<span class="c1">;lowest harmonic</span>
-k<span class="n">mul</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">;increase amplitude of</span>
+k<span class="n">nh</span>  <span class="o">=</span> <span class="vi">p4</span>		<span class="c1">;total no. of harmonics</span>
+k<span class="n">lh</span>  <span class="o">=</span> <span class="vi">p5</span>		<span class="c1">;lowest harmonic</span>
+k<span class="n">mul</span> <span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1</span>	<span class="c1">;increase amplitude of</span>
 			<span class="c1">;higer partials</span>
 a<span class="n">sig</span> <span class="nb">gbuzz</span> <span class="mf">.6</span><span class="p">,</span> k<span class="n">cps</span><span class="p">,</span> k<span class="n">nh</span><span class="p">,</span> k<span class="n">lh</span><span class="p">,</span> k<span class="n">mul</span><span class="p">,</span> <span class="mi">1</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
@@ -148,14 +148,14 @@ a<span class="n">sig</span> <span class="nb">gbuzz</span> <span class="mf">.6</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm93770"></a>
+        <a id="idm93676"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="buzz.html" title="buzz"><em class="citetitle">buzz</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm93775"></a>
+        <a id="idm93681"></a>
         <h2>Credits</h2>
         <p>September 2003. Thanks to Kanata Motohashi for correcting the mentions of the <span class="emphasis"><em>kmul</em></span> parameter.</p>
       </div>

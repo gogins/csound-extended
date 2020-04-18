@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm191509"></a>
+        <a id="idm190802"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>scalearray</em></span> opcode scales a subregion of a
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm191513"></a>
+        <a id="idm190806"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>scalearray</strong></span> tarray, kmin, kmax[, kleft, kright]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm191517"></a>
+        <a id="idm190810"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>karray</em></span> --  array for operation.
@@ -66,20 +66,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm191525"></a>
+        <a id="idm190818"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the scalearray opcode. It uses the file <a class="ulink" href="examples/scalearray.csd.html" target="_top"> (click here to play) <em class="citetitle">scalearray.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm191530"></a>
+          <a id="idm190823"></a>
           <p class="title">
-            <strong>Example 869. Example of the scalearray opcode.</strong>
+            <strong>Example 871. Example of the scalearray opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm191537"></a>
+              <a id="idm190830"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -100,7 +100,7 @@ k<span class="n">Indx</span>      <span class="o">=</span>          <span class=
   <span class="k">until</span> k<span class="n">Indx</span> <span class="o">==</span> <span class="mi">10</span> <span class="k">do</span>
 k<span class="n">Num</span>       <span class="nb">random</span>     <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span>
 k<span class="n">Arr</span><span class="p">[</span>k<span class="n">Indx</span><span class="p">]</span> <span class="o">=</span>         k<span class="n">Num</span>
-           <span class="nb">printf</span>     <span class="s">"kArr[</span><span class="si">%d</span><span class="s">] = %10f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Indx</span><span class="p">,</span> k<span class="n">Num</span>
+           <span class="nb">printf</span>     <span class="s">"kArr[</span><span class="si">%d</span><span class="s">] = </span><span class="si">%10f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Indx</span><span class="p">,</span> k<span class="n">Num</span>
 k<span class="n">Indx</span>      <span class="o">+=</span>         <span class="mi">1</span>
   <span class="k">od</span>
 <span class="c1">;scale numbers 0...1 and print them out again</span>
@@ -108,7 +108,7 @@ k<span class="n">Indx</span>      <span class="o">+=</span>         <span class=
 k<span class="n">Indx</span>      <span class="o">=</span>          <span class="mi">0</span>
            <span class="nb">printks</span>    <span class="s">"kArr in range 0..1</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">0</span>
   <span class="k">until</span> k<span class="n">Indx</span> <span class="o">==</span> <span class="mi">10</span> <span class="k">do</span>
-           <span class="nb">printf</span>     <span class="s">"kArr[</span><span class="si">%d</span><span class="s">] = %10f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Indx</span><span class="p">,</span> k<span class="n">Arr</span><span class="p">[</span>k<span class="n">Indx</span><span class="p">]</span>
+           <span class="nb">printf</span>     <span class="s">"kArr[</span><span class="si">%d</span><span class="s">] = </span><span class="si">%10f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">Indx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> k<span class="n">Indx</span><span class="p">,</span> k<span class="n">Arr</span><span class="p">[</span>k<span class="n">Indx</span><span class="p">]</span>
 k<span class="n">Indx</span>      <span class="o">+=</span>         <span class="mi">1</span>
   <span class="k">od</span>
            <span class="nb">turnoff</span>
@@ -127,7 +127,7 @@ k<span class="n">Indx</span>      <span class="o">+=</span>         <span class=
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm191651"></a>
+        <a id="idm190946"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="maxarray.html" title="maxarray"><em class="citetitle">maxarray</em></a>, 
@@ -136,7 +136,7 @@ k<span class="n">Indx</span>      <span class="o">+=</span>         <span class=
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm191660"></a>
+        <a id="idm190955"></a>
         <h2>Credits</h2>
         <p>
       </p>

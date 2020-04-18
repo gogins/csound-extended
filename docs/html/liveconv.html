@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm117720"></a>
+        <a id="idm117822"></a>
         <h2>Description</h2>
         <p>Plugin opcode in liveconv.</p>
         <p>
@@ -62,12 +62,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm117733"></a>
+        <a id="idm117835"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>liveconv</strong></span> ain, ift, iplen, kupdate, kclear</pre>
       </div>
       <div class="refsect1">
-        <a id="idm117737"></a>
+        <a id="idm117839"></a>
         <h2>Initialization</h2>
         <p>
   	  <span class="emphasis"><em>ift</em></span>
@@ -82,7 +82,7 @@
       </p>
       </div>
       <div class="refsect1">
-        <a id="idm117743"></a>
+        <a id="idm117845"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ain</em></span>
@@ -106,20 +106,20 @@
       </p>
       </div>
       <div class="refsect1">
-        <a id="idm117753"></a>
+        <a id="idm117855"></a>
         <h2>Example</h2>
         <p>
       Here is an example of the liveconv opcode. It uses the file <a class="ulink" href="examples/liveconv.csd.html" target="_top"> (click here to play) <em class="citetitle">liveconv.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm117758"></a>
+          <a id="idm117860"></a>
           <p class="title">
-            <strong>Example 488. Example of the liveconv opcode.</strong>
+            <strong>Example 489. Example of the liveconv opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm117765"></a>
+              <a id="idm117867"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -137,9 +137,9 @@ gi<span class="n">IR_record</span> 	<span class="nb">ftgen</span>	<span class="m
 <span class="c1">; Record impulse response</span>
 <span class="kd">instr</span> <span class="nf">13</span>
 
-<span class="nb">p3</span> 		<span class="o">=</span>	<span class="nb">ftlen</span><span class="p">(</span>gi<span class="n">IR_record</span><span class="p">)</span><span class="o">/</span><span class="vg">sr</span>
-i<span class="n">skip</span> 	<span class="o">=</span>	<span class="nb">p4</span>
-i<span class="n">rlen</span> 	<span class="o">=</span>	<span class="nb">p5</span>
+<span class="vi">p3</span> 		<span class="o">=</span>	<span class="nb">ftlen</span><span class="p">(</span>gi<span class="n">IR_record</span><span class="p">)</span><span class="o">/</span><span class="vg">sr</span>
+i<span class="n">skip</span> 	<span class="o">=</span>	<span class="vi">p4</span>
+i<span class="n">rlen</span> 	<span class="o">=</span>	<span class="vi">p5</span>
 a<span class="n">1</span> 		<span class="nb">diskin2</span>	<span class="s">"fox.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">skip</span>
 
 <span class="c1">; Fill IR table with segment from audio file</span>
@@ -160,7 +160,7 @@ k<span class="n">trig</span> 	<span class="nb">init</span>	<span class="mi">1</s
 
 a<span class="n">in</span> 	<span class="nb">diskin2</span>	<span class="s">"beats.wav"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
 k<span class="n">update</span> <span class="nb">chnget</span>	<span class="s">"conv_update"</span>
-a<span class="n">conv</span> 	<span class="n">liveconv</span> a<span class="n">in</span><span class="p">,</span> gi<span class="n">IR_record</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> k<span class="n">update</span><span class="p">,</span> <span class="mi">0</span>
+a<span class="n">conv</span> 	<span class="nb">liveconv</span> a<span class="n">in</span><span class="p">,</span> gi<span class="n">IR_record</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> k<span class="n">update</span><span class="p">,</span> <span class="mi">0</span>
 		<span class="nb">outch</span>	<span class="mi">2</span><span class="p">,</span> a<span class="n">conv</span><span class="o">*</span><span class="mf">0.009</span>	<span class="c1">; output the convolution response</span>
 <span class="kd">endin</span>
         
@@ -191,7 +191,7 @@ a<span class="n">conv</span> 	<span class="n">liveconv</span> a<span class="n">i
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm117970"></a>
+        <a id="idm118072"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="ftconv.html" title="ftconv"><em class="citetitle">ftconv</em></a>
@@ -201,7 +201,7 @@ a<span class="n">conv</span> 	<span class="n">liveconv</span> a<span class="n">i
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm117981"></a>
+        <a id="idm118083"></a>
         <h2>Credits</h2>
         <p>
       </p>

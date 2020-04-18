@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm128067"></a>
+        <a id="idm126211"></a>
         <h2>Description</h2>
         <p>
       Calculates the classical ADSR envelope using the <a class="link" href="linsegr.html" title="linsegr"><em class="citetitle">linsegr</em></a> mechanism.
    </p>
       </div>
       <div class="refsect1">
-        <a id="idm128072"></a>
+        <a id="idm126216"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>madsr</strong></span> iatt, idec, islev, irel [, idel] [, ireltim]</pre>
         <pre class="synopsis">kres <span class="command"><strong>madsr</strong></span> iatt, idec, islev, irel [, idel] [, ireltim]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm128078"></a>
+        <a id="idm126222"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iatt</em></span> -- duration of attack phase
@@ -73,11 +73,13 @@
       <span class="emphasis"><em>ireltim</em></span> (optional, default=-1) -- Control release time after receiving a MIDI noteoff event. If less than zero, the longest release time given in the current instrument is used. If zero or more, the given value will be used for release time. Its default value is -1. (New in Csound 3.59 - not yet properly tested)
     </p>
         <p>
-      Please note that the release time cannot be longer than 32767/<a class="link" href="kr.html" title="kr"><em class="citetitle">kr</em></a> seconds.
+      Please note that the release time was restricted to 32767/<a class="link" href="kr.html" title="kr"><em class="citetitle">kr</em></a> seconds in
+      versions prior to 5.00; since then it has been
+      (2<sup>31</sup>-1)/kr.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm128095"></a>
+        <a id="idm126240"></a>
         <h2>Performance</h2>
         <p>
       The envelope is in the range 0 to 1 and may need to be scaled further. The envelope may be described as:
@@ -115,21 +117,21 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm128128"></a>
+        <a id="idm126273"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the madsr opcode. It uses the file <a class="ulink" href="examples/madsr.csd.html" target="_top"> (click here to play) <em class="citetitle">madsr.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm128133"></a>
+          <a id="idm126278"></a>
           <p class="title">
-            <strong>Example 528. Example of the madsr opcode.</strong>
+            <strong>Example 527. Example of the madsr opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm128140"></a>
+              <a id="idm126285"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -192,13 +194,13 @@
 
       </p>
         <div class="example">
-          <a id="idm128229"></a>
+          <a id="idm126374"></a>
           <p class="title">
-            <strong>Example 529. second example of the madsr opcode.</strong>
+            <strong>Example 528. second example of the madsr opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm128231"></a>
+              <a id="idm126376"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -241,7 +243,7 @@ a<span class="n">sig</span>	<span class="nb">pluck</span>	k<span class="n">env</
      </p>
       </div>
       <div class="refsect1">
-        <a id="idm128301"></a>
+        <a id="idm126446"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="expsegr.html" title="expsegr"><em class="citetitle">linsegr</em></a>,
@@ -259,7 +261,7 @@ a<span class="n">sig</span>	<span class="nb">pluck</span>	k<span class="n">env</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm128328"></a>
+        <a id="idm126473"></a>
         <h2>Credits</h2>
         <p>Author: John ffitch</p>
         <p>November 2002. Thanks to Rasmus Ekman, added documentation for the <span class="emphasis"><em>ireltim</em></span> parameter.</p>

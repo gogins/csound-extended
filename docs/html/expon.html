@@ -39,20 +39,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm61504"></a>
+        <a id="idm61099"></a>
         <h2>Description</h2>
         <p>
       Trace an exponential curve between specified points.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm61507"></a>
+        <a id="idm61102"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>expon</strong></span> ia, idur, ib</pre>
         <pre class="synopsis">kres <span class="command"><strong>expon</strong></span> ia, idur, ib</pre>
       </div>
       <div class="refsect1">
-        <a id="idm61513"></a>
+        <a id="idm61108"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ia</em></span> -- starting value. Zero is illegal for exponentials.
@@ -65,28 +65,28 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm61523"></a>
+        <a id="idm61118"></a>
         <h2>Performance</h2>
         <p>
       These units generate control or audio signals whose values can pass through 2 specified points. The <span class="emphasis"><em>idur</em></span> value may or may not equal the instrument's performance time: a shorter performance will truncate the specified pattern, while a longer one will cause the defined segment to continue on in the same direction.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm61527"></a>
+        <a id="idm61122"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the expon opcode. It uses the file <a class="ulink" href="examples/expon.csd.html" target="_top"> (click here to play) <em class="citetitle">expon.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm61532"></a>
+          <a id="idm61127"></a>
           <p class="title">
             <strong>Example 260. Example of the expon opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm61539"></a>
+              <a id="idm61134"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -105,12 +105,12 @@
 
 <span class="kd">instr</span> <span class="nf">1</span> 
 
-k<span class="n">pitch</span> <span class="o">=</span> <span class="nb">p6</span>
+k<span class="n">pitch</span> <span class="o">=</span> <span class="vi">p6</span>
 <span class="c1">;choose between expon or line</span>
 <span class="k">if</span> <span class="p">(</span>k<span class="n">pitch</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span> 	
-  k<span class="n">pitch</span> <span class="nb">expon</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p5</span> 
+  k<span class="n">pitch</span> <span class="nb">expon</span> <span class="vi">p4</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p5</span> 
 <span class="k">elseif</span> <span class="p">(</span>k<span class="n">pitch</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">then</span>
-  k<span class="n">pitch</span> <span class="nb">line</span> <span class="nb">p4</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p5</span> 
+  k<span class="n">pitch</span> <span class="nb">line</span> <span class="vi">p4</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p5</span> 
 <span class="k">endif</span>
 
 a<span class="n">sig</span>   <span class="nb">vco2</span> <span class="mf">.6</span><span class="p">,</span> k<span class="n">pitch</span> 
@@ -139,7 +139,7 @@ a<span class="n">sig</span>   <span class="nb">vco2</span> <span class="mf">.6</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm61670"></a>
+        <a id="idm61265"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="expseg.html" title="expseg"><em class="citetitle">expseg</em></a>,

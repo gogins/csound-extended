@@ -39,7 +39,7 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm20504"></a>
+        <a id="idm19581"></a>
         <h2>Description</h2>
         <p>
       Arithmetic operators perform operations of change-sign (negate), don't-change-sign, logical AND logical OR, add, subtract, multiply and divide. Note that a value or an expression may fall between two of these operators, either of which could take it as its left or right argument, as in
@@ -106,7 +106,7 @@ a - b - c<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm20521"></a>
+        <a id="idm19598"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">a <span class="command"><strong>/</strong></span>  b  (no rate restriction)</pre>
         <p>
@@ -114,7 +114,7 @@ a - b - c<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm20528"></a>
+        <a id="idm19605"></a>
         <h2>Arguments</h2>
         <p>
       The arguments of / can be scalar values or k-rate one
@@ -123,20 +123,20 @@ a - b - c<br />
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm20531"></a>
+        <a id="idm19608"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the / operator. It uses the file <a class="ulink" href="examples/divides.csd.html" target="_top"> (click here to play) <em class="citetitle">divides.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm20536"></a>
+          <a id="idm19613"></a>
           <p class="title">
             <strong>Example 30. Example of the / operator.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm20543"></a>
+              <a id="idm19620"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -155,10 +155,10 @@ a - b - c<br />
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">div</span>  <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="nb">p3</span> <span class="o">*</span> <span class="nb">p4</span>
+i<span class="n">div</span>  <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="vi">p3</span> <span class="o">*</span> <span class="vi">p4</span>
 k<span class="n">trm</span>  <span class="nb">oscil</span> <span class="mi">1</span><span class="p">,</span> i<span class="n">div</span><span class="p">,</span> <span class="mi">1</span>						<span class="c1">;use oscil as an envelope</span>
-<span class="nb">printf</span> <span class="s">"retrigger rate per note duration = %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> i<span class="n">div</span>
-k<span class="n">ndx</span>  <span class="nb">line</span> <span class="mi">5</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>						<span class="c1">;vary index of FM</span>
+<span class="nb">printf</span> <span class="s">"retrigger rate per note duration = </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> i<span class="n">div</span>
+k<span class="n">ndx</span>  <span class="nb">line</span> <span class="mi">5</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1</span>						<span class="c1">;vary index of FM</span>
 a<span class="n">sig</span>  <span class="nb">foscil</span> k<span class="n">trm</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> k<span class="n">ndx</span><span class="p">,</span> <span class="mi">1</span>
       <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
@@ -189,7 +189,7 @@ retrigger rate per note duration = 0.666667</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm20645"></a>
+        <a id="idm19723"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="subtracts.html" title="-"><em class="citetitle">-</em></a>, 
@@ -202,7 +202,7 @@ retrigger rate per note duration = 0.666667</pre>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm20662"></a>
+        <a id="idm19740"></a>
         <h2>Credits</h2>
         <p>Arithmetic on vectors is new in version 6.00</p>
       </div>

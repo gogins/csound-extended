@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm139416"></a>
+        <a id="idm137987"></a>
         <h2>Description</h2>
         <p>
       Filters the incoming signal with the specified resonance frequency and
@@ -49,12 +49,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm139419"></a>
+        <a id="idm137990"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">aout <span class="command"><strong>mode</strong></span> ain, xfreq, xQ [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm139423"></a>
+        <a id="idm137994"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iskip</em></span>
@@ -63,7 +63,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm139427"></a>
+        <a id="idm137998"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>aout</em></span> -- filtered signal
@@ -108,20 +108,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm139451"></a>
+        <a id="idm138022"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the mode opcode. It uses the file <a class="ulink" href="examples/mode.csd.html" target="_top"> (click here to play) <em class="citetitle">mode.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm139456"></a>
+          <a id="idm138027"></a>
           <p class="title">
             <strong>Example 586. Example of the mode opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm139463"></a>
+              <a id="idm138034"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -141,16 +141,16 @@
 
 <span class="kd">instr</span> <span class="nf">1</span><span class="c1">; 2 modes excitator</span>
 
-i<span class="n">dur</span> <span class="nb">init</span> <span class="nb">p3</span>
-i<span class="n">freq11</span> <span class="nb">init</span> <span class="nb">p4</span>
-i<span class="n">freq12</span> <span class="nb">init</span> <span class="nb">p5</span>
-i<span class="n">Q11</span>    <span class="nb">init</span> <span class="nb">p6</span>
-i<span class="n">Q12</span>    <span class="nb">init</span> <span class="nb">p7</span>
-i<span class="n">amp</span>    <span class="nb">init</span> <span class="nb">ampdb</span><span class="p">(</span><span class="nb">p8</span><span class="p">)</span>
-i<span class="n">freq21</span> <span class="nb">init</span> <span class="nb">p9</span>
-i<span class="n">freq22</span> <span class="nb">init</span> <span class="nb">p10</span>
-i<span class="n">Q21</span>    <span class="nb">init</span> <span class="nb">p11</span>
-i<span class="n">Q22</span>    <span class="nb">init</span> <span class="nb">p12</span>
+i<span class="n">dur</span> <span class="nb">init</span> <span class="vi">p3</span>
+i<span class="n">freq11</span> <span class="nb">init</span> <span class="vi">p4</span>
+i<span class="n">freq12</span> <span class="nb">init</span> <span class="vi">p5</span>
+i<span class="n">Q11</span>    <span class="nb">init</span> <span class="vi">p6</span>
+i<span class="n">Q12</span>    <span class="nb">init</span> <span class="vi">p7</span>
+i<span class="n">amp</span>    <span class="nb">init</span> <span class="nb">ampdb</span><span class="p">(</span><span class="vi">p8</span><span class="p">)</span>
+i<span class="n">freq21</span> <span class="nb">init</span> <span class="vi">p9</span>
+i<span class="n">freq22</span> <span class="nb">init</span> <span class="vi">p10</span>
+i<span class="n">Q21</span>    <span class="nb">init</span> <span class="vi">p11</span>
+i<span class="n">Q22</span>    <span class="nb">init</span> <span class="vi">p12</span>
 
 <span class="c1">; to simulate the shock between the excitator and the resonator</span>
 a<span class="n">shock</span>  <span class="nb">mpulse</span>  <span class="mi">3</span><span class="p">,</span><span class="mi">0</span> 
@@ -174,7 +174,7 @@ a<span class="n">res2</span>  <span class="nb">mode</span> a<span class="n">exc<
 
 a<span class="n">res</span> <span class="o">=</span> <span class="p">(</span>a<span class="n">res1</span><span class="o">+</span>a<span class="n">res2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
 
-<span class="nb">display</span> a<span class="n">exc</span><span class="o">+</span>a<span class="n">res</span><span class="p">,</span><span class="nb">p3</span>
+<span class="nb">display</span> a<span class="n">exc</span><span class="o">+</span>a<span class="n">res</span><span class="p">,</span><span class="vi">p3</span>
 <span class="nb">outs</span>  a<span class="n">exc</span><span class="o">+</span>a<span class="n">res</span><span class="p">,</span>a<span class="n">exc</span><span class="o">+</span>a<span class="n">res</span>
 
 <span class="kd">endin</span>
@@ -218,7 +218,7 @@ a<span class="n">res</span> <span class="o">=</span> <span class="p">(</span>a<s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm139738"></a>
+        <a id="idm138309"></a>
         <h2>Credits</h2>
         <p>Original UDO and documentation/example by François Blanc</p>
         <p>Opcode translation to C-code by Steven Yi</p>

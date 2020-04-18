@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm214288"></a>
+        <a id="idm213806"></a>
         <h2>Description</h2>
         <p>Plugin opcode in stkopd.</p>
         <p>
@@ -48,12 +48,12 @@ This instrument contains an excitation singing wavetable (looping wave with rand
 Measured formant data is included, and enough data is there to support either parallel or cascade synthesis. In the floating point case cascade synthesis is the most natural so that's what you'll find here.</p>
       </div>
       <div class="refsect1">
-        <a id="idm214292"></a>
+        <a id="idm213810"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">asignal <span class="command"><strong>STKVoicForm</strong></span> ifrequency, iamplitude, [kmix, kv1[, ksel, kv2[, klfo, kv3[, klfodepth, kv4[, kloud, kv5]]]]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm214296"></a>
+        <a id="idm213814"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifrequency</em></span> -- Frequency of note played, in Hertz.
@@ -63,7 +63,7 @@ Measured formant data is included, and enough data is there to support either pa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm214302"></a>
+        <a id="idm213820"></a>
         <h2>Performance</h2>
         <p><span class="emphasis"><em>kmix</em></span> -- controller 2, voiced/unvoiced mix. Value range of kv1 is 0-127.</p>
         <p><span class="emphasis"><em>ksel</em></span> -- controller 4, vowel/phoneme selection. Value range of kv2 is 0-127.</p>
@@ -72,7 +72,7 @@ Measured formant data is included, and enough data is there to support either pa
         <p><span class="emphasis"><em>kloud</em></span> -- controller 128, loudness (spectral tilt). Value range of kv5 is 0-127.</p>
       </div>
       <div class="refsect1">
-        <a id="idm214314"></a>
+        <a id="idm213832"></a>
         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
           <table border="0" summary="Note: Note">
             <tr>
@@ -98,7 +98,7 @@ The order of the controller pair is arbitrary, as long as they are after <span c
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm214323"></a>
+        <a id="idm213841"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the STKVoicForm opcode. 
@@ -106,13 +106,13 @@ The order of the controller pair is arbitrary, as long as they are after <span c
      
       </p>
         <div class="example">
-          <a id="idm214328"></a>
+          <a id="idm213846"></a>
           <p class="title">
-            <strong>Example 966. Example of the STKVoicForm opcode.</strong>
+            <strong>Example 968. Example of the STKVoicForm opcode.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm214330"></a>
+              <a id="idm213848"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -131,10 +131,10 @@ The order of the controller pair is arbitrary, as long as they are after <span c
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-i<span class="n">frq</span>	<span class="o">=</span>	<span class="nb">p4</span>
-k<span class="n">v2</span>	<span class="nb">line</span>	<span class="nb">p5</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="nb">p6</span>				<span class="c1">;Vowel/Phoneme Selection</span>
+i<span class="n">frq</span>	<span class="o">=</span>	<span class="vi">p4</span>
+k<span class="n">v2</span>	<span class="nb">line</span>	<span class="vi">p5</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="vi">p6</span>				<span class="c1">;Vowel/Phoneme Selection</span>
 
-a<span class="n">sig</span>	S<span class="n">TKVoicForm</span> <span class="nb">cpspch</span><span class="p">(</span><span class="nb">p4</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> k<span class="n">v2</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">100</span>
+a<span class="n">sig</span>	<span class="nb">STKVoicForm</span> <span class="nb">cpspch</span><span class="p">(</span><span class="vi">p4</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> k<span class="n">v2</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">100</span>
 a<span class="n">sig</span>	<span class="o">=</span>	a<span class="n">sig</span> <span class="o">*</span> <span class="mf">.5</span>				<span class="c1">;too loud</span>
 	<span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 <span class="kd">endin</span>
@@ -155,7 +155,7 @@ a<span class="n">sig</span>	<span class="o">=</span>	a<span class="n">sig</span>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm214423"></a>
+        <a id="idm213941"></a>
         <h2>Credits</h2>
         <p>
       </p>

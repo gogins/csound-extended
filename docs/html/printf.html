@@ -40,7 +40,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm170549"></a>
+        <a id="idm169328"></a>
         <h2>Description</h2>
         <p>
       <span class="command"><strong>printf</strong></span> and <span class="command"><strong>printf_i</strong></span> write
@@ -51,13 +51,13 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm170556"></a>
+        <a id="idm169335"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>printf_i</strong></span> Sfmt, itrig, [iarg1[, iarg2[, ... ]]]</pre>
         <pre class="synopsis"><span class="command"><strong>printf</strong></span> Sfmt, ktrig, [xarg1[, xarg2[, ... ]]]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm170562"></a>
+        <a id="idm169341"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>Sfmt</em></span> -- format string, has the same format
@@ -85,7 +85,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm170573"></a>
+        <a id="idm169352"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ktrig</em></span> -- if greater than zero and different
@@ -100,20 +100,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm170579"></a>
+        <a id="idm169358"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the printf opcode. It uses the file <a class="ulink" href="examples/printf.csd.html" target="_top"> (click here to play) <em class="citetitle">printf.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm170584"></a>
+          <a id="idm169363"></a>
           <p class="title">
             <strong>Example 734. Example of the printf opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm170591"></a>
+              <a id="idm169370"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -131,11 +131,11 @@
 <span class="vg">0dbfs</span>  <span class="o">=</span> <span class="mi">1</span>
 
 <span class="kd">instr</span> <span class="nf">1</span>
-S<span class="n">file</span>     <span class="nb">strget</span>    <span class="nb">p4</span>
+S<span class="n">file</span>     <span class="nb">strget</span>    <span class="vi">p4</span>
 i<span class="n">vld</span>      <span class="nb">filevalid</span> S<span class="n">file</span>
 
 <span class="k">if</span> i<span class="n">vld</span><span class="o">=</span><span class="mi">0</span> <span class="k">then</span>
-          <span class="nb">printf_i</span>  <span class="s">"Audiofile '%s' does not exist!</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> S<span class="n">file</span>
+          <span class="nb">printf_i</span>  <span class="s">"Audiofile '</span><span class="si">%s</span><span class="s">' does not exist!</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> S<span class="n">file</span>
 <span class="k">else</span>
 a<span class="n">sig</span>      <span class="nb">diskin2</span>   S<span class="n">file</span><span class="p">,</span> <span class="mi">1</span>
           <span class="nb">outs</span>      a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
@@ -168,7 +168,7 @@ Audiofile 'frox.wav' does not exist!
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm170666"></a>
+        <a id="idm169447"></a>
         <h2>See Also</h2>
         <p>
 </p>
@@ -177,7 +177,7 @@ Audiofile 'frox.wav' does not exist!
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm170672"></a>
+        <a id="idm169453"></a>
         <h2>Credits</h2>
         <p>
       </p>

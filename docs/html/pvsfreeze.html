@@ -40,7 +40,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm177761"></a>
+        <a id="idm176939"></a>
         <h2>Description</h2>
         <p>
       This opcodes 'freezes' the evolution of pvs stream by locking into steady amplitude and/or
@@ -50,12 +50,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm177764"></a>
+        <a id="idm176942"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">fsig <span class="command"><strong>pvsfreeze</strong></span> fsigin, kfreeza, kfreezf</pre>
       </div>
       <div class="refsect1">
-        <a id="idm177768"></a>
+        <a id="idm176946"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>fsig</em></span> -- output pv stream
@@ -88,14 +88,14 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm177780"></a>
+        <a id="idm176958"></a>
         <h2>Examples</h2>
         <p>
       </p>
         <div class="example">
-          <a id="idm177783"></a>
+          <a id="idm176961"></a>
           <p class="title">
-            <strong>Example 777. Example</strong>
+            <strong>Example 779. Example</strong>
           </p>
           <div class="example-contents">
             <pre class="programlisting">
@@ -115,14 +115,14 @@ aout  <span class="opc">pvsynth</span>   fou                            <span cl
       Here is an example of the use of the <span class="emphasis"><em>pvsfreeze</em></span> opcode. It uses the file <a class="ulink" href="examples/pvsfreeze.csd.html" target="_top"> (click here to play) <em class="citetitle">pvsfreeze.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm177803"></a>
+          <a id="idm176981"></a>
           <p class="title">
-            <strong>Example 778. Example of the <span class="emphasis"><em>pvsfreeze</em></span> opcode.</strong>
+            <strong>Example 780. Example of the <span class="emphasis"><em>pvsfreeze</em></span> opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm177811"></a>
+              <a id="idm176989"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -148,15 +148,15 @@ S<span class="n">file1</span>		<span class="o">=</span>		<span class="s">"fox.wa
 a<span class="n">in</span>		<span class="nb">soundin</span>	S<span class="n">file1</span>
 k<span class="n">freq</span>		<span class="nb">randomh</span>	<span class="mf">.7</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">3</span><span class="c1">; probability of freezing freqs: 1/4</span>
 k<span class="n">amp</span>		<span class="nb">randomh</span>	<span class="mf">.7</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">3</span><span class="c1">; idem for amplitudes</span>
-<span class="n">fftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="c1">; fft-analysis of file</span>
-<span class="n">freeze</span>		<span class="nb">pvsfreeze</span>	<span class="n">fftin</span><span class="p">,</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">freq</span><span class="c1">; freeze amps or freqs independently</span>
-a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">freeze</span><span class="c1">; resynthesize</span>
+f<span class="n">ftin</span>		<span class="nb">pvsanal</span>	a<span class="n">in</span><span class="p">,</span> i<span class="n">fftsize</span><span class="p">,</span> i<span class="n">overlap</span><span class="p">,</span> i<span class="n">winsize</span><span class="p">,</span> i<span class="n">winshape</span><span class="c1">; fft-analysis of file</span>
+f<span class="n">reeze</span>		<span class="nb">pvsfreeze</span>	f<span class="n">ftin</span><span class="p">,</span> k<span class="n">amp</span><span class="p">,</span> k<span class="n">freq</span><span class="c1">; freeze amps or freqs independently</span>
+a<span class="n">out</span>		<span class="nb">pvsynth</span>	f<span class="n">reeze</span><span class="c1">; resynthesize</span>
 		<span class="nb">out</span>		a<span class="n">out</span>
 <span class="kd">endin</span>
 
 <span class="nt">&lt;/CsInstruments&gt;</span>
 <span class="nt">&lt;CsScore&gt;</span>
-<span class="nb">r</span> <span class="mi">10</span>
+<span class="err">r</span> <span class="mi">10</span>
 <span class="nb">i</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mf">2.757</span>
 <span class="nb">e</span>
 <span class="nt">&lt;/CsScore&gt;</span>
@@ -169,7 +169,7 @@ a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fre
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm177909"></a>
+        <a id="idm177087"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="pvsanal.html" title="pvsanal"><em class="citetitle">pvsanal</em></a>,
@@ -178,7 +178,7 @@ a<span class="n">out</span>		<span class="nb">pvsynth</span>	<span class="n">fre
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm177918"></a>
+        <a id="idm177096"></a>
         <h2>Credits</h2>
         <p>
       </p>

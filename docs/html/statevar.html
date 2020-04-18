@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm210155"></a>
+        <a id="idm209673"></a>
         <h2>Description</h2>
         <p>
 Statevar is a new digital implementation of the analogue state-variable filter. 
@@ -50,12 +50,12 @@ resonance limiter that prevents the filter from getting unstable.
   </p>
       </div>
       <div class="refsect1">
-        <a id="idm210158"></a>
+        <a id="idm209676"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ahp,alp,abp,abr <span class="command"><strong>statevar</strong></span> ain, xcf, xq [, iosamps, istor]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm210162"></a>
+        <a id="idm209680"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iosamps</em></span>  -- number of times of oversampling used in the 
@@ -73,7 +73,7 @@ previous information to remain. The default value is 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm210168"></a>
+        <a id="idm209686"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ahp</em></span> -- high-pass output signal.
@@ -101,20 +101,20 @@ previous information to remain. The default value is 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm210184"></a>
+        <a id="idm209702"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the statevar opcode. It uses the file <a class="ulink" href="examples/statevar.csd.html" target="_top"> (click here to play) <em class="citetitle">statevar.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm210189"></a>
+          <a id="idm209707"></a>
           <p class="title">
-            <strong>Example 940. Example of the statevar opcode.</strong>
+            <strong>Example 942. Example of the statevar opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm210196"></a>
+              <a id="idm209714"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -133,9 +133,9 @@ previous information to remain. The default value is 0.
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">env</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span>		<span class="c1">;declick envelope	</span>
+k<span class="n">env</span> <span class="nb">linseg</span> <span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span>		<span class="c1">;declick envelope	</span>
 a<span class="n">sig</span> <span class="nb">buzz</span> <span class="mf">.6</span><span class="o">*</span>k<span class="n">env</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span>
-k<span class="n">f</span>   <span class="nb">expseg</span> <span class="mi">100</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="nb">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1000</span>		<span class="c1">;envelope for filter cutoff</span>
+k<span class="n">f</span>   <span class="nb">expseg</span> <span class="mi">100</span><span class="p">,</span> <span class="vi">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="vi">p3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1000</span>		<span class="c1">;envelope for filter cutoff</span>
 a<span class="n">hp</span><span class="p">,</span>a<span class="n">lp</span><span class="p">,</span>a<span class="n">bp</span><span class="p">,</span>a<span class="n">br</span> <span class="nb">statevar</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">f</span><span class="p">,</span> <span class="mi">4</span>
      <span class="nb">outs</span> a<span class="n">lp</span><span class="p">,</span>a<span class="n">hp</span>				<span class="c1">; lowpass left, highpass right</span>
 	
@@ -156,7 +156,7 @@ a<span class="n">hp</span><span class="p">,</span>a<span class="n">lp</span><spa
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm210301"></a>
+        <a id="idm209819"></a>
         <h2>Credits</h2>
         <p>
       </p>

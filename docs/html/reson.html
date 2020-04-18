@@ -39,19 +39,19 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm186481"></a>
+        <a id="idm185773"></a>
         <h2>Description</h2>
         <p>
       A second-order resonant filter.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm186484"></a>
+        <a id="idm185776"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>reson</strong></span> asig, xcf, xbw [, iscl] [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm186488"></a>
+        <a id="idm185780"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iscl</em></span> (optional, default=0) -- coded scaling factor for resonators. A value of 1 signifies a peak response factor of 1, i.e. all frequencies other than kcf are attenuated in accordance with the (normalized) response curve. A value of 2 raises the response factor so that its overall RMS value equals 1. (This intended equalization of input and output power assumes all frequencies are physically present; hence it is most applicable to white noise.) A zero value signifies no scaling of the signal, leaving that to some later adjustment (see <a class="link" href="balance.html" title="balance"><em class="citetitle">balance</em></a>). The default value is 0.
@@ -61,7 +61,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm186496"></a>
+        <a id="idm185788"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>ares</em></span> -- the output signal at audio rate.
@@ -80,21 +80,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm186510"></a>
+        <a id="idm185802"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the reson opcode. It uses the file <a class="ulink" href="examples/reson.csd.html" target="_top"> (click here to play) <em class="citetitle">reson.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm186515"></a>
+          <a id="idm185807"></a>
           <p class="title">
-            <strong>Example 841. Example of the reson opcode.</strong>
+            <strong>Example 843. Example of the reson opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm186522"></a>
+              <a id="idm185814"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -114,8 +114,8 @@
 <span class="kd">instr</span> <span class="nf">1</span>
 
 a<span class="n">saw</span> <span class="nb">vco2</span> <span class="mf">.2</span><span class="p">,</span> <span class="mi">220</span>	<span class="c1">;sawtooth</span>
-k<span class="n">cf</span>  <span class="nb">line</span> <span class="mi">220</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1760</span>	<span class="c1">;vary cut-off frequency from 220 to 1280 Hz</span>
-k<span class="n">bw</span>  <span class="o">=</span> <span class="nb">p4</span>		<span class="c1">;vary bandwidth of filter too		</span>
+k<span class="n">cf</span>  <span class="nb">line</span> <span class="mi">220</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1760</span>	<span class="c1">;vary cut-off frequency from 220 to 1280 Hz</span>
+k<span class="n">bw</span>  <span class="o">=</span> <span class="vi">p4</span>		<span class="c1">;vary bandwidth of filter too		</span>
 a<span class="n">res</span> <span class="nb">reson</span> a<span class="n">saw</span><span class="p">,</span> k<span class="n">cf</span><span class="p">,</span> k<span class="n">bw</span>
 a<span class="n">sig</span> <span class="nb">balance</span> a<span class="n">res</span><span class="p">,</span> a<span class="n">saw</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
@@ -138,7 +138,7 @@ a<span class="n">sig</span> <span class="nb">balance</span> a<span class="n">res
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm186605"></a>
+        <a id="idm185897"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="areson.html" title="areson"><em class="citetitle">areson</em></a>,
@@ -153,7 +153,7 @@ a<span class="n">sig</span> <span class="nb">balance</span> a<span class="n">res
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm186626"></a>
+        <a id="idm185918"></a>
         <h2>Credits</h2>
         <p>Audio rate parameters introduced in version 6.02</p>
         <p>November 2013.</p>

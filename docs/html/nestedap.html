@@ -39,20 +39,20 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm143753"></a>
+        <a id="idm142397"></a>
         <h2>Description</h2>
         <p>
       Three different nested all-pass filters, useful for implementing reverbs.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm143756"></a>
+        <a id="idm142400"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>nestedap</strong></span> asig, imode, imaxdel, idel1, igain1 [, idel2] [, igain2] \
       [, idel3] [, igain3] [, istor]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm143760"></a>
+        <a id="idm142404"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>imode</em></span> -- operating mode of the filter:
@@ -86,7 +86,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm143786"></a>
+        <a id="idm142430"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- input signal
@@ -126,20 +126,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm143817"></a>
+        <a id="idm142461"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the nestedap opcode. It uses the file <a class="ulink" href="examples/nestedap.csd.html" target="_top"> (click here to play) <em class="citetitle">nestedap.csd</em></a>, and <a class="ulink" href="examples/beats.wav" target="_top"><em class="citetitle">beats.wav</em></a>.
       </p>
         <div class="example">
-          <a id="idm143824"></a>
+          <a id="idm142468"></a>
           <p class="title">
             <strong>Example 611. Example of the nestedap opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm143831"></a>
+              <a id="idm142475"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -157,24 +157,24 @@
 <span class="vg">nchnls</span> <span class="o">=</span> <span class="mi">2</span>
 
 <span class="kd">instr</span> <span class="nf">5</span>
-  i<span class="n">nsnd</span>     <span class="o">=</span>           <span class="nb">p4</span>
+  i<span class="n">nsnd</span>     <span class="o">=</span>           <span class="vi">p4</span>
   ga<span class="n">sig</span>     <span class="nb">diskin2</span>     i<span class="n">nsnd</span><span class="p">,</span> <span class="mi">1</span>
 <span class="kd">endin</span>
 
 <span class="kd">instr</span> <span class="nf">10</span>
   i<span class="n">max</span>      <span class="o">=</span>           <span class="mi">1</span>
-  i<span class="n">del1</span>     <span class="o">=</span>           <span class="nb">p4</span><span class="o">/</span><span class="mi">1000</span>
-  i<span class="n">gain1</span>    <span class="o">=</span>           <span class="nb">p5</span>
-  i<span class="n">del2</span>     <span class="o">=</span>           <span class="nb">p6</span><span class="o">/</span><span class="mi">1000</span>
-  i<span class="n">gain2</span>    <span class="o">=</span>           <span class="nb">p7</span>
-  i<span class="n">del3</span>     <span class="o">=</span>           <span class="nb">p8</span><span class="o">/</span><span class="mi">1000</span>
-  i<span class="n">gain3</span>    <span class="o">=</span>           <span class="nb">p9</span>
-  i<span class="n">del4</span>     <span class="o">=</span>           <span class="nb">p10</span><span class="o">/</span><span class="mi">1000</span>
-  i<span class="n">gain4</span>    <span class="o">=</span>           <span class="nb">p11</span>
-  i<span class="n">del5</span>     <span class="o">=</span>           <span class="nb">p12</span><span class="o">/</span><span class="mi">1000</span>
-  i<span class="n">gain5</span>    <span class="o">=</span>           <span class="nb">p13</span>
-  i<span class="n">del6</span>     <span class="o">=</span>           <span class="nb">p14</span><span class="o">/</span><span class="mi">1000</span>
-  i<span class="n">gain6</span>    <span class="o">=</span>           <span class="nb">p15</span>
+  i<span class="n">del1</span>     <span class="o">=</span>           <span class="vi">p4</span><span class="o">/</span><span class="mi">1000</span>
+  i<span class="n">gain1</span>    <span class="o">=</span>           <span class="vi">p5</span>
+  i<span class="n">del2</span>     <span class="o">=</span>           <span class="vi">p6</span><span class="o">/</span><span class="mi">1000</span>
+  i<span class="n">gain2</span>    <span class="o">=</span>           <span class="vi">p7</span>
+  i<span class="n">del3</span>     <span class="o">=</span>           <span class="vi">p8</span><span class="o">/</span><span class="mi">1000</span>
+  i<span class="n">gain3</span>    <span class="o">=</span>           <span class="vi">p9</span>
+  i<span class="n">del4</span>     <span class="o">=</span>           <span class="vi">p10</span><span class="o">/</span><span class="mi">1000</span>
+  i<span class="n">gain4</span>    <span class="o">=</span>           <span class="vi">p11</span>
+  i<span class="n">del5</span>     <span class="o">=</span>           <span class="vi">p12</span><span class="o">/</span><span class="mi">1000</span>
+  i<span class="n">gain5</span>    <span class="o">=</span>           <span class="vi">p13</span>
+  i<span class="n">del6</span>     <span class="o">=</span>           <span class="vi">p14</span><span class="o">/</span><span class="mi">1000</span>
+  i<span class="n">gain6</span>    <span class="o">=</span>           <span class="vi">p15</span>
 
   a<span class="n">fdbk</span>     <span class="nb">init</span> <span class="mi">0</span>
 
@@ -217,7 +217,7 @@ ga<span class="n">sig</span>     <span class="o">=</span>           <span class=
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm144035"></a>
+        <a id="idm142679"></a>
         <h2>Credits</h2>
         <p>
       </p>

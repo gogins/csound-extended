@@ -1,39 +1,41 @@
 <html>
 <head>
     <title>Minimal Example using Csound for WebAssembly</title>
-    <script src="csound.js"></script>
  </head>
-<body>
+<body style="background-color:LightGrey;">
+    <script src="CsoundAudioNode.js"></script>
+    <script src="csound_loader.js"></script>
     <script>
     var handleMessage = function(message) {
         var messages_textarea = document.getElementById("console");
         var existing = messages_textarea.value;
-        messages_textarea.value = existing + '\n' + message;
+        messages_textarea.value = existing + message;
         messages_textarea.scrollTop = messages_textarea.scrollHeight;
     }
-    var moduleDidLoad = function() {
-        document.getElementById('console').value += 'moduleDidLoad was called; Csound functions may now be called.';
-        console.warn = handleMessage;
-    }
-    var onPlayClick = function() {
+    var onPlayClick = async function() {
         var csd = document.getElementById('csd').value;
-        csound.compileCsdText(csd);
-        csound.start();
-        csound.perform();
+        let csound = get_csound(handleMessage);
+        if (csound == null) {
+            return;
+        }
+        csound.CompileCsdText(csd);
+        csound.Start();
+        csound.Perform();
     }
-    var onPlayStop = function() {
-        csound.stop();
+    var onPlayStop = async function() {
+        let csound = get_csound(handleMessage);
+        csound.Stop();
     }
   </script>
-<h1>vcomb</h1>
+<h1 style="font-family:sans-serif;">vcomb</h1>
 <p>
-This example will play if your Web browser is a desktop version of Google Chrome with WebAssembly enabled. You can edit and replay the code. At this time, most but not all examples will run in WebAssembly.
+This should play if your Web browser has WebAssembly enabled (most do). You can edit and replay the code. At this time, most examples will play in WebAssembly unless they need to load files. The first time you click <i>Play</i>, Csound will load. After that, clicking on <i>Play</i> will actually play.
 </p>
 <p>
 <input type="button" value="Play" onclick="onPlayClick()"/>
 <input type="button" value="Stop" onclick="onPlayStop()"/>
 <p>
-<textarea id="csd" style="width: 100%; height: 50%;font-size:12px;"><CsoundSynthesizer>
+<textarea id="csd" style="width:98vw;height:45vh;font-family:monospace;background-color:#050570;color:#F0F090;"><CsoundSynthesizer>
 <CsOptions>
 ; Select audio/midi flags here according to platform
 ; Audio out   Audio in
@@ -44,7 +46,7 @@ This example will play if your Web browser is a desktop version of Google Chrome
 ; Example by Jonathan Murphy and Charles Gran 2007
   sr	    =  44100
   ksmps	    =  10
-  nchnls = 2 ; Changed for WebAssembly output from:    =  2
+  nchnls = 2 ; Changed for WebAssembly from:    =  2
 
         ; new, and important. Make sure that midi note events are only
         ; received by instruments that actually need them.
@@ -108,8 +110,7 @@ i198 0 10000
 e
 </CsScore>
 </CsoundSynthesizer></textarea>
-<h3>Csound Messages</h3>
-<textarea id="console" readonly style="width: 100%; height: 25%;font-size:12px;">
+<textarea id="console" readonly style="width:98vw;height:40vh;font-family:monospace;background-color:DarkSlateGrey;color:LawnGreen;">
 </textarea>
 </body>
 </html>

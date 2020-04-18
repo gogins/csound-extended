@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm280581"></a>
+        <a id="idm280250"></a>
         <h2>Description</h2>
         <p>Plugin opcode in stackops.</p>
         <p>
@@ -47,20 +47,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm280585"></a>
+        <a id="idm280254"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>push</strong></span>  xval1, [xval2, ... , xval31]</pre>
         <pre class="synopsis"><span class="command"><strong>push</strong></span>  ival1, [ival2, ... , ival31]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm280591"></a>
+        <a id="idm280260"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ival1 ... ival31 </em></span>  - values to be pushed into the stack.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm280595"></a>
+        <a id="idm280264"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>xval1 ... xval31 </em></span>  - values to be pushed into the stack.
@@ -82,20 +82,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm280625"></a>
+        <a id="idm280294"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the push opcode. It uses the file <a class="ulink" href="examples/push.csd.html" target="_top"> (click here to play) <em class="citetitle">push.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm280630"></a>
+          <a id="idm280299"></a>
           <p class="title">
-            <strong>Example 1250. Example of the push opcode.</strong>
+            <strong>Example 1253. Example of the push opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm280637"></a>
+              <a id="idm280306"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span> 
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -117,15 +117,15 @@
 <span class="kd">instr</span> <span class="nf">1</span> 
 
 a<span class="n">1</span>	<span class="nb">oscils</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">0</span> 
-k<span class="n">1</span>	<span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span> 
+k<span class="n">1</span>	<span class="nb">line</span> <span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1</span> 
         <span class="nb">push</span> <span class="s">"blah"</span><span class="p">,</span> <span class="mf">123.45</span><span class="p">,</span> a<span class="n">1</span><span class="p">,</span> k<span class="n">1</span> 
         <span class="nb">push</span> <span class="nb">rnd</span><span class="p">(</span>k<span class="n">1</span><span class="p">)</span> 
 
 k<span class="n">_rnd</span>	<span class="nb">pop</span> 
 S<span class="n">01</span><span class="p">,</span> i<span class="n">01</span><span class="p">,</span> a<span class="n">01</span><span class="p">,</span> k<span class="n">01</span> <span class="nb">pop</span> 
-        <span class="nb">printf_i</span> <span class="s">"S01 = '%s', i01 = %g</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> S<span class="n">01</span><span class="p">,</span> i<span class="n">01</span> 
+        <span class="nb">printf_i</span> <span class="s">"S01 = '</span><span class="si">%s</span><span class="s">', i01 = </span><span class="si">%g</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> S<span class="n">01</span><span class="p">,</span> i<span class="n">01</span> 
 k<span class="n">trig</span>	<span class="nb">metro</span> <span class="mf">5.0</span> 
-        <span class="nb">printf</span> <span class="s">"k01 = %.3f, k_rnd = %.3f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">trig</span><span class="p">,</span> k<span class="n">01</span><span class="p">,</span> k<span class="n">_rnd</span> 
+        <span class="nb">printf</span> <span class="s">"k01 = </span><span class="si">%.3f</span><span class="s">, k_rnd = </span><span class="si">%.3f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> k<span class="n">trig</span><span class="p">,</span> k<span class="n">01</span><span class="p">,</span> k<span class="n">_rnd</span> 
         <span class="nb">outs</span> a<span class="n">01</span><span class="p">,</span> a<span class="n">01</span> 
 
 <span class="kd">endin</span> 
@@ -144,7 +144,7 @@ k<span class="n">trig</span>	<span class="nb">metro</span> <span class="mf">5.0<
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm280738"></a>
+        <a id="idm280413"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="stack.html" title="stack"><em class="citetitle">stack</em></a>,
@@ -155,7 +155,7 @@ k<span class="n">trig</span>	<span class="nb">metro</span> <span class="mf">5.0<
         <p>Using this opcode is somewhat hackish, as you can read here: <a class="ulink" href="http://csound.1045644.n5.nabble.com/passing-a-string-to-a-UDO-td1099284.html" target="_top">http://csound.1045644.n5.nabble.com/passing-a-string-to-a-UDO-td1099284.html</a></p>
       </div>
       <div class="refsect1">
-        <a id="idm280751"></a>
+        <a id="idm280426"></a>
         <h2>Credits</h2>
         <p>By: Istvan Varga.</p>
         <p>2006</p>

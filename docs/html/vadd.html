@@ -39,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm234911"></a>
+        <a id="idm234543"></a>
         <h2>Description</h2>
         <p>
       Adds a scalar value to a vector in a table.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm234914"></a>
+        <a id="idm234546"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>vadd</strong></span>  ifn, kval, kelements [, kdstoffset] [, kverbose]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm234918"></a>
+        <a id="idm234550"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span>  - number of the table hosting the vectorial signal to be processed
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm234922"></a>
+        <a id="idm234554"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>kval</em></span> - scalar value to be added
@@ -119,21 +119,21 @@ ielements  <span class="op">=</span>        20
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm234985"></a>
+        <a id="idm234617"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the vadd opcode. It uses the file <a class="ulink" href="examples/vadd.csd.html" target="_top"> (click here to play) <em class="citetitle">vadd.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm234990"></a>
+          <a id="idm234622"></a>
           <p class="title">
-            <strong>Example 1067. Example of the vadd opcode.</strong>
+            <strong>Example 1070. Example of the vadd opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm234997"></a>
+              <a id="idm234629"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -150,16 +150,16 @@ ielements  <span class="op">=</span>        20
 <span class="vg">nchnls</span><span class="o">=</span><span class="mi">2</span>
 
 	<span class="kd">instr</span> <span class="nf">1</span>
-i<span class="n">fn1</span> <span class="o">=</span> <span class="nb">p4</span>
-i<span class="n">val</span> <span class="o">=</span> <span class="nb">p5</span>
-i<span class="n">elements</span> <span class="o">=</span> <span class="nb">p6</span>
-i<span class="n">dstoffset</span> <span class="o">=</span> <span class="nb">p7</span>
+i<span class="n">fn1</span> <span class="o">=</span> <span class="vi">p4</span>
+i<span class="n">val</span> <span class="o">=</span> <span class="vi">p5</span>
+i<span class="n">elements</span> <span class="o">=</span> <span class="vi">p6</span>
+i<span class="n">dstoffset</span> <span class="o">=</span> <span class="vi">p7</span>
 k<span class="n">val</span> <span class="nb">init</span> <span class="mi">25</span>
 <span class="nb">vadd</span> i<span class="n">fn1</span><span class="p">,</span> i<span class="n">val</span><span class="p">,</span> i<span class="n">elements</span><span class="p">,</span> i<span class="n">dstoffset</span><span class="p">,</span> <span class="mi">1</span>
 	<span class="kd">endin</span>
 
 	<span class="kd">instr</span> <span class="nf">2</span>	<span class="c1">;Printtable</span>
-i<span class="n">table</span> <span class="o">=</span> <span class="nb">p4</span>
+i<span class="n">table</span> <span class="o">=</span> <span class="vi">p4</span>
 i<span class="n">size</span> <span class="o">=</span> <span class="nb">ftlen</span><span class="p">(</span>i<span class="n">table</span><span class="p">)</span>
 k<span class="n">count</span> <span class="nb">init</span> <span class="mi">0</span>
 k<span class="n">val</span> <span class="nb">table</span> k<span class="n">count</span><span class="p">,</span> i<span class="n">table</span>
@@ -199,14 +199,14 @@ k<span class="n">count</span> <span class="o">=</span> k<span class="n">count</s
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm235141"></a>
+        <a id="idm234773"></a>
         <h2>See also</h2>
         <p>
       <a class="link" href="vadd_i.html" title="vadd_i"><em class="citetitle">vadd_i</em></a>, <a class="link" href="vmult.html" title="vmult"><em class="citetitle">vmult</em></a>, <a class="link" href="vpow.html" title="vpow"><em class="citetitle">vpow</em></a> and <a class="link" href="vexp.html" title="vexp"><em class="citetitle">vexp</em></a>.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm235152"></a>
+        <a id="idm234784"></a>
         <h2>Credits</h2>
         <p>Written by Gabriel Maldonado. Optional arguments added by Andres Cabrera and Istvan Varga.</p>
         <p>New in Csound 5 (Previously available only on CsoundAV)</p>

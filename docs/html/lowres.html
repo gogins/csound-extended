@@ -39,26 +39,26 @@
           </p>
       </div>
       <div class="refsect1">
-        <a id="idm123012"></a>
+        <a id="idm123124"></a>
         <h2>Description</h2>
         <p>
       <span class="emphasis"><em>lowres</em></span> is a resonant lowpass filter.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm123016"></a>
+        <a id="idm123128"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ares <span class="command"><strong>lowres</strong></span> asig, xcutoff, xresonance [, iskip]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm123020"></a>
+        <a id="idm123132"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>iskip</em></span> -- initial disposition of internal data space. A zero value will clear the space; a non-zero value will allow previous information to remain. The default value is 0.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm123024"></a>
+        <a id="idm123136"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- input signal
@@ -80,20 +80,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm123038"></a>
+        <a id="idm123150"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the lowres opcode. It uses the file <a class="ulink" href="examples/lowres.csd.html" target="_top"> (click here to play) <em class="citetitle">lowres.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm123043"></a>
+          <a id="idm123155"></a>
           <p class="title">
-            <strong>Example 510. Example of the lowres opcode.</strong>
+            <strong>Example 511. Example of the lowres opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm123050"></a>
+              <a id="idm123162"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -112,10 +112,10 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">res</span> <span class="o">=</span> <span class="nb">p4</span>
+k<span class="n">res</span> <span class="o">=</span> <span class="vi">p4</span>
 a<span class="n">sig</span> <span class="nb">vco</span> <span class="mf">.2</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">1</span>		<span class="c1">;sawtooth</span>
 
-k<span class="n">cut</span> <span class="nb">line</span> <span class="mi">1000</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">10</span>		<span class="c1">;note: kcut is not in Hz</span>
+k<span class="n">cut</span> <span class="nb">line</span> <span class="mi">1000</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">10</span>		<span class="c1">;note: kcut is not in Hz</span>
 a<span class="n">s</span>   <span class="nb">lowres</span> a<span class="n">sig</span><span class="p">,</span> k<span class="n">cut</span><span class="p">,</span> k<span class="n">res</span>	<span class="c1">;note: kres is not in dB</span>
 a<span class="n">out</span> <span class="nb">balance</span> a<span class="n">s</span><span class="p">,</span> a<span class="n">sig</span>		<span class="c1">;avoid very loud sounds</span>
      <span class="nb">outs</span> a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
@@ -140,14 +140,14 @@ a<span class="n">out</span> <span class="nb">balance</span> a<span class="n">s</
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm123140"></a>
+        <a id="idm123252"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="lowresx.html" title="lowresx"><em class="citetitle">lowresx</em></a>
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm123145"></a>
+        <a id="idm123257"></a>
         <h2>Credits</h2>
         <p>
       </p>

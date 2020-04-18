@@ -39,7 +39,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm185500"></a>
+        <a id="idm184733"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>readscratch</em></span> opcode returns one of four
@@ -47,12 +47,12 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm185504"></a>
+        <a id="idm184737"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ival <span class="command"><strong>readscratch</strong></span>[index]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm185508"></a>
+        <a id="idm184741"></a>
         <h2>Initialisation</h2>
         <p>
       <span class="emphasis"><em>ival</em></span> --  variable for result.
@@ -63,20 +63,20 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm185514"></a>
+        <a id="idm184747"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the readscratch opcode. It uses the file <a class="ulink" href="examples/readscratch.csd.html" target="_top"> (click here to play) <em class="citetitle">readscratch.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm185519"></a>
+          <a id="idm184752"></a>
           <p class="title">
-            <strong>Example 836. Example of the readscratch opcode.</strong>
+            <strong>Example 838. Example of the readscratch opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm185526"></a>
+              <a id="idm184759"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -93,10 +93,10 @@
 <span class="kd">instr</span> <span class="nf">1</span>
 
 i<span class="n">last</span> <span class="nb">readscratch</span>
-      <span class="nb">writescratch</span> <span class="nb">p2</span>
+      <span class="nb">writescratch</span> <span class="vi">p2</span>
 i<span class="n">len</span>  <span class="nb">readscratch</span> <span class="mi">1</span>
-      <span class="nb">writescratch</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">1</span>
-      <span class="nb">printf_i</span> <span class="s">"last run at %f for %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">len</span><span class="p">,</span> i<span class="n">last</span><span class="p">,</span> i<span class="n">len</span>
+      <span class="nb">writescratch</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">1</span>
+      <span class="nb">printf_i</span> <span class="s">"last run at </span><span class="si">%f</span><span class="s"> for </span><span class="si">%f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> i<span class="n">len</span><span class="p">,</span> i<span class="n">last</span><span class="p">,</span> i<span class="n">len</span>
 <span class="kd">endin</span>
 
 <span class="nt">&lt;/CsInstruments&gt;</span>
@@ -115,14 +115,14 @@ i<span class="n">len</span>  <span class="nb">readscratch</span> <span class="mi
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm185586"></a>
+        <a id="idm184822"></a>
         <h2>See Also</h2>
         <p>
       <a class="link" href="writescratch.html" title="writescratch"><em class="citetitle">writescratch</em></a>, 
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm185591"></a>
+        <a id="idm184827"></a>
         <h2>Credits</h2>
         <p>
       </p>

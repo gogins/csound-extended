@@ -39,26 +39,26 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm263273"></a>
+        <a id="idm262923"></a>
         <h2>Description</h2>
         <p>
       The <span class="emphasis"><em>s statement</em></span> marks the end of a section.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm263277"></a>
+        <a id="idm262927"></a>
         <h2>Syntax</h2>
         <pre class="synopsis"><span class="command"><strong>s</strong></span> [time]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm263281"></a>
+        <a id="idm262931"></a>
         <h2>Initialization</h2>
         <p>
       The first p-field <span class="emphasis"><em>time</em></span> is optional and if present determines the end time (length in beats) of the section.  This time must be after the end of the last event in the section otherwise it will have no effect. This can be used to create a pause before the beginning of the next section or to allow "always on" instruments such as effects to play by themselves for some length of time.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm263285"></a>
+        <a id="idm262935"></a>
         <h2>Performance</h2>
         <p>
       Sorting of the <a class="link" href="i.html" title="i Statement (Instrument or Note Statement)"><em class="citetitle">i statement</em></a>, <a class="link" href="f.html" title="f Statement (or Function Table Statement)"><em class="citetitle">f statement</em></a> and <a class="link" href="a.html" title="a Statement (or Advance Statement)"><em class="citetitle">a statement</em></a> by action time is done section by section.
@@ -109,19 +109,19 @@
         </div>
       </div>
       <div class="refsect1">
-        <a id="idm263315"></a>
+        <a id="idm262965"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the s statement. It uses the file <a class="ulink" href="examples/s.csd.html" target="_top"> (click here to play) <em class="citetitle">s.csd</em></a>.
       </p>
         <div class="example">
-          <a id="idm263320"></a>
+          <a id="idm262970"></a>
           <p class="title">
-            <strong>Example 1188. Example of the s statement.</strong>
+            <strong>Example 1191. Example of the s statement.</strong>
           </p>
           <div class="example-contents">
             <div class="refsect1">
-              <a id="idm263322"></a>
+              <a id="idm262972"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -140,8 +140,8 @@
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-a<span class="n">env</span> <span class="nb">expseg</span> <span class="mf">.01</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">p3</span><span class="o">*</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.01</span>
-a<span class="n">sig</span> <span class="nb">poscil3</span> <span class="mf">.8</span><span class="o">*</span>a<span class="n">env</span><span class="p">,</span> <span class="nb">p4</span><span class="p">,</span> <span class="mi">1</span>
+a<span class="n">env</span> <span class="nb">expseg</span> <span class="mf">.01</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="vi">p3</span><span class="o">*</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.01</span>
+a<span class="n">sig</span> <span class="nb">poscil3</span> <span class="mf">.8</span><span class="o">*</span>a<span class="n">env</span><span class="p">,</span> <span class="vi">p4</span><span class="p">,</span> <span class="mi">1</span>
      <span class="nb">outs</span> a<span class="n">sig</span><span class="p">,</span> a<span class="n">sig</span>
 
 <span class="kd">endin</span>

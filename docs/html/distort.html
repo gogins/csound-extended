@@ -39,19 +39,19 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm55045"></a>
+        <a id="idm54607"></a>
         <h2>Description</h2>
         <p>
       Distort an audio signal via waveshaping and optional clipping.
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm55048"></a>
+        <a id="idm54610"></a>
         <h2>Syntax</h2>
         <pre class="synopsis">ar <span class="command"><strong>distort</strong></span> asig, kdist, ifn[, ihp, istor]</pre>
       </div>
       <div class="refsect1">
-        <a id="idm55052"></a>
+        <a id="idm54614"></a>
         <h2>Initialization</h2>
         <p>
       <span class="emphasis"><em>ifn</em></span> -- table number of a waveshaping
@@ -70,7 +70,7 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm55060"></a>
+        <a id="idm54622"></a>
         <h2>Performance</h2>
         <p>
       <span class="emphasis"><em>asig</em></span> -- Audio signal to be processed
@@ -130,21 +130,21 @@
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm55083"></a>
+        <a id="idm54645"></a>
         <h2>Examples</h2>
         <p>
       Here is an example of the distort opcode. It uses the file <a class="ulink" href="examples/distort.csd.html" target="_top"> (click here to play) <em class="citetitle">distort.csd</em></a>.
 
       </p>
         <div class="example">
-          <a id="idm55088"></a>
+          <a id="idm54650"></a>
           <p class="title">
             <strong>Example 223. Example of the distort opcode.</strong>
           </p>
           <div class="example-contents">
             <p>See the sections <a class="link" href="UsingRealTime.html" title="Real-Time Audio"><em class="citetitle">Real-time Audio</em></a> and <a class="link" href="CommandFlags.html" title="Csound command line"><em class="citetitle">Command Line Flags</em></a> for more information on using command line flags.</p>
             <div class="refsect1">
-              <a id="idm55095"></a>
+              <a id="idm54657"></a>
               <pre class="programlisting">
 <span class="nt">&lt;CsoundSynthesizer&gt;</span>
 <span class="nt">&lt;CsOptions&gt;</span>
@@ -166,7 +166,7 @@ gi<span class="n">fn</span>	<span class="nb">ftgen</span>	<span class="mi">0</sp
 
 <span class="kd">instr</span> <span class="nf">1</span>
 
-k<span class="n">dist</span>	<span class="nb">line</span>	<span class="mi">0</span><span class="p">,</span> <span class="nb">p3</span><span class="p">,</span> <span class="mi">2</span>		<span class="c1">; and over 10 seconds</span>
+k<span class="n">dist</span>	<span class="nb">line</span>	<span class="mi">0</span><span class="p">,</span> <span class="vi">p3</span><span class="p">,</span> <span class="mi">2</span>		<span class="c1">; and over 10 seconds</span>
 a<span class="n">sig</span>	<span class="nb">poscil</span>	<span class="mf">0.3</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="mi">1</span>
 a<span class="n">out</span>	<span class="nb">distort</span>	a<span class="n">sig</span><span class="p">,</span> k<span class="n">dist</span><span class="p">,</span> gi<span class="n">fn</span>	<span class="c1">; gradually increase the distortion</span>
 	<span class="nb">outs</span>	a<span class="n">out</span><span class="p">,</span> a<span class="n">out</span>
@@ -188,7 +188,7 @@ a<span class="n">out</span>	<span class="nb">distort</span>	a<span class="n">sig
     </p>
       </div>
       <div class="refsect1">
-        <a id="idm55180"></a>
+        <a id="idm54742"></a>
         <h2>Credits</h2>
         <p>Written by Barry L. Vercoe for Extended Csound and released in Csound5.</p>
       </div>
