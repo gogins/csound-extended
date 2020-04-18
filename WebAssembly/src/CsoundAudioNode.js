@@ -16,19 +16,23 @@
 // import csound_audio_processor_module from 'CsoundAudioProcessor.js';
 
 class CsoundAudioNode extends AudioWorkletNode {
+    resolveCleanup(result) {
+        return result;
+    }
     resolveCompileCsdText(result) {
         this.message_callback("[" + window.performance.now() + " resolveCompileCsdText with: " + result + ", " + this + "]\n");
         return result;
+    }
+    resolveReadScore(result) {
+        return result;
+    }
+    resolveReset() {
+        return;
     }
     resolveCompileOrc(result) {
         return result;
     }
     resolveStop() {
-    }
-    resolveCleanup(result) {
-        return result;
-    }
-    resolveReset() {
         return;
     }
     async onMessage(event) {
@@ -42,30 +46,30 @@ class CsoundAudioNode extends AudioWorkletNode {
                     }
                     break;
                 // Some Csound API calls should be serializable, i.e. 
-                // synchronous. These cases resolve promises from those calls.
-                case "CompileCsdTextResult":
-                    this.message_callback("[" + window.performance.now() + " Received CompileCsdTextResult with: " + data[1] + ".]\n");
-                    this.resolveCompileCsdText(data[1]);
-                    break;
-                case "CompileOrcResult":
-                    this.message_callback("[" + window.performance.now() + " Received CompileOrcResult with: " + data[1] + ".]\n");
-                    this.resolveCompileOrc(data[1]);
-                    break;
-                case "StopResult":
-                    this.message_callback("[" + window.performance.now() + " Received StopResult.]\n");
-                    this.resolveStop();
-                    break;
+                // synchronous. These cases resolve promises (above) from those calls.
                 case "CleanupResult":
-                    this.message_callback("[" + window.performance.now() + " Received CleanupResult with: " + data[1] + ".]\n");
+                    // this.message_callback("[" + window.performance.now() + " Received CleanupResult with: " + data[1] + ".]\n");
                     this.resolveCleanup(data[1]);
                     break;
+                case "CompileOrcResult":
+                    // this.message_callback("[" + window.performance.now() + " Received CompileOrcResult with: " + data[1] + ".]\n");
+                    this.resolveCompileOrc(data[1]);
+                    break;
+                case "CompileCsdTextResult":
+                    // this.message_callback("[" + window.performance.now() + " Received CompileCsdTextResult with: " + data[1] + ".]\n");
+                    this.resolveCompileCsdText(data[1]);
+                    break;
                 case "ReadScoreResult":
-                    this.message_callback("[" + window.performance.now() + " Received ReadScoreResult.]\n");
+                    // this.message_callback("[" + window.performance.now() + " Received ReadScoreResult with: " + data[1] + ".]\n");
                     this.resolveReadScore(data[1]);
                     break;
                 case "ResetResult":
-                    this.message_callback("[" + window.performance.now() + " Received ResetResult.]\n");
+                    // this.message_callback("[" + window.performance.now() + " Received ResetResult.]\n");
                     this.resolveReset();
+                    break;
+                case "StopResult":
+                    // this.message_callback("[" + window.performance.now() + " Received StopResult.]\n");
+                    this.resolveStop();
                     break;
             };
     };
@@ -95,39 +99,39 @@ class CsoundAudioNode extends AudioWorkletNode {
         this.output = null;
     }
     async Cleanup() {
-        this.message_callback("[" + window.performance.now() + " Cleanup.]\n");
+        // this.message_callback("[" + window.performance.now() + " Cleanup.]\n");
         let promise = new Promise((resolve, reject) => {
             // Not exactly intuitive!
             this.resolveCleanup = resolve;
             this.port.postMessage(["Cleanup"]);
         });
         let result = await promise;
-        this.message_callback("[" + window.performance.now() + " Cleanup resolved with: " + result + ".]\n");
+        // this.message_callback("[" + window.performance.now() + " Cleanup resolved with: " + result + ".]\n");
         return result;
     }
     CompileCsd(filename) {
         this.port.postMessage(["CompileCsd", filename]);
     };
     async CompileCsdText(csd) {
-        this.message_callback("[" + window.performance.now() + " CompileCsdText.]\n");
+        // this.message_callback("[" + window.performance.now() + " CompileCsdText.]\n");
         let promise = new Promise((resolve, reject) => {
             // Not exactly intuitive!
             this.resolveCompileCsdText = resolve;
             this.port.postMessage(["CompileCsdText", csd]);
         });
         let result = await promise;
-        this.message_callback("[" + window.performance.now() + " CompileCsdText resolved with: " + result + ".]\n");
+        // this.message_callback("[" + window.performance.now() + " CompileCsdText resolved with: " + result + ".]\n");
         return result;
     };
     async CompileOrc(orc) {
-        this.message_callback("[" + window.performance.now() + " CompileOrc.]\n");
+        // this.message_callback("[" + window.performance.now() + " CompileOrc.]\n");
         let promise = new Promise((resolve, reject) => {
             // Not exactly intuitive!
             this.resolveCompileOrc = resolve;
             this.port.postMessage(["CompileOrc", orc]);
         });
         let result = await promise;
-        this.message_callback("[" + window.performance.now() + " CompileOrc resolved with: " + result + ".]\n");
+        // this.message_callback("[" + window.performance.now() + " CompileOrc resolved with: " + result + ".]\n");
         return result;
     };
     Destroy() {
@@ -194,7 +198,7 @@ class CsoundAudioNode extends AudioWorkletNode {
         this.port.postMessage(["Message", text]);
     };
     Perform() {
-        this.message_callback("[" + window.performance.now() + " Perform.]\n");
+        // this.message_callback("[" + window.performance.now() + " Perform.]\n");
         this.port.postMessage(["Perform"]);
     };
     /**
@@ -214,25 +218,25 @@ class CsoundAudioNode extends AudioWorkletNode {
         this.port.postMessage(["PerformOrc", options, orc, sco]);
     }
     async ReadScore(score) {
-        this.message_callback("[" + window.performance.now() + " ReadScore.]\n");
+        // this.message_callback("[" + window.performance.now() + " ReadScore.]\n");
         let promise = new Promise((resolve, reject) => {
             // Not exactly intuitive!
             this.resolveReadScore = resolve;
             this.port.postMessage(["ReadScore", score]);
         });
         let result = await promise;
-        this.message_callback("[" + window.performance.now() + " ReadScore resolved with: " + result + ".]\n");
+        // this.message_callback("[" + window.performance.now() + " ReadScore resolved with: " + result + ".]\n");
         return result;
     };
     async Reset() {
-        this.message_callback("[" + window.performance.now() + " Reset.]\n");
+        // this.message_callback("[" + window.performance.now() + " Reset.]\n");
         let promise = new Promise((resolve, reject) => {
             // Not exactly intuitive!
             this.resolveReset = resolve;
             this.port.postMessage(["Reset"]);
         });
         await promise;
-        this.message_callback("[" + window.performance.now() + " Reset resolved.]\n");
+        // this.message_callback("[" + window.performance.now() + " Reset resolved.]\n");
     };
     RewindScore() {
         this.port.postMessage(["RewindScore"]);
@@ -275,7 +279,7 @@ class CsoundAudioNode extends AudioWorkletNode {
     // Wiring into Web Audio graph is up here in the upper half, 
     // wiring within Csound is down in the lower half.
     async Start() {
-        this.message_callback("[" + window.performance.now() + " Start.]\n");
+        // this.message_callback("[" + window.performance.now() + " Start.]\n");
         try {
             let device_list = await navigator.mediaDevices.enumerateDevices();
             var message_callback_ = this.message_callback;
