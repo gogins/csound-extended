@@ -154,8 +154,8 @@ public:
     virtual void Message(const std::string &message) {
         Csound::Message(message.c_str());
     }
-    virtual void ReadScore(const std::string &sco) {
-        Csound::ReadScore(sco.c_str());
+    virtual int ReadScore(const std::string &sco) {
+        return Csound::ReadScore(sco.c_str());
     }
     virtual void SetChannel(const std::string &name, MYFLT value) {
         return Csound::SetChannel(name.c_str(), value);

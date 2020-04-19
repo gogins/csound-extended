@@ -1337,13 +1337,6 @@ f 0 360
                 score_time_cell.innerHTML = score_time.toFixed(4);
                 setTimeout(updateTimeCell, 100);
             };
-            var mediaQueryList = window.matchMedia('print');
-            mediaQueryList.addListener(function(mql) {
-               console.log('mql: ' + mql.media);
-               if (mql.matches) {
-                   console.log('onbeforeprint equivalent.');
-               }
-            });
             // Map orbit X to score instrument.
             function rescaleX(x) {
                 var scale = orbit.xMax - orbit.xMin;
@@ -1475,15 +1468,18 @@ f 0 360
                 },
                 Stop: function() {
                     (async () => {
+                        is_playing = false;
                         await csound.Stop();
                         await csound.Cleanup();
                         await csound.Reset();
                     })();
                 },
-                Close: function() {
+                Close: async function() {
                     try {
-                        csound.Stop();
-                        window.close();
+                        is_playing = false;
+                        await csound.Stop();
+                        await csound.Cleanup();
+                        await csound.Reset();
                     } catch (e) {
                         console.log(e);
                     }
