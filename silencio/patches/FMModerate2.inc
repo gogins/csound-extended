@@ -1,4 +1,8 @@
 gk_FMModerate2_level init 0
+gi_FMModerate2_carrier init 1
+gi_FMModerate2_modulator init 4
+gi_FMModerate2_fmamplitude init 9
+gi_FMModerate2_index init 2
 instr FMModerate2
 ; Author: Michael Gogins
 i_instrument = p1
@@ -20,10 +24,10 @@ isustain = p3
 idecay = 1.5
 irelease = 0.05
 xtratim iattack + irelease
-icarrier = 1
-imodulator = 4
-ifmamplitude = 9
-index = 2
+icarrier = gi_FMModerate2_carrier
+imodulator = gi_FMModerate2_modulator
+ifmamplitude = gi_FMModerate2_fmamplitude
+index = gi_FMModerate2_index
 ifrequencyb = i_frequency * 1.003
 icarrierb = icarrier * 1.004
 aindenv transegr 0.0, iattack, -8.0, 1.0, idecay, -8.0, 0.025, isustain, 0.0, 0.025, irelease, 7.0, 0.0

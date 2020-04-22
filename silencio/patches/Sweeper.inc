@@ -6,8 +6,8 @@ gk_Sweeper_briteh init 2.9
 gk_Sweeper_britels init 2
 gk_Sweeper_britehs init 1
 gk_Sweeper_level init 0
-gi_Sweeper_sine ftgen 0, 0, 65536, 10, 1
-gi_Sweeper_octfn ftgen 0, 0, 65536, -19, 1, 0.5, 270, 0.5
+gi_Sweeper_sine ftgen 0, 0, 65537, 10, 1
+gi_Sweeper_octfn ftgen 0, 0, 65537, -19, 1, 0.5, 270, 0.5
 instr Sweeper
 //////////////////////////////////////////////
 // Original by Iain McCurdy.

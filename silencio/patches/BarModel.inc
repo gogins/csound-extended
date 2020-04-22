@@ -2,14 +2,14 @@ gk_BarModel_midi_dynamic_range init 127
 gk_BarModel_level init 0
 gk_BarModel_kbcL init 1
 gk_BarModel_kbcR init 1
-gi_BarModel_iK init 0 -3
+gi_BarModel_iK init 0
 gi_BarModel_ib init .001
 gk_BarModel_kscan init .23
 gi_BarModel_iT30 init 5
 gi_BarModel_ipos init 0.3 
 gi_BarModel_ivel init 1000 
 gi_BarModel_iwid init 0.05
-gi_BarModel_sine ftgen 0, 0, 65536, 10, 1, 0, 1
+gi_BarModel_sine ftgen 0, 0, 65537, 10, 1, 0, 1
 instr BarModel
 i_instrument = p1
 i_time = p2
@@ -23,7 +23,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 84.75
+i_level_correction = 120
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_BarModel_level)
