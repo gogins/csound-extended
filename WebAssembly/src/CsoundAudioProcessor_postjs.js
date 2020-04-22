@@ -327,11 +327,11 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
                 }
             }
             this.format_validated = true;
-            // These loops require Csound's ksmps to equal the length of the 
-            // WebAudio input and output buffers (should ALWAYS be 128).
-            if (this.has_audio_input === true) {
+            // These loops require Csound's ksmps to equal the length of the
+            // WebAudio input and output buffers (always 128 frames if present).
+            if (this.has_audio_input === true && inputChannelN != 0) {
                 // WebAudio spreads 1 input channel across 2 channels...
-                for (let inputChannelI = 0; inputChannelI < this.inputChannelN; inputChannelI++) {
+                for (let inputChannelI = 0; inputChannelI < inputChannelN; inputChannelI++) {
                     let inputChannelBuffer = inputBuffer[inputChannelI];
                     for (let sampleFrameI = 0; sampleFrameI < hostFrameN; sampleFrameI++) {
                         this.spinBuffer[(sampleFrameI * inputChannelN) + inputChannelI] = (inputChannelBuffer[sampleFrameI] * this.zerodBFS);
