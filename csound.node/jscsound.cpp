@@ -33,6 +33,20 @@ static Napi::FunctionReference persistent_message_callback;
 static concurrent_queue<char *> csound_messages_queue;
 static uv_async_t uv_csound_message_async;
 
+/**
+ * As this will often be called from Csound's native performance thread, 
+ * it is not safe to call from here back into JavaScript. Hence, we enqueue 
+ * messages to be dequeued and dispatched from the main JavaScript thread.
+ * Dispatching is implemented using libuv.
+ */
+static void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist)
+{
+    char buffer[0x1000];
+    std::vsprintf(buffer, format, valist);
+    csound_messages_queue.push(strdup(buffer));
+    uv_async_send(&uv_csound_message_async);
+}
+
 Napi::Number Cleanup(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
     int result = csound_.Cleanup();
@@ -198,6 +212,13 @@ void SetDoGitCommit(const Napi::CallbackInfo &info) {
     csound_.SetDoGitCommit(value);
 }
 
+void SetMessageCallback(const Napi::CallbackInfo &info) {
+    // std::fprintf(stderr, "SetMessageCallback\n");
+    Napi::Function csound_message_callback = info[0].As<Napi::Function>();
+    persistent_message_callback = Napi::Persistent(csound_message_callback);
+    persistent_message_callback.SuppressDestruct();
+}
+
 void SetMetadata(const Napi::CallbackInfo &info) {
     std::string tag = info[0].As<Napi::String>().Utf8Value();
     std::string value = info[1].As<Napi::String>().Utf8Value();
@@ -229,35 +250,14 @@ Napi::Number Start(const Napi::CallbackInfo &info) {
 
 void Stop(const Napi::CallbackInfo &info) {
     csound_.Stop();
-}
-
-void SetMessageCallback(const Napi::CallbackInfo &info) {
-    Napi::Function csound_message_callback = info[0].As<Napi::Function>();
-    persistent_message_callback = Napi::Persistent(csound_message_callback);
-    persistent_message_callback.SuppressDestruct();
-}
-
-/**
- * As this will often be called from Csound's native performance thread, 
- * it is not safe to call from here back into JavaScript. Hence, we enqueue 
- * messages to be dequeued and dispatched from the main JavaScript thread.
- * Dispatching is implemented using libuv.
- */
-void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist)
-{
-    char buffer[0x1000];
-    std::vsprintf(buffer, format, valist);
-    csound_messages_queue.push(strdup(buffer));
-    uv_async_send(&uv_csound_message_async);
+    csound_.Join();
 }
 
 void uv_csound_message_callback(uv_async_t *handle)
 {
-    if (persistent_message_callback.IsEmpty()) {
-        return;
-    }
     char *message = nullptr;
     while (csound_messages_queue.try_pop(message)) {
+        // std::fprintf(stderr, "uv_csound_message_callback message: %s\n", message);
         Napi::Env env = persistent_message_callback.Env();
         Napi::HandleScope handle_scope(env);
         std::vector<napi_value> args = {Napi::String::New(env, message)};
@@ -268,13 +268,16 @@ void uv_csound_message_callback(uv_async_t *handle)
 
 void on_exit()
 {
+    std::fprintf(stderr, "on_exit\n");
     uv_close((uv_handle_t *)&uv_csound_message_async, 0);
 }
 
 Napi::Object Initialize(Napi::Env env, Napi::Object exports) {
     std::fprintf(stderr, "Initializing csound.node...\n");
     uv_async_init(uv_default_loop(), &uv_csound_message_async, uv_csound_message_callback);
-    std::atexit(&on_exit);                
+    std::atexit(&on_exit);  
+    // Wormy logic...
+    csoundSetDefaultMessageCallback(csoundMessageCallback_);
     csound_.SetMessageCallback(csoundMessageCallback_);
     exports.Set(Napi::String::New(env, "Cleanup"),
                 Napi::Function::New(env, Cleanup));
