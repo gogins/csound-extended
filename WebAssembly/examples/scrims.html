@@ -133,27 +133,891 @@ alwayson "MasterOutput"
 
 scoreline_i "f 0 360\n"
 
-#include "patches/Plucked.inc"
-#include "patches/Rhodes.inc"
-#include "patches/Buzzer.inc"
-#include "patches/Droner.inc"
-#include "patches/YiString.inc"
-#include "patches/FMModerate2.inc"
-#include "patches/Phaser.inc"
-#include "patches/Bower.inc"
-#include "patches/Blower.inc"
-#include "patches/Xing.inc"
-#include "patches/Harpsichord.inc"
-#include "patches/Blower.inc"
-#include "patches/Sweeper.inc"
-#include "patches/Shiner.inc"
+gk_Plucked_level init 0
+instr Plucked
+; Author: Michael Gogins
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_overall_amps = 101
+i_normalization = ampdb(-i_overall_amps) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Plucked_level)
+isine ftgenonce 0, 0, 65537, 10, 1
+aenvelope transeg 1.0, 20, -12.0, 0.05
+aexcite poscil 1.0, 1, isine
+asignal1 wgpluck2 0.1, 1.0, i_frequency, 0.25, 0.22
+asignal2 wgpluck2 0.1, 1.0, i_frequency * 1.003, 0.20, 0.223
+asignal3 wgpluck2 0.1, 11, i_frequency * 0.997, 0.23, 0.224
+a_signal = (asignal1 + asignal2 + asignal3) * aenvelope
+i_attack = .002
+i_sustain = p3
+i_release = 0.01
+xtratim i_attack + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
 
-#include "patches/KarplusStrong3.inc" ; For some reason, behaves differently in csound.node than it does in patch_calibrator.py.
-#include "patches/BarModel.inc" ; Too demanding.
+gk_Rhodes_level init 0
+gi_Rhodes_sine ftgen 0, 0, 65537, 10, 1
+gi_Rhodes_cosine ftgen 0, 0, 65537, 11, 1
+gi_Rhodes_blank ftgen 0, 0, 65537, 10, 0 ; Blank wavetable for some Cook FM opcodes.
+instr Rhodes
+; Authors: Perry Cook, John ffitch, Michael Gogins
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+k_space_front_to_back = p6
+k_space_left_to_right = .5
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_overall_amps = 82
+i_normalization = ampdb(-i_overall_amps) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Rhodes_level)
+iindex = 4
+icrossfade = 3
+ivibedepth = 0.2
+iviberate = 6
+ifn1 = gi_Rhodes_sine
+ifn2 = gi_Rhodes_cosine
+ifn3 = gi_Rhodes_sine
+ifn4 = gi_Rhodes_blank
+ivibefn = gi_Rhodes_sine
+a_signal fmrhode i_amplitude, i_frequency, iindex, icrossfade, ivibedepth, iviberate, ifn1, ifn2, ifn3, ifn4, ivibefn
+i_attack = .002
+i_sustain = p3
+i_release = 0.01
+xtratim i_attack + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
 
-#include "patches/SolinaChorus.inc"
-#include "patches/ReverbSC.inc"
-#include "patches/MasterOutput.inc"
+gk_Buzzer_attack init .125
+gk_Buzzer_release init .25
+gk_Buzzer_harmonics init 8
+gk_Buzzer_level init 0
+gk_Buzzer_midi_dynamic_range init 127
+gi_Buzzer_sine ftgen 0, 0, 65537, 10, 1
+instr Buzzer
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Buzzer_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 79.5
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Buzzer_level)
+i_attack = i(gk_Buzzer_attack)
+i_release = i(gk_Buzzer_release)
+i_sustain = p3
+xtratim i_attack + i_release
+a_envelope transegr 0.0, i_attack / 2.0, 1.5, i_amplitude / 2.0, i_attack / 2.0, -1.5, i_amplitude, i_sustain, 0.0, i_amplitude, i_release / 2.0, 1.5, i_amplitude / 2.0, i_release / 2.0, -1.5, 0
+a_signal buzz a_envelope, i_frequency, gk_Buzzer_harmonics, gi_Buzzer_sine
+
+a_signal = a_signal * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+;printks "Buzzer         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(a_out_left)), dbamp(rms(a_out_right))
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Droner_partial1 init .5
+gk_Droner_partial2 init .05
+gk_Droner_partial3 init .1
+gk_Droner_partial4 init .2
+gk_Droner_partial5 init .1
+gk_Droner_partial6 init 0
+gk_Droner_partial7 init 0
+gk_Droner_partial8 init 0
+gk_Droner_partial9 init 0
+gk_Droner_partial10 init 0
+gk_Droner_level init 0
+gi_Droner_waveform init 0
+instr Droner
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_overall_amps = -20 + 98 + 4
+i_normalization = ampdb(-i_overall_amps) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Droner_level)
+k1 = gk_Droner_partial1
+k2 = gk_Droner_partial2
+k3 = gk_Droner_partial3
+k4 = gk_Droner_partial4
+k5 = gk_Droner_partial5
+k6 = gk_Droner_partial6
+k7 = gk_Droner_partial7
+k8 = gk_Droner_partial8
+k9 = gk_Droner_partial9
+k10 = gk_Droner_partial10
+iwaveform = gi_Droner_waveform
+iattack = .5
+idecay = .5
+xtratim iattack + idecay
+isustain = p3
+aenvelope transegr 0.0, iattack / 2.0, 1.5, 1 / 2.0, iattack / 2.0, -1.5, 1, isustain, 0.0, 1, idecay / 2.0, 1.5, 1 / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(i_midi_key)
+isine ftgenonce 0, 0, 65537, 10, 1, 0, .02
+if iwaveform == 0 goto i_waveform_0
+if iwaveform == 1 goto i_waveform_1
+if iwaveform == 2 goto i_waveform_2
+i_waveform_0:
+asignal poscil3 1, ihertz, isine
+goto i_waveform_endif
+i_waveform_1:
+asignal vco2 1, ihertz, 8 ; integrated saw
+goto i_waveform_endif
+i_waveform_2:
+asignal vco2 1, ihertz, 12 ; triangle
+i_waveform_endif:
+asignal chebyshevpoly asignal, 0, k1, k2, k3, k4, k5, k6, k7, k8, k9, k10
+adeclicking linsegr 0, .004, 1, p3 - .014, 1, .1, 0
+a_signal = asignal * adeclicking
+a_signal = a_signal * i_amplitude * k_gain * 1.4
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_YiString_midi_dynamic_range init 127
+gk_YiString_level init 0
+gk_YiString_reverb_send init .5
+gk_YiString_chorus_send init .5
+gi_YiString_overlap init .1
+instr YiString
+//////////////////////////////////////////////
+// Original by Steven Yi.
+// Adapted by Michael Gogins.
+//////////////////////////////////////////////
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_YiString_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 71.5
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_YiString_level)
+iattack = gi_YiString_overlap
+isustain = p3
+idecay = gi_YiString_overlap
+xtratim iattack + idecay
+aenvelope transeg 0.0, iattack / 2.0, 1.5, i_amplitude / 2.0, iattack / 2.0, -1.5, i_amplitude, isustain, 0.0, i_amplitude, idecay / 2.0, 1.5, i_amplitude / 2.0, idecay / 2.0, -1.5, 0
+;ampenv = madsr:a(1, 0.1, 0.95, 0.5)
+asignal = vco2(1, i_frequency)
+asignal = moogladder(asignal, 6000, 0.1)
+a_signal = asignal * aenvelope
+i_attack = .002
+i_release = 0.01
+i_sustain = p3 - (i_attack + i_release)
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain 
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_signal_reverb = a_signal * gk_YiString_reverb_send
+a_signal_chorus = a_signal * gk_YiString_chorus_send
+a_out_left, a_out_right pan2 a_signal_reverb, p7
+outleta "outleft", a_out_left
+outleta "outright",  a_out_right
+a_out_left, a_out_right pan2 a_signal_chorus, p7
+outleta "chorusleft", a_out_left 
+outleta "chorusright", a_out_right 
+;printks "YiString         %9.4f  %9.4f\n", 0.5, a_out_left, a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_FMModerate2_level init 0
+gi_FMModerate2_carrier init 1
+gi_FMModerate2_modulator init 4
+gi_FMModerate2_fmamplitude init 9
+gi_FMModerate2_index init 2
+instr FMModerate2
+; Author: Michael Gogins
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_overall_amps = 85
+i_normalization = ampdb(-i_overall_amps) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+i_frequency = cpsmidinn(i_midi_key)
+k_gain = ampdb(gk_FMModerate2_level)
+iattack = 0.002
+isustain = p3
+idecay = 1.5
+irelease = 0.05
+xtratim iattack + irelease
+icarrier = gi_FMModerate2_carrier
+imodulator = gi_FMModerate2_modulator
+ifmamplitude = gi_FMModerate2_fmamplitude
+index = gi_FMModerate2_index
+ifrequencyb = i_frequency * 1.003
+icarrierb = icarrier * 1.004
+aindenv transegr 0.0, iattack, -8.0, 1.0, idecay, -8.0, 0.025, isustain, 0.0, 0.025, irelease, 7.0, 0.0
+aindex = aindenv * index * ifmamplitude
+icosine ftgenonce 0, 0, 65537, 11, 1
+aouta foscili 1.0, i_frequency, icarrier, imodulator, index, icosine
+aoutb foscili 1.0, ifrequencyb, icarrierb, imodulator, index, icosine; Plus amplitude correction.
+a_signal = (aouta + aoutb) * aindenv
+i_attack = .002
+i_sustain = p3
+i_release = 0.01
+xtratim i_attack + i_sustain + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Phaser_attack init .125
+gk_Phaser_release init .125
+gk_Phaser_ratio1 init 1
+gk_Phaser_ratio2 init 1/3
+gk_Phaser_index1 init 2
+gk_Phaser_index2 init 0.0125
+gk_Phaser_level init 0.5
+gk_Phaser_midi_dynamic_range init 127
+gi_Phaser_sine ftgen 0,0,65537,10,1
+instr Phaser
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Phaser_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 85.5
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Phaser_level)
+i_attack = i(gk_Phaser_attack)
+i_release = i(gk_Phaser_release)
+i_sustain = 1000
+xtratim i_attack + i_release
+a_envelope transegr 0.0, i_attack / 2.0, 1.5, i_amplitude / 2.0, i_attack / 2.0, -1.5, i_amplitude, i_sustain, 0.0, i_amplitude, i_release / 2.0, 1.5, i_amplitude / 2.0, i_release / 2.0, -1.5, 0
+a1,a2 crosspm gk_Phaser_ratio1, gk_Phaser_ratio2, gk_Phaser_index1, gk_Phaser_index2, i_frequency, gi_Phaser_sine, gi_Phaser_sine
+a_signal = (a1 + a2) * k_gain * a_envelope
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+;printks "Phaser         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(aleft)), dbamp(rms(aright))
+endin
+
+gk_Bower_midi_dynamic_range init 127
+gk_Bower_attack init .125
+gk_Bower_release init .125
+gk_Bower_level init 0
+gk_Bower_pressure init 0.25
+gi_Bower_sine ftgen 0,0,65537,10,1
+instr Bower
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Bower_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 80
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Bower_level)
+iattack = i(gk_Bower_attack)
+idecay = i(gk_Bower_release)
+isustain = p3
+iamp = i_amplitude
+xtratim iattack + idecay
+kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(i_midi_key)
+kamp = kenvelope
+kfreq = ihertz
+kpres = 0.25
+krat rspline 0.006,0.988,1,4
+kvibf = 4.5
+kvibamp = 0
+iminfreq = i(kfreq) / 2
+aSig wgbow kamp,kfreq,gk_Bower_pressure,krat,kvibf,kvibamp,gi_Bower_sine,iminfreq
+a_signal = aSig * kenvelope * k_gain
+aleft, aright pan2 a_signal, k_space_left_to_right
+outleta "outleft", aleft
+outleta "outright", aright
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Blower_grainDensity init 40
+gk_Blower_grainDuration init 0.2
+gk_Blower_grainAmplitudeRange init 100
+gk_Blower_grainFrequencyRange init 3
+gk_Blower_level init 0
+gk_Blower_midi_dynamic_range init 127
+gi_Blower_grtab ftgen 0, 0, 65537, 10, 1, .3, .1, 0, .2, .02, 0, .1, .04
+gi_Blower_wintab ftgen 0, 0, 65537, 10, 1, 0, .5, 0, .33, 0, .25, 0, .2, 0, .167
+instr Blower
+//////////////////////////////////////////////
+// Original by Hans Mikelson.
+// Adapted by Michael Gogins.
+//////////////////////////////////////////////
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Blower_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 132
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Blower_level)
+iHz = i_frequency
+ihertz = iHz
+ip4 = i_amplitude
+ip5 = iHz
+ip6 = gi_Blower_grtab
+ip7 = gi_Blower_wintab
+ip8 = 0.033
+ip8 = .002
+ip9 = 150
+ip9 = 100
+ip10 = 1.6
+ip10 = 3
+idur = p3
+iamp = i_amplitude ; p4
+ifqc = iHz ; cpspch(p5)
+igrtab = ip6
+iwintab = ip7
+ifrng = ip8
+idens = ip9
+ifade = ip10
+igdur = 0.2
+iattack = 0.5
+i_sustain = p3
+idecay = 1.5
+xtratim iattack + idecay
+kenvelope transegr 0.0, iattack / 2.0, 1.5, .5, iattack / 2.0, -1.5, 1, i_sustain, 0.0, 1, idecay / 2.0, 1.5, .5, idecay / 2.0, -1.5, 0
+; kamp linseg 0, ifade, 1, idur - 2 * ifade, 1, ifade, 0
+kamp = kenvelope
+; Amp Fqc Dense AmpOff PitchOff GrDur GrTable WinTable MaxGrDur
+aoutl grain ip4, ifqc, gk_Blower_grainDensity, gk_Blower_grainAmplitudeRange, gk_Blower_grainFrequencyRange, gk_Blower_grainDuration, igrtab, iwintab, 5
+aoutr grain ip4, ifqc, gk_Blower_grainDensity, gk_Blower_grainAmplitudeRange, gk_Blower_grainFrequencyRange, gk_Blower_grainDuration, igrtab, iwintab, 5
+a_signal = aoutl + aoutr
+i_attack = .002
+i_release = 0.01
+xtratim i_attack + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+;printks "Blower         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(a_out_left)), dbamp(rms(a_out_right))
+endin
+
+gk_Xing_level init 0
+instr Xing
+; Author: Andrew Horner
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_overall_amps = 75
+i_normalization = ampdb(-i_overall_amps) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+i_frequency = cpsmidinn(i_midi_key)
+k_gain = ampdb(gk_Xing_level  )
+isine ftgenonce 0, 0, 65537, 10, 1
+iinstrument = p1
+istarttime = p2
+ioctave = p4
+idur = p3
+kfreq = k(i_frequency)
+iamp = 1
+inorm = 32310
+aamp1 linseg 0,.001,5200,.001,800,.001,3000,.0025,1100,.002,2800,.0015,1500,.001,2100,.011,1600,.03,1400,.95,700,1,320,1,180,1,90,1,40,1,20,1,12,1,6,1,3,1,0,1,0
+adevamp1 linseg 0, .05, .3, idur - .05, 0
+adev1 poscil adevamp1, 6.7, isine, .8
+amp1 = aamp1 * (1 + adev1)
+aamp2 linseg 0,.0009,22000,.0005,7300,.0009,11000,.0004,5500,.0006,15000,.0004,5500,.0008,2200,.055,7300,.02,8500,.38,5000,.5,300,.5,73,.5,5.,5,0,1,1
+adevamp2 linseg 0,.12,.5,idur-.12,0
+adev2 poscil adevamp2, 10.5, isine, 0
+amp2 = aamp2 * (1 + adev2)
+aamp3 linseg 0,.001,3000,.001,1000,.0017,12000,.0013,3700,.001,12500,.0018,3000,.0012,1200,.001,1400,.0017,6000,.0023,200,.001,3000,.001,1200,.0015,8000,.001,1800,.0015,6000,.08,1200,.2,200,.2,40,.2,10,.4,0,1,0
+adevamp3 linseg 0, .02, .8, idur - .02, 0
+adev3 poscil adevamp3, 70, isine ,0
+amp3 = aamp3 * (1 + adev3)
+awt1 poscil amp1, i_frequency, isine
+awt2 poscil amp2, 2.7 * i_frequency, isine
+awt3 poscil amp3, 4.95 * i_frequency, isine
+asig = awt1 + awt2 + awt3
+arel linenr 1,0, idur, .06
+a_signal = asig * arel * (iamp / inorm)
+i_attack = .002
+i_sustain = p3
+i_release = 0.01
+xtratim i_attack + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Harpsichord_midi_dynamic_range init 127
+gk_Harpsichord_level init 0
+gk_Harpsichord_pick init .075
+gk_Harpsichord_reflection init .5
+gk_Harpsichord_pluck init .75
+instr Harpsichord
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Harpsichord_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 82.4
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Harpsichord_level)
+iHz = cpsmidinn(i_midi_key)
+kHz = k(iHz)
+aenvelope transeg 1.0, 20.0, -10.0, 0.05
+k_amplitude = 1
+apluck pluck 1, kHz, iHz, 0, 1
+iharptable ftgenonce 0, 0, 65536, 7, -1, 1024, 1, 1024, -1
+aharp poscil 1, kHz, iharptable
+aharp2 balance apluck, aharp
+a_signal	= (apluck + aharp2)
+i_attack = .002
+i_sustain = p3
+i_release = 0.01
+xtratim i_attack + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+;printks "Harpsichord      %9.4f   %9.4f\n", 0.5, a_out_left, a_out_right
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Bower_midi_dynamic_range init 127
+gk_Bower_attack init .125
+gk_Bower_release init .125
+gk_Bower_level init 0
+gk_Bower_pressure init 0.25
+gi_Bower_sine ftgen 0,0,65537,10,1
+instr Bower
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Bower_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 80
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Bower_level)
+iattack = i(gk_Bower_attack)
+idecay = i(gk_Bower_release)
+isustain = p3
+iamp = i_amplitude
+xtratim iattack + idecay
+kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(i_midi_key)
+kamp = kenvelope
+kfreq = ihertz
+kpres = 0.25
+krat rspline 0.006,0.988,1,4
+kvibf = 4.5
+kvibamp = 0
+iminfreq = i(kfreq) / 2
+aSig wgbow kamp,kfreq,gk_Bower_pressure,krat,kvibf,kvibamp,gi_Bower_sine,iminfreq
+a_signal = aSig * kenvelope * k_gain
+aleft, aright pan2 a_signal, k_space_left_to_right
+outleta "outleft", aleft
+outleta "outright", aright
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Sweeper_midi_dynamic_range init 127
+gk_Sweeper_attack init .125
+gk_Sweeper_release init .25
+gk_Sweeper_britel init 0.1
+gk_Sweeper_briteh init 2.9
+gk_Sweeper_britels init 2
+gk_Sweeper_britehs init 1
+gk_Sweeper_level init 0
+gi_Sweeper_sine ftgen 0, 0, 65537, 10, 1
+gi_Sweeper_octfn ftgen 0, 0, 65537, -19, 1, 0.5, 270, 0.5
+instr Sweeper
+//////////////////////////////////////////////
+// Original by Iain McCurdy.
+// Adapted by Michael Gogins.
+//////////////////////////////////////////////
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Sweeper_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 78.3
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Sweeper_level)
+
+iattack = i(gk_Sweeper_attack)
+irelease = i(gk_Sweeper_release)
+isustain = p3
+xtratim iattack + irelease
+kenvelope transegr 0.0, iattack / 2.0, 1.5, i_amplitude / 2.0, iattack / 2.0, -1.5, i_amplitude, isustain, 0.0, i_amplitude, irelease / 2.0, 1.5, i_amplitude / 2.0, irelease / 2.0, -1.5, 0
+ihertz = i_frequency
+icps = ihertz
+kamp expseg 0.001,0.02,0.2,p3-0.01,0.001
+ktonemoddep jspline 0.01,0.05,0.2
+ktonemodrte jspline 6,0.1,0.2
+ktone poscil3 ktonemoddep, ktonemodrte, gi_Sweeper_sine
+kbrite rspline gk_Sweeper_britel, gk_Sweeper_briteh, gk_Sweeper_britels, gk_Sweeper_britehs
+ibasfreq init icps
+ioctcnt init 3
+iphs init 0
+a1 hsboscil kenvelope, ktone, kbrite, ibasfreq, gi_Sweeper_sine, gi_Sweeper_octfn, ioctcnt, iphs
+amod poscil3 0.25, ibasfreq*(1/3), gi_Sweeper_sine
+arm = a1*amod
+kmix expseg 0.001, 0.01, rnd(1), rnd(3)+0.3, 0.001
+kmix=.25
+a1 ntrpol a1, arm, kmix
+kpanrte jspline 5, 0.05, 0.1
+kpandep jspline 0.9, 0.2, 0.4
+kpan poscil3 kpandep, kpanrte, gi_Sweeper_sine
+;a1,a2 pan2 a1, kpan
+a1,a2 pan2 a1, k_space_left_to_right
+aleft delay a1, rnd(0.1)
+aright delay a2, rnd(0.11)
+a_signal = (aleft + aright) * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Shiner_midi_dynamic_range init 127
+gk_Shiner_attack init .0125
+gk_Shiner_release init .0125
+gk_Shiner_level init 0.5
+instr Shiner
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Shiner_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 92
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Shiner_level)
+
+iattack = i(gk_Shiner_attack)
+idecay = i(gk_Shiner_release)
+isustain = p3 - i(gk_Shiner_attack)
+xtratim iattack + idecay
+kenvelope transeg 0.0, iattack / 2.0, 1.5, i_amplitude / 2.0, iattack / 2.0, -1.5, i_amplitude, isustain, 0.0, i_amplitude, idecay / 2.0, 1.5, i_amplitude / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(i_midi_key)
+gk_Harmonics = 1 * 20
+asignal vco2 kenvelope * 4, ihertz, 12
+kgain = ampdb(gk_Shiner_level) * .5
+adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
+a_signal = asignal * kgain * adamping
+aleft, aright pan2 asignal, k_space_left_to_right
+;printks2 "master gain:", kgain
+outleta "outleft", aleft
+outleta "outright", aright
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+/**
+ * Solina Chorus, based on Solina String Ensemble Chorus Module
+
+   J. Haible: Triple Chorus
+   http://jhaible.com/legacy/triple_chorus/triple_chorus.html
+
+   Hugo Portillo: Solina-V String Ensemble
+   http://www.native-instruments.com/en/reaktor-community/reaktor-user-library/entry/show/4525/
+
+   Parabola tabled shape borrowed from Iain McCurdy delayStereoChorus.csd:
+   http://iainmccurdy.org/CsoundRealtimeExamples/Delays/delayStereoChorus.csd
+
+   Author: Steven Yi
+   Date: 2016.05.22
+   Adapted by Michael Gogins
+*/
+gi_solina_parabola ftgen 0, 0, 65537, 19, 0.5, 1, 180, 1
+; 3 sine wave LFOs, 120 degrees out of phase
+opcode sol_lfo_3, aaa, kk
+kfreq, kamp xin
+aphs phasor kfreq
+; Funny: Function syntax does not work in this context.
+a0   tablei aphs, gi_solina_parabola, 1, 0, 1
+a120 tablei aphs, gi_solina_parabola, 1, 0.333, 1
+a240 tablei aphs, gi_solina_parabola, 1, -0.333, 1
+xout (a0 * kamp), (a120 * kamp), (a240 * kamp)
+endop
+
+opcode solina_chorus, a, akkkk
+aLeft, klfo_freq1, klfo_amp1, klfo_freq2, klfo_amp2 xin
+imax = 100
+;; slow lfo
+as1, as2, as3 sol_lfo_3 klfo_freq1, klfo_amp1
+;; fast lfo
+af1, af2, af3  sol_lfo_3 klfo_freq2, klfo_amp2
+at1 = limit(as1 + af1 + 5, 0.0, imax)
+at2 = limit(as2 + af2 + 5, 0.0, imax)
+at3 = limit(as3 + af3 + 5, 0.0, imax)
+a1 vdelay3 aLeft, at1, imax
+a2 vdelay3 aLeft, at2, imax
+a3 vdelay3 aLeft, at2, imax
+xout (a1 + a2 + a3) / 3
+endop
+
+gk_SolinaChorus_chorus_lfo1_hz init .18
+gk_SolinaChorus_chorus_lfo1_amp init .6
+gk_SolinaChorus_chorus_lfo2_hz init 6
+gk_SolinaChorus_chorus_lfo2_amp init .2
+instr SolinaChorus
+aleft inleta "inleft"
+aright inleta "inright"
+aleft solina_chorus aleft, gk_SolinaChorus_chorus_lfo1_hz, gk_SolinaChorus_chorus_lfo1_amp, gk_SolinaChorus_chorus_lfo2_hz, gk_SolinaChorus_chorus_lfo2_amp
+aright solina_chorus aright, gk_SolinaChorus_chorus_lfo1_hz, gk_SolinaChorus_chorus_lfo1_amp, gk_SolinaChorus_chorus_lfo2_hz, gk_SolinaChorus_chorus_lfo2_amp
+outleta "outleft", aleft
+outleta "outright", aright
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Reverb_feedback init 0.975
+gi_Reverb_delay_modulation init 0.875
+gk_Reverb_frequency_cutoff init 15000
+instr ReverbSC
+adummy init 0
+azero init 0
+aleft init 0
+aleft_zero init 0
+aright init 0
+aright_zero init 0
+aleft inleta "inleft"
+aright inleta "inright"
+; aoutL, aoutR reverbsc ainL, ainR, kfblvl, kfco[, israte[, ipitchm[, iskip]]]
+aleft, adummy  reverbsc aleft, azero,  gk_Reverb_feedback, gk_Reverb_frequency_cutoff, sr, gi_Reverb_delay_modulation
+adummy, aright reverbsc azero, aright, gk_Reverb_feedback, gk_Reverb_frequency_cutoff, sr, gi_Reverb_delay_modulation
+outleta "outleft", aleft
+outleta "outright", aright
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_MasterOutput_level init 0
+gS_MasterOutput_filename init ""
+instr MasterOutput
+aleft inleta "inleft"
+aright inleta "inright"
+k_gain = ampdb(gk_MasterOutput_level)
+printks2 "Master gain: %f\n", k_gain
+iamp init 1
+aleft butterlp aleft, 18000
+aright butterlp aright, 18000
+outs aleft * k_gain, aright * k_gain
+; We want something that will play on my phone.
+i_amplitude_adjustment = ampdbfs(-3) / 32767
+i_filename_length strlen gS_MasterOutput_filename
+if i_filename_length > 0 goto filename_exists
+goto filename_endif
+filename_exists:
+prints sprintf("Output filename: %s\n", gS_MasterOutput_filename)
+fout gS_MasterOutput_filename, 18, aleft * i_amplitude_adjustment, aright * i_amplitude_adjustment
+filename_endif:
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
 
 instr Controls
     gk_BarModel_level chnget "gk_BarModel_level"
