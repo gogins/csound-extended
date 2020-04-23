@@ -79,7 +79,7 @@
 <CsoundSynthesizer>
 <CsOptions>
 ; Needed to work with csound.node:
--d -f -m195 -+rtaudio=alsa -odac:plughw:1,0 -iadc:plughw:1,0 
+-d -f -m195 -+rtaudio=alsa -odac:plughw:1,0 -iadc:plughw:1,0 --ksmps=128
 </CsOptions>
 <CsInstruments>
 
@@ -758,17 +758,17 @@ f 0 360
             add_slider(Master, 'gk_Reverb_frequency_cutoff', 5000, 20000);
             add_slider(Master, 'gk_MasterOutput_level', -80, 80);
             let instruments = gui.addFolder('Instruments');
-            let BarModel = instruments.addFolder('BarModel');
-            add_slider(BarModel, 'gk_BarModel_kbcL', 1, 3);
-            add_slider(BarModel, 'gk_BarModel_kbcR', 1, 3);
-            add_slider(BarModel, 'gi_BarModel_iK', -5, 5);
-            add_slider(BarModel, 'gi_BarModel_ib', 0, 1);
-            add_slider(BarModel, 'gk_BarModel_kscan', 0, 2);
-            add_slider(BarModel, 'gi_BarModel_iT30', 0, 20);
-            add_slider(BarModel, 'gi_BarModel_ipos', 0, 1);
-            add_slider(BarModel, 'gi_BarModel_ivel', 0, 10000);
-            add_slider(BarModel, 'gi_BarModel_iwid', 0, 1);           
-            add_slider(BarModel, 'gk_BarModel_level', -80, 80);
+            //let BarModel = instruments.addFolder('BarModel');
+            //add_slider(BarModel, 'gk_BarModel_kbcL', 1, 3);
+            //add_slider(BarModel, 'gk_BarModel_kbcR', 1, 3);
+            //add_slider(BarModel, 'gi_BarModel_iK', -5, 5);
+            //add_slider(BarModel, 'gi_BarModel_ib', 0, 1);
+            //add_slider(BarModel, 'gk_BarModel_kscan', 0, 2);
+            //add_slider(BarModel, 'gi_BarModel_iT30', 0, 20);
+            //add_slider(BarModel, 'gi_BarModel_ipos', 0, 1);
+            //add_slider(BarModel, 'gi_BarModel_ivel', 0, 10000);
+            //add_slider(BarModel, 'gi_BarModel_iwid', 0, 1);           
+            //add_slider(BarModel, 'gk_BarModel_level', -80, 80);
             let Blower = instruments.addFolder('Blower');
             add_slider(Blower, 'gk_Blower_grainDensity', 0, 400);
             add_slider(Blower, 'gk_Blower_grainDuration', 0, .5);
