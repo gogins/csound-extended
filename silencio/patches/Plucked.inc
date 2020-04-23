@@ -17,7 +17,7 @@ i_normalization = ampdb(-i_overall_amps) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Plucked_level)
 isine ftgenonce 0, 0, 65537, 10, 1
-aenvelope transegr 1.0, 20, -12.0, 0.05
+aenvelope transeg 1.0, 20, -12.0, 0.05
 aexcite poscil 1.0, 1, isine
 asignal1 wgpluck2 0.1, 1.0, i_frequency, 0.25, 0.22
 asignal2 wgpluck2 0.1, 1.0, i_frequency * 1.003, 0.20, 0.223

@@ -120,7 +120,8 @@ aoutr       poscil      1000*aadsr*a4, ao2+cpsoct(ioct-ishift), 1 ;fnl outright
 ;   -------------------
 ;All functions are post-normalized (max value is 1) if p4 is
 ;POSITIVE.
-
+f0 3600 ; Play for an hour.
+; Test with: schedule(3, 0, 15, 0, 7.08, 2.0, 0.2)
 f1 0 65537  10 1      ;sine wave
 f2 0 65537  11 1      ;cosine wave
 f3 0 65537 -12 20.0  ;unscaled ln(I(x)) from 0 to 20.0
@@ -256,11 +257,20 @@ int main(int argc, char *argv[])
     csound.CompileCsdText(csd_text);
     csound.Start();
     int thread = csound.Perform();
-    std::cout << "Performing in thread 0x" << std::hex << thread << "..." << std::endl;
+    std::cout << "Performing in thread 0x" << std::hex << thread << " for one hour, enter 'quit' to stop..." << std::endl;
+    std::cout << "After 'Xanadu' has finished playing, try entering: 'schedule(3, 0, 15, 0, 6.01, 3.0, 0.2)' or other orc code." << std::endl;
     while (true) {
         std::cout << "Enter code for Csound:" << std::endl;
         std::string input;
         std::getline(std::cin, input);
+        if (input.find("quit") == 0) {
+            std::cout << "Quitting..." << std::endl;
+            csound.Stop();
+            csound.Cleanup();
+            csound.Reset();
+            csound.Join();
+            std::exit(0);
+        }
         auto result = csound.EvalCode(input.c_str());
         std::cout << "Result: " << result << std::endl;
     };

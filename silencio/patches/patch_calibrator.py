@@ -4,8 +4,9 @@ import sys
 
 orc = '''
 sr = 48000
-ksmps = 1
+ksmps = 128
 nchnls = 2
+nchnls_i = 1
 0dbfs = 1
 
 // These must be initialized here to be in scope for both 
