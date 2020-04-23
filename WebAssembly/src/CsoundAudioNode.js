@@ -293,22 +293,24 @@ class CsoundAudioNode extends AudioWorkletNode {
             this.message_callback("WebAudio frames per second:         " +  this.context.sampleRate + "\n");
             this.message_callback("WebAudio maximum output channels:   " +  this.context.destination.maxChannelCount + "\n");
             this.connect(this.context.destination);
-            let midi_access = await navigator.requestMIDIAccess();
-            const inputs = midi_access.inputs.values();
-            var post_message = this.postMessage;
-            for (let entry of midi_access.inputs) {
-                var port_ = entry[1];
-                message_callback_("MIDI port: type: " + port_.type + "  manufacturer: " + port_.manufacturer + " name: " + port_.name +
+            if (navigator.requestMIDIAccess) {
+              let midi_access = await navigator.requestMIDIAccess();
+              const inputs = midi_access.inputs.values();
+              var post_message = this.postMessage;
+              for (let entry of midi_access.inputs) {
+                  var port_ = entry[1];
+                  message_callback_("MIDI port: type: " + port_.type + "  manufacturer: " + port_.manufacturer + " name: " + port_.name +
+                      " version: " + port_.version + "\n");
+                  // Using the MessagePort for this is probably not good enough.
+                  port_.onmidimessage = function(event) {
+                      post_message(["MidiEvent", event.data[0], event.data[1], event.data[2]]);
+                  };
+              }
+              for (let entry of midi_access.outputs) {
+                  var port_ = entry[1];
+                  message_callback_( "MIDI port: type: " + port_.type + " manufacturer: " + port_.manufacturer + " name: " + port_.name +
                     " version: " + port_.version + "\n");
-                // Using the MessagePort for this is probably not good enough.
-                port_.onmidimessage = function(event) {
-                    post_message(["MidiEvent", event.data[0], event.data[1], event.data[2]]);
-                };
-            }
-            for (let entry of midi_access.outputs) {
-                var port_ = entry[1];
-                message_callback_( "MIDI port: type: " + port_.type + " manufacturer: " + port_.manufacturer + " name: " + port_.name +
-                  " version: " + port_.version + "\n");
+              }
             }
             // Try to obtain the Web browser audio input, if available.
             // Not to be confused with any other audio input interfaces on the 
