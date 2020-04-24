@@ -131,8 +131,6 @@ alwayson "SolinaChorus"
 alwayson "ReverbSC"
 alwayson "MasterOutput"
 
-scoreline_i "f 0 360\n"
-
 gk_Plucked_level init 0
 instr Plucked
 ; Author: Michael Gogins
@@ -1097,11 +1095,11 @@ endin
 
 </CsInstruments>
 <CsScore>
-f 0 360
+f 0 3600
 </CsScore>
 <CsoundSynthesizer>
     </textarea>
-    <script type="text/javascript">
+    <script>
         /**
          * AUTHOR: Iacopo Sassarini
          * Based on Barry Martin's formula for the hopalong fractal.
@@ -1277,7 +1275,7 @@ f 0 360
                 scene.children[i].needsUpdate = 1;
             }
             // Speed up or slow down the interval between generations.
-            // Time is in milliseconds.
+            // Timeout interval is in milliseconds.
             setTimeout(updateOrbit, 10000 / Scene_speed);
         }
         function generateOrbit(){
@@ -1295,12 +1293,13 @@ f 0 360
             let scale_factor_l = SCALE_FACTOR;
             let xMin = 0, xMax = 0, yMin = 0, yMax = 0;
             for (let s = 0; s < NUM_SUBSETS; s++){
-                // Use a different starting point for each orbit subset
+                // Use a different starting point for each orbit subset,
+                // with a variable degree of randomization, including 0.
                 x = s * .01 * (0.5 - randomization * Math.random());
                 y = s * .01 * (0.5 - randomization * Math.random());
                 let curSubset = subsets[s];
                 for (let i = 0; i < num_points_subset_l; i++){
-                    // Iteration formula (generalization of the Barry Martin's original one)
+                    // Iteration formula (generalization of Barry Martin's original one)
                     z = (dl + Math.sqrt(Math.abs(bl * x - cl)));
                     if (x > 0) {x1 = y - z;}
                     else if (x == 0) {x1 = y;}
