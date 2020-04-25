@@ -1113,7 +1113,7 @@ f 0 3600
         let modality = chord.clone();
         let RANGE = 60;
         let BASS = 36;
-        let INSTRUMENT_COUNT = 7;
+        let INSTRUMENT_COUNT = 13.9;
         let NOTE_COUNT = 16;
         let container = document.getElementById('webgl_cell');
         console.log('container:' + container);
@@ -1487,6 +1487,7 @@ f 0 3600
             "gk_Phaser_index1": 1,
             "gk_Phaser_index2": 0.0125,
             "gk_Phaser_level": 0,
+            "gk_Rhodes_level": 0,
             "gk_Reverb_feedback": 0.75,
             "gi_Reverb_delay_modulation": 0.27761567319716546,
             "gk_Reverb_frequency_cutoff": 15000,
@@ -1669,6 +1670,8 @@ f 0 3600
             add_slider(FMModerate2, 'gk_FMModerate2_level', -80, 80);
             let Harpsichord = instruments.addFolder('Harpsichord');
             add_slider(Harpsichord, 'gk_Harpsichord_level', -80, 80);
+            let Rhodes = instruments.addFolder('Rhodes');
+            add_slider(Rhodes, 'gk_Rhodes_level', -80, 80);
             let Phaser = instruments.addFolder('Phaser');
             add_slider(Phaser, 'gk_Phaser_attack', 0, .25);
             add_slider(Phaser, 'gk_Phaser_release', 0, .5);
