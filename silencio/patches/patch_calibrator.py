@@ -13,7 +13,7 @@ nchnls_i = 1
 // the note and the audio patches.
 
 gi_Fluidsynth fluidEngine 0, 0
-gi_FluidSteinway fluidLoad "Steinway_C.sf2", gi_Fluidsynth, 1
+gi_FluidSteinway fluidLoad "/home/mkg/Dropbox/Steinway_C.sf2", gi_Fluidsynth, 1
 fluidProgramSelect gi_Fluidsynth, 0, gi_FluidSteinway, 0, 1
 
 gi_Pianoteq vstinit "/home/mkg/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0

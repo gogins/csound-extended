@@ -250,7 +250,7 @@ Napi::Number Start(const Napi::CallbackInfo &info) {
 
 void Stop(const Napi::CallbackInfo &info) {
     csound_.Stop();
-    csound_.Join();
+    //csound_.Join();
 }
 
 void uv_csound_message_callback(uv_async_t *handle)

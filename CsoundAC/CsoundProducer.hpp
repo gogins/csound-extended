@@ -424,6 +424,20 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
                 cl_object lisp_csound = evaluate_form(form);
             }
             /**
+             * Causes the calling thread to wait for the end of the performance
+             * thread routine.
+             */
+            virtual void Join()
+            {
+                Message("CsoundProducer::Join...\n");
+                if (performance_thread.get_id() != std::this_thread::get_id()) {
+                    if (performance_thread.joinable()) {
+                        performance_thread.join();
+                    }
+                }
+                Message("CsoundProducer::Join.\n");
+            }
+            /**
              * Runs a script in a dynamic language, e.g. to generate a score 
              * for Csound to render. This instance of Csound is exposed in the 
              * runtime context of the script as a raw pointer or handle named 
