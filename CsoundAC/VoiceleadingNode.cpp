@@ -122,6 +122,40 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
     if (operation.begin == operation.end) {
         return;
     }
+    // For actual Chord objects...
+    if ((operation.P_ == DBL_MAX) && 
+        (operation.T_ == DBL_MAX) && 
+        (operation.C_ == DBL_MAX) && 
+        (operation.K_ == DBL_MAX) && 
+        (operation.Q_ == DBL_MAX) && 
+        (operation.V_ == DBL_MAX)) {
+        auto epcs_ = operation.chord.epcs();
+        std::vector<double> pcs;
+        for (int voice = 0, voices = epcs_.voices(); voice < voices; ++voice) {
+            auto pc = epcs_.getPitch(voice);
+            if (std::find(pcs.begin(), pcs.end(), pc) == pcs.end()) {
+                pcs.push_back(pc);
+            }
+        }
+        // Without voice-leading from the prior segment.
+        if (operation.L_ != DBL_MAX) {
+            System::inform("  Operation: chord\n");
+            score.setPitchClassSet(operation.begin, operation.end, pcs);
+        // With voice-leading from the prior segment.
+        } else {
+            System::inform("  Operation: chordVoiceLeading\n");
+            score.voicelead(priorOperation.begin,
+                            priorOperation.end,
+                            operation.begin,
+                            operation.end,
+                            pcs,
+                            base,
+                            range,
+                            avoidParallels,
+                            divisionsPerOctave);
+            return;
+        }
+    }
     if (!(operation.K_ == DBL_MAX)) {
         if ((operation.V_ == DBL_MAX) && (!operation.L_)) {
             System::inform("  Operation: K\n");
