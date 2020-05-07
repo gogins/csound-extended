@@ -16,7 +16,7 @@ The Python interface for CsoundAC now specifically targets Python2, for compatib
 
 The ["live" version of the Csound Reference Manual](https://gogins.github.io/csound-extended/html/indexframes.html), using the WebAssembly build of Csound to play most of the examples from the Web browser, has been updated with the latest sources for the manual.
 
-## [csound-android](https://github.com/gogins/csound-android/releases/tag/v28)
+## [csound-android](https://github.com/gogins/csound-android/releases)
 
 A bug preventing writing to the filesystem on some devices has been fixed. Thanks to Karin Daum for helpful advice with this. The Csound for Android app on the Google Play Store has been updated with this fix.
 
