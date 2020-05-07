@@ -12,21 +12,23 @@ The CsoundAC VoiceleadingNode class now implements conforming notes produced by 
 
 Out of order and incorrect comments in the VoiceleadingNode class have been fixed, leading to corrected Doxygen documentation for this class.
 
-The Python interface for CsoundAC now specifically targets Python2, for compatibility with the csnd module in the csound repository.
+The Python interface for CsoundAC now specifically targets Python2, for compatibility with the csnd6 module in the csound repository.
 
-The ["live" version of the Csound Reference Manual](), using the WebAssembly build of Csound to play most of the examples from the Web browser, has been updated with the latest sources for the manual.
+The ["live" version of the Csound Reference Manual](https://gogins.github.io/csound-extended/html/indexframes.html), using the WebAssembly build of Csound to play most of the examples from the Web browser, has been updated with the latest sources for the manual.
 
-## [csound-android]
+## [csound-android](https://github.com/gogins/csound-android/releases/tag/v28)
 
 A bug preventing writing to the filesystem on some devices has been fixed. Thanks to Karin Daum for helpful advice with this. The Csound for Android app on the Google Play Store has been updated with this fix.
 
-A debuggable version of the Csound for Android app is now available on the GitHub release page. The app has also been updated on the [Google Play Store]()
+A debuggable version of the Csound for Android app is now available on the GitHub release page. The app has also been updated on the [Google Play Store](https://play.google.com/store/apps/details?id=com.csounds.Csound6&hl=en)
 
-## [michael.gogins.studio]()
+The build system for the Csound for Android app has been considerably simplified and made easier to run. Old and redundant libraries and code have been removed.
+
+## [michael.gogins.studio](https://github.com/gogins/michael.gogins.studio)
     
-I am now hosting certain of my pieces in my personal GitHub repository for live performance in Web browsers. The first such piece is "Scrims v2" which updates Scrims, premiered at the New York City Electroacoustic Music Festival in 2016, for the current WebAssembly build of Csound as well as improved Csound instruments and more reliable performance. Other pieces will follow. 
+I am now hosting certain of my pieces in my personal GitHub repository for live performance in Web browsers. The first such piece is "Scrims v2" which updates Scrims, premiered at the New York City Electroacoustic Music Festival in 2016, for the current WebAssembly build of Csound as well as improved Csound instruments and more reliable performance. This is a piece of interactive visual music. Other pieces will follow. 
 
-I have updated my "live talk" on algorithmic composition, originally given at the National University of Quilmes in Buenos Aires in 2018, to use the current version of my build of Csound for WebAssembly, and I have added a new live talk on my implementation of JavaScript interfaces for Csound in csound.node, WebAssembly, and Android.
+I have updated my "live talk" on algorithmic composition, originally given at the National University of Quilmes in Buenos Aires in 2018, to use the current version of my build of Csound for WebAssembly, and I have added a new live talk on my implementations of JavaScript interfaces for Csound in csound.node, WebAssembly, and Android.
     
 Regards,
 Mike
