@@ -10,7 +10,7 @@ THis directory builds, packages, and tests csound-extended for WebAssembly.
 This build replaces `CsoundObj.js` from the core Csound repository with a 
 WebAssembly build of Csound, compiled using the Emscripten LLVM toolchain.
 This build uses the new WebAudio AudioWorklet for superior performance with 
-fewer audio issues.
+fewer audio issues. Features include:
 
 * A number of C++ plugin opcodes (here, statically linked).
 
@@ -51,7 +51,8 @@ directory, and navigate in your Web browser to localhost at the port reported
 at server startup.
 
 The `cmask.html` example will run with `csound.node` in NW.js 30.2 or later,
-and will run with `CsoundAudioNode.js` in Chrome 66 or later. 
+and will run with `CsoundAudioNode.js` in Chrome 66 or later, and Firefox 77 
+or later.
 
 The `csound_loader.js` script is provided as a convenient method of
 detecting and using available implementations of Csound that run in HTML5

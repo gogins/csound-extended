@@ -1610,6 +1610,8 @@ inline void initializeNames() {
             fill(rootName, rootPitch, "m6",                "C        Eb          G     A      ");
             fill(rootName, rootPitch, "m69",               "C     D  Eb          G     A      ");
             fill(rootName, rootPitch, "m7",                "C        Eb          G        Bb  ");
+            fill(rootName, rootPitch, "m7b9",              "C  Db    Eb          G        Bb  ");
+            fill(rootName, rootPitch, "m7b9b5",            "C  Db    Eb       Gb          Bb  ");
             fill(rootName, rootPitch, "m#7",               "C        Eb          G           B");
             fill(rootName, rootPitch, "m7b5",              "C        Eb       Gb          Bb  ");
             fill(rootName, rootPitch, "m9",                "C     D  Eb          G        Bb  ");

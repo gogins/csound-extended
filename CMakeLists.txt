@@ -28,7 +28,7 @@ project(csound-extended)
 include(ExternalProject)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Wall -Wno-sign-compare")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-sign-compare -Wno-unknown-pragmas -Wno-misleading-indentation")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME "csound-base")
@@ -253,7 +253,7 @@ set(CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
 set(CPACK_DEBIAN_COMPONENT_INSTALL "ON")
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/DEBIAN/triggers")
 set(CPACK_DEBIAN_PACKAGE_CONFLICTS "libcsoundac-dev, libcsoundac6.0v5")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "python2")
+## set(CPACK_DEBIAN_PACKAGE_DEPENDS "python")
 set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Extends the sound programming language
  and library Csound. Additional features include the CsoundAC library for
  algorithmic composition, the cmask opcode for algorithmic composition
