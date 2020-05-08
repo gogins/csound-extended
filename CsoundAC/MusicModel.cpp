@@ -29,8 +29,8 @@
 namespace csound
 {
 MusicModel::MusicModel() :
-    cppSound(&cppSound_),
-    threadCount(1)
+    threadCount(1),
+    cppSound(&cppSound_)
 {
 }
 

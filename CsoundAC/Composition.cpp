@@ -29,12 +29,13 @@
 
 namespace csound
 {
+
 Composition::Composition() :
+    score(baseScore),
     tonesPerOctave(12.0),
     conformPitches(false),
     tieOverlappingNotes(false),
-    duration(0),
-    score(baseScore)
+    duration(0)
 {
 }
 
@@ -115,6 +116,8 @@ bool Composition::getConformPitches() const
     return conformPitches;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-result"
 std::string Composition::getOutputDirectory() const
 {
     if (output_directory.empty() == true) {
@@ -124,6 +127,7 @@ std::string Composition::getOutputDirectory() const
     }
     return output_directory;
 }
+#pragma GCC diagnostic pop
 
 void Composition::setOutputDirectory(std::string output_directory)
 {

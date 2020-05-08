@@ -212,7 +212,6 @@ public:
     virtual void cppsoundStop() {
         cppSound->stop();
     }
-    
 protected:
     /**
      * Self-contained Csound object.

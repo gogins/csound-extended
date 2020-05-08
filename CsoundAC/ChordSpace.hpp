@@ -802,6 +802,31 @@ public:
         return clone;
     }
     /**
+     * Transposes the chord by the indicated voiceleading (passed as a Chord 
+     * of directed intervals). 
+     * NOTE: Does NOT return an equivalent under any equivalence relation.
+     */
+    virtual Chord T(const Chord &voiceleading) {
+        Chord clone = *this;
+        for (size_t voice = 0; voice < voices(); voice++) {
+            clone.setPitch(voice, getPitch(voice) + voiceleading.getPitch(voice));
+        }
+        return clone;
+    }
+    /**
+     * Returns the transpositions (as a Chord of directed intervals) that 
+     * takes this chord to the destination chord.
+     * NOTE: Makes no assumption that both chords are in the same equivalence 
+     * class.
+     */
+    virtual Chord voiceleading(const Chord &destination) const {
+        Chord voiceleading_ = *this;
+        for (size_t voice = 0; voice < voices(); voice++) {
+            voiceleading_.setPitch(voice, destination.getPitch(voice) - getPitch(voice));
+        }
+        return voiceleading_;
+    }
+    /**
      * Inverts the chord by another chord that is on the unison diagonal, by
      * default the origin.
      * NOTE: Does NOT return an equivalent under any requivalence relation.
