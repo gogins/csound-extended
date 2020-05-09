@@ -13,9 +13,8 @@ echo "Building packages..."
 sudo make package
 echo "Debian packages and contents..."
 find . -name '*.deb' -ls -exec dpkg -f '{}' ';'
-# find . -name '*.deb' -ls -exec dpkg -c '{}' ';' 
 cd ..
 echo "Running lintian..."
-lintian --no-tag-display-limit build-linux/csound-extended-*.deb
+lintian --no-tag-display-limit --suppress-tags=spelling-error-in-changelog,non-dev-pkg-with-shlib-symlink -i build-linux/csound-extended-*.deb
 bash executable-targets-linux.sh
 echo "Finished building all for Linux."

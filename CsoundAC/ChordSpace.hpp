@@ -531,15 +531,23 @@ public:
     }
     virtual Chord &operator = (const Chord &other) {
         Eigen::MatrixXd::operator=(other);
-        //if (this != &other) {
-        //    resizeLike(other);
-        //    for (int i = 0, n = rows(); i < n; ++i) {
-        //        for (int j = 0, m = cols(); j < m; ++j) {
-        //            coeffRef(i, j) = other.coeff(i, j);
-        //        }
-        //    }
-        //}
         return *this;
+    }
+    virtual Chord &operator = (const std::vector<double> &other) {
+        auto voices_n = other.size();
+        resize(voices_n);
+        for (size_t voice = 0; voice < voices_n; ++voice) {
+            setPitch(voice, other[voice]);
+        }
+        return *this;
+    }
+    virtual operator std::vector<double>() const {
+        std::vector<double> result;
+        result.resize(voices());
+        for (size_t voice = 0; voice < voices(); ++voice) {
+            result.push_back(getPitch(voice));
+        }
+        return result;
     }
 #if __cpplusplus >= 201103L
     Chord &operator = (Chord &&other) = default;
@@ -1620,6 +1628,14 @@ inline void initializeNames() {
             fill(rootName, rootPitch, " 4 semitone",       "C           E           G#        ");
             fill(rootName, rootPitch, " blues",            "C     D  Eb    F  Gb G        Bb  ");
             fill(rootName, rootPitch, " bebop",            "C     D     E  F     G     A  Bb B");
+            // Modes.
+            fill(rootName, rootPitch, " Ionian",           "C     D     E  F     G     A     B");
+            fill(rootName, rootPitch, " Dorian",           "C     D  Eb    F     G     A  Bb  ");
+            fill(rootName, rootPitch, " Phrygian",         "C  Db    Eb    F     G  Ab    Bb  ");
+            fill(rootName, rootPitch, " Lydian",           "C     D     E     F# G     A     B");
+            fill(rootName, rootPitch, " Mixolydian",       "C     D     E  F     G     A  Bb  ");
+            fill(rootName, rootPitch, " Aeolian",          "C     D  Eb    F     G  Ab    Bb  ");
+            fill(rootName, rootPitch, " Locrian",          "C  Db    Eb    F  Gb    Ab    Bb B");
             // Major chords.
             fill(rootName, rootPitch, "M",                 "C           E        G            ");
             fill(rootName, rootPitch, "6",                 "C           E        G     A      ");
