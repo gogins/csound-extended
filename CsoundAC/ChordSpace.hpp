@@ -17,8 +17,8 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef CHORD_SPACES_H
-#define CHORD_SPACES_H
+#ifndef CHORD_SPACE_H
+#define CHORD_SPACE_H
 #define EIGEN_INITIALIZE_MATRICES_BY_ZERO
 #include "Platform.hpp"
 #ifdef SWIG
@@ -194,6 +194,13 @@ OP      Octave equivalence with permutational equivalence. Tymoczko's orbifold
         alternating columns around the augmented triads, the two-pitch chords
         form the 3 sides, and the one-pitch chords form the 3 edges that join
         the sides.
+        
+PP      The same as OP except that the hyperprism's origin is at 0. This gives 
+        the "pitches" of the chord or scale in the normal sense, e.g. Bo
+        is not (-1, 2, 5) but rather (11, 14, 17). Can be used to make sense 
+        of scales and chords with reference to a "tonic" that breaks the 
+        symmetry of chord space, e.g. Roman numeral chords, or modes of the 
+        major scale.
 
 OPT     The layer of the OP prism as close as possible to the origin, modulo
         the number of voices. Chord type. Note that CM and Cm are different
@@ -999,6 +1006,19 @@ public:
      * uses a bubble sort to swap out of order voices in the Eigen matrix.
      */
     virtual Chord eP() const;
+     /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of permutational equivalence, with the additional constraint that all 
+     * pitches are >= 0 (i.e., "pitches" in the normal sense).
+     */
+    virtual bool isePP() const;
+   /**
+     * Returns the equivalent of the chord within the representative
+     * fundamental domain of permutational equivalence, with the additional 
+     * constraint that all pitches are >= 0 (i.e., "pitches" in the normal 
+     * sense).
+     */
+    virtual Chord ePP() const;
     /**
      * Returns whether the chord is within the representative fundamental domain
      * of transpositional equivalence.
@@ -1410,6 +1430,12 @@ public:
         }
         resultPitch = resultChord.getPitch(resultVoice);
         return resultChord;
+    }
+    virtual bool equals(const Chord &other) const {
+        return *this == other;
+    }
+    virtual bool less(const Chord &other) const {
+        return *this < other;
     }
 };
 
@@ -2240,6 +2266,27 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_P>(const C
 inline Chord Chord::eP() const {
     return csound::normalize<EQUIVALENCE_RELATION_P>(*this, OCTAVE(), 1.0);
 }
+
+/**
+ * Returns the chord as a scale, that is, starting with the chord in OP, and 
+ * sorting it from the tonic pitch-class on up. This enables transformations 
+ * in tonal harmony such as transposing by scale degree.
+ */
+inline Chord scale(std::string name) {
+    print("scale: for name: %s\n", name.c_str());
+    auto scale = chordForName(name);
+    auto parts = split(name);
+    auto tonic = pitchClassForName(parts.front());
+    print("scale: tonic: %9.4f\n", tonic);
+    print("scale: initially: %s\n", scale.toString().c_str());
+    while (eq_epsilon(scale.getPitch(0), tonic) == false) {
+        scale = scale.v();
+        print("scale: revoicing: %s\n", scale.toString().c_str());
+    }
+    return scale;
+}
+
+
 
 //	EQUIVALENCE_RELATION_T
 
