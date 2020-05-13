@@ -257,3 +257,60 @@ print("V:\n"    + CsoundAC.chord(C_major, 5, 5).information())
 print("vi:\n"   + CsoundAC.chord(C_major, 6, 5).information())
 print("viio:\n" + CsoundAC.chord(C_major, 7, 5).information())
 
+C_major = CsoundAC.Scale("C major")
+print(C_major)
+print(C_major.information())
+D_Dorian = CsoundAC.Scale("D Dorian")
+print(D_Dorian)
+print(D_Dorian.information())
+C_major_to_D_Dorian = CsoundAC.voiceleading(C_major, D_Dorian)
+print("From C to D Dorian:\n" + C_major_to_D_Dorian.information())
+
+# In sevenths now...
+IM7 = C_major.chord(1, 4)
+print("IM7:")
+print(IM7.information())
+iim7 = C_major.chord(2, 4)
+print("iim7:")
+print(iim7.information())
+iiim7 = C_major.chord(3, 4)
+print("iiim7:")
+print(iiim7.information())
+IVM7 = C_major.chord(4, 4)
+print("IVM7:")
+print(IVM7.information())
+V7 = C_major.chord(5, 4)
+print("V7:")
+print(V7.information())
+Vim7 = C_major.chord(6, 4)
+print("Vim7:")
+print(Vim7.information())
+viim7b5 = C_major.chord(7, 4)
+print("viim7b5:")
+print(viim7b5.information())
+
+
+I_to_vi = C_major.transpose(IM7, 5)
+print ("I to vi:\n" + I_to_vi.information())
+'''
+I_to_IV
+I_to_ii
+I_to_viio
+I_to_V
+vi_to_IV
+vi_to_ii
+vi_to_viio
+IV_to_ii
+IV_to_viio
+ii_to_viio
+ii_to_V
+viio_to_V
+V_to_IV
+V_to_vi
+V_to_I
+viio_to_I
+vi_to_I
+'''
+
+
+
