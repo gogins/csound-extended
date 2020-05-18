@@ -309,55 +309,67 @@ print("I to I:")
 print(C_major.transpose(IM7, 7).toString())
 print
 
-IM7_to_vim7 = C_major.transpose(IM7, -2).eOP()
+print
+print("Going away from tonic...")
+print
+
+progression = -2
+IM7_to_vim7 = C_major.transpose(IM7, progression).eOP()
 print("IM7:             " + IM7.eOP().toString())
-print("-2 =>            " + IM7.eOP().voiceleading(vim7.eOP()).toString())
+print("{:3} =>           {}".format(progression, IM7.eOP().voiceleading(vim7.eOP()).toString()))
 print("ivm7:            " + vim7.eOP().toString())
 print("IM7_to_vim7:     " + IM7_to_vim7.eOP().toString())
 print
 
-IM7_to_IVM7 = C_major.transpose(IM7, -4).eOP()
+progression = -4
+IM7_to_IVM7 = C_major.transpose(IM7, progression).eOP()
 print("IM7:             " + IM7.eOP().toString())
-print("-4 =>            " + IM7.eOP().voiceleading(IVM7.eOP()).toString())
+print("{:3} =>           {}".format(progression, IM7.eOP().voiceleading(IVM7.eOP()).toString()))
 print("IVM7:            " + IVM7.eOP().toString())
 print("IM7_to_IVM7:     " + IM7_to_IVM7.toString())
 print
 
-IM7_to_iim7 = C_major.transpose(IM7, -6).eOP()
+progression = -6
+IM7_to_iim7 = C_major.transpose(IM7, progression).eOP()
 print("IM7:             " + IM7.eOP().toString())
-print("-6 =>            " + IM7.eOP().voiceleading(iim7.eOP()).toString())
+print("{:3} =>           {}".format(progression, IM7.eOP().voiceleading(iim7.eOP()).toString()))
 print("iim7:            " + iim7.eOP().toString())
 print("IM7_to_iim7:     " + IM7_to_iim7.toString())
 print
 
-IM7_to_viim7b5 = C_major.transpose(IM7, -8).eOP()
+progression = -8
+IM7_to_viim7b5 = C_major.transpose(IM7, progression).eOP()
 print("IM7:             " + IM7.eOP().toString())
-print("-8 =>            " + IM7.eOP().voiceleading(viim7b5.eOP()).toString())
+print("{:3} =>           {}".format(progression, IM7.eOP().voiceleading(viim7b5.eOP()).toString()))
 print("viim7b5:         " + viim7b5.eOP().toString())
 print("IM7_to_viim7b5:  " + IM7_to_viim7b5.toString())
 print
 
-IM7_to_V7 = C_major.transpose(IM7, -10).eOP()
+progression = -10
+IM7_to_V7 = C_major.transpose(IM7, progression).eOP()
 print("IM7:             " + IM7.eOP().toString())
-print("-10 =>           " + IM7.eOP().voiceleading(V7.eOP()).toString())
+print("{:3} =>           {}".format(progression, IM7.eOP().voiceleading(V7.eOP()).toString()))
 print("V7:              " + V7.eOP().toString())
 print("IM7_to_V7:       " + IM7_to_V7.toString())
 print
 
-vim7_to_IVM7 = C_major.transpose(vim7, -2).eOP()
+progression = -2
+vim7_to_IVM7 = C_major.transpose(vim7, progression).eOP()
 print("vim7:            " + vim7.eOP().toString())
-print("-2 =>            " + vim7.eOP().voiceleading(IVM7.eOP()).toString())
+print("{:3} =>           {}".format(progression, vim7.eOP().voiceleading(IVM7.eOP()).toString()))
 print("IVM7:            " + IVM7.eOP().toString())
 print("vim7_to_IVM7:    " + vim7_to_IVM7.toString())
 print
 
-vim7_to_iim7 = C_major.transpose(vim7, -4).eOP()
+progression = -4
+vim7_to_iim7 = C_major.transpose(vim7, progression).eOP()
 print("vim7:            " + vim7.eOP().toString())
-print("-4 =>            " + vim7.eOP().voiceleading(iim7.eOP()).toString())
+print("{:3} =>           {}".format(progression, vim7.eOP().voiceleading(iim7.eOP()).toString()))
 print("iim7:            " + iim7.eOP().toString())
 print("vim7_to_iim7:    " + vim7_to_iim7.toString())
 print
 
+progression = -6
 vim7_to_viim7b5 = C_major.transpose(vim7, -6).eOP()
 print("vim7:            " + vim7.eOP().toString())
 print("-6 =>            " + vim7.eOP().voiceleading(viim7b5.eOP()).toString())
@@ -365,87 +377,102 @@ print("viim7b5:         " + viim7b5.eOP().toString())
 print("vim7_to_viim7b5: " + vim7_to_viim7b5.toString())
 print
 
-vim7_to_V7 = C_major.transpose(vim7, -8).eOP()
+progression = -8
+vim7_to_V7 = C_major.transpose(vim7, progression).eOP()
 print("vim7:            " + vim7.eOP().toString())
-print("-8 =>            " + vim7.eOP().voiceleading(V7.eOP()).toString())
+print("{:3} =>           {}".format(progression, vim7.eOP().voiceleading(V7.eOP()).toString()))
 print("V7:              " + V7.eOP().toString())
 print("vim7_to_V7:      " + vim7_to_V7.toString())
 print
 
-IVM7_to_iim7 = C_major.transpose(IVM7, -2).eOP()
+progression = -2
+IVM7_to_iim7 = C_major.transpose(IVM7, progression).eOP()
 print("IVM7:            " + IVM7.eOP().toString())
-print("-2 =>            " + IVM7.eOP().voiceleading(iim7.eOP()).toString())
+print("{:3} =>           {}".format(progression, IVM7.eOP().voiceleading(iim7.eOP()).toString()))
 print("iim7:            " + iim7.eOP().toString())
 print("IVM7_to_iim7:    " + IVM7_to_iim7.toString())
 print
 
-iim7_to_viim7b5 = C_major.transpose(iim7, -2).eOP()
+progression = -2
+iim7_to_viim7b5 = C_major.transpose(iim7, progression).eOP()
 print("iim7:            " + iim7.eOP().toString())
-print("-2 =>            " + iim7.eOP().voiceleading(viim7b5.eOP()).toString())
+print("{:3} =>           {}".format(progression, iim7.eOP().voiceleading(viim7b5.eOP()).toString()))
 print("viim7b5:         " + viim7b5.eOP().toString())
 print("iim7_to_viim7b5: " + iim7_to_viim7b5.toString())
 print
 
-iim7_to_V7 = C_major.transpose(iim7, -4).eOP()
+progression = -4
+iim7_to_V7 = C_major.transpose(iim7, progression).eOP()
 print("iim7:            " + iim7.eOP().toString())
-print("-4 =>            " + iim7.eOP().voiceleading(V7.eOP()).toString())
+print("{:3} =>           {}".format(progression, iim7.eOP().voiceleading(V7.eOP()).toString()))
 print("V7:              " + V7.eOP().toString())
 print("iim7_to_V7:      " + iim7_to_V7.toString())
 print
 
-viim7b5_to_V7 = C_major.transpose(viim7b5, -2).eOP()
+progression = -2
+viim7b5_to_V7 = C_major.transpose(viim7b5, progression).eOP()
 print("viim7b5:         " + viim7b5.eOP().toString())
-print("-2 =>            " + viim7b5.eOP().voiceleading(V7.eOP()).toString())
+print("{:3} =>           {}".format(progression, viim7b5.eOP().voiceleading(V7.eOP()).toString()))
 print("V7:              " + V7.eOP().toString())
 print("viim7b5_to_V7:   " + viim7b5_to_V7.toString())
 print
 
+print
+print("Going back to tonic...")
+print
 
-V7_to_IVM7 = C_major.transpose(V7, -8).eOP()
+progression = 6
+V7_to_IVM7 = C_major.transpose(V7, progression).eOP()
 print("V7:              " + V7.eOP().toString())
-print("-8 =>            " + V7.eOP().voiceleading(IVM7.eOP()).toString())
+print("{:3} =>           {}".format(progression, V7.eOP().voiceleading(IVM7.eOP()).toString()))
 print("IVM7:            " + IVM7.eOP().toString())
 print("V7_to_IVM7:      " + V7_to_IVM7.toString())
 print
 
-V7_to_vim7 = C_major.transpose(V7, -6).eOP()
+progression = 1
+V7_to_vim7 = C_major.transpose(V7, progression).eOP()
 print("V7:              " + V7.eOP().toString())
-print("-4 =>            " + V7.eOP().voiceleading(IVM7.eOP()).toString())
+print("{:3} =>           {}".format(progression, V7.eOP().voiceleading(vim7.eOP()).toString()))
 print("vim7:            " + vim7.eOP().toString())
-print("V7_to_vim7:      " + viim7b5_to_V7.toString())
+print("V7_to_vim7:      " + V7_to_vim7.toString())
 print
 
-V7_to_IM7 = C_major.transpose(V7, -4).eOP()
+progression = 3
+V7_to_IM7 = C_major.transpose(V7, progression).eOP()
 print("V7:              " + V7.eOP().toString())
-print("-4 =>            " + V7.eOP().voiceleading(IVM7.eOP()).toString())
+print("{:3} =>           {}".format(progression, V7.eOP().voiceleading(IM7.eOP()).toString()))
 print("IM7:             " + IM7.eOP().toString())
 print("V7_to_IM7:       " + V7_to_IM7.toString())
 print
 
-viim7b5_to_IM7 = C_major.transpose(viim7b5, -6).eOP()
+progression = 1
+viim7b5_to_IM7 = C_major.transpose(viim7b5, progression).eOP()
 print("viim7b5:         " + viim7b5.eOP().toString())
-print("-6 =>            " + V7.eOP().voiceleading(IVM7.eOP()).toString())
+print("{:3} =>           {}".format(progression, viim7b5.eOP().voiceleading(IM7.eOP()).toString()))
 print("IM7:             " + IM7.eOP().toString())
 print("viim7b5_to_IM7:  " + viim7b5_to_IM7.toString())
 print
 
-iim7_to_IM7 = C_major.transpose(iim7, -8).eOP()
+progression = 6
+iim7_to_IM7 = C_major.transpose(iim7, progression).eOP()
 print("iim7:            " + iim7.eOP().toString())
-print("-8 =>            " + iim7.eOP().voiceleading(IM7.eOP()).toString())
+print("{:3} =>           {}".format(progression, iim7.eOP().voiceleading(IM7.eOP()).toString()))
 print("IM7:             " + IM7.eOP().toString())
 print("iim7_to_IM7:     " + iim7_to_IM7.toString())
 print
 
-IVM7_to_IM7 = C_major.transpose(IVM7, -10).eOP()
+progression = 4
+IVM7_to_IM7 = C_major.transpose(IVM7, progression).eOP()
 print("IVM7:            " + IVM7.eOP().toString())
-print("-8 =>            " + IVM7.eOP().voiceleading(IM7.eOP()).toString())
+print("{:3} =>           {}".format(progression, IVM7.eOP().voiceleading(IM7.eOP()).toString()))
 print("IM7:             " + IM7.eOP().toString())
 print("IVM7_to_IM7:     " + IVM7_to_IM7.toString())
 print
 
-vim7_to_IM7 = C_major.transpose(vim7, -12).eOP()
+progression = 2
+vim7_to_IM7 = C_major.transpose(vim7, progression).eOP()
 print("vim7:            " + vim7.eOP().toString())
-print("-8 =>            " + vim7.eOP().voiceleading(IM7.eOP()).toString())
+print("{:3} =>           {}".format(progression, vim7.eOP().voiceleading(IM7.eOP()).toString()))
 print("IM7:             " + IM7.eOP().toString())
 print("vim7_to_IM7:     " + vim7_to_IM7.toString())
 print
