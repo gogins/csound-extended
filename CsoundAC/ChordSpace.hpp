@@ -2442,6 +2442,35 @@ class SILENCE_PUBLIC Scale : public Chord {
         }
         /** 
          * Returns a copy of this Scale transposed by the indicated number of 
+         * _scale degrees_. 
+         */
+        virtual Scale transpose_degrees(int degrees) const {
+            Chord transposed_pitches = csound::transpose_degrees(*this, *this, degrees);
+            // Make sure the copy starts in octave 0.
+            while (lt_epsilon(transposed_pitches.getPitch(0), 0) == true) {
+                transposed_pitches = transposed_pitches.T(OCTAVE());
+            }
+            while (ge_epsilon(transposed_pitches.getPitch(0), OCTAVE()) == true) {
+                transposed_pitches = transposed_pitches.T( - OCTAVE());
+            }
+            if (get_debug() == true) print("Scale::transpose_degrees: transposed_pitches(%f): %s\n", degrees, transposed_pitches.toString().c_str());
+            // Create the copy with the name of the new tonic.
+            if (get_debug() == true) print("Scale::transpose_degrees: original name: %s\n", name().c_str());
+            auto parts = split(name());
+            auto tonic_name = nameForPitchClass(transposed_pitches.getPitch(0));
+            std::string new_name = tonic_name + " " + parts[1];
+            if (get_debug() == true) print("Scale::transpose: new name: %s\n", new_name.c_str());
+            Scale transposed_scale;
+            transposed_scale.resize(voices());
+            transposed_scale.name_ = new_name;
+            for (int voice = 0; voice < voices(); ++voice) {
+                transposed_scale.setPitch(voice, transposed_pitches.getPitch(voice));
+            }
+            if (get_debug() == true) print("Scale::transpose_degrees: result: %s\n", transposed_scale.information().c_str());
+            return transposed_scale;
+        }
+        /** 
+         * Returns a copy of this Scale transposed by the indicated number of 
          * _semitones_. If semitones is an integer, then the new Scale is also 
          * properly named.
          */
@@ -2498,6 +2527,51 @@ class SILENCE_PUBLIC Scale : public Chord {
             }
             return -1;
         }
+        /**
+         * For any Chord belonging to this Scale, returns a list of other 
+         * Scales to which that Chord also belongs. Switching to one of these 
+         * Scales will perform some sort of modulation. NOTE: This method only 
+         * works in 12-tone equal temperament. TODO: Get to work for all 12TET
+         * Scales, not only major scales.
+         */
+        virtual std::vector<Scale> modulations(const Chord &chord) const {
+            Chord eop = chord.eOP();
+            std::vector<Scale> scales;
+            for (int semitones = 1; semitones < 12; ++semitones) {
+                Scale scale = transpose(semitones);
+                int degree = scale.degree(chord);
+                if (degree != -1) {
+                    scales.push_back(scale);
+                }
+            }
+            return scales;
+        }
+        /**
+         * Returns the current Chord mutated, if possible, to a secondary 
+         * function with respect to another Chord in its Scale. If that is not 
+         * possible, the original Chord is returned. The number of voices 
+         * defaults to that of the current Chord. Can be used to generate 
+         * secondary dominants (function = 5), secondary supertonics 
+         * (function = 2), secondary subtonics (function = 6), and so on.
+         * It is then up to the user to perform an appropriate progression 
+         * by number of scale degrees back to a tonicization in the original 
+         * Scale.
+         */
+        virtual Chord secondary(const Chord &current_chord, int function = 5, int voices=-1) const {
+            int current_degree = degree(current_chord);
+            // If the Chord doesn't belong to this Scale, it cannot be mutated 
+            // to a secondary function.
+            if (current_degree == -1) {
+                return current_chord;
+            }
+            if (voices == -1) {
+                voices = current_chord.voices();
+            }
+            int tonicization_degree = current_degree + function - 2;
+            Scale tonicization = transpose_degrees(tonicization_degree - 1);
+            Chord secondary_ = tonicization.chord(function, voices);
+            return secondary_;
+         }
     protected:
         std::string name_;
 };

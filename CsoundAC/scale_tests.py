@@ -479,9 +479,35 @@ print
 
 nonexistent_scale = CsoundAC.scale("GG <<")
 print(nonexistent_scale.information())
-CsoundAC.set_debug(True)
+print
+
 degree = C_major.degree(iim7)
 print("Degree of Dm7 in C major: {}.".format(degree))
-D_major = C_major.transpose(2)
-print("C major up two semitones: {}.".format(D_major.information()))
+D_major = C_major.transpose(-10)
+print("C major up two semitones:\n{}.".format(D_major.information()))
+print
 
+print("Modulations through iim7 in C major:")
+modulations_through_iim7 = C_major.modulations(iim7)
+for scale in modulations_through_iim7:
+    print(scale.name(), scale.toString())
+print
+
+CsoundAC.set_debug(True)
+
+print("Transpose C major by degrees:")
+for degree in xrange(1, 8):
+    scale = C_major.transpose_degrees(degree)
+    #V7 = scale.chord(5, 4)
+    print("Degree: {:2} name: {:10} {}".format(degree, scale.name(), scale.toString()))
+    #print("                       V7: {} {}".format(V7.name(), V7.toString()))    
+print
+
+CsoundAC.set_debug(False)
+
+
+print("Secondary dominants in C major:")
+for degree in xrange(1,8):
+    primary = C_major.chord(degree, 3).eOP()
+    secondary = C_major.secondary(primary, 5, 4).eOP()
+    print("Degree: {} secondary dominant: {}  primary: {} ".format(degree, secondary.toString(), primary.name()))

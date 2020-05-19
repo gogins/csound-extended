@@ -82,6 +82,9 @@
 %include <Silence.hpp>
 %include <Conversions.hpp>
 
+%template(vectorScale) std::vector<csound::Scale>;
+%template(vectorChord) std::vector<csound::Chord>;
+
 %pythoncode
 %{
 # Create one global instance of CppSound for CsoundAC to grab.
