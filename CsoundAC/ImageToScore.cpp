@@ -150,7 +150,7 @@ double ImageToScore::getMinimumValue() const
 */
 void ImageToScore::generate()
 {
-    System::inform("BEGAN ImageToScore::generate()...\n");
+    System::inform("ImageToScore::generate...\n");
     if (image) {
         delete image;
         image = 0;
@@ -173,7 +173,7 @@ void ImageToScore::generate()
     }
     if (!image) {
         System::error("Failed to load mage.\n");
-        System::inform("ENDED ImageToScore::generate().\n");
+        System::inform("ImageToScore::generate.\n");
         return;
     }
     System::inform("Loaded image file \"%s\".\n", imageFilename.c_str());
@@ -187,7 +187,7 @@ void ImageToScore::generate()
     System::inform("Image count  = %d\n", image->count());
     if (image->d() < 3) {
         System::error("Image must have depth 3 or greater.\n");
-        System::inform("ENDED ImageToScore::generate().\n");
+        System::inform("ImageToScore::generate.\n");
         return;
     }
     double saturation;
@@ -273,7 +273,7 @@ void ImageToScore::generate()
         score.push_back(startingEvent);
         System::debug("Ending:   %s\n", startingEvent.toString().c_str());
     }
-    System::inform("ENDED ImageToScore::generate().\n");
+    System::inform("ImageToScore::generate.\n");
 }
 
 ImageToScore2::ImageToScore2(void) {
@@ -353,7 +353,7 @@ void ImageToScore2::write_processed_file(std::string operation, const cv::Mat &p
 }
 
 void ImageToScore2::processImage(){
-  System::inform("BEGAN ImageToScore2::processImage()...\n");
+  System::inform("ImageToScore2::processImage...\n");
   System::inform("image_filename: %s\n", image_filename.c_str());
   original_image = cv::imread(image_filename, cv::IMREAD_COLOR);
   System::inform("Read image: columns: %d rows: %d type: %d depth: %d\n", original_image.cols, original_image.rows, original_image.type(), original_image.depth());
@@ -418,7 +418,7 @@ void ImageToScore2::processImage(){
       source_image = output_image;
   }
   processed_image = source_image;
-  System::inform("Ended ImageToScore2::processImage().\n");
+  System::inform("ImageToScore2::processImage.\n");
 }
 
 void ImageToScore2::pixel_to_event(int column, int row, const HSV &hsv, Event &event_) const {
@@ -441,7 +441,7 @@ void ImageToScore2::pixel_to_event(int column, int row, const HSV &hsv, Event &e
 }
 
 void ImageToScore2::generate() {
-    System::inform("BEGAN ImageToScore2::generate()...\n");
+    System::inform("ImageToScore2::generate...\n");
     // Processing the image before translating can reduce the number
     // of salient notes.
     processImage();
@@ -531,7 +531,7 @@ void ImageToScore2::generate() {
         // salient ones.
         score.sort();
     }
-    System::inform("ENDED ImageToScore2::generate() with %d events.\n", score.size());
+    System::inform("ImageToScore2::generate with %d events.\n", score.size());
 }
 
 }

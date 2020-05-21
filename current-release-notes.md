@@ -2,17 +2,28 @@ I am pleased to announce new releases of my various projects on GitHub (and else
 
 ## [csound-extended](https://github.com/gogins/csound-extended/releases)
 
+The Python interface for CsoundAC now specifically targets Python 3 rather than Python 2. This has been tested with Python versions 3.6.9 and 3.7.0.
+
 Csound performances can now be stopped and restarted in csound.node, and Csound message printing now works for successive performances.
 
 Some of the examples using csound.node and WebAssembly have been improved.
 
 The `csound_loader.js` script for loading Csound in the same manner across the csound.node, Android, and WebAssembly platforms has been much improved and is much more reliable.
 
+The ChordSpace module in the CsoundAC library now supports fairly extensive operations on scales and their chords, in the spirit of Roman numeral analysis and "functional harmony," including:
+
+ 1.  Returning a chord of any size and any whole interval spacing in scale steps for any scale degree (Roman numeral) of any scale.
+ 2.  For a given scale and a given chord, return the scale degree of that chord in that scale, if it belongs to the scale.
+ 3.  Transposing a chord in a given scale by any whole number of scale steps; may be used to implement typical root progressions.
+ 4.  Transposing a given scale to a new tonic on any scale degree.
+ 5.  For a given chord in a given scale, return any other scales to which that chord also belongs; can be used to implement common-chord modulations.
+ 6.  For a given chord in a given scale, return it in the form of a secondary dominant or other secondary function, if that is possible; may be used to implement secondary dominants and other secondary functions.
+ 7.  For a given chord in a given scale and a secondary function, return the relative tonicization of that chord, that is, the scale in which that chord has that secondary function.
+ 8.  Create a new scale with a name and any number of pitches, which may be in any system of temperament and may have any interval structure; all of the above operations will work with such scales.
+
 The CsoundAC VoiceleadingNode class now implements conforming notes produced by children of this node to specific instances of the Chord class, by timed segment. This makes composing algorithmically using chords, neo-Riemannian transformations of chords, and automatic voice-leading much easier and more flexible.
 
 Out of order and incorrect comments in the VoiceleadingNode class have been fixed, leading to corrected Doxygen documentation for this class.
-
-The Python interface for CsoundAC now specifically targets Python2, for compatibility with the csnd6 module in the csound repository.
 
 The ["live" version of the Csound Reference Manual](https://gogins.github.io/csound-extended/html/indexframes.html), using the WebAssembly build of Csound to play most of the examples from the Web browser, has been updated with the latest sources for the manual and my latest WebAssembly build of Csound.
 

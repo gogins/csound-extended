@@ -487,7 +487,7 @@ D_major = C_major.transpose(-10)
 print("C major up two semitones:\n{}.".format(D_major.information()))
 print
 
-for degree in xrange(1, 8):
+for degree in range(1, 8):
     chord = C_major.chord(degree, 3)
     print("Modulations from {:2} in C major:".format(degree))
     modulations = C_major.modulations(chord)
@@ -496,7 +496,7 @@ for degree in xrange(1, 8):
 print
 
 print("Transpose C major to degree:")
-for degree in xrange(0, 8):
+for degree in range(0, 8):
     scale = C_major.transpose_to_degree(degree)
     #V7 = scale.chord(5, 4)
     print("degree: {:2} name: {:10} {}".format(degree, scale.name(), scale.toString()))
@@ -506,7 +506,7 @@ print
 #CsoundAC.System_setMessageLevel(8)
 
 print("Secondary dominants in C major:")
-for degree in xrange(1,8):
+for degree in range(1,8):
     primary = C_major.chord(degree, 3).eOP()
     function = 5
     voices = 4

@@ -64,23 +64,23 @@ std::string ChordLindenmayer::getReplacement(std::string word)
 
 void ChordLindenmayer::generate()
 {
-    System::inform("BEGAN ChordLindenmayer::generate()...\n");
-    System::inform("      ChordLindenmayer::initialize()...\n");
+    System::inform("ChordLindenmayer::generate...\n");
+    System::inform("ChordLindenmayer::initialize...\n");
     initialize();
-    System::inform("      ChordLindenmayer::generateLindenmayerSystem()...\n");
+    System::inform("ChordLindenmayer::generateLindenmayerSystem...\n");
     generateLindenmayerSystem();
-    System::inform("      ChordLindenmayer::writeScore()...\n");
+    System::inform("ChordLindenmayer::writeScore...\n");
     writeScore();
-    System::inform("      ChordLindenmayer::writeScore(): %d events.\n", score.size());
-    System::inform("      ChordLindenmayer::tieOverlappingNotes()...\n");
+    System::inform("ChordLindenmayer::writeScore(): %d events.\n", score.size());
+    System::inform("ChordLindenmayer::tieOverlappingNotes...\n");
     tieOverlappingNotes();
-    System::inform("      ChordLindenmayer::applyVoiceleadingOperationse()...\n");
+    System::inform("ChordLindenmayer::applyVoiceleadingOperationse...\n");
     applyVoiceleadingOperations();
-    System::inform("      ChordLindenmayer::tieOverlappingNotes()...\n");
+    System::inform("ChordLindenmayer::tieOverlappingNotes...\n");
     tieOverlappingNotes();
-    System::inform("      ChordLindenmayer::fixStatus()...\n");
+    System::inform("ChordLindenmayer::fixStatus...\n");
     fixStatus();
-    System::inform("ENDED ChordLindenmayer::generate(): %d events.\n", score.size());
+    System::inform("ChordLindenmayer::generate: %d events.\n", score.size());
 }
 
 void ChordLindenmayer::initialize()

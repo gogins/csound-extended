@@ -86,18 +86,4 @@
 %template(vectorScale) std::vector<csound::Scale>;
 %template(vectorChord) std::vector<csound::Chord>;
 
-%pythoncode
-%{
-# Create one global instance of CppSound for CsoundAC to grab.
-# Create it in the main module, so that scripts for CsoundAC
-# will also work in a standalone Python interpreter.
-import sys
-import csnd6
-sys.modules["__main__"].csound = csnd6.CppSound()
-# sys.modules["__main__"].csound.thisown = 0
-sys.modules["__main__"].csound.setPythonMessageCallback()
-%}
-
-
-
 #endif

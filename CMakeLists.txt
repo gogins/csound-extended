@@ -122,7 +122,7 @@ find_package(LLVM)
 find_package(OpenCV REQUIRED)
 find_package(PORTSMF)
 find_package(PNG)
-find_package(Python2 COMPONENTS Interpreter Development)
+find_package(Python3 COMPONENTS Interpreter Development)
 find_package(SWIG)
 include(UseSWIG)
 find_package(STK)
@@ -253,7 +253,7 @@ set(CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
 set(CPACK_DEBIAN_COMPONENT_INSTALL "ON")
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/DEBIAN/triggers;${CMAKE_SOURCE_DIR}/DEBIAN/postinst;${CMAKE_SOURCE_DIR}/DEBIAN/postrm")
 set(CPACK_DEBIAN_PACKAGE_CONFLICTS "libcsoundac-dev, libcsoundac6.0v5")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "python")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "python3")
 set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Extends the sound programming language
  and library Csound. Additional features include the CsoundAC library for
  algorithmic composition, the cmask opcode for algorithmic composition

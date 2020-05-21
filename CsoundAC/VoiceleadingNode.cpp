@@ -108,7 +108,7 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
 {
     if ( (System::getMessageLevel() & System::INFORMATION_LEVEL) == System::INFORMATION_LEVEL) {
         std::stringstream stream;
-        stream << "BEGAN VoiceleadingNode::apply:..." << std::endl;
+        stream << "VoiceleadingNode::apply:..." << std::endl;
         stream << "  Events in score:     " << score.size() << std::endl;
         stream << "  Score duration:      " << score.getDuration() << std::endl;
         stream << "  Events in operation: " << (operation.end - operation.begin) << std::endl;
@@ -314,7 +314,7 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
                             divisionsPerOctave);
         }
     }
-    System::message("ENDED VoiceleadingNode::apply.\n");
+    System::message("VoiceleadingNode::apply.\n");
 }
 
 void VoiceleadingNode::PT(double time, double P_, double T_)
@@ -445,7 +445,7 @@ void VoiceleadingNode::transform(Score &score)
     double scoreMaxTime = scoreMinTime + scoreDuration;
     double operationMaxTime = 0.0;
     double timeScale = 1.0;
-    System::inform("BEGAN VoiceleadingNode::transform...\n");
+    System::inform("VoiceleadingNode::transform...\n");
     System::inform("  operations:    %d\n", operations.size());
     System::inform("  scoreMinTime:  %f\n", scoreMinTime);
     System::inform("  scoreDuration: %f\n", scoreDuration);
@@ -491,7 +491,7 @@ void VoiceleadingNode::transform(Score &score)
         currentOperation->end = score.indexAfterTime(currentOperation->rescaledEndTime);
         apply(score, *priorOperation, *currentOperation);
     }
-    System::inform("ENDED VoiceleadingNode::transform.\n");
+    System::inform("VoiceleadingNode::transform.\n");
 }
 
 void VoiceleadingNode::setModality(const std::vector<double> &pcs)

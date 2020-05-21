@@ -16,7 +16,7 @@ option(USE_SYSTEM_PORTSMF ON)
 find_library(MUSICXML_LIBRARY musicxml2)
 find_package(FLTK)
 find_package(SWIG)
-find_package (Python2 COMPONENTS Interpreter Development)
+find_package(PYTHON COMPONENTS Interpreter Development)
 message(STATUS "Python libraries:  ${PYTHONLIBS_VERSION_STRING}")
 find_library(PORTSMF_LIBRARY portSMF)
 find_library(JPEG_LIBRARY jpeg)
@@ -74,7 +74,7 @@ if(BUILD_CSOUND_AC)
         add_library(libCsoundAC SHARED ${libcsoundac_SRCS})
     endif()
 
-    target_include_directories(libCsoundAC SYSTEM PRIVATE ${Python2_INCLUDE_DIRS})
+    target_include_directories(libCsoundAC SYSTEM PRIVATE ${Python3_INCLUDE_DIRS})
     target_include_directories(libCsoundAC SYSTEM PRIVATE ${CSOUND_INCLUDE_PATH})
     target_include_directories(libCsoundAC PRIVATE ${EIGEN3_INCLUDE_PATH})
     target_include_directories(libCsoundAC PRIVATE ${FLTK_INCLUDE_DIR})
@@ -86,7 +86,7 @@ if(BUILD_CSOUND_AC)
         LIBRARY_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"
         ARCHIVE_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}")
 
-    target_link_libraries(libCsoundAC PRIVATE csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY})
+    target_link_libraries(libCsoundAC PRIVATE ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY})
     if(USE_SYSTEM_PORTSMF)
         target_link_libraries(libCsoundAC PRIVATE ${PORTSMF_LIBRARY})
     endif()
@@ -126,17 +126,17 @@ if(BUILD_CSOUND_AC)
 
     if(BUILD_CSOUND_AC_PYTHON_INTERFACE)
         message(STATUS "Building CsoundAC Python interface.")
-        include_directories(${Python2_INCLUDE_DIRS})
+        include_directories(${Python3_INCLUDE_DIRS})
         # Had: 	    SWIG_FLAGS "-threads"
         set_source_files_properties(CsoundAC.i
             PROPERTIES CPLUSPLUS ON
             SWIG_MODULE_NAME CsoundAC)
 
         swig_add_module(CsoundAC python CsoundAC.i)
-        swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${Python2_LIBRARIES})
+        swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${Python3_LIBRARIES})
 
         if(MUSICXML_LIBRARY)
-            swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY} ${Python2_LIBRARIES})
+            swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY} ${Python3_LIBRARIES})
         endif()
 
         if(APPLE)
@@ -151,10 +151,10 @@ if(BUILD_CSOUND_AC)
             ARCHIVE_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}")
 
         install(TARGETS ${SWIG_MODULE_CsoundAC_REAL_NAME}
-            LIBRARY DESTINATION "${Python2_SITEARCH}"
-            ARCHIVE DESTINATION "${Python2_SITEARCH}")
+            LIBRARY DESTINATION "${Python3_SITEARCH}"
+            ARCHIVE DESTINATION "${Python3_SITEARCH}")
             install(FILES "${BUILD_LIB_DIR}/CsoundAC.py"
-            DESTINATION ${Python2_SITEARCH})
+            DESTINATION ${Python3_SITEARCH})
     endif()
 
 endif()

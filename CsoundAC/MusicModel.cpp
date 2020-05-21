@@ -233,7 +233,7 @@ Node *MusicModel::getThisNode()
 
 int MusicModel::processArgs(const std::vector<std::string> &args)
 {
-    System::inform("BEGAN MusicModel::processArgs()...\n");
+    System::inform("MusicModel::processArgs...\n");
     generateAllNames();
     std::map<std::string, std::string> argsmap;
     std::string key;
@@ -308,13 +308,13 @@ int MusicModel::processArgs(const std::vector<std::string> &args)
         System::inform("Csound command: %s\n", command);
         errorStatus = std::system(command);
     }
-    System::inform("ENDED MusicModel::processArgv().\n");
+    System::inform("MusicModel::processArgv.\n");
     return errorStatus;
 }
 
 void MusicModel::stop()
 {
-    System::inform("MusicModel::stop()...\n");
+    System::inform("MusicModel::stop...\n");
     cppSound->stop();
 }
 }

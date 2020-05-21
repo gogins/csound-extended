@@ -3078,19 +3078,19 @@ public:
     }
     virtual void list(bool listheader = true, bool listopttis = false, bool listvoicings = false) const {
         if (listheader) {
-            System::debug("ChordSpaceGroup.voices: %8d\n", N);
-            System::debug("ChordSpaceGroup.range : %13.4f\n", range);
-            System::debug("ChordSpaceGroup.g     : %13.4f\n", g);
-            System::debug("ChordSpaceGroup.countP: %8d\n", countP);
-            System::debug("ChordSpaceGroup.countI: %8d\n", countI);
-            System::debug("ChordSpaceGroup.countT: %8d\n", countT);
-            System::debug("ChordSpaceGroup.countV: %8d\n", countV);
+            System::inform("ChordSpaceGroup.voices: %8d\n", N);
+            System::inform("ChordSpaceGroup.range : %13.4f\n", range);
+            System::inform("ChordSpaceGroup.g     : %13.4f\n", g);
+            System::inform("ChordSpaceGroup.countP: %8d\n", countP);
+            System::inform("ChordSpaceGroup.countI: %8d\n", countI);
+            System::inform("ChordSpaceGroup.countT: %8d\n", countT);
+            System::inform("ChordSpaceGroup.countV: %8d\n", countV);
         }
         if (listopttis) {
             for (int i = 0, n = opttisForIndexes.size(); i < n; ++i) {
                 const Chord &optti = opttisForIndexes[i];
                 int index = indexesForOpttis.at(optti);
-                System::debug("index: %5d  optti: %s  index from optti: %5d  %s\n", i, optti.toString().c_str(), index, optti.name().c_str());
+                System::inform("index: %5d  optti: %s  index from optti: %5d  %s\n", i, optti.toString().c_str(), index, optti.name().c_str());
             }
         }
         // Doesn't currently do anything as these collections are not currently initialized.
@@ -3098,7 +3098,7 @@ public:
             for (int i = 0, n = voicingsForIndexes.size(); i < n; ++i) {
                 const Chord &voicing = voicingsForIndexes[i];
                 int index = indexesForVoicings.at(voicing);
-                System::debug("voicing index: %5d  voicing: %s  index from voicing: %5d\n", i,  voicing.toString().c_str(), index);
+                System::inform("voicing index: %5d  voicing: %s  index from voicing: %5d\n", i,  voicing.toString().c_str(), index);
             }
         }
     }
@@ -3116,13 +3116,13 @@ public:
         std::fstream stream;
         stream.open(filename.c_str());
         if (!stream.is_open()) {
-            System::debug("No data in ChordSpaceGroup file \"%s\", initializing and saving...\n", filename.c_str());
+            System::inform("No data in ChordSpaceGroup file \"%s\", initializing and saving...\n", filename.c_str());
             stream.close();
             stream.open(filename.c_str(), std::fstream::out);
             initialize(voices, range, g);
             save(stream);
         } else {
-            System::debug("Loading ChordSpaceGroup data from file \"%s\"...\n", filename.c_str());
+            System::inform("Loading ChordSpaceGroup data from file \"%s\"...\n", filename.c_str());
             load(stream);
         }
         stream.close();
@@ -3171,7 +3171,7 @@ public:
     Eigen::VectorXi fromChord(const Chord &chord, bool printme = false) const {
         bool isNormalOP = csound::isNormal<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), g);
         if (printme) {
-            System::debug("BEGAN fromChord()...\n");
+            System::debug("fromChord...\n");
             System::debug("chord:          %s  %d\n", chord.toString().c_str(), isNormalOP);
         }
         Chord normalOP;
@@ -3233,7 +3233,7 @@ public:
         pitv(3) = V_;
         if (printme) {
             System::debug("PITV:       %8d     %8d     %8d     %8d\n", pitv(0), pitv(1), pitv(2), pitv(3));
-            System::debug("ENDED fromChord().\n");
+            System::debug("fromChord.\n");
         }
         return pitv;
     }
@@ -3254,7 +3254,7 @@ public:
         T = T % countT;
         V = V % countV;
         if (printme) {
-            System::debug("BEGAN toChord()...\n");
+            System::debug("toChord...\n");
             System::debug("PITV:       %8d     %8d     %8d     %8d\n", P, I, T, V);
         }
         Chord normalOPTgI = opttisForIndexes[P];
@@ -3286,7 +3286,7 @@ public:
         result[2] = normalOP;
         if (printme) {
             System::debug("revoicing:      %s\n", result[0].toString().c_str());
-            System::debug("ENDED toChord().\n");
+            System::debug("toChord.\n");
         }
         return result;
     }

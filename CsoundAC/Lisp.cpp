@@ -167,7 +167,7 @@ void LispGenerator::generate(Score &score_from_this)
     for (auto it = top_level_forms.begin(); it != top_level_forms.end(); ++it) {
         // The final form must return the seq to be translated.
         result = evaluate_form(*it);
-        //std::printf("result type: %d\n", ecl_t_of(result));
+        System::debug("result type: %d\n", ecl_t_of(result));
     }
     seqToScore(result, score_from_this);
     System::inform("LispGenerator::generate.\n");

@@ -21,6 +21,7 @@
 #pragma warning (disable:4786)
 #endif
 #include "Midifile.hpp"
+#include "System.hpp"
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -492,18 +493,14 @@ void MidiEvent::read(std::istream &stream, MidiFile &midiFile)
     }
     if(peeked < 0x80)
     {
-#ifdef _DEBUG
-        //                      fprintf(stderr, "Running status: %x\n", midiFile.lastStatus);
-#endif
+        System::debug("Running status: %x\n", midiFile.lastStatus);
         push_back(midiFile.lastStatus);
     }
     else
     {
         read(stream);
         midiFile.lastStatus = getStatus();
-#ifdef _DEBUG
-        //                      fprintf(stderr, "Status:         %x\n", getStatus());
-#endif
+        System::debug("Status:         %x\n", getStatus());
     }
     switch(getStatusNybble())
     {
