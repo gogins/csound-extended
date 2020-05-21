@@ -487,27 +487,33 @@ D_major = C_major.transpose(-10)
 print("C major up two semitones:\n{}.".format(D_major.information()))
 print
 
-print("Modulations through iim7 in C major:")
-modulations_through_iim7 = C_major.modulations(iim7)
-for scale in modulations_through_iim7:
-    print(scale.name(), scale.toString())
+for degree in xrange(1, 8):
+    chord = C_major.chord(degree, 3)
+    print("Modulations from {:2} in C major:".format(degree))
+    modulations = C_major.modulations(chord)
+    for scale in modulations:
+        print("{:10} {}".format(scale.name(), scale.toString()))
 print
 
-CsoundAC.set_debug(True)
-
-print("Transpose C major by degrees:")
-for degree in xrange(1, 8):
-    scale = C_major.transpose_degrees(degree)
+print("Transpose C major to degree:")
+for degree in xrange(0, 8):
+    scale = C_major.transpose_to_degree(degree)
     #V7 = scale.chord(5, 4)
-    print("Degree: {:2} name: {:10} {}".format(degree, scale.name(), scale.toString()))
+    print("degree: {:2} name: {:10} {}".format(degree, scale.name(), scale.toString()))
     #print("                       V7: {} {}".format(V7.name(), V7.toString()))    
 print
 
-CsoundAC.set_debug(False)
-
+#CsoundAC.System_setMessageLevel(8)
 
 print("Secondary dominants in C major:")
 for degree in xrange(1,8):
     primary = C_major.chord(degree, 3).eOP()
-    secondary = C_major.secondary(primary, 5, 4).eOP()
-    print("Degree: {} secondary dominant: {}  primary: {} ".format(degree, secondary.toString(), primary.name()))
+    function = 5
+    voices = 4
+    relative_tonicization = C_major.relative_tonicization(primary, 5)
+    secondary = C_major.secondary(primary, 5, voices)
+    print("original chord:   {:10} {}".format(primary.eOP().name(), primary.toString()))
+    print("  as dominant:    {:10} {}".format(secondary.eOP().name(), secondary.toString()))
+    print("  of this scale:  {:10} {}".format(relative_tonicization.name(), relative_tonicization.toString()))
+print
+ 

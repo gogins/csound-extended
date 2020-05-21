@@ -205,7 +205,6 @@ void Soundfile::jonesParksGrain(double centerTimeSeconds,
     grainBuffer.resize(frameCount, channelCount);
     for(size_t frameI = 0; frameI < frameCount; frameI++) {
         double sample = f0.real();
-        //std::cout << sample << std::endl;
         if (channelCount == 2) {
             grainOutput(frameI, 0) += (leftGain * sample);
             grainOutput(frameI, 1) += (rightGain * sample);

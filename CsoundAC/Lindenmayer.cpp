@@ -301,7 +301,7 @@ void Lindenmayer::interpret(std::string action, bool render)
     }
     catch(void *x)
     {
-        std::cout << x << std::endl;
+        System::error("Caught exception: %p\n", x);
     }
 }
 

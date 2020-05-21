@@ -314,7 +314,7 @@ int MusicModel::processArgs(const std::vector<std::string> &args)
 
 void MusicModel::stop()
 {
-    std::cout << "MusicModel::stop()..." << std::endl;
+    System::inform("MusicModel::stop()...\n");
     cppSound->stop();
 }
 }

@@ -81,6 +81,7 @@
 %feature("director") Node;
 %include <Silence.hpp>
 %include <Conversions.hpp>
+%include <System.hpp>
 
 %template(vectorScale) std::vector<csound::Scale>;
 %template(vectorChord) std::vector<csound::Chord>;

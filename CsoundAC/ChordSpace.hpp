@@ -36,6 +36,7 @@
 #include <iterator>
 #include <map>
 #include <Score.hpp>
+#include <System.hpp>
 #include <set>
 #include <sstream>
 #include <vector>
@@ -55,6 +56,7 @@
 #include <iterator>
 #include <map>
 #include <Score.hpp>
+#include <System.hpp>
 #include <set>
 #include <sstream>
 #include <vector>
@@ -252,32 +254,6 @@ Q(c, n, m)      Contexual transposition;
                 of L or R; but, like them, K and Q generate the T-I group.
 
 */
-
-static bool debug_ = false;
-
-inline SILENCE_PUBLIC void set_debug(bool debug) {
-    debug_ = debug;
-}
-
-inline SILENCE_PUBLIC bool get_debug() {
-    return debug_;
-}
-
-inline SILENCE_PUBLIC void print(const char *format, va_list valist) {
-    if (get_debug() == true) {
-        std::vfprintf(stderr, format, valist);
-    }
-}
-
-/**
- * Convenience function for unbuffered printing of messages to the console.
- */
-inline SILENCE_PUBLIC void print(const char *format,...) {
-    va_list marker;
-    va_start(marker, format);
-    print(format, marker);
-    va_end(marker);
-}
 
 /**
  * Returns n!
@@ -1522,7 +1498,7 @@ inline SILENCE_PUBLIC Chord midpoint(const Chord &a, const Chord &b) {
         double voiceMidpoint = voiceSum / 2.0;
         midpoint_.setPitch(voice, voiceMidpoint);
     }
-    //csound::print("a: %s  b: %s  mid: %s\n", a.toString().c_str(), b.toString().c_str(), midpoint_.toString().c_str());
+    System::debug("a: %s  b: %s  mid: %s\n", a.toString().c_str(), b.toString().c_str(), midpoint_.toString().c_str());
     return midpoint_;
 }
 
@@ -1606,25 +1582,17 @@ inline void fill(std::string rootName, double rootPitch, std::string typeName, s
     Chord chord;
     std::string chordName = rootName + typeName;
     std::vector<std::string> splitPitches = split(typePitches);
-    if (get_debug() == true) {
-        csound::print("chordName: %s = rootName: %s  rootPitch: %f  typeName: %s  typePitches: %s\n", chordName.c_str(), rootName.c_str(), rootPitch, typeName.c_str(), typePitches.c_str());
-    }
+    System::debug("chordName: %s = rootName: %s  rootPitch: %f  typeName: %s  typePitches: %s\n", chordName.c_str(), rootName.c_str(), rootPitch, typeName.c_str(), typePitches.c_str());
     chord.resize(splitPitches.size());
     for (int voice = 0, voiceN = splitPitches.size(); voice < voiceN; ++voice) {
         double pitch = pitchClassForName(splitPitches[voice]);
-        if (get_debug() == true) {
-            csound::print("voice: %3d  pc: %-4s  pitch: %9.4f\n", voice, splitPitches[voice].c_str(), pitch);
-        }
+        System::debug("voice: %3d  pc: %-4s  pitch: %9.4f\n", voice, splitPitches[voice].c_str(), pitch);
         chord.setPitch(voice, pitch);
     }
-    if (get_debug() == true) {
-        print("chord type: %s\n", chord.toString().c_str());
-    }
+    System::debug("chord type: %s\n", chord.toString().c_str());
     chord = chord.T(rootPitch);
     Chord eOP_ = chord.eOP();
-    if (get_debug() == true) {
-        print("eOP_:   %s  chordName: %s\n", eOP_.toString().c_str(), chordName.c_str());
-    }
+    System::debug("eOP_:   %s  chordName: %s\n", eOP_.toString().c_str(), chordName.c_str());
     chordsForNames()[chordName] = eOP_;
     namesForChords()[eOP_] = chordName;
 }
@@ -1633,14 +1601,14 @@ inline void initializeNames() {
     static bool initializeNamesInitialized = false;
     if (!initializeNamesInitialized) {
         initializeNamesInitialized = true;
-        csound::print("Initializing chord names...\n");
+        System::debug("Initializing chord names...\n");
         const std::map<std::string, double> &pitchClassesForNames_ = pitchClassesForNames();
         for (std::map<std::string, double>::const_iterator it = pitchClassesForNames_.begin();
                 it != pitchClassesForNames_.end();
                 ++it) {
             const std::string &rootName = it->first;
             const double &rootPitch = it->second;
-            print("rootName: %-3s  rootPitch: %9.5f\n", rootName.c_str(), rootPitch);
+            System::debug("rootName: %-3s  rootPitch: %9.5f\n", rootName.c_str(), rootPitch);
             fill(rootName, rootPitch, " minor second",     "C  C#                             ");
             fill(rootName, rootPitch, " major second",     "C     D                           ");
             fill(rootName, rootPitch, " minor third",      "C        Eb                       ");
@@ -2113,12 +2081,10 @@ inline SILENCE_PUBLIC int octavewiseRevoicings(const Chord &chord,
     while (next(odometer, origin, range, OCTAVE())) {
         voicings = voicings + 1;
     }
-    if (get_debug() == true) {
-        print("octavewiseRevoicings: chord:    %s\n", chord.toString().c_str());
-        print("octavewiseRevoicings: eop:      %s\n", chord.eOP().toString().c_str());
-        print("octavewiseRevoicings: odometer: %s\n", odometer.toString().c_str());
-        print("octavewiseRevoicings: voicings: %5d\n", voicings);
-    }
+    System::debug("octavewiseRevoicings: chord:    %s\n", chord.toString().c_str());
+    System::debug("octavewiseRevoicings: eop:      %s\n", chord.eOP().toString().c_str());
+    System::debug("octavewiseRevoicings: odometer: %s\n", odometer.toString().c_str());
+    System::debug("octavewiseRevoicings: voicings: %5d\n", voicings);
     return voicings;
 }
 
@@ -2289,18 +2255,18 @@ inline Chord Chord::eP() const {
  * Chord exists for the name, an empty Chord is returned.
  */
 inline SILENCE_PUBLIC Chord scale(std::string name) {
-    if (get_debug() == true) print("scale: for name: %s\n", name.c_str());
+    System::debug("scale: for name: %s\n", name.c_str());
     auto scale = chordForName(name);
     if (scale.size() == 0) {
         return scale;
     }
     auto parts = split(name);
     auto tonic = pitchClassForName(parts.front());
-    if (get_debug() == true) print("scale: tonic: %9.4f\n", tonic);
-    if (get_debug() == true) print("scale: initially: %s\n", scale.toString().c_str());
+    System::debug("scale: tonic: %9.4f\n", tonic);
+    System::debug("scale: initially: %s\n", scale.toString().c_str());
     while (eq_epsilon(scale.getPitch(0), tonic) == false) {
         scale = scale.v();
-        if (get_debug() == true) print("scale: revoicing: %s\n", scale.toString().c_str());
+        System::debug("scale: revoicing: %s\n", scale.toString().c_str());
     }
     return scale;
 }
@@ -2336,7 +2302,7 @@ inline SILENCE_PUBLIC Chord chord(const Chord &scale, int scale_degree, int chor
  * Returns the chord, in scale order, transposed within the scale by the 
  * indicated number of scale degrees, which can be positive or negative.
  * The original chord may be in any order or voicing. By default,
- * the chords are generated by thirds, but can be at any interval in scale 
+ * chords are generated by thirds, but they can be at any interval in scale 
  * degrees. If the original chord does not belong to the scale, an empty 
  * Chord is returned.
  */
@@ -2345,21 +2311,21 @@ inline SILENCE_PUBLIC Chord transpose_degrees(const Chord &scale, const Chord &o
     int chord_voices = original_chord.voices();
     Chord original_eop = original_chord.eOP();
     for (int original_chord_index = 0; original_chord_index < scale_degrees; ++original_chord_index) {
-        if (get_debug() == true) print("transpose_degrees: original_chord_index: %d scale_degrees: %d\n", original_chord_index, scale_degrees);
+        System::debug("transpose_degrees: original_chord_index: %d scale_degrees: %d\n", original_chord_index, scale_degrees);
         Chord transposed = csound::chord(scale, original_chord_index + 1, chord_voices, interval);
         Chord transposed_eop = transposed.eOP();
-        if (get_debug() == true) print("original_eop: %s\ntransposed_eop: %s\n", original_eop.information().c_str(), transposed_eop.information().c_str());
+        System::debug("original_eop: %s\ntransposed_eop: %s\n", original_eop.information().c_str(), transposed_eop.information().c_str());
         if (original_eop == transposed_eop) {
             // Found the scale index of the original chord, now get the transposed chord.
             int target_index = original_chord_index + transposition_degrees;
-            if (get_debug() == true) print("found chord, target_index: %d original_chord_index: %d transposition_degrees: %d\n", target_index, original_chord_index, transposition_degrees);
+            System::debug("found chord, target_index: %d original_chord_index: %d transposition_degrees: %d\n", target_index, original_chord_index, transposition_degrees);
             // Transposition has sign. If negative, wrap.
             while (target_index < 0) {
                 target_index = target_index + scale_degrees;
             }
-            if (get_debug() == true) print("wrapped target_index: %d original_chord_index: %d transposition_degrees: %d\n", target_index, original_chord_index, transposition_degrees);
+            System::debug("wrapped target_index: %d original_chord_index: %d transposition_degrees: %d\n", target_index, original_chord_index, transposition_degrees);
             Chord transposed_chord = csound::chord(scale, target_index + 1, chord_voices, interval);
-            if (get_debug() == true) print("transposed_chord: %s\n", transposed_chord.toString().c_str());
+            System::debug("transposed_chord: %s\n", transposed_chord.toString().c_str());
             return transposed_chord;
         }
     }
@@ -2440,34 +2406,32 @@ class SILENCE_PUBLIC Scale : public Chord {
         virtual Chord transpose_degrees(const Chord &chord, int scale_degrees, int interval = 3) const {
             return csound::transpose_degrees(*this, chord, scale_degrees, interval);
         }
-        /** 
-         * Returns a copy of this Scale transposed by the indicated number of 
-         * _scale degrees_. 
+        /**
+         * Returns the number of semitones (may be whole or fractional) from 
+         * the tonic (as 0) of this Scale to the indicated scale degree, which 
+         * is wrapped around by octave equivalence.
          */
-        virtual Scale transpose_degrees(int degrees) const {
-            Chord transposed_pitches = csound::transpose_degrees(*this, *this, degrees);
-            // Make sure the copy starts in octave 0.
-            while (lt_epsilon(transposed_pitches.getPitch(0), 0) == true) {
-                transposed_pitches = transposed_pitches.T(OCTAVE());
+        virtual double semitones_for_degree(int scale_degree) const {
+            int scale_degrees = voices();
+            while(scale_degree < 1) {
+                scale_degree = scale_degree + scale_degrees;
             }
-            while (ge_epsilon(transposed_pitches.getPitch(0), OCTAVE()) == true) {
-                transposed_pitches = transposed_pitches.T( - OCTAVE());
+            while (scale_degree > scale_degrees) {
+                scale_degree = scale_degree - scale_degrees;
             }
-            if (get_debug() == true) print("Scale::transpose_degrees: transposed_pitches(%f): %s\n", degrees, transposed_pitches.toString().c_str());
-            // Create the copy with the name of the new tonic.
-            if (get_debug() == true) print("Scale::transpose_degrees: original name: %s\n", name().c_str());
-            auto parts = split(name());
-            auto tonic_name = nameForPitchClass(transposed_pitches.getPitch(0));
-            std::string new_name = tonic_name + " " + parts[1];
-            if (get_debug() == true) print("Scale::transpose: new name: %s\n", new_name.c_str());
-            Scale transposed_scale;
-            transposed_scale.resize(voices());
-            transposed_scale.name_ = new_name;
-            for (int voice = 0; voice < voices(); ++voice) {
-                transposed_scale.setPitch(voice, transposed_pitches.getPitch(voice));
-            }
-            if (get_debug() == true) print("Scale::transpose_degrees: result: %s\n", transposed_scale.information().c_str());
-            return transposed_scale;
+            double pitch_of_tonic = tonic();
+            double pitch_of_scale_degree = getPitch(scale_degree - 1);
+            double semitones = pitch_of_scale_degree - pitch_of_tonic;
+            return semitones;
+        }
+        /** 
+         * Returns a copy of this Scale transposed to the indicated 
+         * _scale degree_. 
+         */
+        virtual Scale transpose_to_degree(int degrees) const {
+            System::debug("Scale::transpose_to_degree(%9.4f)...\n", degrees);
+            double semitones = semitones_for_degree(degrees);
+            return transpose(semitones);
         }
         /** 
          * Returns a copy of this Scale transposed by the indicated number of 
@@ -2483,20 +2447,20 @@ class SILENCE_PUBLIC Scale : public Chord {
             while (ge_epsilon(transposed_pitches.getPitch(0), OCTAVE()) == true) {
                 transposed_pitches = transposed_pitches.T( - OCTAVE());
             }
-            if (get_debug() == true) print("Scale::transpose: transposed_pitches(%f): %s\n", semitones, transposed_pitches.toString().c_str());
+            System::debug("Scale::transpose: transposed_pitches(%f): %s\n", semitones, transposed_pitches.toString().c_str());
             // Create the copy with the name of the new tonic.
-            if (get_debug() == true) print("Scale::transpose: original name: %s\n", name().c_str());
+            System::debug("Scale::transpose: original name: %s\n", name().c_str());
             auto parts = split(name());
             auto tonic_name = nameForPitchClass(transposed_pitches.getPitch(0));
             std::string new_name = tonic_name + " " + parts[1];
-            if (get_debug() == true) print("Scale::transpose: new name: %s\n", new_name.c_str());
+            System::debug("Scale::transpose: new name: %s\n", new_name.c_str());
             Scale transposed_scale;
             transposed_scale.resize(voices());
             transposed_scale.name_ = new_name;
             for (int voice = 0; voice < voices(); ++voice) {
                 transposed_scale.setPitch(voice, transposed_pitches.getPitch(voice));
             }
-            if (get_debug() == true) print("Scale::transpose: result: %s\n", transposed_scale.information().c_str());
+            System::debug("Scale::transpose: result: %s\n", transposed_scale.information().c_str());
             return transposed_scale;
         }
         /**
@@ -2547,29 +2511,47 @@ class SILENCE_PUBLIC Scale : public Chord {
             return scales;
         }
         /**
+         * Returns the relative tonicization of the Chord, that is, the scale 
+         * for which that Chord would have the secondary function. If that is 
+         * not possible, an empty Scale is returned. TODO: Currently all 
+         * tonicizations are in the major mode even if the tonic chord is 
+         * minor; this must be changed.
+         */
+        virtual Scale relative_tonicization(const Chord &current_chord, int secondary_function = 5) const {
+            int current_function = degree(current_chord);
+            // If the Chord doesn't belong to this Scale, it cannot be mutated 
+            // to a secondary function.
+            if (current_function == -1) {
+                return Scale();
+            }
+            int scale_degrees = voices();
+            int degree_of_tonicization = current_function + secondary_function - 2;
+            while (degree_of_tonicization < 1) {
+                degree_of_tonicization = degree_of_tonicization + scale_degrees;
+            }
+            while (degree_of_tonicization > scale_degrees) {
+                degree_of_tonicization = degree_of_tonicization - scale_degrees;
+            }
+            Scale tonicization = transpose_to_degree(degree_of_tonicization);
+            System::debug("degree_of_tonicization: %3d %s %s\n", degree_of_tonicization, tonicization.toString().c_str(), tonicization.name().c_str());
+            return tonicization;
+        }
+        /**
          * Returns the current Chord mutated, if possible, to a secondary 
-         * function with respect to another Chord in its Scale. If that is not 
-         * possible, the original Chord is returned. The number of voices 
+         * function with respect to another Chord in its Scale. Not 
+         * "secondary function of this chord," but "this chord as secondary 
+         * function of another (tonicized) chord." If that is not 
+         * possible, an empty Chord is returned. The number of voices 
          * defaults to that of the current Chord. Can be used to generate 
          * secondary dominants (function = 5), secondary supertonics 
          * (function = 2), secondary subtonics (function = 6), and so on.
          * It is then up to the user to perform an appropriate progression 
-         * by number of scale degrees back to a tonicization in the original 
+         * by number of scale degrees to a tonicization in the original 
          * Scale.
          */
-        virtual Chord secondary(const Chord &current_chord, int function = 5, int voices=-1) const {
-            int current_degree = degree(current_chord);
-            // If the Chord doesn't belong to this Scale, it cannot be mutated 
-            // to a secondary function.
-            if (current_degree == -1) {
-                return current_chord;
-            }
-            if (voices == -1) {
-                voices = current_chord.voices();
-            }
-            int tonicization_degree = current_degree + function - 2;
-            Scale tonicization = transpose_degrees(tonicization_degree - 1);
-            Chord secondary_ = tonicization.chord(function, voices);
+        virtual Chord secondary(const Chord &current_chord, int secondary_function = 5, int voices_ =-1) const {
+            Scale tonicization = relative_tonicization(current_chord, secondary_function);
+            Chord secondary_ = tonicization.chord(secondary_function, voices_);
             return secondary_;
          }
     protected:
@@ -2987,7 +2969,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
             fundamentalDomain.insert(copy);
         }
         if (false) {
-            print("By isNormal %-8s: chord: %6d  domain: %6d  range: %.2f  g: %7.2f  %s  isNormal: %d\n",
+            System::debug("By isNormal %-8s: chord: %6d  domain: %6d  range: %.2f  g: %7.2f  %s  isNormal: %d\n",
                   namesForEquivalenceRelations[EQUIVALENCE_RELATION],
                   chords,
                   fundamentalDomain.size(),
@@ -3014,7 +2996,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
         Chord normal = normalize<EQUIVALENCE_RELATION>(chord, range, g);
         fundamentalDomain.insert(normal);
         if (false) {
-            print("By normalize %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  %s  normalized: %s  isNormal: %d\n",
+            System::debug("By normalize %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  %s  normalized: %s  isNormal: %d\n",
                   namesForEquivalenceRelations[EQUIVALENCE_RELATION],
                   chords,
                   fundamentalDomain.size(),
@@ -3096,19 +3078,19 @@ public:
     }
     virtual void list(bool listheader = true, bool listopttis = false, bool listvoicings = false) const {
         if (listheader) {
-            print("ChordSpaceGroup.voices: %8d\n", N);
-            print("ChordSpaceGroup.range : %13.4f\n", range);
-            print("ChordSpaceGroup.g     : %13.4f\n", g);
-            print("ChordSpaceGroup.countP: %8d\n", countP);
-            print("ChordSpaceGroup.countI: %8d\n", countI);
-            print("ChordSpaceGroup.countT: %8d\n", countT);
-            print("ChordSpaceGroup.countV: %8d\n", countV);
+            System::debug("ChordSpaceGroup.voices: %8d\n", N);
+            System::debug("ChordSpaceGroup.range : %13.4f\n", range);
+            System::debug("ChordSpaceGroup.g     : %13.4f\n", g);
+            System::debug("ChordSpaceGroup.countP: %8d\n", countP);
+            System::debug("ChordSpaceGroup.countI: %8d\n", countI);
+            System::debug("ChordSpaceGroup.countT: %8d\n", countT);
+            System::debug("ChordSpaceGroup.countV: %8d\n", countV);
         }
         if (listopttis) {
             for (int i = 0, n = opttisForIndexes.size(); i < n; ++i) {
                 const Chord &optti = opttisForIndexes[i];
                 int index = indexesForOpttis.at(optti);
-                print("index: %5d  optti: %s  index from optti: %5d  %s\n", i, optti.toString().c_str(), index, optti.name().c_str());
+                System::debug("index: %5d  optti: %s  index from optti: %5d  %s\n", i, optti.toString().c_str(), index, optti.name().c_str());
             }
         }
         // Doesn't currently do anything as these collections are not currently initialized.
@@ -3116,7 +3098,7 @@ public:
             for (int i = 0, n = voicingsForIndexes.size(); i < n; ++i) {
                 const Chord &voicing = voicingsForIndexes[i];
                 int index = indexesForVoicings.at(voicing);
-                print("voicing index: %5d  voicing: %s  index from voicing: %5d\n", i,  voicing.toString().c_str(), index);
+                System::debug("voicing index: %5d  voicing: %s  index from voicing: %5d\n", i,  voicing.toString().c_str(), index);
             }
         }
     }
@@ -3134,13 +3116,13 @@ public:
         std::fstream stream;
         stream.open(filename.c_str());
         if (!stream.is_open()) {
-            print("No data in ChordSpaceGroup file \"%s\", initializing and saving...\n", filename.c_str());
+            System::debug("No data in ChordSpaceGroup file \"%s\", initializing and saving...\n", filename.c_str());
             stream.close();
             stream.open(filename.c_str(), std::fstream::out);
             initialize(voices, range, g);
             save(stream);
         } else {
-            print("Loading ChordSpaceGroup data from file \"%s\"...\n", filename.c_str());
+            System::debug("Loading ChordSpaceGroup data from file \"%s\"...\n", filename.c_str());
             load(stream);
         }
         stream.close();
@@ -3189,8 +3171,8 @@ public:
     Eigen::VectorXi fromChord(const Chord &chord, bool printme = false) const {
         bool isNormalOP = csound::isNormal<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), g);
         if (printme) {
-            print("BEGAN fromChord()...\n");
-            print("chord:          %s  %d\n", chord.toString().c_str(), isNormalOP);
+            System::debug("BEGAN fromChord()...\n");
+            System::debug("chord:          %s  %d\n", chord.toString().c_str(), isNormalOP);
         }
         Chord normalOP;
         if (isNormalOP) {
@@ -3199,22 +3181,22 @@ public:
             normalOP = csound::normalize<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), g);
         }
         if (printme) {
-            print("normalOP:       %s  %d\n", normalOP.toString().c_str(), csound::isNormal<EQUIVALENCE_RELATION_RP>(normalOP, OCTAVE(), g));
+            System::debug("normalOP:       %s  %d\n", normalOP.toString().c_str(), csound::isNormal<EQUIVALENCE_RELATION_RP>(normalOP, OCTAVE(), g));
         }
         Chord normalOPTg = csound::normalize<EQUIVALENCE_RELATION_RPTg>(chord, OCTAVE(), g);
         if (printme) {
-            print("normalOPTg:     %s\n", normalOPTg.toString().c_str());
+            System::debug("normalOPTg:     %s\n", normalOPTg.toString().c_str());
         }
         int T_ = 0;
         for (double t = 0.0; t < OCTAVE(); t += g) {
             Chord normalOPTg_t = normalOPTg.T(t);
             normalOPTg_t = csound::normalize<EQUIVALENCE_RELATION_RP>(normalOPTg_t, OCTAVE(), g);
             if (printme) {
-                print("normalOPTg_t:   %s    %f\n", normalOPTg_t.toString().c_str(), t);
+                System::debug("normalOPTg_t:   %s    %f\n", normalOPTg_t.toString().c_str(), t);
             }
             if (normalOPTg_t == normalOP) {
                 if (printme) {
-                    print("equals\n");
+                    System::debug("equals\n");
                 }
                 T_ = t;
                 break;
@@ -3227,12 +3209,12 @@ public:
         std::map<Chord, int>::const_iterator it = indexesForOpttis.find(normalOPTgI);
         if (it == indexesForOpttis.end()) {
             // Falling through here means there is a bug that I want to know about.
-            csound::print("Error: normalOPTgI %s not found! Please report an issue, this should not appear.\n");
+            System::debug("Error: normalOPTgI %s not found! Please report an issue, this should not appear.\n");
             exit(1);
         }
         int P_ = it->second;
         if (printme) {
-            print("normalOPTgI:    %s    %d\n", normalOPTgI.toString().c_str(), P_);
+            System::debug("normalOPTgI:    %s    %d\n", normalOPTgI.toString().c_str(), P_);
         }
         int I_;
         if (normalOPTg == normalOPTgI) {
@@ -3250,8 +3232,8 @@ public:
         pitv(2) = T_;
         pitv(3) = V_;
         if (printme) {
-            print("PITV:       %8d     %8d     %8d     %8d\n", pitv(0), pitv(1), pitv(2), pitv(3));
-            print("ENDED fromChord().\n");
+            System::debug("PITV:       %8d     %8d     %8d     %8d\n", pitv(0), pitv(1), pitv(2), pitv(3));
+            System::debug("ENDED fromChord().\n");
         }
         return pitv;
     }
@@ -3272,12 +3254,12 @@ public:
         T = T % countT;
         V = V % countV;
         if (printme) {
-            print("BEGAN toChord()...\n");
-            print("PITV:       %8d     %8d     %8d     %8d\n", P, I, T, V);
+            System::debug("BEGAN toChord()...\n");
+            System::debug("PITV:       %8d     %8d     %8d     %8d\n", P, I, T, V);
         }
         Chord normalOPTgI = opttisForIndexes[P];
         if (printme) {
-            print("normalOPTgI:    %s\n", normalOPTgI.toString().c_str());
+            System::debug("normalOPTgI:    %s\n", normalOPTgI.toString().c_str());
         }
         Chord normalOPTg;
         if (I == 0) {
@@ -3287,15 +3269,15 @@ public:
             normalOPTg = csound::normalize<EQUIVALENCE_RELATION_RPTg>(inverse, OCTAVE(), g);
         }
         if (printme) {
-            print("normalOPTg:     %s\n", normalOPTg.toString().c_str());
+            System::debug("normalOPTg:     %s\n", normalOPTg.toString().c_str());
         }
         Chord normalOPTg_t = normalOPTg.T(T);
         if (printme) {
-            print("normalOPTg_t:   %s\n", normalOPTg_t.toString().c_str());
+            System::debug("normalOPTg_t:   %s\n", normalOPTg_t.toString().c_str());
         }
         Chord normalOP = csound::normalize<EQUIVALENCE_RELATION_RP>(normalOPTg_t, OCTAVE(), g);
         if (printme) {
-            print("normalOP:       %s\n", normalOP.toString().c_str());
+            System::debug("normalOP:       %s\n", normalOP.toString().c_str());
         }
         Chord revoicing = octavewiseRevoicing(normalOP, V, range, printme);
         std::vector<Chord> result(3);
@@ -3303,8 +3285,8 @@ public:
         result[1] = normalOPTgI;
         result[2] = normalOP;
         if (printme) {
-            print("revoicing:      %s\n", result[0].toString().c_str());
-            print("ENDED toChord().\n");
+            System::debug("revoicing:      %s\n", result[0].toString().c_str());
+            System::debug("ENDED toChord().\n");
         }
         return result;
     }
@@ -3387,16 +3369,14 @@ inline SILENCE_PUBLIC Chord octavewiseRevoicing(const Chord &chord, int revoicin
     Chord revoicing = origin;
     int revoicingI = 0;
     while (true) {
-        if (get_debug() == true) {
-            print("octavewiseRevoicing %d (%d) of %s in range %7.3f: %5d: %s\n",
-                  revoicingNumber,
-                  revoicingNumber_,
-                  chord.toString().c_str(),
-                  range,
-                  revoicingI,
-                  revoicing.toString().c_str());
-        }
-        if (revoicingI == revoicingNumber) {
+        System::debug("octavewiseRevoicing %d (%d) of %s in range %7.3f: %5d: %s\n",
+              revoicingNumber,
+              revoicingNumber_,
+              chord.toString().c_str(),
+              range,
+              revoicingI,
+              revoicing.toString().c_str());
+         if (revoicingI == revoicingNumber) {
             return revoicing;
         }
         (void) next(revoicing, origin, range, OCTAVE());
@@ -3416,14 +3396,12 @@ inline SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &chord, double
     Chord revoicing = origin;
     int revoicingI = 0;
     while (true) {
-        if (get_debug() == true) {
-            print("indexForOctavewiseRevoicing of %s in range %7.3f: %5d of %5d: %s\n",
-                  chord.toString().c_str(),
-                  range,
-                  revoicingI,
-                  revoicingN,
-                  revoicing.toString().c_str());
-        }
+        System::debug("indexForOctavewiseRevoicing of %s in range %7.3f: %5d of %5d: %s\n",
+              chord.toString().c_str(),
+              range,
+              revoicingI,
+              revoicingN,
+              revoicing.toString().c_str());
         if (revoicing == chord) {
             return revoicingI;
         }
