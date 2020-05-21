@@ -22,11 +22,12 @@ The ChordSpace module in the CsoundAC library now supports fairly extensive oper
  1.  Returning a chord of any size and any whole interval spacing in scale steps for any scale degree (Roman numeral) of any scale.
  2.  For a given scale and a given chord, return the scale degree of that chord in that scale, if it belongs to the scale.
  3.  Transposing a chord in a given scale by any whole number of scale steps; may be used to implement typical root progressions.
- 4.  Transposing a given scale to a new tonic on any scale degree.
- 5.  For a given chord in a given scale, return any other scales to which that chord also belongs; can be used to implement common-chord modulations.
- 6.  For a given chord in a given scale, return it in the form of a secondary dominant or other secondary function, if that is possible; may be used to implement secondary dominants and other secondary functions.
- 7.  For a given chord in a given scale and a secondary function, return the relative tonicization of that chord, that is, the scale in which that chord has that secondary function.
- 8.  Create a new scale with a name and any number of pitches, which may be in any system of temperament and may have any interval structure; all of the above operations will work with such scales.
+ 4.  Transposing a given scale to a new tonic by any number of semitones, which can be fractional.
+ 5.  Transposing a given scale to a new tonic on any scale degree.
+ 6.  For a given chord in a given scale, return any other scales to which that chord also belongs; can be used to implement common-chord modulations.
+ 7.  For a given chord in a given scale, return it in the form of a secondary dominant or other secondary function, if that is possible; may be used to implement secondary dominants and other secondary functions.
+ 8.  For a given chord in a given scale and a secondary function, return the relative tonicization of that chord, that is, the scale in which that chord has that secondary function.
+ 9.  Create a new scale with a name and any number of pitches, which may be in any system of temperament and may have any interval structure; all of the above operations will work with such scales.
 
 The CsoundAC VoiceleadingNode class now implements conforming notes produced by children of this node to specific instances of the Chord class, by timed segment. This makes composing algorithmically using chords, neo-Riemannian transformations of chords, and automatic voice-leading much easier and more flexible.
 
