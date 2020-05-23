@@ -314,7 +314,7 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
                             divisionsPerOctave);
         }
     }
-    System::message("VoiceleadingNode::apply.\n");
+    System::inform("VoiceleadingNode::apply.\n");
 }
 
 void VoiceleadingNode::PT(double time, double P_, double T_)

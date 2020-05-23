@@ -132,7 +132,9 @@ if(BUILD_CSOUND_AC)
             PROPERTIES CPLUSPLUS ON
             SWIG_MODULE_NAME CsoundAC)
 
-        swig_add_module(CsoundAC python CsoundAC.i)
+        swig_add_library(CsoundAC 
+            LANGUAGE python 
+            SOURCES CsoundAC.i)
         swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${Python3_LIBRARIES})
 
         if(MUSICXML_LIBRARY)

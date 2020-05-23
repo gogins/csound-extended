@@ -94,7 +94,7 @@ void ThreadLock::endWait()
 
 FILE *System::logfile = 0;
 
-int System::messageLevel = ERROR_LEVEL | WARNING_LEVEL | INFORMATION_LEVEL;
+int System::messageLevel = ERROR_LEVEL | WARNING_LEVEL;
 
 void * System::userdata_ = 0;
 
