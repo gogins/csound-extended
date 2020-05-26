@@ -269,14 +269,12 @@ int Composition::performAll()
     System::inform("Composition::performAll...\n");
     auto started_at = System::startTiming();
     int errorStatus = performMaster();
-    if (errorStatus) {
-        return errorStatus;
-    }
+    System::inform("Composition::performMaster ended with %d.\n", errorStatus);
     double seconds = System::stopTiming(started_at);
     System::message("Performance took %9.4f seconds.\n", seconds);
     started_at = System::startTiming();
     errorStatus = translateMaster();
-    System::inform("Composition::performAll.\n");
+    System::inform("Composition::translateMaster ended with %d.\n", errorStatus);
     return errorStatus;
 }
 

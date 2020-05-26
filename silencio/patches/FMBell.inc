@@ -26,7 +26,7 @@ ifn3 = icosine
 ifn4 = icosine
 ivfn = icosine
 aout fmbell 1, i_frequency, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
-aenv transegr 0.0, .003, -6, 1.0, 9, -6, 0
+aenv transegr 0.0, .003, -6, 1.0, 9, -16, 0
 a_signal = aout * aenv
 i_attack = .0005  
 i_sustain = p3

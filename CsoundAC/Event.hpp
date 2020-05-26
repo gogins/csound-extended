@@ -187,6 +187,11 @@ public:
 #endif
     virtual Event &operator = (const Eigen::VectorXd &a);
 #ifndef SWIG
+    /** 
+     * Returns any properties of this as a string consisting of 
+     * "key"="value" pairs in CSV format.
+     */
+    virtual std::string getProperties() const;
     static int SORT_ORDER[];
     static const char *labels[];
 #endif
