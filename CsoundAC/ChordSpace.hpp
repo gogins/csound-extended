@@ -1569,6 +1569,16 @@ inline SILENCE_PUBLIC std::map<std::string, Chord> &chordsForNames() {
     return chordsForNames_;
 }
 
+inline SILENCE_PUBLIC std::map<Chord, std::string> &namesForScales() {
+    static std::map<Scale, std::string> namesForScales_;
+    return namesForScales_;
+}
+
+inline SILENCE_PUBLIC std::map<std::string, Scale> &scalesForNames() {
+    static std::map<std::string, Scale> scalesForNames_;
+    return scalesForNames_;
+}
+
 inline SILENCE_PUBLIC std::vector<std::string> split(std::string string_) {
     std::vector<std::string> tokens;
     std::istringstream iss(string_);
@@ -1578,7 +1588,7 @@ inline SILENCE_PUBLIC std::vector<std::string> split(std::string string_) {
     return tokens;
 }
 
-inline void fill(std::string rootName, double rootPitch, std::string typeName, std::string typePitches, bool debug = false) {
+inline void fill(std::string rootName, double rootPitch, std::string typeName, std::string typePitches, bool is_scale, bool debug = false) {
     Chord chord;
     std::string chordName = rootName + typeName;
     std::vector<std::string> splitPitches = split(typePitches);
@@ -1595,6 +1605,11 @@ inline void fill(std::string rootName, double rootPitch, std::string typeName, s
     System::debug("eOP_:   %s  chordName: %s\n", eOP_.toString().c_str(), chordName.c_str());
     chordsForNames()[chordName] = eOP_;
     namesForChords()[eOP_] = chordName;
+    if (is_scale == true) {
+        Scale scale(chordName);
+        scalesForNames()[chordName] = scale;
+        namesForScales()[scale] = chordName;
+    }
 }
 
 inline void initializeNames() {
@@ -1621,30 +1636,30 @@ inline void initializeNames() {
             fill(rootName, rootPitch, " minor seventh  ",  "C                             Bb  ");
             fill(rootName, rootPitch, " major seventh",    "C                                B");
             // Scales.
-            fill(rootName, rootPitch, " major",            "C     D     E  F     G     A     B");
-            fill(rootName, rootPitch, " minor",            "C     D  Eb    F     G  Ab    Bb  ");
-            fill(rootName, rootPitch, " natural minor",    "C     D  Eb    F     G  Ab    Bb  ");
-            fill(rootName, rootPitch, " harmonic minor",   "C     D  Eb    F     G  Ab       B");
-            fill(rootName, rootPitch, " chromatic",        "C  C# D  D# E  F  F# G  G# A  A# B");
-            fill(rootName, rootPitch, " whole tone",       "C     D     E     F#    G#    A#  ");
-            fill(rootName, rootPitch, " diminished",       "C     D  D#    F  F#    G# A     B");
-            fill(rootName, rootPitch, " pentatonic",       "C     D     E        G     A      ");
-            fill(rootName, rootPitch, " pentatonic major", "C     D     E        G     A      ");
-            fill(rootName, rootPitch, " pentatonic minor", "C        Eb    F     G        Bb  ");
-            fill(rootName, rootPitch, " augmented",        "C        Eb E        G  Ab    Bb  ");
-            fill(rootName, rootPitch, " Lydian dominant",  "C     D     E     Gb G     A  Bb  ");
-            fill(rootName, rootPitch, " 3 semitone",       "C        D#       F#       A      ");
-            fill(rootName, rootPitch, " 4 semitone",       "C           E           G#        ");
-            fill(rootName, rootPitch, " blues",            "C     D  Eb    F  Gb G        Bb  ");
-            fill(rootName, rootPitch, " bebop",            "C     D     E  F     G     A  Bb B");
+            fill(rootName, rootPitch, " major",            "C     D     E  F     G     A     B", true);
+            fill(rootName, rootPitch, " minor",            "C     D  Eb    F     G  Ab    Bb  ", true);
+            fill(rootName, rootPitch, " natural minor",    "C     D  Eb    F     G  Ab    Bb  ", true);
+            fill(rootName, rootPitch, " harmonic minor",   "C     D  Eb    F     G  Ab       B", true);
+            fill(rootName, rootPitch, " chromatic",        "C  C# D  D# E  F  F# G  G# A  A# B", true);
+            fill(rootName, rootPitch, " whole tone",       "C     D     E     F#    G#    A#  ", true);
+            fill(rootName, rootPitch, " diminished",       "C     D  D#    F  F#    G# A     B", true);
+            fill(rootName, rootPitch, " pentatonic",       "C     D     E        G     A      ", true);
+            fill(rootName, rootPitch, " pentatonic major", "C     D     E        G     A      ", true);
+            fill(rootName, rootPitch, " pentatonic minor", "C        Eb    F     G        Bb  ", true);
+            fill(rootName, rootPitch, " augmented",        "C        Eb E        G  Ab    Bb  ", true);
+            fill(rootName, rootPitch, " Lydian dominant",  "C     D     E     Gb G     A  Bb  ", true);
+            fill(rootName, rootPitch, " 3 semitone",       "C        D#       F#       A      ", true);
+            fill(rootName, rootPitch, " 4 semitone",       "C           E           G#        ", true);
+            fill(rootName, rootPitch, " blues",            "C     D  Eb    F  Gb G        Bb  ", true);
+            fill(rootName, rootPitch, " bebop",            "C     D     E  F     G     A  Bb B", true);
             // Modes.
-            fill(rootName, rootPitch, " Ionian",           "C     D     E  F     G     A     B");
-            fill(rootName, rootPitch, " Dorian",           "C     D  Eb    F     G     A  Bb  ");
-            fill(rootName, rootPitch, " Phrygian",         "C  Db    Eb    F     G  Ab    Bb  ");
-            fill(rootName, rootPitch, " Lydian",           "C     D     E     F# G     A     B");
-            fill(rootName, rootPitch, " Mixolydian",       "C     D     E  F     G     A  Bb  ");
-            fill(rootName, rootPitch, " Aeolian",          "C     D  Eb    F     G  Ab    Bb  ");
-            fill(rootName, rootPitch, " Locrian",          "C  Db    Eb    F  Gb    Ab    Bb B");
+            fill(rootName, rootPitch, " Ionian",           "C     D     E  F     G     A     B", true);
+            fill(rootName, rootPitch, " Dorian",           "C     D  Eb    F     G     A  Bb  ", true);
+            fill(rootName, rootPitch, " Phrygian",         "C  Db    Eb    F     G  Ab    Bb  ", true);
+            fill(rootName, rootPitch, " Lydian",           "C     D     E     F# G     A     B", true);
+            fill(rootName, rootPitch, " Mixolydian",       "C     D     E  F     G     A  Bb  ", true);
+            fill(rootName, rootPitch, " Aeolian",          "C     D  Eb    F     G  Ab    Bb  ", true);
+            fill(rootName, rootPitch, " Locrian",          "C  Db    Eb    F  Gb    Ab    Bb B", true);
             // Major chords.
             fill(rootName, rootPitch, "M",                 "C           E        G            ");
             fill(rootName, rootPitch, "6",                 "C           E        G     A      ");
@@ -2365,7 +2380,7 @@ class SILENCE_PUBLIC Scale : public Chord {
          * construction of new scales with any temperament and with any 
          * interval content. If a Scale with the proposed name already exists, 
          * that Scale is returned. New Scales are also stored 
-         * as new named Chords.
+         * as new named Scales.
          */
         Scale(std::string name, const Chord &scale_pitches) {
             Scale temporary(name);
@@ -2379,7 +2394,8 @@ class SILENCE_PUBLIC Scale : public Chord {
                 setPitch(index, scale_pitches.getPitch(index));
             }
             name_ = name;
-            chordsForNames()[name_] = *this;
+            scalesForNames()[name_] = *this;
+            namesForScales()[*this] = name_;
         }
         virtual ~Scale() {};
         virtual Scale &operator = (const Scale &other) {
@@ -2426,7 +2442,7 @@ class SILENCE_PUBLIC Scale : public Chord {
         }
         /** 
          * Returns a copy of this Scale transposed to the indicated 
-         * _scale degree_. 
+         * _scale degree_; used to modulate. 
          */
         virtual Scale transpose_to_degree(int degrees) const {
             System::debug("Scale::transpose_to_degree(%9.4f)...\n", degrees);

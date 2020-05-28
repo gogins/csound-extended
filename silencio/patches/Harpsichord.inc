@@ -17,7 +17,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 82.4
+i_level_correction = 110
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Harpsichord_level)
@@ -33,7 +33,7 @@ i_sustain = p3
 i_release = 0.01
 xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
-a_signal = a_signal * a_declicking
+a_signal = a_signal * a_declicking * k_gain
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
