@@ -252,6 +252,16 @@ Q(c, n, m)      Contexual transposition;
                 Q(c, n, m) := T(c, n) if c is a T-form of m,
                 or T(c, -n) if c is an I-form of M. Not a generalized form
                 of L or R; but, like them, K and Q generate the T-I group.
+                
+TO DO
+
+The root_name type_name thing is completely bogus of course. The chord when 
+transformed must be able to return its proper name. 
+
+I think it will be necessary to use a multimap to handle enharmonic names.
+
+The secondary function must return all matching scales, as do 
+tonicizations and modulations
 
 */
 
@@ -449,12 +459,20 @@ static const char* namesForEquivalenceRelations[] = {
 
 // Forward declarations:
 
+SILENCE_PUBLIC std::vector<std::string> split(std::string);
 class SILENCE_PUBLIC Chord;
+class SILENCE_PUBLIC Scale;
 SILENCE_PUBLIC double euclidean(const csound::Chord &a, const csound::Chord &b);
-SILENCE_PUBLIC double pitchClassForName(std::string pitchclass);
+
+
+SILENCE_PUBLIC double pitchClassForName(std::string name);
+SILENCE_PUBLIC std::string nameForPitchClass(double pitch);
 SILENCE_PUBLIC std::string nameForChord(const Chord &chord);
 SILENCE_PUBLIC const Chord &chordForName(std::string name);
-SILENCE_PUBLIC std::vector<std::string> split(std::string);
+SILENCE_PUBLIC std::string nameForScale(const Scale &scale);
+SILENCE_PUBLIC const Scale &scaleForName(std::string name);
+SILENCE_PUBLIC std::map<Scale, std::string> &namesForScales();
+SILENCE_PUBLIC std::map<std::string, Scale> &scalesForNames();
 
 // Equivalence relations are implemented first as template functions at namespace scope,
 // and then as class member functions delegating to the corresponding namespace functions.
@@ -526,6 +544,8 @@ public:
     }
     virtual Chord &operator = (const Chord &other) {
         Eigen::MatrixXd::operator=(other);
+        root_name = other.getRootName();
+        type_name = other.getTypeName();
         return *this;
     }
     virtual Chord &operator = (const std::vector<double> &other) {
@@ -1412,6 +1432,29 @@ public:
     virtual bool less(const Chord &other) const {
         return *this < other;
     }
+    virtual void setRootName(std::string root_name_) {
+        root_name = root_name_;
+    }
+    virtual std::string getRootName() const {
+        return root_name;
+    }
+    /**
+     * Sets the type name of this; if the type name 
+     * begins with a space, that is removed.
+     */
+    virtual void setTypeName(std::string type_name_) {
+        if (type_name_[0] == ' ') {
+            type_name = type_name_.substr(1);
+        } else {
+            type_name = type_name_;
+        }
+    }
+    virtual std::string getTypeName() const {
+        return type_name;
+    }
+protected:
+    std::string root_name;
+    std::string type_name;
 };
 
 inline SILENCE_PUBLIC bool operator == (const Chord &a, const Chord &b) {
@@ -1502,246 +1545,6 @@ inline SILENCE_PUBLIC Chord midpoint(const Chord &a, const Chord &b) {
     return midpoint_;
 }
 
-
-inline SILENCE_PUBLIC const std::map<std::string, double> &pitchClassesForNames() {
-    static bool pitchClassesForNamesInitialized = false;
-    static std::map<std::string, double> pitchClassesForNames_;
-    if (!pitchClassesForNamesInitialized) {
-        pitchClassesForNamesInitialized = true;
-        pitchClassesForNames_["Ab"] =   8.;
-        pitchClassesForNames_["A" ] =   9.;
-        pitchClassesForNames_["A#"] =  10.;
-        pitchClassesForNames_["Bb"] =  10.;
-        pitchClassesForNames_["B" ] =  11.;
-        pitchClassesForNames_["B#"] =   0.;
-        pitchClassesForNames_["Cb"] =  11.;
-        pitchClassesForNames_["C" ] =   0.;
-        pitchClassesForNames_["C#"] =   1.;
-        pitchClassesForNames_["Db"] =   1.;
-        pitchClassesForNames_["D" ] =   2.;
-        pitchClassesForNames_["D#"] =   3.;
-        pitchClassesForNames_["Eb"] =   3.;
-        pitchClassesForNames_["E" ] =   4.;
-        pitchClassesForNames_["E#"] =   5.;
-        pitchClassesForNames_["Fb"] =   4.;
-        pitchClassesForNames_["F" ] =   5.;
-        pitchClassesForNames_["F#"] =   6.;
-        pitchClassesForNames_["Gb"] =   6.;
-        pitchClassesForNames_["G" ] =   7.;
-        pitchClassesForNames_["G#"] =   8.;
-    }
-    return const_cast<std::map<std::string, double> &>(pitchClassesForNames_);
-}
-
-inline SILENCE_PUBLIC double pitchClassForName(std::string name) {
-    const std::map<std::string, double> &pitchClassesForNames_ = pitchClassesForNames();
-    std::map<std::string, double>::const_iterator it = pitchClassesForNames_.find(name);
-    if (it == pitchClassesForNames_.end()) {
-        return DBL_MAX;
-    } else {
-        return it->second;
-    }
-}
-
-/**
- * Returns the name of the pitch-class of the pitch.
- * The first of enharmonic names is always used, sorry. 
- * If there is no matching name, an empty string is returned.
- */
-inline SILENCE_PUBLIC std::string nameForPitchClass(double pitch) {
-    auto pc = epc(pitch);
-    const std::map<std::string, double> &pitchClassesForNames_ = pitchClassesForNames();
-    for (auto it = pitchClassesForNames_.begin(); it != pitchClassesForNames_.end(); ++it) {
-        if (eq_epsilon(it->second, pc) == true) {
-            return it->first;
-        }
-    }
-    return "";
-}
-
-inline SILENCE_PUBLIC std::map<Chord, std::string> &namesForChords() {
-    static std::map<Chord, std::string> namesForChords_;
-    return namesForChords_;
-}
-
-inline SILENCE_PUBLIC std::map<std::string, Chord> &chordsForNames() {
-    static std::map<std::string, Chord> chordsForNames_;
-    return chordsForNames_;
-}
-
-inline SILENCE_PUBLIC std::map<Chord, std::string> &namesForScales() {
-    static std::map<Scale, std::string> namesForScales_;
-    return namesForScales_;
-}
-
-inline SILENCE_PUBLIC std::map<std::string, Scale> &scalesForNames() {
-    static std::map<std::string, Scale> scalesForNames_;
-    return scalesForNames_;
-}
-
-inline SILENCE_PUBLIC std::vector<std::string> split(std::string string_) {
-    std::vector<std::string> tokens;
-    std::istringstream iss(string_);
-    std::copy(std::istream_iterator<std::string>(iss),
-              std::istream_iterator<std::string>(),
-              std::back_inserter<std::vector<std::string> >(tokens));
-    return tokens;
-}
-
-inline void fill(std::string rootName, double rootPitch, std::string typeName, std::string typePitches, bool is_scale, bool debug = false) {
-    Chord chord;
-    std::string chordName = rootName + typeName;
-    std::vector<std::string> splitPitches = split(typePitches);
-    System::debug("chordName: %s = rootName: %s  rootPitch: %f  typeName: %s  typePitches: %s\n", chordName.c_str(), rootName.c_str(), rootPitch, typeName.c_str(), typePitches.c_str());
-    chord.resize(splitPitches.size());
-    for (int voice = 0, voiceN = splitPitches.size(); voice < voiceN; ++voice) {
-        double pitch = pitchClassForName(splitPitches[voice]);
-        System::debug("voice: %3d  pc: %-4s  pitch: %9.4f\n", voice, splitPitches[voice].c_str(), pitch);
-        chord.setPitch(voice, pitch);
-    }
-    System::debug("chord type: %s\n", chord.toString().c_str());
-    chord = chord.T(rootPitch);
-    Chord eOP_ = chord.eOP();
-    System::debug("eOP_:   %s  chordName: %s\n", eOP_.toString().c_str(), chordName.c_str());
-    chordsForNames()[chordName] = eOP_;
-    namesForChords()[eOP_] = chordName;
-    if (is_scale == true) {
-        Scale scale(chordName);
-        scalesForNames()[chordName] = scale;
-        namesForScales()[scale] = chordName;
-    }
-}
-
-inline void initializeNames() {
-    static bool initializeNamesInitialized = false;
-    if (!initializeNamesInitialized) {
-        initializeNamesInitialized = true;
-        System::debug("Initializing chord names...\n");
-        const std::map<std::string, double> &pitchClassesForNames_ = pitchClassesForNames();
-        for (std::map<std::string, double>::const_iterator it = pitchClassesForNames_.begin();
-                it != pitchClassesForNames_.end();
-                ++it) {
-            const std::string &rootName = it->first;
-            const double &rootPitch = it->second;
-            System::debug("rootName: %-3s  rootPitch: %9.5f\n", rootName.c_str(), rootPitch);
-            fill(rootName, rootPitch, " minor second",     "C  C#                             ");
-            fill(rootName, rootPitch, " major second",     "C     D                           ");
-            fill(rootName, rootPitch, " minor third",      "C        Eb                       ");
-            fill(rootName, rootPitch, " major third",      "C           E                     ");
-            fill(rootName, rootPitch, " perfect fourth",   "C              F                  ");
-            fill(rootName, rootPitch, " tritone",          "C                 F#              ");
-            fill(rootName, rootPitch, " perfect fifth",    "C                    G            ");
-            fill(rootName, rootPitch, " augmented fifth",  "C                       G#        ");
-            fill(rootName, rootPitch, " sixth",            "C                          A      ");
-            fill(rootName, rootPitch, " minor seventh  ",  "C                             Bb  ");
-            fill(rootName, rootPitch, " major seventh",    "C                                B");
-            // Scales.
-            fill(rootName, rootPitch, " major",            "C     D     E  F     G     A     B", true);
-            fill(rootName, rootPitch, " minor",            "C     D  Eb    F     G  Ab    Bb  ", true);
-            fill(rootName, rootPitch, " natural minor",    "C     D  Eb    F     G  Ab    Bb  ", true);
-            fill(rootName, rootPitch, " harmonic minor",   "C     D  Eb    F     G  Ab       B", true);
-            fill(rootName, rootPitch, " chromatic",        "C  C# D  D# E  F  F# G  G# A  A# B", true);
-            fill(rootName, rootPitch, " whole tone",       "C     D     E     F#    G#    A#  ", true);
-            fill(rootName, rootPitch, " diminished",       "C     D  D#    F  F#    G# A     B", true);
-            fill(rootName, rootPitch, " pentatonic",       "C     D     E        G     A      ", true);
-            fill(rootName, rootPitch, " pentatonic major", "C     D     E        G     A      ", true);
-            fill(rootName, rootPitch, " pentatonic minor", "C        Eb    F     G        Bb  ", true);
-            fill(rootName, rootPitch, " augmented",        "C        Eb E        G  Ab    Bb  ", true);
-            fill(rootName, rootPitch, " Lydian dominant",  "C     D     E     Gb G     A  Bb  ", true);
-            fill(rootName, rootPitch, " 3 semitone",       "C        D#       F#       A      ", true);
-            fill(rootName, rootPitch, " 4 semitone",       "C           E           G#        ", true);
-            fill(rootName, rootPitch, " blues",            "C     D  Eb    F  Gb G        Bb  ", true);
-            fill(rootName, rootPitch, " bebop",            "C     D     E  F     G     A  Bb B", true);
-            // Modes.
-            fill(rootName, rootPitch, " Ionian",           "C     D     E  F     G     A     B", true);
-            fill(rootName, rootPitch, " Dorian",           "C     D  Eb    F     G     A  Bb  ", true);
-            fill(rootName, rootPitch, " Phrygian",         "C  Db    Eb    F     G  Ab    Bb  ", true);
-            fill(rootName, rootPitch, " Lydian",           "C     D     E     F# G     A     B", true);
-            fill(rootName, rootPitch, " Mixolydian",       "C     D     E  F     G     A  Bb  ", true);
-            fill(rootName, rootPitch, " Aeolian",          "C     D  Eb    F     G  Ab    Bb  ", true);
-            fill(rootName, rootPitch, " Locrian",          "C  Db    Eb    F  Gb    Ab    Bb B", true);
-            // Major chords.
-            fill(rootName, rootPitch, "M",                 "C           E        G            ");
-            fill(rootName, rootPitch, "6",                 "C           E        G     A      ");
-            fill(rootName, rootPitch, "69",                "C     D     E        G     A      ");
-            fill(rootName, rootPitch, "69b5",              "C     D     E     Gb       A      ");
-            fill(rootName, rootPitch, "M7",                "C           E        G           B");
-            fill(rootName, rootPitch, "M9",                "C     D     E        G           B");
-            fill(rootName, rootPitch, "M11",               "C     D     E  F     G           B");
-            fill(rootName, rootPitch, "M#11",              "C     D     E  F#    G           B");
-            fill(rootName, rootPitch, "M13",               "C     D     E  F     G     A     B");
-            // Minor chords.
-            fill(rootName, rootPitch, "m",                 "C        Eb          G            ");
-            fill(rootName, rootPitch, "m6",                "C        Eb          G     A      ");
-            fill(rootName, rootPitch, "m69",               "C     D  Eb          G     A      ");
-            fill(rootName, rootPitch, "m7",                "C        Eb          G        Bb  ");
-            fill(rootName, rootPitch, "m7b9",              "C  Db    Eb          G        Bb  ");
-            fill(rootName, rootPitch, "m7b9b5",            "C  Db    Eb       Gb          Bb  ");
-            fill(rootName, rootPitch, "m#7",               "C        Eb          G           B");
-            fill(rootName, rootPitch, "m7b5",              "C        Eb       Gb          Bb  ");
-            fill(rootName, rootPitch, "m9",                "C     D  Eb          G        Bb  ");
-            fill(rootName, rootPitch, "m9#7",              "C     D  Eb          G           B");
-            fill(rootName, rootPitch, "m11",               "C     D  Eb    F     G        Bb  ");
-            fill(rootName, rootPitch, "m#11",              "C     D  Eb    F     G        Bb  ");
-            fill(rootName, rootPitch, "m13",               "C     D  Eb    F     G     A  Bb  ");
-            // Augmented chords.
-            fill(rootName, rootPitch, "+",                 "C            E         G#         ");
-            fill(rootName, rootPitch, "7#5",               "C            E         G#     Bb  ");
-            fill(rootName, rootPitch, "7b9#5",             "C  Db        E         G#     Bb  ");
-            fill(rootName, rootPitch, "9#5",               "C     D      E         G#     Bb  ");
-            // Diminished chords.
-            fill(rootName, rootPitch, "o",                 "C        Eb       Gb              ");
-            fill(rootName, rootPitch, "o7",                "C        Eb       Gb       A      ");
-            // Suspended chords.
-            fill(rootName, rootPitch, "6sus",              "C              F     G     A      ");
-            fill(rootName, rootPitch, "69sus",             "C     D        F     G     A      ");
-            fill(rootName, rootPitch, "7sus",              "C              F     G        Bb  ");
-            fill(rootName, rootPitch, "9sus",              "C     D        F     G        Bb  ");
-            fill(rootName, rootPitch, "M7sus",             "C              F     G           B");
-            fill(rootName, rootPitch, "M9sus",             "C     D        F     G           B");
-            // Dominant chords.
-            fill(rootName, rootPitch, "7",                 "C            E       G        Bb  ");
-            fill(rootName, rootPitch, "7b5",               "C            E    Gb          Bb  ");
-            fill(rootName, rootPitch, "7b9",               "C  Db        E       G        Bb  ");
-            fill(rootName, rootPitch, "7b9b5",             "C  Db        E    Gb          Bb  ");
-            fill(rootName, rootPitch, "9",                 "C     D      E       G        Bb  ");
-            fill(rootName, rootPitch, "9#11",              "C     D      E F#    G        Bb  ");
-            fill(rootName, rootPitch, "13",                "C     D      E F     G     A  Bb  ");
-            fill(rootName, rootPitch, "13#11",             "C     D      E F#    G     A  Bb  ");
-        }
-    }
-}
-
-inline SILENCE_PUBLIC std::string nameForChord(const Chord &chord) {
-    static bool nameForChordInitialized = false;
-    if (!nameForChordInitialized) {
-        nameForChordInitialized = true;
-        initializeNames();
-    }
-    std::map<Chord, std::string> &namesForChords_ = namesForChords();
-    if (namesForChords_.find(chord) == namesForChords_.end()) {
-        return "";
-    } else {
-        return namesForChords_[chord];
-    }
-}
-
-inline SILENCE_PUBLIC const Chord &chordForName(std::string name) {
-    static bool chordForNameInitialized = false;
-    if (!chordForNameInitialized) {
-        chordForNameInitialized = true;
-        initializeNames();
-    }
-    const std::map<std::string, Chord> &chordsForNames_ = chordsForNames();
-    std::map<std::string, Chord>::const_iterator it = chordsForNames_.find(name);
-    if (it == chordsForNames_.end()) {
-        static Chord chord;
-        chord.resize(0);
-        return chord;
-    } else {
-        return it->second;
-    }
-}
 
 inline SILENCE_PUBLIC bool next(Chord &iterator_, const Chord &origin, double range, double g) {
     int leastSignificantVoice = iterator_.voices() - 1;
@@ -2508,23 +2311,45 @@ class SILENCE_PUBLIC Scale : public Chord {
             return -1;
         }
         /**
-         * For any Chord belonging to this Scale, returns a list of other 
-         * Scales to which that Chord also belongs. Switching to one of these 
-         * Scales will perform some sort of modulation. NOTE: This method only 
-         * works in 12-tone equal temperament. TODO: Get to work for all 12TET
-         * Scales, not only major scales.
+         * For any Chord belonging to this Scale, returns in the argument a 
+         * list of other Scales to which that Chord also belongs. Switching to 
+         * one of these Scales will perform some sort of modulation. The list 
+         * of scale type names restricts the types of Scale that will be 
+         * returned.
          */
-        virtual std::vector<Scale> modulations(const Chord &chord) const {
-            Chord eop = chord.eOP();
-            std::vector<Scale> scales;
-            for (int semitones = 1; semitones < 12; ++semitones) {
-                Scale scale = transpose(semitones);
-                int degree = scale.degree(chord);
-                if (degree != -1) {
-                    scales.push_back(scale);
+        virtual void modulations(std::vector<Scale> &result, const Chord &current_chord, int voices, const std::vector<std::string> &type_names) const {
+            result.clear();
+            int current_degree = degree(current_chord);
+            if (current_degree == -1) {
+                return;
+            }
+            if (voices == -1) {
+                voices = current_chord.voices();
+            }
+            Chord chord_ = chord(current_degree, voices);
+            for (auto it : namesForScales()) {
+                if (it.first.degree(chord_) != -1) {
+                    for (auto type_name : type_names) {
+                         if (it.first.getTypeName() == type_name) {
+                            result.push_back(it.first);
+                        }
+                    }
                 }
             }
-            return scales;
+        }
+        /**
+         * Returns a list of common modulations, that is, other major or minor 
+         * Scales to which the Chord belongs; optionally the Chord can first 
+         * be changed in size (e.g. from a 9th chord to a triad) in order to 
+         * find more or fewer possible modulations.
+         */
+        virtual std::vector<Scale> modulations(const Chord &chord, int voices = -1) const {
+            std::vector<Scale> result;
+            std::vector<std::string> type_names;
+            type_names.push_back("major");
+            type_names.push_back("minor");
+            modulations(result, chord, voices, type_names);
+            return result;
         }
         /**
          * Returns the relative tonicization of the Chord, that is, the scale 
@@ -2569,7 +2394,32 @@ class SILENCE_PUBLIC Scale : public Chord {
             Scale tonicization = relative_tonicization(current_chord, secondary_function);
             Chord secondary_ = tonicization.chord(secondary_function, voices_);
             return secondary_;
-         }
+        }
+        /**
+         * Returns all major or minor Scales for which the current Chord is 
+         * the tonic (scale degree 1). The number of voices defaults to that 
+         * of the current Chord, but may be larger or smaller.
+         * NOTE: Here, tonicizations are modulations in which the Chord has 
+         * degree 1, i.e. is the tonic chord.
+         */
+        virtual std::vector<Scale> tonicizations(const Chord &current_chord, int voices = -1) const {
+            static std::vector<Scale> result;
+            int current_degree = degree(current_chord);
+            if (current_degree == -1) {
+                return result;
+            }
+            if (voices == -1) {
+                voices = current_chord.voices();
+            }
+            Chord chord_ = chord(current_degree, voices);
+            std::vector<Scale> modulations_ = modulations(chord_);
+            for (auto it : modulations_) {
+                if (it.degree(chord_) != -1) {
+                    result.push_back(it);
+                }
+            }
+            return result;
+        }
     protected:
         std::string name_;
 };
@@ -3025,6 +2875,282 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
     }
     return fundamentalDomain;
 }
+
+inline SILENCE_PUBLIC const std::map<std::string, double> &pitchClassesForNames() {
+    static bool pitchClassesForNamesInitialized = false;
+    static std::map<std::string, double> pitchClassesForNames_;
+    if (!pitchClassesForNamesInitialized) {
+        pitchClassesForNamesInitialized = true;
+        pitchClassesForNames_["Ab"] =   8.;
+        pitchClassesForNames_["A" ] =   9.;
+        pitchClassesForNames_["A#"] =  10.;
+        pitchClassesForNames_["Bb"] =  10.;
+        pitchClassesForNames_["B" ] =  11.;
+        pitchClassesForNames_["B#"] =   0.;
+        pitchClassesForNames_["Cb"] =  11.;
+        pitchClassesForNames_["C" ] =   0.;
+        pitchClassesForNames_["C#"] =   1.;
+        pitchClassesForNames_["Db"] =   1.;
+        pitchClassesForNames_["D" ] =   2.;
+        pitchClassesForNames_["D#"] =   3.;
+        pitchClassesForNames_["Eb"] =   3.;
+        pitchClassesForNames_["E" ] =   4.;
+        pitchClassesForNames_["E#"] =   5.;
+        pitchClassesForNames_["Fb"] =   4.;
+        pitchClassesForNames_["F" ] =   5.;
+        pitchClassesForNames_["F#"] =   6.;
+        pitchClassesForNames_["Gb"] =   6.;
+        pitchClassesForNames_["G" ] =   7.;
+        pitchClassesForNames_["G#"] =   8.;
+    }
+    return const_cast<std::map<std::string, double> &>(pitchClassesForNames_);
+}
+
+inline SILENCE_PUBLIC double pitchClassForName(std::string name) {
+    const std::map<std::string, double> &pitchClassesForNames_ = pitchClassesForNames();
+    std::map<std::string, double>::const_iterator it = pitchClassesForNames_.find(name);
+    if (it == pitchClassesForNames_.end()) {
+        return DBL_MAX;
+    } else {
+        return it->second;
+    }
+}
+
+/**
+ * Returns the name of the pitch-class of the pitch.
+ * The first of enharmonic names is always used, sorry. 
+ * If there is no matching name, an empty string is returned.
+ */
+inline SILENCE_PUBLIC std::string nameForPitchClass(double pitch) {
+    auto pc = epc(pitch);
+    const std::map<std::string, double> &pitchClassesForNames_ = pitchClassesForNames();
+    for (auto it = pitchClassesForNames_.begin(); it != pitchClassesForNames_.end(); ++it) {
+        if (eq_epsilon(it->second, pc) == true) {
+            return it->first;
+        }
+    }
+    return "";
+}
+
+inline SILENCE_PUBLIC std::map<Chord, std::string> &namesForChords() {
+    static std::map<Chord, std::string> namesForChords_;
+    return namesForChords_;
+}
+
+inline SILENCE_PUBLIC std::map<std::string, Chord> &chordsForNames() {
+    static std::map<std::string, Chord> chordsForNames_;
+    return chordsForNames_;
+}
+
+inline SILENCE_PUBLIC std::map<Scale, std::string> &namesForScales() {
+    static std::map<Scale, std::string> namesForScales_;
+    return namesForScales_;
+}
+
+inline SILENCE_PUBLIC std::map<std::string, Scale> &scalesForNames() {
+    static std::map<std::string, Scale> scalesForNames_;
+    return scalesForNames_;
+}
+
+inline SILENCE_PUBLIC std::vector<std::string> split(std::string string_) {
+    std::vector<std::string> tokens;
+    std::istringstream iss(string_);
+    std::copy(std::istream_iterator<std::string>(iss),
+              std::istream_iterator<std::string>(),
+              std::back_inserter<std::vector<std::string> >(tokens));
+    return tokens;
+}
+
+inline void fill(std::string rootName, double rootPitch, std::string typeName, std::string typePitches, bool is_scale = false) {
+    Chord chord;
+    std::string chordName = rootName + typeName;
+    chord.setRootName(rootName);
+    chord.setTypeName(typeName);
+    std::vector<std::string> splitPitches = split(typePitches);
+    System::debug("chordName: %s = rootName: %s  rootPitch: %f  typeName: %s  typePitches: %s\n", chordName.c_str(), rootName.c_str(), rootPitch, typeName.c_str(), typePitches.c_str());
+    chord.resize(splitPitches.size());
+    for (int voice = 0, voiceN = splitPitches.size(); voice < voiceN; ++voice) {
+        double pitch = pitchClassForName(splitPitches[voice]);
+        System::debug("voice: %3d  pc: %-4s  pitch: %9.4f\n", voice, splitPitches[voice].c_str(), pitch);
+        chord.setPitch(voice, pitch);
+    }
+    System::debug("chord type: %s\n", chord.toString().c_str());
+    chord = chord.T(rootPitch);
+    Chord eOP_ = chord.eOP();
+    System::debug("eOP_:   %s  chordName: %s\n", eOP_.toString().c_str(), chordName.c_str());
+    chordsForNames()[chordName] = eOP_;
+    namesForChords()[eOP_] = chordName;
+    if (is_scale == true) {
+        Scale scale(chordName, chord);
+        scale.setRootName(rootName);
+        scale.setTypeName(typeName);
+        scalesForNames()[chordName] = scale;
+        namesForScales()[scale] = chordName;
+    }
+}
+
+inline void initializeNames() {
+    static bool initializeNamesInitialized = false;
+    if (!initializeNamesInitialized) {
+        initializeNamesInitialized = true;
+        System::debug("Initializing chord names...\n");
+        const std::map<std::string, double> &pitchClassesForNames_ = pitchClassesForNames();
+        for (std::map<std::string, double>::const_iterator it = pitchClassesForNames_.begin();
+                it != pitchClassesForNames_.end();
+                ++it) {
+            const std::string &rootName = it->first;
+            const double &rootPitch = it->second;
+            System::debug("rootName: %-3s  rootPitch: %9.5f\n", rootName.c_str(), rootPitch);
+            fill(rootName, rootPitch, " minor second",     "C  C#                             ");
+            fill(rootName, rootPitch, " major second",     "C     D                           ");
+            fill(rootName, rootPitch, " minor third",      "C        Eb                       ");
+            fill(rootName, rootPitch, " major third",      "C           E                     ");
+            fill(rootName, rootPitch, " perfect fourth",   "C              F                  ");
+            fill(rootName, rootPitch, " tritone",          "C                 F#              ");
+            fill(rootName, rootPitch, " perfect fifth",    "C                    G            ");
+            fill(rootName, rootPitch, " augmented fifth",  "C                       G#        ");
+            fill(rootName, rootPitch, " sixth",            "C                          A      ");
+            fill(rootName, rootPitch, " minor seventh  ",  "C                             Bb  ");
+            fill(rootName, rootPitch, " major seventh",    "C                                B");
+            // Scales.
+            fill(rootName, rootPitch, " major",            "C     D     E  F     G     A     B", true);
+            fill(rootName, rootPitch, " minor",            "C     D  Eb    F     G  Ab    Bb  ", true);
+            fill(rootName, rootPitch, " natural minor",    "C     D  Eb    F     G  Ab    Bb  ", true);
+            fill(rootName, rootPitch, " harmonic minor",   "C     D  Eb    F     G  Ab       B", true);
+            fill(rootName, rootPitch, " chromatic",        "C  C# D  D# E  F  F# G  G# A  A# B", true);
+            fill(rootName, rootPitch, " whole tone",       "C     D     E     F#    G#    A#  ", true);
+            fill(rootName, rootPitch, " diminished",       "C     D  D#    F  F#    G# A     B", true);
+            fill(rootName, rootPitch, " pentatonic",       "C     D     E        G     A      ", true);
+            fill(rootName, rootPitch, " pentatonic major", "C     D     E        G     A      ", true);
+            fill(rootName, rootPitch, " pentatonic minor", "C        Eb    F     G        Bb  ", true);
+            fill(rootName, rootPitch, " augmented",        "C        Eb E        G  Ab    Bb  ", true);
+            fill(rootName, rootPitch, " Lydian dominant",  "C     D     E     Gb G     A  Bb  ", true);
+            fill(rootName, rootPitch, " 3 semitone",       "C        D#       F#       A      ", true);
+            fill(rootName, rootPitch, " 4 semitone",       "C           E           G#        ", true);
+            fill(rootName, rootPitch, " blues",            "C     D  Eb    F  Gb G        Bb  ", true);
+            fill(rootName, rootPitch, " bebop",            "C     D     E  F     G     A  Bb B", true);
+            // Modes.
+            fill(rootName, rootPitch, " Ionian",           "C     D     E  F     G     A     B", true);
+            fill(rootName, rootPitch, " Dorian",           "C     D  Eb    F     G     A  Bb  ", true);
+            fill(rootName, rootPitch, " Phrygian",         "C  Db    Eb    F     G  Ab    Bb  ", true);
+            fill(rootName, rootPitch, " Lydian",           "C     D     E     F# G     A     B", true);
+            fill(rootName, rootPitch, " Mixolydian",       "C     D     E  F     G     A  Bb  ", true);
+            fill(rootName, rootPitch, " Aeolian",          "C     D  Eb    F     G  Ab    Bb  ", true);
+            fill(rootName, rootPitch, " Locrian",          "C  Db    Eb    F  Gb    Ab    Bb B", true);
+            // Major chords.
+            fill(rootName, rootPitch, "M",                 "C           E        G            ");
+            fill(rootName, rootPitch, "6",                 "C           E        G     A      ");
+            fill(rootName, rootPitch, "69",                "C     D     E        G     A      ");
+            fill(rootName, rootPitch, "69b5",              "C     D     E     Gb       A      ");
+            fill(rootName, rootPitch, "M7",                "C           E        G           B");
+            fill(rootName, rootPitch, "M9",                "C     D     E        G           B");
+            fill(rootName, rootPitch, "M11",               "C     D     E  F     G           B");
+            fill(rootName, rootPitch, "M#11",              "C     D     E  F#    G           B");
+            fill(rootName, rootPitch, "M13",               "C     D     E  F     G     A     B");
+            // Minor chords.
+            fill(rootName, rootPitch, "m",                 "C        Eb          G            ");
+            fill(rootName, rootPitch, "m6",                "C        Eb          G     A      ");
+            fill(rootName, rootPitch, "m69",               "C     D  Eb          G     A      ");
+            fill(rootName, rootPitch, "m7",                "C        Eb          G        Bb  ");
+            fill(rootName, rootPitch, "m7b9",              "C  Db    Eb          G        Bb  ");
+            fill(rootName, rootPitch, "m7b9b5",            "C  Db    Eb       Gb          Bb  ");
+            fill(rootName, rootPitch, "m#7",               "C        Eb          G           B");
+            fill(rootName, rootPitch, "m7b5",              "C        Eb       Gb          Bb  ");
+            fill(rootName, rootPitch, "m9",                "C     D  Eb          G        Bb  ");
+            fill(rootName, rootPitch, "m9#7",              "C     D  Eb          G           B");
+            fill(rootName, rootPitch, "m11",               "C     D  Eb    F     G        Bb  ");
+            fill(rootName, rootPitch, "m#11",              "C     D  Eb    F     G        Bb  ");
+            fill(rootName, rootPitch, "m13",               "C     D  Eb    F     G     A  Bb  ");
+            // Augmented chords.
+            fill(rootName, rootPitch, "+",                 "C            E         G#         ");
+            fill(rootName, rootPitch, "7#5",               "C            E         G#     Bb  ");
+            fill(rootName, rootPitch, "7b9#5",             "C  Db        E         G#     Bb  ");
+            fill(rootName, rootPitch, "9#5",               "C     D      E         G#     Bb  ");
+            // Diminished chords.
+            fill(rootName, rootPitch, "o",                 "C        Eb       Gb              ");
+            fill(rootName, rootPitch, "o7",                "C        Eb       Gb       A      ");
+            // Suspended chords.
+            fill(rootName, rootPitch, "6sus",              "C              F     G     A      ");
+            fill(rootName, rootPitch, "69sus",             "C     D        F     G     A      ");
+            fill(rootName, rootPitch, "7sus",              "C              F     G        Bb  ");
+            fill(rootName, rootPitch, "9sus",              "C     D        F     G        Bb  ");
+            fill(rootName, rootPitch, "M7sus",             "C              F     G           B");
+            fill(rootName, rootPitch, "M9sus",             "C     D        F     G           B");
+            // Dominant chords.
+            fill(rootName, rootPitch, "7",                 "C            E       G        Bb  ");
+            fill(rootName, rootPitch, "7b5",               "C            E    Gb          Bb  ");
+            fill(rootName, rootPitch, "7b9",               "C  Db        E       G        Bb  ");
+            fill(rootName, rootPitch, "7b9b5",             "C  Db        E    Gb          Bb  ");
+            fill(rootName, rootPitch, "9",                 "C     D      E       G        Bb  ");
+            fill(rootName, rootPitch, "9#11",              "C     D      E F#    G        Bb  ");
+            fill(rootName, rootPitch, "13",                "C     D      E F     G     A  Bb  ");
+            fill(rootName, rootPitch, "13#11",             "C     D      E F#    G     A  Bb  ");
+        }
+    }
+}
+
+inline SILENCE_PUBLIC std::string nameForChord(const Chord &chord) {
+    static bool nameForChordInitialized = false;
+    if (!nameForChordInitialized) {
+        nameForChordInitialized = true;
+        initializeNames();
+    }
+    std::map<Chord, std::string> &namesForChords_ = namesForChords();
+    if (namesForChords_.find(chord) == namesForChords_.end()) {
+        return "";
+    } else {
+        return namesForChords_[chord];
+    }
+}
+
+inline SILENCE_PUBLIC const Chord &chordForName(std::string name) {
+    static bool chordForNameInitialized = false;
+    if (!chordForNameInitialized) {
+        chordForNameInitialized = true;
+        initializeNames();
+    }
+    const std::map<std::string, Chord> &chordsForNames_ = chordsForNames();
+    std::map<std::string, Chord>::const_iterator it = chordsForNames_.find(name);
+    if (it == chordsForNames_.end()) {
+        static Chord chord;
+        chord.resize(0);
+        return chord;
+    } else {
+        return it->second;
+    }
+}
+
+inline SILENCE_PUBLIC std::string nameForScale(const Scale &scale) {
+    static bool nameForScaleInitialized = false;
+    if (!nameForScaleInitialized) {
+        nameForScaleInitialized = true;
+        initializeNames();
+    }
+    std::map<Scale, std::string> &namesForScales_ = namesForScales();
+    if (namesForScales_.find(scale) == namesForScales_.end()) {
+        return "";
+    } else {
+        return namesForScales_[scale];
+    }
+}
+
+inline SILENCE_PUBLIC const Scale &scaleForName(std::string name) {
+    static bool scaleForNameInitialized = false;
+    if (!scaleForNameInitialized) {
+        scaleForNameInitialized = true;
+        initializeNames();
+    }
+    const std::map<std::string, Scale> &scalesForNames_ = scalesForNames();
+    std::map<std::string, Scale>::const_iterator it = scalesForNames_.find(name);
+    if (it == scalesForNames_.end()) {
+        static Scale scale;
+        scale.resize(0);
+        return scale;
+    } else {
+        return it->second;
+    }
+}
+
 
 /**
  * Orthogonal additive groups for unordered chords of given arity under range

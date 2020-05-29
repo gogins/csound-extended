@@ -488,8 +488,8 @@ print("C major up two semitones:\n{}.".format(D_major.information()))
 print
 
 for degree in range(1, 8):
-    chord = C_major.chord(degree, 3)
-    print("Modulations from {:2} in C major:".format(degree))
+    chord = C_major.chord(degree, 4)
+    print("Modulations from {:2} ({}) in C major:".format(degree, C_major.chord(degree, chord.voices()).eOP().name()))
     modulations = C_major.modulations(chord)
     for scale in modulations:
         print("{:10} {}".format(scale.name(), scale.toString()))
