@@ -510,10 +510,12 @@ for degree in range(1,8):
     primary = C_major.chord(degree, 3).eOP()
     function = 5
     voices = 4
-    relative_tonicization = C_major.relative_tonicization(primary, 5)
-    secondary = C_major.secondary(primary, 5, voices)
-    print("original chord:   {:10} {}".format(primary.eOP().name(), primary.toString()))
-    print("  as dominant:    {:10} {}".format(secondary.eOP().name(), secondary.toString()))
-    print("  of this scale:  {:10} {}".format(relative_tonicization.name(), relative_tonicization.toString()))
+    relative_tonicizations = C_major.relative_tonicizations(primary, function)
+    for relative_tonicization in relative_tonicizations:
+        secondaries = C_major.secondary(primary, 5, voices)
+        for secondary in secondaries:
+            print("primary chord:    {:20} {}".format(primary.eOP().name(), primary.toString()))
+            print("  as dominant:    {:20} {}".format(secondary.eOP().name(), secondary.toString()))
+            print("  of this scale:  {:20} {}".format(relative_tonicization.name(), relative_tonicization.toString()))
 print
  

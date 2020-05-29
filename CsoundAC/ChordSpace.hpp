@@ -253,16 +253,6 @@ Q(c, n, m)      Contexual transposition;
                 or T(c, -n) if c is an I-form of M. Not a generalized form
                 of L or R; but, like them, K and Q generate the T-I group.
                 
-TO DO
-
-The root_name type_name thing is completely bogus of course. The chord when 
-transformed must be able to return its proper name. 
-
-I think it will be necessary to use a multimap to handle enharmonic names.
-
-The secondary function must return all matching scales, as do 
-tonicizations and modulations
-
 */
 
 /**
@@ -463,16 +453,19 @@ SILENCE_PUBLIC std::vector<std::string> split(std::string);
 class SILENCE_PUBLIC Chord;
 class SILENCE_PUBLIC Scale;
 SILENCE_PUBLIC double euclidean(const csound::Chord &a, const csound::Chord &b);
-
-
 SILENCE_PUBLIC double pitchClassForName(std::string name);
 SILENCE_PUBLIC std::string nameForPitchClass(double pitch);
 SILENCE_PUBLIC std::string nameForChord(const Chord &chord);
 SILENCE_PUBLIC const Chord &chordForName(std::string name);
 SILENCE_PUBLIC std::string nameForScale(const Scale &scale);
 SILENCE_PUBLIC const Scale &scaleForName(std::string name);
-SILENCE_PUBLIC std::map<Scale, std::string> &namesForScales();
+SILENCE_PUBLIC std::multimap<Chord, std::string> &namesForChords();
+SILENCE_PUBLIC std::multimap<Scale, std::string> &namesForScales();
 SILENCE_PUBLIC std::map<std::string, Scale> &scalesForNames();
+SILENCE_PUBLIC void add(std::string, const Chord &chord);
+SILENCE_PUBLIC void add(std::string, const Scale &scale);
+SILENCE_PUBLIC std::set<Chord> &unique_chords();
+SILENCE_PUBLIC std::set<Scale> &unique_scales();
 
 // Equivalence relations are implemented first as template functions at namespace scope,
 // and then as class member functions delegating to the corresponding namespace functions.
@@ -2145,7 +2138,8 @@ class SILENCE_PUBLIC Scale : public Chord {
             const Chord temporary = csound::scale(name);
             Eigen::MatrixXd::operator=(temporary);
             if (temporary.voices() > 0) {
-                name_ = name;
+                auto space_at = name.find(' ');
+                type_name = name.substr(space_at + 1);
             }
         }
         /** 
@@ -2154,8 +2148,8 @@ class SILENCE_PUBLIC Scale : public Chord {
          * any value in semitones or fractions of semitones; this permits the 
          * construction of new scales with any temperament and with any 
          * interval content. If a Scale with the proposed name already exists, 
-         * that Scale is returned. New Scales are also stored 
-         * as new named Scales.
+         * that Scale is returned. New Scales are also stored as new named 
+         * Scales.
          */
         Scale(std::string name, const Chord &scale_pitches) {
             Scale temporary(name);
@@ -2168,14 +2162,12 @@ class SILENCE_PUBLIC Scale : public Chord {
             for (int index = 0; index < voices(); ++index) {
                 setPitch(index, scale_pitches.getPitch(index));
             }
-            name_ = name;
-            scalesForNames()[name_] = *this;
-            namesForScales()[*this] = name_;
+            add(name, *this);
         }
         virtual ~Scale() {};
         virtual Scale &operator = (const Scale &other) {
             Eigen::MatrixXd::operator=(dynamic_cast<const Chord &>(other));
-            name_ = other.name();
+            type_name = other.getTypeName();
             return *this;
         }
         /** 
@@ -2217,7 +2209,7 @@ class SILENCE_PUBLIC Scale : public Chord {
         }
         /** 
          * Returns a copy of this Scale transposed to the indicated 
-         * _scale degree_; used to modulate. 
+         * _scale degree_. 
          */
         virtual Scale transpose_to_degree(int degrees) const {
             System::debug("Scale::transpose_to_degree(%9.4f)...\n", degrees);
@@ -2226,8 +2218,7 @@ class SILENCE_PUBLIC Scale : public Chord {
         }
         /** 
          * Returns a copy of this Scale transposed by the indicated number of 
-         * _semitones_. If semitones is an integer, then the new Scale is also 
-         * properly named.
+         * _semitones_.
          */
         virtual Scale transpose(double semitones) const {
             Chord transposed_pitches = T(semitones);
@@ -2241,16 +2232,14 @@ class SILENCE_PUBLIC Scale : public Chord {
             System::debug("Scale::transpose: transposed_pitches(%f): %s\n", semitones, transposed_pitches.toString().c_str());
             // Create the copy with the name of the new tonic.
             System::debug("Scale::transpose: original name: %s\n", name().c_str());
-            auto parts = split(name());
             auto tonic_name = nameForPitchClass(transposed_pitches.getPitch(0));
-            std::string new_name = tonic_name + " " + parts[1];
-            System::debug("Scale::transpose: new name: %s\n", new_name.c_str());
             Scale transposed_scale;
+            transposed_scale.type_name = getTypeName();
             transposed_scale.resize(voices());
-            transposed_scale.name_ = new_name;
             for (int voice = 0; voice < voices(); ++voice) {
                 transposed_scale.setPitch(voice, transposed_pitches.getPitch(voice));
             }
+            System::debug("Scale::transpose: new name: %s\n", transposed_scale.name().c_str());
             System::debug("Scale::transpose: result: %s\n", transposed_scale.information().c_str());
             return transposed_scale;
         }
@@ -2258,7 +2247,7 @@ class SILENCE_PUBLIC Scale : public Chord {
          * Returns the name of this Scale.
          */
         virtual std::string name() const {
-            return name_;
+            return nameForPitchClass(tonic()) + " " + type_name;
         }
         /**
          * Returns the type name, e.g. "major" or "whole tone," of this.
@@ -2266,8 +2255,7 @@ class SILENCE_PUBLIC Scale : public Chord {
          * this has been changed, e.g. by inversion.  
          */
         virtual std::string getTypeName() const {
-            auto space_at = name_.find(' ');
-            return name_.substr(space_at + 1);
+            return type_name;
         }
         /**
          * Returns the pitch-class that is the tonic or root of this Scale.
@@ -2298,54 +2286,54 @@ class SILENCE_PUBLIC Scale : public Chord {
          * of scale type names restricts the types of Scale that will be 
          * returned.
          */
-        virtual void modulations(std::vector<Scale> &result, const Chord &current_chord, int voices, const std::vector<std::string> &type_names) const {
+        virtual void modulations(std::vector<Scale> &result, const Chord &current_chord, int voices_, const std::vector<std::string> &type_names) const {
             result.clear();
             int current_degree = degree(current_chord);
             if (current_degree == -1) {
                 return;
             }
-            if (voices == -1) {
-                voices = current_chord.voices();
+            if (voices_ == -1) {
+                voices_ = current_chord.voices();
             }
-            Chord chord_ = chord(current_degree, voices);
-            for (auto it : namesForScales()) {
-                if (it.first.degree(chord_) != -1) {
-                    for (auto type_name : type_names) {
-                         if (it.first.getTypeName() == type_name) {
-                            result.push_back(it.first);
-                        }
+            Chord chord_ = chord(current_degree, voices_);
+            for (auto scale : unique_scales()) {
+                if (scale.degree(chord_) != -1) {
+                    if (std::find(type_names.begin(), type_names.end(), scale.getTypeName()) != type_names.end()) {
+                        result.push_back(scale);
                     }
                 }
             }
         }
         /**
-         * Returns a list of common modulations, that is, other major or minor 
-         * Scales to which the Chord belongs; optionally the Chord can first 
-         * be changed in size (e.g. from a 9th chord to a triad) in order to 
-         * find more or fewer possible modulations.
+         * Returns a list of common modulations, that is, other major or 
+         * harmonic minor Scales to which the Chord belongs; optionally the 
+         * Chord can first be resized (e.g. from a 9th chord to a triad) in 
+         * order to find more or fewer possible modulations.
          */
         virtual std::vector<Scale> modulations(const Chord &chord, int voices = -1) const {
             std::vector<Scale> result;
             std::vector<std::string> type_names;
             type_names.push_back("major");
-            type_names.push_back("minor");
+            type_names.push_back("harmonic minor");
             modulations(result, chord, voices, type_names);
             return result;
         }
         /**
-         * Returns the relative tonicization of the Chord, that is, the scale 
-         * for which that Chord would have the secondary function. If that is 
-         * not possible, an empty Scale is returned. TODO: Currently all 
-         * tonicizations are in the major mode even if the tonic chord is 
-         * minor; this must be changed.
+         * Returns the _relative_ tonicizations of the Chord, that is, the 
+         * scales for which that Chord could be mutated to have the secondary 
+         * function, if that is possible. The list of scale types is used to 
+         * restrict the types of Scales that are returned.
          */
-        virtual Scale relative_tonicization(const Chord &current_chord, int secondary_function = 5) const {
+        virtual void relative_tonicizations(std::vector<Scale> &result, const Chord &current_chord, int secondary_function, const std::vector<std::string> &type_names) const {
             int current_function = degree(current_chord);
             // If the Chord doesn't belong to this Scale, it cannot be mutated 
             // to a secondary function.
             if (current_function == -1) {
-                return Scale();
+                return;
             }
+            // Chord and tonicization both must have root pitches in this 
+            // Scale. The degree of that tonicization is taken under octave 
+            // equivalence.
             int scale_degrees = voices();
             int degree_of_tonicization = current_function + secondary_function - 2;
             while (degree_of_tonicization < 1) {
@@ -2354,13 +2342,32 @@ class SILENCE_PUBLIC Scale : public Chord {
             while (degree_of_tonicization > scale_degrees) {
                 degree_of_tonicization = degree_of_tonicization - scale_degrees;
             }
-            Scale tonicization = transpose_to_degree(degree_of_tonicization);
-            System::debug("degree_of_tonicization: %3d %s %s\n", degree_of_tonicization, tonicization.toString().c_str(), tonicization.name().c_str());
-            return tonicization;
+            // Now return all Scales with this root pitch and matching 
+            // scale type.
+            double root_pitch = getPitch(degree_of_tonicization);
+            for (auto scale : unique_scales()) {
+                if (eq_epsilon(scale.getPitch(0), root_pitch) == true) {
+                    if (std::find(type_names.begin(), type_names.end(), scale.getTypeName()) != type_names.end()) {
+                        result.push_back(scale);
+                    }
+                }
+            }
         }
         /**
-         * Returns the current Chord mutated, if possible, to a secondary 
-         * function with respect to another Chord in its Scale. Not 
+         * Returns a list of common relative tonicizations for the Chord, that 
+         * is, the other major or harmonic minor Scales for which that Chord 
+         * could be mutated to have the secondary function. If that is not 
+         * possible, an empty result is returned.
+         */
+        virtual std::vector<Scale> relative_tonicizations(const Chord &current_chord, int secondary_function = 5) const {
+            std::vector<Scale> result;
+            std::vector<std::string> scale_types = {"major", "harmonic minor"};
+            relative_tonicizations(result, current_chord, secondary_function, scale_types);
+            return result;
+        }
+        /**
+         * Returns the current Chord mutated, if possible, to one or more 
+         * function(s) with respect to another Chord in its Scale. Not 
          * "secondary function of this chord," but "this chord as secondary 
          * function of another (tonicized) chord." If that is not 
          * possible, an empty Chord is returned. The number of voices 
@@ -2368,13 +2375,19 @@ class SILENCE_PUBLIC Scale : public Chord {
          * secondary dominants (function = 5), secondary supertonics 
          * (function = 2), secondary subtonics (function = 6), and so on.
          * It is then up to the user to perform an appropriate progression 
-         * by number of scale degrees to a tonicization in the original 
-         * Scale.
+         * by number of scale degrees in the original Scale.
          */
-        virtual Chord secondary(const Chord &current_chord, int secondary_function = 5, int voices_ =-1) const {
-            Scale tonicization = relative_tonicization(current_chord, secondary_function);
-            Chord secondary_ = tonicization.chord(secondary_function, voices_);
-            return secondary_;
+        virtual std::vector<Chord> secondary(const Chord &current_chord, int secondary_function = 5, int voices_ = -1) const {
+            if (voices_ == -1) {
+                voices_ = current_chord.voices();
+            }
+            std::vector<Scale> relative_tonicizations_ = relative_tonicizations(current_chord, secondary_function);
+            std::vector<Chord> result;
+            for (auto tonicization : relative_tonicizations_) {
+                Chord mutation = tonicization.chord(secondary_function, voices_);
+                result.push_back(mutation);
+            }
+            return result;
         }
         /**
          * Returns all major or minor Scales for which the current Chord is 
@@ -2402,7 +2415,7 @@ class SILENCE_PUBLIC Scale : public Chord {
             return result;
         }
     protected:
-        std::string name_;
+        std::string type_name;
 };
 
 //	EQUIVALENCE_RELATION_T
@@ -2913,8 +2926,8 @@ inline SILENCE_PUBLIC std::string nameForPitchClass(double pitch) {
     return "";
 }
 
-inline SILENCE_PUBLIC std::map<Chord, std::string> &namesForChords() {
-    static std::map<Chord, std::string> namesForChords_;
+inline SILENCE_PUBLIC std::multimap<Chord, std::string> &namesForChords() {
+    static std::multimap<Chord, std::string> namesForChords_;
     return namesForChords_;
 }
 
@@ -2923,14 +2936,36 @@ inline SILENCE_PUBLIC std::map<std::string, Chord> &chordsForNames() {
     return chordsForNames_;
 }
 
-inline SILENCE_PUBLIC std::map<Scale, std::string> &namesForScales() {
-    static std::map<Scale, std::string> namesForScales_;
+inline SILENCE_PUBLIC std::multimap<Scale, std::string> &namesForScales() {
+    static std::multimap<Scale, std::string> namesForScales_;
     return namesForScales_;
 }
 
 inline SILENCE_PUBLIC std::map<std::string, Scale> &scalesForNames() {
     static std::map<std::string, Scale> scalesForNames_;
     return scalesForNames_;
+}
+
+inline SILENCE_PUBLIC std::set<Chord> &unique_chords() {
+    static std::set<Chord> unique_chords_;
+    return unique_chords_;
+}
+
+inline SILENCE_PUBLIC std::set<Scale> &unique_scales() {
+    static std::set<Scale> unique_scales_;
+    return unique_scales_;
+}
+
+inline SILENCE_PUBLIC void add(std::string name, const Chord &chord) {
+    unique_chords().insert(chord);
+    chordsForNames().insert(std::make_pair(name, chord));
+    namesForChords().insert(std::make_pair(chord, name));
+}
+
+inline SILENCE_PUBLIC void add(std::string name, const Scale &scale) {
+    unique_scales().insert(scale);
+    scalesForNames().insert(std::make_pair(name, scale));
+    namesForScales().insert(std::make_pair(scale, name));
 }
 
 inline SILENCE_PUBLIC std::vector<std::string> split(std::string string_) {
@@ -2957,12 +2992,14 @@ inline void fill(std::string rootName, double rootPitch, std::string typeName, s
     chord = chord.T(rootPitch);
     Chord eOP_ = chord.eOP();
     System::debug("eOP_:   %s  chordName: %s\n", eOP_.toString().c_str(), chordName.c_str());
-    chordsForNames()[chordName] = eOP_;
-    namesForChords()[eOP_] = chordName;
+    ///chordsForNames()[chordName] = eOP_;
+    ///namesForChords()[eOP_] = chordName;
+    add(chordName, eOP_);
     if (is_scale == true) {
         Scale scale(chordName, chord);
-        scalesForNames()[chordName] = scale;
-        namesForScales()[scale] = chordName;
+        ///scalesForNames()[chordName] = scale;
+        ///namesForScales()[scale] = chordName;
+        add(chordName, scale);
     }
 }
 
@@ -3066,24 +3103,42 @@ inline void initializeNames() {
     }
 }
 
-inline SILENCE_PUBLIC std::string nameForChord(const Chord &chord) {
-    static bool nameForChordInitialized = false;
-    if (!nameForChordInitialized) {
-        nameForChordInitialized = true;
+/**
+ * Returns all enharmonic names for the Chord, if any exists. If none exists, 
+ * an empty result is returned.
+ */
+inline SILENCE_PUBLIC std::vector<std::string> namesForChord(const Chord &chord) {
+    static bool initialized = false;
+    if (!initialized) {
+        initialized = true;
         initializeNames();
     }
-    std::map<Chord, std::string> &namesForChords_ = namesForChords();
-    if (namesForChords_.find(chord) == namesForChords_.end()) {
+    std::multimap<Chord, std::string> &namesForChords_ = namesForChords();
+    std::vector<std::string> result;
+    auto matches = namesForChords_.equal_range(chord);
+    for (auto it = matches.first; it != matches.second; ++it) {
+        result.push_back(it->second);
+    }
+    return result;
+}
+
+/**
+ * Returns the first valid name for the Chord. If none exists, an empty result 
+ * is returned.
+ */
+inline SILENCE_PUBLIC std::string nameForChord(const Chord &chord) {
+    auto result = namesForChord(chord);
+    if (result.size() == 0) {
         return "";
     } else {
-        return namesForChords_[chord];
+        return result[0];
     }
 }
 
 inline SILENCE_PUBLIC const Chord &chordForName(std::string name) {
-    static bool chordForNameInitialized = false;
-    if (!chordForNameInitialized) {
-        chordForNameInitialized = true;
+    static bool initialized = false;
+    if (!initialized) {
+        initialized = true;
         initializeNames();
     }
     const std::map<std::string, Chord> &chordsForNames_ = chordsForNames();
@@ -3097,24 +3152,41 @@ inline SILENCE_PUBLIC const Chord &chordForName(std::string name) {
     }
 }
 
-inline SILENCE_PUBLIC std::string nameForScale(const Scale &scale) {
-    static bool nameForScaleInitialized = false;
-    if (!nameForScaleInitialized) {
-        nameForScaleInitialized = true;
+/**
+ * Returns all enharmonic names for the Scale, if any exists. If none exists, 
+ * an empty result is returned.
+ */
+inline SILENCE_PUBLIC std::vector<std::string> namesForScale(const Scale &scale) {
+    static bool initialized = false;
+    if (!initialized) {
+        initialized = true;
         initializeNames();
     }
-    std::map<Scale, std::string> &namesForScales_ = namesForScales();
-    if (namesForScales_.find(scale) == namesForScales_.end()) {
+    std::multimap<Scale, std::string> &namesForScales_ = namesForScales();
+    std::vector<std::string> result;
+    auto matches = namesForScales_.equal_range(scale);
+    for (auto it = matches.first; it != matches.second; ++it) {
+        result.push_back(it->second);
+    }
+    return result;
+}
+
+/**
+ * Returns the first valid name for the Scale.
+ */
+inline SILENCE_PUBLIC std::string nameForScale(const Scale &scale) {
+    auto result = namesForScale(scale);
+    if (result.size() == 0) {
         return "";
     } else {
-        return namesForScales_[scale];
+        return result[0];
     }
 }
 
 inline SILENCE_PUBLIC const Scale &scaleForName(std::string name) {
-    static bool scaleForNameInitialized = false;
-    if (!scaleForNameInitialized) {
-        scaleForNameInitialized = true;
+    static bool initialized = false;
+    if (!initialized) {
+        initialized = true;
         initializeNames();
     }
     const std::map<std::string, Scale> &scalesForNames_ = scalesForNames();
@@ -3127,7 +3199,6 @@ inline SILENCE_PUBLIC const Scale &scaleForName(std::string name) {
         return it->second;
     }
 }
-
 
 /**
  * Orthogonal additive groups for unordered chords of given arity under range
