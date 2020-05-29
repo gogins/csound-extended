@@ -544,8 +544,6 @@ public:
     }
     virtual Chord &operator = (const Chord &other) {
         Eigen::MatrixXd::operator=(other);
-        root_name = other.getRootName();
-        type_name = other.getTypeName();
         return *this;
     }
     virtual Chord &operator = (const std::vector<double> &other) {
@@ -1429,32 +1427,6 @@ public:
     virtual bool equals(const Chord &other) const {
         return *this == other;
     }
-    virtual bool less(const Chord &other) const {
-        return *this < other;
-    }
-    virtual void setRootName(std::string root_name_) {
-        root_name = root_name_;
-    }
-    virtual std::string getRootName() const {
-        return root_name;
-    }
-    /**
-     * Sets the type name of this; if the type name 
-     * begins with a space, that is removed.
-     */
-    virtual void setTypeName(std::string type_name_) {
-        if (type_name_[0] == ' ') {
-            type_name = type_name_.substr(1);
-        } else {
-            type_name = type_name_;
-        }
-    }
-    virtual std::string getTypeName() const {
-        return type_name;
-    }
-protected:
-    std::string root_name;
-    std::string type_name;
 };
 
 inline SILENCE_PUBLIC bool operator == (const Chord &a, const Chord &b) {
@@ -2289,6 +2261,15 @@ class SILENCE_PUBLIC Scale : public Chord {
             return name_;
         }
         /**
+         * Returns the type name, e.g. "major" or "whole tone," of this.
+         * This name will probably be invalid if the interval structure of 
+         * this has been changed, e.g. by inversion.  
+         */
+        virtual std::string getTypeName() const {
+            auto space_at = name_.find(' ');
+            return name_.substr(space_at + 1);
+        }
+        /**
          * Returns the pitch-class that is the tonic or root of this Scale.
          */
         virtual double tonic() const {
@@ -2964,8 +2945,6 @@ inline SILENCE_PUBLIC std::vector<std::string> split(std::string string_) {
 inline void fill(std::string rootName, double rootPitch, std::string typeName, std::string typePitches, bool is_scale = false) {
     Chord chord;
     std::string chordName = rootName + typeName;
-    chord.setRootName(rootName);
-    chord.setTypeName(typeName);
     std::vector<std::string> splitPitches = split(typePitches);
     System::debug("chordName: %s = rootName: %s  rootPitch: %f  typeName: %s  typePitches: %s\n", chordName.c_str(), rootName.c_str(), rootPitch, typeName.c_str(), typePitches.c_str());
     chord.resize(splitPitches.size());
@@ -2982,8 +2961,6 @@ inline void fill(std::string rootName, double rootPitch, std::string typeName, s
     namesForChords()[eOP_] = chordName;
     if (is_scale == true) {
         Scale scale(chordName, chord);
-        scale.setRootName(rootName);
-        scale.setTypeName(typeName);
         scalesForNames()[chordName] = scale;
         namesForScales()[scale] = chordName;
     }
