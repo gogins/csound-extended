@@ -2299,7 +2299,9 @@ class SILENCE_PUBLIC Scale : public Chord {
             for (auto scale : unique_scales()) {
                 if (scale.degree(chord_) != -1) {
                     if (std::find(type_names.begin(), type_names.end(), scale.getTypeName()) != type_names.end()) {
-                        result.push_back(scale);
+                        if (std::find(result.begin(), result.end(), scale) == result.end()) {
+                            result.push_back(scale);
+                        }
                     }
                 }
             }
@@ -2324,31 +2326,25 @@ class SILENCE_PUBLIC Scale : public Chord {
          * function, if that is possible. The list of scale types is used to 
          * restrict the types of Scales that are returned.
          */
-        virtual void relative_tonicizations(std::vector<Scale> &result, const Chord &current_chord, int secondary_function, const std::vector<std::string> &type_names) const {
-            int current_function = degree(current_chord);
-            // If the Chord doesn't belong to this Scale, it cannot be mutated 
-            // to a secondary function.
-            if (current_function == -1) {
+        virtual void relative_tonicizations(std::vector<Scale> &result, const Chord &current_chord, int secondary_function, int voices, const std::vector<std::string> &type_names) const {
+            result.clear();
+            int current_degree = degree(current_chord);
+            System::debug("Scale::relative_tonicizations: chord: %.20s (%s) degree: %3d\n", current_chord.name().c_str(), current_chord.toString().c_str(), current_degree);
+            if (current_degree == -1) {
                 return;
             }
-            // Chord and tonicization both must have root pitches in this 
-            // Scale. The degree of that tonicization is taken under octave 
-            // equivalence.
-            int scale_degrees = voices();
-            int degree_of_tonicization = current_function + secondary_function - 2;
-            while (degree_of_tonicization < 1) {
-                degree_of_tonicization = degree_of_tonicization + scale_degrees;
+             if (voices == -1) {
+                voices = current_chord.voices();
             }
-            while (degree_of_tonicization > scale_degrees) {
-                degree_of_tonicization = degree_of_tonicization - scale_degrees;
-            }
-            // Now return all Scales with this root pitch and matching 
-            // scale type.
-            double root_pitch = getPitch(degree_of_tonicization);
-            for (auto scale : unique_scales()) {
-                if (eq_epsilon(scale.getPitch(0), root_pitch) == true) {
-                    if (std::find(type_names.begin(), type_names.end(), scale.getTypeName()) != type_names.end()) {
-                        result.push_back(scale);
+            Chord chord_ = chord(current_degree, voices);
+            System::debug("Scale::relative_tonicizations: resized: %.20s (%s) degree: %3d\n", chord_.name().c_str(), chord_.toString().c_str(), current_degree);
+            std::vector<Scale> modulations_ = modulations(chord_);
+            for (auto modulation : modulations_) {
+                int degree_in_modulation = modulation.degree(chord_);
+                if (degree_in_modulation == secondary_function) {
+                    if (std::find(result.begin(), result.end(), modulation) == result.end()) {
+                        System::debug("Scale::relative_tonicizations: modulation: %.20s (%s) degree of chord in modulation: %3d\n", modulation.name().c_str(), modulation.toString().c_str(), degree_in_modulation);
+                        result.push_back(modulation);
                     }
                 }
             }
@@ -2359,10 +2355,10 @@ class SILENCE_PUBLIC Scale : public Chord {
          * could be mutated to have the secondary function. If that is not 
          * possible, an empty result is returned.
          */
-        virtual std::vector<Scale> relative_tonicizations(const Chord &current_chord, int secondary_function = 5) const {
+        virtual std::vector<Scale> relative_tonicizations(const Chord &current_chord, int secondary_function = 5, int voices = -1) const {
             std::vector<Scale> result;
             std::vector<std::string> scale_types = {"major", "harmonic minor"};
-            relative_tonicizations(result, current_chord, secondary_function, scale_types);
+            relative_tonicizations(result, current_chord, secondary_function, voices, scale_types);
             return result;
         }
         /**
@@ -2385,7 +2381,9 @@ class SILENCE_PUBLIC Scale : public Chord {
             std::vector<Chord> result;
             for (auto tonicization : relative_tonicizations_) {
                 Chord mutation = tonicization.chord(secondary_function, voices_);
-                result.push_back(mutation);
+                    if (std::find(result.begin(), result.end(), mutation) == result.end()) {
+                        result.push_back(mutation);
+                    }
             }
             return result;
         }
@@ -2397,8 +2395,9 @@ class SILENCE_PUBLIC Scale : public Chord {
          * degree 1, i.e. is the tonic chord.
          */
         virtual std::vector<Scale> tonicizations(const Chord &current_chord, int voices = -1) const {
-            static std::vector<Scale> result;
+            std::vector<Scale> result;
             int current_degree = degree(current_chord);
+            System::debug("Scale::tonicizations: chord: %.20s (%s) degree: %3d\n", current_chord.name().c_str(), current_chord.toString().c_str(), current_degree);
             if (current_degree == -1) {
                 return result;
             }
@@ -2406,10 +2405,15 @@ class SILENCE_PUBLIC Scale : public Chord {
                 voices = current_chord.voices();
             }
             Chord chord_ = chord(current_degree, voices);
+            System::debug("Scale::tonicizations: resized: %.20s (%s) degree: %3d\n", chord_.name().c_str(), chord_.toString().c_str(), current_degree);
             std::vector<Scale> modulations_ = modulations(chord_);
-            for (auto it : modulations_) {
-                if (it.degree(chord_) != -1) {
-                    result.push_back(it);
+            for (auto modulation : modulations_) {
+                int degree_in_modulation = modulation.degree(chord_);
+                if (degree_in_modulation == 1) {
+                    if (std::find(result.begin(), result.end(), modulation) == result.end()) {
+                        System::debug("Scale::tonicizations: modulation: %.20s (%s) degree of chord in modulation: %3d\n", modulation.name().c_str(), modulation.toString().c_str(), degree_in_modulation);
+                        result.push_back(modulation);
+                    }
                 }
             }
             return result;

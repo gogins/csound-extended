@@ -479,31 +479,55 @@ print
 
 nonexistent_scale = CsoundAC.scale("GG <<")
 print(nonexistent_scale.information())
-print
+print()
 
 degree = C_major.degree(iim7)
 print("Degree of Dm7 in C major: {}.".format(degree))
 D_major = C_major.transpose(-10)
 print("C major up two semitones:\n{}.".format(D_major.information()))
-print
+print()
 
 for degree in range(1, 8):
     chord = C_major.chord(degree, 4)
     print("Modulations from {:2} ({}) in C major:".format(degree, C_major.chord(degree, chord.voices()).eOP().name()))
     modulations = C_major.modulations(chord)
+    print("{:20} {}".format(chord.eOP().name(), chord.toString()))
     for scale in modulations:
-        print("{:10} {}".format(scale.name(), scale.toString()))
-print
+        print("{:20} {}".format(scale.name(), scale.toString()))
+print()
 
 print("Transpose C major to degree:")
 for degree in range(0, 8):
     scale = C_major.transpose_to_degree(degree)
     #V7 = scale.chord(5, 4)
-    print("degree: {:2} name: {:10} {}".format(degree, scale.name(), scale.toString()))
+    print("degree: {:2} name: {:20} {}".format(degree, scale.name(), scale.toString()))
     #print("                       V7: {} {}".format(V7.name(), V7.toString()))    
-print
+print()
 
-#CsoundAC.System_setMessageLevel(8)
+CsoundAC.System_setMessageLevel(15)
+chord = CsoundAC.chordForName("Dm")
+print("Tonicizations:")
+tonicizations = C_major.tonicizations(chord)
+for tonicization in tonicizations:
+    print("Chord {:10} tonicization: {:20} {}".format(chord.name(), tonicization.name(), tonicization.toString()))
+chord = CsoundAC.chordForName("GM")
+tonicizations = C_major.tonicizations(chord)
+for tonicization in tonicizations:
+    print("Chord {:10} tonicization is: {:20} {}".format(chord.name(), tonicization.name(), tonicization.toString()))
+print()
+CsoundAC.System_setMessageLevel(3)
+
+print("Relative tonicizations:")
+chord = CsoundAC.chordForName("Dm")
+function = 5
+tonicizations = C_major.relative_tonicizations(chord, function)
+for tonicization in tonicizations:
+    print("Chord {:10} is {:2} of: {:20} {}".format(chord.name(), function, tonicization.name(), tonicization.toString()))
+chord = CsoundAC.chordForName("GM")
+tonicizations = C_major.relative_tonicizations(chord, function)
+for tonicization in tonicizations:
+    print("Chord {:10} is {:2} of: {:20} {}".format(chord.name(), function, tonicization.name(), tonicization.toString()))
+print()
 
 print("Secondary dominants in C major:")
 for degree in range(1,8):
