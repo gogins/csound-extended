@@ -1,5 +1,5 @@
 # Build CsoundAC
-
+cmake_minimum_required(VERSION 3.10)
 include(CheckIncludeFiles)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -14,6 +14,7 @@ option(BUILD_CSOUND_AC_PYTHON_INTERFACE "Build the Csound AC Python interface" O
 option(USE_SYSTEM_PORTSMF ON)
 
 find_library(MUSICXML_LIBRARY musicxml2)
+#find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(FLTK)
 find_package(SWIG)
 find_package(PYTHON COMPONENTS Interpreter Development)

@@ -38,11 +38,17 @@
 #endif
 
 #include <csound.hpp>
+#include <cstdio>
 #include <deque>
+#include <eigen3/Eigen/Dense>
 #include <emscripten/bind.h>
 #include <emscripten/emscripten.h>
 #include <emscripten/html5.h>
 #include <emscripten/val.h>
+#include <iostream>
+#include <fstream>
+#include <Silence.hpp>
+#include <sstream>
 #include <string>
 
 extern "C" {
@@ -268,6 +274,11 @@ void nodefs_mount() {
   );
 }
 
+ 
+void csoundac() {
+    csound::System::message("Hello, this is CsoundAC.\n");
+}
+
 /**
  * For the sake of backwards compatibility, all method names are declared with 
  * both initial capitals and camel case. Please keep bindings in 
@@ -370,6 +381,7 @@ EMSCRIPTEN_BINDINGS(csound_web_audio) {
         .function("Start", &CsoundEmbind::Start)
         .function("start", &CsoundEmbind::Start)
         ;
- }
+    function("csoundac", &csoundac);
+}
 
 #endif  // __CSOUND_WEBAUDIO_HPP__

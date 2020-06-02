@@ -161,7 +161,9 @@ void KMeansMCRM::random_algorithm()
     for (size_t column = 0, columns = weights.cols(); column < columns; ++column) {
         auto sum = normalized_weights.col(column).sum();
         normalized_weights.col(column) = normalized_weights.col(column) / sum;
-        System::inform("col: %5d weight: %9.4f normalized_weights: %9.4f\n", column, weights.col(column), normalized_weights.col(column));
+        char buffer[0x200];
+        std::snprintf(buffer, 0x200, "col: %5ld weight: %9.4f normalized_weights: %9.4f\n", column, weights(column), normalized_weights(column));
+        System::inform(buffer);
     }
     for (size_t iteration = 0; iteration < iteration_count; ++iteration) {
         auto ball = wheel();

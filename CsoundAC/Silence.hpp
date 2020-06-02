@@ -328,7 +328,9 @@
 #include "MusicModel.hpp"
 #include "Sequence.hpp"
 #include "Random.hpp"
+#if !defined(EMSCRIPTEN)
 #include "ImageToScore.hpp"
+#endif
 #include "StrangeAttractor.hpp"
 #include "Lindenmayer.hpp"
 #include "MCRM.hpp"

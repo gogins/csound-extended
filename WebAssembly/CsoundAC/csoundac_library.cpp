@@ -26,10 +26,13 @@
     however invalidate any other reasons why the library or executable
     file might be covered by the GNU Lesser General Public License.
 */
+#include <csound.hpp>
 #include <cstdio>
+#include <eigen3/Eigen/Dense>
 #include <emscripten/bind.h>
 #include <fstream>
 #include <iostream>
+#include <Silence.hpp>
 #include <string>
 #include <sstream>
 
@@ -38,12 +41,12 @@ void csoundac() {
 }
 
 EMSCRIPTEN_BINDINGS(csoundac) {         
-   emscripten::function("csoundac", &csoundac);
-    class_<Eigen::MatrixXd>("MatrixXd")
+    emscripten::function("csoundac", &csoundac);
+    emscripten::class_<Eigen::MatrixXd>("MatrixXd")
         .constructor<>()
         .constructor<int, int>()
     ;
-    class_<csound::Node>("Node")
+    emscripten::class_<csound::Node>("Node")
         .constructor<>()
         .function("Cleanup", &Csound::Cleanup)
     ;

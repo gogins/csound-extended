@@ -584,7 +584,7 @@ void MidiEvent::read(std::istream &stream, MidiFile &midiFile)
     }
     break;
     }
-    System::inform("%s\n", toString());
+    System::inform("%s\n", toString().c_str());
 }
 
 void MidiTrack::write(std::ostream &stream, MidiFile &midiFile)
