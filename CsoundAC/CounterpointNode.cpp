@@ -12,7 +12,6 @@ CounterpointNode::CounterpointNode() :  generationMode(GenerateCounterpoint),
     secondsPerPulse(0.5)
 {
     FillRhyPat();
-    Counterpoint::messageCallback = System::getMessageCallback();
 }
 
 CounterpointNode::~CounterpointNode()

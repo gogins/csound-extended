@@ -56,4 +56,5 @@ em++ -s SAFE_HEAP=0 -v -O1 -std=c++11 --source-map-base . --bind --embed-file ..
 
 cd ..
 bash release-wasm.sh
+
 echo "Finished building the Csound library for WebAssembly."

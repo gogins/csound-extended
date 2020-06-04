@@ -117,17 +117,10 @@ void Counterpoint::message(const char *format,...)
 }
 void Counterpoint::message(const char *format, va_list valist)
 {
-    if(messageCallback)
-    {
-        messageCallback(0, -1, format, valist);
-    }
-    else
-    {
-        csound::System::message(format, valist);
-    }
-}
+    csound::System::message(format, valist);
+ }
 
-Counterpoint::Counterpoint() : messageCallback(0), LowestSemitone(24), HighestSemitone(72)
+Counterpoint::Counterpoint() : LowestSemitone(24), HighestSemitone(72)
 {
     UnisonPenalty                         = Counterpoint::Bad;
     DirectToFifthPenalty                  = Counterpoint::RealBad;

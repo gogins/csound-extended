@@ -98,7 +98,11 @@ int System::messageLevel = ERROR_LEVEL | WARNING_LEVEL;
 
 void * System::userdata_ = 0;
 
-void (*System::messageCallback)(CSOUND *csound, int attribute, const char *format, va_list valist) = 0;
+#if defined(EMSCRIPTEN)
+MessageCallbackType System::messageCallback = emscripten::val::undefined();
+#else
+MessageCallbackType System::messageCallback = nullptr;
+#endif
 
 void System::setUserdata(void *userdata)
 {
@@ -110,16 +114,7 @@ void *System::getUserdata()
     return userdata_;
 }
 
-void System::message(CSOUND *csound, int level, const char *format,...)
-{
-    if((level & messageLevel) == level)
-    {
-        va_list marker;
-        va_start(marker, format);
-        message(csound, level, format, marker);
-        va_end(marker);
-    }
-}
+#if !defined(EMSCRIPTEN)
 
 void System::error(CSOUND *csound, const char *format,...)
 {
@@ -128,17 +123,6 @@ void System::error(CSOUND *csound, const char *format,...)
         va_list marker;
         va_start(marker, format);
         message(csound, ERROR_LEVEL, format, marker);
-        va_end(marker);
-    }
-}
-
-void System::error(const char *format,...)
-{
-    if((ERROR_LEVEL & messageLevel) == ERROR_LEVEL)
-    {
-        va_list marker;
-        va_start(marker, format);
-        message((CSOUND*) userdata_, ERROR_LEVEL, format, marker);
         va_end(marker);
     }
 }
@@ -154,17 +138,6 @@ void System::warn(CSOUND *csound, const char *format,...)
     }
 }
 
-void System::warn(const char *format,...)
-{
-    if((WARNING_LEVEL & messageLevel) == WARNING_LEVEL)
-    {
-        va_list marker;
-        va_start(marker, format);
-        message((CSOUND*) userdata_, WARNING_LEVEL, format, marker);
-        va_end(marker);
-    }
-}
-
 void System::inform(CSOUND *csound, const char *format,...)
 {
     if((INFORMATION_LEVEL & messageLevel) == INFORMATION_LEVEL)
@@ -172,17 +145,6 @@ void System::inform(CSOUND *csound, const char *format,...)
         va_list marker;
         va_start(marker, format);
         message(csound, INFORMATION_LEVEL, format, marker);
-        va_end(marker);
-    }
-}
-
-void System::inform(const char *format,...)
-{
-    if((INFORMATION_LEVEL & messageLevel) == INFORMATION_LEVEL)
-    {
-        va_list marker;
-        va_start(marker, format);
-        message((CSOUND*) userdata_, INFORMATION_LEVEL, format, marker);
         va_end(marker);
     }
 }
@@ -198,13 +160,13 @@ void System::debug(CSOUND *csound, const char *format,...)
     }
 }
 
-void System::debug(const char *format,...)
+void System::message(CSOUND *csound, int level, const char *format,...)
 {
-    if((DEBUGGING_LEVEL & messageLevel) == DEBUGGING_LEVEL)
+    if((level & messageLevel) == level)
     {
         va_list marker;
         va_start(marker, format);
-        message((CSOUND*) userdata_, DEBUGGING_LEVEL, format, marker);
+        message(csound, level, format, marker);
         va_end(marker);
     }
 }
@@ -217,31 +179,9 @@ void System::message(CSOUND *csound, const char *format,...)
     va_end(marker);
 }
 
-void System::message(const char *format,...)
-{
-    va_list marker;
-    va_start(marker, format);
-    message((CSOUND*) userdata_, messageLevel, format, marker);
-    va_end(marker);
-}
-
-void System::message(const char *format, va_list valist)
-{
-    message((CSOUND*) userdata_, messageLevel, format, valist);
-}
-
 void System::message(CSOUND *csound, const char *format, va_list valist)
 {
-    if (logfile) {
-        vfprintf(logfile, format, valist);
-        fflush(logfile);
-    }
-    if(messageCallback) {
-        messageCallback(csound, messageLevel, format, valist);
-    }
-    else {
-        vfprintf(stderr, format, valist);
-    }
+    System::message(csound, 0, format, valist);
 }
 
 void System::message(CSOUND *csound, int attribute, const char *format, va_list valist)
@@ -258,6 +198,139 @@ void System::message(CSOUND *csound, int attribute, const char *format, va_list 
     {
         vfprintf(stderr, format, valist);
     }
+}
+
+void System::error(const char *format,...)
+{
+    if((ERROR_LEVEL & messageLevel) == ERROR_LEVEL)
+    {
+        va_list marker;
+        va_start(marker, format);
+        message((CSOUND*) userdata_, ERROR_LEVEL, format, marker);
+        va_end(marker);
+    }
+}
+
+void System::warn(const char *format,...)
+{
+    if((WARNING_LEVEL & messageLevel) == WARNING_LEVEL)
+    {
+        va_list marker;
+        va_start(marker, format);
+        message((CSOUND*) userdata_, WARNING_LEVEL, format, marker);
+        va_end(marker);
+    }
+}
+
+void System::inform(const char *format,...)
+{
+    if((INFORMATION_LEVEL & messageLevel) == INFORMATION_LEVEL)
+    {
+        va_list marker;
+        va_start(marker, format);
+        message((CSOUND*) userdata_, INFORMATION_LEVEL, format, marker);
+        va_end(marker);
+    }
+}
+
+void System::debug(const char *format,...)
+{
+    if((DEBUGGING_LEVEL & messageLevel) == DEBUGGING_LEVEL)
+    {
+        va_list marker;
+        va_start(marker, format);
+        message((CSOUND*) userdata_, DEBUGGING_LEVEL, format, marker);
+        va_end(marker);
+    }
+}
+
+void System::message(const char *format,...)
+{
+    va_list marker;
+    va_start(marker, format);
+    message((CSOUND*) userdata_, messageLevel, format, marker);
+    va_end(marker);
+}
+
+void System::message(const char *format, va_list valist)
+{
+    message((CSOUND*) userdata_, messageLevel, format, valist);
+}
+
+#else
+
+void System::error(const char *format,...)
+{
+    if((ERROR_LEVEL & messageLevel) == ERROR_LEVEL)
+    {
+        va_list marker;
+        va_start(marker, format);
+        message(ERROR_LEVEL, format, marker);
+        va_end(marker);
+    }
+}
+
+void System::warn(const char *format,...)
+{
+    if((WARNING_LEVEL & messageLevel) == WARNING_LEVEL)
+    {
+        va_list marker;
+        va_start(marker, format);
+        message(WARNING_LEVEL, format, marker);
+        va_end(marker);
+    }
+}
+
+void System::inform(const char *format,...)
+{
+    if((INFORMATION_LEVEL & messageLevel) == INFORMATION_LEVEL)
+    {
+        va_list marker;
+        va_start(marker, format);
+        message(INFORMATION_LEVEL, format, marker);
+        va_end(marker);
+    }
+}
+
+void System::debug(const char *format,...)
+{
+    if((DEBUGGING_LEVEL & messageLevel) == DEBUGGING_LEVEL)
+    {
+        va_list marker;
+        va_start(marker, format);
+        message(DEBUGGING_LEVEL, format, marker);
+        va_end(marker);
+    }
+}
+
+void System::message(const char *format,...)
+{
+    va_list marker;
+    va_start(marker, format);
+    message(format, marker);
+    va_end(marker);
+}
+
+void System::message(const char *format, va_list valist)
+{
+    message(messageLevel, format, valist);
+}
+
+void System::message(int error_level, const char *format, va_list valist)
+{
+    char buffer[0x2000];
+    std::vsnprintf(buffer, 0x2000, format, valist);
+    if (messageCallback == emscripten::val::undefined() || messageCallback == emscripten::val::null()) {
+        emscripten_log(EM_LOG_CONSOLE, buffer);
+    } else {
+        messageCallback.call<void>(buffer);
+    }
+}
+
+#endif
+
+void System::message(std::string text) {
+    message(text.c_str());
 }
 
 int System::setMessageLevel(int messageLevel_)

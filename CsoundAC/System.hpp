@@ -24,14 +24,21 @@
 #ifdef SWIG
 %module CsoundAC
 %{
+#if !defined(EMSCRIPTEN)
 #include "CppSound.hpp"
+#endif
 #include <string>
 #include <vector>
 #include <cstdarg>
 #include <ctime>
 %}
 #else
+#if !defined(EMSCRIPTEN)
 #include "CppSound.hpp"
+#else
+#include <emscripten/emscripten.h>
+#include <emscripten/val.h>
+#endif
 #include <string>
 #include <vector>
 #include <cstdarg>
@@ -48,7 +55,11 @@ public:
     virtual void write(const char *text);
 };
 
+#if !defined(EMSCRIPTEN)
 typedef void (*MessageCallbackType)(CSOUND *csound, int attribute, const char *format, va_list marker);
+#else
+typedef emscripten::val MessageCallbackType;
+#endif
 
 /**
  * Abstraction layer for a minimal set of system services.
@@ -57,8 +68,8 @@ class SILENCE_PUBLIC System
 {
     static void *userdata_;
     static int messageLevel;
-    static void (*messageCallback)(CSOUND *csound, int attribute, const char *format, va_list valist);
     static FILE *logfile;
+    static MessageCallbackType messageCallback;
 public:
     enum Level {
         ERROR_LEVEL             = 1,
@@ -147,39 +158,24 @@ public:
      * printing messages to.
      */
     static FILE *getLogfile();
-#ifndef SWIG
+#if !defined(SWIG)
+    #if !defined(EMSCRIPTEN)
     /**
      *  Prints a message if the ERROR_LEVEL flag is set.
      */
     static void error(CSOUND *csound, const char *format,...);
     /**
-     *  Prints a message if the ERROR_LEVEL flag is set.
-     */
-    static void error(const char *format,...);
-    /**
      *  Prints a message if the WARNNING_LEVEL flag is set.
      */
     static void warn(CSOUND *csound, const char *format,...);
-    /**
-     *  Prints a message if the WARNNING_LEVEL flag is set.
-     */
-    static void warn(const char *format,...);
     /**
      *  Prints a message if the INFORMATION_LEVEL flag is set.
      */
     static void inform(CSOUND *csound, const char *format,...);
     /**
-     *  Prints a message if the INFORMATION_LEVEL flag is set.
-     */
-    static void inform(const char *format,...);
-    /**
      *  Prints a message if the DEBUGGING_LEVEL flag is set.
      */
     static void debug(CSOUND *csound, const char *format,...);
-    /**
-     *  Prints a message if the DEBUGGING_LEVEL flag is set.
-     */
-    static void debug(const char *format,...);
     /**
      *  Prints a message.
      */
@@ -187,27 +183,53 @@ public:
     /**
      *  Prints a message.
      */
-    static void message(const char *format,...);
-    /**
-     *  Prints a message.
-     */
     static void message(CSOUND *csound, const char *format, va_list valist);
-    /**
-     *  Prints a message.
-     */
-#if defined(_MSC_VER)
-    static void message(const char *format, va_list valist);
-#else
-    PUBLIC static void message(const char *format, va_list valist);
-#endif
     /**
      *  Prints a message.
      */
     static void message(CSOUND *csound, int level, const char *format,...);
     /**
-     *  Prints a message.
+     *  Unconditionally prints a message. This is the lowest-level message 
+     *  function that calls the message callback, if one has been set.
      */
     static void message(CSOUND *csound, int attribute, const char *format, va_list valist);
+    #endif
+    /**
+     *  Prints a message.
+     */
+    static void message(const char *format, va_list valist);
+#endif
+    /**
+     *  Prints a message if the ERROR_LEVEL flag is set.
+     */
+    static void error(const char *format,...);
+    /**
+     *  Prints a message if the WARNNING_LEVEL flag is set.
+     */
+    static void warn(const char *format,...);
+    /**
+     *  Prints a message if the INFORMATION_LEVEL flag is set.
+     */
+    static void inform(const char *format,...);
+    /**
+     *  Prints a message if the DEBUGGING_LEVEL flag is set.
+     */
+    static void debug(const char *format,...);
+    /**
+     *  Prints a message.
+     */
+    static void message(const char *format,...);
+#if defined(EMSCRIPTEN)
+    /**
+     *  Unconditionally prints a message. This is the lowest-level message 
+     *  function that calls the message callback, if one has been set.
+     */
+    static void message(int attribute, const char *format, va_list valist);
+#endif
+    /**
+     *  Prints a message.
+     */
+    static void message(std::string text);
     /**
      *  Sets message callback.
      */
@@ -216,7 +238,6 @@ public:
      *  Return the message callback, or null if none.
      */
     static MessageCallbackType getMessageCallback();
-#endif
     /**
      *  Execute a system command or program.
      */

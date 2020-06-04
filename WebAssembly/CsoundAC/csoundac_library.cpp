@@ -26,18 +26,17 @@
     however invalidate any other reasons why the library or executable
     file might be covered by the GNU Lesser General Public License.
 */
-#include <csound.hpp>
 #include <cstdio>
 #include <eigen3/Eigen/Dense>
 #include <emscripten/bind.h>
 #include <fstream>
 #include <iostream>
-#include <Silence.hpp>
+#include <CsoundAC/Silence.hpp>
 #include <string>
 #include <sstream>
 
-void csoundac() {
-    std::cout << "Hello, this is CsoundAC." << std::endl;
+static void csoundac() {
+    csound::System::message("Hello, this is CsoundAC.\n");
 }
 
 EMSCRIPTEN_BINDINGS(csoundac) {         
@@ -48,6 +47,5 @@ EMSCRIPTEN_BINDINGS(csoundac) {
     ;
     emscripten::class_<csound::Node>("Node")
         .constructor<>()
-        .function("Cleanup", &Csound::Cleanup)
     ;
 }

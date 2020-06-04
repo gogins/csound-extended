@@ -73,7 +73,6 @@
 class SILENCE_PUBLIC Counterpoint
 {
 public:
-    void (*messageCallback)(CSOUND *csound, int attribute, const char *format, va_list valist);
     void message(const char *format,...);
     void message(const char *format, va_list valist);
     int MostNotes;

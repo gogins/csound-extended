@@ -50,13 +50,13 @@
 #include <cmath>
 #include <cstdarg>
 #include <eigen3/Eigen/Dense>
-#include <Event.hpp>
+#include "Event.hpp"
 #include <functional>
 #include <iostream>
 #include <iterator>
 #include <map>
-#include <Score.hpp>
-#include <System.hpp>
+#include "Score.hpp"
+#include "System.hpp"
 #include <set>
 #include <sstream>
 #include <vector>

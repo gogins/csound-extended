@@ -325,7 +325,9 @@
 #include "Cell.hpp"
 #include "Rescale.hpp"
 #include "ScoreModel.hpp"
+#if !defined(EMSCRIPTEN)
 #include "MusicModel.hpp"
+#endif
 #include "Sequence.hpp"
 #include "Random.hpp"
 #if !defined(EMSCRIPTEN)

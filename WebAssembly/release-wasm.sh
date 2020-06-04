@@ -10,6 +10,7 @@ rm -rf dist-wasm
 mkdir dist-wasm
 cp src/*.js dist-wasm/
 cp build-wasm/CsoundAudio*.* dist-wasm/
+cp build-wasm/CsoundAC.js dist-wasm/
 cp build-wasm/csound_samples.* dist-wasm/
 rm -rf $RELEASE_DIR
 mkdir $RELEASE_DIR
