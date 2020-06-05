@@ -35,12 +35,12 @@
 #include <string>
 #include <sstream>
 
-static void csoundac() {
-    csound::System::message("Hello, this is CsoundAC.\n");
+static void hello() {
+    csound::System::message("Hello, World, this is CsoundAC!\n");
 }
 
 EMSCRIPTEN_BINDINGS(csoundac) {         
-    emscripten::function("csoundac", &csoundac);
+    emscripten::function("hello", &hello);
     emscripten::class_<Eigen::MatrixXd>("MatrixXd")
         .constructor<>()
         .constructor<int, int>()
