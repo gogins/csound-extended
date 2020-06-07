@@ -55,6 +55,12 @@ public:
      * of this.
      */
     int repeatCount;
+    virtual int getRepeatCount() const {
+        return repeatCount;
+    }
+    virtual void setRepeatCount(int count) {
+        repeatCount = count;
+    }
     /**
      * Indicates whether the durationSeconds of this cell is added
      * to the duration of the notes produced by the child nodes of this
@@ -63,6 +69,12 @@ public:
      * (or may not) overlap the notes of the N + 1th repetition.
      */
     bool relativeDuration;
+    virtual bool getRelativeDuration() const {
+        return relativeDuration;
+    }
+    virtual void setRelativeDuration(bool value) {
+        relativeDuration = value;
+    }
     /**
      * If relativeDuraton is true, then this time is added to the
      * duration of the Nth repetition in order to obtain the
@@ -72,9 +84,21 @@ public:
      * repetition.
      */
     double durationSeconds;
+    virtual double getDurationSeconds() const {
+        return durationSeconds;
+    }
+    virtual void setDurationSeconds(double value) {
+        durationSeconds = value;
+    }
     Cell();
     virtual ~Cell();
     virtual void transform(Score &score);
+    virtual std::string getImportFilename() const {
+        return importFilename;
+    }
+    virtual void setImportFilename(std::string filename) {
+        importFilename = filename;
+    }
 };
 
 /**

@@ -102,9 +102,12 @@ public:
      */
     virtual void transform(Score &score_from_children);
     /**
-     * Returns identity.
+     * Returns the identity matrix for score space.
      */
     virtual Eigen::MatrixXd createTransform();
+    /**
+     * Recursively clears all child Nodes of this.
+     */
     virtual void clear();
     /**
      * Returns a reference to the indicated element of the local transformation of coordinate system.
@@ -114,8 +117,20 @@ public:
      * Sets the indicated element of the local transformation of coordinate system.
      */
     virtual void setElement(size_t row, size_t column, double value);
+    /**
+     * Adds an immediate child Node to this.
+     */
     virtual void addChild(Node *node);
+    /**
+     * Returns the number of immediate children of this.
+     */
+    virtual size_t childCount() const;
+    /**
+     * Returns the immediate child of this at the index.
+     */
+    virtual Node* getChild(size_t index);
 };
+
 typedef Node* NodePtr;
 
 /**

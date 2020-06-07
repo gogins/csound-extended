@@ -33,7 +33,7 @@ em++ -s SAFE_HEAP=0 -v -O1 -std=c++11 --source-map-base . --bind --embed-file ..
 
 echo "Compiling CsoundAC..."
 
-em++ -s MODULARIZE -s EXPORT_NAME="createCsoundAC" -s SAFE_HEAP=0 -v -O1 -std=c++11 --source-map-base . --bind ../CsoundAC/csoundac_library.cpp -s FORCE_FILESYSTEM=1 -s WASM=1 -s ASSERTIONS=0 -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s TOTAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s WASM_ASYNC_COMPILATION=1 -s NO_EXIT_RUNTIME=0 -s SINGLE_FILE=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' -s FORCE_FILESYSTEM=1 -I ../deps/libsndfile-1.0.25/src -I../.. CsoundAC/libcsoundac-static.a ../deps/lib/libsndfile.a ../deps/lib/libogg.a ../deps/lib/libvorbis.a ../deps/lib/libvorbisenc.a ../deps/lib/libFLAC.a -o CsoundAC.js
+em++ -s MODULARIZE -s EXPORT_NAME="createCsoundAC" -s SAFE_HEAP=0 -v -O1 -std=c++11 --source-map-base . --bind ../CsoundAC/csoundac_embind.cpp -s FORCE_FILESYSTEM=1 -s WASM=1 -s ASSERTIONS=0 -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s TOTAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s WASM_ASYNC_COMPILATION=1 -s NO_EXIT_RUNTIME=0 -s SINGLE_FILE=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' -s FORCE_FILESYSTEM=1 -I ../deps/libsndfile-1.0.25/src -I../.. CsoundAC/libcsoundac-static.a ../deps/lib/libsndfile.a ../deps/lib/libogg.a ../deps/lib/libvorbis.a ../deps/lib/libvorbisenc.a ../deps/lib/libFLAC.a -o CsoundAC.js
 
 cd ..
 bash release-wasm.sh
