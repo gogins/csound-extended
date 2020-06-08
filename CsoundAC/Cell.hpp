@@ -46,8 +46,7 @@ namespace csound
  * Score node that simplifies building up structures of motivic cells,
  * and incrementally transforming them, as in Minimalism.
  */
-class SILENCE_PUBLIC Cell :
-    public ScoreNode
+class SILENCE_PUBLIC Cell : public ScoreNode
 {
 public:
     /**
