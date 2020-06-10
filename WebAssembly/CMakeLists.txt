@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(csound-extended)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS -frtti)
 set(CPPSOUND_SOURCE_DIRECTORY "../dependencies/csound/interfaces")
 set(CSOUND_INCLUDE_DIRECTORY "../dependencies/csound/include")

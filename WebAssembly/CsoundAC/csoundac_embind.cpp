@@ -116,6 +116,60 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         //~ .value("PAN", CHORD_DIMENSION::PAN)
         //~ .value("COUNT", CHORD_DIMENSION::COUNT)
     //~ ;
+    emscripten::function("euclidean", &csound::euclidean);
+    emscripten::function("factorial", &csound::factorial);
+    emscripten::function("midpoint", &csound::midpoint);
+    emscripten::function("EPSILON", &csound::EPSILON);
+    emscripten::function("epsilonFactor", &csound::epsilonFactor);
+    emscripten::function("eq_epsilon", &csound::eq_epsilon);
+    emscripten::function("gt_epsilon", &csound::gt_epsilon);
+    emscripten::function("lt_epsilon", &csound::lt_epsilon);
+    emscripten::function("ge_epsilon", &csound::ge_epsilon);
+    emscripten::function("le_epsilon", &csound::le_epsilon);
+    emscripten::function("OCTAVE", &csound::OCTAVE);
+    emscripten::function("MIDDLE_C", &csound::MIDDLE_C);
+    emscripten::function("C4", &csound::C4);
+    emscripten::function("T", &csound::T);
+    emscripten::function("I", &csound::I);
+    emscripten::function("modulo", &csound::modulo);
+    emscripten::function("epc", &csound::epc);
+    emscripten::function("pitchClassForName", &csound::pitchClassForName);
+    emscripten::function("nameForPitchClass", &csound::nameForPitchClass);
+    emscripten::function("nameForChord", &csound::nameForChord);
+    emscripten::function("chordForName", &csound::chordForName);
+    emscripten::function("nameForScale", &csound::nameForScale);
+    emscripten::function("scaleForName", &csound::scaleForName);
+    emscripten::function("add", emscripten::select_overload<void(std::string,const csound::Chord&)>(&csound::add));
+    emscripten::function("add", emscripten::select_overload<void(std::string,const csound::Scale&)>(&csound::add));
+    emscripten::function("iterator", &csound::iterator);
+    emscripten::function("next", &csound::next);
+    emscripten::function("operator==", &csound::operator==);
+    emscripten::function("operator<", emscripten::select_overload<bool(const csound::Chord&,const csound::Chord&)>(&csound::operator<));
+    emscripten::function("operator<=", &csound::operator<=);
+    emscripten::function("operator>", &csound::operator>);
+    emscripten::function("operator>=", &csound::operator>=);
+    emscripten::function("voiceleading", &csound::voiceleading);
+    emscripten::function("parallelFifth", &csound::parallelFifth);
+    emscripten::function("voiceleadingSmoothness", &csound::voiceleadingSmoothness);
+    emscripten::function("voiceleadingSmoother", &csound::voiceleadingSmoother);
+    emscripten::function("voiceleadingSimpler", &csound::voiceleadingSimpler);
+    emscripten::function("voiceleadingCloser", &csound::voiceleadingCloser);
+    emscripten::function("voiceleadingClosestRange", &csound::voiceleadingClosestRange);
+    emscripten::function("closestPitch", &csound::closestPitch);
+    emscripten::function("conformToPitchClassSet", &csound::conformToPitchClassSet);
+    emscripten::function("conformToChord", &csound::conformToChord);
+    emscripten::function("insert", &csound::insert);
+    emscripten::function("slice", &csound::slice);
+    emscripten::function("apply", &csound::apply);
+    emscripten::function("gather", &csound::gather);
+    emscripten::function("octavewiseRevoicings", &csound::octavewiseRevoicings);
+    emscripten::function("octavewiseRevoicing", &csound::octavewiseRevoicing);
+    emscripten::function("indexForOctavewiseRevoicing", &csound::indexForOctavewiseRevoicing);
+    emscripten::function("scale", &csound::scale);
+    emscripten::function("chord", &csound::chord);
+    emscripten::function("transpose_degrees", &csound::transpose_degrees);
+    emscripten::register_vector<csound::Chord>("ChordVector");
+    emscripten::register_vector<csound::Scale>("ScaleVector");
     emscripten::class_<csound::Chord>("Chord")
         .constructor<>()
         .constructor<csound::Chord>()
@@ -180,6 +234,42 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         .function("iseT", &csound::Chord::iseT)
         .function("iseTT", &csound::Chord::iseTT)
         .function("iseV", &csound::Chord::iseV)
+        .function("K", &csound::Chord::K)
+        .function("layer", &csound::Chord::layer)
+        .function("max", &csound::Chord::max)
+        .function("maximallyEven", &csound::Chord::maximallyEven)
+        .function("maximumInterval", &csound::Chord::maximumInterval)
+        .function("min", &csound::Chord::min)
+        .function("minimumInterval", &csound::Chord::minimumInterval)
+        .function("move", &csound::Chord::move)
+        .function("name", &csound::Chord::name)
+        .function("note", &csound::Chord::note)
+        .function("notes", &csound::Chord::notes)
+        .function("nrD", &csound::Chord::nrD)
+        .function("nrH", &csound::Chord::nrH)
+        .function("nrL", &csound::Chord::nrL)
+        .function("nrN", &csound::Chord::nrN)
+        .function("nrP", &csound::Chord::nrP)
+        .function("nrR", &csound::Chord::nrR)
+        .function("nrS", &csound::Chord::iseV)
+        .function("operator=", emscripten::select_overload<csound::Chord &(const csound::Chord &)>(&csound::Chord::operator=))
+        .function("origin", &csound::Chord::origin)
+        .function("permutations", &csound::Chord::permutations)
+        .function("Q", &csound::Chord::Q)
+        .function("resize", &csound::Chord::resize)
+        .function("setDuration", &csound::Chord::setDuration)
+        .function("setInstrument", &csound::Chord::setInstrument)
+        .function("setLoudness", &csound::Chord::setLoudness)
+        .function("setPan", &csound::Chord::setPan)
+        .function("setPitch", &csound::Chord::setPitch)
+        .function("T", emscripten::select_overload<csound::Chord(double) const>(&csound::Chord::T))
+        .function("T_voiceleading", emscripten::select_overload<csound::Chord(const csound::Chord &)>(&csound::Chord::T))
+        .function("Tform", &csound::Chord::Tform)
+        .function("toScore", &csound::Chord::toScore)
+        .function("toString", &csound::Chord::toString)
+        .function("v", &csound::Chord::v)
+        .function("voiceleading", &csound::Chord::voiceleading)
+        .function("voices", &csound::Chord::voices)
     ;
     emscripten::class_<csound::Event, emscripten::base<Eigen::VectorXd> >("Event")
         .constructor<>()
@@ -207,6 +297,25 @@ EMSCRIPTEN_BINDINGS(csoundac) {
        .function("getRandomCoordinates", &csound::Random::getRandomCoordinates)
        .function("sample", &csound::Random::sample)
        .function("seed", &csound::Random::seed)
+    ;
+    // FINISHED
+    emscripten::class_<csound::Scale>("Scale")
+        .constructor<>()
+        .constructor<std::string>()
+        .constructor<std::string, const csound::Chord&>()
+        .function("chord", &csound::Scale::chord)
+        .function("operator=", &csound::Scale::operator=)
+        .function("getTypeName", &csound::Scale::getTypeName)
+        .function("modulations", &csound::Scale::modulations)
+        .function("modulations_for_scale_types", &csound::Scale::modulations_for_scale_types)
+        .function("relative_tonicizations", &csound::Scale::relative_tonicizations)
+        .function("secondary", &csound::Scale::secondary)
+        .function("semitones_for_degree", &csound::Scale::semitones_for_degree)
+        .function("tonic", &csound::Scale::tonic)
+        .function("tonicizations", &csound::Scale::tonicizations)
+        .function("transpose", &csound::Scale::transpose)
+        .function("transpose_degrees", &csound::Scale::transpose_degrees)
+        .function("transpose_to_degree", &csound::Scale::transpose_to_degree)
     ;
     emscripten::class_<csound::Score>("Score")
         .constructor<>()

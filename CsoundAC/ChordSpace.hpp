@@ -2286,7 +2286,7 @@ class SILENCE_PUBLIC Scale : public Chord {
          * of scale type names restricts the types of Scale that will be 
          * returned.
          */
-        virtual void modulations(std::vector<Scale> &result, const Chord &current_chord, int voices_, const std::vector<std::string> &type_names) const {
+        virtual void modulations_for_scale_types(std::vector<Scale> &result, const Chord &current_chord, int voices_, const std::vector<std::string> &type_names) const {
             result.clear();
             int current_degree = degree(current_chord);
             if (current_degree == -1) {
@@ -2317,7 +2317,7 @@ class SILENCE_PUBLIC Scale : public Chord {
             std::vector<std::string> type_names;
             type_names.push_back("major");
             type_names.push_back("harmonic minor");
-            modulations(result, chord, voices, type_names);
+            modulations_for_scale_types(result, chord, voices, type_names);
             return result;
         }
         /**
@@ -2326,7 +2326,7 @@ class SILENCE_PUBLIC Scale : public Chord {
          * function, if that is possible. The list of scale types is used to 
          * restrict the types of Scales that are returned.
          */
-        virtual void relative_tonicizations(std::vector<Scale> &result, const Chord &current_chord, int secondary_function, int voices, const std::vector<std::string> &type_names) const {
+        virtual void relative_tonicizations_for_scale_types(std::vector<Scale> &result, const Chord &current_chord, int secondary_function, int voices, const std::vector<std::string> &type_names) const {
             result.clear();
             int current_degree = degree(current_chord);
             System::debug("Scale::relative_tonicizations: chord: %.20s (%s) degree: %3d\n", current_chord.name().c_str(), current_chord.toString().c_str(), current_degree);
@@ -2358,7 +2358,7 @@ class SILENCE_PUBLIC Scale : public Chord {
         virtual std::vector<Scale> relative_tonicizations(const Chord &current_chord, int secondary_function = 5, int voices = -1) const {
             std::vector<Scale> result;
             std::vector<std::string> scale_types = {"major", "harmonic minor"};
-            relative_tonicizations(result, current_chord, secondary_function, voices, scale_types);
+            relative_tonicizations_for_scale_types(result, current_chord, secondary_function, voices, scale_types);
             return result;
         }
         /**

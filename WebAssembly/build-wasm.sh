@@ -21,7 +21,7 @@ python $EMSCRIPTEN_ROOT/tools/file_packager.py csound_samples.data --preload ../
 
 echo "Compiling csound_embind..."
 
-em++ -std=c++11 -s SAFE_HEAP=0 -s LINKABLE=1 -s ASSERTIONS=1 -DINIT_STATIC_MODULES=1 -s FORCE_FILESYSTEM=1 -iquote ../src -I../../dependencies/csound/include -I../../dependencies/csound/H -I../../dependencies/csound/interfaces -I../deps/libsndfile-1.0.25/src -c ../src/csound_embind.cpp -Iinclude -o csound_web_audio.bc
+em++ -std=c++17 -s SAFE_HEAP=0 -s LINKABLE=1 -s ASSERTIONS=1 -DINIT_STATIC_MODULES=1 -s FORCE_FILESYSTEM=1 -iquote ../src -I../../dependencies/csound/include -I../../dependencies/csound/H -I../../dependencies/csound/interfaces -I../deps/libsndfile-1.0.25/src -c ../src/csound_embind.cpp -Iinclude -o csound_web_audio.bc
 
 # Total memory for a WebAssembly module must be a multiple of 64 KB so...
 # 1024 * 64 = 65536 is 64 KB
@@ -29,7 +29,7 @@ em++ -std=c++11 -s SAFE_HEAP=0 -s LINKABLE=1 -s ASSERTIONS=1 -DINIT_STATIC_MODUL
 
 echo "Compiling CsoundAudioProcessor..."
 
-em++ -s SAFE_HEAP=0 -v -O1 -std=c++11 --source-map-base . --bind --embed-file ../../dependencies/csound/samples@/ --pre-js ../src/CsoundAudioProcessor_prejs.js --post-js ../src/CsoundAudioProcessor_postjs.js -DINIT_STATIC_MODULES=1 -s FORCE_FILESYSTEM=1 -s WASM=1 -s ASSERTIONS=0 -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s TOTAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s WASM_ASYNC_COMPILATION=0 -s NO_EXIT_RUNTIME=0 -s SINGLE_FILE=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' -s FORCE_FILESYSTEM=1 csound_web_audio.bc csound/libcsound.a ../deps/lib/libsndfile.a ../deps/lib/libogg.a ../deps/lib/libvorbis.a ../deps/lib/libvorbisenc.a ../deps/lib/libFLAC.a -o CsoundAudioProcessor.js
+em++ -s SAFE_HEAP=0 -v -O1 -std=c++17 --source-map-base . --bind --embed-file ../../dependencies/csound/samples@/ --pre-js ../src/CsoundAudioProcessor_prejs.js --post-js ../src/CsoundAudioProcessor_postjs.js -DINIT_STATIC_MODULES=1 -s FORCE_FILESYSTEM=1 -s WASM=1 -s ASSERTIONS=0 -s LINKABLE=1 -s RESERVED_FUNCTION_POINTERS=1 -s TOTAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s WASM_ASYNC_COMPILATION=0 -s NO_EXIT_RUNTIME=0 -s SINGLE_FILE=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' -s FORCE_FILESYSTEM=1 csound_web_audio.bc csound/libcsound.a ../deps/lib/libsndfile.a ../deps/lib/libogg.a ../deps/lib/libvorbis.a ../deps/lib/libvorbisenc.a ../deps/lib/libFLAC.a -o CsoundAudioProcessor.js
 
 echo "Compiling CsoundAC..."
 
