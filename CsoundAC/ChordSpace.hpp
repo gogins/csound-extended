@@ -462,8 +462,8 @@ SILENCE_PUBLIC const Scale &scaleForName(std::string name);
 SILENCE_PUBLIC std::multimap<Chord, std::string> &namesForChords();
 SILENCE_PUBLIC std::multimap<Scale, std::string> &namesForScales();
 SILENCE_PUBLIC std::map<std::string, Scale> &scalesForNames();
-SILENCE_PUBLIC void add(std::string, const Chord &chord);
-SILENCE_PUBLIC void add(std::string, const Scale &scale);
+SILENCE_PUBLIC void add_chord(std::string, const Chord &chord);
+SILENCE_PUBLIC void add_scale(std::string, const Scale &scale);
 SILENCE_PUBLIC std::set<Chord> &unique_chords();
 SILENCE_PUBLIC std::set<Scale> &unique_scales();
 
@@ -820,7 +820,7 @@ public:
      * of directed intervals). 
      * NOTE: Does NOT return an equivalent under any equivalence relation.
      */
-    virtual Chord T(const Chord &voiceleading) {
+    virtual Chord T_voiceleading(const Chord &voiceleading) {
         Chord clone = *this;
         for (size_t voice = 0; voice < voices(); voice++) {
             clone.setPitch(voice, getPitch(voice) + voiceleading.getPitch(voice));
@@ -1032,9 +1032,9 @@ public:
      * Returns whether the chord is within the representative fundamental domain
      * of inversional equivalence.
      */
-    virtual bool iseI(Chord *inverse) const;
+    virtual bool iseI_chord(Chord *inverse) const;
     virtual bool iseI() const {
-        return iseI(0);
+        return iseI_chord(nullptr);
     }
     /**
      * Returns the equivalent of the chord within the representative fundamental
@@ -2162,7 +2162,7 @@ class SILENCE_PUBLIC Scale : public Chord {
             for (int index = 0; index < voices(); ++index) {
                 setPitch(index, scale_pitches.getPitch(index));
             }
-            add(name, *this);
+            add_scale(name, *this);
         }
         virtual ~Scale() {};
         virtual Scale &operator = (const Scale &other) {
@@ -2501,7 +2501,7 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_I>(const Cho
     return true;
 }
 
-inline bool Chord::iseI(Chord *inverse) const {
+inline bool Chord::iseI_chord(Chord *inverse) const {
     return isNormal<EQUIVALENCE_RELATION_I>(*this, OCTAVE(), 1.0);
 }
 
@@ -2960,13 +2960,13 @@ inline SILENCE_PUBLIC std::set<Scale> &unique_scales() {
     return unique_scales_;
 }
 
-inline SILENCE_PUBLIC void add(std::string name, const Chord &chord) {
+inline SILENCE_PUBLIC void add_chord(std::string name, const Chord &chord) {
     unique_chords().insert(chord);
     chordsForNames().insert(std::make_pair(name, chord));
     namesForChords().insert(std::make_pair(chord, name));
 }
 
-inline SILENCE_PUBLIC void add(std::string name, const Scale &scale) {
+inline SILENCE_PUBLIC void add_scale(std::string name, const Scale &scale) {
     unique_scales().insert(scale);
     scalesForNames().insert(std::make_pair(name, scale));
     namesForScales().insert(std::make_pair(scale, name));
@@ -2998,12 +2998,12 @@ inline void fill(std::string rootName, double rootPitch, std::string typeName, s
     System::debug("eOP_:   %s  chordName: %s\n", eOP_.toString().c_str(), chordName.c_str());
     ///chordsForNames()[chordName] = eOP_;
     ///namesForChords()[eOP_] = chordName;
-    add(chordName, eOP_);
+    add_chord(chordName, eOP_);
     if (is_scale == true) {
         Scale scale(chordName, chord);
         ///scalesForNames()[chordName] = scale;
         ///namesForScales()[scale] = chordName;
-        add(chordName, scale);
+        add_scale(chordName, scale);
     }
 }
 

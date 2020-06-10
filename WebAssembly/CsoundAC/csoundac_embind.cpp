@@ -139,8 +139,8 @@ EMSCRIPTEN_BINDINGS(csoundac) {
     emscripten::function("chordForName", &csound::chordForName);
     emscripten::function("nameForScale", &csound::nameForScale);
     emscripten::function("scaleForName", &csound::scaleForName);
-    emscripten::function("add", emscripten::select_overload<void(std::string,const csound::Chord&)>(&csound::add));
-    emscripten::function("add", emscripten::select_overload<void(std::string,const csound::Scale&)>(&csound::add));
+    emscripten::function("add_chord", &csound::add_chord);
+    emscripten::function("add_scale", &csound::add_scale);
     emscripten::function("iterator", &csound::iterator);
     emscripten::function("next", &csound::next);
     emscripten::function("operator==", &csound::operator==);
@@ -213,8 +213,8 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         .function("I", &csound::Chord::I)
         .function("Iform", &csound::Chord::Iform)
         .function("information", &csound::Chord::information)
-        .function("iseI", emscripten::select_overload<bool()const>(&csound::Chord::iseI))
-        .function("iseI_chord", emscripten::select_overload<bool(csound::Chord *)const>(&csound::Chord::iseI), emscripten::allow_raw_pointers())
+        .function("iseI", &csound::Chord::iseI)
+        .function("iseI_chord", &csound::Chord::iseI_chord, emscripten::allow_raw_pointers())
         .function("iseOP", &csound::Chord::iseOP)
         .function("iseOPI", &csound::Chord::iseOPI)
         .function("iseOPT", &csound::Chord::iseOPT)
@@ -262,8 +262,8 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         .function("setLoudness", &csound::Chord::setLoudness)
         .function("setPan", &csound::Chord::setPan)
         .function("setPitch", &csound::Chord::setPitch)
-        .function("T", emscripten::select_overload<csound::Chord(double) const>(&csound::Chord::T))
-        .function("T_voiceleading", emscripten::select_overload<csound::Chord(const csound::Chord &)>(&csound::Chord::T))
+        .function("T", &csound::Chord::T)
+        .function("T_voiceleading", &csound::Chord::T_voiceleading)
         .function("Tform", &csound::Chord::Tform)
         .function("toScore", &csound::Chord::toScore)
         .function("toString", &csound::Chord::toString)
@@ -309,6 +309,7 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         .function("modulations", &csound::Scale::modulations)
         .function("modulations_for_scale_types", &csound::Scale::modulations_for_scale_types)
         .function("relative_tonicizations", &csound::Scale::relative_tonicizations)
+       .function("relative_tonicizations_for_scale_types", &csound::Scale::relative_tonicizations_for_scale_types)
         .function("secondary", &csound::Scale::secondary)
         .function("semitones_for_degree", &csound::Scale::semitones_for_degree)
         .function("tonic", &csound::Scale::tonic)
