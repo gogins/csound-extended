@@ -564,6 +564,23 @@ void Score::initialize(void)
     rescaleRanges[Event::HOMOGENEITY] = false;
 }
 
+void Score::append_note(double time_, double duration, double status, double instrument, double key, double velocity, double phase, double pan, double depth, double height, double pitches) {
+{
+    Event event;
+    event.setTime(time_);
+    event.setDuration(duration);
+    event.setStatus(status);
+    event.setInstrument(instrument);
+    event.setKey(key);
+    event.setVelocity(velocity);
+    event.setPhase(phase);
+    event.setPan(pan);
+    event.setDepth(depth);
+    event.setHeight(height);
+    event.setPitches(pitches);
+    push_back(event);
+}
+
 void Score::append(double time_, double duration, double status, double instrument, double key, double velocity, double phase, double pan, double depth, double height, double pitches)
 {
     Event event;
@@ -578,6 +595,11 @@ void Score::append(double time_, double duration, double status, double instrume
     event.setDepth(depth);
     event.setHeight(height);
     event.setPitches(pitches);
+    push_back(event);
+}
+
+void Score::append_event(Event event)
+{
     push_back(event);
 }
 

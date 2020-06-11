@@ -59,11 +59,47 @@ public:
         CorrectCounterpoint = 1
     };
     int generationMode;
+    virtual int getGenerationMode() const {
+        return generationMode;
+    }
+    virtual void setGenerationMode(int value) {
+        generationMode = value;
+    }
     int musicMode;
+    virtual int getMusicMode() const {
+        return musicMode;
+    }
+    virtual void setMusicMode(int value) {
+            musicMode = value;
+    }
     int species;
+    virtual int getSpecies() const {
+        return species;
+    }
+    virtual void setSpecies(int value) {
+            species = value;
+    }
     size_t voices;
+    virtual size_t getVoices() const {
+        return voices;
+    }
+    virtual void setVoices(size_t value) {
+            voices = value;
+    }
     double secondsPerPulse;
+    virtual double getSecondsPerPulse() const {
+        return secondsPerPulse;
+    }
+    virtual void setSecondsPerPulse(double value) {
+            secondsPerPulse = value;
+    }
     std::vector<int> voiceBeginnings;
+    virtual std::vector<int> &getVoiceBeginnings() {
+        return voiceBeginnings;
+    }
+    virtual void setVoiceBeginnings(const std::vector<int> &value) {
+            voiceBeginnings = value;
+    }
     CounterpointNode();
     virtual ~CounterpointNode();
     virtual void transform(Score &score);

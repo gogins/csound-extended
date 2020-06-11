@@ -66,7 +66,9 @@ public:
     virtual ~Score();
     virtual void initialize();
     virtual void append(Event event);
+    virtual void append_event(Event event);
     virtual void append(double time, double duration, double status, double channel, double key, double velocity, double phase=0, double pan=0, double depth=0, double height=0, double pitches=4095);
+    virtual void append_note(double time, double duration, double status, double channel, double key, double velocity, double phase=0, double pan=0, double depth=0, double height=0, double pitches=4095);
     virtual void remove(size_t index);
     /**
      * Loads score data from a MIDI (.mid) file,

@@ -3221,18 +3221,39 @@ public:
      * Number of voices in the chord space.
      */
     int N;
+    virtual int getN() const {
+        return N;
+    }
     /**
      * The generator of transposition.
      */
     double g;
+    virtual int getG() const {
+        return g;
+    }
     /**
      * The zero-based range of the chord space.
      */
     double range;
+    virtual int getRange() const {
+        return range;
+    }
     int countP;
+    virtual int getCountP() const {
+        return countP;
+    }
     int countI;
+    virtual int getCountI() const {
+        return countI;
+    }
     int countT;
+    virtual int getCountT() const {
+        return countT;
+    }
     int countV;
+    virtual int getCountV() const {
+        return countV;
+    }
     /**
      * Ordered table of all OPTTI chords for g.
      */
