@@ -76,6 +76,7 @@ public:
      * Non-sounding data is ignored.
      */
     virtual void load(std::string filename);
+    virtual void load_filename(std::string filename);
     virtual void load(std::istream &stream);
     //virtual void load(MidiFile &midiFile);
     /**
@@ -85,6 +86,7 @@ public:
      * Only sounding data is saved.
      */
     virtual void save(std::string filename);
+    virtual void save_filename(std::string filename);
     /**
      * Save as a MIDI file, format 1.
      */
@@ -98,6 +100,7 @@ public:
     virtual void findScale();
     virtual void rescale();
     virtual void rescale(Event &event);
+    virtual void rescale_event(Event &event);
     /**
      * Sort all events in the score by time, instrument number, pitch, duration, loudness,
      * and other dimensions as given by Event::SORT_ORDER.
@@ -128,6 +131,7 @@ public:
      * Re-assign instrument number, adjust gain, and change pan for export to Csound score.
      */
     virtual void arrange(int oldInstrumentNumber, int newInstrumentNumber, double gain, double pan);
+    virtual void arrange_all(int oldInstrumentNumber, int newInstrumentNumber, double gain, double pan);
     /**
      * Remove instrument number, gain, and pan assignments.
      */
@@ -232,6 +236,14 @@ public:
                            double range,
                            bool avoidParallelFifths,
                            size_t divisionsPerOctave = 12);
+    virtual void voicelead_segments(size_t beginSource,
+                           size_t endSource,
+                           size_t beginTarget,
+                           size_t endTarget,
+                           double lowest,
+                           double range,
+                           bool avoidParallelFifths,
+                           size_t divisionsPerOctave = 12);
     /**
      * Performs voice-leading between
      * the specified segments of the score
@@ -247,6 +259,15 @@ public:
      * See: http://ruccas.org/pub/Gogins/music_atoms.pdf
      */
     virtual void voicelead(size_t beginSource,
+                           size_t endSource,
+                           size_t beginTarget,
+                           size_t endTarget,
+                           const std::vector<double> &targetPitches,
+                           double lowest,
+                           double range,
+                           bool avoidParallelFifths,
+                           size_t divisionsPerOctave = 12);
+    virtual void voicelead_pitches(size_t beginSource,
                            size_t endSource,
                            size_t beginTarget,
                            size_t endTarget,

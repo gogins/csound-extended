@@ -56,6 +56,9 @@ just above the class that appears in the same header file.
 
 The order of definitions does not matter when compiling, so just keep these 
 in the order describe above order. 
+
+In place of overloads use distinguished names, but for the Embind name, use 
+the name that would go to the most commonly used overload.
 */
 
 EMSCRIPTEN_BINDINGS(csoundac) {  
@@ -657,7 +660,6 @@ EMSCRIPTEN_BINDINGS(csoundac) {
     // FINISHED
     emscripten::class_<csound::MCRM, emscripten::base<csound::ScoreNode> >("MCRM")
         .constructor<>()
-        .function("iterate", &csound::MCRM::iterate)
         .function("resize", &csound::MCRM::resize)
         .function("setDepth", &csound::MCRM::setDepth)
         .function("setTransformationElement", &csound::MCRM::setTransformationElement)
@@ -693,7 +695,8 @@ EMSCRIPTEN_BINDINGS(csoundac) {
     // FINISHED
     emscripten::class_<csound::Rescale, emscripten::base<csound::Node> >("Rescale")
         .constructor<>()
-       .function("getRescale", &csound::Rescale::getRescale)
+        // NOT SUPPORTED
+        // .function("getRescale", &csound::Rescale::getRescale, emscripten::allow_raw_pointers())
        .function("initialize", &csound::Rescale::initialize)
        .function("setRescale", &csound::Rescale::setRescale)
     ;
@@ -719,8 +722,49 @@ EMSCRIPTEN_BINDINGS(csoundac) {
     ;
     emscripten::class_<csound::Score>("Score")
         .constructor<>()
-        .function("chord", &csound::Score::chord)
-    ;
+        .function("append_note", &csound::Score::append_note)
+        .function("append_event", &csound::Score::append_event)
+        .function("arrange_all", &csound::Score::arrange_all)
+        .function("getCsoundScore", &csound::Score::getCsoundScore)
+        .function("getDuration", &csound::Score::getDuration)
+        .function("getPitches", &csound::Score::getPitches)
+        .function("getPT", &csound::Score::getPT)
+        .function("getPTV", &csound::Score::getPTV)
+        // NOT SUPPORTED
+        // .function("getScale", &csound::Score::getScale, emscripten::allow_raw_pointers())
+        .function("getPTV", &csound::Score::getPTV)
+        .function("getVoicing", &csound::Score::getVoicing)
+        .function("indexAfterTime", &csound::Score::indexAfterTime)
+        .function("indexAtTime", &csound::Score::indexAtTime)
+        .function("indexToTime", &csound::Score::indexToTime)
+        .function("initialize", &csound::Score::initialize)
+        .function("load", &csound::Score::load_filename)
+        .function("process", &csound::Score::process)
+        .function("remove", &csound::Score::remove)
+        .function("removeArrangement", &csound::Score::removeArrangement)
+        .function("rescale", emscripten::select_overload<void()>(&csound::Score::rescale))
+        .function("save", &csound::Score::save_filename)
+        .function("setDuration", &csound::Score::setDuration)
+        .function("setK", &csound::Score::setK)
+        .function("setKL", &csound::Score::setKL)
+        .function("setKV", &csound::Score::setKV)
+        .function("setPitchClassSet", &csound::Score::setPitchClassSet)
+        .function("setPitches", &csound::Score::setPitches)
+        .function("setPT", &csound::Score::setPT)
+        .function("setPTV", &csound::Score::setPTV)
+        .function("setQ", &csound::Score::setQ)
+        .function("setQL", &csound::Score::setQL)
+        .function("setQV", &csound::Score::setQV)
+        .function("setScale", &csound::Score::setScale)
+        .function("setVoicing", &csound::Score::setVoicing)
+        .function("sort", &csound::Score::sort)
+        .function("temper", &csound::Score::temper)
+        .function("tieOverlappingNotes", &csound::Score::tieOverlappingNotes)
+        .function("toString", &csound::Score::toString)
+        .function("voicelead", &csound::Score::voicelead_segments)
+        .function("voicelead_pitches", &csound::Score::voicelead_pitches)
+        .function("setPTV", &csound::Score::setPTV)
+   ;
     // FINISHED
     emscripten::class_<csound::ScoreNode, emscripten::base<csound::Node> >("ScoreNode")
         .constructor<>()

@@ -172,6 +172,11 @@ void Score::load(std::string filename)
     System::inform("Score::load.\n");
 }
 
+void Score::load_filename(std::string filename)
+{
+    load(filename);
+}
+
 void Score::load(std::istream &stream)
 {
     Alg_seq seq(stream, true);
@@ -348,6 +353,11 @@ void Score::save(std::string filename)
     stream.close();
 }
 
+void Score::save_filename(std::string filename)
+{
+    save(filename);
+}
+
 void Score::save(std::ostream &stream)
 {
     Alg_seq seq;
@@ -516,6 +526,11 @@ void Score::rescale(Event &event)
     }
 }
 
+void Score::rescale_event(Event &event)
+{
+    rescale(event);
+}
+
 void Score::dump(std::ostream &stream)
 {
     stream << "silence::Score = " << int(size()) << " events:" << std::endl;
@@ -564,7 +579,7 @@ void Score::initialize(void)
     rescaleRanges[Event::HOMOGENEITY] = false;
 }
 
-void Score::append_note(double time_, double duration, double status, double instrument, double key, double velocity, double phase, double pan, double depth, double height, double pitches) {
+void Score::append_note(double time_, double duration, double status, double instrument, double key, double velocity, double phase, double pan, double depth, double height, double pitches) 
 {
     Event event;
     event.setTime(time_);
@@ -680,6 +695,13 @@ void Score::arrange(int oldInstrumentNumber, int newInstrumentNumber, double gai
 }
 
 void Score::arrange(int oldInstrumentNumber, int newInstrumentNumber, double gain, double pan)
+{
+    reassignments[oldInstrumentNumber] = newInstrumentNumber;
+    gains[oldInstrumentNumber] = gain;
+    pans[oldInstrumentNumber] = pan;
+}
+
+void Score::arrange_all(int oldInstrumentNumber, int newInstrumentNumber, double gain, double pan)
 {
     reassignments[oldInstrumentNumber] = newInstrumentNumber;
     gains[oldInstrumentNumber] = gain;
@@ -971,6 +993,18 @@ void Score::voicelead(size_t beginSource,
     System::inform("Score::voicelead.\n");
 }
 
+void Score::voicelead_segments(size_t beginSource,
+                      size_t endSource,
+                      size_t beginTarget,
+                      size_t endTarget,
+                      double lowest,
+                      double range,
+                      bool avoidParallelFifths,
+                      size_t divisionsPerOctave_)
+{
+    voicelead(beginSource, endSource, beginTarget, lowest, range, avoidParallelFifths, divisionsPerOctave_);
+}
+
 void Score::voicelead(size_t beginSource,
                       size_t endSource,
                       size_t beginTarget,
@@ -1064,6 +1098,20 @@ void Score::voicelead(size_t beginSource,
     printChord("  as pitch-class set:  ", resultTones);
     System::inform("Score::voicelead.\n");
 }
+
+void Score::voicelead_pitches(size_t beginSource,
+                      size_t endSource,
+                      size_t beginTarget,
+                      size_t endTarget,
+                      const std::vector<double> &target,
+                      double lowest,
+                      double range,
+                      bool avoidParallelFifths,
+                      size_t divisionsPerOctave_)
+{
+    voicelead(beginSource, endSource, beginTarget, endTarget, target, lowest, range, avoidParallelFifths, divisionsPerOctave_);
+}
+
 
 void Score::setK(size_t priorBegin, size_t begin, size_t end, double base, double range)
 {
