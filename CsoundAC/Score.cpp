@@ -681,7 +681,7 @@ std::vector<double> Score::getPitches(size_t begin_, size_t end_, size_t divisio
     std::vector<double> chord;
     for (size_t i = begin_; i < end_; i++) {
         const Event &event = (*this)[i];
-        double pitch = event.getKey(divisionsPerOctave_);
+        double pitch = event.getKey_tempered(divisionsPerOctave_);
         if (pitches.find(pitch) == pitches.end()) {
             pitches.insert(pitch);
             chord.push_back(pitch);

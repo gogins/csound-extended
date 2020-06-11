@@ -3484,7 +3484,7 @@ public:
         }
         return result;
     }
-    std::vector<Chord> toChord(const Eigen::VectorXi &pitv, bool printme = false) const {
+    std::vector<Chord> toChord_vector(const Eigen::VectorXi &pitv, bool printme = false) const {
         return toChord(pitv(0), pitv(1), pitv(2), pitv(3), printme);
     }
 };

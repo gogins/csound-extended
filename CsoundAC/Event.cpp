@@ -324,7 +324,7 @@ double Event::getGain() const
     return Conversions::midiToGain(getVelocity());
 }
 
-double Event::getKey(double tonesPerOctave) const
+double Event::getKey_tempered(double tonesPerOctave) const
 {
     if(tonesPerOctave == 0.0)
     {
@@ -372,7 +372,7 @@ std::string Event::toCsoundIStatement(double tonesPerOctave) const
             getInstrument(),
             getTime(),
             getDuration(),
-            getKey(tonesPerOctave),
+            getKey_tempered(tonesPerOctave),
             getVelocity(),
             getDepth(),
             getPan(),

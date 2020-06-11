@@ -138,7 +138,7 @@ public:
     virtual void setOffTime(double offTime);
     virtual int getKeyNumber() const;
     virtual double getKey() const;
-    virtual double getKey(double tonesPerOctave) const;
+    virtual double getKey_tempered(double tonesPerOctave) const;
     virtual void setKey(double key);
     virtual double getFrequency() const;
     virtual void setFrequency(double frequency);
