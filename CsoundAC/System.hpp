@@ -267,6 +267,21 @@ public:
      *  Make some sort of noticeable sound.
      */
     static void beep();
+    static void message_text(std::string text) {
+        message(text.c_str());
+    }
+    static void debug_text(std::string text) {
+        debug(text.c_str());
+    }
+    static void inform_text(std::string text) {
+        inform(text.c_str());
+    }
+    static void warn_text(std::string text) {
+        warn(text.c_str());
+    }
+    static void error_text(std::string text) {
+        error(text.c_str());
+    }
 };
 
 /**

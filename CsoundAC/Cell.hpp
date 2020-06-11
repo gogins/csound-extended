@@ -136,6 +136,12 @@ public:
      * first (0th) node.
      */
     double duration;
+    virtual double getDuration() const {
+        return duration;
+    }
+    virtual double setDuration(double value) {
+        duration = value;
+    }
     Stack();
     virtual ~Stack();
     virtual void traverse(const Eigen::MatrixXd &globalCoordinates,

@@ -720,9 +720,10 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         .function("transpose_degrees", &csound::Scale::transpose_degrees)
         .function("transpose_to_degree", &csound::Scale::transpose_to_degree)
     ;
+    // FINISHED
     emscripten::class_<csound::Score>("Score")
         .constructor<>()
-        .function("append_note", &csound::Score::append_note)
+        .function("append", &csound::Score::append_note)
         .function("append_event", &csound::Score::append_event)
         .function("arrange_all", &csound::Score::arrange_all)
         .function("getCsoundScore", &csound::Score::getCsoundScore)
@@ -764,12 +765,104 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         .function("voicelead", &csound::Score::voicelead_segments)
         .function("voicelead_pitches", &csound::Score::voicelead_pitches)
         .function("setPTV", &csound::Score::setPTV)
-   ;
+    ;
+    // FINISHED
+    emscripten::class_<csound::ScoreModel, emscripten::base<csound::Composition> >("ScoreModel")
+        .constructor<>()
+        // Repeating Node methods here to make up for lack of multiple inheritance.
+        .function("addChild", &csound::ScoreModel::addChild, emscripten::allow_raw_pointers())
+        .function("childCount", &csound::ScoreModel::childCount)
+        .function("clear", &csound::ScoreModel::clear)
+        .function("createTransform", &csound::ScoreModel::createTransform)
+        .function("element", &csound::ScoreModel::element)
+        .function("generate", &csound::ScoreModel::generate)
+        .function("getChild", &csound::ScoreModel::getChild, emscripten::allow_raw_pointers())
+        .function("getLocalCoordinates", &csound::ScoreModel::getLocalCoordinates)
+        .function("setElement", &csound::ScoreModel::setElement)
+        .function("transform", &csound::ScoreModel::transform)
+        .function("traverse", &csound::ScoreModel::traverse)
+        // End of Node methods.
+        .function("getThisNode", &csound::ScoreModel::getThisNode, emscripten::allow_raw_pointers())
+        .function("initialize", &csound::ScoreModel::initialize)
+    ;
     // FINISHED
     emscripten::class_<csound::ScoreNode, emscripten::base<csound::Node> >("ScoreNode")
         .constructor<>()
         .function("getScore", &csound::ScoreNode::getScore, emscripten::allow_raw_pointers())
     ;
+    // FINISHED
+    emscripten::class_<csound::Sequence, emscripten::base<csound::Node> >("Sequence")
+        .constructor<>()
+    ;
+    // FINISHED
+    emscripten::class_<csound::Stack, emscripten::base<csound::ScoreNode> >("Stack")
+        .constructor<>()
+        .property("duration", &csound::Stack::getDuration, &csound::Stack::setDuration)
+    ;
+    // FINISHED
+    emscripten::class_<csound::StrangeAttractor, emscripten::base<csound::ScoreNode> >("StrangeAttractor")
+        .constructor<>()
+        .function("calculateFractalDimension", &csound::StrangeAttractor::calculateFractalDimension)
+        .function("calculateLyupanovExponent", &csound::StrangeAttractor::calculateLyupanovExponent)
+        .function("codeRandomize", &csound::StrangeAttractor::codeRandomize)
+        .function("evaluateAttractor", &csound::StrangeAttractor::evaluateAttractor)
+        .function("getAttractorType", &csound::StrangeAttractor::getAttractorType)
+        .function("getCode", &csound::StrangeAttractor::getCode)
+        .function("getCoefficients", &csound::StrangeAttractor::getCoefficients)
+        .function("getDimensionAndOrder", &csound::StrangeAttractor::getDimensionAndOrder)
+        .function("getDimensionCount", &csound::StrangeAttractor::getDimensionCount)
+        .function("getFractalDimension", &csound::StrangeAttractor::getFractalDimension)
+        .function("getIteration", &csound::StrangeAttractor::getIteration)
+        .function("getIterationCount", &csound::StrangeAttractor::getIterationCount)
+        .function("getLyupanovExponent", &csound::StrangeAttractor::getLyupanovExponent)
+        .function("getScoreType", &csound::StrangeAttractor::getScoreType)
+        .function("getW", &csound::StrangeAttractor::getW)
+        .function("getX", &csound::StrangeAttractor::getX)
+        .function("getY", &csound::StrangeAttractor::getY)
+        .function("getZ", &csound::StrangeAttractor::getZ)
+        .function("initialize", &csound::StrangeAttractor::initialize)
+        .function("iterate", &csound::StrangeAttractor::iterate)
+        .function("reinitialize", &csound::StrangeAttractor::reinitialize)
+        .function("render", &csound::StrangeAttractor::render)
+        .function("reset", &csound::StrangeAttractor::reset)
+        .function("searchForAttractor", &csound::StrangeAttractor::searchForAttractor)
+        .function("setAttractorType", &csound::StrangeAttractor::setAttractorType)
+        .function("setCode", &csound::StrangeAttractor::setCode)
+        .function("setDimensionCount", &csound::StrangeAttractor::setDimensionCount)
+        .function("setIteration", &csound::StrangeAttractor::setIteration)
+        .function("setIterationCount", &csound::StrangeAttractor::setIterationCount)
+        .function("setScoreType", &csound::StrangeAttractor::setScoreType)
+        .function("setAttractorType", &csound::StrangeAttractor::setAttractorType)
+        .function("setAttractorType", &csound::StrangeAttractor::setAttractorType)
+        .function("setW", &csound::StrangeAttractor::setW)
+        .function("setX", &csound::StrangeAttractor::setX)
+        .function("setY", &csound::StrangeAttractor::setY)
+        .function("setZ", &csound::StrangeAttractor::setZ)
+        .function("shuffleRandomNumbers", &csound::StrangeAttractor::shuffleRandomNumbers)
+        .function("specialFunctions", &csound::StrangeAttractor::specialFunctions)
+    ;
+    // FINISHED
+    // Mostly not supported and not used, much else simplified.
+    emscripten::class_<csound::System>("System")
+        .constructor<>()
+        .function("beep", &csound::System::beep)
+        .function("debug", &csound::System::debug_text)
+        .function("error", &csound::System::error_text)
+        .function("execute", &csound::System::execute)
+        .function("getDirectoryNames", &csound::System::getDirectoryNames)
+        .function("getFilenames", &csound::System::getFilenames)
+        .function("getMessageCallback", &csound::System::getMessageCallback)
+        .function("getMessageLevel", &csound::System::getMessageLevel)
+        .function("getUserdata", &csound::System::getUserdata)
+        .function("inform", &csound::System::inform_text)
+        .function("message", &csound::System::message_text)
+        .function("parsePathname", &csound::System::parsePathname)
+        .function("setMessageCallback", &csound::System::setMessageCallback)
+        .function("setMessageLevel", &csound::System::setMessageLevel)
+        .function("setUserdata", &csound::System::setUserdata)
+        .function("warn", &csound::System::warn_text)
+     ;
+    
     emscripten::class_<Eigen::VectorXd>("VectorXd")
         .constructor<>()
     ;
