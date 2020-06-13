@@ -235,7 +235,7 @@ public:
      * Same as C, except the chord can be specified by
      * jazz-type name (e.g. EbM7) instead of C number.
      */
-    void C(double time, std::string C_);
+    void C_name(double time, std::string C_);
     /**
      * Beginning at the specified time and continuing
      * to the beginning of the next operation
@@ -250,7 +250,7 @@ public:
      * Same as CV, except the chord is specified by
      * jazz-type name (e.g. EbM7) instead of C number.
      */
-    void CV(double time, std::string C_, double V_);
+    void CV_name(double time, std::string C_, double V_);
     /**
      * Beginning at the specified time and continuing
      * to the beginning of the next operation
@@ -267,7 +267,7 @@ public:
      * Same as CL, except the chord is specified by
      * jazz-type name (e.g. EbM7) instead of C number.
      */
-    void CL(double time, std::string C_, bool avoidParallels = true);
+    void CL_name(double time, std::string C_, bool avoidParallels = true);
     /**
      * Find the C of the previous segment, and contextually invert it; apply
      * the resulting C to the current segment. Contextual inversion is

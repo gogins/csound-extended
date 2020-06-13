@@ -632,12 +632,12 @@ void ChordLindenmayer::interpret(std::string command)
     break;
     case 'T':
     {
-        turtle.chord = Voicelead::T(turtle.chord, scalar);
+        turtle.chord = Voicelead::T_vector(turtle.chord, scalar);
     }
     break;
     case 'I':
     {
-        turtle.chord = Voicelead::I(turtle.chord, scalar);
+        turtle.chord = Voicelead::I_vector(turtle.chord, scalar);
     }
     break;
     case 'K':

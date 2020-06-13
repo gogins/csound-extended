@@ -954,7 +954,7 @@ double Voicelead::T(double p, double n)
     return pc(p + n);
 }
 
-std::vector<double> Voicelead::T(const std::vector<double> &c, double t)
+std::vector<double> Voicelead::T_vector(const std::vector<double> &c, double t)
 {
     std::vector<double> returnValue(c.size());
     for (size_t i = 0, n = c.size(); i < n; ++i) {
@@ -969,7 +969,7 @@ double Voicelead::I(double p, double n)
     return pc((12.0 - pc(p)) + n);
 }
 
-std::vector<double> Voicelead::I(const std::vector<double> &c, double ii)
+std::vector<double> Voicelead::I_vector(const std::vector<double> &c, double ii)
 {
     std::vector<double> returnValue(c.size());
     for (size_t i = 0, n = c.size(); i < n; ++i) {
@@ -985,7 +985,7 @@ std::vector<double> Voicelead::K(const std::vector<double> &c)
         return c;
     }
     double n = c[0] + c[1];
-    return I(c, n);
+    return I_vector(c, n);
 }
 
 bool Voicelead::Tform(const std::vector<double> &X, const std::vector<double> &Y, double g)
@@ -993,7 +993,7 @@ bool Voicelead::Tform(const std::vector<double> &X, const std::vector<double> &Y
     double i = 0.0;
     std::vector<double> pcsx = pcs(X);
     while (i < 12.0) {
-        std::vector<double> ty = T(Y, i);
+        std::vector<double> ty = T_vector(Y, i);
         std::vector<double> pcsty = pcs(ty);
         if (pcsx == pcsty) {
             return true;
@@ -1008,7 +1008,7 @@ bool Voicelead::Iform(const std::vector<double> &X, const std::vector<double> &Y
     double i = 0.0;
     std::vector<double> pcsx = pcs(X);
     while (i < 12.0) {
-        std::vector<double> iy = I(Y, i);
+        std::vector<double> iy = I_vector(Y, i);
         std::vector<double> pcsiy = pcs(iy);
         if (pcsx == pcsiy) {
             return true;
@@ -1021,10 +1021,10 @@ bool Voicelead::Iform(const std::vector<double> &X, const std::vector<double> &Y
 std::vector<double> Voicelead::Q(const std::vector<double> &c, double n, const std::vector<double> &s, double g)
 {
     if (Tform(c, s, g)) {
-        return T(c, n);
+        return T_vector(c, n);
     }
     if (Iform(c, s, g)) {
-        return T(c, -n);
+        return T_vector(c, -n);
     } else {
         return c;
     }

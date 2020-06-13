@@ -7,7 +7,7 @@
 #include <string>
 
 static bool printPass = true;
-static bool failureExits = true;
+static bool failureExits = false;
 static int passCount = 0;
 static int failureCount = 0;
 static int testCount = 0;
@@ -18,16 +18,16 @@ static void pass(std::string message) {
     passCount = passCount + 1;
     testCount = passCount + failureCount;
     if (printPass) {
-        csound::print("\nPASSED (pass %9d fail %9d of %9d): %s\n", passCount, failureCount, testCount, message.c_str());
+        std::fprintf(stderr, "\nPASSED (pass %9d fail %9d of %9d): %s\n", passCount, failureCount, testCount, message.c_str());
     }
 }
 
 static void fail(std::string message) {
     failureCount = failureCount + 1;
     testCount = passCount + failureCount;
-    csound::print("================================================================================================================\n");
-    csound::print("FAILED (pass %9d fail %9d of %9d): %s", passCount, failureCount, testCount, message.c_str());
-    csound::print("================================================================================================================\n");
+    std::fprintf(stderr, "================================================================================================================\n");
+    std::fprintf(stderr, "FAILED (pass %9d fail %9d of %9d): %s", passCount, failureCount, testCount, message.c_str());
+    std::fprintf(stderr, "================================================================================================================\n");
     if (failureExits && (failureCount >= exitAfterFailureCount)) {
         std::exit(-1);
     }
@@ -45,35 +45,35 @@ static bool test(bool passes, std::string message) {
 static void printSet(std::string name, const std::set<csound::Chord> &chords) {
     int i = 1;
     for (auto it = chords.begin(); it != chords.end(); ++it, ++i) {
-        csound::print("%s %5d: %s\n", name.c_str(), i, it->toString().c_str());
+        std::fprintf(stderr, "%s %5d: %s\n", name.c_str(), i, it->toString().c_str());
     }
 }
 
 static void testChordSpaceGroup(const csound::ChordSpaceGroup &chordSpaceGroup, std::string chordName) {
-    csound::print("BEGAN test ChordSpaceGroup for %s...\n", chordName.c_str());
+    std::fprintf(stderr, "BEGAN test ChordSpaceGroup for %s...\n", chordName.c_str());
     csound::Chord originalChord = csound::chordForName(chordName);
     csound::Chord optti = originalChord.eOPTTI();
-    csound::print("Original chord:\n%s\n", originalChord.information().c_str());
+    std::fprintf(stderr, "Original chord:\n%s\n", originalChord.information().c_str());
     Eigen::VectorXi pitv = chordSpaceGroup.fromChord(originalChord, true);
     csound::Chord reconstitutedChord = chordSpaceGroup.toChord(pitv[0], pitv[1], pitv[2], pitv[3], true)[0];
-    csound::print("Reconstituted chord:\n%s\n", reconstitutedChord.information().c_str());
+    std::fprintf(stderr, "Reconstituted chord:\n%s\n", reconstitutedChord.information().c_str());
     test(originalChord == reconstitutedChord, "Reconstituted chord must be the same as the original chord.\n");
     csound::Chord revoicedOriginalChord = originalChord;
     revoicedOriginalChord.setPitch(1,  revoicedOriginalChord.getPitch(1) + 12.);
     revoicedOriginalChord.setPitch(2,  revoicedOriginalChord.getPitch(2) + 24.);
-    csound::print("Revoiced original chord:\n%s\n", revoicedOriginalChord.information().c_str());
+    std::fprintf(stderr, "Revoiced original chord:\n%s\n", revoicedOriginalChord.information().c_str());
     pitv = chordSpaceGroup.fromChord(revoicedOriginalChord, true);
-    csound::Chord reconstitutedRevoicedChord = chordSpaceGroup.toChord(pitv, true)[0];
-    csound::print("Reconstituted revoiced chord:\n%s\n", reconstitutedRevoicedChord.information().c_str());
+    csound::Chord reconstitutedRevoicedChord = chordSpaceGroup.toChord_vector(pitv, true)[0];
+    std::fprintf(stderr, "Reconstituted revoiced chord:\n%s\n", reconstitutedRevoicedChord.information().c_str());
     test(revoicedOriginalChord == reconstitutedRevoicedChord, "Reconstituted revoiced chord must be the same as the original revoiced chord.\n");
     csound::Chord invertedChord = originalChord.I().eOP();
-    csound::print("Inverted original chord:\n%s\n", invertedChord.information().c_str());
+    std::fprintf(stderr, "Inverted original chord:\n%s\n", invertedChord.information().c_str());
     pitv = chordSpaceGroup.fromChord(invertedChord);
-    csound::Chord reconstitutedInvertedChord = chordSpaceGroup.toChord(pitv, true)[0];
-    csound::print("Reconstituted inverted chord:\n%s\n", reconstitutedInvertedChord.information().c_str());
+    csound::Chord reconstitutedInvertedChord = chordSpaceGroup.toChord_vector(pitv, true)[0];
+    std::fprintf(stderr, "Reconstituted inverted chord:\n%s\n", reconstitutedInvertedChord.information().c_str());
     test(invertedChord == reconstitutedInvertedChord,"Reconstituted inverted chord must be the same as the original inverted chord.\n");
-    csound::print("ENDED test ChordSpaceGroup for %s.\n", chordName.c_str());
-    csound::print("");
+    std::fprintf(stderr, "ENDED test ChordSpaceGroup for %s.\n", chordName.c_str());
+    std::fprintf(stderr, "");
 }
 
 static void testAllOfChordSpaceGroup(int initialVoiceCount, int finalVoiceCount) {
@@ -81,8 +81,8 @@ static void testAllOfChordSpaceGroup(int initialVoiceCount, int finalVoiceCount)
     for (int voiceCount = initialVoiceCount; voiceCount <= finalVoiceCount; ++voiceCount) {
         bool passes = true;
         csound::ChordSpaceGroup chordSpaceGroup;
-        csound::print("Testing all of ChordSpaceGroup: voices: %d  range: %f\n", voiceCount, range);
-        csound::print("Testing ChordSpaceGroup to chords and back...\n");
+        std::fprintf(stderr, "Testing all of ChordSpaceGroup: voices: %d  range: %f\n", voiceCount, range);
+        std::fprintf(stderr, "Testing ChordSpaceGroup to chords and back...\n");
         chordSpaceGroup.initialize(voiceCount, range);
         chordSpaceGroup.list(true, true, true);
         for (int P = 0; P < chordSpaceGroup.countP; ++P) {
@@ -90,25 +90,25 @@ static void testAllOfChordSpaceGroup(int initialVoiceCount, int finalVoiceCount)
                 for (int T = 0; T < chordSpaceGroup.countT; ++T) {
                     for (int V = 0; V < chordSpaceGroup.countV; ++V) {
                         csound::Chord fromPITV = chordSpaceGroup.toChord(P, I, T, V)[0];
-                        if (printPass) csound::print("%8d     %8d     %8d     %8d => %s\n", P, I, T, V, fromPITV.toString().c_str());
+                        if (printPass) std::fprintf(stderr, "%8d     %8d     %8d     %8d => %s\n", P, I, T, V, fromPITV.toString().c_str());
                         Eigen::VectorXi pitv = chordSpaceGroup.fromChord(fromPITV);
                         csound::Chord frompitv = chordSpaceGroup.toChord(pitv(0), pitv(1), pitv(2), pitv(3))[0];
-                        if (printPass) csound::print("%8d     %8d     %8d     %8d <= %s\n",pitv(0), pitv(1), pitv(2), pitv(3), frompitv.toString().c_str());
+                        if (printPass) std::fprintf(stderr, "%8d     %8d     %8d     %8d <= %s\n",pitv(0), pitv(1), pitv(2), pitv(3), frompitv.toString().c_str());
                         bool equals = (fromPITV == frompitv);
                         if (!equals) {
                             chordSpaceGroup.toChord(P, I, T, V, true);
-                            csound::print("fromPITV (toChord):\n%s\n", fromPITV.information().c_str());
+                            std::fprintf(stderr, "fromPITV (toChord):\n%s\n", fromPITV.information().c_str());
                             chordSpaceGroup.fromChord(fromPITV, true);
-                            csound::print("frompitv (fromChord):\n%s\n", frompitv.information().c_str());
+                            std::fprintf(stderr, "frompitv (fromChord):\n%s\n", frompitv.information().c_str());
                             passes = false;
                         }
                         test(equals, "fromPITV must match frompitv.\n");
-                        if (printPass) csound::print("\n");
+                        if (printPass) std::fprintf(stderr, "\n");
                     }
                 }
             }
         }
-        csound::print("Testing chords to ChordSpaceGroup and back...\n\n");
+        std::fprintf(stderr, "Testing chords to ChordSpaceGroup and back...\n\n");
         bool passes2 = true;
         auto eops = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RP>(voiceCount, csound::OCTAVE(), 1.0);
         for(auto it = eops.begin(); it != eops.end(); ++it) {
@@ -116,17 +116,17 @@ static void testAllOfChordSpaceGroup(int initialVoiceCount, int finalVoiceCount)
             auto origin = chord;
             for(;;) {
                 Eigen::VectorXi pitv = chordSpaceGroup.fromChord(chord);
-                if (printPass) csound::print("%8d     %8d     %8d     %8d <= %s\n", pitv(0), pitv(1), pitv(2), pitv(3), chord.toString().c_str());
+                if (printPass) std::fprintf(stderr, "%8d     %8d     %8d     %8d <= %s\n", pitv(0), pitv(1), pitv(2), pitv(3), chord.toString().c_str());
                 csound::Chord fromPITV = chordSpaceGroup.toChord(pitv(0), pitv(1), pitv(2), pitv(3))[0];
-                if (printPass) csound::print("%8d     %8d     %8d     %8d => %s\n", pitv(0), pitv(1), pitv(2), pitv(3), fromPITV.toString().c_str());
+                if (printPass) std::fprintf(stderr, "%8d     %8d     %8d     %8d => %s\n", pitv(0), pitv(1), pitv(2), pitv(3), fromPITV.toString().c_str());
                 bool equals = (fromPITV == chord);
                 if (!equals) {
-                    csound::print("Original chord (fromChord):\n%s\n", chord.information().c_str());
-                    csound::print("New chord (toChord):\n%s\n", fromPITV.information().c_str());
+                    std::fprintf(stderr, "Original chord (fromChord):\n%s\n", chord.information().c_str());
+                    std::fprintf(stderr, "New chord (toChord):\n%s\n", fromPITV.information().c_str());
                     passes2 = false;
                 }
                 test(equals, "Original chord must match chord from original chord's PITV.\n");
-                if (printPass) csound::print("\n");
+                if (printPass) std::fprintf(stderr, "\n");
                 // This was going too far... cut off sooner and all seems well.
                 if (csound::next(chord, origin, range - 1.0, csound::OCTAVE()) == false)
                 {
@@ -177,7 +177,7 @@ static bool testNormalsAndEquivalents(std::string equivalence,
     for (auto it = normalize_.begin(); it != normalize_.end(); ++it) {
         if (isNormal_.find(*it) == isNormal_.end()) {
             passes = false;
-            csound::print("testNormalsAndEquivalents: %s range %f g %f: normalize %s not in isNormal.\n",
+            std::fprintf(stderr, "testNormalsAndEquivalents: %s range %f g %f: normalize %s not in isNormal.\n",
                           equivalence.c_str(),
                           range,
                           g,
@@ -197,12 +197,12 @@ static bool testNormalsAndEquivalents(std::string equivalence,
         }
     }
     for (auto it = elementsInIsNormalButNotInNormalize.begin(); it != elementsInIsNormalButNotInNormalize.end(); ++it) {
-        csound::print("elementsInIsNormalButNotInNormalize: %s %s.\n", equivalence.c_str(), it->toString().c_str());
+        std::fprintf(stderr, "elementsInIsNormalButNotInNormalize: %s %s.\n", equivalence.c_str(), it->toString().c_str());
         bool equivalenceFound = false;
         for (auto jt = normalize_.begin(); jt != normalize_.end(); ++jt) {
             if (isEquivalent(*it, *jt, range, g) == true) {
                 equivalenceFound = true;
-                csound::print("  Equivalent: %s\n", jt->toString().c_str());
+                std::fprintf(stderr, "  Equivalent: %s\n", jt->toString().c_str());
             }
         }
         if (equivalenceFound == false) {
@@ -293,7 +293,7 @@ static bool testEquivalenceRelation(std::string equivalenceRelation, int voiceCo
 
 static bool testEquivalenceRelations(int voiceCount, double range, double g) {
     bool passes = true;
-    csound::print("\nTesting equivalence relations for %d voices over range %f with g %f...\n\n", voiceCount, range, g);
+    std::fprintf(stderr, "\nTesting equivalence relations for %d voices over range %f with g %f...\n\n", voiceCount, range, g);
     for (auto equivalenceRelationI = equivalenceRelationsToTest.begin();
             equivalenceRelationI != equivalenceRelationsToTest.end();
             ++equivalenceRelationI) {
@@ -306,39 +306,39 @@ static bool testEquivalenceRelations(int voiceCount, double range, double g) {
 
 void printRPIStuff(const csound::Chord &chord)
 {
-    csound::print("%s\n", chord.information().c_str());
+    std::fprintf(stderr, "%s\n", chord.information().c_str());
 }
 
 void testRPIStuff(const csound::Chord &chord)
 {
-    csound::print("\nTESTING RPI STUFF\n");
-    csound::print("chord...\n");
+    std::fprintf(stderr, "\nTESTING RPI STUFF\n");
+    std::fprintf(stderr, "chord...\n");
     printRPIStuff(chord);
     auto chordRP = csound::normalize<csound::EQUIVALENCE_RELATION_RP>(chord, 12.0, 1.0);
     auto inverse = chord.I().eP();
-    csound::print("inverse...\n");
+    std::fprintf(stderr, "inverse...\n");
     printRPIStuff(inverse);
     auto inverseRP = csound::normalize<csound::EQUIVALENCE_RELATION_RP>(inverse, 12.0, 1.0);
-    csound::print("inverseRP...\n");
+    std::fprintf(stderr, "inverseRP...\n");
     printRPIStuff(inverseRP);
     auto midpoint = csound::midpoint(chord.eP(), inverseRP.eP());
-    csound::print("midpoint of chord and inverseRP: %s\n", midpoint.eOP().toString().c_str());
-    csound::print("inverse of midpoint:             %s\n", midpoint.I().eOP().toString().c_str());
+    std::fprintf(stderr, "midpoint of chord and inverseRP: %s\n", midpoint.eOP().toString().c_str());
+    std::fprintf(stderr, "inverse of midpoint:             %s\n", midpoint.I().eOP().toString().c_str());
     auto inverseInverseRP = inverseRP.I();
-    csound::print("inverseInverseRP...\n");
+    std::fprintf(stderr, "inverseInverseRP...\n");
     printRPIStuff(inverseInverseRP);
     auto inverseRPinverseRP = csound::normalize<csound::EQUIVALENCE_RELATION_RP>(inverseInverseRP, 12.0, 1.0);
-    csound::print("inverseRPinverseRP...\n");
+    std::fprintf(stderr, "inverseRPinverseRP...\n");
     printRPIStuff(inverseRPinverseRP);
     test(inverseRPinverseRP == chordRP, "chordRP must equal inverseRPinverseRP.");
 }
 
 int main(int argc, char **argv) {
-    csound::print("C H O R D S P A C E   U N I T   T E S T S\n\n");
+    std::fprintf(stderr, "C H O R D S P A C E   U N I T   T E S T S\n\n");
 #if defined(USE_OLD_EQUIVALENCES)
-    csound::print("Using OLD implementation of equivalence relations.\n\n");
+    std::fprintf(stderr, "Using OLD implementation of equivalence relations.\n\n");
 #else
-    csound::print("Using NEW implementation of equivalence relations.\n\n");
+    std::fprintf(stderr, "Using NEW implementation of equivalence relations.\n\n");
 #endif
     normalizesForEquivalenceRelations["R"] =        csound::normalize<csound::EQUIVALENCE_RELATION_R>;
     normalizesForEquivalenceRelations["P"] =        csound::normalize<csound::EQUIVALENCE_RELATION_P>;
@@ -410,7 +410,7 @@ int main(int argc, char **argv) {
     // normals for T and equals for T are of course very very different, modify test for this.
 
     auto normalized = csound::normalize<csound::EQUIVALENCE_RELATION_R>(original, 24.0, 1.0);
-    csound::print("R:     original: %s  normalized: %s:\n", original.toString().c_str(), normalized.toString().c_str());
+    std::fprintf(stderr, "R:     original: %s  normalized: %s:\n", original.toString().c_str(), normalized.toString().c_str());
 
     original.setPitch(0,  3.0);
     original.setPitch(1,  4.0);
@@ -507,144 +507,148 @@ int main(int argc, char **argv) {
     //int x;
     //std::cin >> x;
 
-    csound::print("\nBehavior of std::fmod and std::remainder:\n\n");
+    std::fprintf(stderr, "\nBehavior of std::fmod and std::remainder:\n\n");
     for (double pitch = -24.0; pitch < 24.0; pitch += 1.0) {
         double modulusFmod = std::fmod(pitch, csound::OCTAVE());
         double modulusRemainder = std::remainder(pitch, csound::OCTAVE());
         double pc = csound::epc(pitch);
         double modulus = csound::modulo(pitch, csound::OCTAVE());
-        csound::print("Pitch: %9.4f  modulo: %9.4f  std::fmod: %9.4f  std::remainder: %9.4f  epc: %9.4f\n", pitch, modulus, modulusFmod, modulusRemainder, pc);
+        std::fprintf(stderr, "Pitch: %9.4f  modulo: %9.4f  std::fmod: %9.4f  std::remainder: %9.4f  epc: %9.4f\n", pitch, modulus, modulusFmod, modulusRemainder, pc);
     }
     csound::Chord pcs = csound::chordForName("C major").epcs();
-    csound::print("Should be C major scale:\n%s\n", pcs.information().c_str());
+    std::fprintf(stderr, "Should be C major scale:\n%s\n", pcs.information().c_str());
     for (double pitch = 36.0; pitch < 96.0; pitch += 1.0) {
         double conformed = csound::conformToPitchClassSet(pitch, pcs);
-        csound::print("pitch: %9.4f  conformed: %9.4f\n", pitch, conformed);
+        std::fprintf(stderr, "pitch: %9.4f  conformed: %9.4f\n", pitch, conformed);
     }
-    std::cout << "EPSILON: " << csound::EPSILON() << std::endl;
-    std::cout << "epsilonFactor: " << csound::epsilonFactor() << std::endl;
-    std::cout << "EPSILON * epsilonFactor: " << csound::EPSILON() * csound::epsilonFactor() << std::endl;
-    std::cout << "csound::eq_epsilon(0.15, 0.15): " << csound::eq_epsilon(0.15, 0.15) << std::endl;
-    std::cout << "csound::eq_epsilon(0.1500001, 0.15): " << csound::eq_epsilon(0.1500001, 0.15) << std::endl;
-    std::cout << "csound::gt_epsilon(14.0, 12.0): " << csound::gt_epsilon(14.0, 12.0) << std::endl;
-    std::cout << "csound::ge_epsilon(14.0, 12.0): " << csound::ge_epsilon(14.0, 12.0) << std::endl;
+    std::cerr << "EPSILON: " << csound::EPSILON() << std::endl;
+    std::cerr << "epsilonFactor: " << csound::epsilonFactor() << std::endl;
+    std::cerr << "EPSILON * epsilonFactor: " << csound::EPSILON() * csound::epsilonFactor() << std::endl;
+    std::cerr << "csound::eq_epsilon(0.15, 0.15): " << csound::eq_epsilon(0.15, 0.15) << std::endl;
+    std::cerr << "csound::eq_epsilon(0.1500001, 0.15): " << csound::eq_epsilon(0.1500001, 0.15) << std::endl;
+    std::cerr << "csound::gt_epsilon(14.0, 12.0): " << csound::gt_epsilon(14.0, 12.0) << std::endl;
+    std::cerr << "csound::ge_epsilon(14.0, 12.0): " << csound::ge_epsilon(14.0, 12.0) << std::endl;
     csound::Chord chord;
     chord.resize(3);
-    std::cout << "Default chord: " << chord.toString() << std::endl;
-    std::cout << "chord.count(0.0): " << chord.count(0.0) << std::endl;
+    std::cerr << "Default chord: " << chord.toString() << std::endl;
+    std::cerr << "chord.count(0.0): " << chord.count(0.0) << std::endl;
     csound::Chord other;
     other.resize(3);
     other.setPitch(1, 2);
-    std::cout << "Other chord: " << other.toString() << std::endl;
-    std::cout << "other.count(0.0): " << other.count(0.0) << std::endl;
-    std::cout << "(chord == other): " << (chord == other) << std::endl;
-    std::cout << "other.contains(2.0): " << other.contains(2.0) << std::endl;
-    std::cout << "other.contains(2.00000001): " << other.contains(2.00000001) << std::endl;
+    std::cerr << "Other chord: " << other.toString() << std::endl;
+    std::cerr << "other.count(0.0): " << other.count(0.0) << std::endl;
+    std::cerr << "(chord == other): " << (chord == other) << std::endl;
+    std::cerr << "other.contains(2.0): " << other.contains(2.0) << std::endl;
+    std::cerr << "other.contains(2.00000001): " << other.contains(2.00000001) << std::endl;
     std::vector<double> result = other.min();
-    std::cout << "other.min(): " << result[0] << ", " << result[1] << ", " << result.size() << std::endl;
-    std::cout << "other.minimumInterval(): " << other.minimumInterval() << std::endl;
-    std::cout << "other.maximumInterval(): " << other.maximumInterval() << std::endl;
+    std::cerr << "other.min(): " << result[0] << ", " << result[1] << ", " << result.size() << std::endl;
+    std::cerr << "other.minimumInterval(): " << other.minimumInterval() << std::endl;
+    std::cerr << "other.maximumInterval(): " << other.maximumInterval() << std::endl;
     csound::Chord clone = other;
-    std::cout << "clone = other: " << clone.toString() << std::endl;
+    std::cerr << "clone = other: " << clone.toString() << std::endl;
     clone.setPitch(1, .5);
-    std::cout << "clone: " << clone.toString() << std::endl;
+    std::cerr << "clone: " << clone.toString() << std::endl;
     csound::Chord floor = clone.floor();
-    std::cout << "floor: " << floor.toString() << std::endl;
+    std::cerr << "floor: " << floor.toString() << std::endl;
     csound::Chord ceiling = clone.ceiling();
-    std::cout << "ceiling: " << ceiling.toString() << std::endl;
+    std::cerr << "ceiling: " << ceiling.toString() << std::endl;
     chord.setPitch(0, 1);
     chord.setPitch(1, 1);
-    std::cout << "chord: " << chord.toString() << std::endl;
-    std::cout << "chord.distanceToOrigin(): " << chord.distanceToOrigin() << std::endl;
-    std::cout << "chord.distanceToUnisonDiagonal(): " << chord.distanceToUnisonDiagonal() << std::endl;
-    std::cout << "chord.maximallyEven(): " << chord.maximallyEven().toString() << std::endl;
-    std::cout << "chord.T(3): " << chord.T(3).toString() << std::endl;
-    std::cout << "chord.I(): " << chord.I().toString() << std::endl;
-    std::cout << "csound::epc(13.2): " << csound::epc(13.2) << std::endl;
-    std::cout << "chord.isepcs(): " << chord.isepcs() << std::endl;
+    std::cerr << "chord: " << chord.toString() << std::endl;
+    std::cerr << "chord.distanceToOrigin(): " << chord.distanceToOrigin() << std::endl;
+    std::cerr << "chord.distanceToUnisonDiagonal(): " << chord.distanceToUnisonDiagonal() << std::endl;
+    std::cerr << "chord.maximallyEven(): " << chord.maximallyEven().toString() << std::endl;
+    std::cerr << "chord.T(3): " << chord.T(3).toString() << std::endl;
+    std::cerr << "chord.I(): " << chord.I().toString() << std::endl;
+    std::cerr << "csound::epc(13.2): " << csound::epc(13.2) << std::endl;
+    std::cerr << "chord.isepcs(): " << chord.isepcs() << std::endl;
     chord.setPitch(2, 14);
-    std::cout << "chord: " << chord.toString() << std::endl;
-    std::cout << "chord.isepcs(): " << chord.isepcs() << std::endl;
+    std::cerr << "chord: " << chord.toString() << std::endl;
+    std::cerr << "chord.isepcs(): " << chord.isepcs() << std::endl;
     csound::Chord epcs = chord.epcs();
-    std::cout << "chord.epcs(): " << epcs.toString() << std::endl;
-    std::cout << "csound::epc(14.0): " << csound::epc(14.0) << std::endl;
+    std::cerr << "chord.epcs(): " << epcs.toString() << std::endl;
+    std::cerr << "csound::epc(14.0): " << csound::epc(14.0) << std::endl;
     csound::Chord transposed = chord.T(5.0);
-    std::cout << "chord::T(5.0): " << transposed.toString() << std::endl;
-    std::cout << "transposed.iset(): " << transposed.iset() << std::endl;
+    std::cerr << "chord::T(5.0): " << transposed.toString() << std::endl;
+    std::cerr << "transposed.iset(): " << transposed.iset() << std::endl;
     csound::Chord et = transposed.et();
-    std::cout << "et = transposed.et(): " << et.toString() << std::endl;
-    std::cout << "transposed.iseO(): " << transposed.iseO() << std::endl;
+    std::cerr << "et = transposed.et(): " << et.toString() << std::endl;
+    std::cerr << "transposed.iseO(): " << transposed.iseO() << std::endl;
     csound::Chord eO = transposed.eO();
-    std::cout << "transposed.eO(): " << eO.toString() << std::endl;
-    std::cout << "eO.iseO(): " << eO.iseO() << std::endl;
-    std::cout << "eO.iseP(): " << eO.iseP() << std::endl;
+    std::cerr << "transposed.eO(): " << eO.toString() << std::endl;
+    std::cerr << "eO.iseO(): " << eO.iseO() << std::endl;
+    std::cerr << "eO.iseP(): " << eO.iseP() << std::endl;
     csound::Chord eP = eO.eP();
-    std::cout << "eP = eO.eP(): " << eP.toString() << std::endl;
-    std::cout << "eP.iseT(): " << eP.iseT() << std::endl;
+    std::cerr << "eP = eO.eP(): " << eP.toString() << std::endl;
+    std::cerr << "eP.iseT(): " << eP.iseT() << std::endl;
     csound::Chord eT= eP.eT();
-    std::cout << "eT = eP.eT(): " << eT.toString() << std::endl;
-    std::cout << "eT.iseT(): " << eT.iseT() << std::endl;
+    std::cerr << "eT = eP.eT(): " << eT.toString() << std::endl;
+    std::cerr << "eT.iseT(): " << eT.iseT() << std::endl;
     csound::Chord eTT= eP.eTT();
-    std::cout << "eTT = eP.eTT(): " << eTT.toString() << std::endl;
-    std::cout << "eTT.iseT(): " << eTT.iseTT() << std::endl;
-    std::cout << "eT.iseTT(): " << eT.iseTT() << std::endl;
-    std::cout << "eTT: " << eTT.toString() << std::endl;
+    std::cerr << "eTT = eP.eTT(): " << eTT.toString() << std::endl;
+    std::cerr << "eTT.iseT(): " << eTT.iseTT() << std::endl;
+    std::cerr << "eT.iseTT(): " << eT.iseTT() << std::endl;
+    std::cerr << "eTT: " << eTT.toString() << std::endl;
     csound::Chord inverse = eTT.I();
-    std::cout << "csound::Chord inverse = eTT.I(): " << inverse.toString() << std::endl;
+    std::cerr << "csound::Chord inverse = eTT.I(): " << inverse.toString() << std::endl;
     csound::Chord inverseOfInverse = inverse.I();
-    std::cout << "csound::Chord inverseOfInverse = inverse.I(): " << inverseOfInverse.toString() << std::endl;
-    std::cout << "inverse.iseI(): " << inverse.iseI() << std::endl;
+    std::cerr << "csound::Chord inverseOfInverse = inverse.I(): " << inverseOfInverse.toString() << std::endl;
+    std::cerr << "inverse.iseI(): " << inverse.iseI() << std::endl;
     csound::Chord eI = eTT.eI();
-    std::cout << "csound::Chord eI = eTT.eI(): " << eI.toString() << std::endl;
-    std::cout << "eI.iseI(): " << eI.iseI() << std::endl;
-    std::cout << "eTT.iseI(): " << eTT.iseI() << std::endl;
-    std::cout << "(inverse < eTT): " << (inverse < eTT) << std::endl;
-    std::cout << "(eTT < inverse): " << (eTT < inverse) << std::endl;
-    std::cout << "chord: " << chord.toString() << std::endl;
-    std::cout << "chord.cycle(): " << chord.cycle().toString() << std::endl;
-    std::cout << "chord.cycle(2): " << chord.cycle(2).toString() << std::endl;
-    std::cout << "chord.cycle().cycle(): " << chord.cycle().cycle().toString() << std::endl;
-    std::cout << "eI: " << eI.toString() << std::endl;
-    std::cout << "eI.cycle(-1): " << eI.cycle(-1).toString() << std::endl;
+    std::cerr << "csound::Chord eI = eTT.eI(): " << eI.toString() << std::endl;
+    std::cerr << "eI.iseI(): " << eI.iseI() << std::endl;
+    std::cerr << "eTT.iseI(): " << eTT.iseI() << std::endl;
+    std::cerr << "(inverse < eTT): " << (inverse < eTT) << std::endl;
+    std::cerr << "(eTT < inverse): " << (eTT < inverse) << std::endl;
+    std::cerr << "chord: " << chord.toString() << std::endl;
+    std::cerr << "chord.cycle(): " << chord.cycle().toString() << std::endl;
+    std::cerr << "chord.cycle(2): " << chord.cycle(2).toString() << std::endl;
+    std::cerr << "chord.cycle().cycle(): " << chord.cycle().cycle().toString() << std::endl;
+    std::cerr << "eI: " << eI.toString() << std::endl;
+    std::cerr << "eI.cycle(-1): " << eI.cycle(-1).toString() << std::endl;
     std::vector<csound::Chord> permutations = chord.permutations();
-    std::cout << "Permutations, iseV, eV:" << std::endl;
+    std::cerr << "Permutations, iseV, eV:" << std::endl;
     for (size_t i = 0; i < permutations.size(); i++) {
         const csound::Chord permutation = permutations[i];
         const csound::Chord &eV = permutation.eV();
-        std::cout << i << " " << permutation.toString() << "  iseV: " << permutation.iseV() << "  eV: " << eV.toString() << "  iseP: " <<  permutation.iseP() << std::endl;
+        std::cerr << i << " of " << permutations.size() << ": " << permutation.toString() << "  iseV: " << permutation.iseV() << "  eV: " << eV.toString() << "  iseP: " <<  permutation.iseP() << std::endl;
     }
     std::vector<csound::Chord> voicings = chord.voicings();
-    std::cout << "voicing, iseV, eV:" << std::endl;
+    std::cerr << "voicing, iseV, eV:" << std::endl;
     for (size_t i = 0; i < voicings.size(); i++) {
         const csound::Chord voicing = voicings[i];
         const csound::Chord &eV = voicing.eV();
-        std::cout << i << " " << voicing.toString() << "  iseV: " << voicing.iseV() << "  eV: " << eV.toString() << std::endl;
+        std::cerr << i << " of " << voicings.size() << ": " << voicing.toString() << "  iseV: " << voicing.iseV() << "  eV: " << eV.toString() << std::endl;
     }
     std::string tosplit = "C     D     E        G           B";
-    csound::fill("C", 0., "M9", tosplit, true);
+    //auto prior_level = csound::System::setMessageLevel(15);
+    // Must be 'false' because this is a chord not a scale, and if it were a 
+    // scale, infinite looping because tosplit is not in order.
+    csound::fill("C", 0., "M9", tosplit, false);
+    //csound::System::setMessageLevel(prior_level);
     csound::Chord C7 = csound::chordForName("C7");
-    std::cout << "Should be C7:" << std::endl << C7.information().c_str() << std::endl;
+    std::cerr << "Should be C7:" << std::endl << C7.information().c_str() << std::endl;
     csound::Chord G7 = csound::chordForName("G7");
-    std::cout << "Should be G7:" << std::endl << G7.information().c_str() << std::endl;
+    std::cerr << "Should be G7:" << std::endl << G7.information().c_str() << std::endl;
     csound::Chord CM9 = csound::chordForName("CM9");
-    std::cout << "Should be CM9:" << std::endl << CM9.information().c_str() << std::endl;
+    std::cerr << "Should be CM9:" << std::endl << CM9.information().c_str() << std::endl;
     CM9.setPitch(0, 0.);
     CM9.setPitch(1, 4.);
     CM9.setPitch(2, 7.);
     CM9.setPitch(3,-1.);
     CM9.setPitch(4, 2.);
-    std::cout << "Should be CM9:" << std::endl << CM9.information().c_str() << std::endl;
+    std::cerr << "Should be CM9:" << std::endl << CM9.information().c_str() << std::endl;
     csound::Chord Dm9 = csound::chordForName("Dm9");
-    std::cout << "Should be Dm9:" << std::endl << Dm9.information().c_str() << std::endl;
+    std::cerr << "Should be Dm9:" << std::endl << Dm9.information().c_str() << std::endl;
     Dm9.setPitch(0, 2.);
     Dm9.setPitch(1, 5.);
     Dm9.setPitch(2, 9.);
     Dm9.setPitch(3, 0.);
     Dm9.setPitch(4, 4.);
-    std::cout << "Should be Dm9:" << std::endl << Dm9.information().c_str() << std::endl;
+    std::cerr << "Should be Dm9:" << std::endl << Dm9.information().c_str() << std::endl;
     csound::Chord chordForName_ = csound::chordForName("CM9");
-    csound::print("chordForName(%s): %s\n", "CM9", chordForName_.information().c_str());
-    csound::print("\nTesting all equivalence relations...\n\n");
+    std::fprintf(stderr, "chordForName(%s): %s\n", "CM9", chordForName_.information().c_str());
+    std::fprintf(stderr, "\nTesting all equivalence relations...\n\n");
     for (int voiceCount = 3; voiceCount <= maximumVoiceCountToTest; ++voiceCount) {
         testEquivalenceRelations(voiceCount, csound::OCTAVE(), 1.0);
     }
@@ -653,16 +657,16 @@ int main(int argc, char **argv) {
     auto optgiByIsNormal = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(4, 12.0, 1.0);
     printSet("optgiByIsNormal", optgiByIsNormal);
     if (optgiByNormalize == optgiByIsNormal) {
-        csound::print("optgiByNormalize == optgiByIsNormal\n");
+        std::fprintf(stderr, "optgiByNormalize == optgiByIsNormal\n");
     } else {
-        csound::print("optgiByNormalize != optgiByIsNormal\n");
+        std::fprintf(stderr, "optgiByNormalize != optgiByIsNormal\n");
     }
     csound::ChordSpaceGroup chordSpaceGroup;
     chordSpaceGroup.createChordSpaceGroup(4, csound::OCTAVE() * 5.0, 1.0);
     chordSpaceGroup.list(true, true, true);
     testChordSpaceGroup(chordSpaceGroup, "Gb7");
-    csound::print("\nTesting all of chord space groups...\n\n");
+    std::fprintf(stderr, "\nTesting all of chord space groups...\n\n");
     testAllOfChordSpaceGroup(3, maximumVoiceCountToTest);
-    csound::print("\nFINISHED.\n\n");
+    std::fprintf(stderr, "\nFINISHED.\n\n");
     return 0;
 }

@@ -347,7 +347,7 @@ void VoiceleadingNode::C(double time, double C_)
     operations[time].C_ = C_;
 }
 
-void VoiceleadingNode::C(double time, std::string C_)
+void VoiceleadingNode::C_name(double time, std::string C_)
 {
     C(time, Voicelead::nameToC(C_, divisionsPerOctave));
 }
@@ -359,7 +359,7 @@ void VoiceleadingNode::CV(double time, double C_, double V_)
     operations[time].V_ = V_;
 }
 
-void VoiceleadingNode::CV(double time, std::string C_, double V_)
+void VoiceleadingNode::CV_name(double time, std::string C_, double V_)
 {
     CV(time, Voicelead::nameToC(C_, divisionsPerOctave), V_);
 }
@@ -372,7 +372,7 @@ void VoiceleadingNode::CL(double time, double C_, bool avoidParallels)
     operations[time].avoidParallels = avoidParallels;
 }
 
-void VoiceleadingNode::CL(double time, std::string C_, bool avoidParallels)
+void VoiceleadingNode::CL_name(double time, std::string C_, bool avoidParallels)
 {
     CL(time, Voicelead::nameToC(C_, divisionsPerOctave), avoidParallels);
 }

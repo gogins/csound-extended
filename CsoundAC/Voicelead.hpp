@@ -416,7 +416,7 @@ public:
     /**
      * Return the pitch-class transposition of chord c by n semitones.
      */
-    static std::vector<double> T(const std::vector<double> &c, double n);
+    static std::vector<double> T_vector(const std::vector<double> &c, double n);
 
     /**
      * Return the pitch-class inversion of pitch p by n semitones.
@@ -426,7 +426,7 @@ public:
     /**
      * Return the pitch-class inversion of chord c by n semitones.
      */
-    static std::vector<double> I(const std::vector<double> &c, double n);
+    static std::vector<double> I_vector(const std::vector<double> &c, double n);
 
     /**
      * Invert chord c by exchange.
