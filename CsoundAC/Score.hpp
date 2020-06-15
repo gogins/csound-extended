@@ -384,6 +384,15 @@ public:
      * Multiply each event in this by the transformation.
      */
     virtual void transform(const Eigen::MatrixXd &transformation);
+    /*
+     * Exposed as functions for Embind.
+     */     
+    virtual Event &getScaleTargetMinima();
+    virtual std::vector<bool> &getRescaleMinima();
+    virtual Event &getScaleTargetRanges();
+    virtual std::vector<bool> &getRescaleRanges();
+    virtual Event &getScaleActualMinima();
+    virtual Event &getScaleActualRanges();
 };
 }
 #endif

@@ -1351,4 +1351,28 @@ void Score::transform(const Eigen::MatrixXd &transformation) {
     }
 }
 
+Event &Score::getScaleTargetMinima() {
+    return scaleTargetMinima;
+}
+
+std::vector<bool> &Score::getRescaleMinima() {
+    return rescaleMinima;
+}
+
+Event &Score::getScaleTargetRanges() {
+    return scaleTargetRanges;
+}
+
+std::vector<bool> &Score::getRescaleRanges() {
+    return rescaleRanges;
+}
+
+Event &Score::getScaleActualMinima() {
+    return scaleActualMinima;
+}
+
+Event &Score::getScaleActualRanges() {
+    return scaleActualRanges;
+}
+
 }

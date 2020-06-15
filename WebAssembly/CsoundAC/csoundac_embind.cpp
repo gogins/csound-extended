@@ -50,19 +50,25 @@ Filling out the Embind definitions is a big job that needs to be kept in order
 and to enable keeping track of work completed. This is done by following the 
 order in the Doxygen documentation for the `csound` namespace by structure 
 name and method name, and marking finished classes with a // FINISHED comment.
-In other words, classes and their methods are in alphabetical order. Other 
-functions, constants, and such should however put in, in declaration order, 
-just above the class that appears in the same header file.
+In other words, classes and their methods are more or less in alphabetical 
+order. Other functions, constants, and such should however put in, in 
+declaration order, just above the class that appears in the same header file.
 
 The order of definitions does not matter when compiling, so just keep these 
-in the order describe above order. 
+in the order described above. 
 
 In place of overloads use distinguished names, but for the Embind name, use 
 the name that would go to the most commonly used overload.
 */
 
 EMSCRIPTEN_BINDINGS(csoundac) {  
-    // FINISHED
+    emscripten::register_map<std::string,std::string>("StringToStringMap");
+    emscripten::register_vector<double>("DoubleVector");
+    emscripten::register_vector<csound::Chord>("ChordVector");
+    emscripten::register_vector<csound::Scale>("ScaleVector");
+    emscripten::register_vector<csound::Event>("EventVector");
+    emscripten::register_vector<std::string>("StringVector");
+     // FINISHED
     emscripten::class_<csound::Cell, emscripten::base<csound::ScoreNode> >("Cell")
         .constructor<>()
         .property("durationSeconds", &csound::Cell::getDurationSeconds, &csound::Cell::setDurationSeconds)
@@ -177,10 +183,6 @@ EMSCRIPTEN_BINDINGS(csoundac) {
     emscripten::function("scale", &csound::scale);
     emscripten::function("chord", &csound::chord);
     emscripten::function("transpose_degrees", &csound::transpose_degrees);
-    emscripten::register_vector<csound::Chord>("ChordVector");
-    emscripten::register_vector<csound::Scale>("ScaleVector");
-    emscripten::register_vector<double>("DoubleVector");
-    emscripten::register_map<std::string,std::string>("StringToStringMap");
     emscripten::class_<csound::Chord>("Chord")
         .constructor<>()
         .constructor<csound::Chord>()
@@ -701,7 +703,7 @@ EMSCRIPTEN_BINDINGS(csoundac) {
        .function("setRescale", &csound::Rescale::setRescale)
     ;
     // FINISHED
-    emscripten::class_<csound::Scale>("Scale")
+    emscripten::class_<csound::Scale, emscripten::base<csound::Chord>>("Scale")
         .constructor<>()
         .constructor<std::string>()
         .constructor<std::string, const csound::Chord&>()
@@ -721,7 +723,7 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         .function("transpose_to_degree", &csound::Scale::transpose_to_degree)
     ;
     // FINISHED
-    emscripten::class_<csound::Score>("Score")
+    emscripten::class_<csound::Score, emscripten::base<std::vector<csound::Event>>>("Score")
         .constructor<>()
         .function("append", &csound::Score::append_note)
         .function("append_event", &csound::Score::append_event)
@@ -734,6 +736,12 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         // NOT SUPPORTED
         // .function("getScale", &csound::Score::getScale, emscripten::allow_raw_pointers())
         .function("getPTV", &csound::Score::getPTV)
+        .function("getRescaleMinima", &csound::Score::getRescaleMinima)
+        .function("getRescaleRanges", &csound::Score::getRescaleRanges)
+        .function("getScaleActualMinima", &csound::Score::getScaleActualMinima)
+        .function("getScaleActualRanges", &csound::Score::getScaleActualRanges)
+        .function("getScaleTargetMinima", &csound::Score::getScaleTargetMinima)
+        .function("getScaleTargetRanges", &csound::Score::getScaleTargetRanges)
         .function("getVoicing", &csound::Score::getVoicing)
         .function("indexAfterTime", &csound::Score::indexAfterTime)
         .function("indexAtTime", &csound::Score::indexAtTime)
@@ -769,21 +777,18 @@ EMSCRIPTEN_BINDINGS(csoundac) {
     // FINISHED
     emscripten::class_<csound::ScoreModel, emscripten::base<csound::Composition> >("ScoreModel")
         .constructor<>()
-        // Repeating Node methods here to make up for lack of multiple inheritance.
         .function("addChild", &csound::ScoreModel::addChild, emscripten::allow_raw_pointers())
         .function("childCount", &csound::ScoreModel::childCount)
         .function("clear", &csound::ScoreModel::clear)
         .function("createTransform", &csound::ScoreModel::createTransform)
         .function("element", &csound::ScoreModel::element)
-        .function("generate", &csound::ScoreModel::generate)
         .function("getChild", &csound::ScoreModel::getChild, emscripten::allow_raw_pointers())
         .function("getLocalCoordinates", &csound::ScoreModel::getLocalCoordinates)
+        .function("getThisNode", &csound::ScoreModel::getThisNode, emscripten::allow_raw_pointers())
+        .function("initialize", &csound::ScoreModel::initialize)
         .function("setElement", &csound::ScoreModel::setElement)
         .function("transform", &csound::ScoreModel::transform)
         .function("traverse", &csound::ScoreModel::traverse)
-        // End of Node methods.
-        .function("getThisNode", &csound::ScoreModel::getThisNode, emscripten::allow_raw_pointers())
-        .function("initialize", &csound::ScoreModel::initialize)
     ;
     // FINISHED
     emscripten::class_<csound::ScoreNode, emscripten::base<csound::Node> >("ScoreNode")
