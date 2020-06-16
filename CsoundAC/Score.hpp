@@ -56,6 +56,7 @@ public:
     std::vector<bool> rescaleMinima;
     Event scaleTargetRanges;
     std::vector<bool> rescaleRanges;
+    Event scaleActualMaxima;
     Event scaleActualMinima;
     Event scaleActualRanges;
     MidiFile midifile;
@@ -391,8 +392,8 @@ public:
     virtual std::vector<bool> &getRescaleMinima();
     virtual Event &getScaleTargetRanges();
     virtual std::vector<bool> &getRescaleRanges();
-    virtual Event &getScaleActualMinima();
-    virtual Event &getScaleActualRanges();
+    virtual const Event &getScaleActualMinima() const;
+    virtual const Event &getScaleActualRanges() const;
 };
 }
 #endif

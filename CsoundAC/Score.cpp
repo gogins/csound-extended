@@ -1367,11 +1367,11 @@ std::vector<bool> &Score::getRescaleRanges() {
     return rescaleRanges;
 }
 
-Event &Score::getScaleActualMinima() {
+const Event &Score::getScaleActualMinima() const {
     return scaleActualMinima;
 }
 
-Event &Score::getScaleActualRanges() {
+const Event &Score::getScaleActualRanges() const {
     return scaleActualRanges;
 }
 
