@@ -12,17 +12,18 @@ cp build-wasm/CsoundAC.js dist-wasm/
 cp build-wasm/csound_samples.* dist-wasm/
 rm -rf $RELEASE_DIR
 mkdir $RELEASE_DIR
-cp -R cmask/*.js dist-wasm
-cp -R cmask/*.wasm dist-wasm
-cp -R dist-wasm/* examples
+cp -r cmask/*.js dist-wasm
+cp -r cmask/*.wasm dist-wasm
+cp -r dist-wasm/* examples
 cp -f CsoundAC/piano-roll.js dist-wasm
 cp -f CsoundAC/piano-roll.js examples/
-cp -R examples/* ${RELEASE_DIR}/
-cp -R examples/* ../docs
+cp -r examples/* ${RELEASE_DIR}/
+cp -r examples/* ../docs
 cp -f src/csound_loader.js ../silencio/js/
 cp -f CsoundAC/piano-roll.js ../silencio/js/
 cp -f examples/CsoundAC.js ../silencio/js/
-cp -R dist-wasm/* ../docs/html/
+cp -r dist-wasm/* ../docs/html/
+cp -rf ../silencio/js/* examples/js/
 zip -r ${RELEASE_DIR}.zip ${RELEASE_DIR}
 echo "Files in examples:"
 ls -ll examples/

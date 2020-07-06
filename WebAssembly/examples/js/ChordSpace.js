@@ -25,7 +25,7 @@ if (typeof console === 'undefined') {
     var console = {};
     console.debug = print;
     console.warn = print;
-    console.log = print;
+    console.info = print;
 }
 
 (function() {
@@ -43,7 +43,7 @@ if (typeof console === 'undefined') {
         var nextEpsilon = ChordSpace.EPSILON / 2;
         var onePlusNextEpsilon = 1 + nextEpsilon;
         if (onePlusNextEpsilon == 1) {
-            console.log('ChordSpace EPSILON: ' + ChordSpace.EPSILON);
+            console.info('ChordSpace EPSILON: ' + ChordSpace.EPSILON);
             break;
         }
     }
@@ -367,12 +367,15 @@ if (typeof console === 'undefined') {
     // A chord is one point in a space with one dimension per voice.
     // Pitches are represented as semitones with 0 at the origin
     // and middle C as 60.
-    var Chord = function() {
+    var Chord = function(array_) {
         this.voices = [];
         this.duration = [];
         this.channel = [];
         this.velocity = [];
         this.pan = [];
+        if (typeof array_ != 'undefined') {
+            this.set(array_);
+        }
     };
     ChordSpace.Chord = Chord;
 
@@ -439,6 +442,21 @@ if (typeof console === 'undefined') {
         }
     };
 
+    Chord.prototype.setChannelsToVoices = function(base_voice) {
+        if (typeof base_voice === 'undefined') {
+            base_voice = 1;
+        }
+        for (var voice = 0; voice < this.voices.length; voice++) {
+            this.channel[voice] = base_voice + voice;
+        }
+    };
+
+    Chord.prototype.setPansToVoices = function() {
+        for (var voice = 0; voice < this.voices.length; voice++) {
+            this.pan[voice] = (voice + 1) / (this.voices.length + 1);
+        }
+    };
+
     Chord.prototype.getChannel = function(voice) {
         voice = typeof voice !== 'undefined' ? voice : 0;
         return this.channel[voice];
@@ -484,6 +502,18 @@ if (typeof console === 'undefined') {
             buffer = buffer + sprintf('%12.7f ', this.voices[voice]);
         }
         buffer = buffer + ']';
+        return buffer;
+    };
+
+    // Returns a musician-friendly string representation of the chord.
+    Chord.prototype.toName= function() {
+        let buffer = ''
+        for (var voice = 0; voice < this.voices.length; voice++) {
+            if (voice > 0) {
+                buffer = buffer + " ";
+            }
+            buffer = buffer + ChordSpace.noteName(this.voices[voice]);
+        }
         return buffer;
     };
 
@@ -1136,7 +1166,7 @@ if (typeof console === 'undefined') {
                 return voicing.eT();
             }
         }
-        console.log('ERROR: chord.eRPT() should not come here: ' + this);
+        console.info('ERROR: chord.eRPT() should not come here: ' + this);
     };
 
     Chord.prototype.eRPTT = function(range) {
@@ -1148,7 +1178,7 @@ if (typeof console === 'undefined') {
                 return voicing;
             }
         }
-        console.log('ERROR: chord.eRPTT() should not come here: ' + this);
+        console.info('ERROR: chord.eRPTT() should not come here: ' + this);
     };
 
     // Returns the equivalent of the chord within the representative fundamental
@@ -1241,9 +1271,9 @@ if (typeof console === 'undefined') {
     };
     Chord.prototype.iseOPTTI = function() {
         var result = this.iseRPTTI(ChordSpace.OCTAVE);
-        if (result === true) {
-            console.log('Chord.prototype.iseOPTTI: ' + this + ' ' + result);
-        }
+        //if (result === true) {
+        //    console.info('Chord.prototype.iseOPTTI: ' + this + ' ' + result);
+        //}
         return result;
     };
 
@@ -1302,8 +1332,22 @@ if (typeof console === 'undefined') {
     pitchClassesForNames["B"] = 11;
     ChordSpace.pitchClassesForNames = pitchClassesForNames;
 
+    var namesForPitchClasses = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+
     var chordsForNames = {};
     var namesForChords = {};
+
+    // Returns the standard name for the pitch (middle C is MIDI key 60 is
+    // C4). There are of course no enharmonic names here, so all are sharps.
+    // Works only for 12-tone equal temperament.
+    ChordSpace.noteName = function (midi_key) {
+        midi_key = Math.round(midi_key);
+        let pc = Math.round(ChordSpace.epc(midi_key))
+        let note_name = namesForPitchClasses[pc]
+        let octave = Math.floor(midi_key / 12) - 1;
+        note_name = note_name + octave;
+        return note_name;
+    }
 
     var fill = function(rootName, rootPitch, typeName, typePitches) {
         typePitches = typePitches.trim();
@@ -1397,6 +1441,7 @@ if (typeof console === 'undefined') {
             fill(rootName, rootPitch, "7b5", "C            E    Gb          Bb  ");
             fill(rootName, rootPitch, "7b9", "C  Db        E       G        Bb  ");
             fill(rootName, rootPitch, "7b9b5", "C  Db        E    Gb          Bb  ");
+            fill(rootName, rootPitch, "7#9", "C  D#        E       G        Bb  ");
             fill(rootName, rootPitch, "9", "C     D      E       G        Bb  ");
             fill(rootName, rootPitch, "9#11", "C     D      E F#    G        Bb  ");
             fill(rootName, rootPitch, "13", "C     D      E F     G     A  Bb  ");
@@ -1410,7 +1455,7 @@ if (typeof console === 'undefined') {
     Chord.prototype.name = function() {
         var chordName = ChordSpace.namesForChords[this.eOP().hash()];
         if (typeof chordName === 'undefined') {
-            chordName = '';
+            chordName = this.eOP().toName();
         }
         return chordName;
     };
@@ -1516,8 +1561,9 @@ if (typeof console === 'undefined') {
         if (chord.size() < 2) {
             return chord;
         }
-        var ep = chord.eP();
-        var x = ep.voices[0] + ep.voices[1];
+        // Unordered! In [0, 12)!
+        var epc = chord.epcs();
+        var x = epc.voices[0] + epc.voices[1];
         return this.I(x);
     };
 
@@ -1830,11 +1876,13 @@ if (typeof console === 'undefined') {
                 closestPitchClass = chordPitchClass;
             }
         }
-        if (octaveEquivalence === true) {
-            return closestPitchClass;
-        } else {
-            return octave + closestPitchClass;
+        var newPitch = closestPitchClass;
+        if (octaveEquivalence !== true) {
+            newPitch = octave + newPitch;
         }
+        //var message = sprintf("chord: %s pitch: %s original pc: %s octave: %s new pc: %s new pitch: %s\n", chord, pitch, pitchClass, octave, closestPitchClass, newPitch);
+        //console.info(message);
+        return newPitch;
     };
 
     // If the event is a note, moves its pitch
@@ -1867,7 +1915,7 @@ if (typeof console === 'undefined') {
     // Inserts the notes of the chord into the score at the specified time.
     // The internal duration, instrument, and loudness are used.
     ChordSpace.insert = function(score, chord, time_) {
-        // console.log(score, chord, time_, duration, channel, velocity, pan)
+        // console.info(score, chord, time_, duration, channel, velocity, pan)
         for (var voice = 0; voice < chord.size(); voice++) {
             var event = chord.note(voice, time_, chord.getDuration(voice), chord.getChannel(voice), chord.getVelocity(voice), chord.getPan(voice));
             score.append(event);
@@ -1879,13 +1927,21 @@ if (typeof console === 'undefined') {
     // and up to but not including the end time, moves the pitch of the note to
     // belong to the chord, using the conformToChord function.
     ChordSpace.apply = function(score, chord, start, end_, octaveEquivalence) {
+        if (typeof chord === 'undefined') {
+            return;
+        }
         octaveEquivalence = typeof octaveEquivalence !== 'undefined' ? octaveEquivalence : true;
         var s = score.slice(start, end_, true);
         for (var index = 0; index < s.size(); index++) {
             var event = s.data[index];
             ChordSpace.conformToChord(event, chord, octaveEquivalence);
         }
-        console.log('Conform to: ' + chord.name() + ' from: ' + start + ' to: ' + end_ + ' notes: ' + s.data.length + '.');
+        var message = sprintf('Conform to: %-20.20s from: %12.4f to: %12.4f notes: %5d.', chord.name(), parseFloat(start), parseFloat(end_), parseInt(s.data.length));
+        if (typeof csound !== 'undefined') {
+            console.info(message + '\n');
+        } else {
+            console.info(message);
+        }
         return s;
     };
 
@@ -1917,7 +1973,7 @@ if (typeof console === 'undefined') {
     ChordSpace.LSys.prototype = new Silencio.LSys();
 
     ChordSpace.LSys.prototype.generate = function(n) {
-        csound.message('ChordSpace.LSys.prototype.generate\n');
+        console.info('ChordSpace.LSys.prototype.generate\n');
         this.chordsForTimes = {};
         this.sentence = this.axiom.split(' ');
         for (var g = 0; g < n; g++) {
@@ -1956,22 +2012,22 @@ if (typeof console === 'undefined') {
         else if (c === 'T') t.upTempo();
         else if (c === 't') t.downTempo();
         else if (c === 'C') {
-            this.chordsForTimes[t.event.start] = t.chord.clone();
+            this.chordsForTimes[t.event.time] = t.chord.clone();
         } else if (c === 'K') {
             t.K();
-            this.chordsForTimes[t.event.start] = t.chord.clone();
+            this.chordsForTimes[t.event.time] = t.chord.clone();
         } else {
             var parts = c.split(',');
             var cc = parts[0];
             if (cc === 'T') {
                 t.T(Number(parts[1]));
-                this.chordsForTimes[t.event.start] = t.chord.clone();
+                this.chordsForTimes[t.event.time] = t.chord.clone();
             } else if (cc === 'I') {
                 t.I(Number(parts[1]));
-                this.chordsForTimes[t.event.start] = t.chord.clone();
+                this.chordsForTimes[t.event.time] = t.chord.clone();
             } else if (cc === 'Q') {
                 t.Q(Number(parts[1]));
-                this.chordsForTimes[t.event.start] = t.chord.clone();
+                this.chordsForTimes[t.event.time] = t.chord.clone();
             } else if (cc === 'J') {
                 t.J(Number(parts[1], Number(parts[2])));
                 this.chordsForTimes[t.event.start] = t.chord.clone();
@@ -1988,7 +2044,7 @@ if (typeof console === 'undefined') {
                     t.tempo *= operand;
                 } else if (operation === '/') {
                     t.tempo /= operand;
-                    csound.message('tempo:' + t.tempo + '\n');
+                    //console.info('tempo:' + t.tempo + '\n');
                 }
             }
         }
@@ -2005,6 +2061,8 @@ if (typeof console === 'undefined') {
     /**
      * Conforms the pitch of each event in this,
      * to the closest pitch-class in the chord that applies to the event's time.
+     * NOTE: Must do this AFTER rescaling pitches in the score, but BEFORE
+     * rescaling times in the score.
      */
     ChordSpace.LSys.prototype.conformToChords = function() {
         var times = [];
@@ -2013,13 +2071,15 @@ if (typeof console === 'undefined') {
                 times.push(tyme);
             }
         }
-        var end = this.score.duration();
-        for (var i = 0; i < times.length; i++) {
+        times.push(this.score.getDuration());
+        times.sort(function(a, b) { return a - b; });
+        for (var i = 0; i < times.length - 1; i++) {
             var begin = times[i];
-            var chord = this.chordsForTimes[tyme];
-            ChordSpace.apply(this.score, begin, end, chord, false);
-            end = begin;
+            var end = times[i + 1];
+            var chord = this.chordsForTimes[begin];
+            ChordSpace.apply(this.score, chord, begin, end, false);
         }
+        console.info(sprintf("Applied %5d chords to this score.\n", Object.keys(this.chordsForTimes).length));
     };
 
     /**
@@ -2090,13 +2150,13 @@ if (typeof console === 'undefined') {
             'chord': chord
         };
     };
-    
+
     /**
-     * Forces the voices to the most precise possible representation of 
-     * equal temperament, where g is the generator of transposition. 
+     * Forces the voices to the most precise possible representation of
+     * equal temperament, where g is the generator of transposition.
      * Probably works in all cases only when g is an integer.
      */
-    
+
     Chord.prototype.clamp = function(g) {
         for (var voice = 0; voice < this.size(); voice++) {
             var pitch = this.voices[voice];
@@ -2104,22 +2164,20 @@ if (typeof console === 'undefined') {
             pitch = Math.round(pitch);
             pitch *= g;
             this.voices[voice] = pitch;
-        }            
+        }
     };
 
     /**
      * Orthogonal additive groups for unordered chords of given arity under range
-     * equivalence (RP): prime form or P, inversion or I, transposition or T, and
-     * voicing or V. P x I x T = OP, P x I x T x V = RP. Therefore, an
-     * operation on P, I, T, or V may be used to independently transform the
-     * respective symmetry of any chord. Some of these operations will reflect
-     * in RP.
+     * equivalence (RP): prime form or P, inversion or I, transposition or T,
+     * voicing or V, and arrangement or A. P x I x T = OP, P x I x T x V = RP.
+     * Therefore, an operation on P, I, T, V, or A may be used to independently
+     * transform the respective symmetry of any chord. Some of these operations
+     * will reflect in RP.
      */
     var ChordSpaceGroup = function() {
         this.optisForIndexes = [];
         this.indexesForOptis = {};
-        this.voicingsForIndexes = [];
-        this.indexesForVoicings = {};
     };
     ChordSpace.ChordSpaceGroup = ChordSpaceGroup;
 
@@ -2128,7 +2186,7 @@ if (typeof console === 'undefined') {
         var voices = chord.size();
         var origin = chord.eOP();
         var odometer = origin.clone();
-        // Enumerate the permutations.
+        // Enumerate the permutations of voicings.
         // iterator[0] is the most significant voice, and
         // iterator[N-1] is the least significant voice.
         var voicings = 0;
@@ -2187,8 +2245,8 @@ if (typeof console === 'undefined') {
         // Enumerate all chords in [-O, O].
         var iterator = ChordSpace.iterator(voices, -13);
         var origin = iterator.clone();
-        console.log('iterator:' + iterator);
-        console.log('equivalenceMapper:' + equivalenceMapper);
+        console.info('iterator:' + iterator);
+        console.info('equivalenceMapper:' + equivalenceMapper);
         while (ChordSpace.next(iterator, origin, 26, g) === true) {
             if (iterator.iseP() === true) {
                 var eP = iterator.clone();
@@ -2219,45 +2277,162 @@ if (typeof console === 'undefined') {
         return odometer;
     };
 
-    /**
-     * Creates a JSON filename encoding the structure of a chord space group.
-     * NOTE: Serialization and deserialization of ChordSpaceGroup is not complete
-     * and may or may not prove necessary.
-     */
-    ChordSpace.createFilename = function(voices, range, g) {
-        var gstring = sprintf('g%.6f', g);
-        gstring = gstring.replace('.', '_');
-        var filename = sprintf('ChordSpaceGroup_V%d_R%d_%s.json', voices, range, gstring);
-        return filename;
-    };
-
-    ChordSpace.createChordSpaceGroup = function(voices, range, g) {
+    ChordSpace.createChordSpaceGroup = function(voices, range, instruments, dynamics, durations, g) {
         var chordSpaceGroup = new ChordSpaceGroup();
-        chordSpaceGroup.initialize(voices, range, g);
+        chordSpaceGroup.initialize(voices, range, instruments, dynamics, durations, g);
         return chordSpaceGroup;
     };
 
+    var kpermutationForIndex = function(elements, voice_count, index) {
+        var intBase = elements.length,
+            intSetSize = Math.pow(intBase, voice_count),
+            lastIndex = intSetSize - 1; // zero-based
+        if (intBase < 1 || index > lastIndex) return undefined;
+        var baseElements = unfoldr(function (m) {
+                var v = m.new,
+                    d = Math.floor(v / intBase);
+                return {
+                    valid: d > 0,
+                    value: elements[v % intBase],
+                    new: d
+                };
+            }, index),
+            intZeros = voice_count - baseElements.length;
+        return intZeros > 0 ? replicate(intZeros, elements[0])
+            .concat(baseElements) : baseElements;
+    };
+
+    // GENERIC FUNCTIONS
+
+    // unfoldr :: (b -> Maybe (a, b)) -> b -> [a]
+    var unfoldr = function (mf, v) {
+        var elements = [];
+        return [until(function (m) {
+                return !m.valid;
+            }, function (m) {
+                var m2 = mf(m);
+                return m2.valid && (elements = [m2.value].concat(elements)), m2;
+            }, {
+                valid: true,
+                value: v,
+                new: v
+            })
+            .value
+        ].concat(elements);
+    };
+
+    // until :: (a -> Bool) -> (a -> a) -> a -> a
+    var until = function (p, f, x) {
+        var v = x;
+        while (!p(v)) {
+            v = f(v);
+        }
+        return v;
+    };
+
+    // replicate :: Int -> a -> [a]
+    var replicate = function (n, a) {
+        var v = [a],
+            o = [];
+        if (n < 1) return o;
+        while (n > 1) {
+            if (n & 1) o = o.concat(v);
+            n >>= 1;
+            v = v.concat(v);
+        }
+        return o.concat(v);
+    };
+
+    // show :: a -> String
+    var show = function (x) {
+        return JSON.stringify(x);
+    }; //, null, 2);
+
+    // curry :: Function -> Function
+    var curry = function (f) {
+        for (var lng = arguments.length,
+                args = Array(lng > 1 ? lng - 1 : 0),
+                iArg = 1; iArg < lng; iArg++) {
+            args[iArg - 1] = arguments[iArg];
+        }
+
+        var intArgs = f.length,
+            go = function (elements) {
+                return elements.length >= intArgs ? f.apply(null, elements) : function () {
+                    return go(elements.concat([].slice.apply(arguments)));
+                };
+            };
+        return go([].slice.call(args, 1));
+    };
+
+    // range :: Int -> Int -> [Int]
+    var range = function (m, n) {
+        return Array.from({
+            length: Math.floor(n - m) + 1
+        }, function (_, i) {
+            return m + i;
+        });
+    };
+
+    // TEST
+    // Just items 30 to 35 in the (zero-indexed) series:
+    console.info(range(30, 35)
+        .map(curry(kpermutationForIndex)([1, 2, 3, 4, 5], 4)));
+
+    /**
+     * A is the index of k-permutations with repetition of instruments for
+     * voices, instruments is an array of instrument numbers.
+     */
+    ChordSpace.arrange_instruments = function(chord, A, instruments) {
+        let arrangement = kpermutationForIndex(instruments, chord.size(), A);
+        for (var voice = 0; voice < chord.size(); voice++) {
+            chord.channel[voice] = arrangement[voice];
+        }
+    }
+
+    /**
+     * A is the index of k-permutations with repetition of instruments for
+     * voices, instruments is an array of instrument numbers.
+     */
+    ChordSpace.arrange_dynamics = function(chord, L, dynamics) {
+        let arrangement = kpermutationForIndex(dynamics, chord.size(), L);
+        for (var voice = 0; voice < chord.size(); voice++) {
+            chord.velocity[voice] = arrangement[voice];
+        }
+    }
+
+    /**
+     * A is the index of k-permutations with repetition of note durations for
+     * voices, instruments is an array of instrument numbers.
+     */
+    ChordSpace.arrange_durations = function(chord, D, durations) {
+        let arrangement = kpermutationForIndex(durations, chord.size(), D);
+        for (var voice = 0; voice < chord.size(); voice++) {
+            chord.duration[voice] = arrangement[voice];
+        }
+    }
+
     /**
      * Returns the chord for the indices of prime form, inversion,
-     * transposition, and voicing. The chord is not in RP; rather, each voice
-     * of the chord's OP may have zero or more octaves added to it.
+     * transposition, voicing, and arrangement. The chord is not in RP; rather,
+     * each voice of the chord's OP may have zero or more octaves added to it.
      * Please note, because some set classes e.g. diminished chords are
-     * invariant under some T, there may be more than one PITV to get the
-     * same chord. If model_chord is defined, copy its extra data.
+     * invariant under some T, there may be more than one PITV to get the same
+     * chord
      */
-    ChordSpaceGroup.prototype.toChord = function(P, I, T, V, model_chord, printme) {
+    ChordSpaceGroup.prototype.toChord = function(P, I, T, V, A, L, D, printme) {
         try {
             printme = typeof printme !== 'undefined' ? printme : false;
-            P = P % this.countP;
-            I = I % 2;
-            T = T % ChordSpace.OCTAVE;
+            P = Silencio.modulo(P, this.countP);
+            I = Silencio.modulo(I, 2);
+            T = Silencio.modulo(T, ChordSpace.OCTAVE);
             V = V % this.countV;
             if (printme) {
-                console.log(sprintf('toChord:             %s %s %s %s', P, I, T, V));
+                console.info(sprintf('toChord:             %s %s %s %s', P, I, T, V));
             }
             var optti = this.optisForIndexes[P];
             if (printme) {
-                console.log('toChord:   optti:    ' + optti);
+                console.info('toChord:   optti:    ' + optti);
             }
             var optt;
             if (I === 0) {
@@ -2266,35 +2441,37 @@ if (typeof console === 'undefined') {
                 optt = optti.I().eOPTT();
             }
             if (console.logme) {
-                console.log('toChord:   optt:      ' + optt);
+                console.info('toChord:   optt:      ' + optt);
             }
             var optt_t = optt.T(T);
             if (printme) {
-                console.log('toChord:   optt_t:    ' + optt_t);
+                console.info('toChord:   optt_t:    ' + optt_t);
             }
             var op = optt_t.eOP();
             if (printme) {
-                console.log('toChord:   op:        ' + op);
+                console.info('toChord:   op:        ' + op);
             }
-            V = V % this.countV;
+            V = Silencio.modulo(V, this.countV);
             var revoicing = ChordSpace.octavewiseRevoicing(op, V, this.range);
             if (printme) {
-                console.log('toChord:   revoicing: ' + revoicing);
+                console.info('toChord:   revoicing: ' + revoicing);
             }
-            if (typeof model_chord !== 'undefined') {
-                var revoicing_ = model_chord.clone();
-                revoicing_.set(revoicing.voices);
-                var optti_ = model_chord.clone();
-                optti_.set(optti.voices);
-                var op_ = model_chord.clone();
-                op_.set(op.voices);
-                return {'revoicing': revoicing_, 'opti': optti_, 'op': op_}
-            } else {
-                return {'revoicing': revoicing, 'opti': optti, 'op': op};
+            A = Silencio.modulo(A, this.countA);
+            if (typeof this.instruments != 'undefined') {
+                ChordSpace.arrange_instruments(revoicing, A, this.instruments);
             }
+            L = Silencio.modulo(L, this.countL);
+            if (typeof this.dynamics != 'undefined') {
+                ChordSpace.arrange_dynamics(revoicing, L, this.dynamics);
+            }
+            D = Silencio.modulo(D, this.countD);
+            if (typeof this.durations != 'undefined') {
+                ChordSpace.arrange_durations(revoicing, D, this.durations);
+            }
+            return {'revoicing': revoicing, 'opti': optti, 'op': op};
         } catch (ex) {
-            console.log(ex);
-            throw x;
+            console.info(ex);
+            throw ex;
         }
     };
 
@@ -2305,7 +2482,7 @@ if (typeof console === 'undefined') {
     ChordSpaceGroup.prototype.fromChord = function(chord, printme) {
         printme = typeof(printme) !== 'undefined' ? printme : false;
         if (printme) {
-            console.log('fromChord: chord:    ' + chord + ' ' + chord.iseOP());
+            console.info('fromChord: chord:    ' + chord + ' ' + chord.iseOP());
         }
         var op;
         if (chord.iseOP()) {
@@ -2314,21 +2491,21 @@ if (typeof console === 'undefined') {
             op = chord.eOP();
         }
         if (printme) {
-            console.log('fromChord: op:       ' + op);
+            console.info('fromChord: op:       ' + op);
         }
         var optt = chord.eOPTT();
         if (printme) {
-            console.log('fromChord: optt:     ' + optt);
+            console.info('fromChord: optt:     ' + optt);
         }
         var T = 0;
         for (t = 0; t < ChordSpace.OCTAVE - 1; t = t + this.g) {
             var optt_t = optt.T(t).eOP();
             if (printme) {
-                console.log('fromChord: optt_t:   ' + optt_t + ' T: ' + t);
+                console.info('fromChord: optt_t:   ' + optt_t + ' T: ' + t);
             }
             if (optt_t.eq_epsilon(op) === true) {
                 if (printme) {
-                    console.log('equals');
+                    console.info('equals');
                 }
                 T = t;
                 break;
@@ -2337,7 +2514,7 @@ if (typeof console === 'undefined') {
         var optti = chord.eOPTTI();
         optti.clamp(this.g);
         if (printme) {
-            console.log('fromChord: optti:    ' + optti);
+            console.info('fromChord: optti:    ' + optti);
         }
         var P = this.indexesForOptis[optti.toString()];
         if (typeof P === 'undefined') {
@@ -2349,9 +2526,9 @@ if (typeof console === 'undefined') {
             I = 1;
             optt_i_optt = optt.I().eOPTT();
             if (optt_i_optt.eq_epsilon(optti) === false) {
-                console.log("Error: OPTT(I(OPTT)) must equal OPTTI.");
-                console.log('optt_i_optt:' + optt_i_optt.information());
-                console.log('optti:      ' + optti.information());
+                console.info("Error: OPTT(I(OPTT)) must equal OPTTI.");
+                console.info('optt_i_optt:' + optt_i_optt.information());
+                console.info('optti:      ' + optti.information());
                 process.exit();
             }
         }
@@ -2362,17 +2539,18 @@ if (typeof console === 'undefined') {
             V = 0;
         }
         if (printme) {
-            console.log('fromChord: voicing:  ' + voicing + ' ' + V);
-            console.log('fromChord:           ' + P + ' ' + I + ' ' + T + ' ' + V);
+            console.info('fromChord: voicing:  ' + voicing + ' ' + V);
+            console.info('fromChord:           ' + P + ' ' + I + ' ' + T + ' ' + V);
         }
+        // TODO: return {'P': P, 'I': I, 'T': T, 'V': V, 'A': A, 'L': L, 'D': D};
         return {'P': P, 'I': I, 'T': T, 'V': V};
     };
-    
+
     ChordSpaceGroup.prototype.printChords = function() {
         for (var index = 0; index < this.optisForIndexes.length; index++) {
             var opti = this.optisForIndexes[index];
             var name = opti.name();
-            console.log(sprintf('index: %5d  opti: %s %s', index, opti.toString(), name));
+            console.info(sprintf('index: %5d  opti: %s %s', index, opti.toString(), name));
         }
     };
 
@@ -2381,7 +2559,7 @@ if (typeof console === 'undefined') {
             var opti = this.optisForIndexes[index];
             var name = opti.name();
             if (name !== '') {
-                console.log(sprintf('index: %5d  opti: %s %s', index, opti.toString(), name));
+                console.info(sprintf('index: %5d  opti: %s %s', index, opti.toString(), name));
             }
         }
     };
@@ -2398,7 +2576,7 @@ if (typeof console === 'undefined') {
         var revoicingI = 0;
         while (true) {
             if (debug) {
-                console.log(sprintf("indexForOctavewiseRevoicing of %s in range %7.3f: %5d of %5d: %s",
+                console.info(sprintf("indexForOctavewiseRevoicing of %s in range %7.3f: %5d of %5d: %s",
                     chord,
                     range,
                     revoicingI,
@@ -2421,13 +2599,16 @@ if (typeof console === 'undefined') {
         listopttis = typeof listopttis !== 'undefined' ? listopttis : false;
         listvoicings = typeof listvoicings !== 'undefined' ? listvoicings : false;
         if (listheader) {
-            console.log(sprintf('ChordSpaceGroup.voices: %8d', this.voices));
-            console.log(sprintf('ChordSpaceGroup.range : %8d', this.range));
-            console.log(sprintf('ChordSpaceGroup.g     : %13.4f', this.g));
-            console.log(sprintf('ChordSpaceGroup.countP: %8d', this.countP));
-            console.log(sprintf('ChordSpaceGroup.countI: %8d', this.countI));
-            console.log(sprintf('ChordSpaceGroup.countT: %8d', this.countT));
-            console.log(sprintf('ChordSpaceGroup.countV: %8d', this.countV));
+            console.info(sprintf('ChordSpaceGroup.voices: %8d\n', this.voices));
+            console.info(sprintf('ChordSpaceGroup.range : %8d\n', this.range));
+            console.info(sprintf('ChordSpaceGroup.g     : %13.4f\n', this.g));
+            console.info(sprintf('ChordSpaceGroup.countP: %8d\n', this.countP));
+            console.info(sprintf('ChordSpaceGroup.countI: %8d\n', this.countI));
+            console.info(sprintf('ChordSpaceGroup.countT: %8d\n', this.countT));
+            console.info(sprintf('ChordSpaceGroup.countV: %8d\n', this.countV));
+            console.info(sprintf('ChordSpaceGroup.countA: %8d\n', this.countA));
+            console.info(sprintf('ChordSpaceGroup.countL: %8d\n', this.countL));
+            console.info(sprintf('ChordSpaceGroup.countD: %8d\n', this.countD));
         }
         var index;
         var voicing_index;
@@ -2437,12 +2618,12 @@ if (typeof console === 'undefined') {
         if (listopttis) {
             for (index = 0; index < this.optisForIndexes.length; index++) {
                 opti = this.optisForIndexes[index];
-                console.log(sprintf('index: %5d  opti: %s  index from opti: %s', index, opti.toString(), this.indexesForOptis[opti.toString()]));
+                console.info(sprintf('index: %5d  opti: %s  index from opti: %s %s\n', index, opti.toString(), opti.name(), this.indexesForOptis[opti.toString()]));
                 if (listvoicings) {
                     for (voicing_index = 0; voicing_index < this.countV; voicing_index++) {
                         voicingFromIndex = ChordSpace.octavewiseRevoicing(opti, voicing_index, this.range);
                         indexFromVoicing = ChordSpace.indexForOctavewiseRevoicing(voicingFromIndex, this.range);
-                        console.log(sprintf('  voicing index: %5d  voicing: %s  index from voicing: %5d', voicing_index, voicingFromIndex, indexFromVoicing));
+                        console.info(sprintf('  voicing index: %5d  voicing: %s  index from voicing: %5d\n', voicing_index, voicingFromIndex, indexFromVoicing));
                     }
                 }
             }
@@ -2451,20 +2632,36 @@ if (typeof console === 'undefined') {
 
     /**
      * N is the number of voices in the chord space, g is the generator of
-     * transposition, and range is the size of chord space.
+     * transposition, instruments is an array of instrument numbers from which
+     * to select an arrangement, and range is the size of chord space.
      */
-    ChordSpaceGroup.prototype.initialize = function(voices, range, g) {
+    ChordSpaceGroup.prototype.initialize = function(voices, range, instruments, dynamics, durations, g) {
         var began = performance.now();
-        console.log("ChordSpaceGroup.prototype.initialize...");
+        console.info("ChordSpaceGroup.prototype.initialize...");
         this.voices = typeof voices !== 'undefined' ? voices : 3;
         this.range = typeof range !== 'undefined' ? range : 60;
+        this.instruments = typeof instruments !== 'undefined' ? instruments : [1];
         this.g = typeof g !== 'undefined' ? g : 1;
+        if (typeof dynamics !== 'undefined') {
+            this.dynamics = dynamics;
+        } else {
+            this.dynamics = [0, 1, 2, 3];
+        };
+        if (typeof durations !== 'undefined') {
+            this.durations = durations;
+        } else {
+            // These are sixteenth notes (subdivisions of the nominal beat).
+            this.durations = [0, 1/4, 2/4, 3/4, 1];
+        };
         this.countP = 0;
         this.countI = 2;
         this.countT = ChordSpace.OCTAVE / this.g;
         var chord = new ChordSpace.Chord();
         chord.resize(voices);
         this.countV = ChordSpace.octavewiseRevoicings(chord, this.range);
+        this.countA = Math.pow(this.instruments.length, this.voices);
+        this.countL = Math.pow(this.dynamics.length, this.voices);
+        this.countD = Math.pow(this.durations.length, this.voices);
         this.indexesForOptis = {};
         var result = ChordSpace.allOfEquivalenceClass(voices, 'OPTTI');
         this.optisForIndexes = result.array;
@@ -2477,7 +2674,7 @@ if (typeof console === 'undefined') {
         }
         var ended = performance.now();
         var elapsed = (ended - began) / 1000.;
-        console.log("ChordSpaceGroup.prototype.initialize: " + elapsed);
+        console.info("ChordSpaceGroup.prototype.initialize: " + elapsed);
     };
 
     //////////////////////////////////////////////////////////////////////////////
