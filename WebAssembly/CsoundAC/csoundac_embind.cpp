@@ -35,8 +35,10 @@
 #include <string>
 #include <sstream>
 
-static void hello() {
-    csound::System::message("Hello, World, this is CsoundAC!\n");
+static std::string hello() {
+    static std::string hello_ = "Hello, World, this is CsoundAC!\n";
+    csound::System::message(hello_.c_str());
+    return hello_;
 }
 
 /*
