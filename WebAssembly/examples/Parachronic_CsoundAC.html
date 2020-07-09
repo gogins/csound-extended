@@ -803,18 +803,105 @@ var generate = function() {
     csound.message(scale.information());
     let chord = scale.chord(1, 5, 3);
     csound.message(chord.eOP().information());
+    /*
+     * The turtle T represents the current state of a Lindenmayer system. The 
+     * turtle consists of a note vector N that represents a position in score 
+     * space, a step size S, an orientation O, a chord C, a chord defining 
+     * modality M, an octavewise chord revoicing V, a scale Sc, a scale degree 
+     * Sd, and a range R. Turtle commands are defined `(operation target ...)` 
+     * or `(operation target[dimension] ...)`:
+     *
+     * ([ T)        Push the current turtle state on a stack (start a branch).
+     * (] T)        Pop the current turtle state from the stack (return to 
+     *              the branching point).
+     * (F N x)      Move the turtle position N "forward" x steps S along its 
+     *              current orientation O): 
+     *              N := N + (x * S * O).
+     * (R O d1 d2)  Rotate the turtle orientation O in the plane of dimensions 
+     *              d1 and d2 by angle x radians:
+     *              R = makeRotation(d, e, x); O := R * O.
+     * (o N[d] x e) Apply algebraic operation o (=, +, -, *, /) to dimension d 
+     *              (i, t, d, k, v, p, x, y, z, s) of the turtle position N 
+     *              with operand x under equivalence class e (0, O, R):
+     *              N[d] := N[d] + S[d] o x.
+     * (o S[d] x e) Apply algebraic operation o (=, +, -, *, /) to dimension d 
+     *              (i, t, d, k, v, p, x, y, z, s) of the turtle step size S
+     *              with operand x under equivalence class e (0, O, R):
+     *              S[d] := S[d] + S[d] o x.
+     * (o C v e)    Apply algebraic operation o (=, +, -, *, /) to the turtle 
+     *              chord C as a whole with operand v (a vector or chord name) 
+     *              under equivalence class e (0, O, R):
+     *              C := C o x.
+     * (o C[i] x e) Apply algebraic operation o (=, +, -, *, /) to voice i 
+     *              of the turtle chord C with operand x under equivalence 
+     *              class e (0, O, R):
+     *              C[i] := C[i] o v.
+     * (o M v e)    Apply algebraic operation o (=, +, -, *, /) to the turtle 
+     *              modality M as a whole with operand v (a vector or chord 
+     *              name) under equivalence class e (0, O, R):
+     *              M := M o v.
+     * (o M[i] x e) Apply algebraic operation o (=, +, -, *, /) to voice i 
+     *              of the turtle modality M with operand x under equivalence 
+     *              class e (0, O, R):
+     *              M[i] := M[i] o x.
+     * (o V x)      Apply algebraic operation o (=, +, -, *, /) to the voicing 
+     *              index of the turtle chord with operand x: 
+     *              V := V o x. Of necessity the equivalence class is the 
+     *              range of the score.
+     * (I C x)      Invert the turtle chord C by reflecting it around 
+     *              pitch-class x.
+     * (K C)        Apply Neo-Riemannian inversion by exchange to the turtle 
+     *              chord C.
+     * (Q C x)      Apply Neo-Riemannian contextual transposition by x 
+     *              pitch-classes (with reference to the turtle's modality M) 
+     *              to the turtle chord C.
+     * (+ C)        Add a voice (doubling the root) to the turtle chord C.
+     * (- C)        Remove a voice (the uppermost) from the turtle chord C.
+     * (W N)        Write the current turtle note N to the score.
+     * (W C e)      Write the current turtle chord C with voicing V to the 
+     *              score under equivalence class e (0, O, R). This chord will 
+     *              have the same instrument and other dimensions as the 
+     *              turtle note N.
+     * (o Sd x)     Apply algebraic operation o (=, +, -, *, /) to the turtle 
+     *              scale degree Sd, with operand x.
+     * (C Sd m)     Obtain the turtle chord C of m voices as the current scale 
+     *              degree Sd degree of the turtle scale Sc.
+     * (C Sc n m)   Obtain the turtle chord C with m voices as the nth degree 
+     *              of the turtle scale Sc.
+     * (o Sc x)     Apply algebraic operation o (=, +, -, *, /) to the turtle 
+     *              scale Sc; x may be a scalar, a vector to define the scale, 
+     *              or the name of a scale.
+     * (M Sc n m)   Modulate the turtle scale Sc to a new scale Sc at scale 
+     *              degree n; if there is more than one scale with the 
+     *              common chord, choose scale m.
+     * (A C)        Apply the current turtle chord C to the score, starting at 
+     *              the current time and continuing until the next A command.
+     * (A C L)      Apply the current turtle chord C to the score, using the 
+     *              closest voice-leading from the previous chord (if any), 
+     *              starting at the current time and continuing to the next A 
+     *              command.
+     * (A Sc)       Apply the current turtle scale S to the score, starting at 
+     *              the current time and continuing until the next A command.
+     * (A 0)        End application of the previous A command.   
+     *
+     * PLEASE NOTE: Commands are not always implemented, or always logically 
+     * compatible. Scale commands take precedence over chord commands. 
+     * Commands that define invalid operations perform no operation and print 
+     * a warning.
+     */
     let lindenmayer = new CsoundAC.ChordLindenmayer();
-    lindenmayer.setAxiom('=NNd1 =NNv60 =CO"CM7" =MO"CM7" [ a ] +NNt1.5 +NRk7 b')
-    lindenmayer.addRule('a', 'WN a +NNt1 +NRk1 WN [ +NRk5 c ] a +NNt1 -NRk1 +NNt1 WN [ +NRk12 c ] a');
-    lindenmayer.addRule('b', 'AC K Q5 WN b +NNt1 +NRk1 WN [ +NRk5 c ] b +NNt1 -NRk1 +NNt1 WN [ +NRk12 c ] b');
-    lindenmayer.addRule('c', '*SNt.95 *SNd.95 *SRk1.02 +NNt0.5 WN c +NNt1 +NRk1 WN [ +NRk5 c ] c +NNt1 -NRk1 +NNt1 WN c');
-    lindenmayer.setIterationCount(4);
+    lindenmayer.setAxiom('=Nd1 =R60 =Nv60 =CR"CM7" =MR"CM7" [ a ] c +Nt01.5 +NRk7 b')
+    lindenmayer.addRule('a', 'WN +T5 a +Nt1.5 +NRk1.5 WC *Okt.03 [ +NRk5 c ] +Q3 a +Nt1 -NRk1 +Nt1 WN [ +NRk12 c ] a');
+    lindenmayer.addRule('b', 'AC K Q5 WN b +NNt17 *NRk1.1 WN [ +NRk5 c ] b +Nt1 -NRk1 +NNt1 WN WCV [ +NRk11 c ] b');
+    lindenmayer.addRule('c', '*SNt.95 *SNd.95 *SRk1.02 +Nt0.5 WN K c +Nt1 +NRk1 WN [ +NRk5 c ] c +Nt1 -NRk1 +Nt1 WN c');
+    lindenmayer.setIterationCount(2);
     csound.message("lindenmayer: " + lindenmayer);
     let rescale = new CsoundAC.Rescale();
     rescale.setRescale(0, true, false, 1., 0.);
     rescale.setRescale(3, true, true, 1., 8.);
-    rescale.setRescale(4, true, true, 30., 72.);
+    rescale.setRescale(4, true, false, 30., 72.);
     rescale.setRescale(5, true, true, 60., 12.);
+    CsoundAC.System.setMessageLevel(15);
     rescale.addChild(lindenmayer);
     score_model.addChild(rescale);
     score_model.generate();
@@ -825,176 +912,6 @@ var generate = function() {
   } catch(err) {
     csound.message(err.name + ': ' + err.message + ' ' + err.line + '\n');
   }
-};
-
-var generatex = function() {
-    csound.message("generate()...\n");
-    try {
-        window.lsys = new ChordSpace.LSys();
-        lsys.axiom = "- [ g f f I I I I a ] g a";
-        lsys.addRule('g', 'Ja b a3 c aa F F c2 a2 t,/,1.025 b2 K c2 g b2 t,*,1.025 T,5 F Jb F F c g a b g');
-        lsys.addRule('a', 'F b F a2 b a2 [ b3 F F f F [ c F F F F ] ] F F F Jb c2 a2 c F c F F F b2 Ja a2');
-        lsys.addRule('aa', '[ b3 F F F c3 f F F F F ] F b F a2 b I I I F F [ c2 F F F F F F ] F c2 a2 c F c F F b2 a2');
-        lsys.addRule('xaa', '[ b3 F F F c3 f F F F F ] F b F a2 b I I F F [ c2 F F F F F F ] F c2 a2 c F c F F b2 a2');
-        lsys.addRule('xa2', 'I F b F b a3 i i b2 f F F f c2 a3 c F c2 F b2 a3 i i c');
-        lsys.addRule('a3', 'F b2 b F a I v F F c F F F F F c2 aa V f c2 F F b2 a');
-        lsys.addRule('xa3', 'F b2 b F a I v F F c F F F F F c2 aa i i V f c2 F F b2 a');
-        lsys.addRule('Ja', 'J,2,0');
-        lsys.addRule('Jb', 'J,2,2'); 
-        ///lsys.addRule('b', '+ f f f f f - -'); 
-        ///lsys.addRule('c', '- f f f f f +');
-        lsys.addRule('b', '+ f f f f F f - -'); 
-        lsys.addRule('c', '- f f F f f f +');
-        lsys.addRule('b2', '+ f f f f -'); 
-        ///lsys.addRule('c2', '- - f f f f + +');
-        lsys.addRule('c2', '- - f f f f + +');
-        lsys.addRule('b3', '- - f f f + +'); 
-        ///lsys.addRule('b3', '- - f f f f + +'); 
-        var chord = ChordSpace.chordForName('CM9'); 
-        var t = new ChordSpace.Turtle(4.5, Math.PI/2, chord, chord);
-        lsys.generate(4);
-        lsys.write_score(t);
-        csound.message("Finding size of score...\n");
-        lsys.score.findScales();
-        csound.message("Rescaling score...\n");
-        lsys.score.setScale(3, 1, 8.125);
-        //lsys.score.setScale(3, 3, 0);
-        lsys.score.setScale(4, 24, 72);
-        ///lsys.score.setScale(5, 60, 8);
-        ///lsys.score.setScale(5, 60, 9);
-        lsys.score.setScale(5, 60, 11);
-        lsys.score.setScale(7, 0, 1);
-        lsys.score.temper(12);
-        csound.message("Conforming to chords...\n");
-        lsys.conformToChords();
-        lsys.score.setDuration(12*60);
-        csound.message("Tieing overlapping notes...\n");
-        lsys.score.tieOverlaps(true);
-        lsys.score.sort();
-        // Fix up score before rendering.
-        var i;
-        var n = lsys.score.data.length;
-        var cutoff = 7 * 60 + 35;
-        var note;
-        for (i = n - 1; i >= 0; --i) {
-        note = lsys.score.data[i];
-        // Extend the notes at the end.
-        if ((note.time + note.duration) >= cutoff) {
-        note.duration = (note.duration + 2.5);
-        }
-        if (note.duration < .5) {
-        note.duration = .5;
-        }
-        }
-        // Pianoteq misbehaves if we start right at time 0.
-        for (var i = 0; i < lsys.score.data.length; i++) {
-        var event = lsys.score.data[i];
-        event.time = event.time + 2;
-        }
-        if (false) {
-        // Also if keys overlap.
-        for (var i = 0; i < lsys.score.data.length; i++) {
-        var event = lsys.score.data[i];
-        csound.message(event.toIStatement() + ' e: ' + event.end);
-        var channel = Math.floor(event.channel);
-        var key = event.key;
-        for (var j = i + 1; j < lsys.score.data.length; j++) {
-        var overlap = lsys.score.data[j];
-        var overlap_channel = Math.floor(overlap.channel);
-        var overlap_key = overlap.key;
-        if (key === overlap_key && channel === overlap_channel && channel === 2) {
-        if (event.end > overlap.time) {
-        var the_end = Math.max(event.end, overlap.end);
-        csound.message('Correcting overlap for:');
-        csound.message(' ' + event.toIStatement() + ' e: ' + event.end);
-        csound.message(' ' + overlap.toIStatement() + ' e: ' + overlap.end);
-        event.end = the_end;
-        overlap.end = the_end;
-        csound.message('to:');
-        csound.message(' ' + event.toIStatement() + ' e: ' + event.end);
-        csound.message(' ' + overlap.toIStatement() + ' e: ' + overlap.end + '\n');
-        }
-        }
-        }
-        }
-        }
-        // Reassign Pianoteq to FMWaterBell,
-        // randomize pans
-        for (var i = 0; i < lsys.score.data.length; i++) {
-        var event = lsys.score.data[i];
-        event.channel = Math.round(event.channel);
-        let random_variable = Math.random();
-        random_variable *= .6;
-        random_variable += .2;
-        event.pan = event.pan + random_variable
-        if (event.channel >= 9 && event.channel < 10) {
-        event.channel = 1;
-        csound.message('Reassigned...\n');
-        }
-        } 
-        // Shorten duration preserving corrections...
-        lsys.score.setDuration(9*60);
-        // Bring in final notes.
-        let size = lsys.score.data.length;
-        lsys.score.data[size - 1].time = (lsys.score.data[size - 1].time - 12.);
-        lsys.score.data[size - 2].time = (lsys.score.data[size - 2].time - 12.);
-        if (true) {
-        let start_shortening = 4*60+40;
-        let old_end_shortening = 4*60+57;
-        let old_duration = old_end_shortening - start_shortening;
-        let new_end_shortening = old_end_shortening - 18;
-        let new_duration = new_end_shortening - start_shortening;
-        let shrinkage = new_duration / old_duration;
-        for (var i = 0; i < lsys.score.data.length; i++) {
-        var event = lsys.score.data[i];
-        // Try transposing without changing interval structure.
-        event.key += 1;
-        if (event.time >= old_end_shortening) {
-        let old_time = event.time;
-        let old_end = event.end;
-        event.time = event.time - start_shortening;
-        if (old_time < old_end_shortening) {
-        event.time = event.time * shrinkage;
-        if (old_end < old_end_shortening) {
-        event.duration = event.duration * shrinkage;
-        } 
-        }
-        event.time = event.time + start_shortening;
-        }
-        }
-        }
-        if (false) {
-        let start_shortening = 4*60+40;
-        ///let old_end_shortening = 4*60+48;
-        let old_end_shortening = 290;;
-        let old_duration = old_end_shortening - start_shortening;
-        let new_end_shortening = 270;
-        let new_duration = new_end_shortening - start_shortening;
-        let shrinkage = new_duration / old_duration;
-        for (var i = 0; i < lsys.score.data.length; i++) {
-        var event = lsys.score.data[i];
-        // Try transposing without changing interval structure.
-        event.key += 1;
-        if (event.time >= old_end_shortening) {
-        let old_time = event.time;
-        let old_end = event.end;
-        event.time = event.time - start_shortening;
-        if (old_time < old_end_shortening) {
-        event.time = event.time * shrinkage;
-        if (old_end < old_end_shortening) {
-        event.duration = event.duration * shrinkage;
-        } 
-        }
-        event.time = event.time + start_shortening;
-        }
-        }
-        }
-        csound.message("Plotting score...\n");
-        lsys.score.draw3D(document.getElementById("canvas"));
-        csound.message('Generated ' + lsys.score.data.length + ' notes.\n');
-    } catch(err) {
-        csound.message(err.name + ': ' + err.message + ' ' + err.line + '\n');
-    }
 };
 
 // Message level for standard (terminal) output. Takes the sum of any of the following values:

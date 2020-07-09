@@ -2374,6 +2374,11 @@ if (typeof console === 'undefined') {
         });
     };
 
+    // TEST
+    // Just items 30 to 35 in the (zero-indexed) series:
+    console.info(range(30, 35)
+        .map(curry(kpermutationForIndex)([1, 2, 3, 4, 5], 4)));
+
     /**
      * A is the index of k-permutations with repetition of instruments for
      * voices, instruments is an array of instrument numbers.

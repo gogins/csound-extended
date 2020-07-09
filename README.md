@@ -211,6 +211,18 @@ To install, change to build-linux and execute `sudo install
 First, install the Emscripten SDK according to instructions at 
 `https://emscripten.org/docs/getting_started/downloads.html`.
 
+You will need to make sure that the Eigen library for matrix algebra is 
+available to the Emscripten toolchain. The easiest way to do this is to 
+install the `libeigen3-dev` system package, and then create a symbolic 
+link to the system eigen3 include directory to the Emscripten C++ include 
+directory:
+```
+mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ 
+mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ ln -s /usr/include/eigen3 eigen3
+mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ ls eigen3
+Eigen  signature_of_eigen3_matrix_library  unsupported
+```
+
 Then, to build for WebAssembly for the first time, change to the WebAssembly
 subdirectory of this repository and execute:
 

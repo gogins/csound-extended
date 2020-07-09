@@ -74,7 +74,7 @@ void ChordLindenmayer::generate()
     System::inform("ChordLindenmayer::writeScore(): %d events.\n", score.size());
     System::inform("ChordLindenmayer::tieOverlappingNotes...\n");
     tieOverlappingNotes();
-    System::inform("ChordLindenmayer::applyVoiceleadingOperationse...\n");
+    System::inform("ChordLindenmayer::applyVoiceleadingOperations...\n");
     applyVoiceleadingOperations();
     System::inform("ChordLindenmayer::tieOverlappingNotes...\n");
     tieOverlappingNotes();
@@ -280,6 +280,8 @@ char ChordLindenmayer::parseCommand(const std::string &command,
         // All other commands take no parameters.
         operation = command;
     }
+    System::inform("parsed %s to: operation: %s target: %c equivalence: %c  dimension: %2d operand: %9.4f\n", 
+        command.c_str(), operation.c_str(), target, equivalenceClass, dimension, scalar);
     return o;
 }
 

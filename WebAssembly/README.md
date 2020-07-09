@@ -21,6 +21,9 @@ fewer audio issues. Features include:
 
 * Additional Csound API methods exposed to JavaScript.
 
+* A new WebAssembly build of the C++ CsoundAC ("Csound Algorithmic 
+  Composition") library.
+
 Please log any bug reports or requests for enhancements at
 https://github.com/gogins/csound-extended/issues.
 
