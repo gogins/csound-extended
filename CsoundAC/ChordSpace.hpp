@@ -2164,6 +2164,22 @@ class SILENCE_PUBLIC Scale : public Chord {
             }
             add_scale(name, *this);
         }
+        /** 
+         * Creates a Scale with a new name as a set of pitches. These must 
+         * start in octave 0 and be in ascending order, but otherwise may have 
+         * any value in semitones or fractions of semitones; this permits the 
+         * construction of new scales with any temperament and with any 
+         * interval content. If a Scale with the proposed name already exists, 
+         * that Scale is replaced. New Scales are also stored as new named 
+         * Scales.
+         */
+        Scale(std::string name, const std::vector<double> &scale_pitches) {
+            resize(scale_pitches.size());
+            for (int index = 0; index < voices(); ++index) {
+                setPitch(index, scale_pitches[index]);
+            }
+            add_scale(name, *this);
+        }
         virtual ~Scale() {};
         virtual Scale &operator = (const Scale &other) {
             Eigen::MatrixXd::operator=(dynamic_cast<const Chord &>(other));

@@ -216,7 +216,7 @@ struct SILENCE_PUBLIC Command
  * ```
  * ([ T)        Push the current turtle state on a stack (start a branch).
  * (] T)        Pop the current turtle state from the stack (return to start).
- * (W N e)      Write the current turtle note N into the score under
+ * (W N e)      Write the current turtle note N into the score under 
  *              equivalence class e.
  * (F N x e)    Move the turtle position N "forward" x steps S along its
  *              current orientation O) under equivalence class e.
@@ -226,9 +226,10 @@ struct SILENCE_PUBLIC Command
  *              step size S with parameter x under equivalence class e.
  * (R O a b w)  Rotate the turtle orientation O in the plane of dimensions
  *              a and b by angle w radians.
- * (W C e)      Write the current turtle chord C with voicing V to the score
- *              under equivalence class e. Chord voices default to the same
- *              instrument and other dimensions as the current turtle note N.
+ * (W C e)      Write the current turtle chord C with octavewise revoicing 
+ *              from OP order V to the score under equivalence class e. Chord 
+ *              voices default to the same time and other dimensions as the 
+ *              current turtle note N.
  * (o C v e)    Apply arithmetic operation o to the turtle chord C as a whole
  *              with parameter v (a vector or chord name) under equivalence
  *              class e.
@@ -240,8 +241,10 @@ struct SILENCE_PUBLIC Command
  *              chord C.
  * (Q C x)      Apply Neo-Riemannian contextual transposition by x
  *              (by reference to the turtle's modality M) to turtle chord C.
- * (++ C)       Add a voice (doubling the root) to the turtle chord C.
- * (-- C)       Remove a voice (the uppermost) from the turtle chord C.
+ * (++ C)       Add a voice (doubling the first pitch in OP order) to the 
+ *              turtle chord C.
+ * (-- C)       Remove a voice (the uppermost pitch in OP order) from the 
+ *              turtle chord C.
  * (o M v e)    Apply arithmetic operation o to the turtle modality M as a
  *              whole with parameter v (a vector or chord name) under
  *              equivalence class e.
@@ -250,13 +253,14 @@ struct SILENCE_PUBLIC Command
  * (o V x)      Apply arithmetic operation o to the voicing index of the
  *              turtle chord with parameter x. Of necessity the
  *              equivalence class is the range of the score.
- * (o Sc x)     Apply arithmetic operation o to the turtle scale Sc; x may be
- *              a scalar, a vector to define the scale, or a scale name.
- * (C Sc n m)   Obtain the turtle chord C with m voices as the nth degree
+ * (= Sc n v)   Assign the vector of pitches v to the turtle scale Sc with 
+ *              name n.
+ * (C Sc n m)   Obtain the turtle chord C with m voices at the nth degree
  *              of the current turtle scale Sc.
- * (M Sc n k)   Modulate the turtle scale Sc to a new scale Sc with the common
- *              chord at the current scale degree with n voices; if more than
- *              one scale exists with that common chord, choose the kth scale.
+ * (M Sc n k)   Modulate the turtle scale Sc to a new scale Sc with the the 
+ *              current turtle chord C as the common chord but with n voices; 
+ *              if more than one scale exists with that common chord, 
+ *              choose the kth scale.
  * (o Sd x)     Apply arithmetic operation o to the turtle scale degree Sd,
  *              with parameter x.
  * (C Sd m)     Obtain the turtle chord C of m voices as the current scale
@@ -272,6 +276,8 @@ struct SILENCE_PUBLIC Command
  * (0 P)        End the scope of the previous application of a chord or scale.
  * (= P n)      Assign the range n to the size of the score, i.e. define
  *              range equivalence.
+ * (seed P x)   Seed the static random generator used by all random 
+ *              distributions with x.
  * ```
  * An arithmetic operation may also consist of sampling a random
  * distribution, e.g. `(u N[k] minimum maximum)`  ; all parameters of the
@@ -283,19 +289,19 @@ struct SILENCE_PUBLIC Command
  * Multiplication       * x e
  * Division             / x e
  * Uniform              uni min max
- * Normal (Gaussian)    nor mean sigma min max
- * Binomial             bin p k min max
- * Negative binomial    nbi p k min max
- * Poisson              poi min max
- * Exponential          exp lambda min max
- * Gamma                gam alpha beta min max
- * Weibull              wei a b min max
- * Extreme value        ext a b min max
- * Log normal           log mean sigma min max
- * Chi squared          chi n min max
- * Cauchy               cau a b min max
- * Fisher               fis m n min max
- * Student              stu n min max
+ * Normal (Gaussian)    nor mean sigma
+ * Binomial             bin p k
+ * Negative binomial    nbi p k
+ * Poisson              poi mean
+ * Exponential          exp lambda
+ * Gamma                gam alpha beta
+ * Weibull              wei a b
+ * Extreme value        ext a b
+ * Log normal           log mean sigma
+ * Chi squared          chi n
+ * Cauchy               cau a b
+ * Fisher               fis m n
+ * Student              stu n
  * ```
  * Dimensions are:
  * ```
@@ -370,12 +376,12 @@ public:
     clock_t elapsed;
     virtual void initialize();
 protected:
+    virtual double equivalence(double &value, const std::string &equivalenceClass) const;
     /**
      * Iterates the replacement rules on the axiom and subsequent productions
      * to produce the final production, a possibly long string of turtle
      * commands.
      */
-    virtual double equivalence(double &value, const std::string &equivalenceClass) const;
     virtual void generateLindenmayerSystem();
     /**
      * Parses the final production into commands, each a tuple of strings,
@@ -394,9 +400,9 @@ protected:
     virtual void noteOrientationOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
     virtual void chordOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
     virtual void voicingOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
-    virtual void modalityOperationOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
-    virtual void scaleOperationOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
-    virtual void scaleStepOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
+    virtual void modalityOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
+    virtual void scaleOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
+    virtual void scaleDegreeOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
     virtual void scoreOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
 
 };
