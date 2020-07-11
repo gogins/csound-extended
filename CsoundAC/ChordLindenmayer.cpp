@@ -17,15 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#include "CppSound.hpp"
 #include "ChordLindenmayer.hpp"
-#include "Event.hpp"
-#include "Score.hpp"
-#include "Voicelead.hpp"
-#include <cstring>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
 #if defined(HAVE_IO_H)
 #ifdef __linux__
 #include <sys/io.h>
@@ -131,10 +123,10 @@ void ChordLindenmayer::writeScore()
     std::vector<std::string> command;
     std::stringstream stream(production);
     char c;
-    while (stream.get(c)){
+    while (stream.get(c)) {
         if (c == '(') {
-            command.clear;
-        } else if (c == ')' {
+            command.clear();
+        } else if (c == ')') {
             interpret(command);
         } else if (c == ' ') {
             command.push_back(token);
@@ -145,8 +137,7 @@ void ChordLindenmayer::writeScore()
     }
 }
 
-void ChordLindenmayer::fixStatus()
-{
+void ChordLindenmayer::fixStatus() {
     for(std::vector<Event>::iterator it = score.begin(); it != score.end(); ++it) {
         if (it->getStatusNumber() == 0.0) {
             it->setStatus(144.0);
@@ -154,95 +145,301 @@ void ChordLindenmayer::fixStatus()
     }
 }
 
-void ChordLindenmayer::tieOverlappingNotes()
-{
+void ChordLindenmayer::tieOverlappingNotes() {
     score.tieOverlappingNotes();
 }
 
-void ChordLindenmayer::applyVoiceleadingOperations()
-{
+void ChordLindenmayer::applyVoiceleadingOperations() {
     transform(score);
 }
 
-double ChordLindenmayer::equivalence(double &value, const std::string &equivalenceClass) const
-{
-    switch(equivalenceClass)
-    {
-    case "0":
-    {
+double ChordLindenmayer::equivalence(double &value, const std::string &equivalenceClass) const {
+    if (equivalenceClass == "O") {
         value = Conversions::modulus(value, 12.0);
-    }
-    break;
-    case "R":
-    {
+    } else if (equivalenceClass == "R") {
         value = Conversions::modulus(value, turtle.rangeSize);
-    }
-    break;
     }
     return value;
 }
 
-void ChordLindenmayer::turtleOperation(const std::string &operation, 
-    const std::string &target, const std::vector<std::string> &command) {
+/**
+ * Returns a zero-based numerical index for a string
+ * dimension name (for Events) or voice number (for Chords).
+ */
+static int getIndex (const std::string &dimension) {
+    static std::map<std::string, int> indexesForDimensions = {
+        {"t", Event::TIME},
+        {"d", Event::DURATION},
+        {"s", Event::STATUS},
+        {"i", Event::INSTRUMENT},
+        {"k", Event::KEY},
+        {"v", Event::VELOCITY},
+        {"p", Event::PHASE},
+        {"x", Event::PAN},
+        {"y", Event::DEPTH},
+        {"z", Event::HEIGHT},
+        {"m", Event::PITCHES},
+        {"0", 0},
+        {"1", 1},
+        {"2", 2},
+        {"3", 3},
+        {"4", 4},
+        {"5", 5},
+        {"6", 6},
+        {"7", 7},
+        {"8", 8},
+        {"9", 9},
+        {"10", 10},
+        {"11", 11},
+        {"12", 12}
+    };
+    if (indexesForDimensions.find(dimension) != indexesForDimensions.end()) {
+        return indexesForDimensions[dimension];
+    } else {
+        return -1;
+    }
+}
+
+static void arithmetic(double &target, const std::string &operation, const std::string &x, const std::string equivalence = "0") {
+}
+
+static void sample(double &target, const std::string &distribution, const std::string &p1, const std::string &p2, const std::string &p3, const std::string &p4) {
+}
+
+static double real(const std::string &number) {
+    return std::atof(number.c_str());
+}
+
+static double &element(Event &event, const std::string &stringIndex) {
+    double value;
+    int index = getIndex(stringIndex);
+    if (index != -1) {
+        value = event[index];
+    }
+    return value;
+}
+
+static double &voice(Chord &chord, const std::string &stringIndex) {
+    double pitch;
+    int voice = getIndex(stringIndex);
+    if (voice != -1) {
+        pitch = chord.getPitch(voice);
+    }
+    return pitch;
+}
+
+std::vector<double> parseVector(std::string text) {
+    std::vector<double> result;
+    std::string token;
+    for (int i = 0; i < text.length(); ++i) {
+        char c = text[i];
+        if (c == '{') {
+            continue;
+        } else if (c == ',' || c == '}') {
+            result.push_back(real(token));
+        } else {
+            token.push_back(c);
+        }
+    }
+    return result;
+}
+
+void ChordLindenmayer::turtleOperation(const std::string &operation,
+                                       const std::string &target, const std::vector<std::string> &command) {
     if        (operation == "[") {
     } else if (operation == "]") {
     }
 }
 
-void ChordLindenmayer::noteOperation(const std::string &operation, 
-    const std::string &target, const std::vector<std::string> &command) {
-    if        (operation == "[") {
-    } else if (operation == "]") {
+void ChordLindenmayer::noteOperation(const std::string &operation,
+                                     const std::string &target, const std::vector<std::string> &command) {
+    if        (operation == "W") {
+    } else if (operation == "F") {
+    } else if (operation == "=") {
+    } else if (operation == "+") {
+    } else if (operation == "-") {
+    } else if (operation == "*") {
+    } else if (operation == "/") {
+    } else if (operation == "uni") {
+    } else if (operation == "nor") {
+    } else if (operation == "bin") {
+    } else if (operation == "nbi") {
+    } else if (operation == "poi") {
+    } else if (operation == "exp") {
+    } else if (operation == "gam") {
+    } else if (operation == "wei") {
+    } else if (operation == "ext") {
+    } else if (operation == "log") {
+    } else if (operation == "chi") {
+    } else if (operation == "cau") {
+    } else if (operation == "fis") {
+    } else if (operation == "stu") {
     }
 }
 
-void ChordLindenmayer::noteStepOperation(c(const std::string &operation, 
-    const std::string &target, const std::vector<std::string> &command) {
-    if        (operation == "[") {
-    } else if (operation == "]") {
-    }
-}
-
-void ChordLindenmayer::noteOrientationOperation((const std::string &operation, 
-    const std::string &target, const std::vector<std::string> &command) {
-    if        (operation == "[") {
-    } else if (operation == "]") {
-    }
-}
-
-void ChordLindenmayer::chordOperation((const std::string &operation, 
-    const std::string &target, const std::vector<std::string> &command) {
-    if        (operation == "[") {
-    } else if (operation == "]") {
-    }
-}
-
-void ChordLindenmayer::scaleOperation((const std::string &operation, 
-    const std::string &target, const std::vector<std::string> &command) {
-    if        (operation == "[") {
-    } else if (operation == "]") {
-    }
-}
-
-void ChordLindenmayer::scaleStepOperation((const std::string &operation, 
-    const std::string &target, const std::vector<std::string> &command) {
-    if        (operation == "[") {
-    } else if (operation == "]") {
-    }
-}
-
-void ChordLindenmayer::scoreOperation((const std::string &operation, 
-    const std::string &target, const std::vector<std::string> &command) {
+void ChordLindenmayer::noteStepOperation(const std::string &operation,
+                                         const std::string &target, const std::vector<std::string> &command) {
     if        (operation == "=") {
+    } else if (operation == "+") {
+    } else if (operation == "-") {
+    } else if (operation == "*") {
+    } else if (operation == "/") {
+    } else if (operation == "uni") {
+    } else if (operation == "nor") {
+    } else if (operation == "bin") {
+    } else if (operation == "nbi") {
+    } else if (operation == "poi") {
+    } else if (operation == "exp") {
+    } else if (operation == "gam") {
+    } else if (operation == "wei") {
+    } else if (operation == "ext") {
+    } else if (operation == "log") {
+    } else if (operation == "chi") {
+    } else if (operation == "cau") {
+    } else if (operation == "fis") {
+    } else if (operation == "stu") {
+    }
+}
+
+void ChordLindenmayer::noteOrientationOperation(const std::string &operation,
+        const std::string &target, const std::vector<std::string> &command) {
+    if        (operation == "R") {
+    }
+}
+
+void ChordLindenmayer::chordOperation(const std::string &operation,
+                                      const std::string &target, const std::vector<std::string> &command) {
+    if        (operation == "W") {
+    } else if (operation == "T") {
+    } else if (operation == "I") {
+    } else if (operation == "K") {
+    } else if (operation == "Q") {
+    } else if (operation == "+") {
+    } else if (operation == "-") {
+    } else if (operation == "*") {
+    } else if (operation == "/") {
+    } else if (operation == "++") {
+    } else if (operation == "--") {
+    } else if (operation == "uni") {
+    } else if (operation == "nor") {
+    } else if (operation == "bin") {
+    } else if (operation == "nbi") {
+    } else if (operation == "poi") {
+    } else if (operation == "exp") {
+    } else if (operation == "gam") {
+    } else if (operation == "wei") {
+    } else if (operation == "ext") {
+    } else if (operation == "log") {
+    } else if (operation == "chi") {
+    } else if (operation == "cau") {
+    } else if (operation == "fis") {
+    } else if (operation == "stu") {
+    }
+}
+
+void ChordLindenmayer::voicingOperation(const std::string &operation,
+                                        const std::string &target, const std::vector<std::string> &command) {
+    if        (operation == "+") {
+    } else if (operation == "-") {
+    } else if (operation == "*") {
+    } else if (operation == "/") {
+    } else if (operation == "uni") {
+    } else if (operation == "nor") {
+    } else if (operation == "bin") {
+    } else if (operation == "nbi") {
+    } else if (operation == "poi") {
+    } else if (operation == "exp") {
+    } else if (operation == "gam") {
+    } else if (operation == "wei") {
+    } else if (operation == "ext") {
+    } else if (operation == "log") {
+    } else if (operation == "chi") {
+    } else if (operation == "cau") {
+    } else if (operation == "fis") {
+    } else if (operation == "stu") {
+    }
+}
+
+void ChordLindenmayer::modalityOperation(const std::string &operation,
+        const std::string &target, const std::vector<std::string> &command) {
+    if        (operation == "T") {
+    } else if (operation == "I") {
+    } else if (operation == "K") {
+    } else if (operation == "Q") {
+    } else if (operation == "+") {
+    } else if (operation == "-") {
+    } else if (operation == "*") {
+    } else if (operation == "/") {
+    } else if (operation == "++") {
+    } else if (operation == "--") {
+    } else if (operation == "uni") {
+    } else if (operation == "nor") {
+    } else if (operation == "bin") {
+    } else if (operation == "nbi") {
+    } else if (operation == "poi") {
+    } else if (operation == "exp") {
+    } else if (operation == "gam") {
+    } else if (operation == "wei") {
+    } else if (operation == "ext") {
+    } else if (operation == "log") {
+    } else if (operation == "chi") {
+    } else if (operation == "cau") {
+    } else if (operation == "fis") {
+    } else if (operation == "stu") {
+    }
+}
+
+void ChordLindenmayer::scaleOperation(const std::string &operation,
+                                      const std::string &target, const std::vector<std::string> &command) {
+    if        (operation == "+") {
+    } else if (operation == "-") {
+    } else if (operation == "*") {
+    } else if (operation == "/") {
+    } else if (operation == "C") {
+    } else if (operation == "M") {
+    }
+}
+
+void ChordLindenmayer::scaleDegreeOperation(const std::string &operation,
+        const std::string &target, const std::vector<std::string> &command) {
+    if        (operation == "+") {
+    } else if (operation == "-") {
+    } else if (operation == "*") {
+    } else if (operation == "/") {
+    } else if (operation == "uni") {
+    } else if (operation == "nor") {
+    } else if (operation == "bin") {
+    } else if (operation == "nbi") {
+    } else if (operation == "poi") {
+    } else if (operation == "exp") {
+    } else if (operation == "gam") {
+    } else if (operation == "wei") {
+    } else if (operation == "ext") {
+    } else if (operation == "log") {
+    } else if (operation == "chi") {
+    } else if (operation == "cau") {
+    } else if (operation == "fis") {
+    } else if (operation == "stu") {
+    } else if (operation == "C") {
+    }
+}
+
+void ChordLindenmayer::scoreOperation(const std::string &operation,
+                                      const std::string &target, const std::vector<std::string> &command) {
+    if        (operation == "=") {
+    } else if (operation == "0") {
+    } else if (operation == "C") {
+    } else if (operation == "Cl") {
+    } else if (operation == "S") {
     }
 }
 
 /**
- * The first element of the command is always the operation, 
+ * The first element of the command is always the operation,
  * the second element is always the target. Not all operations
- * are defined for all targets, and not all operations have the same 
- * operands. The logic switches first on target, then on 
- * operation, then on the remaining elements of the command.
+ * are defined for all targets, and not all operations have the same
+ * parameters. The logic switches first on target, then on
+ * operation, then on the remaining parameters of the command.
  */
 void ChordLindenmayer::interpret(std::vector<std::string> command) {
     const std::string &operation = command[0];
@@ -250,50 +447,24 @@ void ChordLindenmayer::interpret(std::vector<std::string> command) {
     if (target == "T") {
         turtleOperation(command);
     } else if target == "N") {
-        noteOperation(command);
+    noteOperation(command);
     } else if target == "S") {
-        noteStepOperation(command);
+    noteStepOperation(command);
     } else if target == "O") {
-        noteOrientationOperation(command);
+    noteOrientationOperation(command);
     } else if target == "C") {
-        chordOperation(command);
+    chordOperation(command);
     } else if target == "M") {
-        modalityOperation(command);
+    modalityOperation(command);
     } else if target == "V") {
-        voicingOperation(command);
+    voicingOperation(command);
     } else if target == "Sc") {
-        scaleOperation(command);
+    scaleOperation(command);
     } else if target == "Sd") {
-        scaleDegreeOperation(command);
+    scaleDegreeOperation(command);
     } else if target == "P") {
-        scoreOperation(command);
+    scoreOperation(command);
     }
-}
-
-int ChordLindenmayer::getDimension (const std::string &dimension) const {
-    switch(dimension) {
-    case "i":
-        return Event::INSTRUMENT;
-    case "t":
-        return Event::TIME;
-    case "d":
-        return Event::DURATION;
-    case "k":
-        return Event::KEY;
-    case "v":
-        return Event::VELOCITY;
-    case "p":
-        return Event::PHASE;
-    case "x":
-        return Event::PAN;
-    case "y":
-        return Event::HEIGHT;
-    case "z":
-        return Event::DEPTH;
-    case "s":
-        return Event::PITCHES;
-    }
-    return -1;
 }
 
 Eigen::MatrixXd ChordLindenmayer::createRotation (int dimension1, int dimension2, double angle) const

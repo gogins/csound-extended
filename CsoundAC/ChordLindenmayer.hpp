@@ -23,10 +23,10 @@
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
-%include "std_string.i"
-%include "std_vector.i"
-%include "std_map.i"
-%{
+    %include "std_string.i"
+    %include "std_vector.i"
+    %include "std_map.i"
+    %{
 #include "ChordSpace.hpp"
 #include "Conversions.hpp"
 #include "Event.hpp"
@@ -41,8 +41,8 @@
 #include <map>
 #include <vector>
 #include <eigen3/Eigen/Dense>
-%}
-%template(StringMap) std::map<std::string, std::string>;
+    %}
+    %template(StringMap) std::map<std::string, std::string>;
 #else
 #include "ChordSpace.hpp"
 #include "Conversions.hpp"
@@ -62,7 +62,7 @@
 
 namespace csound
 {
-    
+
 extern void SILENCE_PUBLIC printChord(std::ostream &stream, std::string label, const std::vector<double> &chord);
 
 struct SILENCE_PUBLIC Turtle
@@ -81,7 +81,7 @@ struct SILENCE_PUBLIC Turtle
     {
         initialize();
     }
-    virtual ~Turtle() 
+    virtual ~Turtle()
     {
     }
     Turtle(const Turtle &other)
@@ -98,14 +98,13 @@ struct SILENCE_PUBLIC Turtle
         }
         orientation = csound::Event();
         orientation[Event::TIME] = 1.0;
-        chord.clear();
-        modality.clear();
-        scale.clear();
+        chord = chordForName("CM");
         scaleDegree = 1;
         rangeBass = 36;
         rangeSize = 60;
         voicing = 0;
-        modality = Conversions::nameToPitches("C Major");
+        scale = scaleForName("C major");
+        modality = scaleForName("C major");
     }
     Turtle &operator = (const Turtle &other)
     {
@@ -201,100 +200,82 @@ struct SILENCE_PUBLIC Command
 };
 
 /**
- * A Lindenmayer system consists of a turtle representing a position in 
- * musical space, commands for moving the turtle or writing its state into 
- * a musical score, an axiom or initial set of commands, and zero or more 
- * rules for replacing commands with arbitrary sequences of commands.
+ * A Lindenmayer system consists of a turtle representing a position in
+ * musical space, i.e. a note; commands for moving the turtle or writing its
+ * state into a musical score; an axiom or initial set of commands; and zero
+ * or more rules for replacing commands with arbitrary sequences of commands.
  *
- * The turtle T represents the current state of the Lindenmayer system. 
- * The turtle consists of a note vector N that represents a position in 
- * musical space, a step size S, an orientation O, a chord C, a chord 
- * defining modality M, an octavewise chord revoicing V, a scale Sc, a 
- * scale degree Sd, and a range Ra. Turtle commands are defined 
- * `(operation target ...)` or `(operation target[dimension] ...)`:
+ * The turtle T represents the current state of the Lindenmayer system: a note
+ * vector N that represents a position in score space, a step size S, an
+ * orientation O, a chord C, a chord that defines modality M, an octavewise
+ * chord revoicing V, a scale Sc, a scale degree Sd, and a range Ra. Vectors
+ * are given as `{el0,el2,...}`  __**without any spaces**__.
+ *
+ * The turtle commands are defined `(operation target ...)` or
+ * `(operation target[dimension] ...)`, as follows:
  * ```
  * ([ T)        Push the current turtle state on a stack (start a branch).
- * (] T)        Pop the current turtle state from the stack (return to 
- *              the branching point).
- * (W N e)      Write the current turtle position as a note into the score
- *              under equivalence class e (0, 0, R).
- * (F N x e)    Move the turtle position N "forward" x steps S along its 
- *              current orientation O) under equivalence class e 
- *              (0, O, R): 
- *              N := N + (x * S * O).
- * (o N[d] x e) Apply algebraic operation o (=, +, -, *, /) to dimension d 
- *              (i, t, d, k, v, p, x, y, z, s) of the turtle position N 
- *              with parameter x under equivalence class e (0, O, R):
- *              N[d] := N[d] + S[d] o x.
- * (o S[d] x e) Apply algebraic operation o (=, +, -, *, /) to dimension d 
- *              (i, t, d, k, v, p, x, y, z, s) of the turtle step size S
- *              with parameter x under equivalence class e (0, O, R):
- *              S[d] := S[d] + S[d] o x.
- * (R O d1 d2)  Rotate the turtle orientation O in the plane of dimensions 
- *              d1 and d2 by angle x radians:
- *              R = makeRotation(d, e, x); O := R * O.
- * (W C e)      Write the current turtle chord C with voicing V to the 
- *              score under equivalence class e (0, O, R). This chord will 
- *              default to the same instrument and other dimensions as the 
- *              current turtle note N.
- * (o C v e)    Apply algebraic operation o (=, +, -, *, /) to the turtle 
- *              chord C as a whole with parameter v (a vector or chord name) 
- *              under equivalence class e (0, O, R):
- *              C := C o x.
- * (o C[i] x e) Apply algebraic operation o (=, +, -, *, /) to voice i 
- *              of the turtle chord C with parameter x under equivalence 
- *              class e (0, O, R):
- *              C[i] := C[i] o v.
- * (o M v e)    Apply algebraic operation o (=, +, -, *, /) to the turtle 
- *              modality M as a whole with parameter v (a vector or chord 
- *              name) under equivalence class e (0, O, R):
- *              M := M o v.
- * (o M[i] x e) Apply algebraic operation o (=, +, -, *, /) to voice i 
- *              of the turtle modality M with parameter x under 
- *              equivalence class e (0, O, R):
- *              M[i] := M[i] o x.
- * (o V x)      Apply algebraic operation o (=, +, -, *, /) to the voicing 
- *              index of the turtle chord with parameter x: 
- *              V := V o x. Of necessity the equivalence class is the 
- *              range of the score.
- * (I C x)      Invert the turtle chord C by reflecting it around 
- *              pitch-class x.
- * (K C)        Apply Neo-Riemannian inversion by exchange to the turtle 
+ * (] T)        Pop the current turtle state from the stack (return to start).
+ * (W N e)      Write the current turtle note N into the score under
+ *              equivalence class e.
+ * (F N x e)    Move the turtle position N "forward" x steps S along its
+ *              current orientation O) under equivalence class e.
+ * (o N[d] x e) Apply arithmetic operation o to dimension d of the turtle
+ *              position N with parameter x under equivalence class e.
+ * (o S[d] x e) Apply arithmetic operation o to dimension d  of the turtle
+ *              step size S with parameter x under equivalence class e.
+ * (R O a b w)  Rotate the turtle orientation O in the plane of dimensions
+ *              a and b by angle w radians.
+ * (W C e)      Write the current turtle chord C with voicing V to the score
+ *              under equivalence class e. Chord voices default to the same
+ *              instrument and other dimensions as the current turtle note N.
+ * (o C v e)    Apply arithmetic operation o to the turtle chord C as a whole
+ *              with parameter v (a vector or chord name) under equivalence
+ *              class e.
+ * (o C[i] x e) Apply arithmetic operation o to voice i of the turtle chord C
+ *              with parameter x under equivalence class e.
+ * (T C x)      Transpose the turtle chord C by x under equivalence class e.
+ * (I C x)      Invert the turtle chord C by reflecting around pitch-class x.
+ * (K C)        Apply Neo-Riemannian inversion by exchange to the turtle
  *              chord C.
- * (Q C x)      Apply Neo-Riemannian contextual transposition by x 
- *              pitch-classes (with reference to the turtle's modality M) 
- *              to the turtle chord C.
- * (+ C)        Add a voice (doubling the root) to the turtle chord C.
- * (- C)        Remove a voice (the uppermost) from the turtle chord C.
- * (o Sd x)     Apply algebraic operation o (=, +, -, *, /) to the turtle 
- *              scale degree Sd, with parameter x.
- * (C Sd m)     Obtain the turtle chord C of m voices as the current scale 
- *              degree Sd degree of the turtle scale Sc.
- * (C Sc n m)   Obtain the turtle chord C with m voices as the nth degree 
- *              of the turtle scale Sc.
- * (o Sc x)     Apply algebraic operation o (=, +, -, *, /) to the turtle 
- *              scale Sc; x may be a scalar, a vector to define the scale, 
- *              or the name of a scale.
- * (M Sc n k)   Modulate the turtle scale Sc to a new scale Sc with the 
- *              common chord at the current scale degree with n voices; if 
- *              there is more than one scale with that common chord, 
- *              choose the kth scale.
- * (C P)        Apply the current turtle chord C to the score, starting at 
- *              the current time and continuing until the next A command.
- * (C P L)      Apply the current turtle chord C to the score, using the 
- *              closest voice-leading from the previous chord (if any), 
- *              starting at the current time and continuing to the next 
- *              chord or scale.
- * (Sc P)       Apply the current turtle scale Sc to the score, starting 
- *              at the current time and continuing until the next chord 
- *              or scale.
- * (0 P)        End the scope of the previous chord or scale.   
- * (= P n)      Assign the range n to the size of the score, i.e. define 
+ * (Q C x)      Apply Neo-Riemannian contextual transposition by x
+ *              (by reference to the turtle's modality M) to turtle chord C.
+ * (++ C)       Add a voice (doubling the root) to the turtle chord C.
+ * (-- C)       Remove a voice (the uppermost) from the turtle chord C.
+ * (o M v e)    Apply arithmetic operation o to the turtle modality M as a
+ *              whole with parameter v (a vector or chord name) under
+ *              equivalence class e.
+ * (o M[i] x e) Apply arithmetic operation o to voice i of the turtle modality
+ *              M with parameter x under equivalence class e.
+ * (o V x)      Apply arithmetic operation o to the voicing index of the
+ *              turtle chord with parameter x. Of necessity the
+ *              equivalence class is the range of the score.
+ * (o Sc x)     Apply arithmetic operation o to the turtle scale Sc; x may be
+ *              a scalar, a vector to define the scale, or a scale name.
+ * (C Sc n m)   Obtain the turtle chord C with m voices as the nth degree
+ *              of the current turtle scale Sc.
+ * (M Sc n k)   Modulate the turtle scale Sc to a new scale Sc with the common
+ *              chord at the current scale degree with n voices; if more than
+ *              one scale exists with that common chord, choose the kth scale.
+ * (o Sd x)     Apply arithmetic operation o to the turtle scale degree Sd,
+ *              with parameter x.
+ * (C Sd m)     Obtain the turtle chord C of m voices as the current scale
+ *              degree Sd of the turtle scale Sc.
+ * (C P)        Apply the current turtle chord C to the score, starting at
+ *              the current time and continuing until the next application.
+ * (Cl P)       Apply the current turtle chord C to the score, using the
+ *              closest voice-leading from the previous chord (if any),
+ *              starting at the current time and continuing to the next
+ *              application.
+ * (Sc P)       Apply the current turtle scale Sc to the score, starting
+ *              at the current time and continuing until the next application.
+ * (0 P)        End the scope of the previous application of a chord or scale.
+ * (= P n)      Assign the range n to the size of the score, i.e. define
  *              range equivalence.
  * ```
- * An arithmetic operation may also consist of sampling a random 
- * distribution, e.g. (u N[k] minimum maximum); the parameters of the 
- * distribution must be given. All the arithmetic operations are:
+ * An arithmetic operation may also consist of sampling a random
+ * distribution, e.g. `(u N[k] minimum maximum)`  ; all parameters of the
+ * distribution must be given. The complete set of operations is:
  * ```
  * Assignment           = x e
  * Addition             + x e
@@ -316,9 +297,30 @@ struct SILENCE_PUBLIC Command
  * Fisher               fis m n min max
  * Student              stu n min max
  * ```
- * PLEASE NOTE: Scale commands take precedence over chord commands. Not 
- * all commands are implemented. Unimplemented commands silently perform 
- * no operations, but may still be used to define replacement rules.
+ * Dimensions are:
+ * ```
+ * Time                 t
+ * Duration             d
+ * MIDI status          s
+ * Instrument           i
+ * MIDI key             k
+ * MIDI velocity        v
+ * Phase in radians     p
+ * Pan                  x
+ * Depth                y
+ * Height               z
+ * Pitch-class set      m
+ * ```
+ * Equivalence classes are:
+ * ```
+ * None                 0
+ * The octave           O
+ * Range of the score   R
+ *
+ * ```
+ * PLEASE NOTE: Scale commands take precedence over chord commands. Not
+ * all commands are implemented. Unimplemented commands silently perform
+ * no operation, but may still be used to define replacement rules.
  */
 class SILENCE_PUBLIC ChordLindenmayer :
     public VoiceleadingNode
@@ -345,10 +347,10 @@ public:
      *      moving a turtle around in various music spaces to write a score.</li><ol>
      * <li> Notes (N operations) are written directly into the score.</li>
      * <li> Chords (C operations) are written into the score as notes.</li>
-     * <li> L and A operations are written into the score as voice-leading operations,
+     * <li> Score operations are written into the score as voice-leading operations,
      *      to be applied after all notes have been generated.</li></ol>
      * <li> Overlapping and directly abutting notes in the score are joined.</li>
-     * <li> The L and A operations are actually applied to the score.
+     * <li> The chord and scale operations are actually applied to the score.
      * <li> Overlapping and abutting notes in the score are again joined.</li>
      * </ol>
      */
@@ -367,15 +369,17 @@ public:
     clock_t endedAt;
     clock_t elapsed;
     virtual void initialize();
+protected:
     /**
-     * Iterates the replacement rules on the axiom and subsequent productions 
-     * to produce the final production, a possibly long string of turtle 
+     * Iterates the replacement rules on the axiom and subsequent productions
+     * to produce the final production, a possibly long string of turtle
      * commands.
      */
+    virtual double equivalence(double &value, const std::string &equivalenceClass) const;
     virtual void generateLindenmayerSystem();
-    /** 
+    /**
      * Parses the final production into commands, each a tuple of strings,
-     * and interprets each command to write notes and chord progressions into 
+     * and interprets each command to write notes and chord progressions into
      * the score.
      */
     virtual void writeScore();
@@ -383,13 +387,17 @@ public:
     virtual void tieOverlappingNotes();
     virtual void applyVoiceleadingOperations();
     virtual void interpret(std::vector<std::string> command);
-    virtual int getDimension (const std::string &dimension) const;
     virtual Eigen::MatrixXd createRotation (int dimension1, int dimension2, double angle) const;
-    /**
-     * Returns the result of applying the equivalence class to the value,
-     * both in the argument and as the return value; there may be no effect.
-     */
-    virtual double equivalence(double &value, const std::string &equivalenceClass) const;
+    virtual void turtleOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
+    virtual void noteOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
+    virtual void noteStepOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
+    virtual void noteOrientationOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
+    virtual void chordOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
+    virtual void voicingOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
+    virtual void modalityOperationOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
+    virtual void scaleOperationOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
+    virtual void scaleStepOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
+    virtual void scoreOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
 
 };
 }
