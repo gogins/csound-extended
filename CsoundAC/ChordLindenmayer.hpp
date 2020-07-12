@@ -201,9 +201,10 @@ struct SILENCE_PUBLIC Command
 
 /**
  * A Lindenmayer system consists of a turtle representing a position in
- * musical space, i.e. a note; commands for moving the turtle or writing its
- * state into a musical score; an axiom or initial set of commands; and zero
- * or more rules for replacing commands with arbitrary sequences of commands.
+ * musical space, that is, a note; commands for moving the turtle or writing 
+ * its state into a musical score; an axiom or initial set of commands; and 
+ * zero or more rules for replacing commands with arbitrary sequences of 
+ * commands.
  *
  * The turtle T represents the current state of the Lindenmayer system: a note
  * vector N that represents a position in score space, a step size S, an

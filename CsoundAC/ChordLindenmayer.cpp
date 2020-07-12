@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 #include "ChordLindenmayer.hpp"
+#include <random>
 #if defined(HAVE_IO_H)
 #ifdef __linux__
 #include <sys/io.h>
@@ -237,7 +238,7 @@ bool parseVector(std::vector<double> &elements, std::string text) {
         if (c == '{') {
             continue;
         } else if (c == ',' || c == '}') {
-            result.push_back(real(token));
+            elements.push_back(real(token));
         } else {
             token.push_back(c);
         }
@@ -245,14 +246,10 @@ bool parseVector(std::vector<double> &elements, std::string text) {
     return true;
 }
 
-static void arithmetic(Scale &target, const std::string &operation, const std::vector<std::string> &command) {
-    
-}
-
 static void addVoice(Chord &chord) {
     chord = chord.eOP();
     chord.resize(chord.voices() + 1);
-    chord.setPitch(chord.voices() - 1), chord.getPitch(0));
+    chord.setPitch(chord.voices() - 1, chord.getPitch(0));
     chord = chord.eOP();
     
 }
@@ -263,25 +260,55 @@ static void removeVoice(Chord &chord) {
     chord = chord.eOP();
 }
 
-static void arithmetic(Chord &target, const std::string &operation, const std::vector<std::string> &command) {
+static void arithmetic(Chord &target, const std::string &operation, const std::string &targetString, const std::vector<std::string> &command) {
+    size_t index;
+    if (parseIndex(index, targetString)) {
+        // Apply the operation to the indexed element of the target.
+        arithmetic(target.getPitchReference(index), operation, command);
+        equivalence(target.getPitchReference(index), command.back());
+    } else {
+        std::vector<double> elements;
+        if (parseVector(elements, command[2])) {
+            // Apply vector-vector arithmetic to the target.
+            for (int i, n = target.voices(); i < n; ++i) {
+                arithmetic(target.getPitchReference(i), operation, elements[i], 0, 0, 0, 0);
+                equivalence(target.getPitchReference(i), command.back());
+            }
+        } else {
+            // Apply vector-scalar arithmetic to the target.
+            for (int i, n = target.voices(); i < n; ++i) {
+                arithmetic(target.getPitchReference(i), operation, real(command[3], 0, 0, 0, 0);
+                equivalence(target.getPitchReference(i), command.back());
+            }
+        }
+    }
 }
 
 static void arithmetic(Event &target, const std::string &operation, const std::string &targetString, const std::vector<std::string> &command) {
     size_t index;
     if (parseIndex(index, targetString)) {
         // Apply the operation to the indexed element of the target.
-        arithmetic(target.note[index], operation, command);
+        arithmetic(target[index], operation, command);
+        if (index == 4) {
+            equivalence(target.note[index], command.back());
+        }
     } else {
         std::vector<double> elements;
-        if (parseVector(elements, command[2]) {
+        if (parseVector(elements, command[2])) {
             // Apply vector-vector arithmetic to the target.
             for (int i, n = turtle.note.size() - 1; i < n; ++i) {
-                arithmetic(turtle.note[i], operation, elements[i], 0, 0, 0, 0);
+                arithmetic(turtle[i], operation, elements[i], 0, 0, 0, 0);
+                if (i == 4) {
+                    equivalence(target[i], command.back());
+                }
             }
         } else {
             // Apply vector-scalar arithmetic to the target.
             for (int i, n = turtle.note.size() - 1; i < n; ++i) {
                 arithmetic(turtle.note[i], operation, command);
+                if (i == 4) {
+                    equivalence(target[i], command.back());
+                }
             }
         }
     }
@@ -517,9 +544,13 @@ void ChordLindenmayer::scaleDegreeOperation(const std::string &operation,
 void ChordLindenmayer::scoreOperation(const std::string &operation,
                                       const std::string &target, const std::vector<std::string> &command) {
     if        (operation == "0") {
+        operations[turtle.note.getTime()].beginTime = turtle.note.getTime();	
     } else if (operation == "C") {
+        chord(turtle.note.getTime(), turtle.chord);
     } else if (operation == "Cl") {
+        chordVoiceLeading(turtle.note.getTime(), turtle.chord);
     } else if (operation == "S") {
+        chord(turtle.note.getTime(), turtle.scale);
     } else if (operation == "seed") {
         twister.seed(real(command[2]);
     }

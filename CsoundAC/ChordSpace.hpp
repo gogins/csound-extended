@@ -600,6 +600,9 @@ public:
     virtual double getPitch(int voice) const {
         return coeff(voice, PITCH);
     }
+    virtual double &getPitchReference(int voice) {
+        return coeffRef(voice, PITCH);
+    }
     virtual void setPitch(int voice, double value) {
         coeffRef(voice, PITCH) = value;
     }
