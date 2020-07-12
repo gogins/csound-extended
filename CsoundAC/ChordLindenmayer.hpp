@@ -189,16 +189,6 @@ struct SILENCE_PUBLIC Turtle
     }
 };
 
-struct SILENCE_PUBLIC Command
-{
-    std::string operation;
-    std::string target;
-    std::string equivalence;
-    int index;
-    double x;
-    std::vector<double> v;
-};
-
 /**
  * A Lindenmayer system consists of a turtle representing a position in
  * musical space, that is, a note; commands for moving the turtle or writing 
@@ -405,7 +395,10 @@ protected:
     virtual void scaleOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
     virtual void scaleDegreeOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
     virtual void scoreOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
-
+    virtual void arithmetic(Chord &target, const std::string &operation, const std::string &targetString, const std::vector<std::string> &command);
+    virtual void arithmetic(Event &target, const std::string &operation, const std::string &targetString, const std::vector<std::string> &command);
+    virtual void arithmetic(double &target, const std::string &operation, const std::string &targetString, const std::vector<std::string> &command);
+    virtual void arithmetic(double &target, const std::string &operation, const std::string &targetString, double p1, double p2, double p3, double p4, double p5);
 };
 }
 #endif

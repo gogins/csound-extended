@@ -139,7 +139,7 @@ public:
     virtual double getDuration() const {
         return duration;
     }
-    virtual double setDuration(double value) {
+    virtual void setDuration(double value) {
         duration = value;
     }
     Stack();

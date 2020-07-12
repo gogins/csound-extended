@@ -290,11 +290,12 @@ EMSCRIPTEN_BINDINGS(csoundac) {
     emscripten::class_<csound::ChordLindenmayer, emscripten::base<csound::VoiceleadingNode> >("ChordLindenmayer")
         .constructor<>()
         .function("addRule", &csound::ChordLindenmayer::addRule)
+        .function("clear", &csound::ChordLindenmayer::clear)
         .function("createRotation", &csound::ChordLindenmayer::createRotation)
         // NOT SUPPORTED
         // .function("equivalence", &csound::ChordLindenmayer::equivalence)
         .function("fixStatus", &csound::ChordLindenmayer::fixStatus)
-        .function("generateLindenmayerSystem", &csound::ChordLindenmayer::generateLindenmayerSystem)
+        //.function("generateLindenmayerSystem", &csound::ChordLindenmayer::generateLindenmayerSystem)
         .function("getAngle", &csound::ChordLindenmayer::getAngle)
         .function("getAxiom", &csound::ChordLindenmayer::getAxiom)
         .function("getDimension", &csound::ChordLindenmayer::getDimension)
