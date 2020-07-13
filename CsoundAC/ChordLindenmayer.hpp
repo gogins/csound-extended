@@ -397,8 +397,8 @@ protected:
     virtual void scoreOperation(const std::string &operation, const std::string &target, const std::vector<std::string> &command);
     virtual void arithmetic(Chord &target, const std::string &operation, const std::string &targetString, const std::vector<std::string> &command);
     virtual void arithmetic(Event &target, const std::string &operation, const std::string &targetString, const std::vector<std::string> &command);
-    virtual void arithmetic(double &target, const std::string &operation, const std::string &targetString, const std::vector<std::string> &command);
-    virtual void arithmetic(double &target, const std::string &operation, const std::string &targetString, double p1, double p2, double p3, double p4, double p5);
+    virtual double arithmetic(const double &target, const std::string &operation, const std::string &targetString, const std::vector<std::string> &command);
+    virtual double arithmetic(const double &target, const std::string &operation, const std::string &targetString, double p1, double p2, double p3, double p4, double p5);
 };
 }
 #endif

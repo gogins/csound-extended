@@ -29,6 +29,7 @@
 #include <stdio.h>
 
 #define DEBUGGING 1
+#define INDEX_DEBUGGING 0
 
 namespace csound
 {
@@ -93,26 +94,25 @@ void ChordLindenmayer::initialize()
 
 void ChordLindenmayer::generateLindenmayerSystem()
 {
-    std::stringstream source;
-    std::stringstream target;
-    std::string word;
-    std::string rewrittenWord;
-    target.str(axiom);
+    production.clear();
     for (int i = 0; i < iterationCount; i++) {
+        std::stringstream input;
 #if DEBUGGING
         System::inform("ChordLindenmayer::generateLindenmayerSystem: iteration: %3d of %d\n", i + 1, iterationCount);
 #endif
-        source.str(target.str());
-        ///source.clear();
-        source.seekg(0);
-        target.str("");
-        target.clear();
-        target.seekp(0);
+        if (i == 0) {
+            input.str(axiom);
+        } else {
+            input.str(production);
+        }
         char c;
 #if DEBUGGING
-        System::inform("  source:      %s\n", source.str().c_str());
+        System::inform("  source:      %s\n", input.str().c_str());
 #endif
-        while (source.get(c)) {
+        std::string word;
+        std::string rewrittenWord;
+        std::stringstream output;
+        while (input.get(c)) {
             if (c == '(') {
                 word.clear();
                 word.append(1, c);
@@ -127,13 +127,14 @@ void ChordLindenmayer::generateLindenmayerSystem()
         System::inform("    replaced:  %s\n", word.c_str());
         System::inform("    with:      %s\n", rewrittenWord.c_str());
 #endif
-                target << rewrittenWord;
+                output << rewrittenWord;
             } else {
                 word.append(1, c);
             }
         }
+        production = output.str();
 #if DEBUGGING
-        System::inform("  production:  %s\n", target.str().c_str());
+        System::inform("  production:  %s\n", production.c_str());
 #endif
     }
 }
@@ -142,14 +143,16 @@ void ChordLindenmayer::writeScore()
 {
     std::string token;
     std::vector<std::string> command;
-    std::stringstream stream(production);\
+    std::stringstream stream(production);
     // Turtle commands have the syntax of a Lisp function:
     // `(operation target parameter1 ...)`.
     char c;
     while (stream.get(c)) {
         if (c == '(') {
-            command.clear();
+            token.clear();
+            command.resize(0);
         } else if (c == ')') {
+            command.push_back(token);
             interpret(command);
         } else if (c == ' ') {
             command.push_back(token);
@@ -236,21 +239,25 @@ static double real(const std::string &number) {
     return std::atof(number.c_str());
 }
 
-static size_t parseIndex(size_t &index, const std::string &target) {
+static bool parseIndex(int &index, const std::string &target) {
+    bool result = false;
     size_t openBrace = target.find('[');
     // The target should be treated as a vector.
     if (openBrace == std::string::npos) {
         index = -1;
-        return false;
     // The target should be treated as one element of a vector.
     } else {
         size_t start = openBrace + 1;
         size_t closeBrace = target.find(']');
-        size_t length = closeBrace - openBrace - 2;
-        std::string index = target.substr(start, length);
-        index = getIndex(index);
-        return true;
+        size_t length = closeBrace - openBrace - 1;
+        std::string indexString = target.substr(start, length);
+        index = getIndex(indexString);
+        result = true;
     }
+#if INDEX_DEBUGGING
+    System::inform("parseIndex: %d %d %s\n", result, index, target.c_str());
+#endif
+    return result;
 }
 
 bool parseVector(std::vector<double> &elements, std::string text) {
@@ -287,7 +294,7 @@ static void removeVoice(Chord &chord) {
 }
 
 void ChordLindenmayer::arithmetic(Chord &target, const std::string &operation, const std::string &targetString, const std::vector<std::string> &command) {
-    size_t index;
+    int index;
     if (parseIndex(index, targetString)) {
         // Apply the operation to the indexed element of the target.
         arithmetic(target.getPitchReference(index), operation, targetString, command);
@@ -311,92 +318,111 @@ void ChordLindenmayer::arithmetic(Chord &target, const std::string &operation, c
 }
 
 void ChordLindenmayer::arithmetic(Event &target, const std::string &operation, const std::string &targetString, const std::vector<std::string> &command) {
-    size_t index;
+    int index;
+    double result;
     if (parseIndex(index, targetString)) {
+#if DEBUGGING
+        System::inform("ChordLindenmayer::arithmetic: index: %3d Event: %s\n", index, target.toString().c_str());
+#endif
         // Apply the operation to the indexed element of the target.
-        arithmetic(target[index], operation, targetString, command);
+        result = arithmetic(target[index], operation, targetString, command);
         if (index == 4) {
-            equivalence(target[index], command.back());
+#if DEBUGGING
+            target[index] = result;
+            System::inform("  after arithmetic:           Event: %s\n", target.toString().c_str());
+#endif
+            equivalence(result, command.back());
         }
+        target[index] = result;
+#if DEBUGGING
+        System::inform("  after equivalence:            Event: %s\n", target.toString().c_str());
+#endif
     } else {
         std::vector<double> elements;
         if (parseVector(elements, command[2])) {
             // Apply vector-vector arithmetic to the target.
             for (int i = 0, n = target.size() - 1; i < n; ++i) {
-                arithmetic(target[i], operation, targetString, elements[i], 0, 0, 0, 0);
+                result = arithmetic(target[i], operation, targetString, elements[i], 0, 0, 0, 0);
                 if (i == 4) {
-                    equivalence(target[i], command.back());
+                    equivalence(result, command.back());
                 }
+                target[i] = result;
             }
         } else {
             // Apply vector-scalar arithmetic to the target.
             for (int i = 0, n = target.size() - 1; i < n; ++i) {
-                arithmetic(target[i], operation, targetString, command);
+                result = arithmetic(target[i], operation, targetString, command);
                 if (i == 4) {
-                    equivalence(target[i], command.back());
+                    equivalence(result, command.back());
                 }
+                target[i] = result;
             }
         }
     }
 }
 
-void ChordLindenmayer::arithmetic(double &target, const std::string &operation, const std::string &targetString, double p1, double p2, double p3, double p4, double p5) {
+double ChordLindenmayer::arithmetic(const double &target, const std::string &operation, const std::string &targetString, double p1, double p2, double p3, double p4, double p5) {
+    double result = target;
     if        (operation == "=") {
-        target = p1;
+        result = p1;
     } else if (operation == "+") {
-        target = target + p1;
+        result = target + p1;
     } else if (operation == "-") {
-        target = target - p1;
+        result = target - p1;
     } else if (operation == "*") {
-        target = target * p1;
+        result = target * p1;
     } else if (operation == "/") {
-        target = target / p1;
+        result = target / p1;
     } else if (operation == "uni") {
         std::uniform_real_distribution<> distribution(p1, p2);
-        target = distribution(twister);
+        result = distribution(twister);
     } else if (operation == "nor") {
         std::normal_distribution<> distribution(p1, p2);
-        target = distribution(twister);
+        result = distribution(twister);
     } else if (operation == "bin") {
         std::binomial_distribution<> distribution(p1, p2);
-        target = distribution(twister);
+        result = distribution(twister);
     } else if (operation == "nbi") {
         std::negative_binomial_distribution<> distribution(p1, p2);
-        target = distribution(twister);
+        result = distribution(twister);
     } else if (operation == "poi") {
         std::poisson_distribution<> distribution(p1);
-        target = distribution(twister);
+        result = distribution(twister);
     } else if (operation == "exp") {
         std::exponential_distribution<> distribution(p1);
-        target = distribution(twister);
+        result = distribution(twister);
     } else if (operation == "gam") {
         std::gamma_distribution<> distribution(p1, p2);
-        target = distribution(twister);
+        result = distribution(twister);
     } else if (operation == "wei") {
         std::weibull_distribution<> distribution(p1, p2);
-        target = distribution(twister);
+        result = distribution(twister);
     } else if (operation == "ext") {
         std::extreme_value_distribution<> distribution(p1, p2);
-        target = distribution(twister);
+        result = distribution(twister);
     } else if (operation == "log") {
         std::lognormal_distribution<> distribution(p1, p2);
-        target = distribution(twister);
+        result = distribution(twister);
      } else if (operation == "chi") {
         std::chi_squared_distribution<> distribution(p1);
-        target = distribution(twister);
+        result = distribution(twister);
     } else if (operation == "cau") {
         std::cauchy_distribution<> distribution(p1, p2);
-        target = distribution(twister);
+        result = distribution(twister);
     } else if (operation == "fis") {
         std::fisher_f_distribution<> distribution(p1, p2);
-        target = distribution(twister);
+        result = distribution(twister);
     } else if (operation == "stu") {
         std::student_t_distribution<> distribution(p1);
-        target = distribution(twister);
+        result = distribution(twister);
     }
+#if DEBUGGING
+        System::inform("ChordLindenmayer::arithmetic: %9.4f = %9.4f %s %9.4f %9.4f\n", result, target, operation.c_str(), p1, p2);
+#endif
+    return result;
 }
 
-void ChordLindenmayer::arithmetic(double &target, const std::string &operation, const std::string &targetString, const std::vector<std::string> &command) {
+double ChordLindenmayer::arithmetic(const double &target, const std::string &operation, const std::string &targetString, const std::vector<std::string> &command) {
     double p1 = real(command[2]);
     double p2 = 0;
     if (command.size() > 3) {
@@ -414,11 +440,14 @@ void ChordLindenmayer::arithmetic(double &target, const std::string &operation, 
     if (command.size() > 6) {
         p5 = real(command[6]);
     }
-    arithmetic(target, operation, targetString, p1, p2, p3, p4, p5);
+    return arithmetic(target, operation, targetString, p1, p2, p3, p4, p5);
 }
 
 void ChordLindenmayer::turtleOperation(const std::string &operation,
                                        const std::string &target, const std::vector<std::string> &command) {
+#if DEBUGGING
+        System::inform("ChordLindenmayer::turtleOperation: %s %s\n", operation.c_str(), target.c_str());
+#endif
     if        (operation == "[") {
         turtleStack.push(turtle);
     } else if (operation == "]") {
@@ -429,6 +458,9 @@ void ChordLindenmayer::turtleOperation(const std::string &operation,
 
 void ChordLindenmayer::noteOperation(const std::string &operation,
                                      const std::string &target, const std::vector<std::string> &command) {
+#if DEBUGGING
+        System::inform("ChordLindenmayer::noteOperation: %s %s\n", operation.c_str(), target.c_str());
+#endif
     if        (operation == "W") {
         score.append(turtle.note);
     } else if (operation == "F") {
@@ -443,11 +475,17 @@ void ChordLindenmayer::noteOperation(const std::string &operation,
 
 void ChordLindenmayer::noteStepOperation(const std::string &operation,
                                          const std::string &target, const std::vector<std::string> &command) {
+#if DEBUGGING
+        System::inform("ChordLindenmayer::noteStepOperation: %s %s\n", operation.c_str(), target.c_str());
+#endif
     arithmetic(turtle.step, operation, target, command);
 }
 
 void ChordLindenmayer::noteOrientationOperation(const std::string &operation,
         const std::string &target, const std::vector<std::string> &command) {
+#if DEBUGGING
+        System::inform("ChordLindenmayer::noteOrientationOperation: %s %s\n", operation.c_str(), target.c_str());
+#endif
     if        (operation == "R") {
         int dimension1;
         if (getIndex(dimension1, command[2]) == false) {
@@ -465,6 +503,9 @@ void ChordLindenmayer::noteOrientationOperation(const std::string &operation,
 
 void ChordLindenmayer::chordOperation(const std::string &operation,
                                       const std::string &target, const std::vector<std::string> &command) {
+#if DEBUGGING
+        System::inform("ChordLindenmayer::chordOperation: %s %s\n", operation.c_str(), target.c_str());
+#endif
     if        (operation == "W") {
         std::vector<double> ptv = Voicelead::chordToPTV(turtle.chord,	
                                   0,	
@@ -501,11 +542,17 @@ void ChordLindenmayer::chordOperation(const std::string &operation,
 
 void ChordLindenmayer::voicingOperation(const std::string &operation,
                                         const std::string &target, const std::vector<std::string> &command) {
+#if DEBUGGING
+        System::inform("ChordLindenmayer::voicingOperation: %s %s\n", operation.c_str(), target.c_str());
+#endif
     arithmetic(turtle.voicing, operation, target, command); 
 }
 
 void ChordLindenmayer::modalityOperation(const std::string &operation,
         const std::string &target, const std::vector<std::string> &command) {
+#if DEBUGGING
+        System::inform("ChordLindenmayer::modalityOperation: %s %s\n", operation.c_str(), target.c_str());
+#endif
     if        (operation == "T") {
         double x = real(command[2]);
         turtle.modality = turtle.modality.T(x).eOP();
@@ -527,6 +574,9 @@ void ChordLindenmayer::modalityOperation(const std::string &operation,
 
 void ChordLindenmayer::scaleOperation(const std::string &operation,
                                       const std::string &target, const std::vector<std::string> &command) {
+#if DEBUGGING
+        System::inform("ChordLindenmayer::scaleOperation: %s %s\n", operation.c_str(), target.c_str());
+#endif
     if        (operation == "=") {
         std::vector<double> scale_tones;
         if (parseVector(scale_tones, command[3])) {
@@ -565,6 +615,9 @@ void ChordLindenmayer::scaleOperation(const std::string &operation,
 
 void ChordLindenmayer::scaleDegreeOperation(const std::string &operation,
         const std::string &target, const std::vector<std::string> &command) {
+#if DEBUGGING
+        System::inform("ChordLindenmayer::scaleDegreeOperation: %s %s\n", operation.c_str(), target.c_str());
+#endif
     double temporary = turtle.scaleDegree;
     arithmetic(temporary, operation, target, command);
     turtle.scaleDegree = temporary;
@@ -572,6 +625,9 @@ void ChordLindenmayer::scaleDegreeOperation(const std::string &operation,
 
 void ChordLindenmayer::scoreOperation(const std::string &operation,
                                       const std::string &target, const std::vector<std::string> &command) {
+#if DEBUGGING
+        System::inform("ChordLindenmayer::scoreOperation: %s %s\n", operation.c_str(), target.c_str());
+#endif
     if        (operation == "0") {
         operations[turtle.note.getTime()].beginTime = turtle.note.getTime();	
     } else if (operation == "C") {
@@ -581,7 +637,7 @@ void ChordLindenmayer::scoreOperation(const std::string &operation,
     } else if (operation == "S") {
         chord(turtle.scale, turtle.note.getTime());
     } else if (operation == "seed") {
-        twister.seed(real(command[2]));
+        twister.seed(int(real(command[2])));
     }
 }
 
@@ -594,26 +650,31 @@ void ChordLindenmayer::scoreOperation(const std::string &operation,
  */
 void ChordLindenmayer::interpret(std::vector<std::string> tokens) {
     const std::string &operation = tokens[0];
-    const std::string &target = tokens[1];
-    if (target == "T") {
+    std::string target;
+    std::string switchTarget;
+    if (tokens.size() > 1) {
+        target = tokens[1];
+        switchTarget = target.substr(0, target.find('['));
+    }
+    if (switchTarget == "T") {
         turtleOperation(operation, target, tokens);
-    } else if (target == "N") {
+    } else if (switchTarget == "N") {
         noteOperation(operation, target, tokens);
-    } else if (target == "S") {
+    } else if (switchTarget == "S") {
         noteStepOperation(operation, target, tokens);
-    } else if (target == "O") {
+    } else if (switchTarget == "O") {
         noteOrientationOperation(operation, target, tokens);
-    } else if (target == "C") {
+    } else if (switchTarget == "C") {
         chordOperation(operation, target, tokens);
-    } else if (target == "M") {
+    } else if (switchTarget == "M") {
         modalityOperation(operation, target, tokens);
-    } else if (target == "V") {
+    } else if (switchTarget == "V") {
         voicingOperation(operation, target, tokens);
-    } else if (target == "Sc") {
+    } else if (switchTarget == "Sc") {
         scaleOperation(operation, target, tokens);
-    } else if (target == "Sd") {
+    } else if (switchTarget == "Sd") {
         scaleDegreeOperation(operation, target, tokens);
-    } else if (target == "P") {
+    } else if (switchTarget == "P") {
         scoreOperation(operation, target, tokens);
     }
 }
