@@ -329,13 +329,13 @@ void ChordLindenmayer::arithmetic(Event &target, const std::string &operation, c
         if (index == 4) {
 #if DEBUGGING
             target[index] = result;
-            System::inform("  after arithmetic:           Event: %s\n", target.toString().c_str());
+        System::inform("  after arithmetic:                      Event: %s\n", target.toString().c_str());
 #endif
             equivalence(result, command.back());
         }
         target[index] = result;
 #if DEBUGGING
-        System::inform("  after equivalence:            Event: %s\n", target.toString().c_str());
+        System::inform("  after equivalence:                     Event: %s\n", target.toString().c_str());
 #endif
     } else {
         std::vector<double> elements;
@@ -595,10 +595,16 @@ void ChordLindenmayer::scaleOperation(const std::string &operation,
         turtle.chord = turtle.scale.chord(degree, voices);
     } else if (operation == "M") {
         int scaleDegree = turtle.scale.degree(turtle.chord);
+#if DEBUGGING
+        System::inform("  current scale degree:           %3d\n", scaleDegree);
+#endif
         int choice = real(command[3]);
         if (scaleDegree > 0) {
             int voices = real(command[2]);
             Chord chord = turtle.scale.chord(scaleDegree, voices);
+#if DEBUGGING
+        System::inform("  chord at degree:                %s\n", chord.toString().c_str());
+#endif
             auto modulations = turtle.scale.modulations(chord, voices);
             if (modulations.size() > 0) {
                 while (choice < 0) {
@@ -608,6 +614,10 @@ void ChordLindenmayer::scaleOperation(const std::string &operation,
                     choice = choice - modulations.size();
                 }
                 turtle.scale = modulations[choice];
+#if DEBUGGING
+        System::inform("  modulated from:                 %s\n", modulations[choice].toString().c_str());
+        System::inform("  to:                             %s\n", turtle.scale.toString().c_str());
+#endif
             }                
         }
     }
@@ -618,9 +628,20 @@ void ChordLindenmayer::scaleDegreeOperation(const std::string &operation,
 #if DEBUGGING
         System::inform("ChordLindenmayer::scaleDegreeOperation: %s %s\n", operation.c_str(), target.c_str());
 #endif
-    double temporary = turtle.scaleDegree;
-    arithmetic(temporary, operation, target, command);
-    turtle.scaleDegree = temporary;
+    if (operation == "C") {
+        int voices = int(real(command[2]));
+        turtle.chord = turtle.scale.chord(turtle.scaleDegree, voices);
+#if DEBUGGING
+        System::inform("  new chord at degree %3d: %s\n", turtle.scaleDegree, turtle.chord.toString().c_str());
+#endif
+    } else {
+        double temporary = turtle.scaleDegree;
+        arithmetic(temporary, operation, target, command);
+        turtle.scaleDegree = temporary;
+#if DEBUGGING
+        System::inform("  from degree:                          %3d to %3d\n", int(temporary), turtle.scaleDegree);
+#endif
+    }
 }
 
 void ChordLindenmayer::scoreOperation(const std::string &operation,
@@ -631,10 +652,20 @@ void ChordLindenmayer::scoreOperation(const std::string &operation,
     if        (operation == "0") {
         operations[turtle.note.getTime()].beginTime = turtle.note.getTime();	
     } else if (operation == "C") {
+#if DEBUGGING
+        System::inform("  apply chord:                    %s starting at %9.4f\n", turtle.chord.toString().c_str(), turtle.note.getTime());
+#endif
         chord(turtle.chord, turtle.note.getTime());
     } else if (operation == "Cl") {
+#if DEBUGGING
+        System::inform("  apply cord with voiceleading:   %s starting at %9.4f\n", turtle.chord.toString().c_str(), turtle.note.getTime());
+#endif
         chordVoiceleading(turtle.chord, turtle.note.getTime(), true);
-    } else if (operation == "S") {
+    } else if (operation == "Sc") {
+#if DEBUGGING
+        System::inform("  apply scale:                    %s starting at %9.4f\n", turtle.scale.toString().c_str(), turtle.note.getTime());
+#endif
+        
         chord(turtle.scale, turtle.note.getTime());
     } else if (operation == "seed") {
         twister.seed(int(real(command[2])));
@@ -737,6 +768,38 @@ void ChordLindenmayer::generate(Score &collectingScore)
 {
     generate();
     collectingScore.insert(collectingScore.end(), score.begin(), score.end());
+}
+
+Chord ChordLindenmayer::getTurtleChord() const {
+    return turtle.chord;
+}
+
+Chord ChordLindenmayer::getTurtleModality() const {
+    return turtle.modality;
+}
+
+Scale ChordLindenmayer::getTurtleScale() const {
+    return turtle.scale;
+}
+
+int ChordLindenmayer::getTurtleScaleDegree() const {
+    return turtle.scaleDegree;
+}
+
+void ChordLindenmayer::setTurtleChord(const csound::Chord &chord) {
+    turtle.chord = chord;
+}
+
+void ChordLindenmayer::setTurtleModality(const csound::Chord &chord) {
+    turtle.modality = modality;
+}
+
+void ChordLindenmayer::setTurtleScale(const csound::Scale &scale) {
+    turtle.scale = scale;
+}
+
+void ChordLindenmayer::setTurtleScaleDegree(int degree) {
+    turtle.scaleDegree = degree;
 }
 
 }

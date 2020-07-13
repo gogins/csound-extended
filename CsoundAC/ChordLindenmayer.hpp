@@ -325,14 +325,8 @@ class SILENCE_PUBLIC ChordLindenmayer :
 public:
     ChordLindenmayer();
     virtual ~ChordLindenmayer();
-    virtual int getIterationCount() const;
-    virtual void setIterationCount(int count);
-    virtual double getAngle() const;
-    virtual void setAngle(double angle);
-    virtual std::string getAxiom() const;
-    virtual void setAxiom(std::string axiom);
     virtual void addRule(std::string command, std::string replacement);
-    virtual std::string getReplacement(std::string command);
+    virtual void clear();
     /**
      * Scores are generated as follows:
      * <ol>
@@ -353,7 +347,22 @@ public:
      */
     virtual void generate();
     virtual void generate(Score &score);
-    virtual void clear();
+    virtual double getAngle() const;
+    virtual std::string getAxiom() const;
+    virtual int getIterationCount() const;
+    virtual std::string getReplacement(std::string command);
+    virtual Chord getTurtleChord() const;
+    virtual Chord getTurtleModality() const;
+    virtual Scale getTurtleScale() const;
+    virtual int getTurtleScaleDegree() const;
+    virtual void initialize();
+    virtual void setAngle(double angle);
+    virtual void setAxiom(std::string axiom);
+    virtual void setIterationCount(int count);
+    virtual void setTurtleChord(const csound::Chord &chord);
+    virtual void setTurtleModality(const csound::Chord &chord);
+    virtual void setTurtleScale(const csound::Scale &scale);
+    virtual void setTurtleScaleDegree(int degree);
     Score score;
     int iterationCount;
     double angle;
@@ -365,7 +374,6 @@ public:
     clock_t beganAt;
     clock_t endedAt;
     clock_t elapsed;
-    virtual void initialize();
 protected:
     virtual double equivalence(double &value, const std::string &equivalenceClass) const;
     /**
