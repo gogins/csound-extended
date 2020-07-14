@@ -52,6 +52,9 @@ int MusicModel::generate()
     }
     traverse(getLocalCoordinates(), score);
     score.process();
+    if (duration > 0.) {
+        score.setDuration(duration);
+    }
     System::message("Generated %d events.\n", score.size());
     // Not implemented fully yet.
     //score.save(getMusicXmlfileFilepath());
