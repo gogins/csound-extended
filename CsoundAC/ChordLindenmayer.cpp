@@ -293,25 +293,40 @@ static void removeVoice(Chord &chord) {
     chord = chord.eOP();
 }
 
+static int equivalentDegree(const Scale &scale, int degree) {
+    int voices_ = scale.voices();
+    while (degree < 1) {
+        degree = degree + voices_;
+    }
+    while (degree > voices_) {
+        degree = degree - voices_;
+    }
+    return degree;
+}
+
 void ChordLindenmayer::arithmetic(Chord &target, const std::string &operation, const std::string &targetString, const std::vector<std::string> &command) {
     int index;
+    double result;
     if (parseIndex(index, targetString)) {
         // Apply the operation to the indexed element of the target.
-        arithmetic(target.getPitchReference(index), operation, targetString, command);
-        equivalence(target.getPitchReference(index), command.back());
+        result = arithmetic(target.getPitch(index), operation, targetString, command);
+        equivalence(result, command.back());
+        target.setPitch(index, result);
     } else {
         std::vector<double> elements;
         if (parseVector(elements, command[2])) {
             // Apply vector-vector arithmetic to the target.
             for (int i = 0, n = target.voices(); i < n; ++i) {
-                arithmetic(target.getPitchReference(i), operation, targetString, elements[i], 0, 0, 0, 0);
-                equivalence(target.getPitchReference(i), command.back());
+                result = arithmetic(target.getPitch(i), operation, targetString, elements[i], 0, 0, 0, 0);
+                equivalence(result, command.back());
+                target.setPitch(i, result);
             }
         } else {
             // Apply vector-scalar arithmetic to the target.
             for (int i = 0, n = target.voices(); i < n; ++i) {
-                arithmetic(target.getPitchReference(i), operation, targetString, real(command[3]), 0, 0, 0, 0);
-                equivalence(target.getPitchReference(i), command.back());
+                result = arithmetic(target.getPitch(i), operation, targetString, real(command[3]), 0, 0, 0, 0);
+                equivalence(result, command.back());
+                target.setPitch(i, result);
             }
         }
     }
@@ -583,20 +598,21 @@ void ChordLindenmayer::scaleOperation(const std::string &operation,
             turtle.scale = Scale(command[2], scale_tones);
         }
     } else if (operation == "C") {
-        int degree = real(command[2]);
+        int degree = equivalentDegree(turtle.scale, real(command[2]));
         int voices = real(command[3]);
-        // Under implicit scale degree equivalence.
-        while (degree < 1) {
-            degree = degree + turtle.scale.voices();
-        }
-        while (degree > turtle.scale.size()) {
-            degree = degree - turtle.scale.voices();
-        }
         turtle.chord = turtle.scale.chord(degree, voices);
+#if DEBUGGING
+        System::inform("  current turtle scale:           %s\n", turtle.scale.toString().c_str());
+        System::inform("  for scale degree:               %3d\n", degree);
+        System::inform("  voices:                         %3d\n", voices);
+        System::inform("  new turtle chord:               %s\n", turtle.chord.toString().c_str());
+#endif
     } else if (operation == "M") {
         int scaleDegree = turtle.scale.degree(turtle.chord);
 #if DEBUGGING
-        System::inform("  current scale degree:           %3d\n", scaleDegree);
+        System::inform("  current turtle scale:           %s\n", turtle.scale.toString().c_str());
+        System::inform("  current turtle chord:           %s\n", turtle.chord.toString().c_str());
+        System::inform("  its scale degree:               %3d\n", scaleDegree);
 #endif
         int choice = real(command[3]);
         if (scaleDegree > 0) {
@@ -615,8 +631,7 @@ void ChordLindenmayer::scaleOperation(const std::string &operation,
                 }
                 turtle.scale = modulations[choice];
 #if DEBUGGING
-        System::inform("  modulated from:                 %s\n", modulations[choice].toString().c_str());
-        System::inform("  to:                             %s\n", turtle.scale.toString().c_str());
+        System::inform("  modulated to:                   %s\n", turtle.scale.toString().c_str());
 #endif
             }                
         }
@@ -636,8 +651,8 @@ void ChordLindenmayer::scaleDegreeOperation(const std::string &operation,
 #endif
     } else {
         double temporary = turtle.scaleDegree;
-        arithmetic(temporary, operation, target, command);
-        turtle.scaleDegree = temporary;
+        double result = arithmetic(temporary, operation, target, command);
+        turtle.scaleDegree = equivalentDegree(turtle.scale, result);
 #if DEBUGGING
         System::inform("  from degree:                          %3d to %3d\n", int(temporary), turtle.scaleDegree);
 #endif
