@@ -37,6 +37,7 @@ if(BUILD_CSOUND_AC)
         CounterpointMain.cpp
         CounterpointNode.cpp
         Event.cpp
+        HarmonyIFS.cpp
         ImageToScore.cpp
         Lindenmayer.cpp
         MCRM.cpp

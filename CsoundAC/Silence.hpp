@@ -340,5 +340,6 @@
 #include "Voicelead.hpp"
 #include "VoiceleadingNode.hpp"
 #include "ChordLindenmayer.hpp"
+#include "HarmonyIFS.hpp"
 
 #endif
