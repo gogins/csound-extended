@@ -11,5 +11,5 @@ rm -rf build-wasm
 emcc --clear-cache
 bash download_and_build_libsndfile_wasm.sh
 bash build-wasm.sh
-echo "Completed fresh build of Csound for WebAssembly."
+echo "Completed clean build of Csound for WebAssembly."
 echo

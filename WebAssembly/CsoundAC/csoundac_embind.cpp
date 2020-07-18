@@ -619,6 +619,18 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         .constructor<>()
     ;
     // FINISHED
+    emscripten::class_<csound::HarmonyIFS, emscripten::base<csound::ScoreNode> >("HarmonyIFS")
+        .constructor<>()
+        .function("add_interpolation_point", &csound::HarmonyIFS::add_interpolation_point)
+        .function("generate_score_attractor", &csound::HarmonyIFS::generate_score_attractor)
+        .function("initialize", &csound::HarmonyIFS::initialize)
+        .function("initialize_hutchinson_operator", &csound::HarmonyIFS::initialize_hutchinson_operator)
+        .function("iterate", &csound::HarmonyIFS::iterate, emscripten::allow_raw_pointers())
+        .function("point_to_note", &csound::HarmonyIFS::point_to_note, emscripten::allow_raw_pointers())
+        .function("remove_duplicate_notes", &csound::HarmonyIFS::remove_duplicate_notes)
+        .function("translate_score_attractor_to_score", &csound::HarmonyIFS::translate_score_attractor_to_score)
+    ;
+    // FINISHED
     emscripten::class_<csound::KMeansMCRM, emscripten::base<csound::MCRM> >("KMeansMCRM")
         .constructor<>()
         .function("deterministic_algorithm", &csound::KMeansMCRM::deterministic_algorithm)

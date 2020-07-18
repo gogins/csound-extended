@@ -323,6 +323,7 @@
 #include "CounterpointNode.hpp"
 #include "ScoreNode.hpp"
 #include "Cell.hpp"
+#include "HarmonyIFS.hpp"
 #include "Rescale.hpp"
 #include "ScoreModel.hpp"
 #if !defined(EMSCRIPTEN)
