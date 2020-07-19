@@ -42,11 +42,11 @@
 </canvas>
 <textarea id="console" style="position:absolute;left:1vw;top:1vw;width:50vw;height:98vh;color:SkyBlue;background-color:transparent;border:none;text-align:left;font-size:8.25px;overflow:auto;cursor:none;"></textarea>
 <script>
-var title = 'Harmony IFS Test 3'
+var title = 'Harmony IFS'
 try {
     var fs = require("fs");
     var git = require('git-rev-sync');
-    var soundfile_name = sprintf("HarmonyIfsTest3-%s.wav",  git.short());
+    var soundfile_name = sprintf("HarmonyIfs-%s.wav",  git.short());
 } catch(e) {
     console.log(e);
 }
@@ -548,7 +548,7 @@ prealloc 11, 1
 prealloc 12, 1
 prealloc 13, 1
 
-giPianoteq vstinit "/home/mkg/pianoteq_linux_v630/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 1
+giPianoteq vstinit "/home/mkg/Pianoteq_6.so", 1
 
 instr PianoteqNote
 i_instrument = p1
