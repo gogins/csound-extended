@@ -339,7 +339,7 @@ HarmonyIFS.ScoreAttractor.prototype.generate = function(depth) {
     let iteration = 0;
     // This point should be within the bounds of the attractor.
     let initial_point = new HarmonyIFS.Point();
-    initial_point.k = 36;
+    initial_point.k = 60;
     initial_point.v = 60;
     initial_point.i = 1;
     // We wrote the code for column vectors, which is more common in the
