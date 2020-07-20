@@ -58,9 +58,10 @@ window.onerror = function(message, url, line) {
 var generate = function() {
     try {
         csound.message("Generating score...\n");
-        let harmony_ifs = new HarmonyIFS.ScoreAttractor(5, 60., 48., .001);
-        let chord = ChordSpace.chordForName("CM9");
-        let dominant = ChordSpace.chordForName("G9");
+        let harmony_ifs = new HarmonyIFS.ScoreAttractor(4, 60., 48., .001);
+        harmony_ifs.chord_space_group.list(true, true);
+        let chord = ChordSpace.chordForName("CM7");
+        let dominant = ChordSpace.chordForName("G7");
         console.log(chord.information)
         let chord_point = harmony_ifs.chord_space_group.fromChord(chord);
         let dominant_point = harmony_ifs.chord_space_group.fromChord(dominant);
@@ -68,7 +69,7 @@ var generate = function() {
         csound.message(sprintf("\nMajor P:    %12.4f\n", chord_point.P));
         csound.message(sprintf("\nDominant P: %12.4f\n", dominant_point.P));
         // Must contract QUITE A BIT in order to converge to these interpolation points!
-        // This is supposed to elaborate on IM9 - iim9 - V9 - IM9.
+        // This is supposed to elaborate on IM7 - iim7 - V7 - IM7.
         harmony_ifs.add_interpolation_point( 0, chord_point.P,    1,  0, .001, .001, .001);
         harmony_ifs.add_interpolation_point(10, chord_point.P,    0,  2, .001, .001, .001);
         harmony_ifs.add_interpolation_point(20, dominant_point.P, 1, -5, .001, .001, .001);
@@ -84,7 +85,8 @@ var generate = function() {
         harmony_ifs.hutchinson_operator[2][4][7] = -1;
         harmony_ifs.hutchinson_operator[2][4][4] =  0.85;
         harmony_ifs.hutchinson_operator[2][4][7] = -1;
-        let A = 45 * Math.PI / 180;
+        let A = 45. * Math.PI / 180.;
+        csound.message("A: %9.4f\n", A);
         // Add a rotation in the velocity/key plane, and the key/instrument
         // plane.
         let t = 0;

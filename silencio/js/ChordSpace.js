@@ -2242,12 +2242,13 @@ if (typeof console === 'undefined') {
             equivalenceMapper = Chord.prototype.iseOPTTI;
         }
         var equivalentChords = new Set();
-        // Enumerate all chords in [-O, O].
-        var iterator = ChordSpace.iterator(voices, -13);
+        var upperI = 2 * ChordSpace.OCTAVE + 1;
+        var lowerI = - (ChordSpace.OCTAVE + 1);
+        var iterator = ChordSpace.iterator(voices, lowerI);
         var origin = iterator.clone();
         console.info('iterator:' + iterator);
         console.info('equivalenceMapper:' + equivalenceMapper);
-        while (ChordSpace.next(iterator, origin, 26, g) === true) {
+        while (ChordSpace.next(iterator, origin, upperI, g) === true) {
             if (iterator.iseP() === true) {
                 var eP = iterator.clone();
                 if (equivalenceMapper.apply(eP)) {

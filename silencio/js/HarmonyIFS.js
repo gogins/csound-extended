@@ -342,14 +342,9 @@ HarmonyIFS.ScoreAttractor.prototype.generate = function(depth) {
     initial_point.k = 60;
     initial_point.v = 60;
     initial_point.i = 1;
-    // We wrote the code for column vectors, which is more common in the
-    // literature and easier to read, but numeric.js only works with row
-    // vectors.
-    this.transposed_hutchinson_operator = [];
     for (let i = 0; i < this.hutchinson_operator.length; i++) {
         let transformation = this.hutchinson_operator[i];
-        let transposed_transformation = numeric.transpose(transformation);
-        this.transposed_hutchinson_operator.push(transposed_transformation);
+        console.log("transformation " + i + ":\n" + numeric.prettyPrint(transformation));
     }
     this.iterate(depth, iteration, initial_point.data);
     console.info(sprintf("Generated %d points.\n", this.score.size()));
@@ -374,9 +369,10 @@ HarmonyIFS.ScoreAttractor.prototype.generate = function(depth) {
         return;
     }
     for (let i = 0; i < this.hutchinson_operator.length; i++) {
-        let transposed_transformation = this.transposed_hutchinson_operator[i];
+        let transposed_transformation = this.hutchinson_operator[i];
         // Remember, we are using row vectors.
-        let new_point = numeric.dotVM(point, transposed_transformation);
+        ///let new_point = numeric.dotMV(point, transposed_transformation);
+        let new_point = numeric.dotMV(transposed_transformation, point);
         this.iterate(depth, iteration, new_point);
     }
 };
