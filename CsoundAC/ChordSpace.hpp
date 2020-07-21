@@ -3288,6 +3288,7 @@ public:
     std::vector<Chord> voicingsForIndexes;
     std::map<Chord, int> indexesForVoicings;
     virtual void preinitialize(int N_, double range_, double g_ = 1.0) {
+        System::inform("ChordSpaceGroup.preinitialize...\n");
         opttisForIndexes.clear();
         indexesForOpttis.clear();
         voicingsForIndexes.clear();
@@ -3303,15 +3304,28 @@ public:
         countV = octavewiseRevoicings(chord, range);
     }
     virtual void initialize(int N_, double range_, double g_ = 1.0) {
+        System::inform("ChordSpaceGroup.initialize...\n");
         preinitialize(N_, range_, g_);
-        std::set<Chord> opttisForIndexes_ = fundamentalDomainByNormalize<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g);
-        for (std::set<Chord>::iterator it = opttisForIndexes_.begin(); it != opttisForIndexes_.end(); ++it) {
+        std::set<Chord> representative_opttis = fundamentalDomainByNormalize<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g);
+        System::inform("ChordSpaceGroup.initialize: representative_opttis: %6d\n", representative_opttis.size());
+        std::set<Chord> equivalent_opttis = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g);
+        System::inform("ChordSpaceGroup.initialize: equivalent_opttis:     %6d\n", equivalent_opttis.size());
+        for (auto it = representative_opttis.begin(); it != representative_opttis.end(); ++it) {
             opttisForIndexes.push_back(*it);
         }
-        for (int i = 0, n = opttisForIndexes.size(); i < n; ++i) {
-            indexesForOpttis[opttisForIndexes[i]] = i;
-            countP = countP + 1;
+        countP = opttisForIndexes.size();
+        for (auto equivalent_it = equivalent_opttis.begin(); equivalent_it != equivalent_opttis.end(); ++equivalent_it) {
+            const Chord &representative = equivalent_it->eOPTTI();
+            auto representative_it = std::find(opttisForIndexes.begin(), opttisForIndexes.end(), representative);
+            if (representative_it == opttisForIndexes.end()) {
+                System::error("ChordSpaceGroup::initialize: error: representative OPTTI missing: %s\n", representative.information().c_str());
+            } else {
+                auto index = std::distance(opttisForIndexes.begin(), representative_it);
+                indexesForOpttis[*equivalent_it] = index;
+            }
         }
+        System::inform("ChordSpaceGroup.initialize: indexesForOpttis:      %6d\n", indexesForOpttis.size());
+        System::inform("ChordSpaceGroup.initialize.\n");
     }
     virtual void list(bool listheader = true, bool listopttis = false, bool listvoicings = false) const {
         if (listheader) {
@@ -3324,10 +3338,8 @@ public:
             System::inform("ChordSpaceGroup.countV: %8d\n", countV);
         }
         if (listopttis) {
-            for (int i = 0, n = opttisForIndexes.size(); i < n; ++i) {
-                const Chord &optti = opttisForIndexes[i];
-                int index = indexesForOpttis.at(optti);
-                System::inform("index: %5d  optti: %s  index from optti: %5d  %s\n", i, optti.toString().c_str(), index, optti.name().c_str());
+            for (auto &entry : indexesForOpttis) {
+                System::inform("index: %5d  optti: %s\n", entry.second, entry.first.toString().c_str());
             }
         }
         // Doesn't currently do anything as these collections are not currently initialized.
