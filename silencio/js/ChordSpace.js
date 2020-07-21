@@ -2176,8 +2176,8 @@ if (typeof console === 'undefined') {
      * will reflect in RP.
      */
     var ChordSpaceGroup = function() {
-        this.optisForIndexes = [];
-        this.indexesForOptis = {};
+        this.opttis_for_p = new Map();
+        this.p_for_opttis = new Map();
     };
     ChordSpace.ChordSpaceGroup = ChordSpaceGroup;
 
@@ -2222,47 +2222,73 @@ if (typeof console === 'undefined') {
 
     ChordSpace.allOfEquivalenceClass = function(voices, equivalence, g) {
         g = typeof g !== 'undefined' ? g : 1;
-        var equivalenceMapper = null;
+        var is_equivalent = null;
+        var make_equivalent = null;
         if (equivalence == 'OP') {
-            equivalenceMapper = Chord.prototype.iseOP;
+            is_equivalent = Chord.prototype.iseOP;
+            make_equivalent = Chord.prototype.eOP;
         }
         if (equivalence == 'OPT') {
-            equivalenceMapper = Chord.prototype.iseOPT;
+            is_equivalent = Chord.prototype.iseOPT;
+            make_equivalent = Chord.prototype.eOPT;
         }
         if (equivalence == 'OPTT') {
-            equivalenceMapper = Chord.prototype.iseOPTT;
+            is_equivalent = Chord.prototype.iseOPTT;
+            make_equivalent = Chord.prototype.eOPTT;
         }
         if (equivalence == 'OPI') {
-            equivalenceMapper = Chord.prototype.iseOPI;
+            is_equivalent = Chord.prototype.iseOPI;
+            make_equivalent = Chord.prototype.eOPI;
         }
         if (equivalence == 'OPTI') {
-            equivalenceMapper = Chord.prototype.iseOPTI;
+            is_equivalent = Chord.prototype.iseOPTI;
+            make_equivalent = Chord.prototype.eOPTI;
         }
         if (equivalence == 'OPTTI') {
-            equivalenceMapper = Chord.prototype.iseOPTTI;
+            is_equivalent = Chord.prototype.iseOPTTI;
+            make_equivalent = Chord.prototype.eOPTTI;
         }
-        var equivalentChords = new Set();
-        var upperI = 2 * ChordSpace.OCTAVE + 1;
+        var upperI = 2 * (ChordSpace.OCTAVE + 1)    ;
         var lowerI = - (ChordSpace.OCTAVE + 1);
         var iterator = ChordSpace.iterator(voices, lowerI);
         var origin = iterator.clone();
-        console.info('iterator:' + iterator);
-        console.info('equivalenceMapper:' + equivalenceMapper);
+        // Construct two maps to correctly map back and forth between chords 
+        // in the fundamental domain and their indexes, taking singularities 
+        // into account:
+        // (1) From the index ->  the _representative_ chord in the 
+        //     fundamental domain (one-to-one).
+        var chords_for_indexes = new Array();
+        // (2) From _any_ chord in the fundamental domain -> the index of the 
+        //     corresponding _representative_ chord (many-to-one). This must 
+        //     use a _value key_.
+        var indexes_for_chords = new Map();
         while (ChordSpace.next(iterator, origin, upperI, g) === true) {
-            if (iterator.iseP() === true) {
-                var eP = iterator.clone();
-                if (equivalenceMapper.apply(eP)) {
-                    equivalentChords.add(eP);
-                }
-            }
+             //if (iterator.iseP() === true) {
+                if (is_equivalent.apply(iterator) == true) {
+                    var equivalent = iterator.clone();
+                    var representative = make_equivalent.apply(equivalent);
+                    // If the representative chord is not already in 
+                    // chords_for_indexes, add it. In either case, obtain its 
+                    // index.
+                    var finder = function(element) {
+                        if (element.eq_epsilon(representative)) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    };
+                    var index = chords_for_indexes.findIndex(finder);
+                    if (index == -1) {
+                        chords_for_indexes.push(representative);
+                        index = chords_for_indexes.length - 1;
+                    }
+                    // Map each equivalent to the index of the representative 
+                    // chord. They key must be a value not a reference.
+                    indexes_for_chords.set(equivalent.toString(), index);
+                } 
+            ///}
         }
-        var zeroBasedChords = Array.from(equivalentChords);
-        zeroBasedChords = zeroBasedChords.sort(ChordSpace.chord_compare_epsilon);
-        equivalentChords = new Set(zeroBasedChords);
-        return {
-            'array': zeroBasedChords,
-            'set': equivalentChords
-        };
+        return [chords_for_indexes, indexes_for_chords];
     };
 
     /**
@@ -2419,7 +2445,9 @@ if (typeof console === 'undefined') {
      * each voice of the chord's OP may have zero or more octaves added to it.
      * Please note, because some set classes e.g. diminished chords are
      * invariant under some T, there may be more than one PITV to get the same
-     * chord
+     * chord. Also, every P will return one chord from the representative 
+     * fundamental domain, even if there is a singularity that identifies several 
+     * chords at that point.
      */
     ChordSpaceGroup.prototype.toChord = function(P, I, T, V, A, L, D, printme) {
         try {
@@ -2478,7 +2506,9 @@ if (typeof console === 'undefined') {
 
     /**
      * Returns the indices of prime form, inversion, transposition,
-     * and voicing for a chord in the group.
+     * and voicing for a chord in the group. Any of several chords 
+     * that are identified in a singualar point of the fundamental domain will 
+     * return the same P.
      */
     ChordSpaceGroup.prototype.fromChord = function(chord, printme) {
         printme = typeof(printme) !== 'undefined' ? printme : false;
@@ -2517,7 +2547,7 @@ if (typeof console === 'undefined') {
         if (printme) {
             console.info('fromChord: optti:    ' + optti);
         }
-        var P = this.indexesForOptis[optti.toString()];
+        var P = this.indexesForOptis.get(optti.toString());
         if (typeof P === 'undefined') {
             throw "Undefined optti:" + optti;
         }
@@ -2617,9 +2647,13 @@ if (typeof console === 'undefined') {
         var voicingFromIndex;
         var indexFromVoicing;
         if (listopttis) {
-            for (index = 0; index < this.optisForIndexes.length; index++) {
+            const iterator = this.indexesForOptis.entries();
+            let result = iterator.next();
+            while (!result.done) {
+                key = result.value[0];
+                index = result.value[1];
                 opti = this.optisForIndexes[index];
-                console.info(sprintf('index: %5d  opti: %s  index from opti: %s %s\n', index, opti.toString(), opti.name(), this.indexesForOptis[opti.toString()]));
+                console.info(sprintf('index: %5d  opti: %s\n', index, opti.toString()));
                 if (listvoicings) {
                     for (voicing_index = 0; voicing_index < this.countV; voicing_index++) {
                         voicingFromIndex = ChordSpace.octavewiseRevoicing(opti, voicing_index, this.range);
@@ -2627,6 +2661,7 @@ if (typeof console === 'undefined') {
                         console.info(sprintf('  voicing index: %5d  voicing: %s  index from voicing: %5d\n', voicing_index, voicingFromIndex, indexFromVoicing));
                     }
                 }
+                result = iterator.next();
             }
         }
     };
@@ -2663,16 +2698,10 @@ if (typeof console === 'undefined') {
         this.countA = Math.pow(this.instruments.length, this.voices);
         this.countL = Math.pow(this.dynamics.length, this.voices);
         this.countD = Math.pow(this.durations.length, this.voices);
-        this.indexesForOptis = {};
         var result = ChordSpace.allOfEquivalenceClass(voices, 'OPTTI');
-        this.optisForIndexes = result.array;
-        this.indexesForOptis = new Map();
-        for (var index = 0; index < this.optisForIndexes.length; index++) {
-            var opti = this.optisForIndexes[index];
-            opti.clamp(this.g);
-            this.indexesForOptis[opti.toString()] = index;
-            this.countP = this.countP + 1;
-        }
+        this.optisForIndexes = result[0];
+        this.indexesForOptis = result[1];
+        this.countP = this.optisForIndexes.length;
         var ended = performance.now();
         var elapsed = (ended - began) / 1000.;
         console.info("ChordSpaceGroup.prototype.initialize: " + elapsed);

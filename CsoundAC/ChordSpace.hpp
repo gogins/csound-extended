@@ -3230,8 +3230,11 @@ inline SILENCE_PUBLIC const Scale &scaleForName(std::string name) {
  * operation on P, I, T, or V may be used to independently transform the
  * respective symmetry of any chord. Some of these operations will reflect
  * in RP. Please note: some equivalence classes define quotient spaces
- * with singularities, meaning that more than one chord on the surface of
- * the space may have the same equivalence.
+ * with singularities, meaning that more than one chord where the space is 
+ * glued may have the same equivalent. Hence, for each P there must be one and 
+ * only one chord in the representative fundamental domain of the group, yet 
+ * each of several chords at any singular point of the fundamental domain must
+ * have the same P.
  */
 class SILENCE_PUBLIC ChordSpaceGroup {
 public:
@@ -3397,10 +3400,9 @@ public:
      *
      * Please note: where are there singularities
      * in the quotient spaces for chords, there may be several chords that
-     * belong to the same equivalence class. In such cases, although there
-     * will aways be a mapping from each set of indices to one chord, there
-     * may be several chords that map to the same set of indices.
-     * The result is returned in a homogeneous vector.
+     * belong to the same equivalence class. In such cases, any of several 
+     * chords at a singular point of the fundamental domain will return the 
+     * same P.
      */
     Eigen::VectorXi fromChord(const Chord &chord, bool printme = false) const {
         bool isNormalOP = csound::isNormal<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), g);
@@ -3478,9 +3480,8 @@ public:
      *
      * Please note: where are there singularities
      * in the quotient spaces for chords, there may be several chords that
-     * belong to the same equivalence class. In such cases, although there
-     * will aways be a mapping from each set of indices to one chord, there
-     * may be several chords that map to the same set of indices.
+     * belong to the same equivalence class. In such cases, each P will return 
+     * just one chord from the representative fundamental domain.
      */
     std::vector<Chord> toChord(int P, int I, int T, int V, bool printme = false) const {
         P = P % countP;
