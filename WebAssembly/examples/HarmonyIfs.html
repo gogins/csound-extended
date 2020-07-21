@@ -58,7 +58,7 @@ window.onerror = function(message, url, line) {
 var generate = function() {
     try {
         csound.message("Generating score...\n");
-        let harmony_ifs = new HarmonyIFS.ScoreAttractor(4, 60., 48., .001);
+        let harmony_ifs = new HarmonyIFS.ScoreAttractor(4, 60., 48., .01);
         harmony_ifs.chord_space_group.list(true, true);
         let chord = ChordSpace.chordForName("CM7");
         let dominant = ChordSpace.chordForName("G7");
@@ -495,7 +495,7 @@ window.addEventListener("unload", function(event) {
 sr = 48000
 ksmps = 100
 nchnls = 2
-0dbfs = 800000
+0dbfs = 8000000
 
 ; Ensure the same random stream for each rendering.
 ; rand, randh, randi, rnd(x) and birnd(x) are not affected by seed.

@@ -2538,18 +2538,21 @@ inline Chord Chord::eI() const {
 
 //	EQUIVALENCE_RELATION_V
 
-//  TODO: Is this correct?
-
+// Returns whether the chord is within the representative fundamental 
+// domain of voicing equivalence. I think this identifies which simplex 
+// the voicing is in. In Tymoczko's 1-based notation:
+// x[1] + 12 - x[N] <= x[i + 1] - x[i], 1 <= i < N - 1
+// In 0-based notation:
+// x[0] + 12 - x[N-1] <= x[i + 1] - x[i], 0 <= i < N - 2
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_V>(const Chord &chord, double range, double g) {
-    double outer = chord.getPitch(0) + range - chord.getPitch(chord.voices() - 1);
-    bool isNormal = true;
-    for (size_t voice = 0; voice < chord.voices() - 1; voice++) {
-        double inner = chord.getPitch(voice + 1) - chord.getPitch(voice);
-        if (!(ge_epsilon(outer, inner))) {
-            isNormal = false;
+    double outer_interval = chord.getPitch(0) + range - chord.getPitch(chord.voices() - 1);
+    for (size_t voice = 0; voice < chord.voices() - 2; voice++) {
+        double inner_interval = chord.getPitch(voice + 1) - chord.getPitch(voice);
+        if (le_epsilon(outer_interval, inner_interval) == false) {
+            return false;
         }
     }
-    return isNormal;
+    return true;
 }
 
 inline bool Chord::iseV() const {

@@ -639,7 +639,7 @@ if (typeof console === 'undefined') {
         var highestVoice = 0;
         var highestPitch = this.voices[highestVoice];
         for (var voice = 1; voice < this.voices.length; voice++) {
-            if (this.voices[voice] > highestPitch) {
+            if (ChordSpace.gt_epsilon(this.voices[voice], highestPitch) == true) {
                 highestPitch = this.voices[voice];
                 highestVoice = voice;
             }
@@ -841,7 +841,8 @@ if (typeof console === 'undefined') {
         if (ChordSpace.le_epsilon(0, layer_) === false) {
             return false;
         }
-        if (ChordSpace.le_epsilon(layer_, range) === false) {
+        ///if (ChordSpace.le_epsilon(layer_, range) === false) {
+        if (ChordSpace.lt_epsilon(layer_, range) === false) {
             return false;
         }
         return true;
@@ -885,7 +886,8 @@ if (typeof console === 'undefined') {
     // of permutational equivalence.
     Chord.prototype.iseP = function() {
         for (var voice = 1; voice < this.size(); voice++) {
-            if (ChordSpace.le_epsilon(this.voices[voice - 1], this.voices[voice]) === false) {
+            ///if (ChordSpace.le_epsilon(this.voices[voice - 1], this.voices[voice]) === false) {
+            if (ChordSpace.gt_epsilon(this.voices[voice - 1], this.voices[voice]) === true  ) {
                 return false;
             }
         }
@@ -1050,13 +1052,15 @@ if (typeof console === 'undefined') {
         var outer = this.voices[0] + range - this.voices[this.size() - 1];
         var inner;
         var voice;
-        for (voice = 0; voice < this.size() - 2; voice++) {
+        var is_normal = true;
+        ///for (voice = 0; voice < this.size() - 2; voice++) {
+        for (voice = 0; voice < this.size() - 1; voice++) {
             inner = this.voices[voice + 1] - this.voices[voice];
             if (ChordSpace.ge_epsilon(outer, inner) === false) {
-                return false;
+                is_normal = false;
             }
         }
-        return true;
+        return is_normal;
     };
 
     // Returns the equivalent of the chord within the representative fundamental
@@ -2653,7 +2657,7 @@ if (typeof console === 'undefined') {
                 key = result.value[0];
                 index = result.value[1];
                 opti = this.optisForIndexes[index];
-                console.info(sprintf('index: %5d  opti: %s\n', index, opti.toString());
+                console.info(sprintf('index: %5d  opti: %s\n', index, opti.toString()));
                 if (listvoicings) {
                     for (voicing_index = 0; voicing_index < this.countV; voicing_index++) {
                         voicingFromIndex = ChordSpace.octavewiseRevoicing(opti, voicing_index, this.range);

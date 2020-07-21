@@ -639,7 +639,7 @@ if (typeof console === 'undefined') {
         var highestVoice = 0;
         var highestPitch = this.voices[highestVoice];
         for (var voice = 1; voice < this.voices.length; voice++) {
-            if (this.voices[voice] > highestPitch) {
+            if (ChordSpace.gt_epsilon(this.voices[voice], highestPitch) == true) {
                 highestPitch = this.voices[voice];
                 highestVoice = voice;
             }
@@ -841,7 +841,8 @@ if (typeof console === 'undefined') {
         if (ChordSpace.le_epsilon(0, layer_) === false) {
             return false;
         }
-        if (ChordSpace.le_epsilon(layer_, range) === false) {
+        ///if (ChordSpace.le_epsilon(layer_, range) === false) {
+        if (ChordSpace.lt_epsilon(layer_, range) === false) {
             return false;
         }
         return true;
@@ -885,7 +886,8 @@ if (typeof console === 'undefined') {
     // of permutational equivalence.
     Chord.prototype.iseP = function() {
         for (var voice = 1; voice < this.size(); voice++) {
-            if (ChordSpace.le_epsilon(this.voices[voice - 1], this.voices[voice]) === false) {
+            ///if (ChordSpace.le_epsilon(this.voices[voice - 1], this.voices[voice]) === false) {
+            if (ChordSpace.gt_epsilon(this.voices[voice - 1], this.voices[voice]) === true  ) {
                 return false;
             }
         }
@@ -1043,16 +1045,19 @@ if (typeof console === 'undefined') {
         return permutations_;
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of voicing equivalence.
+    // Returns whether the chord is within the representative fundamental 
+    // domain of voicing equivalence. I think this identifies which simplex 
+    // the voicing is in. In Tymoczko's 1-based notation:
+    // x[1] + 12 - x[N] <= x[i + 1] - x[i], 1 <= i < N - 1
+    // In 0-based notation:
+    // x[0] + 12 - x[N-1] <= x[i + 1] - x[i], 0 <= i < N - 2
     Chord.prototype.iseV = function(range) {
         range = typeof range !== 'undefined' ? range : ChordSpace.OCTAVE;
-        var outer = this.voices[0] + range - this.voices[this.size() - 1];
-        var inner;
-        var voice;
-        for (voice = 0; voice < this.size() - 2; voice++) {
-            inner = this.voices[voice + 1] - this.voices[voice];
-            if (ChordSpace.ge_epsilon(outer, inner) === false) {
+        var outer_interval = this.voices[0] + range - this.voices[this.size() - 1];
+        var inner_interval;
+        for (let voice = 0; voice < this.size() - 2; voice++) {
+            inner_interval = this.voices[voice + 1] - this.voices[voice];
+            if (ChordSpace.le_epsilon(outer_interval, inner_interval) === false) {
                 return false;
             }
         }
