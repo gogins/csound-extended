@@ -62,7 +62,7 @@ var generate = function() {
         harmony_ifs.chord_space_group.list(true, true);
         let chord = ChordSpace.chordForName("CM7");
         let dominant = ChordSpace.chordForName("G7");
-        console.log(chord.information)
+        console.log(chord.information())
         let chord_point = harmony_ifs.chord_space_group.fromChord(chord);
         let dominant_point = harmony_ifs.chord_space_group.fromChord(dominant);
         window.score = harmony_ifs.score;
@@ -122,7 +122,7 @@ var generate = function() {
             var event = score.data[i];
             event.time = event.time + 4;
         }
-        score.setScale(Silencio.Event.CHANNEL, 1, 5);
+        score.setScale(Silencio.Event.CHANNEL, 1, 0);
         csound.message("Plotting score...\n");
         score.draw3D(document.getElementById("canvas"));
         csound.message(sprintf("Generated %d notes.\n", harmony_ifs.score.size()));
@@ -171,7 +171,7 @@ var render = function(soundfile, post_process) {
     csound.setMetadata("license", "CC BY-NC-SA");
     csound.setMetadata("genre", "Electroacoustic");
     if (soundfile === true) {
-        csound.setOutput("HarmonyIfsTest3.wav", "wav", "float");
+        csound.setOutput("HarmonyIfsTest.wav", "wav", "float");
     } else {
         csound.setOutput("dac", "wav", "float");
     }

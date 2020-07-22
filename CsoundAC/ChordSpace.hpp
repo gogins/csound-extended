@@ -2559,6 +2559,11 @@ inline bool Chord::iseV() const {
     return isNormal<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0);
 }
 
+// Tymoczko: Consider the dominant seventh chord -- take C7, which is {0, 4, 
+// 7, 10}. Now put the thing in ascending order (0, 4, 7, 10).  Now rotate 
+// until the smallest interval is between the first and second notes (10, 0, 
+// 4, 7). I think he meant first and LAST notes.
+
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_V>(const Chord &chord, double range, double g) {
     const std::vector<Chord> permutations = chord.permutations();
     for (size_t i = 0; i < permutations.size(); i++) {
@@ -2567,7 +2572,7 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_V>(const C
             return permutation;
         }
     }
-    throw "Shouldn't come here.";
+    throw "normalize<EQUIVALENCE_RELATION_V>: no voicing equivalent found.\n";
 }
 
 inline Chord Chord::eV() const {
@@ -2665,8 +2670,8 @@ inline bool Chord::iseRPT(double range) const {
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPT>(const Chord &chord, double range, double g) {
     Chord normalRP = normalize<EQUIVALENCE_RELATION_RP>(chord, range, g);
     std::vector<Chord> voicings_ = normalRP.voicings();
-    for (size_t voice = 0; voice < normalRP.voices(); voice++) {
-        const Chord &voicing = voicings_[voice];
+    for (size_t i = 0; i < voicings_.size(); i++) {
+        const Chord &voicing = voicings_[i];
         if (isNormal<EQUIVALENCE_RELATION_V>(voicing, range, g)) {
             return normalize<EQUIVALENCE_RELATION_T>(voicing, range, g);
         }
@@ -2704,8 +2709,8 @@ inline bool Chord::iseRPTT(double range, double g) const {
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTg>(const Chord &chord, double range, double g) {
     Chord normalRP = normalize<EQUIVALENCE_RELATION_RP>(chord, range, g);
     std::vector<Chord> voicings_ = normalRP.voicings();
-    for (size_t voice = 0; voice < normalRP.voices(); voice++) {
-        const Chord &voicing = voicings_[voice];
+    for (size_t i = 0; i < voicings_.size(); i++) {
+        const Chord &voicing = voicings_[i];
         Chord normalTg = normalize<EQUIVALENCE_RELATION_Tg>(voicing, range, g);
         if (isNormal<EQUIVALENCE_RELATION_V>(normalTg, range, g) == true) {
             return normalTg;
@@ -2842,17 +2847,16 @@ inline Chord Chord::eRPTTI(double range) const {
 template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundamentalDomainByIsNormal(int voiceN, double range, double g)
 {
     std::set<Chord> fundamentalDomain;
-    int upperI = 2 * range + 1;
+    int upperI = 2 * (range + 1);
     int lowerI = - (range + 1);
     Chord origin = iterator(voiceN, lowerI);
     Chord chord = origin;
     int chords = 0;
     while (next(chord, origin, upperI, g) == true) {
         chords++;
-        Chord copy = chord;
-        bool isNormal_ = isNormal<EQUIVALENCE_RELATION>(copy, range, g);
+        bool isNormal_ = isNormal<EQUIVALENCE_RELATION>(chord, range, g);
         if (isNormal_ == true) {
-            fundamentalDomain.insert(copy);
+            fundamentalDomain.insert(chord);
         }
         if (false) {
             System::debug("By isNormal %-8s: chord: %6d  domain: %6d  range: %.2f  g: %7.2f  %s  isNormal: %d\n",
@@ -2861,7 +2865,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
                   fundamentalDomain.size(),
                   range,
                   g,
-                  copy.toString().c_str(),
+                  chord.toString().c_str(),
                   isNormal_);
         }
     }
@@ -2871,7 +2875,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
 template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundamentalDomainByNormalize(int voiceN, double range, double g)
 {
     std::set<Chord> fundamentalDomain;
-    int upperI = 2 * range + 1;
+    int upperI = 2 * (range + 1);
     int lowerI = - (range + 1);
     Chord origin = iterator(voiceN, lowerI);
     Chord chord = origin;
@@ -3558,8 +3562,8 @@ inline std::string Chord::information() const {
     Chord normalT =     csound::normalize<EQUIVALENCE_RELATION_T>(*this, OCTAVE(), 1.0);
     Chord normalt =     normalT.et();
     Chord normalI =     csound::normalize<EQUIVALENCE_RELATION_I>(*this, OCTAVE(), 1.0);
-    Chord normalV =     csound::normalize<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0);
-    Chord normalvt =    normalV.et();
+///    Chord normalV =     csound::normalize<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0);
+///    Chord normalvt =    normalV.et();
     Chord normalpcs =   epcs().eP();
     Chord normalOPT =   csound::normalize<EQUIVALENCE_RELATION_RPT>(*this, OCTAVE(), 1.0);
     Chord normalOPTg =  csound::normalize<EQUIVALENCE_RELATION_RPTg>(*this, OCTAVE(), 1.0);
@@ -3575,8 +3579,8 @@ inline std::string Chord::information() const {
                  "eT:       %s  iseT:    %d\n"
                  "          %s\n"
                  "eI:       %s  iseI:    %d\n"
-                 "eV:       %s  iseV:    %d\n"
-                 "          %s\n"
+///                 "eV:       %s  iseV:    %d\n"
+///                 "          %s\n"
                  "eOP:      %s  iseOP:   %d\n"
                  "pcs:      %s\n"
                  "eOPT:     %s  iseOPT:  %d\n"
@@ -3594,8 +3598,8 @@ inline std::string Chord::information() const {
                  normalT.toString().c_str(),     isNormal<EQUIVALENCE_RELATION_T>(*this, OCTAVE(), 1.0),
                  normalt.toString().c_str(),
                  normalI.toString().c_str(),     isNormal<EQUIVALENCE_RELATION_I>(*this, OCTAVE(), 1.0),
-                 normalV.toString().c_str(),     isNormal<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0),
-                 normalvt.toString().c_str(),
+///                 normalV.toString().c_str(),     isNormal<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0),
+///                 normalvt.toString().c_str(),
                  normalOP.toString().c_str(),    isNormal<EQUIVALENCE_RELATION_RP>(*this, OCTAVE(), 1.0),
                  normalpcs.toString().c_str(),
                  normalOPT.toString().c_str(),   isNormal<EQUIVALENCE_RELATION_RPT>(*this, OCTAVE(), 1.0),

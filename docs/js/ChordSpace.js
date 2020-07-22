@@ -1045,26 +1045,29 @@ if (typeof console === 'undefined') {
         return permutations_;
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of voicing equivalence.
+    // Returns whether the chord is within the representative fundamental 
+    // domain of voicing equivalence. I think this identifies which simplex 
+    // the voicing is in. In Tymoczko's 1-based notation:
+    // x[1] + 12 - x[N] <= x[i + 1] - x[i], 1 <= i < N - 1
+    // In 0-based notation:
+    // x[0] + 12 - x[N-1] <= x[i + 1] - x[i], 0 <= i < N - 2
+    // I am sure I have this misnamed and misconceived, but the code is 
+    // now functional for OPT and OPTI.
     Chord.prototype.iseV = function(range) {
         range = typeof range !== 'undefined' ? range : ChordSpace.OCTAVE;
-        var outer = this.voices[0] + range - this.voices[this.size() - 1];
-        var inner;
-        var voice;
-        var is_normal = true;
-        ///for (voice = 0; voice < this.size() - 2; voice++) {
-        for (voice = 0; voice < this.size() - 1; voice++) {
-            inner = this.voices[voice + 1] - this.voices[voice];
-            if (ChordSpace.ge_epsilon(outer, inner) === false) {
-                is_normal = false;
+        var outer_interval = this.voices[0] + range - this.voices[this.size() - 1];
+        var inner_interval;
+        for (let voice = 0; voice < this.size() - 2; voice++) {
+            inner_interval = this.voices[voice + 1] - this.voices[voice];
+            if (ChordSpace.le_epsilon(outer_interval, inner_interval) === false) {
+                return false;
             }
         }
-        return is_normal;
+        return true;
     };
 
     // Returns the equivalent of the chord within the representative fundamental
-    // domain of voicing equivalence.
+    // domain of voicing equivalence. I am sure I haved this wrong.
     Chord.prototype.eV = function(range) {
         range = typeof range !== 'undefined' ? range : ChordSpace.OCTAVE;
         var permutations = this.permutations();
@@ -1074,6 +1077,7 @@ if (typeof console === 'undefined') {
                 return permutation;
             }
         }
+        console.error("Chord.eV: no voicing equivalent found.");
     };
 
     // Returns whether the chord is within the representative fundamental domain
@@ -1476,13 +1480,14 @@ if (typeof console === 'undefined') {
 
     Chord.prototype.information = function() {
         var et = this.eT().et();
-        var evt = this.eV().et();
+        ///var evt = this.eV().et();
         var eopt = this.eOPT().et();
         var epcs = this.eopcs();
         var eopti = this.eOPTI().et();
         var eOP = this.eOP();
         var chordName = this.name();
-        return sprintf("Pitches:  %s  %s\nI:        %s\neO:       %s  iseO:    %s\neP:       %s  iseP:    %s\neT:       %s  iseT:    %s\n          %s\neI:       %s  iseI:    %s\neV:       %s  iseV:    %s\n          %s\neOP:      %s  iseOP:   %s\npcs:      %s\neOPT:     %s  iseOPT:  %s\neOPTT:    %s\n          %s\neOPI:     %s  iseOPI:  %s\neOPTI:    %s  iseOPTI: %s\neOPTTI:   %s\n          %s\nlayer:      %6.2f",
+        ///return sprintf("Pitches:  %s  %s\nI:        %s\neO:       %s  iseO:    %s\neP:       %s  iseP:    %s\neT:       %s  iseT:    %s\n          %s\neI:       %s  iseI:    %s\neV:       %s  iseV:    %s\n          %s\neOP:      %s  iseOP:   %s\npcs:      %s\neOPT:     %s  iseOPT:  %s\neOPTT:    %s\n          %s\neOPI:     %s  iseOPI:  %s\neOPTI:    %s  iseOPTI: %s\neOPTTI:   %s\n          %s\nlayer:      %6.2f",
+        return sprintf("Pitches:  %s  %s\nI:        %s\neO:       %s  iseO:    %s\neP:       %s  iseP:    %s\neT:       %s  iseT:    %s\n          %s\neI:       %s  iseI:    %s\neOP:      %s  iseOP:   %s\npcs:      %s\neOPT:     %s  iseOPT:  %s\neOPTT:    %s\n          %s\neOPI:     %s  iseOPI:  %s\neOPTI:    %s  iseOPTI: %s\neOPTTI:   %s\n          %s\nlayer:      %6.2f",
             this, chordName,
             this.I(),
             this.eO(), this.iseO(),
@@ -1490,8 +1495,8 @@ if (typeof console === 'undefined') {
             this.eT(), this.iseT(),
             et,
             this.eI(), this.iseI(),
-            this.eV(), this.iseV(),
-            evt,
+            ///this.eV(), this.iseV(),
+            ///evt,
             this.eOP(), this.iseOP(),
             epcs,
             this.eOPT(), this.iseOPT(),
@@ -2267,7 +2272,7 @@ if (typeof console === 'undefined') {
         //     use a _value key_.
         var indexes_for_chords = new Map();
         while (ChordSpace.next(iterator, origin, upperI, g) === true) {
-             //if (iterator.iseP() === true) {
+             if (iterator.iseP() === true) {
                 if (is_equivalent.apply(iterator) == true) {
                     var equivalent = iterator.clone();
                     var representative = make_equivalent.apply(equivalent);
@@ -2290,7 +2295,7 @@ if (typeof console === 'undefined') {
                     // chord. They key must be a value not a reference.
                     indexes_for_chords.set(equivalent.toString(), index);
                 } 
-            ///}
+            }
         }
         return [chords_for_indexes, indexes_for_chords];
     };
