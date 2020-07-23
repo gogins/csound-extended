@@ -166,40 +166,41 @@ std::map<std::string, fundamentalDomainByIsNormal_t> fundamentalDomainByIsNormal
  * ChordSpaceGroup.
  */
 static bool testNormalsAndEquivalents(std::string equivalence,
-                                      std::set<csound::Chord> &normalize_,
-                                      std::set<csound::Chord> &isNormal_,
+                                      std::set<csound::Chord> &normalized_,
+                                      std::set<csound::Chord> &is_normal_,
                                       double range,
                                       double g) {
     char buffer[0x200];
+    std::fprintf(stderr, "\nequivalence: %s  normalized: %d  is_normal: %d  range: %f  g: %f\n", equivalence.c_str(), normalized_.size(), is_normal_.size(), range, g);
     auto normalize = normalizesForEquivalenceRelations[equivalence];
     auto isEquivalent = isEquivalentsForEquivalenceRelations[equivalence];
     bool passes = true;
-    for (auto it = normalize_.begin(); it != normalize_.end(); ++it) {
-        if (isNormal_.find(*it) == isNormal_.end()) {
+    for (auto it = normalized_.begin(); it != normalized_.end(); ++it) {
+        if (is_normal_.find(*it) == is_normal_.end()) {
             passes = false;
-            std::fprintf(stderr, "testNormalsAndEquivalents: %s range %f g %f: normalize %s not in isNormal.\n",
+            std::fprintf(stderr, "testNormalsAndEquivalents: %s range %f g %f: normalized %s not in isNormal.\n",
                           equivalence.c_str(),
                           range,
                           g,
                           it->toString().c_str());
         }
     }
-    std::sprintf(buffer, "testNormalsAndEquivalents: %s range %f g %f: all normalize must be in isNormal.\n",
+    std::sprintf(buffer, "testNormalsAndEquivalents: %s range %f g %f: all normalized must be in isNormal.\n",
                  equivalence.c_str(),
                  range,
                  g);
     test(passes, buffer);
     bool passes2 = true;
     std::set<csound::Chord> elementsInIsNormalButNotInNormalize;
-    for (auto it = isNormal_.begin(); it != isNormal_.end(); ++it) {
-        if (normalize_.find(*it) == normalize_.end()) {
+    for (auto it = is_normal_.begin(); it != is_normal_.end(); ++it) {
+        if (normalized_.find(*it) == normalized_.end()) {
             elementsInIsNormalButNotInNormalize.insert(*it);
         }
     }
     for (auto it = elementsInIsNormalButNotInNormalize.begin(); it != elementsInIsNormalButNotInNormalize.end(); ++it) {
         std::fprintf(stderr, "elementsInIsNormalButNotInNormalize: %s %s.\n", equivalence.c_str(), it->toString().c_str());
         bool equivalenceFound = false;
-        for (auto jt = normalize_.begin(); jt != normalize_.end(); ++jt) {
+        for (auto jt = normalized_.begin(); jt != normalized_.end(); ++jt) {
             if (isEquivalent(*it, *jt, range, g) == true) {
                 equivalenceFound = true;
                 std::fprintf(stderr, "  Equivalent: %s\n", jt->toString().c_str());
@@ -207,7 +208,7 @@ static bool testNormalsAndEquivalents(std::string equivalence,
         }
         if (equivalenceFound == false) {
             passes2 = false;
-            std::sprintf(buffer, "testNormalsAndEquivalents: %s range %f g %f: no normalize found for isNormal: %s\n",
+            std::sprintf(buffer, "testNormalsAndEquivalents: %s range %f g %f: no normalized found for isNormal: %s\n",
                          equivalence.c_str(),
                          range,
                          g,
@@ -215,7 +216,7 @@ static bool testNormalsAndEquivalents(std::string equivalence,
             fail(buffer);
         }
     }
-    std::sprintf(buffer, "normals and equivalents: %s range %f g %f: all isNormal must have equivalent in normalize.\n",
+    std::sprintf(buffer, "normals and equivalents: %s range %f g %f: all isNormal must have equivalent in normalized.\n",
                  equivalence.c_str(),
                  range,
                  g);

@@ -29,6 +29,7 @@ if (typeof console === 'undefined') {
 }
 
 (function() {
+    
 
     // All JavaScript dependencies of ChordSpace.js:
     // var Silencio = require("Silencio");
@@ -37,6 +38,7 @@ if (typeof console === 'undefined') {
 
     ChordSpace.EPSILON = 1;
     ChordSpace.epsilonFactor = 1000;
+    ChordSpace.debug = true;
 
     while (true) {
         ChordSpace.EPSILON = ChordSpace.EPSILON / 2;
@@ -2272,7 +2274,14 @@ if (typeof console === 'undefined') {
         //     use a _value key_.
         var indexes_for_chords = new Map();
         while (ChordSpace.next(iterator, origin, upperI, g) === true) {
-             if (iterator.iseP() === true) {
+             ///if (iterator.iseP() === true) {
+            //  -13.0000000  -13.0000000  -12.0000000   -3.0000000
+            if (iterator.getPitch(0) == -13 &&
+                iterator.getPitch(1) == -13 &&
+                iterator.getPitch(2) == -12 && 
+                iterator.getPitch(3) == -3){
+                    console.log("Found it.");
+                }
                 if (is_equivalent.apply(iterator) == true) {
                     var equivalent = iterator.clone();
                     var representative = make_equivalent.apply(equivalent);
@@ -2295,7 +2304,7 @@ if (typeof console === 'undefined') {
                     // chord. They key must be a value not a reference.
                     indexes_for_chords.set(equivalent.toString(), index);
                 } 
-            }
+            ///}
         }
         return [chords_for_indexes, indexes_for_chords];
     };

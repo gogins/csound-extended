@@ -58,7 +58,7 @@ window.onerror = function(message, url, line) {
 var generate = function() {
     try {
         csound.message("Generating score...\n");
-        let harmony_ifs = new HarmonyIFS.ScoreAttractor(4, 60., 48., .01);
+        let harmony_ifs = new HarmonyIFS.ScoreAttractor(4, 60., 48., .02);
         harmony_ifs.chord_space_group.list(true, true);
         let chord = ChordSpace.chordForName("CM7");
         let dominant = ChordSpace.chordForName("G7");

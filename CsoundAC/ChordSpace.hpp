@@ -255,6 +255,8 @@ Q(c, n, m)      Contexual transposition;
                 
 */
 
+static int DEBUGGING = false;
+
 /**
  * Returns n!
  */
@@ -282,7 +284,7 @@ inline SILENCE_PUBLIC double EPSILON() {
 }
 
 inline SILENCE_PUBLIC double &epsilonFactor() {
-    static double epsilonFactor = 100000.0;
+    static double epsilonFactor = 1000.0;
     return epsilonFactor;
 }
 
@@ -2546,7 +2548,7 @@ inline Chord Chord::eI() const {
 // x[0] + 12 - x[N-1] <= x[i + 1] - x[i], 0 <= i < N - 2
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_V>(const Chord &chord, double range, double g) {
     double outer_interval = chord.getPitch(0) + range - chord.getPitch(chord.voices() - 1);
-    for (size_t voice = 0; voice < chord.voices() - 2; voice++) {
+    for (size_t voice = 0, n = chord.voices() - 2; voice < n; ++voice) {
         double inner_interval = chord.getPitch(voice + 1) - chord.getPitch(voice);
         if (le_epsilon(outer_interval, inner_interval) == false) {
             return false;
@@ -2562,14 +2564,13 @@ inline bool Chord::iseV() const {
 // Tymoczko: Consider the dominant seventh chord -- take C7, which is {0, 4, 
 // 7, 10}. Now put the thing in ascending order (0, 4, 7, 10).  Now rotate 
 // until the smallest interval is between the first and second notes (10, 0, 
-// 4, 7). I think he meant first and LAST notes.
-
+// 4, 7). [This implies octavewise revoicing so the chord is always ordered.]
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_V>(const Chord &chord, double range, double g) {
-    const std::vector<Chord> permutations = chord.permutations();
-    for (size_t i = 0; i < permutations.size(); i++) {
-        const Chord &permutation = permutations[i];
-        if (isNormal<EQUIVALENCE_RELATION_V>(permutation, range, g)) {
-            return permutation;
+    const std::vector<Chord> voicings = chord.voicings();
+    for (size_t i = 0; i < voicings.size(); i++) {
+        const Chord &voicing = voicings[i];
+        if (isNormal<EQUIVALENCE_RELATION_V>(voicing, range, g)) {
+            return voicing;
         }
     }
     throw "normalize<EQUIVALENCE_RELATION_V>: no voicing equivalent found.\n";
@@ -2849,27 +2850,35 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
     std::set<Chord> fundamentalDomain;
     int upperI = 2 * (range + 1);
     int lowerI = - (range + 1);
-    Chord origin = iterator(voiceN, lowerI);
-    Chord chord = origin;
+    Chord iterator_ = iterator(voiceN, lowerI);
+    Chord origin = iterator_;
     int chords = 0;
-    while (next(chord, origin, upperI, g) == true) {
+    while (next(iterator_, origin, upperI, g) == true) {
         chords++;
-        bool isNormal_ = isNormal<EQUIVALENCE_RELATION>(chord, range, g);
-        if (isNormal_ == true) {
-            fundamentalDomain.insert(chord);
+        bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
+        Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
+        bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
+        if (DEBUGGING && normalized_is_normal == false) {
+            std::cerr << "Inconsistent equivalence class! " << normalized.toString().c_str() << std::endl;
         }
-        if (false) {
-            System::debug("By isNormal %-8s: chord: %6d  domain: %6d  range: %.2f  g: %7.2f  %s  isNormal: %d\n",
-                  namesForEquivalenceRelations[EQUIVALENCE_RELATION],
-                  chords,
-                  fundamentalDomain.size(),
-                  range,
-                  g,
-                  chord.toString().c_str(),
-                  isNormal_);
+        if (iterator_is_normal == true) {
+            auto result = fundamentalDomain.insert(iterator_);
+            if (DEBUGGING && result.second == true) {
+                System::message("By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
+                      namesForEquivalenceRelations[EQUIVALENCE_RELATION],
+                      chords,
+                      fundamentalDomain.size(),
+                      range,
+                      g,
+                      iterator_.toString().c_str(),
+                      iterator_is_normal,
+                      normalized.toString().c_str(),
+                      normalized_is_normal);
+            }
         }
     }
     return fundamentalDomain;
+    
 }
 
 template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundamentalDomainByNormalize(int voiceN, double range, double g)
@@ -2877,24 +2886,29 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
     std::set<Chord> fundamentalDomain;
     int upperI = 2 * (range + 1);
     int lowerI = - (range + 1);
-    Chord origin = iterator(voiceN, lowerI);
-    Chord chord = origin;
+    Chord iterator_ = iterator(voiceN, lowerI);
+    Chord origin = iterator_;
     int chords = 0;
-    while (next(chord, origin, upperI, g) == true) {
+    while (next(iterator_, origin, upperI, g) == true) {
         chords++;
-        bool isNormal_ = isNormal<EQUIVALENCE_RELATION>(chord, range, g);
-        Chord normal = normalize<EQUIVALENCE_RELATION>(chord, range, g);
-        fundamentalDomain.insert(normal);
-        if (false) {
-            System::debug("By normalize %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  %s  normalized: %s  isNormal: %d\n",
+        bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
+        Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
+        bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
+        if (DEBUGGING && normalized_is_normal == false) {
+            std::cerr << "Inconsistent equivalence class! " << normalized.toString().c_str() << std::endl;
+        }
+        auto result = fundamentalDomain.insert(normalized);
+        if (DEBUGGING && result.second == true) {
+            System::message("By normalize %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
                   namesForEquivalenceRelations[EQUIVALENCE_RELATION],
                   chords,
                   fundamentalDomain.size(),
                   range,
                   g,
-                  chord.toString().c_str(),
-                  normal.toString().c_str(),
-                  isNormal_);
+                  iterator_.toString().c_str(),
+                  iterator_is_normal,
+                  normalized.toString().c_str(),
+                  normalized_is_normal);
         }
     }
     return fundamentalDomain;

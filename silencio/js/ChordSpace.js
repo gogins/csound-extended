@@ -29,6 +29,7 @@ if (typeof console === 'undefined') {
 }
 
 (function() {
+    
 
     // All JavaScript dependencies of ChordSpace.js:
     // var Silencio = require("Silencio");
@@ -37,6 +38,7 @@ if (typeof console === 'undefined') {
 
     ChordSpace.EPSILON = 1;
     ChordSpace.epsilonFactor = 1000;
+    ChordSpace.debug = true;
 
     while (true) {
         ChordSpace.EPSILON = ChordSpace.EPSILON / 2;
@@ -1031,8 +1033,6 @@ if (typeof console === 'undefined') {
 
     // Returns the permutations of the pitches in a chord. The permutations from
     // any particular permutation are always returned in the same order.
-    // FIXME: This is not thought through. It does what I said to do, but that may
-    // not be what I meant.
     Chord.prototype.permutations = function() {
         var permutation = this.clone();
         var permutations_ = [];
@@ -1051,8 +1051,6 @@ if (typeof console === 'undefined') {
     // x[1] + 12 - x[N] <= x[i + 1] - x[i], 1 <= i < N - 1
     // In 0-based notation:
     // x[0] + 12 - x[N-1] <= x[i + 1] - x[i], 0 <= i < N - 2
-    // I am sure I have this misnamed and misconceived, but the code is 
-    // now functional for OPT and OPTI.
     Chord.prototype.iseV = function(range) {
         range = typeof range !== 'undefined' ? range : ChordSpace.OCTAVE;
         var outer_interval = this.voices[0] + range - this.voices[this.size() - 1];
@@ -1067,13 +1065,13 @@ if (typeof console === 'undefined') {
     };
 
     // Returns the equivalent of the chord within the representative fundamental
-    // domain of voicing equivalence. I am sure I haved this wrong.
+    // domain of voicing equivalence.
     Chord.prototype.eV = function(range) {
         range = typeof range !== 'undefined' ? range : ChordSpace.OCTAVE;
-        var permutations = this.permutations();
+        var voicings = this.revoicings();
         for (var i = 0; i < this.size(); i++) {
-            var permutation = permutations[i];
-            if (permutation.iseV(range)) {
+            var voicing = voicings[i];
+            if (voicings.iseV(range)) {
                 return permutation;
             }
         }
@@ -2273,6 +2271,13 @@ if (typeof console === 'undefined') {
         var indexes_for_chords = new Map();
         while (ChordSpace.next(iterator, origin, upperI, g) === true) {
              ///if (iterator.iseP() === true) {
+            //  -13.0000000  -13.0000000  -12.0000000   -3.0000000
+            if (iterator.getPitch(0) == -13 &&
+                iterator.getPitch(1) == -13 &&
+                iterator.getPitch(2) == -12 && 
+                iterator.getPitch(3) == -3){
+                    console.log("Found it.");
+                }
                 if (is_equivalent.apply(iterator) == true) {
                     var equivalent = iterator.clone();
                     var representative = make_equivalent.apply(equivalent);
