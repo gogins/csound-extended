@@ -1991,7 +1991,7 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_R>(const C
     //	std::vector<double> minimum = normal.min();
     //	normal.setPitch(minimum[1], minimum[0] + range);
     //}
-    while (lt_epsilon(normal.layer(), range) == false) {
+    while (le_epsilon(normal.layer(), range) == false) {
         std::vector<double> maximum = normal.max();
         normal.setPitch(maximum[1], maximum[0] - range);
     }
@@ -2816,15 +2816,28 @@ inline Chord Chord::eRPTI(double range) const {
 //	EQUIVALENCE_RELATION_RPTgI
 
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RPTgI>(const Chord &chord, double range, double g) {
-    if (isNormal<EQUIVALENCE_RELATION_RPTg>(chord, range, g) == false) {
+    //~ if (isNormal<EQUIVALENCE_RELATION_RPTg>(chord, range, g) == false) {
+        //~ return false;
+    //~ }
+    //~ Chord inverse = chord.I();
+    //~ Chord normalRPTg = normalize<EQUIVALENCE_RELATION_RPTg>(inverse, range, g);
+    //~ if (chord <= normalRPTg) {
+        //~ return true;
+    //~ }
+    //~ return false;
+    if (!isNormal<EQUIVALENCE_RELATION_P>(chord, range, g)) {
         return false;
     }
-    Chord inverse = chord.I();
-    Chord normalRPTg = normalize<EQUIVALENCE_RELATION_RPTg>(inverse, range, g);
-    if (chord <= normalRPTg) {
-        return true;
+    if (!isNormal<EQUIVALENCE_RELATION_R>(chord, range, g)) {
+        return false;
     }
-    return false;
+    if (!isNormal<EQUIVALENCE_RELATION_Tg>(chord, range, g)) {
+        return false;
+    }
+    if (!isNormal<EQUIVALENCE_RELATION_V>(chord, range, g)) {
+        return false;
+    }
+    return true;
 }
 
 inline bool Chord::iseRPTTI(double range) const {
@@ -2832,13 +2845,21 @@ inline bool Chord::iseRPTTI(double range) const {
 }
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTgI>(const Chord &chord, double range, double g) {
+    //~ Chord normalRPTg = normalize<EQUIVALENCE_RELATION_RPTg>(chord, range, g);
+    //~ Chord inverse = normalRPTg.I();
+    //~ Chord inverseNormalRPTg = normalize<EQUIVALENCE_RELATION_RPTg>(inverse, range, g);
+    //~ if (normalRPTg <= inverseNormalRPTg) {
+        //~ return normalRPTg;
+    //~ }
+    //~ return inverseNormalRPTg;
     Chord normalRPTg = normalize<EQUIVALENCE_RELATION_RPTg>(chord, range, g);
-    Chord inverse = normalRPTg.I();
-    Chord inverseNormalRPTg = normalize<EQUIVALENCE_RELATION_RPTg>(inverse, range, g);
-    if (normalRPTg <= inverseNormalRPTg) {
+    if (isNormal<EQUIVALENCE_RELATION_I>(normalRPTg, range, g) == true) {
+        return normalRPTg;
+    } else {
+        Chord normalI = normalize<EQUIVALENCE_RELATION_RPI>(normalRPTg, range, g);
+        Chord normalRPTg = normalize<EQUIVALENCE_RELATION_RPTg>(normalI, range, g);
         return normalRPTg;
     }
-    return inverseNormalRPTg;
 }
 
 inline Chord Chord::eRPTTI(double range) const {

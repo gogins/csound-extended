@@ -58,10 +58,15 @@ window.onerror = function(message, url, line) {
 var generate = function() {
     try {
         csound.message("Generating score...\n");
-        let harmony_ifs = new HarmonyIFS.ScoreAttractor(4, 60., 48., .02);
+        trichord_optis = ChordSpace.allOfEquivalenceClass(3, "OPTI");
+        trichord_opttis = ChordSpace.allOfEquivalenceClass(3, "OPTTI");
+        tetrachord_optis = ChordSpace.allOfEquivalenceClass(4, "OPTI");
+        tetrachord_opttis = ChordSpace.allOfEquivalenceClass(4, "OPTTI");
+        console.log(tetrachord_optis.length);
+        let harmony_ifs = new HarmonyIFS.ScoreAttractor(3, 60., 48., .02);
         harmony_ifs.chord_space_group.list(true, true);
-        let chord = ChordSpace.chordForName("CM7");
-        let dominant = ChordSpace.chordForName("G7");
+        let chord = ChordSpace.chordForName("CM");
+        let dominant = ChordSpace.chordForName("GM");
         console.log(chord.information())
         let chord_point = harmony_ifs.chord_space_group.fromChord(chord);
         let dominant_point = harmony_ifs.chord_space_group.fromChord(dominant);
