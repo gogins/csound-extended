@@ -99,7 +99,7 @@ if (typeof console === 'undefined') {
      *
      * A voice is a distinct sound that is heard as having a pitch.
      *
-     * A chord is simply a set of voiceN heard at the same time, represented here
+     * A chord is simply a set of voices heard at the same time, represented here
      * as a point in a chord space having one dimension of pitch for each voice
      * in the chord.
      *
@@ -149,7 +149,7 @@ if (typeof console === 'undefined') {
      *         an octave or less.
      *
      * P       Permutational equivalence. The fundamental domain is defined by a
-     *         "wedge" of plain chord space in which the voiceN of a chord are always
+     *         "wedge" of plain chord space in which the voices of a chord are always
      *         sorted by pitch.
      *
      * T       Transpositional equivalence, e.g. {1, 2} == {7, 8}. The fundamental
@@ -167,9 +167,9 @@ if (typeof console === 'undefined') {
      *         'invert' and 'inversion'. The inversion point for any inversion lies
      *         on the unison diagonal. A fundamental domain is defined as any half of
      *         chord space that is bounded by a plane containing the inversion point.
-     *         Represented as the chord having the first interval between voiceN be
+     *         Represented as the chord having the first interval between voices be
      *         smaller than or equal to the final interval (recursing for chords of
-     *         more than 3 voiceN).
+     *         more than 3 voices).
      *
      * PI      Inversional equivalence with permutational equivalence. The
      *         'inversion flat' of unordered chord space is a hyperplane consisting
@@ -180,18 +180,18 @@ if (typeof console === 'undefined') {
      *         inversion flat and the unison diagonal.
      *
      * OP      Octave equivalence with permutational equivalence. Tymoczko's orbifold
-     *         for chords; i.e. chords with a fixed number of voiceN in a harmonic
+     *         for chords; i.e. chords with a fixed number of voices in a harmonic
      *         context. The fundamental domain is defined as a hyperprism one octave
-     *         long with as many sides as voiceN and the ends identified by octave
-     *         equivalence and one cyclical permutation of voiceN, modulo the
+     *         long with as many sides as voices and the ends identified by octave
+     *         equivalence and one cyclical permutation of voices, modulo the
      *         unordering. In OP for trichords in 12TET, the augmented triads run up
      *         the middle of the prism, the major and minor triads are in 6
      *         alternating columns around the augmented triads, the two-pitch chords
      *         form the 3 sides, and the one-pitch chords form the 3 edges that join
      *         the sides.
      *
-     * OPT     The layer of the OP prism as close as possible to the origin, modulo
-     *         the number of voiceN. Chord type. Note that CM and Cm are different
+     * OPT     The sum of the OP prism as close as possible to the origin, modulo
+     *         the number of voices. Chord type. Note that CM and Cm are different
      *         OPT. Because the OP prism is canted down from the origin, at least one
      *         pitch in each OPT chord (excepting the origin itself) is negative.
      *
@@ -199,7 +199,7 @@ if (typeof console === 'undefined') {
      *         representative fundamental consists of those chords less than or equal
      *         to their inversions modulo OP.
      *
-     * OPTI    The OPT layer modulo inversion, i.e. 1/2 of the OPT layer.
+     * OPTI    The OPT sum modulo inversion, i.e. 1/2 of the OPT sum.
      *         Set-class. Note that CM and Cm are the same OPTI.
      *
      * TRANSFORMATIONS
@@ -712,7 +712,7 @@ if (typeof console === 'undefined') {
     };
 
     // Returns the sum of the pitches in the chord.
-    Chord.prototype.layer = function() {
+    Chord.prototype.sum = function() {
         var s = 0;
         for (var voice = 0; voice < this.size(); voice++) {
             s = s + this.voices[voice];
@@ -724,7 +724,7 @@ if (typeof console === 'undefined') {
     // to the unison diagonal of its chord space.
     Chord.prototype.distanceToUnisonDiagonal = function() {
         var unison = this.origin();
-        var pitch = this.layer() / this.size();
+        var pitch = this.sum() / this.size();
         for (var voice = 0; voice < this.size(); voice++) {
             unison.voices[voice] = pitch;
         }
@@ -820,6 +820,15 @@ if (typeof console === 'undefined') {
         var min_ = this.min();
         return this.T(-min_[0]);
     };
+    
+    // Returns the standard notation for "chord type," i.e., root position
+    // pitch-classes in ascending order.
+    Chord.prototype.chord_type = function() {
+        let ev = this.eV();
+        // Rotate from "voicing equivalent" to "root position."
+        ev = ev.v(this.size() - 1);
+        return ev.et();
+    };
 
     // Returns whether the chord is within the fundamental domain of
     // transposition to 0.
@@ -839,11 +848,11 @@ if (typeof console === 'undefined') {
         if (ChordSpace.le_epsilon(max_, (min_ + range)) === false) {
             return false;
         }
-        let layer_ = this.layer();
-        if (ChordSpace.le_epsilon(0., layer_) === false) {
+        let sum_ = this.sum();
+        if (ChordSpace.le_epsilon(0., sum_) === false) {
             return false;
         }
-        if (ChordSpace.le_epsilon(layer_, range) === false) {
+        if (ChordSpace.le_epsilon(sum_, range) === false) {
             return false;
         }
         return true;
@@ -865,7 +874,7 @@ if (typeof console === 'undefined') {
         // Then, reflect voices that are outside of the fundamental domain
         // back into it, which will revoice the chord, i.e.
         // the sum of pitches will then be in [0,  range].
-        while (ChordSpace.le_epsilon(normal.layer(), range) === false) {
+        while (ChordSpace.le_epsilon(normal.sum(), range) === false) {
             let max_ = normal.max();
             let maximumPitch = max_[0];
             let maximumVoice = max_[1];
@@ -905,8 +914,8 @@ if (typeof console === 'undefined') {
     // Returns whether the chord is within the representative fundamental domain
     // of transpositional equivalence.
     Chord.prototype.iseT = function() {
-        let layer_ = this.layer();
-        if (ChordSpace.eq_epsilon(layer_, 0) === true) {
+        let sum_ = this.sum();
+        if (ChordSpace.eq_epsilon(sum_, 0) === true) {
             return true;
         }
         return false;
@@ -915,64 +924,64 @@ if (typeof console === 'undefined') {
     // Returns the equivalent of the chord within the representative fundamental
     // domain of transpositonal equivalence.
     Chord.prototype.eT = function() {
-        var layer_ = this.layer();
-        var transposition = layer_ / this.size();
+        var sum_ = this.sum();
+        var transposition = sum_ / this.size();
         return this.T(-transposition);
     };
 
     // Returns the equivalent of the chord within the representative fundamental
     // domain of transpositonal equivalence and the equal temperament generated
-    // by g. I.e., returns the chord transposed such that its layer is 0 or, under
-    // transposition, the positive integral layer closest to 0. NOTE: Does NOT
+    // by g. I.e., returns the chord transposed such that its sum is the least 
+    // that divides evenly by g. NOTE: Does NOT
     // return the result under any other equivalence class.
     Chord.prototype.eTT = function(g) {
         g = typeof g !== 'undefined' ? g : 1;
-        let normal = this.eT();
-        let n_over_g = Math.ceil(normal.voices[0] / g);
-        let transposition = (n_over_g * g) - this.min()[0];
-        let result = normal.T(transposition);
+        let this_sum = this.sum();
+        let et = this.eT();
+        let et_sum = et.sum();
+        let corrective_transposition = (this_sum - et_sum) / (this.size() * g);
+        let result = et.T(corrective_transposition);
         return result;
     };
 
     // Returns whether the chord is within the representative fundamental domain
     // of translational equivalence and the equal temperament generated by g.
     Chord.prototype.iseTT = function(g) {
-        g = typeof g !== 'undefined' ? g : 1;
-        let ett = this.eTT(g);
-        if (this.eq_epsilon(ett) === true) {
-            return true;
+        //~ g = typeof g !== 'undefined' ? g : 1;
+        //~ let ett = this.eTT(g);
+        //~ if (this.eq_epsilon(ett) === true) {
+        //~     return true;
+        //~ }
+        //~ return false;
+        let iterator = this.clone();
+        let this_sum = this.sum();
+        let least_sum;
+        while (true) {
+            least_sum = iterator.sum();
+            iterator = iterator.T(-1);
+            if (ChordSpace.lt_epsilon(iterator.sum(), 0.) == true) {
+                break;
+            }
         }
-        return false;
+        if (ChordSpace.eq_epsilon(this_sum, least_sum) == false) {
+            return false;
+        }        
+        return true;
     };
 
     // Returns whether the chord is within the representative fundamental domain
     // of inversional equivalence.
     Chord.prototype.iseI = function() {
-        //~ let lowerVoice = 1;
-        //~ var upperVoice = this.size();
-        //~ while (lowerVoice < upperVoice) {
-            //~ let lowerInterval = this.voices[lowerVoice] - this.voices[lowerVoice - 1];
-            //~ let upperInterval = this.voices[upperVoice] - this.voices[upperVoice - 1];
-            //~ if (ChordSpace.lt_epsilon(lowerInterval, upperInterval)) {
-                //~ return true;
-            //~ }
-            //~ if (ChordSpace.gt_epsilon(lowerInterval, upperInterval)) {
-                //~ return false;
-            //~ }
-            //~ lowerVoice = lowerVoice + 1;
-            //~ upperVoice = upperVoice - 1;
-        //~ }
-        //~ return true;
-        let lowerVoice = 1;
-        let upperVoice = this.size() - 1;
-        while (lowerVoice < upperVoice) {
-            let lowerInterval = this.voices[lowerVoice] - this.voices[lowerVoice - 1];
-            let upperInterval = this.voices[upperVoice] - this.voices[upperVoice - 1];
-            if (ChordSpace.le_epsilon(lowerInterval, upperInterval) === false) {
+        let lower_voice = 0;
+        let upper_voice = this.size() - 2;
+        while (lower_voice < upper_voice) {
+            let lower_interval = this.voices[lower_voice + 1] - this.voices[lower_voice];
+            let upper_interval = this.voices[upper_voice + 1] - this.voices[upper_voice];
+            if (ChordSpace.le_epsilon(lower_interval, upper_interval) === false) {
                 return false;
             }
-            lowerVoice = lowerVoice + 1;
-            upperVoice = upperVoice - 1;
+            lower_voice = lower_voice + 1;
+            upper_voice = upper_voice - 1;
         }
         return true;
     };
@@ -1071,7 +1080,7 @@ if (typeof console === 'undefined') {
         }
         return true;
     };
-
+    
     // Returns the equivalent of the chord within the representative fundamental
     // domain of voicing equivalence.
     Chord.prototype.eV = function(range) {
@@ -1253,27 +1262,10 @@ if (typeof console === 'undefined') {
 
     // Returns whether the chord is within the representative fundamental domain
     // of range, permutational, transpositional, and inversional equivalence.
-    Chord.prototype.iseRPTI = function(range) {
-        //~ if (this.iseP() === false) {
-            //~ return false;
-        //~ }
-        //~ if (this.iseR(range) === false) {
-            //~ return false;
-        //~ }
-        //~ if (this.iseT() === false) {
-            //~ return false;
-        //~ }
-        //~ if (this.iseV(range) === false) {
-            //~ return false;
-        //~ }
-        //~ if (this.iseI() === false) {
-            //~ return false;
-        //~ }
-        //~ return true;
+    
+    // If I can get this to work I can fix everything else.
         
-        // Spelling out the entire predicate. If I can get this to work
-        // I can fix everything else.
-        
+    Chord.prototype.iseRPTI = function(range) {      
         range = typeof range !== 'undefined' ? range : ChordSpace.OCTAVE;
         if (this.iseP() === false) {
             return false;
@@ -1281,85 +1273,44 @@ if (typeof console === 'undefined') {
         if (this.iseR(range) === false) {
             return false;
         }
-        let this_layer = this.layer();
-        let lowest_layer = this.layer();
-        if (ChordSpace.eq_epsilon(lowest_layer, 0) === false) {
-            for (let t = 0; t < range; t++) {
-                let layer = this.T(t).eRP(range).layer();
-                if (ChordSpace.lt_epsilon(layer, lowest_layer) === true) {
-                    lowest_layer = layer;
-                }
-            }
-            if (ChordSpace.eq_epsilon(this_layer, lowest_layer) === false) {
-                return false;
-            }
-        }
-        // There will be 3 OPT trichords on the lowest layer, and more chords with more voices.
-        // Iterate all transpositions of this chord in OP, identify the ones on the lowest 
-        // layer, and test each of those for voicing equivalence.
-        let eopt;
-        let voicing_equivalent = false;
-        for (let t = 0; t < range; t++) {
-            eopt = this.T(t).eRP(range);
-            let transposed_layer = eopt.layer();
-            if (ChordSpace.eq_epsilon(this_layer, transposed_layer) === true) {
-                let outer_interval = eopt.voices[0] + range - eopt.voices[this.size() - 1];
-                let inner_voicing_equivalent = true;
-                // A special case: this has to be the origin at layer 0.
-                if (ChordSpace.eq_epsilon(outer_interval, range) == true) {
-                    voicing_equivalent = true;
-                    break;
-                }
-                for (let voice = 0; voice < eopt.size() - 2; voice++) {
-                    let inner_interval = eopt.voices[voice + 1] - eopt.voices[voice];
-                    if (ChordSpace.le_epsilon(outer_interval, inner_interval) === false) {
-                        inner_voicing_equivalent = false;
-                        break;
-                    }
-                }
-                if (inner_voicing_equivalent === true) {
-                    voicing_equivalent = true;
-                    break;
-                }
-            }
-        }
-        if (voicing_equivalent === false) {
+        if (this.iseV() === false) {
             return false;
         }
-        let lowerVoice = 1;
-        let upperVoice = this.size() - 1;
-        while (lowerVoice < upperVoice) {
-            let lowerInterval = eopt.voices[lowerVoice] - eopt.voices[lowerVoice - 1];
-            let upperInterval = eopt.voices[upperVoice] - eopt.voices[upperVoice - 1];
-            if (ChordSpace.le_epsilon(lowerInterval, upperInterval) === false) {
-                return false;
-            }
-            lowerVoice = lowerVoice + 1;
-            upperVoice = upperVoice - 1;
+        //~ let this_sum = this.sum();
+        //~ let iterator = this.clone();
+        //~ let ett;
+        //~ let lowest_sum;
+        //~ while (true) {
+            //~ lowest_sum = iterator.sum();
+            //~ ett = iterator.clone();
+            //~ iterator = iterator.T(-1);
+            //~ if (ChordSpace.lt_epsilon(iterator.sum(), 0.) == true) {
+                //~ break;
+            //~ }
+        //~ }
+        //~ if (ChordSpace.eq_epsilon(this_sum, lowest_sum) == false) {
+            //~ return false;
+        //~ }
+        if (this.iseTT(range) === false) {
+            return false;
+        }
+        if (this.iseI() === false) {
+            return false;
         }
         return true;
     };
 
     Chord.prototype.iseRPTTI = function(range) {
-        //~ if (this.iseRPTT(range) === false) {
-            //~ return false;
-        //~ }
-        //~ var inverse = this.I();
-        //~ var normalRPTT = inverse.eRPTT(range);
-        //~ if (this.le_epsilon(normalRPTT) === true) {
-            //~ return true;
-        //~ }
-        //~ return false;
         if (this.iseP() === false) {
             return false;
         }
         if (this.iseR(range) === false) {
             return false;
         }
-        if (this.iseTT() === false) {
+        if (this.iseV(range) === false) {
             return false;
         }
-        if (this.iseV(range) === false) {
+        if (this.iseTT() === false) {
             return false;
         }
         if (this.iseI() === false) {
@@ -1593,8 +1544,8 @@ if (typeof console === 'undefined') {
         var eopti = this.eOPTI().et();
         var eOP = this.eOP();
         var chordName = this.name();
-        ///return sprintf("Pitches:  %s  %s\nI:        %s\neO:       %s  iseO:    %s\neP:       %s  iseP:    %s\neT:       %s  iseT:    %s\n          %s\neI:       %s  iseI:    %s\neV:       %s  iseV:    %s\n          %s\neOP:      %s  iseOP:   %s\npcs:      %s\neOPT:     %s  iseOPT:  %s\neOPTT:    %s\n          %s\neOPI:     %s  iseOPI:  %s\neOPTI:    %s  iseOPTI: %s\neOPTTI:   %s\n          %s\nlayer:      %6.2f",
-        return sprintf("Pitches:  %s  %s\nI:        %s\neO:       %s  iseO:    %s\neP:       %s  iseP:    %s\neT:       %s  iseT:    %s\n          %s\neI:       %s  iseI:    %s\neOP:      %s  iseOP:   %s\npcs:      %s\neOPT:     %s  iseOPT:  %s\neOPTT:    %s\n          %s\neOPI:     %s  iseOPI:  %s\neOPTI:    %s  iseOPTI: %s\neOPTTI:   %s\n          %s\nlayer:      %6.2f",
+        ///return sprintf("Pitches:  %s  %s\nI:        %s\neO:       %s  iseO:    %s\neP:       %s  iseP:    %s\neT:       %s  iseT:    %s\n          %s\neI:       %s  iseI:    %s\neV:       %s  iseV:    %s\n          %s\neOP:      %s  iseOP:   %s\npcs:      %s\neOPT:     %s  iseOPT:  %s\neOPTT:    %s\n          %s\neOPI:     %s  iseOPI:  %s\neOPTI:    %s  iseOPTI: %s\neOPTTI:   %s\n          %s\nsum:      %6.2f",
+        return sprintf("Pitches:  %s  %s\nI:        %s\neO:       %s  iseO:    %s\neP:       %s  iseP:    %s\neT:       %s  iseT:    %s\n          %s\neI:       %s  iseI:    %s\neOP:      %s  iseOP:   %s\npcs:      %s\neOPT:     %s  iseOPT:  %s\neOPTT:    %s\n          %s\neOPI:     %s  iseOPI:  %s\neOPTI:    %s  iseOPTI: %s\neOPTTI:   %s\n          %s\nsum:      %6.2f",
             this, chordName,
             this.I(),
             this.eO(), this.iseO(),
@@ -1613,7 +1564,7 @@ if (typeof console === 'undefined') {
             this.eOPTI(), this.iseOPTI(),
             this.eOPTTI(),
             eopti,
-            this.layer());
+            this.sum());
     };
 
     // Move 1 voice of the chord.
@@ -2381,7 +2332,7 @@ if (typeof console === 'undefined') {
         let indexes_for_representatives = new Map();
         document.write("<pre>");
         while (ChordSpace.next(iterator, origin, upperI, g) === true) {
-            //console.log(sprintf("iterator: %s  epcs: %s layer: %f\n", iterator.toString(), iterator.epcs().eP().toString(), iterator.layer()));
+            //console.log(sprintf("iterator: %s  epcs: %s sum: %f\n", iterator.toString(), iterator.epcs().eP().toString(), iterator.sum()));
             let representative = make_representative.apply(iterator.clone());
             let representative_key = representative.toString();
             if (unique_representatives.has(representative_key) === false) {
@@ -2391,7 +2342,7 @@ if (typeof console === 'undefined') {
             }
             if (is_equivalent.apply(iterator) === true) {
                 let equivalent = iterator.clone();
-                document.write(sprintf("%s: %4d %s layer: %9.4f epcs: %s\n", equivalence, unique_equivalents.size + 1, equivalent.toString(), equivalent.layer(), equivalent.epcs().et().eP().toString()));
+                document.write(sprintf("%s: %4d %s sum: %9.4f chord type: %s\n", equivalence, unique_equivalents.size + 1, equivalent.toString(), equivalent.sum(), equivalent.chord_type().toString()));
                 let equivalent_key = equivalent.toString();
                 if (unique_equivalents.has(equivalent_key) === false) {
                     unique_equivalents.set(equivalent_key, equivalent);

@@ -21,14 +21,45 @@
   function wryte(source) {
     document.write('<h3>Source</h3>');
     document.write('<pre>'+ source + '</pre>');
+    console.log("SOURCE:");
+    console.log(source);
     var result = eval(source);
     document.write('<h3>Result</h3>');
     document.write('<pre>' + result + '</pre>');
+    console.log("RESULT:");
+    console.log(result);
   }
   function test(title, source) {
     document.write('<h2>' + title + '</h2>');
     wryte(source);
   }
+  
+let v1 = new ChordSpace.Chord([0, 3, 7]);
+v1.iseV()
+let v2 = new ChordSpace.Chord([0, 4, 9]);
+v2.iseV();
+let v3 = new ChordSpace.Chord([0, 5, 8]);
+v3.iseV();
+let test_chord;
+let test_is_opti;
+test_chord = new ChordSpace.Chord([0, 0, 0]);
+is_opti = test_chord.iseOPTI();
+// Should not pass.
+test_chord = new ChordSpace.Chord([-3, -2, 8]);
+is_opti = test_chord.iseOPTI();
+let opti_3 = ChordSpace.allOfEquivalenceClass(3, 'OPTI');
+let opti_4 = ChordSpace.allOfEquivalenceClass(4, 'OPTI');
+console.log("EOP OF MINOR TRIADS")
+mt = new ChordSpace.Chord([0, 3, 7]);
+for (i = 0; i < 12; i++) {
+    let triad = mt.T(i);
+    let triad_eop = triad.eOP();
+    let triad_eop_ett = triad_eop.eTT();
+    console.log(sprintf("minor triad:    %s type: %s iseV: %s sum: %s", triad.toString(), triad.chord_type().toString(), triad.iseV(), triad.sum()));
+    console.log(sprintf("    eop:        %s type: %s iseV: %s sum: %s", triad_eop.toString(), triad_eop.chord_type().toString(), triad_eop.iseV(), triad_eop.sum()));
+    console.log(sprintf("    ett of eop: %s type: %s iseV: %s sum: %s", triad_eop_ett.toString(), triad_eop_ett.chord_type().toString(), triad_eop_ett.iseV(), triad_eop_ett.sum()));
+}
+  
 test('factorial', 'ChordSpace.factorial(8)');
 test('EPSILON', 'ChordSpace.EPSILON');
 test('eq_epsilon', 'ChordSpace.eq_epsilon(1,1.00000000000001)');
@@ -74,7 +105,7 @@ b.setPitch(0, 5);
 a.setPitch(3, 7);
 test('Euclidean distance', 'ChordSpace.euclidean(a, b)');
 test('Chord.distanceToOrigin', 'chord.distanceToOrigin()');
-test('Chord.layer', 'chord.layer()');
+test('Chord.sum', 'chord.sum()');
 test('Chord.distanceToUnisonDiagonal', 'chord.distanceToUnisonDiagonal()');
 trichord = new ChordSpace.Chord();
 trichord.resize(3);
@@ -87,6 +118,10 @@ test('ChordSpace.modulo',  'ChordSpace.modulo(  7,  3)');
 wryte('ChordSpace.modulo(-7,  3)');
 wryte('ChordSpace.modulo( 7, -3)');
 wryte('ChordSpace.modulo(-7, -3)');
+wryte('ChordSpace.modulo(-7, 12)');
+wryte('ChordSpace.modulo( 7+12, 12)');
+wryte('ChordSpace.modulo(-7, 12)');
+wryte('ChordSpace.modulo(-7-12, 12)');
 test('ChordSpace.epc',  'ChordSpace.epc(7)');
 wryte('ChordSpace.epc(12+7)');
 test('Chord.isepcs',  'chord.isepcs()');
@@ -219,10 +254,7 @@ ChordSpace.insert(score, c2, 2, 2);
 ChordSpace.insert(score, c1, 2, 2);
 test('Score.slice', 'score.slice(2, 3)');
 test('ChordSpace.gather',  'ChordSpace.gather(score, 2, 3)');
-let origin = new ChordSpace.Chord([0, 0, 0]);
-let is_opti = origin.iseOPTI()
-let opti_3 = ChordSpace.allOfEquivalenceClass(3, 'OPTI');
-let opti_4 = ChordSpace.allOfEquivalenceClass(4, 'OPTI');
+
 </script>
 </body>
 </html>

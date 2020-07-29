@@ -28,10 +28,13 @@ read -r -d '' json_format << EOM
   },
   "webkit": {
     "plugin": true
+  },
+  "chromium-args": {
+    "--device-scale-factor": 4
   }
 }
 EOM
 printf -v json_text "$json_format" $1 $2 $2
 echo "$json_text" | tee package.json
 # Change this if necessary to your nw pathname, and omit or modify the ALSA flags.
-~/nwjs/nw --context-mixed --experimental-modules --alsa-input-device='plughw:1,0' --alsa-output-device='plughw:1,0' --device-scale-factor=10 $3
+~/nwjs/nw --context-mixed --experimental-modules --alsa-input-device='plughw:1,0' --alsa-output-device='plughw:1,0' --device-scale-factor=4 $3
