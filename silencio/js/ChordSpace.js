@@ -111,8 +111,8 @@ if (typeof console === 'undefined') {
      * An equivalence class identifies elements of a set. Operations that send one
      * equivalent point to another induce quotient spaces or orbifolds, where the
      * equivalence operation identifies points on one face of the orbifold with
-     * points on an opposing face. The fundamental domain of the equivalence class
-     * is the space "within" the orbifold.
+     * points on an opposing face. The the space "within" the orbifold is a 
+     * fundamental domain of the equivalence class.
      *
      * Plain chord space has no equivalence classes. Ordered chords are represented
      * as vectors in parentheses (p1, ..., pN). Unordered chords are represented as
@@ -156,6 +156,10 @@ if (typeof console === 'undefined') {
      *         domain is defined as a plane in chord space at right angles to the
      *         diagonal of unison chords. Represented by the chord always having a
      *         sum of pitches equal to 0.
+     *
+     * TT`     A varient of T that preserves equal temperament in chords. The sum 
+     *         of the pitches in a chord is the least possible for an equally 
+     *         tempered chord.
      *
      * I       Inversional equivalence. Care is needed to distinguish the
      *         mathematician's sense of 'invert', which means 'pitch-space inversion'
@@ -269,7 +273,12 @@ if (typeof console === 'undefined') {
             return n * ChordSpace.factorial(n - 1);
         }
     };
-
+    
+    /**
+     * Returns whether a is equal to b within acceptable bounds of numerical 
+     * error in the floating-point computations. Used to construct all other 
+     * numerical comparisons.
+     */ 
     ChordSpace.eq_epsilon = function(a, b, factor) {
         factor = typeof factor !== 'undefined' ? factor : ChordSpace.epsilonFactor;
         if (Math.abs(a - b) < (ChordSpace.EPSILON * factor)) {
@@ -336,28 +345,38 @@ if (typeof console === 'undefined') {
         return 0;
     };
 
-    // The size of the octave, defined to be consistent with
-    // 12 tone equal temperament and MIDI.
+    /** 
+     * The size of the octave, defined to be consistent with 12 tone equal 
+     * temperament and MIDI.
+     */
     ChordSpace.OCTAVE = 12;
 
-    // Middle C.
+    /**
+     * Middle C, defined to be consistent with MIDI.
+     */
     ChordSpace.MIDDLE_C = 60;
 
-    // Returns the pitch transposed by semitones, which may be any scalar.
-    // NOTE: Does NOT return the result under any equivalence class.
+    /**
+     * Returns the pitch transposed by semitones, which may be any scalar.
+     * NOTE: Does NOT return the result under any equivalence class.
+     */
     ChordSpace.T = function(pitch, semitones) {
         return pitch + semitones;
     };
 
-    // Returns the pitch reflected in the center, which may be any pitch.
-    // NOTE: Does NOT return the result under any equivalence class.
+    /**
+     * Returns the pitch reflected in the center, which may be any pitch.
+     * NOTE: Does NOT return the result under any equivalence class.
+     */
     ChordSpace.I = function(pitch, center) {
         center = typeof center !== 'undefined' ? center : 0;
         return center - pitch;
     };
 
-    // Returns the Euclidean distance between chords a and b,
-    // which must have the same number of voiceN.
+    /**
+     * Returns the Euclidean distance between chords a and b,
+     * which must have the same number of voices.
+     */
     ChordSpace.euclidean = function(a, b) {
         var sumOfSquaredDifferences = 0;
         for (var voice = 0; voice < a.voices.length; voice++) {
@@ -366,9 +385,11 @@ if (typeof console === 'undefined') {
         return Math.sqrt(sumOfSquaredDifferences);
     };
 
-    // A chord is one point in a space with one dimension per voice.
-    // Pitches are represented as semitones with 0 at the origin
-    // and middle C as 60.
+    /**
+     * A chord is one point in a space with one dimension per voice.
+     * Pitches are represented as semitones with 0 at the origin
+     * and middle C as 60.
+     */
     var Chord = function(array_) {
         this.voices = [];
         this.duration = [];
@@ -380,14 +401,19 @@ if (typeof console === 'undefined') {
         }
     };
     ChordSpace.Chord = Chord;
-
+    
+    /**
+     * Returns the number of voices in the chord.
+     */
     Chord.prototype.size = function() {
         return this.voices.length;
     };
 
-    // Resizes a chord to the specified number of voiceN.
-    // Existing voiceN are not changed. Extra voiceN are removed.
-    // New voiceN are initialized to 0.
+    /**
+     * Resizes a chord to the specified number of voices.
+     * Existing voices are not changed. Extra voices are removed.
+     * New voices are initialized to 0.
+     */
     Chord.prototype.resize = function(voiceN) {
         var original_length = this.voices.length;
         this.voices.length = voiceN;
@@ -404,8 +430,10 @@ if (typeof console === 'undefined') {
         }
     };
 
-    // Resizes the chord to the length of the array, and sets
-    // the pitches from the values of the array.
+    /**
+     * Resizes the chord to the length of the array, and sets
+     * the pitches from the values of the array.
+     */
     Chord.prototype.set = function(array) {
         this.resize(array.length);
         for (var i = 0; i < this.size(); i++) {
@@ -496,8 +524,10 @@ if (typeof console === 'undefined') {
         return n;
     };
 
-    // Returns a string representation of the chord.
-    // Quadratic complexity, but short enough not to matter.
+    /**
+     * Returns a string representation of the chord.
+     * Quadratic complexity, but short enough not to matter.
+     */
     Chord.prototype.toString = function() {
         var buffer = '[';
         for (var voice = 0; voice < this.voices.length; voice++) {
@@ -507,7 +537,9 @@ if (typeof console === 'undefined') {
         return buffer;
     };
 
-    // Returns a musician-friendly string representation of the chord.
+    /**
+     * Returns a musician-friendly string representation of the chord.
+     */
     Chord.prototype.toName= function() {
         let buffer = ''
         for (var voice = 0; voice < this.voices.length; voice++) {
@@ -519,7 +551,9 @@ if (typeof console === 'undefined') {
         return buffer;
     };
 
-    // Implements value semantics for ==, for the pitches in this only.
+    /**
+     * Implements value semantics for ==, for the pitches in this only.
+     */
     Chord.prototype.eq_epsilon = function(other) {
         if (this.voices.length !== other.voices.length) {
             return false;
@@ -571,7 +605,9 @@ if (typeof console === 'undefined') {
         return this.lt_epsilon(other);
     };
 
-    // Returns whether or not the chord contains the pitch.
+    /**
+     * Returns whether or not the chord contains the pitch.
+     */
     Chord.prototype.contains = function(pitch) {
         for (var voice = 0; voice < this.voices.length; voice++) {
             if (this.voices[voice] === pitch) {
@@ -591,7 +627,9 @@ if (typeof console === 'undefined') {
         return 0;
     };
 
-    // This hash function is used e.g. to give chords value semantics for sets.
+    /**
+     * This hash function is used e.g. to give chords value semantics for sets.
+     */
     Chord.prototype.hash = function() {
         var buffer = '';
         for (var voice = 0; voice < this.voices.length; voice++) {
@@ -605,8 +643,10 @@ if (typeof console === 'undefined') {
         return buffer;
     };
 
-    // Returns the lowest pitch in the chord,
-    // and also its voice index.
+    /**
+     * Returns the lowest pitch in the chord,
+     * and also its voice index.
+     */
     Chord.prototype.min = function() {
         let lowestVoice = 0;
         let lowestPitch = this.voices[lowestVoice];
@@ -619,7 +659,9 @@ if (typeof console === 'undefined') {
         return [lowestPitch, lowestVoice];
     };
 
-    // Returns the minimum interval in the chord.
+    /**
+     * Returns the minimum interval in the chord.
+     */
     Chord.prototype.minimumInterval = function() {
         var minimumInterval_ = Math.abs(this.voices[1] - this.voices[2]);
         for (var v1 = 1; v1 < this.voices.length; v1++) {
@@ -635,8 +677,10 @@ if (typeof console === 'undefined') {
         return minimumInterval_;
     };
 
-    // Returns the highest pitch in the chord,
-    // and also its voice index.
+    /**
+     * Returns the highest pitch in the chord,
+     * and also its voice index.
+     */
     Chord.prototype.max = function() {
         var highestVoice = 0;
         var highestPitch = this.voices[highestVoice];
@@ -649,7 +693,9 @@ if (typeof console === 'undefined') {
         return [highestPitch, highestVoice];
     };
 
-    // Returns the maximum interval in the chord.
+    /**
+     * Returns the maximum interval in the chord.
+     */
     Chord.prototype.maximumInterval = function() {
         var maximumInterval_ = Math.abs(this.voices[1] - this.voices[2]);
         for (var v1 = 0; v1 < this.voices.length; v1++) {
@@ -665,7 +711,9 @@ if (typeof console === 'undefined') {
         return maximumInterval_;
     };
 
-    // Returns a value copy of the chord.
+    /**
+     * Returns a value copy of the chord.
+     */
     Chord.prototype.clone = function() {
         var clone_ = new Chord();
         clone_.resize(this.size());
@@ -679,7 +727,9 @@ if (typeof console === 'undefined') {
         return clone_;
     };
 
-    // Returns a new chord whose pitches are the floors of this chord's pitches.
+    /**
+     * Returns a new chord whose pitches are the floors of this chord's pitches.
+     */
     Chord.prototype.floor = function() {
         var chord = this.clone();
         for (var voice = 0; voice < this.voices.length; voice++) {
@@ -688,7 +738,9 @@ if (typeof console === 'undefined') {
         return chord;
     };
 
-    // Returns a new chord whose pitches are the ceilings of this chord's pitches.
+    /**
+     * Returns a new chord whose pitches are the ceilings of this chord's pitches.
+     */
     Chord.prototype.ceil = function() {
         var chord = this.clone();
         for (var voice = 0; voice < this.voices.length; voice++) {
@@ -697,7 +749,9 @@ if (typeof console === 'undefined') {
         return chord;
     };
 
-    // Returns the origin of the chord's space.
+    /**
+     * Returns the origin of the chord's space.
+     */
     Chord.prototype.origin = function() {
         var clone_ = this.clone();
         for (var voice = 0; voice < this.size(); voice++) {
@@ -711,7 +765,9 @@ if (typeof console === 'undefined') {
         return ChordSpace.euclidean(this, origin);
     };
 
-    // Returns the sum of the pitches in the chord.
+    /**
+     * Returns the sum of the pitches in the chord.
+     */
     Chord.prototype.sum = function() {
         var s = 0;
         for (var voice = 0; voice < this.size(); voice++) {
@@ -720,8 +776,10 @@ if (typeof console === 'undefined') {
         return s;
     };
 
-    // Returns the Euclidean distance from this chord
-    // to the unison diagonal of its chord space.
+    /**
+     * Returns the Euclidean distance from this chord
+     * to the unison diagonal of its chord space.
+     */
     Chord.prototype.distanceToUnisonDiagonal = function() {
         var unison = this.origin();
         var pitch = this.sum() / this.size();
@@ -731,8 +789,10 @@ if (typeof console === 'undefined') {
         return ChordSpace.euclidean(this, unison);
     };
 
-    // Returns the maximally even chord in the chord's space,
-    // e.g. the augmented triad for 3 dimensions.
+    /**
+     * Returns the maximally even chord in the chord's space,
+     * e.g. the augmented triad for 3 dimensions.
+     */
     Chord.prototype.maximallyEven = function() {
         var clone_ = this.clone();
         var g = ChordSpace.OCTAVE / clone_.size();
@@ -742,8 +802,10 @@ if (typeof console === 'undefined') {
         return clone_;
     };
 
-    // Transposes the chord by the indicated interval (may be a fraction).
-    // NOTE: Does NOT return the result under any equivalence class.
+    /**
+     * Transposes the chord by the indicated interval (may be a fraction).
+     * NOTE: Does NOT return the result under any equivalence class.
+     */
     Chord.prototype.T = function(interval) {
         var clone_ = this.clone();
         for (var voice = 0; voice < this.size(); voice++) {
@@ -752,9 +814,11 @@ if (typeof console === 'undefined') {
         return clone_;
     };
 
-    // Inverts the chord by another chord that is on the unison diagonal, by
-    // default the origin.
-    // NOTE: Does NOT return the result under any equivalence class.
+    /**
+     * Inverts the chord by another chord that is on the unison diagonal, by
+     * default the origin.
+     * NOTE: Does NOT return the result under any equivalence class.
+     */
     Chord.prototype.I = function(center) {
         center = typeof center !== 'undefined' ? center : 0;
         var inverse = this.clone();
@@ -764,8 +828,10 @@ if (typeof console === 'undefined') {
         return inverse;
     };
 
-    // Returns the remainder of the dividend divided by the divisor,
-    // according to the Euclidean definition.
+    /**
+     * Returns the remainder of the dividend divided by the divisor,
+     * according to the Euclidean definition.
+     */
     ChordSpace.modulo = function(dividend, divisor) {
         var quotient = 0.0;
         if (divisor < 0.0) {
@@ -778,15 +844,19 @@ if (typeof console === 'undefined') {
         return remainder;
     };
 
-    // Returns the equivalent of the pitch under pitch-class equivalence, i.e.
-    // the pitch is in the interval [0, OCTAVE).
+    /**
+     * Returns the equivalent of the pitch under pitch-class equivalence, i.e.
+     * the pitch is in the interval [0, OCTAVE).
+     */
     ChordSpace.epc = function(pitch) {
         var pc = ChordSpace.modulo(pitch, ChordSpace.OCTAVE);
         return pc;
     };
 
-    // Returns whether the chord is within the fundamental domain of
-    // pitch-class equivalence, i.e. is a pitch-class set.
+    /**
+     * Returns whether the chord is within the fundamental domain of
+     * pitch-class equivalence, i.e. is a pitch-class set.
+     */
     Chord.prototype.isepcs = function() {
         for (var voice = 0; voice < this.size(); voice++) {
             if (ChordSpace.eq_epsilon(this.voices[voice], ChordSpace.epc(chord.voices[voice])) === false) {
@@ -804,8 +874,10 @@ if (typeof console === 'undefined') {
         return chord;
     };
 
-    // Returns the equivalent of the chord under pitch-class equivalence,
-    // i.e. the pitch-class set of the chord.
+    /**
+     * Returns the equivalent of the chord under pitch-class equivalence,
+     * i.e. the pitch-class set of the chord.
+     */
     Chord.prototype.epcs = function() {
         return this.er(ChordSpace.OCTAVE);
     };
@@ -814,24 +886,30 @@ if (typeof console === 'undefined') {
         return this.er(ChordSpace.OCTAVE).eP();
     };
 
-    // Returns the equivalent of the chord within the fundamental domain of
-    // transposition to 0.
+    /**
+     * Returns the equivalent of the chord within the fundamental domain of
+     * transposition to 0.
+     */
     Chord.prototype.et = function() {
         var min_ = this.min();
         return this.T(-min_[0]);
     };
     
-    // Returns the standard notation for "chord type," i.e., root position
-    // pitch-classes in ascending order.
+    /**
+     * Returns the standard notation for "chord type," i.e., root position
+     * pitch-classes in ascending order.
+     */
     Chord.prototype.chord_type = function() {
         let ev = this.eV();
-        // Rotate from "voicing equivalent" to "root position."
+        // Rotate "voicing equivalent" voicing to "root position" voicing.
         ev = ev.v(this.size() - 1);
         return ev.et();
     };
 
-    // Returns whether the chord is within the fundamental domain of
-    // transposition to 0.
+    /**
+     * Returns whether the chord is within the fundamental domain of
+     * transposition to 0.
+     */
     Chord.prototype.iset = function() {
         var et = this.et();
         if (et.eq_epsilon(this) === false) {
@@ -840,8 +918,10 @@ if (typeof console === 'undefined') {
         return true;
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of the indicated range equivalence.
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of the indicated range equivalence.
+     */
     Chord.prototype.iseR = function(range) {
         let max_ = this.max()[0];
         let min_ = this.min()[0];
@@ -858,14 +938,18 @@ if (typeof console === 'undefined') {
         return true;
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of octave equivalence.
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of octave equivalence.
+     */
     Chord.prototype.iseO = function() {
         return this.iseR(ChordSpace.OCTAVE);
     };
 
-    // Returns the equivalent of the chord within the representative fundamental
-    // domain of a range equivalence.
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of a range equivalence.
+     */
     Chord.prototype.eR = function(range) {
         // The clue here is that at least one voice must be >= 0,
         // but no voice can be > range.
@@ -885,14 +969,18 @@ if (typeof console === 'undefined') {
         return normal;
     };
 
-    // Returns the equivalent of the chord within the representative fundamental
-    // domain of octave equivalence.
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of octave equivalence.
+     */
     Chord.prototype.eO = function() {
         return this.eR(ChordSpace.OCTAVE);
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of permutational equivalence.
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of permutational equivalence.
+     */
     Chord.prototype.iseP = function() {
         for (let voice = 1; voice < this.size(); voice++) {
             if (ChordSpace.le_epsilon(this.voices[voice - 1], this.voices[voice]) === false) {
@@ -902,17 +990,21 @@ if (typeof console === 'undefined') {
         return true;
     };
 
-    // Returns the equivalent of the chord within the representative fundamental
-    // domain of permutational equivalence.
-    // NB: Order is correct!
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of permutational equivalence.
+     * NB: Order is correct!
+     */
     Chord.prototype.eP = function() {
         clone_ = this.clone();
         clone_.voices.sort(ChordSpace.compare_epsilon);
         return clone_;
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of transpositional equivalence.
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of transpositional equivalence.
+     */
     Chord.prototype.iseT = function() {
         let sum_ = this.sum();
         if (ChordSpace.eq_epsilon(sum_, 0) === true) {
@@ -921,19 +1013,23 @@ if (typeof console === 'undefined') {
         return false;
     };
 
-    // Returns the equivalent of the chord within the representative fundamental
-    // domain of transpositonal equivalence.
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of transpositonal equivalence.
+     */
     Chord.prototype.eT = function() {
         var sum_ = this.sum();
         var transposition = sum_ / this.size();
         return this.T(-transposition);
     };
 
-    // Returns the equivalent of the chord within the representative fundamental
-    // domain of transpositonal equivalence and the equal temperament generated
-    // by g. I.e., returns the chord transposed such that its sum is the least 
-    // that divides evenly by g. NOTE: Does NOT
-    // return the result under any other equivalence class.
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of transpositonal equivalence and the equal temperament generated
+     * by g. I.e., returns the chord transposed such that its sum is the least 
+     * that divides evenly by g. NOTE: Does NOT
+     * return the result under any other equivalence class.
+     */
     Chord.prototype.eTT = function(g) {
         g = typeof g !== 'undefined' ? g : 1;
         let this_sum = this.sum();
@@ -944,8 +1040,10 @@ if (typeof console === 'undefined') {
         return result;
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of translational equivalence and the equal temperament generated by g.
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of translational equivalence and the equal temperament generated by g.
+     */
     Chord.prototype.iseTT = function(g) {
         //~ g = typeof g !== 'undefined' ? g : 1;
         //~ let ett = this.eTT(g);
@@ -969,8 +1067,10 @@ if (typeof console === 'undefined') {
         return true;
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of inversional equivalence.
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of inversional equivalence.
+     */
     Chord.prototype.iseI = function() {
         let lower_voice = 0;
         let upper_voice = this.size() - 2;
@@ -986,8 +1086,10 @@ if (typeof console === 'undefined') {
         return true;
     };
 
-    // Returns the equivalent of the chord within the representative fundamental
-    // domain of inversional equivalence.
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of inversional equivalence.
+     */
     Chord.prototype.eI = function() {
         if (this.iseI()) {
             return this.clone();
@@ -995,8 +1097,10 @@ if (typeof console === 'undefined') {
         return this.I();
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of range and permutational equivalence.
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of range and permutational equivalence.
+     */
     Chord.prototype.iseRP = function(range) {
         if (this.iseP() === false) {
             return false;
@@ -1007,27 +1111,35 @@ if (typeof console === 'undefined') {
         return true;
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of octave and permutational equivalence.
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of octave and permutational equivalence.
+     */
     Chord.prototype.iseOP = function() {
         return this.iseRP(ChordSpace.OCTAVE);
     };
 
-    // Returns the equivalent of the chord within the representative fundamental
-    // domain of range and permutational equivalence.
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of range and permutational equivalence.
+     */
     Chord.prototype.eRP = function(range) {
         return this.eR(range).eP();
     };
 
-    // Returns the equivalent of the chord within the representative fundamental
-    // domain of octave and permutational equivalence.
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of octave and permutational equivalence.
+     */
     Chord.prototype.eOP = function() {
         return this.eRP(ChordSpace.OCTAVE);
     };
 
-    // Returns a copy of the chord cyclically permuted by a stride, by default 1.
-    // The direction of rotation is the same as musicians' first inversion, second
-    // inversion, and so on.
+    /**
+     * Returns a copy of the chord cyclically permuted by a stride, by default 1.
+     * The direction of rotation is the same as musicians' first inversion, second
+     * inversion, and so on.
+     */
     Chord.prototype.cycle = function(stride) {
         stride = typeof stride !== 'undefined' ? stride : 1;
         var permuted = this.clone();
@@ -1048,8 +1160,10 @@ if (typeof console === 'undefined') {
         return permuted;
     };
 
-    // Returns the permutations of the pitches in a chord. The permutations from
-    // any particular permutation are always returned in the same order.
+    /**
+     * Returns the permutations of the pitches in a chord. The permutations from
+     * any particular permutation are always returned in the same order.
+     */
     Chord.prototype.permutations = function() {
         var permutation = this.clone();
         var permutations_ = [];
@@ -1062,12 +1176,13 @@ if (typeof console === 'undefined') {
         return permutations_;
     };
 
-    // Returns whether the chord is within the representative fundamental 
-    // domain of voicing equivalence. I think this identifies which simplex 
-    // the voicing is in. In Tymoczko's 1-based notation:
-    // x[1] + 12 - x[N] <= x[i + 1] - x[i], 1 <= i < N - 1
-    // In 0-based notation:
-    // x[0] + 12 - x[N-1] <= x[i + 1] - x[i], 0 <= i < N - 2
+    /**
+     * Returns whether the chord is within the representative fundamental 
+     * domain of voicing equivalence. In Tymoczko's 1-based notation:
+     * x[1] + 12 - x[N] <= x[i + 1] - x[i], 1 <= i < N - 1
+     * In 0-based notation:
+     * x[0] + 12 - x[N-1] <= x[i + 1] - x[i], 0 <= i < N - 2
+     */
     Chord.prototype.iseV = function(range) {
         range = typeof range !== 'undefined' ? range : ChordSpace.OCTAVE;
         var outer_interval = this.voices[0] + range - this.voices[this.size() - 1];
@@ -1081,8 +1196,10 @@ if (typeof console === 'undefined') {
         return true;
     };
     
-    // Returns the equivalent of the chord within the representative fundamental
-    // domain of voicing equivalence.
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of voicing equivalence.
+     */
     Chord.prototype.eV = function(range) {
         range = typeof range !== 'undefined' ? range : ChordSpace.OCTAVE;
         var voicings_ = this.voicings();
@@ -1095,8 +1212,10 @@ if (typeof console === 'undefined') {
         console.error("Chord.eV: no voicing equivalent found.");
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of range, permutational, and transpositional equivalence.
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of range, permutational, and transpositional equivalence.
+     */
     Chord.prototype.iseRPT = function(range) {
         if (this.iseP() === false) {
             return false;
@@ -1129,8 +1248,10 @@ if (typeof console === 'undefined') {
         return true;
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of octave, permutational, and transpositional equivalence.
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of octave, permutational, and transpositional equivalence.
+     */
     Chord.prototype.iseOPT = function() {
         return this.iseRPT(ChordSpace.OCTAVE);
     };
@@ -1139,13 +1260,14 @@ if (typeof console === 'undefined') {
         return this.iseRPTT(ChordSpace.OCTAVE);
     };
 
-    // Returns a copy of the chord 'inverted' in the musician's sense,
-    // i.e. revoiced by cyclically permuting the chord and
-    // adding (or subtracting) an octave to the highest (or lowest) voice.
-    // The revoicing will move the chord up or down in pitch.
-    // A positive direction is the same as a musician's first inversion,
-    // second inversion, etc.
-    // FIXME: Original is probably not correct.
+    /**
+     * Returns a copy of the chord 'inverted' in the musician's sense,
+     * i.e. revoiced by cyclically permuting the chord and
+     * adding (or subtracting) an octave to the highest (or lowest) voice.
+     * The revoicing will move the chord up or down in pitch.
+     * A positive direction is the same as a musician's first inversion,
+     * second inversion, etc.
+     */
     Chord.prototype.v = function(direction) {
         direction = typeof direction !== 'undefined' ? direction : 1;
         var chord = this.clone();
@@ -1163,8 +1285,10 @@ if (typeof console === 'undefined') {
         return chord;
     };
 
-    // Returns all the 'inversions' (in the musician's sense)
-    // or octavewise revoicings of the chord.
+    /**
+     * Returns all the 'inversions' (in the musician's sense)
+     * or octavewise revoicings of the chord.
+     */
     Chord.prototype.voicings = function() {
         var chord = this.clone();
         var voicings = [];
@@ -1176,10 +1300,12 @@ if (typeof console === 'undefined') {
         return voicings;
     };
 
-    // Returns the equivalent of the chord within the representative fundamental
-    // domain of range, permutational, and transpositional equivalence; the same
-    // as set-class type, or chord type.
-    // FIXME: Take g into account?
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of range, permutational, and transpositional equivalence; the same
+     * as chord type.
+     * FIXME: Take g into account?
+     */
     Chord.prototype.eRPT = function(range) {
         //~ var et = this.eRP(range);
         //~ var voicings_ = erp.voicings();
@@ -1207,8 +1333,10 @@ if (typeof console === 'undefined') {
         console.info('ERROR: chord.eRPTT() should not come here: ' + this);
     };
 
-    // Returns the equivalent of the chord within the representative fundamental
-    // domain of octave, permutational, and transpositional equivalence.
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of octave, permutational, and transpositional equivalence.
+     */
     Chord.prototype.eOPT = function() {
         return this.eRPT(ChordSpace.OCTAVE);
     };
@@ -1217,8 +1345,10 @@ if (typeof console === 'undefined') {
         return this.eRPTT(ChordSpace.OCTAVE);
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of range, permutational, and inversional equivalence.
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of range, permutational, and inversional equivalence.
+     */
     Chord.prototype.iseRPI = function(range) {
         if (this.iseRP(range) === false) {
             return false;
@@ -1232,14 +1362,18 @@ if (typeof console === 'undefined') {
         return false;
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of octave, permutational, and inversional equivalence.
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of octave, permutational, and inversional equivalence.
+     */
     Chord.prototype.iseOPI = function() {
         return this.iseRPI(ChordSpace.OCTAVE);
     };
 
-    // Returns the equivalent of the chord within the representative fundamental
-    // domain of range, permutational, and inversional equivalence.
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of range, permutational, and inversional equivalence.
+     */
     Chord.prototype.eRPI = function(range) {
         if (this.iseRPI(range) === true) {
             return this.clone();
@@ -1254,17 +1388,21 @@ if (typeof console === 'undefined') {
         }
     };
 
-    // Returns the equivalent of the chord within the representative fundamental
-    // domain of octave, permutational, and inversional equivalence.
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of octave, permutational, and inversional equivalence.
+     */
     Chord.prototype.eOPI = function() {
         return this.eRPI(ChordSpace.OCTAVE);
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of range, permutational, transpositional, and inversional equivalence.
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of range, permutational, transpositional, and inversional equivalence.
     
-    // If I can get this to work I can fix everything else.
+     * If I can get this to work I can fix everything else.
         
+     */
     Chord.prototype.iseRPTI = function(range) {      
         range = typeof range !== 'undefined' ? range : ChordSpace.OCTAVE;
         if (this.iseP() === false) {
@@ -1276,22 +1414,7 @@ if (typeof console === 'undefined') {
         if (this.iseV() === false) {
             return false;
         }
-        //~ let this_sum = this.sum();
-        //~ let iterator = this.clone();
-        //~ let ett;
-        //~ let lowest_sum;
-        //~ while (true) {
-            //~ lowest_sum = iterator.sum();
-            //~ ett = iterator.clone();
-            //~ iterator = iterator.T(-1);
-            //~ if (ChordSpace.lt_epsilon(iterator.sum(), 0.) == true) {
-                //~ break;
-            //~ }
-        //~ }
-        //~ if (ChordSpace.eq_epsilon(this_sum, lowest_sum) == false) {
-            //~ return false;
-        //~ }
-        if (this.iseTT(range) === false) {
+        if (this.iseT(range) === false) {
             return false;
         }
         if (this.iseI() === false) {
@@ -1301,16 +1424,17 @@ if (typeof console === 'undefined') {
     };
 
     Chord.prototype.iseRPTTI = function(range) {
+        range = typeof range !== 'undefined' ? range : ChordSpace.OCTAVE;
         if (this.iseP() === false) {
             return false;
         }
         if (this.iseR(range) === false) {
             return false;
         }
-        if (this.iseV(range) === false) {
+        if (this.iseV() === false) {
             return false;
         }
-        if (this.iseTT() === false) {
+        if (this.iseTT(range) === false) {
             return false;
         }
         if (this.iseI() === false) {
@@ -1319,8 +1443,10 @@ if (typeof console === 'undefined') {
         return true;
     };
 
-    // Returns whether the chord is within the representative fundamental domain
-    // of octave, permutational, transpositional, and inversional equivalence.
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of octave, permutational, transpositional, and inversional equivalence.
+     */
     Chord.prototype.iseOPTI = function() {
         return this.iseRPTI(ChordSpace.OCTAVE);
     };
@@ -1332,9 +1458,11 @@ if (typeof console === 'undefined') {
         return result;
     };
 
-    // Returns the equivalent of the chord within the representative fundamental
-    // domain of range, permutational, transpositional, and inversional
-    // equivalence.
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of range, permutational, transpositional, and inversional
+     * equivalence.
+     */
     Chord.prototype.eRPTI = function(range) {
         let normalRPT = this.eRPT(range);
         if (normalRPT.iseI() === true) {
@@ -1367,9 +1495,11 @@ if (typeof console === 'undefined') {
         }
     };
 
-    // Returns the equivalent of the chord within the representative fundamental
-    // domain of range, permutational, transpositional, and inversional
-    // equivalence.
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of range, permutational, transpositional, and inversional
+     * equivalence.
+     */
     Chord.prototype.eOPTI = function() {
         return this.eRPTI(ChordSpace.OCTAVE);
     };
@@ -1403,9 +1533,11 @@ if (typeof console === 'undefined') {
     var chordsForNames = {};
     var namesForChords = {};
 
-    // Returns the standard name for the pitch (middle C is MIDI key 60 is
-    // C4). There are of course no enharmonic names here, so all are sharps.
-    // Works only for 12-tone equal temperament.
+    /**
+     * Returns the standard name for the pitch (middle C is MIDI key 60 is
+     * C4). There are of course no enharmonic names here, so all are sharps.
+     * Works only for 12-tone equal temperament.
+     */
     ChordSpace.noteName = function (midi_key) {
         midi_key = Math.round(midi_key);
         let pc = Math.round(ChordSpace.epc(midi_key))
@@ -1534,8 +1666,9 @@ if (typeof console === 'undefined') {
         return ChordSpace.chordsForNames[name];
     };
 
-    // Returns a formatted string with information about the chord.
-
+    /**
+     * Returns a formatted string with information about the chord.
+     */
     Chord.prototype.information = function() {
         var et = this.eT().et();
         ///var evt = this.eV().et();
@@ -1567,16 +1700,20 @@ if (typeof console === 'undefined') {
             this.sum());
     };
 
-    // Move 1 voice of the chord.
-    // NOTE: Does NOT return the result under any equivalence class.
+    /**
+     * Move 1 voice of the chord.
+     * NOTE: Does NOT return the result under any equivalence class.
+     */
     Chord.prototype.move = function(voice, interval) {
         var chord = this.clone();
         chord.voices[voice] = ChordSpace.T(chord.voices[voice], interval);
         return chord;
     };
 
-    // Performs the neo-Riemannian parallel transformation.
-    // NOTE: Does NOT return the result under any equivalence class.
+    /**
+     * Performs the neo-Riemannian parallel transformation.
+     * NOTE: Does NOT return the result under any equivalence class.
+     */
     Chord.prototype.nrP = function() {
         var cv = this.eV();
         var cvt = this.eV().et();
@@ -1588,8 +1725,10 @@ if (typeof console === 'undefined') {
         return cv;
     };
 
-    // Performs the neo-Riemannian relative transformation.
-    // NOTE: Does NOT return the result under any equivalence class.
+    /**
+     * Performs the neo-Riemannian relative transformation.
+     * NOTE: Does NOT return the result under any equivalence class.
+     */
     Chord.prototype.nrR = function() {
         var cv = this.eV();
         var cvt = this.eV().et();
@@ -1601,8 +1740,10 @@ if (typeof console === 'undefined') {
         return cv;
     };
 
-    // Performs the neo-Riemannian Lettonwechsel transformation.
-    // NOTE: Does NOT return the result under any equivalence class.
+    /**
+     * Performs the neo-Riemannian Lettonwechsel transformation.
+     * NOTE: Does NOT return the result under any equivalence class.
+     */
     Chord.prototype.nrL = function() {
         var cv = this.eV();
         var cvt = this.eV().et();
@@ -1614,14 +1755,18 @@ if (typeof console === 'undefined') {
         return cv;
     };
 
-    // Performs the neo-Riemannian dominant transformation.
-    // NOTE: Does NOT return the result under any equivalence class.
+    /**
+     * Performs the neo-Riemannian dominant transformation.
+     * NOTE: Does NOT return the result under any equivalence class.
+     */
     Chord.prototype.nrD = function() {
         return this.T(-7);
     };
 
-    // Returns the chord inverted by the sum of its first two voices.
-    // NOTE: Does NOT return the result under any equivalence class.
+    /**
+     * Returns the chord inverted by the sum of its first two voices.
+     * NOTE: Does NOT return the result under any equivalence class.
+     */
     Chord.prototype.K = function(range) {
         range = typeof range !== 'undefined' ? range : ChordSpace.OCTAVE;
         var chord = this.clone();
@@ -1634,9 +1779,11 @@ if (typeof console === 'undefined') {
         return this.I(x);
     };
 
-    // Returns whether the chord is a transpositional form of Y with interval size g.
-    // Only works in equal temperament.
-    // FIXME: Check this in Lua and C++.
+    /**
+     * Returns whether the chord is a transpositional form of Y with interval size g.
+     * Only works in equal temperament.
+     * FIXME: Check this in Lua and C++.
+     */
     Chord.prototype.Tform = function(Y_, g) {
         var eopx = this.eOP();
         var i = 0;
@@ -1651,9 +1798,11 @@ if (typeof console === 'undefined') {
         return false;
     };
 
-    // Returns whether the chord is an inversional form of Y with interval size g.
-    // Only works in equal temperament.
-    // FIXME: Check this in Lua and C++.
+    /**
+     * Returns whether the chord is an inversional form of Y with interval size g.
+     * Only works in equal temperament.
+     * FIXME: Check this in Lua and C++.
+     */
     Chord.prototype.Iform = function(Y, g) {
         var eopx = this.eOP();
         var i = 0;
@@ -1668,9 +1817,11 @@ if (typeof console === 'undefined') {
         return false;
     };
 
-    // Returns the contextual transposition of the chord by x with respect to m
-    // with minimum interval size g.
-    // NOTE: Does NOT return the result under any equivalence class.
+    /**
+     * Returns the contextual transposition of the chord by x with respect to m
+     * with minimum interval size g.
+     * NOTE: Does NOT return the result under any equivalence class.
+     */
     Chord.prototype.Q = function(x, m, g) {
         g = typeof g !== 'undefined' ? g : 1;
         if (this.Tform(m, g) === true) {
@@ -1682,8 +1833,10 @@ if (typeof console === 'undefined') {
         return this.clone();
     };
 
-    // Returns the number of invariant voiceN, under pitch-class equivalence, in
-    // the chord. The two chords must have the same number of voiceN.
+    /**
+     * Returns the number of invariant voices, under pitch-class equivalence, in
+     * the chord. The two chords must have the same number of voices.
+     */
     ChordSpace.invariantvoiceN = function(a_, b_) {
         var a = a_.eOP();
         var b = b_.eOP();
@@ -1697,11 +1850,13 @@ if (typeof console === 'undefined') {
         return count;
     };
 
-    // Returns the contextual inversion(s) of the chord that preserves n
-    // invariant voiceN under pitch-class equivalence, in a sorted list. If there
-    // are no such inversions, an empty list is returned. The inversions are
-    // returned in equivalence class OP. g is the generator of transposition, by
-    // default 1.
+    /**
+     * Returns the contextual inversion(s) of the chord that preserves n
+     * invariant voices under pitch-class equivalence, in a sorted list. If there
+     * are no such inversions, an empty list is returned. The inversions are
+     * returned in equivalence class OP. g is the generator of transposition, by
+     * default 1.
+     */
     Chord.prototype.J = function(n, g) {
         g = typeof g !== 'undefined' ? g : 1;
         var inversions = {};
@@ -1722,9 +1877,11 @@ if (typeof console === 'undefined') {
         return result;
     };
 
-    // Returns the voice-leading between chords a and b,
-    // i.e. what you have to add to a to get b, as a
-    // chord of directed intervals.
+    /**
+     * Returns the voice-leading between chords a and b,
+     * i.e. what you have to add to a to get b, as a
+     * chord of directed intervals.
+     */
     ChordSpace.voiceleading = function(a, b) {
         var voiceleading = a.clone();
         for (var voice = 0; voice < a.size(); voice++) {
@@ -1733,9 +1890,11 @@ if (typeof console === 'undefined') {
         return voiceleading;
     };
 
-    // Returns whether the voiceleading
-    // between chords a and b contains a parallel fifth.
-    // FIXME: Fix in Lua and C++.
+    /**
+     * Returns whether the voiceleading
+     * between chords a and b contains a parallel fifth.
+     * FIXME: Fix in Lua and C++.
+     */
     ChordSpace.parallelFifth = function(a, b) {
         var v = ChordSpace.voiceleading(a, b);
         if (v.count(7) > 1 || v.count(-7) > 1) {
@@ -1745,8 +1904,10 @@ if (typeof console === 'undefined') {
         }
     };
 
-    // Returns the smoothness of the voiceleading between
-    // chords a and b by L1 norm.
+    /**
+     * Returns the smoothness of the voiceleading between
+     * chords a and b by L1 norm.
+     */
     ChordSpace.voiceleadingSmoothness = function(a, b) {
         var L1 = 0;
         for (var voice = 0; voice < a.size(); voice++) {
@@ -1755,8 +1916,10 @@ if (typeof console === 'undefined') {
         return L1;
     };
 
-    // Returns which of the voiceleadings (source to d1, source to d2)
-    // is the smoother (shortest moves), optionally avoiding parallel fifths.
+    /**
+     * Returns which of the voiceleadings (source to d1, source to d2)
+     * is the smoother (shortest moves), optionally avoiding parallel fifths.
+     */
     ChordSpace.voiceleadingSmoother = function(source, d1, d2, avoidParallels, range) {
         range = typeof range !== 'undefined' ? range : ChordSpace.OCTAVE;
         if (avoidParallels === true) {
@@ -1776,8 +1939,10 @@ if (typeof console === 'undefined') {
         }
     };
 
-    // Returns which of the voiceleadings (source to d1, source to d2)
-    // is the simpler (fewest moves), optionally avoiding parallel fifths.
+    /**
+     * Returns which of the voiceleadings (source to d1, source to d2)
+     * is the simpler (fewest moves), optionally avoiding parallel fifths.
+     */
     ChordSpace.voiceleadingSimpler = function(source, d1, d2, avoidParallels) {
         avoidParallels = typeof avoidParallels !== 'undefined' ? avoidParallels : false;
         if (avoidParallels === true) {
@@ -1802,8 +1967,10 @@ if (typeof console === 'undefined') {
         return d1;
     };
 
-    // Returns which of the voiceleadings (source to d1, source to d2)
-    // is the closer (first smoother, then simpler), optionally avoiding parallel fifths.
+    /**
+     * Returns which of the voiceleadings (source to d1, source to d2)
+     * is the closer (first smoother, then simpler), optionally avoiding parallel fifths.
+     */
     ChordSpace.voiceleadingCloser = function(source, d1, d2, avoidParallels) {
         avoidParallels = typeof avoidParallels !== 'undefined' ? avoidParallels : false;
         if (avoidParallels === true) {
@@ -1862,9 +2029,11 @@ if (typeof console === 'undefined') {
         return true;
     };
 
-    // FIXME: Looks like untested bad logic.
-    // Returns the voicing of the destination that has the closest voice-leading
-    // from the source within the range, optionally avoiding parallel fifths.
+    /**
+     * FIXME: Looks like untested bad logic.
+     * Returns the voicing of the destination that has the closest voice-leading
+     * from the source within the range, optionally avoiding parallel fifths.
+     */
     ChordSpace.voiceleadingClosestRange = function(prior_chord, destination, range, avoidParallels) {
       //` return d;
         var voices = destination.size();
@@ -1883,8 +2052,10 @@ if (typeof console === 'undefined') {
         return d;
     };
 
-    // Creates a complete Silencio "note on" event for the
-    // indicated voice of the chord.
+    /**
+     * Creates a complete Silencio "note on" event for the
+     * indicated voice of the chord.
+     */
     Chord.prototype.note = function(voice_, time_, duration_, channel_, velocity_, pan_) {
         duration_ = typeof this.duration[voice_] !== 'undefined' ? this.duration[voice_] : duration_;
         channel_ = typeof this.channel[voice_] !== 'undefined' ? this.channel[voice_] : channel_;
@@ -1907,9 +2078,11 @@ if (typeof console === 'undefined') {
         return note_;
     };
 
-    // Returns an individual note for each voice of the chord.
-    // The chord's duration, instrument, and loudness are used if present,
-    // if not the specified values are used.
+    /**
+     * Returns an individual note for each voice of the chord.
+     * The chord's duration, instrument, and loudness are used if present,
+     * if not the specified values are used.
+     */
     Chord.prototype.notes = function(time_, duration_, channel_, velocity_, pan_) {
         var notes_ = new Silencio.Score();
         for (var voice = 0; voice < this.size(); voice++) {
@@ -1925,8 +2098,10 @@ if (typeof console === 'undefined') {
         return score;
     };
 
-    // Move the pitch to the closest pitch-class of the chord.
-    // FIXME: Correct Lua and C++.
+    /**
+     * Move the pitch to the closest pitch-class of the chord.
+     * FIXME: Correct Lua and C++.
+     */
     ChordSpace.conformPitchToChord = function(pitch, chord, octaveEquivalence) {
         octaveEquivalence = typeof octaveEquivalence !== 'undefined' ? octaveEquivalence : true;
         var pitchClass = ChordSpace.modulo(pitch, ChordSpace.OCTAVE);
@@ -1947,18 +2122,18 @@ if (typeof console === 'undefined') {
         if (octaveEquivalence !== true) {
             newPitch = octave + newPitch;
         }
-        //var message = sprintf("chord: %s pitch: %s original pc: %s octave: %s new pc: %s new pitch: %s\n", chord, pitch, pitchClass, octave, closestPitchClass, newPitch);
-        //console.info(message);
         return newPitch;
     };
 
-    // If the event is a note, moves its pitch
-    // to the closest pitch of the chord.
-    // If octaveEquivalence is true (the default),
-    // the pitch-class of the note is moved to the closest pitch-class
-    // of the chord; otherwise, the pitch of the note is moved to the closest
-    // absolute pitch of the chord.
-    // FIXME: Correct Lua and C++.
+    /**
+     * If the event is a note, moves its pitch
+     * to the closest pitch of the chord.
+     * If octaveEquivalence is true (the default),
+     * the pitch-class of the note is moved to the closest pitch-class
+     * of the chord; otherwise, the pitch of the note is moved to the closest
+     * absolute pitch of the chord.
+     * FIXME: Correct Lua and C++.
+     */
     ChordSpace.conformToChord = function(event, chord, octaveEquivalence) {
         octaveEquivalence = typeof octaveEquivalence !== 'undefined' ? octaveEquivalence : true;
         if (event.status === 144) {
@@ -1979,8 +2154,10 @@ if (typeof console === 'undefined') {
         return event;
     };
 
-    // Inserts the notes of the chord into the score at the specified time.
-    // The internal duration, instrument, and loudness are used.
+    /**
+     * Inserts the notes of the chord into the score at the specified time.
+     * The internal duration, instrument, and loudness are used.
+     */
     ChordSpace.insert = function(score, chord, time_) {
         // console.info(score, chord, time_, duration, channel, velocity, pan)
         for (var voice = 0; voice < chord.size(); voice++) {
@@ -1990,9 +2167,11 @@ if (typeof console === 'undefined') {
         return score;
     };
 
-    // For all the notes in the score beginning at or later than the start time,
-    // and up to but not including the end time, moves the pitch of the note to
-    // belong to the chord, using the conformToChord function.
+    /**
+     * For all the notes in the score beginning at or later than the start time,
+     * and up to but not including the end time, moves the pitch of the note to
+     * belong to the chord, using the conformToChord function.
+     */
     ChordSpace.apply = function(score, chord, start, end_, octaveEquivalence) {
         if (typeof chord === 'undefined') {
             return;
@@ -2012,9 +2191,11 @@ if (typeof console === 'undefined') {
         return s;
     };
 
-    // Returns a chord containing all the pitches of the score
-    // beginning at or later than the start time,
-    // and up to but not including the end time.
+    /**
+     * Returns a chord containing all the pitches of the score
+     * beginning at or later than the start time,
+     * and up to but not including the end time.
+     */
     ChordSpace.gather = function(score, start, end_) {
         let chord = new ChordSpace.Chord();
         let slice = score.slice(start, end_);
