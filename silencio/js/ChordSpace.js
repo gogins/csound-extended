@@ -631,16 +631,16 @@ if (typeof console === 'undefined') {
      * This hash function is used e.g. to give chords value semantics for sets.
      */
     Chord.prototype.hash = function() {
-        let buffer = '';
-        for (let voice = 0; voice < this.voices.length; voice++) {
-            let value = this.voices[voice].toFixed(6).trim();
+        var text = '';
+        for (var voice = 0; voice < this.voices.length; voice++) {
+            var value = this.voices[voice].toFixed(6).trim();
             if (voice === 0) {
-                buffer = buffer.concat(value);
+                text = text.concat(value);
             } else {
-                buffer = buffer.concat(',', value);
+                text = text.concat(',', value);
             }
         }
-        return buffer;
+        return text;
     };
 
     /**
@@ -961,9 +961,12 @@ if (typeof console === 'undefined') {
         // but no voice can be > range.
         // First, move all pitches inside the interval [0,  range).
         let er = this.er(range);
+        let most_compact_er = er;
         // Then, reflect voices that are outside of the fundamental domain
         // back into it, which will revoice the chord, i.e.
         // the sum of pitches will then be in [0,  range].
+        // There may actually be more than one chord in the fundamental 
+        // domain that meet this criterion.
         while (ChordSpace.le_epsilon(er.sum(), range) === false) {
             let max_ = er.max();
             let maximum_pitch = max_[0];
@@ -971,8 +974,11 @@ if (typeof console === 'undefined') {
             // Because no voice is above the range,
             // any voices that need to be revoiced will now be negative.
             er.voices[maximum_voice] = maximum_pitch - range;
+            if (ChordSpace.le_epsilon(er.span(), most_compact_er.span()) == true) {
+                most_compact_er = er;
+            }
         }
-        return er;
+        return most_compact_er;
     };
 
     /**
@@ -1037,12 +1043,32 @@ if (typeof console === 'undefined') {
      */
     Chord.prototype.eTT = function(g) {
         g = typeof g !== 'undefined' ? g : 1;
-        let this_sum = this.sum();
-        let et = this.eT();
-        let et_sum = et.sum();
-        let corrective_transposition = (this_sum - et_sum) / (this.size() * g);
-        let result = et.T(corrective_transposition);
-        return result;
+        let iterator = this.clone();
+        let sum_ = iterator.sum();
+        // If the sum is less than 0, transpose up by steps of g 
+        // until the sum is >= 0.
+        if (ChordSpace.lt_epsilon(sum_, 0.) === true) {
+            while (true) {
+                iterator = iterator.T(g);
+                sum_ = iterator.sum();
+                if (ChordSpace.gt_epsilon(sum_, 0.) === true) {
+                    break;
+                }
+            }  
+        // If the sum is greater than 0, transpose down by steps of g 
+        // until the sum is < 0, then back up by g.
+        } else if (ChordSpace.gt_epsilon(sum_, 0,) === true) {
+             while (true) {
+                iterator = iterator.T(-g);
+                sum_ = iterator.sum();
+                if (ChordSpace.lt_epsilon(sum_, 0.) === true) {
+                    iterator = iterator.T(g);
+                    break;
+                }
+            }
+        };
+        // Otherwise, this chord is already eTT.
+        return iterator;
     };
 
     /**
@@ -1312,22 +1338,18 @@ if (typeof console === 'undefined') {
      * FIXME: Take g into account?
      */
     Chord.prototype.eRPT = function(range) {
-        let et = this.eT(range);
-        let erpt = et.eOP();
-        return erpt;
+        let erp = this.eRP(range);
+        let ev = erp.eV();
+        let erpt = ev.eT();
+        return erp;
     };
 
     Chord.prototype.eRPTT = function(range) {
         let erp = this.eRP(range);
-        let voicings_ = erp.voicings();
-        for (let i = 0; i < voicings_.length; i++) {
-            let voicing = voicings_[i].eTT();
-            if (voicing.iseV()) {
-                return voicing;
-            }
-        }
-        console.info('ERROR: chord.eRPTT() should not come here: ' + this);
-    };
+        let ev = erp.eV();
+        let erptt = ev.eTT();
+        return erptt;
+     };
 
     /**
      * Returns the equivalent of the chord within the representative fundamental
@@ -1349,10 +1371,10 @@ if (typeof console === 'undefined') {
         if (this.iseRP(range) === false) {
             return false;
         }
-        let inverse = this.I();
-        let inverseRP = inverse.eRP(range);
+        let ei = this.I();
+        let ierp = ei.eRP(range);
         //assert(inverse, 'Inverse is nil.');
-        if (this.le_epsilon(inverseRP) === true) {
+        if (this.le_epsilon(ierp) === true) {
             return true;
         }
         return false;
@@ -1374,13 +1396,13 @@ if (typeof console === 'undefined') {
         if (this.iseRPI(range) === true) {
             return this.clone();
         }
-        let normalRP = this.eRP(range);
-        let normalRPInverse = normalRP.I();
-        let normalRPInverseRP = normalRPInverse.eRP(range);
-        if (normalRP.le_epsilon(normalRPInverseRP) === true) {
-            return normalRP;
+        let erp = this.eRP(range);
+        let erpi = erp.I();
+        let erpierp = erpi.eRP(range);
+        if (erp.le_epsilon(erpierp) === true) {
+            return erp;
         } else {
-            return normalRPInverseRP;
+            return erpierp;
         }
     };
 
@@ -1458,27 +1480,55 @@ if (typeof console === 'undefined') {
      * equivalence.
      */
     Chord.prototype.eRPTI = function(range) {
-        let normalRPT = this.eRPT(range);
-        if (normalRPT.iseI() === true) {
-            return normalRPT;
+        let erpt = this.eRPT(range);
+        if (erpt.iseI() === true) {
+            return erpt;
         } else {
-            let normalI = normalRPT.eI();
-            let normalRPT_ = normalI.eRPT(range);
-            return normalRPT_;
+            let erpti = erpt.eI();
+            let erptierpt = erpti.eRPT(range);
+            return erptierpt;
         }
     };
+    
+    // If I can get this one right, I can fix the other eX.
 
     Chord.prototype.eRPTTI = function(range) {
-        let normalRPTT = this.eRPTT(range);
-        if (normalRPTT.iseI() === true) {
-            return normalRPTT;
-        } else {
-            //~ let normalI = normalRPTT.eRPI(range);
-            //~ let normalRPTT_ = normalI.eRPTT(range);
-            //~ return normalRPTT_;
-            let normalI = normalRPTT.eI();
-            let normalRPTT_ = normalI.eRPTT(range);
-            return normalRPTT_;
+        //~ let erptt = this.eRPTT(range);
+        //~ if (erptt.iseI() === true) {
+            //~ return erptt;
+        //~ } else {
+            //~ let erptti = erptt.eI();
+            //~ let erpttierptt = erptti.eRPTT(range);
+            //~ return erpttierptt;
+        //~ }
+        
+        //~ let er = this.eR(range);
+        //~ let ep = er.eP();
+        //~ let voicings_ = ep.voicings();
+        //~ let n = voicings_.length;
+        //~ let ett;
+        //~ for (let i = 0; i < n; i++) {
+            //~ let voicing = voicings_[i];
+            //~ if (voicing.iseV()) {
+                //~ ett = voicing.eTT();
+                //~ break;
+            //~ }
+        //~ }
+        //~ let ei = ett.eI();
+        //~ return ei;
+        let erp = this.eRP(range);
+        let erp_voicings = erp.voicings();
+        for (voicing of erp_voicings) {
+            if (voicing.iseV()) {
+                let ett = voicing.eTT(range);
+                if (ett.iseI() == true) {
+                    return ett;
+                } else {
+                    let ett_i = ett.I();
+                    let ett_i_ett = ett_i.eTT(range);
+                    return ett_i_ett;
+                }
+            }
         }
     };
 
@@ -1664,8 +1714,7 @@ if (typeof console === 'undefined') {
         let eopti = this.eOPTI().et();
         let eOP = this.eOP();
         let chordName = this.name();
-        ///return sprintf("Pitches:  %s  %s\nI:        %s\neO:       %s  iseO:    %s\neP:       %s  iseP:    %s\neT:       %s  iseT:    %s\n          %s\neI:       %s  iseI:    %s\neV:       %s  iseV:    %s\n          %s\neOP:      %s  iseOP:   %s\npcs:      %s\neOPT:     %s  iseOPT:  %s\neOPTT:    %s\n          %s\neOPI:     %s  iseOPI:  %s\neOPTI:    %s  iseOPTI: %s\neOPTTI:   %s\n          %s\nsum:      %6.2f",
-        return sprintf("Pitches:  %s  %s\nI:        %s\neO:       %s  iseO:    %s\neP:       %s  iseP:    %s\neT:       %s  iseT:    %s\n          %s\neI:       %s  iseI:    %s\neOP:      %s  iseOP:   %s\npcs:      %s\neOPT:     %s  iseOPT:  %s\neOPTT:    %s\n          %s\neOPI:     %s  iseOPI:  %s\neOPTI:    %s  iseOPTI: %s\neOPTTI:   %s\n          %s\nsum:      %6.2f",
+        return sprintf("Pitches:  %s  %s\nI:        %s\neO:       %s  iseO:    %s\neP:       %s  iseP:    %s\neT:       %s  iseT:    %s\n          %s\neI:       %s  iseI:    %s\neV:       %s  iseV:    %s\n          %s\neOP:      %s  iseOP:   %s\npcs:      %s\neOPT:     %s  iseOPT:  %s\neOPTT:    %s\n          %s\neOPI:     %s  iseOPI:  %s\neOPTI:    %s  iseOPTI: %s\neOPTTI:   %s\n          %s\nsum:      %6.2f",
             this, chordName,
             this.I(),
             this.eO(), this.iseO(),
@@ -1673,8 +1722,8 @@ if (typeof console === 'undefined') {
             this.eT(), this.iseT(),
             et,
             this.eI(), this.iseI(),
-            ///this.eV(), this.iseV(),
-            ///evt,
+            this.eV(), this.iseV(),
+            evt,
             this.eOP(), this.iseOP(),
             epcs,
             this.eOPT(), this.iseOPT(),
@@ -2072,25 +2121,25 @@ if (typeof console === 'undefined') {
      */
     ChordSpace.conformPitchToChord = function(pitch, chord, octave_equivalence) {
         octave_equivalence = typeof octave_equivalence !== 'undefined' ? octave_equivalence : true;
-        let pitchClass = ChordSpace.modulo(pitch, ChordSpace.OCTAVE);
-        let octave = pitch - pitchClass;
-        let chordPitchClass = ChordSpace.modulo(chord.voices[0], ChordSpace.OCTAVE);
-        let distance = Math.abs(chordPitchClass - pitchClass);
-        let closestPitchClass = chordPitchClass;
-        let minimumDistance = distance;
+        let pitch_class = ChordSpace.modulo(pitch, ChordSpace.OCTAVE);
+        let octave = pitch - pitch_class;
+        let chord_pitch_class = ChordSpace.modulo(chord.voices[0], ChordSpace.OCTAVE);
+        let distance = Math.abs(chord_pitch_class - pitch_class);
+        let closest_pitch_class = chord_pitch_class;
+        let minimum_distance = distance;
         for (let voice = 1; voice < chord.size(); voice++) {
-            chordPitchClass = ChordSpace.modulo(chord.voices[voice], ChordSpace.OCTAVE);
-            distance = Math.abs(chordPitchClass - pitchClass);
-            if (ChordSpace.lt_epsilon(distance, minimumDistance) === true) {
-                minimumDistance = distance;
-                closestPitchClass = chordPitchClass;
+            chord_pitch_class = ChordSpace.modulo(chord.voices[voice], ChordSpace.OCTAVE);
+            distance = Math.abs(chord_pitch_class - pitch_class);
+            if (ChordSpace.lt_epsilon(distance, minimum_distance) === true) {
+                minimum_distance = distance;
+                closest_pitch_class = chord_pitch_class;
             }
         }
-        let newPitch = closestPitchClass;
+        let new_pitch = closest_pitch_class;
         if (octave_equivalence !== true) {
-            newPitch = octave + newPitch;
+            new_pitch = octave + new_pitch;
         }
-        return newPitch;
+        return new_pitch;
     };
 
     /**
@@ -2127,7 +2176,6 @@ if (typeof console === 'undefined') {
      * The internal duration, instrument, and loudness are used.
      */
     ChordSpace.insert = function(score, chord, time_) {
-        // console.info(score, chord, time_, duration, channel, velocity, pan)
         for (let voice = 0; voice < chord.size(); voice++) {
             let event = chord.note(voice, time_, chord.getDuration(voice), chord.getChannel(voice), chord.getVelocity(voice), chord.getPan(voice));
             score.append(event);
@@ -2382,6 +2430,78 @@ if (typeof console === 'undefined') {
             this.voices[voice] = pitch;
         }
     };
+    
+        // GENERIC FUNCTIONS
+
+    // unfoldr :: (b -> Maybe (a, b)) -> b -> [a]
+    var unfoldr = function (mf, v) {
+        var elements = [];
+        return [until(function (m) {
+                return !m.valid;
+            }, function (m) {
+                var m2 = mf(m);
+                return m2.valid && (elements = [m2.value].concat(elements)), m2;
+            }, {
+                valid: true,
+                value: v,
+                new: v
+            })
+            .value
+        ].concat(elements);
+    };
+
+    // until :: (a -> Bool) -> (a -> a) -> a -> a
+    var until = function (p, f, x) {
+        var v = x;
+        while (!p(v)) {
+            v = f(v);
+        }
+        return v;
+    };
+
+    // replicate :: Int -> a -> [a]
+    var replicate = function (n, a) {
+        var v = [a],
+            o = [];
+        if (n < 1) return o;
+        while (n > 1) {
+            if (n & 1) o = o.concat(v);
+            n >>= 1;
+            v = v.concat(v);
+        }
+        return o.concat(v);
+    };
+
+    // show :: a -> String
+    var show = function (x) {
+        return JSON.stringify(x);
+    }; //, null, 2);
+
+    // curry :: Function -> Function
+    var curry = function (f) {
+        for (var lng = arguments.length,
+                args = Array(lng > 1 ? lng - 1 : 0),
+                iArg = 1; iArg < lng; iArg++) {
+            args[iArg - 1] = arguments[iArg];
+        }
+
+        var intArgs = f.length,
+            go = function (elements) {
+                return elements.length >= intArgs ? f.apply(null, elements) : function () {
+                    return go(elements.concat([].slice.apply(arguments)));
+                };
+            };
+        return go([].slice.call(args, 1));
+    };
+
+    // range :: Int -> Int -> [Int]
+    var range = function (m, n) {
+        return Array.from({
+            length: Math.floor(n - m) + 1
+        }, function (_, i) {
+            return m + i;
+        });
+    };
 
     /**
      * Orthogonal additive groups for unordered chords of given arity under range
@@ -2483,16 +2603,23 @@ if (typeof console === 'undefined') {
         while (ChordSpace.next(iterator, origin, upperI, g) === true) {
             //console.log(sprintf("iterator: %s  epcs: %s sum: %f\n", iterator.toString(), iterator.epcs().eP().toString(), iterator.sum()));
             let representative = make_representative.apply(iterator.clone());
+            // eX must be iseX!
+            if (is_equivalent.apply(representative) === false) {
+                let make_e = make_representative.apply(iterator.clone());
+                let is_e = is_equivalent.apply(make_e);
+                console.error(sprintf("%s: make_equivalent %s is not is_equivalent as %s is!", equivalence, make_e.toString(), representative.toString()));
+            }
             let representative_key = representative.toString();
             if (unique_representatives.has(representative_key) === false) {
-                let index = unique_representatives.length;
+                let index = unique_representatives.size;
                 unique_representatives.set(representative_key, representative);
                 indexes_for_representatives.set(representative_key, index);
             }
             if (is_equivalent.apply(iterator) === true) {
                 // For debugging false positives uncomment next line.
-                let junk = is_equivalent.apply(iterator);
+                // let junk = is_equivalent.apply(iterator);
                 let equivalent = iterator.clone();
+                let make_e = make_representative.apply(equivalent);
                 let interval = iterator.span();
                 document.write(sprintf("%s: %4d %s sum: %9.4f span: %9.4f chord type: %s\n", equivalence, unique_equivalents.size + 1, equivalent.toString(), equivalent.sum(), equivalent.span(), equivalent.chord_type().toString()));
                 let equivalent_key = equivalent.toString();
@@ -2506,7 +2633,7 @@ if (typeof console === 'undefined') {
         // For each unique equivalent, make the representative, look up its index, and 
         // store the index for that equivalent.
         let indexes_for_equivalents = new Map();
-        for (let equivalent in unique_equivalents) {
+        for (equivalent in unique_equivalents) {
             let equivalent_key = equivalent.toString();
             let representative = make_representative.apply(equivalent);
             let representative_key = representative.toString();
@@ -2515,6 +2642,10 @@ if (typeof console === 'undefined') {
                 indexes_for_equivalent.set(equivalent_key, index);
             }
         }
+        console.info(sprintf("%s: representatives_for_indexes: %6d", equivalence, representatives_for_indexes.length));
+        console.info(sprintf("%s: indexes_for_equivalents:     %6d", equivalence, indexes_for_equivalents.size));
+        console.info(sprintf("%s: unique_representatives:      %6d", equivalence, unique_representatives.size));
+        console.info(sprintf("%s: unique_equivalents:          %6d", equivalence, unique_equivalents.size));        
         return [representatives_for_indexes, indexes_for_equivalents, unique_representatives, unique_equivalents];
     };
 
@@ -2555,6 +2686,11 @@ if (typeof console === 'undefined') {
         return intZeros > 0 ? replicate(intZeros, elements[0])
             .concat(baseElements) : baseElements;
     };
+    
+    // TEST
+    // Just items 30 to 35 in the (zero-indexed) series:
+    console.info(range(30, 35)
+        .map(curry(kpermutationForIndex)([1, 2, 3, 4, 5], 4)));    
 
     /**
      * A is the index of k-permutations with repetition of instruments for
@@ -2707,9 +2843,9 @@ if (typeof console === 'undefined') {
             I = 1;
             optt_i_optt = optt.I().eOPTT();
             if (optt_i_optt.eq_epsilon(optti) === false) {
-                console.info("Error: OPTT(I(OPTT)) must equal OPTTI.");
-                console.info('optt_i_optt:' + optt_i_optt.information());
-                console.info('optti:      ' + optti.information());
+                console.error("Error: OPTT(I(OPTT)) must equal OPTTI.");
+                console.error('optt_i_optt:' + optt_i_optt.information());
+                console.error('optti:      ' + optti.information());
                 process.exit();
             }
         }
@@ -2751,25 +2887,25 @@ if (typeof console === 'undefined') {
      * -1 if there is no such chord within the range.
      */
     ChordSpace.indexForOctavewiseRevoicing = function (chord, range, debug) {
-        let revoicingN = ChordSpace.octavewiseRevoicings(chord, range);
+        let revoicing_count = ChordSpace.octavewiseRevoicings(chord, range);
         let origin = chord.eOP();
         let revoicing = origin.clone();
-        let revoicingI = 0;
+        let revoicing_index = 0;
         while (true) {
             if (debug) {
                 console.info(sprintf("indexForOctavewiseRevoicing of %s in range %7.3f: %5d of %5d: %s",
                     chord,
                     range,
-                    revoicingI,
-                    revoicingN,
+                    revoicing_index,
+                    revoicing_count,
                     revoicing));
             }
             if (revoicing.eq_epsilon(chord) === true) {
-                return revoicingI;
+                return revoicing_index;
             }
             ChordSpace.next(revoicing, origin, range, ChordSpace.OCTAVE);
-            revoicingI++;
-            if (revoicingI > revoicingN) {
+            revoicing_index++;
+            if (revoicing_index > revoicing_count) {
                 return -1;
             }
         }
@@ -2850,6 +2986,7 @@ if (typeof console === 'undefined') {
         this.countD = Math.pow(this.durations.length, this.voices);
         let result = ChordSpace.allOfEquivalenceClass(voices, 'OPTTI');
         this.optisForIndexes = result[0];
+        // Remove duplicates from optisForIndexes and correct both collections accordingly.
         this.indexesForOptis = result[1];
         this.countP = this.optisForIndexes.length;
         let ended = performance.now();
