@@ -33,6 +33,19 @@
     document.write('<h2>' + title + '</h2>');
     wryte(source);
   }
+// Should not pass.
+let test_chord;
+let test_chord_optti;
+let test_chord_iseoptti;
+test_chord = new ChordSpace.Chord([11, -9, -6]);  
+test_chord_optti = test_chord.eOPTTI();
+test_chord_iseoptti = test_chord_optti.iseOPTTI();
+
+var CM7 = new ChordSpace.Chord();
+CM7.set([0, 4, 7, 11]);
+console.log(sprintf("CM7: %s\n", CM7.toString()));
+var center = CM7.center();
+console.log(sprintf("CM7.center(): %s\n", center.toString()));
 console.log("This is console.log.");
 console.info("This is console.info.");
 console.warn("This is console.warn.");
@@ -44,12 +57,8 @@ let v2 = new ChordSpace.Chord([0, 4, 9]);
 v2.iseV();
 let v3 = new ChordSpace.Chord([0, 5, 8]);
 v3.iseV();
-let test_chord;
 let test_is_opti;
 test_chord = new ChordSpace.Chord([-6, -6, 6, 6]);
-is_opti = test_chord.iseOPTTI();
-// Should not pass.
-test_chord = new ChordSpace.Chord([-3, -2, 8]);
 is_opti = test_chord.iseOPTTI();
 test("There should be 19 chords in OPTTI for trichords", '');
 let opti_3 = ChordSpace.allOfEquivalenceClass(3, 'OPTTI');

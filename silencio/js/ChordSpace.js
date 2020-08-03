@@ -44,7 +44,7 @@ if (typeof console === 'undefined') {
         ChordSpace.EPSILON = ChordSpace.EPSILON / 2;
         let nextEpsilon = ChordSpace.EPSILON / 2;
         let onePlusNextEpsilon = 1 + nextEpsilon;
-        if (onePlusNextEpsilon == 1) {
+        if (onePlusNextEpsilon === 1) {
             console.info('ChordSpace EPSILON: ' + ChordSpace.EPSILON);
             break;
         }
@@ -344,6 +344,21 @@ if (typeof console === 'undefined') {
         }
         return 0;
     };
+    
+    ChordSpace.floor = function(x, g) {
+        g = typeof g !== 'undefined' ? g : 1;
+        // TODO: Make this work for g <> 1.
+        let floor_ = Math.floor(x);
+        return floor_;
+        
+    }
+    
+    ChordSpace.ceiling = function(x, g) {
+        g = typeof g !== 'undefined' ? g : 1;
+        // TODO: Make this work for g <> 1.
+        let ceiling_ = Math.ceil(x);
+        return ceiling_;
+    }
 
     /** 
      * The size of the octave, defined to be consistent with 12 tone equal 
@@ -441,7 +456,7 @@ if (typeof console === 'undefined') {
         }
     };
 
-    Chord.prototype.add = function(pitch) {
+    Chord.prototype.addVoice = function(pitch) {
         this.resize(this.size() + 1);
         this.voices[this.size() - 1] = pitch;
         return this;
@@ -666,7 +681,7 @@ if (typeof console === 'undefined') {
         let minimum_interval = Math.abs(this.voices[1] - this.voices[2]);
         for (let v1 = 1; v1 < this.voices.length; v1++) {
             for (let v2 = 1; v2 < this.voices.length; v2++) {
-                if (v1 == v2) {
+                if (v1 === v2) {
                     let interval = Math.abs(this.voices[v1] - this.voices[v2]);
                     if (interval < minimum_interval) {
                         minimum_interval = interval;
@@ -685,7 +700,7 @@ if (typeof console === 'undefined') {
         let highest_voice = 0;
         let highest_pitch = this.voices[highest_voice];
         for (let voice = 1; voice < this.voices.length; voice++) {
-            if (ChordSpace.gt_epsilon(this.voices[voice], highest_pitch) == true) {
+            if (ChordSpace.gt_epsilon(this.voices[voice], highest_pitch) === true) {
                 highest_pitch = this.voices[voice];
                 highest_voice = voice;
             }
@@ -734,28 +749,6 @@ if (typeof console === 'undefined') {
     };
 
     /**
-     * Returns a new chord whose pitches are the floors of this chord's pitches.
-     */
-    Chord.prototype.floor = function() {
-        let chord = this.clone();
-        for (let voice = 0; voice < this.voices.length; voice++) {
-            chord.voices[voice] = Math.floor(this.voices[voice]);
-        }
-        return chord;
-    };
-
-    /**
-     * Returns a new chord whose pitches are the ceilings of this chord's pitches.
-     */
-    Chord.prototype.ceil = function() {
-        let chord = this.clone();
-        for (let voice = 0; voice < this.voices.length; voice++) {
-            chord.voices[voice] = Math.ceil(this.voices[voice]);
-        }
-        return chord;
-    };
-
-    /**
      * Returns the origin of the chord's space.
      */
     Chord.prototype.origin = function() {
@@ -765,10 +758,53 @@ if (typeof console === 'undefined') {
         }
         return clone_;
     };
+    
+    /**
+     * Returns the center of OPT, that is, the lowest chord with sum 0 on the 
+     * axis of equally spaced chords, e.g. (-4, 0, 4) for trichords.
+     */
+    Chord.prototype.center = function() {
+        let n = this.size();
+        let interval = ChordSpace.OCTAVE / n;
+        let even = this.clone();
+        for (let i = 0; i < n; i++) {
+            even.voices[i] = i * interval;
+        }
+        let center_ = even.eT();
+        return center_;
+    };
+    
+    /**
+     * Returns a new chord whose pitches are the ceilings with respect to g of 
+     * the pitches in this, where g is the generator of transposition.
+     */    
+    Chord.prototype.ceiling = function(g) {
+        g = typeof g !== 'undefined' ? g : 1;
+        ceiling_ = this.clone();
+        for (let i = 0; i < this.size(); i++) {
+            ceiling_.voices[i] = ChordSpace.ceiling(this.voices[i], g);
+        }
+        ceiling_.clamp(g);        
+        return ceiling_;
+    }
+
+    /**
+     * Returns a new chord whose pitches are the floors with respect to g of 
+     * the pitches in this, where g is the generator of transposition.
+     */    
+    Chord.prototype.floor = function(g) {
+        g = typeof g !== 'undefined' ? g : 1;
+        floor_ = this.clone();
+        for (let i = 0; i < this.size(); i++) {
+            floor_.voices[i] = ChordSpace.floor(this.voices[i], g);
+        }
+        floor_.clamp(g);        
+        return floor_;
+    };
 
     Chord.prototype.distanceToOrigin = function() {
-        let origin = this.origin();
-        return ChordSpace.euclidean(this, origin);
+        let origin_ = this.origin();
+        return ChordSpace.euclidean(this, origin_);
     };
 
     /**
@@ -833,7 +869,46 @@ if (typeof console === 'undefined') {
         }
         return inverse;
     };
+    
+    /**
+     * Reflects this chord in another (arbitrary) chord.
+     * NOTE: Does NOT necessarily return the result under any equivalence 
+     * class.
+     */
+    Chord.prototype.reflect = function(other) {
+        let reflection = this.clone();
+        for (let i = 0; i < this.size(); i++) {
+            reflection.voices[i] = ChordSpace.I(this.voices[i], other.voices[i]);
+        }
+        return reflection;
+    };
 
+    /**
+     * Moves this chord by adding to it the pitches of another.
+     * NOTE: Does NOT necessarily return the result under any equivalence 
+     * class.
+     */
+    Chord.prototype.add = function(other) {
+        let translation = this.clone();
+        for (let i = 0; i < this.size(); i++) {
+            translation.voices[i] = this.voices[i] + other.voices[i];
+        }
+        return translation;
+    };
+
+    /**
+     * Moves this chord by subtracting from  it the pitches of another.
+     * NOTE: Does NOT necessarily return the result under any equivalence 
+     * class.
+     */
+    Chord.prototype.subtract = function(other) {
+        let translation = this.clone();
+        for (let i = 0; i < this.size(); i++) {
+            translation.voices[i] = this.voices[i] - other.voices[i];
+        }
+        return translation;
+    };
+    
     /**
      * Returns the remainder of the dividend divided by the divisor,
      * according to the Euclidean definition.
@@ -1043,32 +1118,12 @@ if (typeof console === 'undefined') {
      */
     Chord.prototype.eTT = function(g) {
         g = typeof g !== 'undefined' ? g : 1;
-        let iterator = this.clone();
-        let sum_ = iterator.sum();
-        // If the sum is less than 0, transpose up by steps of g 
-        // until the sum is >= 0.
-        if (ChordSpace.lt_epsilon(sum_, 0.) === true) {
-            while (true) {
-                iterator = iterator.T(g);
-                sum_ = iterator.sum();
-                if (ChordSpace.gt_epsilon(sum_, 0.) === true) {
-                    break;
-                }
-            }  
-        // If the sum is greater than 0, transpose down by steps of g 
-        // until the sum is < 0, then back up by g.
-        } else if (ChordSpace.gt_epsilon(sum_, 0,) === true) {
-             while (true) {
-                iterator = iterator.T(-g);
-                sum_ = iterator.sum();
-                if (ChordSpace.lt_epsilon(sum_, 0.) === true) {
-                    iterator = iterator.T(g);
-                    break;
-                }
-            }
-        };
-        // Otherwise, this chord is already eTT.
-        return iterator;
+        let t_ = this.eT();
+        let t_ceiling = t_.ceiling(g);
+        while (ChordSpace.lt_epsilon(t_ceiling.sum(), 0.) === true) {
+            t_ceiling == t_ceiling.T(g);
+        }
+        return t_ceiling;
     };
 
     /**
@@ -1076,20 +1131,16 @@ if (typeof console === 'undefined') {
      * of translational equivalence and the equal temperament generated by g.
      */
     Chord.prototype.iseTT = function(g) {
-        let iterator = this.clone();
-        let this_sum = this.sum();
-        let least_sum;
-        while (true) {
-            least_sum = iterator.sum();
-            iterator = iterator.T(-1);
-            if (ChordSpace.lt_epsilon(iterator.sum(), 0.) == true) {
-                break;
-            }
+        let sum_ = this.sum();
+        if (ChordSpace.eq_epsilon(sum_, 0) === true) {
+            return true;
         }
-        if (ChordSpace.eq_epsilon(this_sum, least_sum) == false) {
-            return false;
-        }        
-        return true;
+        let t_ = this.eT();
+        let tt = t_.eTT(g);
+        if (this.eq_epsilon(tt) == true) {
+            return true;
+        }
+        return false;
     };
 
     /**
@@ -1213,11 +1264,11 @@ if (typeof console === 'undefined') {
             return true;
         }
         range = typeof range !== 'undefined' ? range : ChordSpace.OCTAVE;
-        let top_voice = this.size() - 1;
+        let comparisons = this.size() - 1;
+        let top_voice = comparisons;
         let bottom_voice = 0;
         let wraparound_interval = (this.voices[bottom_voice] + range) - this.voices[top_voice];
         let other_interval;
-        let comparisons = this.size() - 2;
         for ( ; bottom_voice < comparisons; bottom_voice++) {
             other_interval = this.voices[bottom_voice + 1] - this.voices[bottom_voice];
             if (ChordSpace.le_epsilon(wraparound_interval, other_interval) === false) {
@@ -1345,10 +1396,16 @@ if (typeof console === 'undefined') {
     };
 
     Chord.prototype.eRPTT = function(range) {
-        let erp = this.eRP(range);
-        let ev = erp.eV();
-        let erptt = ev.eTT();
-        return erptt;
+        let rp = this.eRP(range);
+        let rp_voicings = rp.voicings();
+        let rp_voicing_tt;
+        for (rp_voicing of rp_voicings) {
+            if (rp_voicing.iseV() === true) {
+                break;
+            }
+        }
+        rp_voicing_tt = rp_voicing.eTT();
+        return rp_voicing_tt;
      };
 
     /**
@@ -1453,7 +1510,7 @@ if (typeof console === 'undefined') {
         }
         // Testing for voicing equivalence first makes it possible to test 
         // only one of the possible transpositional equivalents.
-        if (this.iseTT(range) === false) {
+        if (this.iseTT() === false) {
             return false;
         }
         if (this.iseI() === false) {
@@ -1490,45 +1547,30 @@ if (typeof console === 'undefined') {
         }
     };
     
-    // If I can get this one right, I can fix the other eX.
-
+    /**
+     * Returns the equivalent of the chord within the representative 
+     * fundamental domain of range, permutational, transpositional, and 
+     * inversional equivalence, within equal temperament.
+     *
+     * If this is not eI, then reflect this in the center, which preserves
+     * the fundamental domain of OPTT.
+     */
     Chord.prototype.eRPTTI = function(range) {
-        //~ let erptt = this.eRPTT(range);
-        //~ if (erptt.iseI() === true) {
-            //~ return erptt;
-        //~ } else {
-            //~ let erptti = erptt.eI();
-            //~ let erpttierptt = erptti.eRPTT(range);
-            //~ return erpttierptt;
-        //~ }
-        
-        //~ let er = this.eR(range);
-        //~ let ep = er.eP();
-        //~ let voicings_ = ep.voicings();
-        //~ let n = voicings_.length;
-        //~ let ett;
-        //~ for (let i = 0; i < n; i++) {
-            //~ let voicing = voicings_[i];
-            //~ if (voicing.iseV()) {
-                //~ ett = voicing.eTT();
-                //~ break;
-            //~ }
-        //~ }
-        //~ let ei = ett.eI();
-        //~ return ei;
-        let erp = this.eRP(range);
-        let erp_voicings = erp.voicings();
-        for (voicing of erp_voicings) {
-            if (voicing.iseV()) {
-                let ett = voicing.eTT(range);
-                if (ett.iseI() == true) {
-                    return ett;
-                } else {
-                    let ett_i = ett.I();
-                    let ett_i_ett = ett_i.eTT(range);
-                    return ett_i_ett;
-                }
-            }
+        let rptt = this.eRPTT(range);
+        if (rptt.iseI() === true) {
+            return rptt;
+        } else {
+            //~ let origin_ = this.origin();
+            //~ let center_ = this.center();
+            //~ let rptt_at_origin = rptt.subtract(center_);
+            //~ let rptt_at_origin_reflected = rptt_at_origin.reflect(origin_);
+            //~ let rptt_reflected = rptt_at_origin_reflected.add(center_);
+            //~ let rptt_reflected_rptt = rptt_reflected.eTT();
+            //~ return rptt_reflected_rptt; 
+            let center_ = this.center();
+            let rptt_i = center_.subtract(rptt);
+            let rptt_i_tt = rptt_i.eRPTT(range);
+            return rptt_i_tt;
         }
     };
 
@@ -1879,7 +1921,7 @@ if (typeof console === 'undefined') {
         let count = 0;
         for (let voice = 0; voice < a_.size(); voice++) {
             let p = a.voices[voice];
-            if (a.count(p) == b.count(p)) {
+            if (a.count(p) === b.count(p)) {
                 count = count + 1;
             }
         }
@@ -2420,7 +2462,6 @@ if (typeof console === 'undefined') {
      * equal temperament, where g is the generator of transposition.
      * Probably works in all cases only when g is an integer.
      */
-
     Chord.prototype.clamp = function(g) {
         for (let voice = 0; voice < this.size(); voice++) {
             let pitch = this.voices[voice];
@@ -2560,27 +2601,27 @@ if (typeof console === 'undefined') {
         g = typeof g !== 'undefined' ? g : 1;
         let is_equivalent = null;
         let make_representative = null;
-        if (equivalence == 'OP') {
+        if (equivalence === 'OP') {
             is_equivalent = Chord.prototype.iseOP;
             make_representative = Chord.prototype.eOP;
         }
-        if (equivalence == 'OPT') {
+        if (equivalence === 'OPT') {
             is_equivalent = Chord.prototype.iseOPT;
             make_representative = Chord.prototype.eOPT;
         }
-        if (equivalence == 'OPTT') {
+        if (equivalence === 'OPTT') {
             is_equivalent = Chord.prototype.iseOPTT;
             make_representative = Chord.prototype.eOPTT;
         }
-        if (equivalence == 'OPI') {
+        if (equivalence === 'OPI') {
             is_equivalent = Chord.prototype.iseOPI;
             make_representative = Chord.prototype.eOPI;
         }
-        if (equivalence == 'OPTI') {
+        if (equivalence === 'OPTI') {
             is_equivalent = Chord.prototype.iseOPTI;
             make_representative = Chord.prototype.eOPTI;
         }
-        if (equivalence == 'OPTTI') {
+        if (equivalence === 'OPTTI') {
             is_equivalent = Chord.prototype.iseOPTTI;
             make_representative = Chord.prototype.eOPTTI;
         }
@@ -2601,13 +2642,12 @@ if (typeof console === 'undefined') {
         let indexes_for_representatives = new Map();
         document.write("<pre>");
         while (ChordSpace.next(iterator, origin, upperI, g) === true) {
-            //console.log(sprintf("iterator: %s  epcs: %s sum: %f\n", iterator.toString(), iterator.epcs().eP().toString(), iterator.sum()));
             let representative = make_representative.apply(iterator.clone());
             // eX must be iseX!
             if (is_equivalent.apply(representative) === false) {
                 let make_e = make_representative.apply(iterator.clone());
                 let is_e = is_equivalent.apply(make_e);
-                console.error(sprintf("%s: make_equivalent %s is not is_equivalent as %s is!", equivalence, make_e.toString(), representative.toString()));
+                console.error(sprintf("chord: %s  e%s(%s) => %s ise%s(%s): %s\n", iterator.toString(),  equivalence, iterator.toString(), make_e.toString(), equivalence, make_e.toString(), is_e));
             }
             let representative_key = representative.toString();
             if (unique_representatives.has(representative_key) === false) {

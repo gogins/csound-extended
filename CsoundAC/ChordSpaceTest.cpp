@@ -73,7 +73,7 @@ static void testChordSpaceGroup(const csound::ChordSpaceGroup &chordSpaceGroup, 
     std::fprintf(stderr, "Reconstituted inverted chord:\n%s\n", reconstitutedInvertedChord.information().c_str());
     test(invertedChord == reconstitutedInvertedChord,"Reconstituted inverted chord must be the same as the original inverted chord.\n");
     std::fprintf(stderr, "ENDED test ChordSpaceGroup for %s.\n", chordName.c_str());
-    std::fprintf(stderr, "");
+    std::fprintf(stderr, "\n");
 }
 
 static void testAllOfChordSpaceGroup(int initialVoiceCount, int finalVoiceCount) {
@@ -171,7 +171,7 @@ static bool testNormalsAndEquivalents(std::string equivalence,
                                       double range,
                                       double g) {
     char buffer[0x200];
-    std::fprintf(stderr, "\nequivalence: %s  normalized: %d  is_normal: %d  range: %f  g: %f\n", equivalence.c_str(), normalized_.size(), is_normal_.size(), range, g);
+    std::fprintf(stderr, "\nequivalence: %s  normalized: %ld  is_normal: %ld  range: %f  g: %f\n", equivalence.c_str(), normalized_.size(), is_normal_.size(), range, g);
     auto normalize = normalizesForEquivalenceRelations[equivalence];
     auto isEquivalent = isEquivalentsForEquivalenceRelations[equivalence];
     bool passes = true;
@@ -246,7 +246,7 @@ static bool testConsistency(std::string compoundEquivalenceRelation, const std::
         for (auto chordI = equivalents.begin(); chordI != equivalents.end(); ++chordI) {
             if (isNormal(*chordI, range, g) == false) {
                 passes = false;
-                std::sprintf(buffer, "testConsistency: chord %s in the domain of %s is not in the domain of %s voices %d range %f g %f.\n",
+                std::sprintf(buffer, "testConsistency: chord %s in the domain of %s is not in the domain of %s voices %ld range %f g %f.\n",
                              chordI->toString().c_str(),
                              compoundEquivalenceRelation.c_str(),
                              equivalenceRelationsI->c_str(),
@@ -265,7 +265,7 @@ static bool testConsistency(std::string compoundEquivalenceRelation, const std::
             pass(buffer);
         }
     }
-    std::sprintf(buffer, "testConsistency: %s for %d voices range %f g %f.\n", compoundEquivalenceRelation.c_str(), equivalents.begin()->voices(), range, g);
+    std::sprintf(buffer, "testConsistency: %s for %ld voices range %f g %f.\n", compoundEquivalenceRelation.c_str(), equivalents.begin()->voices(), range, g);
     pass(buffer);
     return passes;
 }
@@ -288,6 +288,22 @@ static bool testEquivalenceRelation(std::string equivalenceRelation, int voiceCo
     }
     if (!testConsistency(equivalenceRelation, equivalentsForEquivalenceRelation, range, g)) {
         passes = false;
+    }
+    if (equivalenceRelation == "RPTgI") {
+        if (voiceCount == 3) {
+            if (equivalentsForEquivalenceRelation.size() != 19) {
+                std::sprintf(buffer, "%-8s by isNormal size should be 19 but is %ld.\n", equivalenceRelation.c_str(), equivalentsForEquivalenceRelation.size());
+                std::fprintf(stderr, buffer);
+            }
+            passes = false;
+        }
+        if (voiceCount == 4) {
+            if (equivalentsForEquivalenceRelation.size() != 83) {
+                std::sprintf(buffer, "%-8s by isNormal size should be 83 but is %ld.\n", equivalenceRelation.c_str(), equivalentsForEquivalenceRelation.size());
+                std::fprintf(stderr, buffer);
+            }
+            passes = false;    
+        }
     }
     return passes;
 }
