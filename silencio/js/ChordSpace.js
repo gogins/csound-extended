@@ -1532,43 +1532,39 @@ if (typeof console === 'undefined') {
     };
 
     /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of range, permutational, transpositional, and inversional
-     * equivalence.
+     * Returns the equivalent of the chord within the representative 
+     * fundamental domain of range, permutational, transpositional, and 
+     * inversional equivalence.
      */
     Chord.prototype.eRPTI = function(range) {
-        let erpt = this.eRPT(range);
-        if (erpt.iseI() === true) {
-            return erpt;
+        let rpt = this.eRPT(range);
+        if (rpt.iseI() === true) {
+            return rpt;
         } else {
-            let erpti = erpt.eI();
-            let erptierpt = erpti.eRPT(range);
-            return erptierpt;
+            // If this is not eI, then reflect this in the center, which preserves
+            // the fundamental domain of OPT.
+            let center_ = this.center();
+            let rpt_i = center_.subtract(rpt);
+            let rpt_i_t = rpt_i.eRPT(range);
+            return rpt_i_t;
         }
     };
     
     /**
      * Returns the equivalent of the chord within the representative 
      * fundamental domain of range, permutational, transpositional, and 
-     * inversional equivalence, within equal temperament.
-     *
-     * If this is not eI, then reflect this in the center, which preserves
-     * the fundamental domain of OPTT.
+     * inversional equivalence, quantized within equal temperament.
      */
     Chord.prototype.eRPTTI = function(range) {
         let rptt = this.eRPTT(range);
         if (rptt.iseI() === true) {
             return rptt;
         } else {
-            //~ let origin_ = this.origin();
-            //~ let center_ = this.center();
-            //~ let rptt_at_origin = rptt.subtract(center_);
-            //~ let rptt_at_origin_reflected = rptt_at_origin.reflect(origin_);
-            //~ let rptt_reflected = rptt_at_origin_reflected.add(center_);
-            //~ let rptt_reflected_rptt = rptt_reflected.eTT();
-            //~ return rptt_reflected_rptt; 
+            // If this is not eI, then reflect this in the center, which preserves
+            // the fundamental domain of OPT.
             let center_ = this.center();
             let rptt_i = center_.subtract(rptt);
+            // Then quantize by equal temperament.
             let rptt_i_tt = rptt_i.eRPTT(range);
             return rptt_i_tt;
         }
@@ -1749,33 +1745,44 @@ if (typeof console === 'undefined') {
      * Returns a formatted string with information about the chord.
      */
     Chord.prototype.information = function() {
-        let et = this.eT().et();
-        ///let evt = this.eV().et();
-        let eopt = this.eOPT().et();
-        let epcs = this.eopcs();
-        let eopti = this.eOPTI().et();
-        let eOP = this.eOP();
-        let chordName = this.name();
-        return sprintf("Pitches:  %s  %s\nI:        %s\neO:       %s  iseO:    %s\neP:       %s  iseP:    %s\neT:       %s  iseT:    %s\n          %s\neI:       %s  iseI:    %s\neV:       %s  iseV:    %s\n          %s\neOP:      %s  iseOP:   %s\npcs:      %s\neOPT:     %s  iseOPT:  %s\neOPTT:    %s\n          %s\neOPI:     %s  iseOPI:  %s\neOPTI:    %s  iseOPTI: %s\neOPTTI:   %s\n          %s\nsum:      %6.2f",
-            this, chordName,
-            this.I(),
-            this.eO(), this.iseO(),
-            this.eP(), this.iseP(),
-            this.eT(), this.iseT(),
-            et,
-            this.eI(), this.iseI(),
-            this.eV(), this.iseV(),
-            evt,
-            this.eOP(), this.iseOP(),
-            epcs,
-            this.eOPT(), this.iseOPT(),
-            this.eOPTT(),
-            eopt,
-            this.eOPI(), this.iseOPI(),
-            this.eOPTI(), this.iseOPTI(),
-            this.eOPTTI(),
-            eopti,
-            this.sum());
+        let lines = new Array();
+        let chord = this;
+        let name_ = this.name();
+        lines.push(sprintf("%s %s", chord, name));
+        let pcs = this.eopcs();
+        let chord_type = this.chord_type();
+        lines.push(sprintf("%s %s", pcs, chord_type));
+        return lines.join("\n");
+/*         let inversion = this.I();
+ *         let eT = this.eT();
+ *         let iseT = this.iseT();
+ *         let et = this.eT().et();
+ *         let evt = this.eV().et();
+ *         let eopt = this.eOPT().et();
+ *         let epcs = this.eopcs();
+ *         let eopti = this.eOPTI().et();
+ *         let eOP = this.eOP();
+ *         let chordName = this.name();
+ *         return sprintf("Pitches:  %s  %s\nI:        %s\neO:       %s  iseO:    %s\neP:       %s  iseP:    %s\neT:       %s  iseT:    %s\n          %s\neI:       %s  iseI:    %s\neV:       %s  iseV:    %s\n          %s\neOP:      %s  iseOP:   %s\npcs:      %s\neOPT:     %s  iseOPT:  %s\neOPTT:    %s\n          %s\neOPI:     %s  iseOPI:  %s\neOPTI:    %s  iseOPTI: %s\neOPTTI:   %s\n          %s\nsum:      %6.2f",
+ *             this, chordName,
+ *             this.I(),
+ *             this.eO(), this.iseO(),
+ *             this.eP(), this.iseP(),
+ *             this.eT(), this.iseT(),
+ *             et,
+ *             this.eI(), this.iseI(),
+ *             this.eV(), this.iseV(),
+ *             this.eOP(), this.iseOP(),
+ *             epcs,
+ *             this.eOPT(), this.iseOPT(),
+ *             this.eOPTT(),
+ *             eopt,
+ *             this.eOPI(), this.iseOPI(),
+ *             this.eOPTI(), this.iseOPTI(),
+ *             this.eOPTTI(),
+ *             eopti,
+ *             this.sum());
+ */
     };
 
     /**
@@ -2640,6 +2647,7 @@ if (typeof console === 'undefined') {
         let unique_equivalents = new Map();
         let unique_representatives = new Map();
         let indexes_for_representatives = new Map();
+        let indexes_for_equivalents = new Map();
         document.write("<pre>");
         while (ChordSpace.next(iterator, origin, upperI, g) === true) {
             let representative = make_representative.apply(iterator.clone());
@@ -2672,14 +2680,14 @@ if (typeof console === 'undefined') {
         let representatives_for_indexes = Array.from(unique_representatives.values());
         // For each unique equivalent, make the representative, look up its index, and 
         // store the index for that equivalent.
-        let indexes_for_equivalents = new Map();
-        for (equivalent in unique_equivalents) {
-            let equivalent_key = equivalent.toString();
+        for (entry of unique_equivalents.entries()) {
+            let equivalent_key = entry[0];
+            let equivalent = entry[1];
             let representative = make_representative.apply(equivalent);
             let representative_key = representative.toString();
             let index = indexes_for_representatives.get(representative_key);
             if (indexes_for_equivalents.has(representative_key) === false) {
-                indexes_for_equivalent.set(equivalent_key, index);
+                indexes_for_equivalents.set(equivalent_key, index);
             }
         }
         console.info(sprintf("%s: representatives_for_indexes: %6d", equivalence, representatives_for_indexes.length));

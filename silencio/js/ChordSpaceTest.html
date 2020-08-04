@@ -44,6 +44,7 @@ test_chord_iseoptti = test_chord_optti.iseOPTTI();
 var CM7 = new ChordSpace.Chord();
 CM7.set([0, 4, 7, 11]);
 console.log(sprintf("CM7: %s\n", CM7.toString()));
+console.log(CM7.information());
 var center = CM7.center();
 console.log(sprintf("CM7.center(): %s\n", center.toString()));
 console.log("This is console.log.");
@@ -63,7 +64,7 @@ is_opti = test_chord.iseOPTTI();
 test("There should be 19 chords in OPTTI for trichords", '');
 let opti_3 = ChordSpace.allOfEquivalenceClass(3, 'OPTTI');
 test("There should be 83 chords in OPTTI for tetrachords", '');
-//let opti_4 = ChordSpace.allOfEquivalenceClass(4, 'OPTTI');
+///let opti_4 = ChordSpace.allOfEquivalenceClass(4, 'OPTTI');
 console.log("EOP OF MINOR TRIADS")
 mt = new ChordSpace.Chord([0, 3, 7]);
 for (i = 0; i < 12; i++) {
@@ -114,7 +115,7 @@ test('Chord.maximumInterval', 'chord.maximumInterval()');
 clone = chord.clone();
 test('Chord.clone', 'chord.clone()');
 test('Chord.floor', 'chord.floor()');
-test('Chord.ceil', 'chord.ceil()');
+test('Chord.ceiling', 'chord.ceiling()');
 test('Chord.origin', 'chord.origin()');
 b.setPitch(0, 5);
 a.setPitch(3, 7);
