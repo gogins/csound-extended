@@ -81,7 +81,7 @@ if (typeof console === 'undefined') {
      *     "counterpoint").
      *
      * --  Implementing the direct product of the four additive groups
-     *     OPTI x T x I x V (octavewise revoicings within a given range). This
+     *     OPTI x T x I x V (V is octavewise revoicings within a given range). This
      *     provides a set of 4 independent "knobs" for the composer to control prime
      *     form or set class, transposition, inversion, and voicing (octavewise
      *     permutation of voices within a specified range).
@@ -417,6 +417,18 @@ if (typeof console === 'undefined') {
     };
     ChordSpace.Chord = Chord;
     
+    /** 
+     * Global of chords defining inversion flat hyperplanes for chords from 3 
+     * through 7 voices, from the _Science_ material.
+     */
+    ChordSpace.inversion_flats = new Map();
+        
+    /** 
+     * Global of unit normal vectors for reflecting chords in the inversion 
+     * flat that folds OPT to OPTI, for chords from 3 through 7 voices.
+     */
+    ChordSpace.inversion_flat_normals = new Map();
+    
     /**
      * Returns the number of voices in the chord.
      */
@@ -555,7 +567,7 @@ if (typeof console === 'undefined') {
     /**
      * Returns a musician-friendly string representation of the chord.
      */
-    Chord.prototype.toName= function() {
+    Chord.prototype.toPitches = function() {
         let text = ''
         for (let voice = 0; voice < this.voices.length; voice++) {
             if (voice > 0) {
@@ -817,31 +829,23 @@ if (typeof console === 'undefined') {
         }
         return sum_;
     };
+    
+    Chord.prototype.unisonAtSum = function() {
+        let unison_ = this.origin();
+        let pitch = this.sum() / this.size();
+        for (let voice = 0; voice < this.size(); voice++) {
+            unison_.voices[voice] = pitch;
+        }
+        return unison_;
+    };
 
     /**
      * Returns the Euclidean distance from this chord
      * to the unison diagonal of its chord space.
      */
     Chord.prototype.distanceToUnisonDiagonal = function() {
-        let unison = this.origin();
-        let pitch = this.sum() / this.size();
-        for (let voice = 0; voice < this.size(); voice++) {
-            unison.voices[voice] = pitch;
-        }
-        return ChordSpace.euclidean(this, unison);
-    };
-
-    /**
-     * Returns the maximally even chord in the chord's space,
-     * e.g. the augmented triad for 3 dimensions.
-     */
-    Chord.prototype.maximallyEven = function() {
-        let clone_ = this.clone();
-        let g = ChordSpace.OCTAVE / clone_.size();
-        for (let i = 0; i < clone_.size(); i++) {
-            clone_.voices[i] = i * g;
-        }
-        return clone_;
+        let unison_ = this.unisonAtSum();
+        return ChordSpace.euclidean(this, unison_);
     };
 
     /**
@@ -869,20 +873,36 @@ if (typeof console === 'undefined') {
         }
         return inverse;
     };
-    
+
     /**
-     * Reflects this chord in another (arbitrary) chord.
-     * NOTE: Does NOT necessarily return the result under any equivalence 
-     * class.
+     * Returns the reflection of this chord specifically in the inversion flat.
+     * Preserves the fundamental domain of RP and RPT.
+     * TODO: Fix for all cardinalities.
      */
-    Chord.prototype.reflect = function(other) {
-        let reflection = this.clone();
-        for (let i = 0; i < this.size(); i++) {
-            reflection.voices[i] = ChordSpace.I(this.voices[i], other.voices[i]);
+    Chord.prototype.reflect = function() {
+        // Find a unit vector that is normal to the inversion flat...
+        let origin_ = this.origin();
+        let low_normal_endpoint = origin_.clone();
+        low_normal_endpoint.voices[low_normal_endpoint.size() - 1] = ChordSpace.OCTAVE;
+        let high_normal_endpoint = origin_.clone();
+        for (let i = 1; i < high_normal_endpoint.size(); i++ ) {
+            high_normal_endpoint.voices[i] = ChordSpace.OCTAVE;
         }
+        let normal_vector = high_normal_endpoint.subtract(low_normal_endpoint);
+        let magnitude = numeric.norm2(normal_vector.voices);
+        // This is a _unit_ vector normal to the inversion flat.
+        let unit_normal = numeric.div(normal_vector.voices, magnitude);
+        // Apply the Householder reflector to the translated chord.
+        // H = I_n - 2 * ( u x u), x is outer product.
+        let tensor_ = numeric.tensor(unit_normal, unit_normal);
+        let product_ = numeric.mul(tensor_, 2);
+        let identity_ = numeric.identity(this.size());
+        let householder = numeric.sub(identity_, product_);
+        let this_reflected = numeric.dot(householder, this.voices); 
+        reflection = new ChordSpace.Chord(this_reflected);
         return reflection;
     };
-
+    
     /**
      * Moves this chord by adding to it the pitches of another.
      * NOTE: Does NOT necessarily return the result under any equivalence 
@@ -1389,10 +1409,16 @@ if (typeof console === 'undefined') {
      * FIXME: Take g into account?
      */
     Chord.prototype.eRPT = function(range) {
-        let erp = this.eRP(range);
-        let ev = erp.eV();
-        let erpt = ev.eT();
-        return erp;
+        let rp = this.eRP(range);
+        let rp_voicings = rp.voicings();
+        let rp_voicing_t;
+        for (rp_voicing of rp_voicings) {
+            if (rp_voicing.iseV() === true) {
+                break;
+            }
+        }
+        rp_voicing_t = rp_voicing.eT();
+        return rp_voicing_t;
     };
 
     Chord.prototype.eRPTT = function(range) {
@@ -1543,9 +1569,10 @@ if (typeof console === 'undefined') {
         } else {
             // If this is not eI, then reflect this in the center, which preserves
             // the fundamental domain of OPT.
-            let center_ = this.center();
+            let center_ = rpt.center();
             let rpt_i = center_.subtract(rpt);
-            let rpt_i_t = rpt_i.eRPT(range);
+            // Should spin this back into V to preserve T.
+            let rpt_i_t = rpt_i.eRP(range);
             return rpt_i_t;
         }
     };
@@ -1556,19 +1583,16 @@ if (typeof console === 'undefined') {
      * inversional equivalence, quantized within equal temperament.
      */
     Chord.prototype.eRPTTI = function(range) {
-        let rptt = this.eRPTT(range);
-        if (rptt.iseI() === true) {
-            return rptt;
+        let rpt = this.eRPT(range);
+        if (rpt.iseI() === true) {
+            let rpt_tt = rpt.eTT();
+            return rpt_tt;
         } else {
-            // If this is not eI, then reflect this in the center, which preserves
-            // the fundamental domain of OPT.
-            let center_ = this.center();
-            let rptt_i = center_.subtract(rptt);
-            // Then quantize by equal temperament.
-            let rptt_i_tt = rptt_i.eRPTT(range);
-            return rptt_i_tt;
+            let rpt_i = rpt.reflect();
+            let rpt_i_tt = rpt_i.eTT();
+            return rpt_i_tt;            
         }
-    };
+     };
 
     /**
      * Returns the equivalent of the chord within the representative fundamental
@@ -1581,7 +1605,7 @@ if (typeof console === 'undefined') {
     Chord.prototype.eOPTTI = function() {
         return this.eRPTTI(ChordSpace.OCTAVE);
     };
-
+    
     let pitchClassesForNames = {};
 
     pitchClassesForNames["C"] = 0;
@@ -1618,8 +1642,8 @@ if (typeof console === 'undefined') {
         let pc = Math.round(ChordSpace.epc(midi_key))
         let note_name = namesForPitchClasses[pc]
         let octave = Math.floor(midi_key / 12) - 1;
-        note_name = note_name + octave;
-        return note_name;
+        let text = sprintf("%s%d", note_name, octave);
+        return text;
     }
 
     let fill = function(rootName, rootPitch, typeName, typePitches) {
@@ -1728,7 +1752,7 @@ if (typeof console === 'undefined') {
     Chord.prototype.name = function() {
         let name_ = ChordSpace.namesForChords[this.eOP().hash()];
         if (typeof name_ === 'undefined') {
-            name_ = this.eOP().toName();
+            name_ = this.eOP().toPitches();
         }
         return name_;
     };
@@ -1742,47 +1766,45 @@ if (typeof console === 'undefined') {
     };
 
     /**
-     * Returns a formatted string with information about the chord.
+     * Returns a formatted string with much information about the chord.
      */
     Chord.prototype.information = function() {
-        let lines = new Array();
-        let chord = this;
-        let name_ = this.name();
-        lines.push(sprintf("%s %s", chord, name));
-        let pcs = this.eopcs();
-        let chord_type = this.chord_type();
-        lines.push(sprintf("%s %s", pcs, chord_type));
-        return lines.join("\n");
-/*         let inversion = this.I();
- *         let eT = this.eT();
- *         let iseT = this.iseT();
- *         let et = this.eT().et();
- *         let evt = this.eV().et();
- *         let eopt = this.eOPT().et();
- *         let epcs = this.eopcs();
- *         let eopti = this.eOPTI().et();
- *         let eOP = this.eOP();
- *         let chordName = this.name();
- *         return sprintf("Pitches:  %s  %s\nI:        %s\neO:       %s  iseO:    %s\neP:       %s  iseP:    %s\neT:       %s  iseT:    %s\n          %s\neI:       %s  iseI:    %s\neV:       %s  iseV:    %s\n          %s\neOP:      %s  iseOP:   %s\npcs:      %s\neOPT:     %s  iseOPT:  %s\neOPTT:    %s\n          %s\neOPI:     %s  iseOPI:  %s\neOPTI:    %s  iseOPTI: %s\neOPTTI:   %s\n          %s\nsum:      %6.2f",
- *             this, chordName,
- *             this.I(),
- *             this.eO(), this.iseO(),
- *             this.eP(), this.iseP(),
- *             this.eT(), this.iseT(),
- *             et,
- *             this.eI(), this.iseI(),
- *             this.eV(), this.iseV(),
- *             this.eOP(), this.iseOP(),
- *             epcs,
- *             this.eOPT(), this.iseOPT(),
- *             this.eOPTT(),
- *             eopt,
- *             this.eOPI(), this.iseOPI(),
- *             this.eOPTI(), this.iseOPTI(),
- *             this.eOPTTI(),
- *             eopti,
- *             this.sum());
- */
+        let template = `
+        Chord:   %s  name:     %s 
+        pcs:     %s
+        pitches: %s
+        type:    %s
+        eO:      %s  iseO:     %s
+        eP:      %s  iseP:     %s
+        eT:      %s  iseT:     %s
+        eTT:     %s  iseTT:    %s
+        eI:      %s  iseI:     %s
+        eV:      %s  iseV:     %s
+        eOP:     %s  iseOP:    %s
+        eOPT:    %s  iseOPT:   %s
+        eOPTI:   %s  iseOPTI:  %s
+        eOPTT:   %s  iseOPTT:  %s
+        eOPTTI:  %s  iseOPTTI: %s
+        sum:     %s
+        `;
+        let text = sprintf(template, 
+            this, this.name(),
+            this.eopcs(), 
+            this.toPitches(),
+            this.chord_type(),
+            this.eO(), this.iseO(),
+            this.eP(), this.iseP(),
+            this.eT(), this.iseT(),
+            this.eTT(), this.iseTT(),
+            this.eI(), this.iseI(),
+            this.eV(), this.iseV(),
+            this.eOP(), this.iseOP(),
+            this.eOPT(), this.iseOPT(),
+            this.eOPTI(), this.iseOPTI(),
+            this.eOPTT(), this.iseOPTT(),
+            this.eOPTTI(), this.iseOPTTI(),
+            this.sum());
+        return text;
     };
 
     /**
@@ -1867,8 +1889,7 @@ if (typeof console === 'undefined') {
     /**
      * Returns whether the chord is a transpositional form of Y with interval size g.
      * Only works in equal temperament.
-     * FIXME: Check this in Lua and C++.
-     */
+      */
     Chord.prototype.Tform = function(Y_, g) {
         let eopx = this.eOP();
         let i = 0;
@@ -1886,7 +1907,6 @@ if (typeof console === 'undefined') {
     /**
      * Returns whether the chord is an inversional form of Y with interval size g.
      * Only works in equal temperament.
-     * FIXME: Check this in Lua and C++.
      */
     Chord.prototype.Iform = function(Y, g) {
         let eopx = this.eOP();
@@ -1978,7 +1998,6 @@ if (typeof console === 'undefined') {
     /**
      * Returns whether the voiceleading
      * between chords a and b contains a parallel fifth.
-     * FIXME: Fix in Lua and C++.
      */
     ChordSpace.parallelFifth = function(a, b) {
         let v = ChordSpace.voiceleading(a, b);
@@ -2198,7 +2217,6 @@ if (typeof console === 'undefined') {
      * the pitch-class of the note is moved to the closest pitch-class
      * of the chord; otherwise, the pitch of the note is moved to the closest
      * absolute pitch of the chord.
-     * FIXME: Correct Lua and C++.
      */
     ChordSpace.conformToChord = function(event, chord, octave_equivalence) {
         octave_equivalence = typeof octave_equivalence !== 'undefined' ? octave_equivalence : true;
@@ -2580,7 +2598,6 @@ if (typeof console === 'undefined') {
         return voicings;
     };
 
-    ///FIXME
     ChordSpace.octavewiseRevoicing = function(chord, index, range) {
         ///let voices = chord.size();
         let origin = chord.eOP();
@@ -2606,95 +2623,105 @@ if (typeof console === 'undefined') {
 
     ChordSpace.allOfEquivalenceClass = function(voices, equivalence, g) {
         g = typeof g !== 'undefined' ? g : 1;
-        let is_equivalent = null;
-        let make_representative = null;
+        let is_isex = null;
+        let make_ex = null;
         if (equivalence === 'OP') {
-            is_equivalent = Chord.prototype.iseOP;
-            make_representative = Chord.prototype.eOP;
+            is_isex = Chord.prototype.iseOP;
+            make_ex = Chord.prototype.eOP;
         }
         if (equivalence === 'OPT') {
-            is_equivalent = Chord.prototype.iseOPT;
-            make_representative = Chord.prototype.eOPT;
+            is_isex = Chord.prototype.iseOPT;
+            make_ex = Chord.prototype.eOPT;
         }
         if (equivalence === 'OPTT') {
-            is_equivalent = Chord.prototype.iseOPTT;
-            make_representative = Chord.prototype.eOPTT;
+            is_isex = Chord.prototype.iseOPTT;
+            make_ex = Chord.prototype.eOPTT;
         }
         if (equivalence === 'OPI') {
-            is_equivalent = Chord.prototype.iseOPI;
-            make_representative = Chord.prototype.eOPI;
+            is_isex = Chord.prototype.iseOPI;
+            make_ex = Chord.prototype.eOPI;
         }
         if (equivalence === 'OPTI') {
-            is_equivalent = Chord.prototype.iseOPTI;
-            make_representative = Chord.prototype.eOPTI;
+            is_isex = Chord.prototype.iseOPTI;
+            make_ex = Chord.prototype.eOPTI;
         }
         if (equivalence === 'OPTTI') {
-            is_equivalent = Chord.prototype.iseOPTTI;
-            make_representative = Chord.prototype.eOPTTI;
+            is_isex = Chord.prototype.iseOPTTI;
+            make_ex = Chord.prototype.eOPTTI;
         }
-        let upperI = 2 * (ChordSpace.OCTAVE + 1)    ;
-        let lowerI = - (ChordSpace.OCTAVE + 1);
-        let iterator = ChordSpace.iterator(voices, lowerI);
+        let upper_pitch = 2 * (ChordSpace.OCTAVE + 1)    ;
+        let lower_pitch = - (ChordSpace.OCTAVE + 1);
+        let iterator = ChordSpace.iterator(voices, lower_pitch);
         let origin = iterator.clone();
         // Construct maps to correctly map back and forth between chords 
-        // in the fundamental domain and their indexes, taking singularities 
+        // in the fundamental domain and their indexes, taking duplicates 
         // into account:
-        // (1) From the index ->  the _representative_ chord in the 
+        // (1) From the index ->  the _representative_ chord (eX) in the 
         //     fundamental domain (one-to-one). 
-        // (2) From _any_ chord in the fundamental domain -> the index of the 
-        //     corresponding _representative_ chord (many-to-one). This must 
-        //     use a _value key_.
-        let unique_equivalents = new Map();
-        let unique_representatives = new Map();
-        let indexes_for_representatives = new Map();
-        let indexes_for_equivalents = new Map();
-        document.write("<pre>");
-        while (ChordSpace.next(iterator, origin, upperI, g) === true) {
-            let representative = make_representative.apply(iterator.clone());
-            // eX must be iseX!
-            if (is_equivalent.apply(representative) === false) {
-                let make_e = make_representative.apply(iterator.clone());
-                let is_e = is_equivalent.apply(make_e);
-                console.error(sprintf("chord: %s  e%s(%s) => %s ise%s(%s): %s\n", iterator.toString(),  equivalence, iterator.toString(), make_e.toString(), equivalence, make_e.toString(), is_e));
+        // (2) From _any_ equivalent chord in the fundamental domain (iseX) -> 
+        //     the index of the corresponding _representative_ chord (eX) 
+        //     (many-to-one). This must use a _value key_.
+        // Thus, for any equivalent chord (iseX) in the fundamental domain, it 
+        // must be possible to look up the index of the corresponding 
+        // representative chord (eX).
+        // 
+        // The purpose of this is to enable the use of the index of the 
+        // representative chord (eX) in OPTTI as "P" for the ChordSpaceGroup.
+        //
+        // To get P from iseX, use indexes_for_isexs.get(iseX).
+        // To get eX from P, use exs_for_indexes.get(P).
+        let exs_for_indexes = new Map();
+        let indexes_for_exs = new Map();
+        let indexes_for_isexs = new Map();
+        let unique_isexs = new Map();
+        let unique_exs = new Map();
+        while (ChordSpace.next(iterator, origin, upper_pitch, g) === true) {
+            let ex = make_ex.apply(iterator);
+            let ex_key = ex.toString();
+            if (unique_exs.has(ex_key) === false) {
+                unique_exs.set(ex_key, ex);
+                // Every eX must be iseX!
+                if (is_isex.apply(ex) === false) {
+                    // Redo the calls to make them easier to debug.
+                    let ex_ = make_ex.apply(iterator.clone());
+                    let isex_ = is_isex.apply(ex_);
+                    console.error(sprintf("chord: %s  e%s(%s) => %s ise%s(%s): %s\n", iterator.toString(),  equivalence, iterator.toString(), ex_.toString(), equivalence, ex_.toString(), isex_));
+                }
             }
-            let representative_key = representative.toString();
-            if (unique_representatives.has(representative_key) === false) {
-                let index = unique_representatives.size;
-                unique_representatives.set(representative_key, representative);
-                indexes_for_representatives.set(representative_key, index);
-            }
-            if (is_equivalent.apply(iterator) === true) {
-                // For debugging false positives uncomment next line.
-                // let junk = is_equivalent.apply(iterator);
-                let equivalent = iterator.clone();
-                let make_e = make_representative.apply(equivalent);
-                let interval = iterator.span();
-                document.write(sprintf("%s: %4d %s sum: %9.4f span: %9.4f chord type: %s\n", equivalence, unique_equivalents.size + 1, equivalent.toString(), equivalent.sum(), equivalent.span(), equivalent.chord_type().toString()));
-                let equivalent_key = equivalent.toString();
-                if (unique_equivalents.has(equivalent_key) === false) {
-                    unique_equivalents.set(equivalent_key, equivalent);
+            if (is_isex.apply(iterator) === true) {
+                let isex = iterator.clone();
+                let isex_key = isex.toString();
+                if (unique_isexs.has(isex_key) === false) {
+                    unique_isexs.set(isex_key, isex);
+                    console.info(sprintf("%s: %4d %s sum: %9.4f span: %9.4f chord type: %s\n", equivalence, unique_isexs.size + 1, isex.toString(), isex.sum(), isex.span(), isex.chord_type().toString()));
                 }
             }
         }
-        document.write("</pre>");
-        let representatives_for_indexes = Array.from(unique_representatives.values());
-        // For each unique equivalent, make the representative, look up its index, and 
-        // store the index for that equivalent.
-        for (entry of unique_equivalents.entries()) {
-            let equivalent_key = entry[0];
-            let equivalent = entry[1];
-            let representative = make_representative.apply(equivalent);
-            let representative_key = representative.toString();
-            let index = indexes_for_representatives.get(representative_key);
-            if (indexes_for_equivalents.has(representative_key) === false) {
-                indexes_for_equivalents.set(equivalent_key, index);
-            }
+        // There must not be more eX than there are iseX.
+        if (unique_exs.size > unique_isexs.size) {
+            console.error(sprintf("unique_exes.size (%d) is greater than unique_isexs.size (%d)!", unique_exs.size, unique_isexs.size));
         }
-        console.info(sprintf("%s: representatives_for_indexes: %6d", equivalence, representatives_for_indexes.length));
-        console.info(sprintf("%s: indexes_for_equivalents:     %6d", equivalence, indexes_for_equivalents.size));
-        console.info(sprintf("%s: unique_representatives:      %6d", equivalence, unique_representatives.size));
-        console.info(sprintf("%s: unique_equivalents:          %6d", equivalence, unique_equivalents.size));        
-        return [representatives_for_indexes, indexes_for_equivalents, unique_representatives, unique_equivalents];
+        // Construct the actual maps.
+        for (unique_ex of unique_exs) {
+            let index = exs_for_indexes.size;
+            let ex_key = unique_ex[0];
+            let ex = unique_ex[1];
+            exs_for_indexes.set(index, ex);
+            indexes_for_exs.set(ex_key, index);
+        }
+        for (unique_isex of unique_isexs) {
+            let isex_key = unique_isex[0];
+            let isex = unique_ex[1];
+            let ex = make_ex.apply(isex);
+            let ex_key = ex.toString();
+            let index = indexes_for_exs.get(ex_key);
+            indexes_for_isexs.set(isex_key, index);
+        }
+        console.info(sprintf("%s: exs_for_indexes:    %6d", equivalence, exs_for_indexes.size));
+        console.info(sprintf("%s: indexes_for_isexs:  %6d", equivalence, indexes_for_isexs.size));
+        console.info(sprintf("%s: unique_exs:         %6d", equivalence, unique_exs.size));
+        console.info(sprintf("%s: unique_isexs:       %6d", equivalence, unique_isexs.size));        
+        return [exs_for_indexes, indexes_for_isexs, unique_exs, unique_isexs];
     };
 
     /**
@@ -3041,6 +3068,107 @@ if (typeof console === 'undefined') {
         let elapsed = (ended - began) / 1000.;
         console.info("ChordSpaceGroup.prototype.initialize: " + elapsed);
     };
+    
+    /** 
+     * Following https://madoshakalaka.github.io/2019/03/02/generalized-cross-product-for-high-dimensions.html, 
+     * returns the unit normal vector to a hyperplane defined by n linearly 
+     * indepenbdent points.
+def generalized_cross_product(vectors):
+    dim = len(vectors[0])
+    product = []
+    for j in range(dim):
+        basis_vector = [0] * dim
+        basis_vector[j] = 1
+        print("basis_vector:", basis_vector)
+        matrix = scipy.vstack([vectors, basis_vector])
+        print("Matrix:", matrix)
+        product.append(scipy.linalg.det(matrix))
+    return product
+    
+     */
+    ChordSpace.unit_normal_vector = function(independent_points) {
+        // Subtract one of the points from each of the others to define 
+        // n - 1 vectors.
+        console.info("points:");
+        for (point of independent_points) {
+            console.info(point);
+        }
+        let subtrahend = independent_points[independent_points.length - 1];
+        let n = subtrahend.length;
+        let vectors = new Array(n);
+        for (let i = 0; i < n - 1; i++) {
+            let vector = numeric.sub(independent_points[i], subtrahend);
+            vectors[i] = vector;
+        }
+        let cross_product = new Array();
+        for (let i = 0; i < n; i++) {
+            let basis_vector = new Array(n);
+            basis_vector.fill(0);
+            basis_vector[i] = 1;
+            vectors[n - 1] = basis_vector;
+            console.info("vectors:");
+            console.info(vectors);
+            let d = numeric.det(vectors);
+            console.info("determinant:", d);
+            cross_product.push(d);
+        }
+        magnitude = numeric.norm2(cross_product);
+        let unit_normal = numeric.div(cross_product, magnitude);
+        return cross_product;
+    };
+
+    /**
+     * Precompute inversion flats for OPTI (as unit normal vectors) for 
+     * different chord spaces.
+     */
+    for (let n = 3; n <= 4; n++) {
+        console.info(sprintf("Computing inversion flat for %d voices...", n));
+        // First store the pitch-class sets for n linearly independent points 
+        // in each inversion flat, normalized to T. Then use the generalized 
+        // outer product to compute a normal vector to the flat.
+        let chords;
+        let chord;
+        let magnitude;
+        let opt;
+        if        (n === 3) {
+            chords = new Array()
+            chord = new Chord([0,  0,  6]);
+            chords.push(chord.eT());
+            chord = new Chord([0, 12, 12]);
+            chords.push(chord.eT());
+            chord = new Chord([0,  4,  8]);
+            chords.push(chord.eT());
+            ChordSpace.inversion_flats.set(n, chords);
+        } else if (n === 4) {
+            opt = ChordSpace.allOfEquivalenceClass(4, "OPT");
+            let count = 0;
+            for (const opt_chord of opt[3].entries()) {
+                count = count + 1;
+                console.info(sprintf("%3d: key: %s value: %s sum: %f isI: %s", count, opt_chord[0], opt_chord[1], opt_chord[1].sum(), opt_chord[1].iseI()))
+            }
+            chords = new Array()
+            chord = new Chord([ 0,   0,   0,   6  ]);
+            chords.push(chord.eT());
+            chord = new Chord([ 0,   0,   6,   6  ]);
+            chords.push(chord.eT());
+            chord = new Chord([ 0,   6,   6,  12  ]);
+            chords.push(chord.eT());
+            chord = new Chord([ 0,   1.5, 3,   1.5]);
+            chords.push(chord.eT());
+            ChordSpace.inversion_flats.set(n, chords);
+        } else if (n === 5) {
+        } else if (n === 6) {
+        } else if (n === 7) {
+        }
+        let points = new Array();
+        for (let i = 0; i < n; i++) {
+            points.push(chords[i].voices);
+        }
+        unit_normal = ChordSpace.unit_normal_vector(points);
+        console.info(sprintf("Found unit normal for inversion flat with %d voices:", n))
+        console.info(unit_normal);
+        ChordSpace.inversion_flat_normals.set(n, unit_normal);
+    }    
 
     //////////////////////////////////////////////////////////////////////////////
     // EXPORTS
