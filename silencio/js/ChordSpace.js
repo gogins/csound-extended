@@ -875,31 +875,42 @@ if (typeof console === 'undefined') {
     };
 
     /**
-     * Returns the reflection of this chord specifically in the inversion flat.
-     * Preserves the fundamental domain of RP and RPT.
+     * Returns the reflection of this chord specifically in the inversion flat 
+     * within RPT. Preserves the fundamental domain of RP and RPT.
      * TODO: Fix for all cardinalities.
      */
     Chord.prototype.reflect = function() {
-        // Find a unit vector that is normal to the inversion flat...
-        let origin_ = this.origin();
-        let low_normal_endpoint = origin_.clone();
-        low_normal_endpoint.voices[low_normal_endpoint.size() - 1] = ChordSpace.OCTAVE;
-        let high_normal_endpoint = origin_.clone();
-        for (let i = 1; i < high_normal_endpoint.size(); i++ ) {
-            high_normal_endpoint.voices[i] = ChordSpace.OCTAVE;
+        let unit_normal_vector;
+        if (this.size() === 3) {
+            // Find a unit vector that is normal to the inversion flat...
+            let origin_ = this.origin();
+            let low_normal_endpoint = origin_.clone();
+            low_normal_endpoint.voices[low_normal_endpoint.size() - 1] = ChordSpace.OCTAVE;
+            let high_normal_endpoint = origin_.clone();
+            for (let i = 1; i < high_normal_endpoint.size(); i++ ) {
+                high_normal_endpoint.voices[i] = ChordSpace.OCTAVE;
+            }
+            let normal_vector = high_normal_endpoint.subtract(low_normal_endpoint);
+            let magnitude = numeric.norm2(normal_vector.voices);
+            // This is a _unit_ vector normal to the inversion flat.
+            unit_normal_vector = numeric.div(normal_vector.voices, magnitude);
+        } else {
+            unit_normal_vector = ChordSpace.inversion_flat_normals.get(this.size());
         }
-        let normal_vector = high_normal_endpoint.subtract(low_normal_endpoint);
-        let magnitude = numeric.norm2(normal_vector.voices);
-        // This is a _unit_ vector normal to the inversion flat.
-        let unit_normal = numeric.div(normal_vector.voices, magnitude);
-        // Apply the Householder reflector to the translated chord.
         // H = I_n - 2 * ( u x u), x is outer product.
-        let tensor_ = numeric.tensor(unit_normal, unit_normal);
+        // For an affine hyperplane, the reflection is:
+        // Ref(v) = v - 2 {[(v . u) - c] / (u . u)} . u, where c is the distance of the
+        // hyperplane from the origin. That distance can be found here 
+        // https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_plane#Closest_point_and_distance_for_a_hyperplane_and_arbitrary_point.
+        let translate_to_origin = numeric.sub(origin, unit_normal_vector);
+        let tensor_ = numeric.tensor(unit_normal_vector, unit_normal_vector);
         let product_ = numeric.mul(tensor_, 2);
         let identity_ = numeric.identity(this.size());
         let householder = numeric.sub(identity_, product_);
-        let this_reflected = numeric.dot(householder, this.voices); 
-        reflection = new ChordSpace.Chord(this_reflected);
+        let translated_voices = numeric.add(this.voices, translate_to_origin);
+        let reflected_translated_voices = numeric.dot(householder, translated_voices); 
+        let reflected_voices = numeric.sub(reflected_translated_voices, translate_to_origin);
+        reflection = new ChordSpace.Chord(reflected_voices);
         return reflection;
     };
     
@@ -3101,10 +3112,10 @@ def generalized_cross_product(vectors):
             vectors[i] = vector;
         }
         let cross_product = new Array();
-        for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
             let basis_vector = new Array(n);
-            basis_vector.fill(0);
-            basis_vector[i] = 1;
+            basis_vector = basis_vector.fill(0);
+            basis_vector[j] = 1;
             vectors[n - 1] = basis_vector;
             console.info("vectors:");
             console.info(vectors);
