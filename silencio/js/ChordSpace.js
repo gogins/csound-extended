@@ -32,6 +32,8 @@ if (typeof console === 'undefined') {
     
 
     // All JavaScript dependencies of ChordSpace.js:
+    // let numeric = require("numeric.js");
+    // let svd = require("svd.js");
     // let Silencio = require("Silencio");
 
     let ChordSpace = {};
@@ -900,8 +902,7 @@ if (typeof console === 'undefined') {
         // H = I_n - 2 * ( u x u), x is outer product.
         // For an affine hyperplane, the reflection is:
         // Ref(v) = v - 2 {[(v . u) - c] / (u . u)} . u, where c is the distance of the
-        // hyperplane from the origin. That distance can be found here 
-        // https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_plane#Closest_point_and_distance_for_a_hyperplane_and_arbitrary_point.
+        // hyperplane from the origin.
         let translate_to_origin = numeric.sub(origin, unit_normal_vector);
         let tensor_ = numeric.tensor(unit_normal_vector, unit_normal_vector);
         let product_ = numeric.mul(tensor_, 2);
@@ -2704,7 +2705,7 @@ if (typeof console === 'undefined') {
                 let isex_key = isex.toString();
                 if (unique_isexs.has(isex_key) === false) {
                     unique_isexs.set(isex_key, isex);
-                    console.info(sprintf("%s: %4d %s sum: %9.4f span: %9.4f chord type: %s\n", equivalence, unique_isexs.size + 1, isex.toString(), isex.sum(), isex.span(), isex.chord_type().toString()));
+                    console.info(sprintf("%s: %4d %s sum: %9.4f span: %9.4f chord type: %s iseI: %s\n", equivalence, unique_isexs.size + 1, isex.toString(), isex.sum(), isex.span(), isex.chord_type().toString(), isex.iseI()));
                 }
             }
         }
@@ -3128,58 +3129,58 @@ def generalized_cross_product(vectors):
         return cross_product;
     };
 
-    /**
-     * Precompute inversion flats for OPTI (as unit normal vectors) for 
-     * different chord spaces.
-     */
-    for (let n = 3; n <= 4; n++) {
-        console.info(sprintf("Computing inversion flat for %d voices...", n));
-        // First store the pitch-class sets for n linearly independent points 
-        // in each inversion flat, normalized to T. Then use the generalized 
-        // outer product to compute a normal vector to the flat.
-        let chords;
-        let chord;
-        let magnitude;
-        let opt;
-        if        (n === 3) {
-            chords = new Array()
-            chord = new Chord([0,  0,  6]);
-            chords.push(chord.eT());
-            chord = new Chord([0, 12, 12]);
-            chords.push(chord.eT());
-            chord = new Chord([0,  4,  8]);
-            chords.push(chord.eT());
-            ChordSpace.inversion_flats.set(n, chords);
-        } else if (n === 4) {
-            opt = ChordSpace.allOfEquivalenceClass(4, "OPT");
-            let count = 0;
-            for (const opt_chord of opt[3].entries()) {
-                count = count + 1;
-                console.info(sprintf("%3d: key: %s value: %s sum: %f isI: %s", count, opt_chord[0], opt_chord[1], opt_chord[1].sum(), opt_chord[1].iseI()))
-            }
-            chords = new Array()
-            chord = new Chord([ 0,   0,   0,   6  ]);
-            chords.push(chord.eT());
-            chord = new Chord([ 0,   0,   6,   6  ]);
-            chords.push(chord.eT());
-            chord = new Chord([ 0,   6,   6,  12  ]);
-            chords.push(chord.eT());
-            chord = new Chord([ 0,   1.5, 3,   1.5]);
-            chords.push(chord.eT());
-            ChordSpace.inversion_flats.set(n, chords);
-        } else if (n === 5) {
-        } else if (n === 6) {
-        } else if (n === 7) {
-        }
-        let points = new Array();
-        for (let i = 0; i < n; i++) {
-            points.push(chords[i].voices);
-        }
-        unit_normal = ChordSpace.unit_normal_vector(points);
-        console.info(sprintf("Found unit normal for inversion flat with %d voices:", n))
-        console.info(unit_normal);
-        ChordSpace.inversion_flat_normals.set(n, unit_normal);
-    }    
+    //~ /**
+     //~ * Precompute inversion flats for OPTI (as unit normal vectors) for 
+     //~ * different chord spaces.
+     //~ */
+    //~ for (let n = 3; n <= 4; n++) {
+        //~ console.info(sprintf("Computing inversion flat for %d voices...", n));
+        //~ // First store the pitch-class sets for n linearly independent points 
+        //~ // in each inversion flat, normalized to T. Then use the generalized 
+        //~ // outer product to compute a normal vector to the flat.
+        //~ let chords;
+        //~ let chord;
+        //~ let magnitude;
+        //~ let opt;
+        //~ if        (n === 3) {
+            //~ chords = new Array()
+            //~ chord = new Chord([0,  0,  6]);
+            //~ chords.push(chord.eT());
+            //~ chord = new Chord([0, 12, 12]);
+            //~ chords.push(chord.eT());
+            //~ chord = new Chord([0,  4,  8]);
+            //~ chords.push(chord.eT());
+            //~ ChordSpace.inversion_flats.set(n, chords);
+        //~ } else if (n === 4) {
+            //~ opt = ChordSpace.allOfEquivalenceClass(4, "OPT");
+            //~ let count = 0;
+            //~ for (const opt_chord of opt[3].entries()) {
+                //~ count = count + 1;
+                //~ console.info(sprintf("%3d: key: %s value: %s sum: %f isI: %s", count, opt_chord[0], opt_chord[1], opt_chord[1].sum(), opt_chord[1].iseI()))
+            //~ }
+            //~ chords = new Array()
+            //~ chord = new Chord([ 0,   0,   0,   6  ]);
+            //~ chords.push(chord.eT());
+            //~ chord = new Chord([ 0,   0,   6,   6  ]);
+            //~ chords.push(chord.eT());
+            //~ chord = new Chord([ 0,   6,   6,  12  ]);
+            //~ chords.push(chord.eT());
+            //~ chord = new Chord([ 0,   1.5, 3,   1.5]);
+            //~ chords.push(chord.eT());
+            //~ ChordSpace.inversion_flats.set(n, chords);
+        //~ } else if (n === 5) {
+        //~ } else if (n === 6) {
+        //~ } else if (n === 7) {
+        //~ }
+        //~ let points = new Array();
+        //~ for (let i = 0; i < n; i++) {
+            //~ points.push(chords[i].voices);
+        //~ }
+        //~ unit_normal = ChordSpace.unit_normal_vector(points);
+        //~ console.info(sprintf("Found unit normal for inversion flat with %d voices:", n))
+        //~ console.info(unit_normal);
+        //~ ChordSpace.inversion_flat_normals.set(n, unit_normal);
+    //~ }    
 
     //////////////////////////////////////////////////////////////////////////////
     // EXPORTS
