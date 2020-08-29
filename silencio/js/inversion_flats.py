@@ -1,16 +1,18 @@
 '''
 INVERSION FLATS
+
 Michael Gogins
 16 August 2020
 
-Prototype code for computing unit normal vectors for inversion flats that will 
-generate OPTI chords from non-eI OPT chords.
+Prototype code for computing hyperplane equations for inversion flats that 
+will generate OPTI chords from non-eI OPT chords.
 
-I have used several methods in order to develop my understanding of what is 
+I have coded several methods in order to develop my understanding of what is 
 going on and how best to do this.
 '''
 print(__doc__)
 
+import copy
 import scipy
 import scipy.linalg
 import scipy.spatial
@@ -20,6 +22,11 @@ import sys
 print(sys.version)
 
 print("scipy:", scipy.__version__)
+
+debug_ = False
+def debug(*args):
+    if debug_ == True:
+        print(*args)
 
 print("\nSee 'generalized cross product' from https://math.stackexchange.com/questions/2723294/how-to-determine-the-equation-of-the-hyperplane-that-contains-several-points and https://madoshakalaka.github.io/2019/03/02/generalized-cross-product-for-high-dimensions.html...\n")
 
@@ -45,140 +52,193 @@ def generalized_cross_product(vectors):
     for j in range(dim):
         basis_vector = [0] * dim
         basis_vector[j] = 1
-        print("basis_vector:", basis_vector)
+        debug("basis_vector:", basis_vector)
         matrix = scipy.vstack([vectors, basis_vector])
-        print("matrix:", matrix)
-        print("determinant of matrix:", scipy.linalg.det(matrix))
+        debug("matrix:", matrix)
+        debug("determinant of matrix:", scipy.linalg.det(matrix))
         product.append(scipy.linalg.det(matrix))
     return product
     
-def inversion_flat_by_cross_product(points, t_equivalence = 'True'):
+def hyperplane_equation_by_cross_product(points, t_equivalence = 'True'):
     vectors = []
     t_ = []
     if t_equivalence == True:
-        print("original points:", points)
+        debug("original points:", points)
         for point in points:
             t_.append( eT(point))
         points = t_
-    print("points:", points)
-    print("determinant of points:", scipy.linalg.det(points))
+    debug("points:", points)
+    debug("determinant of points:", scipy.linalg.det(points))
     subtrahend = points[-1]
-    print ("subtrahend:", subtrahend)
+    debug("subtrahend:", subtrahend)
     for i in range(len(points) - 1):
         vector = scipy.subtract(points[i], subtrahend)
-        print("vector[", i, "]:", vector)
+        debug("vector[", i, "]:", vector)
         vectors.append(vector)
-    print("vectors:", vectors)
+    debug("vectors:", vectors)
     product = generalized_cross_product(vectors) 
     print("generalized_cross_product:", product)
     norm = scipy.linalg.norm(product)
-    print("norm:", norm)
-    unit_normal = scipy.divide(product, norm)
-    print("unit normal vector:", unit_normal)
-    constant_term = scipy.dot(scipy.transpose(unit_normal), subtrahend)
+    debug("norm:", norm)
+    unit_normal_vector = scipy.divide(product, norm)
+    print("unit_normal_vector:", unit_normal_vector)
+    constant_term = scipy.dot(scipy.transpose(unit_normal_vector), subtrahend)
     print("constant_term:", constant_term)
-    return unit_normal, constant_term
+    return unit_normal_vector, constant_term
     
-def inversion_flat_by_nullspace(points, t_equivalence = 'True'):
+def hyperplane_equation_by_nullspace_from_vectors(points, t_equivalence = 'True'):
     vectors = []
     t_ = []
     if t_equivalence == True:
-        print("original points:", points)
+        debug("original points:", points)
         for point in points:
             t_.append( eT(point))
         points = t_
-    print("points:", points)
+    debug("points:", points)
     try:
-        print("determinant of points:", scipy.linalg.det(points))
+        debug("determinant of points:", scipy.linalg.det(points))
     except:
         pass
     subtrahend = points[-1]
-    print ("subtrahend:", subtrahend)
+    debug("subtrahend:", subtrahend)
     for i in range(len(points) - 1):
         vector = scipy.subtract(points[i], subtrahend)
-        print("vector[", i, "]:", vector)
+        debug("vector[", i, "]:", vector)
         vectors.append(vector)
     nullspace = scipy.linalg.null_space(vectors)
-    print("nullspace from vectors:", nullspace)
-    homogeneous_points = []
-    if True:
-        for point in points:
-            homogeneous_points.append(scipy.append(point, [1]))
-        print("homogeneous points:", homogeneous_points)
-    nullspace_from_points = scipy.linalg.null_space(homogeneous_points)
-    nullspace_from_points = scipy.ndarray.flatten(nullspace_from_points[:-1])
-    print("nullspace from homogeneous points:", nullspace_from_points)
-    constant_term = scipy.dot(scipy.transpose(nullspace), subtrahend)
+    debug("nullspace from vectors:", nullspace)
+    norm = scipy.linalg.norm(nullspace)
+    debug("norm:", norm)
+    unit_normal_vector = scipy.divide(nullspace, norm)
+    print("unit_normal_vector:", scipy.ndarray.flatten(unit_normal_vector))
+    constant_term = scipy.dot(scipy.transpose(unit_normal_vector), subtrahend)
     print("constant_term:", constant_term)
-    return nullspace_from_points, constant_term 
-    
-def inversion_flat_by_nullspacex(points, t_equivalence = 'True'):
-    temp = []
+    return unit_normal_vector, constant_term
+
+def hyperplane_equation_by_nullspace_from_points(points, t_equivalence = 'True'):
+    t_ = []
     if t_equivalence == True:
-        print("original points:", points)
+        debug("original points:", points)
         for point in points:
-            temp.append( eT(point))
-        points = temp
-    print("points:", points)
+            t_.append( eT(point))
+        points = t_
+    debug("points:", points)
     try:
-        print("determinant of points:", scipy.linalg.det(points))
+        debug("determinant of points:", scipy.linalg.det(points))
     except:
         pass
     homogeneous_points = []
     for point in points:
         homogeneous_points.append(scipy.append(point, [1]))
-    print("homogeneous points:", homogeneous_points)
+    debug("homogeneous points:", homogeneous_points)
     nullspace = scipy.linalg.null_space(homogeneous_points)
-    print("nullspace from homogeneous points:", nullspace)
-    constant_term = scipy.dot(scipy.transpose(nullspace), homogeneous_points[0])
+    nullspace = scipy.ndarray.flatten(nullspace[:-1])
+    debug("nullspace from homogeneous points:", nullspace)
+    constant_term = scipy.dot(scipy.transpose(nullspace), points[0])
+    debug("constant_term:", constant_term)
+    norm = scipy.linalg.norm(nullspace)
+    debug("norm:", norm)
+    unit_normal = scipy.divide(nullspace, norm)
+    print("unit normal vector:", unit_normal)
+    constant_term = scipy.dot(scipy.transpose(unit_normal), points[0])
     print("constant_term:", constant_term)
-    return nullspace, constant_term
+    return unit_normal, constant_term
     
-def inversion_flat_by_svd(points, t_equivalence = 'True'):
+def hyperplane_equation_by_svd_from_vectors(points, t_equivalence = 'True'):
     t_ = []
     if t_equivalence == True:
-        print("original points:", points)
+        debug("original points:", points)
         for point in points:
             t_.append( eT(point))
         points = t_
+    debug("points:", points)
+    vectors = []
+    subtrahend = points[-1]
+    debug("subtrahend:", subtrahend)
+    for i in range(len(points) - 1):
+        vector = scipy.subtract(points[i], subtrahend)
+        debug("vector[", i, "]:", vector)
+        vectors.append(vector)
+    left_singular_vectors, singular_values, right_singular_vectors = scipy.linalg.svd(vectors)    
+    debug("left singular vectors:", left_singular_vectors)
+    debug("singular values:", singular_values)
+    debug("right singular vectors:", right_singular_vectors)
+    minimum_singular_value = min(singular_values)
+    index_ = list(singular_values).index(minimum_singular_value)
+    # There aren't enough singular values, so I am assuming the last singular 
+    # vector is the one required.
+    normal_vector = right_singular_vectors[-1]
+    debug("normal_vector:", normal_vector)
+    norm = scipy.linalg.norm(normal_vector)
+    debug("norm:", norm)
+    unit_normal_vector = scipy.divide(normal_vector, norm)
+    print("unit_normal_vector:", scipy.ndarray.flatten(unit_normal_vector))
+    constant_term = scipy.dot(scipy.transpose(unit_normal_vector), subtrahend)
+    print("constant_term:", constant_term)
+    return unit_normal_vector, constant_term
+
+#~ def hyperplane_equation_by_svd_from_points(points, t_equivalence = 'True'):
+    #~ global debug_
+    #~ debug_ = True
+    #~ t_ = []
+    #~ if t_equivalence == True:
+        #~ debug("original points:", points)
+        #~ for point in points:
+            #~ t_.append( eT(point))
+        #~ points = t_
     temp = []
-    if False:
-        for point in points:
-            temp.append(scipy.append(point, [1]))
-        points = temp
-    print("points:", points)
-    svd_ = scipy.linalg.svd(points)    
-    print("left singular vectors:", svd_[0])
-    print("singular values:", svd_[1])
-    print("right singular vectors:", svd_[2])
-    minimum_singular_value = min(svd_[1])
-    index_ = list(svd_[1]).index(minimum_singular_value)
-    unit_normal_vector = svd_[2][index_]
-    print("unit_normal_vector:", unit_normal_vector)
-    constant_term = scipy.dot(scipy.transpose(unit_normal_vector), points[0])
-    print("constant_term:", constant_term)
-    return unit_normal_vector, constant_term       
+    for point in points:
+        temp.append(scipy.append(point, [1]))
+    points = temp
+    #~ debug("points:", points)
+    #~ left_singular_vectors, singular_values, right_singular_vectors = scipy.linalg.svd(points)    
+    #~ debug("left singular vectors:", left_singular_vectors)
+    #~ debug("singular values:", singular_values)
+    #~ debug("right singular vectors:", right_singular_vectors)
+    #~ minimum_singular_value = min(singular_values)
+    #~ index_ = list(singular_values).index(minimum_singular_value)
+    #~ # There aren't enough singular values, so I am assuming the last singular 
+    #~ # vector is the one required.
+    #~ normal_vector = right_singular_vectors[-1]
+    #~ debug("normal_vector:", normal_vector)
+    #~ norm = scipy.linalg.norm(normal_vector)
+    #~ debug("norm:", norm)
+    #~ unit_normal_vector = scipy.divide(normal_vector, norm)
+    #~ print("unit_normal_vector:", scipy.ndarray.flatten(unit_normal_vector))
+    #~ constant_term = scipy.dot(scipy.transpose(unit_normal_vector), points[0])
+    #~ print("constant_term:", constant_term)
+    #~ debug_ = False
+    #~ return unit_normal_vector, constant_term
     
-def inversion_flat_by_least_squares(points, t_equivalence = 'True'):
-    t_ = []
-    if t_equivalence == True:
-        print("original points:", points)
-        for point in points:
-            t_.append( eT(point))
-        points = t_
-    if True:
-        temp = []
-        for point in points:
-            temp.append(scipy.append(point, [1]))
-        points = temp
-    print("points:", points)
-    zeros = [0] * len(points)
-    fit = scipy.linalg.lstsq(points, zeros)
-    print("solution:", fit[0])
-    print("residues:", fit[1])
-    print("rank:", fit[2])
-    print("singular values:", fit[3])
-    return fit
+#~ def hyperplane_equation_by_least_squares(points, t_equivalence = 'True'):
+    #~ global debug_
+    #~ debug_ = True
+    #~ t_ = []
+    #~ if t_equivalence == True:
+        #~ debug("original points:", points)
+        #~ for point in points:
+            #~ t_.append( eT(point))
+        #~ points = t_
+    #~ vectors = []
+    #~ subtrahend = points[-1]
+    #~ debug("subtrahend:", subtrahend)
+    #~ for i in range(len(points) - 1):
+        #~ vector = scipy.subtract(points[i], subtrahend)
+        #~ debug("vector[", i, "]:", vector)
+        #~ vectors.append(vector)
+    #~ temp = []
+    #~ for point in points:
+        #~ temp.append(scipy.append(point, [1]))
+    #~ points = temp
+    #~ debug("vectors:", vectors)
+    #~ zeros = [0] * len(vectors)
+    #~ fit = scipy.linalg.lstsq(vectors, zeros)
+    #~ debug("solution:", fit[0])
+    #~ debug("residues:", fit[1])
+    #~ debug("rank:", fit[2])
+    #~ debug("singular values:", fit[3])
+    #~ debug_ = False
+    #~ return fit
     
 def distance_to_origin(v, u, c):
     numerator = abs(scipy.dot(v, u) + c)
@@ -186,42 +246,42 @@ def distance_to_origin(v, u, c):
     distance = numerator / denominator
     return distance
     
-    
 # Ref(v,c) = v - 2 {[(v . u) - c] / (u . u)} u.
 def reflect(v, u, c):
     print("Reflect by vector math:", v, " in ", u, c)
     v_dot_u = scipy.dot(v, u)
-    print("v_dot_u:", v_dot_u)
-    v_dot_u_minus_c = v_dot_u + c
-    print("v_dot_u_minus_c:", v_dot_u_minus_c)
+    debug("v_dot_u:", v_dot_u)
+    v_dot_u_minus_c = scipy.subtract(v_dot_u, c)
+    debug("v_dot_u_minus_c:", v_dot_u_minus_c)
     u_dot_u = scipy.dot(u, u)
-    print("u_dot_u:", u_dot_u)
-    quotient = v_dot_u_minus_c / u_dot_u
-    print("quotient:", quotient)
-    subtrahend = ((2 * quotient) * u)
-    print("subtrahend:", subtrahend)
-    reflection = v - subtrahend
-    print("reflection by vector math:", reflection)
+    debug("u_dot_u:", u_dot_u)
+    quotient = scipy.divide(v_dot_u_minus_c, u_dot_u)
+    debug("quotient:", quotient)
+    subtrahend = scipy.multiply((2 * quotient), u)
+    debug("subtrahend:", subtrahend)
+    reflection = scipy.subtract(v, subtrahend)
+    debug("reflection by vector math:", reflection)
     return reflection
     
-def reflect_by_householder(v, u, c):
-    print("Reflect by Householder:", v, " in ", u, c)
-    tensor_ = scipy.outer(u, u);
-    print("tensor_:", tensor_)
-    product_ = tensor_ * 2
-    print("product_:", product_)
-    identity_ = scipy.eye(len(v))
-    print("identity_:", identity_)
-    householder = identity_ - tensor_;
-    print("householder:", householder)
-    translated_voices = v - c
-    print("translated_voices:", translated_voices)
-    reflected_translated_voices = scipy.matmul(translated_voices, householder); 
-    print("reflected_translated_voices:", reflected_translated_voices)
-    reflection = reflected_translated_voices + c;
-    print("reflection by householder:", reflection)
-    return reflection
+#~ def reflect_by_householder(v, u, c):
+    #~ print("Reflect by Householder:", v, " in ", u, c)
+    #~ distance = c #distance_to_origin([4,0,-1,0], u, c)
     
+    #~ tensor_ = scipy.outer(u, u);
+    #~ print("tensor_:", tensor_)
+    #~ product_ = scipy.multiply(tensor_, 2)
+    #~ print("product_:", product_)
+    #~ identity_ = scipy.eye(len(v))
+    #~ print("identity_:", identity_)
+    #~ householder = scipy.subtract(identity_, tensor_);
+    #~ print("householder:", householder)
+    #~ translated_voices = scipy.subtract(v, distance)
+    #~ print("translated_voices:", translated_voices)
+    #~ reflected_translated_voices = scipy.matmul(householder, translated_voices) 
+    #~ print("reflected_translated_voices:", reflected_translated_voices)
+    #~ reflection = scipy.add(reflected_translated_voices, distance)
+    #~ print("reflection by householder:", reflection)
+    #~ return reflection
     
 test_points = []
 test_points.append([4,0,-1,0])
@@ -229,15 +289,45 @@ test_points.append([1,2,3,-1])
 test_points.append([ 0,-1,2,0])
 test_points.append([-1,1,-1,1])
 
-print("\nTest points by generalized cross product\n".upper())
+#~ test_points = []
+#~ test_points.append([0,0,-1,0])
+#~ test_points.append([0,2,3,-1])
+#~ test_points.append([ 0,-1,2,0])
+#~ test_points.append([0,1,-1,1])
+
+overdetermined_test_points = copy.deepcopy(test_points)
+overdetermined_test_points.append(test_points[1])
+print("overdetermined_test_points:", overdetermined_test_points)
+
+print("\nHyperplane equation for test points by generalized cross product from vectors\n".upper())
 print("Generalized cross product should be: [13, 8, 20, 57].")
-inversion_flat_by_cross_product(test_points, False)
-print("\nTest points by null space\n".upper())
-inversion_flat_by_nullspace(test_points, False)
-print("\nTest points by SVD\n".upper())
-inversion_flat_by_svd(test_points, False)
-#~ print("\nTest points by least squares\n".upper())
-#~ inversion_flat_by_least_squares(test_points, False)
+u0, c0 = hyperplane_equation_by_cross_product(test_points, False)
+print("\nHyperplane equation for test points by null space from vectors\n".upper())
+u1, c1 = hyperplane_equation_by_nullspace_from_vectors(test_points, False)
+print("\nHyperplane equation for test points by null space from points\n".upper())
+u2, c2 = hyperplane_equation_by_nullspace_from_points(test_points, False)
+print("\nHyperplane equation for test points by SVD from vectors\n".upper())
+hyperplane_equation_by_svd_from_vectors(test_points, False)
+#~ print("\nHyperplane equation for test points by SVD from points\n".upper())
+#~ u3, c3 = hyperplane_equation_by_svd_from_points(test_points, False)
+print("\nHyperplane equation for overdetermined test points by null space from vectors\n".upper())
+u4, c4 = hyperplane_equation_by_nullspace_from_vectors(overdetermined_test_points, False)
+print("\nHyperplane equation for overdetermined test points by null space from points\n".upper())
+u5, c5 = hyperplane_equation_by_nullspace_from_points(overdetermined_test_points, False)
+#~ print("\nHyperplane equation for test points by least squares\n".upper())
+#~ hyperplane_equation_by_least_squares(overdetermined_test_points, False)
+
+u = u5
+c = c5
+test_point = [3, 1, 0, -5]
+print("\nRotation of test point by vector math\n".upper())
+reflected_test_point = reflect(test_point, u, c)
+re_reflected_test_point = reflect(reflected_test_point, u, c)
+print(test_point, reflected_test_point, re_reflected_test_point)
+#~ print("\nRotation of test point by Householder reflector\n".upper())
+#~ reflected_test_point = reflect_by_householder(test_point, u, c)
+#~ re_reflected_test_point = reflect(reflected_test_point, u, c)
+#~ print(test_point, reflected_test_point, re_reflected_test_point)
 
 print("\nInversion flats from _Science_...\n".upper())
 
@@ -253,12 +343,12 @@ OPT:   19 [  -6.0000000   -2.0000000    3.0000000    5.0000000 ] sum:    0.0000 
 
 points = []
 points.append([0,0,0,0])
-points.append([0,3,6,9])
 points.append([0,0,0,12])
-points.append([0,1,2,9])
+points.append([0,3,6,9])
+points.append([0,1,2,5])
 
 print("\n4 voices by cross product...\n".upper())
-u, c = inversion_flat_by_cross_product(points[:4], True)
+u, c = hyperplane_equation_by_cross_product(points[:4], True)
 
 normal = scipy.subtract(eT([0, 0,0,6]), eT([0, 0, 6,6]))
 normal = scipy.subtract(eT([0, 0,3,6]), eT([0, 3, 6,9]))
@@ -277,11 +367,9 @@ print("type:", type(c))
 #c = 2.
 
 print("\n4 voices by nullspace...\n".upper())
-ux, cx = inversion_flat_by_nullspace(points, True)
-print("\n4 voices by nullspacex...\n".upper())
-inversion_flat_by_nullspacex(points, True)
+ux, cx = hyperplane_equation_by_nullspace_from_vectors(points, True)
 print("\n4 voices by SVD...\n".upper())
-ux, cx = inversion_flat_by_svd(points, True)
+ux, cx = hyperplane_equation_by_svd_from_vectors(points, True)
 
 chord = eT([0,2,4,8])
 print("\nChord on inversion flat:", chord)
