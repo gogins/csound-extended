@@ -45,6 +45,7 @@
 %include "std_vector.i"
 #else
 #include <algorithm>
+#include <boost/multiprecision/cpp_bin_float.hpp>
 #include <cfloat>
 #include <climits>
 #include <cmath>
@@ -88,7 +89,8 @@ generating procedures:
     "counterpoint").
     
 --  Implementing "functional" or "Roman numeral" operations performed 
-    using scales and scale degrees.
+    using scales and scale degrees (thus implementing many fundamentals of 
+    "pragmatic music theory").
     
 DEFINITIONS
 
@@ -257,135 +259,36 @@ Q(c, n, m)      Contexual transposition;
 
 static int DEBUGGING = false;
 
-/**
- * Returns n!
- */
-inline SILENCE_PUBLIC double factorial(double n) {
-    double result = 1.0;
-    for (int i = 0; i <= n; ++i) {
-        result = result * i;
-    }
-    return result;
-}
+// ALL DECLARATIONS BELOW HERE MORE OR LESS IN ALPHABETICAL ORDER -- NO DEFINITIONS HERE.
 
-inline SILENCE_PUBLIC double EPSILON() {
-    static double epsilon = 1.0;
-    if (epsilon == 1.0) {
-        for (;;) {
-            epsilon = epsilon / 2.0;
-            double nextEpsilon = epsilon / 2.0;
-            double onePlusNextEpsilon = 1.0 + nextEpsilon;
-            if (onePlusNextEpsilon == 1.0) {
-                break;
-            }
-        }
-    }
-    return epsilon;
-}
+// But forward class declarations come first.
 
-inline SILENCE_PUBLIC double &epsilonFactor() {
-    static double epsilonFactor = 1000.0;
-    return epsilonFactor;
-}
+class SILENCE_PUBLIC Chord;
 
-inline SILENCE_PUBLIC bool eq_epsilon(double a, double b) {
-    if (std::abs(a - b) < (EPSILON() * epsilonFactor())) {
-        return true;
-    } else {
-        return false;
-    }
+class SILENCE_PUBLIC Scale;
 
-}
+SILENCE_PUBLIC void add_chord(std::string, const Chord &chord);
 
-inline SILENCE_PUBLIC double gt_epsilon(double a, double b) {
-    if (eq_epsilon(a, b)) {
-        return false;
-    } else {
-        return (a > b);
-    }
-}
+SILENCE_PUBLIC void add_scale(std::string, const Scale &scale);
 
-inline SILENCE_PUBLIC double lt_epsilon(double a, double b) {
-    if (eq_epsilon(a, b)) {
-        return false;
-    } else {
-        return (a < b);
-    }
-}
+SILENCE_PUBLIC double C4();
 
-inline SILENCE_PUBLIC double ge_epsilon(double a, double b) {
-    if (eq_epsilon(a, b)) {
-        return true;
-    } else {
-        return (a > b);
-    }
-}
-
-inline SILENCE_PUBLIC double le_epsilon(double a, double b) {
-    if (eq_epsilon(a, b)) {
-        return true;
-    } else {
-        return (a < b);
-    }
-}
-
-/**
- * The size of the octave, defined to be consistent with
- * 12 tone equal temperament and MIDI.
- */
-inline SILENCE_PUBLIC double OCTAVE() {
-    return 12.0;
-}
-
-inline SILENCE_PUBLIC double MIDDLE_C() {
-    return 60.0;
-}
-
-inline SILENCE_PUBLIC double C4() {
-    return MIDDLE_C();
-}
-
-/**
- * Returns the pitch transposed by semitones, which may be any scalar.
- * NOTE: Does NOT return an equivalent under any requivalence relation.
- */
-inline SILENCE_PUBLIC double T(double pitch, double semitones) {
-    return pitch + semitones;
-}
-
-/**
- * Returns the pitch reflected in the center, which may be any pitch.
- * NOTE: Does NOT return an equivalent under any requivalence relation.
- */
-inline SILENCE_PUBLIC double I(double pitch, double center = 0.0) {
-    return center - pitch;
-}
-
-/**
- * Returns the remainder of the dividend divided by the divisor,
- * according to the Euclidean definition.
- */
-inline SILENCE_PUBLIC double modulo(double dividend, double divisor) {
-    double quotient = 0.0;
-    if (divisor < 0.0) {
-        quotient = std::ceil(dividend / divisor);
-    }
-    if (divisor > 0.0) {
-        quotient = std::floor(dividend / divisor);
-    }
-    double remainder = dividend - (quotient * divisor);
-    return remainder;
-}
+SILENCE_PUBLIC const Chord &chordForName(std::string name);
 
 /**
  * Returns the equivalent of the pitch under pitch-class equivalence, i.e.
  * the pitch is in the interval [0, OCTAVE). Implemented using the Euclidean
  * definition.
  */
-inline SILENCE_PUBLIC double epc(double pitch) {
-    double pc = modulo(pitch, OCTAVE());
-    return pc;
-}
+SILENCE_PUBLIC double epc(double pitch);
+
+SILENCE_PUBLIC double EPSILON();
+
+SILENCE_PUBLIC double &epsilonFactor();
+
+SILENCE_PUBLIC bool eq_epsilon(double a, double b);
+
+SILENCE_PUBLIC double euclidean(const csound::Chord &a, const csound::Chord &b);
 
 /**
  * Enums for all defined equivalence relations,
@@ -424,6 +327,57 @@ typedef enum {
     EQUIVALENCE_RELATION_RPTgI,
 } EQUIVALENCE_RELATIONS;
 
+SILENCE_PUBLIC double factorial(double n);
+
+SILENCE_PUBLIC bool ge_epsilon(double a, double b);
+
+SILENCE_PUBLIC bool gt_epsilon(double a, double b);
+
+/**
+ * Returns the pitch reflected in the center, which may be any pitch.
+ * NOTE: Does NOT return an equivalent under any requivalence relation.
+ */
+SILENCE_PUBLIC double I(double pitch, double center = 0.0);
+
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC bool isEquivalent(const Chord &a,
+        const Chord &b,
+        double range, double g);
+
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC bool isEquivalent(const Chord &a,
+        const Chord &b,
+        double range);
+
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC bool isEquivalent(const Chord &a,
+        const Chord &b);
+
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC bool isNormal(const Chord &chord,
+        double range, double g);
+
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC bool isNormal(const Chord &chord,
+        double range);
+
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC bool isNormal(const Chord &chord);
+
+SILENCE_PUBLIC bool le_epsilon(double a, double b);
+
+SILENCE_PUBLIC bool lt_epsilon(double a, double b);
+
+SILENCE_PUBLIC double MIDDLE_C();
+
+/**
+ * Returns the remainder of the dividend divided by the divisor,
+ * according to the Euclidean definition.
+ */
+SILENCE_PUBLIC double modulo(double dividend, double divisor);
+
+SILENCE_PUBLIC std::string nameForChord(const Chord &chord);
+
+SILENCE_PUBLIC std::string nameForPitchClass(double pitch);
+
+SILENCE_PUBLIC std::string nameForScale(const Scale &scale);
+
+SILENCE_PUBLIC std::multimap<Chord, std::string> &namesForChords();
+
 static const char* namesForEquivalenceRelations[] = {
     "r",
     "R",
@@ -449,47 +403,40 @@ static const char* namesForEquivalenceRelations[] = {
     "RPTgI"
 };
 
-// Forward declarations:
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC Chord normalize(const Chord &chord,
+        double range, double g);
+
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC Chord normalize(const Chord &chord,
+        double range);
+
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC Chord normalize(const Chord &chord);
+
+
+SILENCE_PUBLIC std::multimap<Scale, std::string> &namesForScales();
+
+/**
+ * The size of the octave, defined to be consistent with
+ * 12 tone equal temperament and MIDI.
+ */
+SILENCE_PUBLIC double OCTAVE();
+
+SILENCE_PUBLIC double pitchClassForName(std::string name);
+
+SILENCE_PUBLIC const Scale &scaleForName(std::string name);
+
+SILENCE_PUBLIC std::map<std::string, Scale> &scalesForNames();
 
 SILENCE_PUBLIC std::vector<std::string> split(std::string);
-class SILENCE_PUBLIC Chord;
-class SILENCE_PUBLIC Scale;
-SILENCE_PUBLIC double euclidean(const csound::Chord &a, const csound::Chord &b);
-SILENCE_PUBLIC double pitchClassForName(std::string name);
-SILENCE_PUBLIC std::string nameForPitchClass(double pitch);
-SILENCE_PUBLIC std::string nameForChord(const Chord &chord);
-SILENCE_PUBLIC const Chord &chordForName(std::string name);
-SILENCE_PUBLIC std::string nameForScale(const Scale &scale);
-SILENCE_PUBLIC const Scale &scaleForName(std::string name);
-SILENCE_PUBLIC std::multimap<Chord, std::string> &namesForChords();
-SILENCE_PUBLIC std::multimap<Scale, std::string> &namesForScales();
-SILENCE_PUBLIC std::map<std::string, Scale> &scalesForNames();
-SILENCE_PUBLIC void add_chord(std::string, const Chord &chord);
-SILENCE_PUBLIC void add_scale(std::string, const Scale &scale);
+
+/**
+ * Returns the pitch transposed by semitones, which may be any scalar.
+ * NOTE: Does NOT return an equivalent under any requivalence relation.
+ */
+SILENCE_PUBLIC double T(double pitch, double semitones);
+
 SILENCE_PUBLIC std::set<Chord> &unique_chords();
+
 SILENCE_PUBLIC std::set<Scale> &unique_scales();
-
-// Equivalence relations are implemented first as template functions at namespace scope,
-// and then as class member functions delegating to the corresponding namespace functions.
-
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC bool isNormal(const Chord &chord,
-        double range, double g);
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC bool isNormal(const Chord &chord,
-        double range);
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC bool isNormal(const Chord &chord);
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC bool isEquivalent(const Chord &a,
-        const Chord &b,
-        double range, double g);
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC bool isEquivalent(const Chord &a,
-        const Chord &b,
-        double range);
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC bool isEquivalent(const Chord &a,
-        const Chord &b);
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC Chord normalize(const Chord &chord,
-        double range, double g);
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC Chord normalize(const Chord &chord,
-        double range);
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC Chord normalize(const Chord &chord);
 
 template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> allNormalizedFundamentalDomain(int voices, double range, double g);
 template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> uniqueNormalizedFundamentalDomain(int voices, double range, double g);
@@ -3900,6 +3847,119 @@ public:
         chords_for_times = temp;
     }
 };
+
+// ALL DEFINITIONS BELOW HERE IN ALPHABETICAL ORDER -- NO DECLARATIONS BELOW HERE.
+
+inline SILENCE_PUBLIC double C4() {
+    return MIDDLE_C();
+}
+
+inline SILENCE_PUBLIC double epc(double pitch) {
+    double pc = modulo(pitch, OCTAVE());
+    return pc;
+}
+
+inline SILENCE_PUBLIC double EPSILON() {
+    static double epsilon = 1.0;
+    if (epsilon == 1.0) {
+        for (;;) {
+            epsilon = epsilon / 2.0;
+            double nextEpsilon = epsilon / 2.0;
+            double onePlusNextEpsilon = 1.0 + nextEpsilon;
+            if (onePlusNextEpsilon == 1.0) {
+                break;
+            }
+        }
+    }
+    return epsilon;
+}
+
+inline SILENCE_PUBLIC double &epsilonFactor() {
+    static double epsilonFactor = 1000.0;
+    return epsilonFactor;
+}
+
+inline SILENCE_PUBLIC bool eq_epsilon(double a, double b) {
+    if (std::abs(a - b) < (EPSILON() * epsilonFactor())) {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+
+inline SILENCE_PUBLIC double factorial(double n) {
+    double result = 1.0;
+    for (int i = 0; i <= n; ++i) {
+        result = result * i;
+    }
+    return result;
+}
+
+inline SILENCE_PUBLIC bool ge_epsilon(double a, double b) {
+    if (eq_epsilon(a, b)) {
+        return true;
+    } else {
+        return (a > b);
+    }
+}
+
+inline SILENCE_PUBLIC bool gt_epsilon(double a, double b) {
+    if (eq_epsilon(a, b)) {
+        return false;
+    } else {
+        return (a > b);
+    }
+}
+
+inline SILENCE_PUBLIC double I(double pitch, double center) {
+    return center - pitch;
+}
+
+inline SILENCE_PUBLIC bool le_epsilon(double a, double b) {
+    if (eq_epsilon(a, b)) {
+        return true;
+    } else {
+        return (a < b);
+    }
+}
+
+inline SILENCE_PUBLIC bool lt_epsilon(double a, double b) {
+    if (eq_epsilon(a, b)) {
+        return false;
+    } else {
+        return (a < b);
+    }
+}
+
+inline SILENCE_PUBLIC double MIDDLE_C() {
+    return 60.0;
+}
+
+inline SILENCE_PUBLIC double modulo(double dividend, double divisor) {
+    double quotient = 0.0;
+    if (divisor < 0.0) {
+        quotient = std::ceil(dividend / divisor);
+    }
+    if (divisor > 0.0) {
+        quotient = std::floor(dividend / divisor);
+    }
+    double remainder = dividend - (quotient * divisor);
+    return remainder;
+}
+
+
+inline SILENCE_PUBLIC double OCTAVE() {
+    return 12.0;
+}
+
+inline SILENCE_PUBLIC double T(double pitch, double semitones) {
+    return pitch + semitones;
+}
+
+
+
+
 
 } // End of namespace csound.
 #endif
