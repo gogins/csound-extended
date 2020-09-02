@@ -296,6 +296,15 @@ SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voiceN, std::string 
  */
 template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> allNormalizedFundamentalDomain(int voices, double range, double g);
 
+/**
+ * For all the notes in the Score
+ * beginning at or later than the start time,
+ * and up to but not including the end time,
+ * moves the pitch of the note to belong to the chord, using the
+ * conformToChord function.
+ */
+SILENCE_PUBLIC void apply(Score &score, const Chord &chord, double startTime, double endTime, bool octaveEquivalence = true);
+
 SILENCE_PUBLIC double C4();
 
 /**
@@ -755,6 +764,27 @@ public:
 SILENCE_PUBLIC const Chord &chordForName(std::string name);
 
 /**
+ * Returns the pitch from the chord that is closest to the pitch.
+ */
+SILENCE_PUBLIC double closestPitch(double pitch, const Chord &chord);
+
+/**
+ * If the Event is a note, moves its pitch
+ * to the closest pitch of the chord.
+ * If octaveEquivalence is true (the default),
+ * the pitch-class of the note is moved to the closest pitch-class
+ * of the chord, i.e. keeping the note more or less in its original register;
+ * otherwise, the pitch of the note is moved to the closest
+ * absolute pitch of the chord.
+ */
+SILENCE_PUBLIC void conformToChord(Event &event, const Chord &chord, bool octaveEquivalence = true);
+
+/**
+ * Conform the pitch to the pitch-class set, but in its original register.
+ */
+SILENCE_PUBLIC double conformToPitchClassSet(double pitch, const Chord &pcs);
+
+/**
  * Returns the equivalent of the pitch under pitch-class equivalence, i.e.
  * the pitch is in the interval [0, OCTAVE). Implemented using the Euclidean
  * definition.
@@ -808,6 +838,13 @@ typedef enum {
 
 SILENCE_PUBLIC double factorial(double n);
 
+/**
+ * Returns a chord containing all the pitches of the score
+ * beginning at or later than the start time,
+ * and up to but not including the end time.
+ */
+SILENCE_PUBLIC Chord gather(Score &score, double startTime, double endTime);
+
 SILENCE_PUBLIC bool ge_epsilon(double a, double b);
 
 SILENCE_PUBLIC bool gt_epsilon(double a, double b);
@@ -817,6 +854,13 @@ SILENCE_PUBLIC bool gt_epsilon(double a, double b);
  * NOTE: Does NOT return an equivalent under any requivalence relation.
  */
 SILENCE_PUBLIC double I(double pitch, double center = 0.0);
+
+/**
+ * Inserts the notes of the chord into the score at the specified time.
+ */
+SILENCE_PUBLIC void insert(Score &score,
+                                  const Chord &chord,
+                                  double time_);
 
 template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC bool isEquivalent(const Chord &a,
         const Chord &b,
@@ -928,6 +972,13 @@ SILENCE_PUBLIC const Scale &scaleForName(std::string name);
 
 SILENCE_PUBLIC std::map<std::string, Scale> &scalesForNames();
 
+/**
+ * Returns a slice of the Score starting at the start time and extending up
+ * to but not including the end time. The slice contains pointers to the Events
+ * in the Score.
+ */
+SILENCE_PUBLIC std::vector<Event *> slice(Score &score, double startTime, double endTime);
+
 SILENCE_PUBLIC std::vector<std::string> split(std::string);
 
 /**
@@ -948,217 +999,36 @@ template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> uniqueNormaliz
  * chord of directed intervals.
  */
 SILENCE_PUBLIC Chord voiceleading(const Chord &a, const Chord &b);
-/**
- * Returns the smoothness of the voiceleading between
- * chords a and b by L1 norm.
- */
-inline SILENCE_PUBLIC double voiceleadingSmoothness(const Chord &a, const Chord &b) {
-    double L1 = 0.0;
-    for (int voice = 0; voice < a.voices(); ++voice) {
-        L1 = L1 + std::abs(b.getPitch(voice) - a.getPitch(voice));
-    }
-    return L1;
-}
-
-/**
- * Returns which of the voiceleadings (source to d1, source to d2)
- * is the smoother (shortest moves), optionally avoiding parallel fifths.
- */
-inline SILENCE_PUBLIC Chord voiceleadingSmoother(const Chord &source, const Chord &d1, const Chord &d2, bool avoidParallels = false, double range = OCTAVE()) {
-    if (avoidParallels) {
-        if (parallelFifth(source, d1)) {
-            return d2;
-        }
-        if (parallelFifth(source, d2)) {
-            return d1;
-        }
-    }
-    double s1 = voiceleadingSmoothness(source, d1);
-    double s2 = voiceleadingSmoothness(source, d2);
-    if (s1 <= s2) {
-        return d1;
-    } else {
-        return d2;
-    }
-}
-/**
- * Returns which of the voiceleadings (source to d1, source to d2)
- * is the simpler (fewest moves), optionally avoiding parallel fifths.
- */
-inline SILENCE_PUBLIC Chord voiceleadingSimpler(const Chord &source, const Chord &d1, const Chord &d2, bool avoidParallels = false) {
-    if (avoidParallels) {
-        if (parallelFifth(source, d1)) {
-            return d2;
-        }
-        if (parallelFifth(source, d2)) {
-            return d1;
-        }
-    }
-    // TODO: Verify this.
-    int s1 = voiceleading(source, d1).count(0.0);
-    int s2 = voiceleading(source, d2).count(0.0);
-    if (s1 > s2) {
-        return d1;
-    }
-    if (s2 > s1) {
-        return d2;
-    }
-    return d1;
-}
 
 /**
  * Returns which of the voiceleadings (source to d1, source to d2)
  * is the closer (first smoother, then simpler), optionally avoiding parallel fifths.
  */
-inline SILENCE_PUBLIC Chord voiceleadingCloser(const Chord &source, const Chord &d1, const Chord &d2, bool avoidParallels = false) {
-    if (avoidParallels) {
-        if (parallelFifth(source, d1)) {
-            return d2;
-        }
-        if (parallelFifth(source, d2)) {
-            return d1;
-        }
-    }
-    double s1 = voiceleadingSmoothness(source, d1);
-    double s2 = voiceleadingSmoothness(source, d2);
-    if (s1 < s2) {
-        return d1;
-    }
-    if (s2 > s1) {
-        return d2;
-    }
-    return voiceleadingSimpler(source, d1, d2, avoidParallels);
-}
+SILENCE_PUBLIC Chord voiceleadingCloser(const Chord &source, const Chord &d1, const Chord &d2, bool avoidParallels = false);
 
 /**
  * Returns the voicing of the destination which has the closest voice-leading
  * from the source within the range, optionally avoiding parallel fifths.
  */
-inline SILENCE_PUBLIC Chord voiceleadingClosestRange(const Chord &source, const Chord &destination, double range, bool avoidParallels = false) {
-    Chord destinationOP = destination.eOP();
-    Chord d = destinationOP;
-    Chord origin = source.eOP();
-    Chord odometer = origin;
-    while (next(odometer, origin, range, OCTAVE())) {
-        Chord revoicing = odometer;
-        for (int voice = 0; voice < revoicing.voices(); ++voice) {
-            revoicing.setPitch(voice, revoicing.getPitch(voice) + destinationOP.getPitch(voice));
-        }
-        d = voiceleadingCloser(source, d, revoicing, avoidParallels);
-    }
-    return d;
-}
+SILENCE_PUBLIC Chord voiceleadingClosestRange(const Chord &source, const Chord &destination, double range, bool avoidParallels);
 
 /**
- * Returns the pitch from the chord that is closest to the pitch.
+ * Returns the smoothness of the voiceleading between
+ * chords a and b by L1 norm.
  */
-inline SILENCE_PUBLIC double closestPitch(double pitch, const Chord &chord) {
-    std::map<double, double> pitchesForDistances;
-    for (int voice = 0; voice < chord.voices(); ++voice) {
-        double chordPitch = chord.getPitch(voice);
-        double distance = std::fabs(chordPitch - pitch);
-        pitchesForDistances[distance] = chordPitch;
-    }
-    return pitchesForDistances.begin()->second;
-}
+SILENCE_PUBLIC double voiceleadingSmoothness(const Chord &a, const Chord &b);
 
 /**
-* Conform the pitch to the pitch-class set, but in its original register.
-*/
-inline SILENCE_PUBLIC double conformToPitchClassSet(double pitch, const Chord &pcs) {
-    double pc_ = epc(pitch);
-    double closestPc = closestPitch(pc_, pcs);
-    double register_ = std::floor(pitch / OCTAVE()) * OCTAVE();
-    double closestPitch = register_ + closestPc;
-    return closestPitch;
-}
-
-/**
- * If the Event is a note, moves its pitch
- * to the closest pitch of the chord.
- * If octaveEquivalence is true (the default),
- * the pitch-class of the note is moved to the closest pitch-class
- * of the chord, i.e. keeping the note more or less in its original register;
- * otherwise, the pitch of the note is moved to the closest
- * absolute pitch of the chord.
+ * Returns which of the voiceleadings (source to d1, source to d2)
+ * is the smoother (shortest moves), optionally avoiding parallel fifths.
  */
-inline SILENCE_PUBLIC void conformToChord(Event &event, const Chord &chord, bool octaveEquivalence = true) {
-    if (!event.isNoteOn()) {
-        return;
-    }
-    double pitch = event.getKey();
-    if (octaveEquivalence) {
-        Chord pcs = chord.epcs();
-        pitch = conformToPitchClassSet(pitch, pcs);
-    } else {
-        pitch = closestPitch(pitch, chord);
-    }
-    event.setKey(pitch);
-}
+SILENCE_PUBLIC Chord voiceleadingSmoother(const Chord &source, const Chord &d1, const Chord &d2, bool avoidParallels = false, double range = OCTAVE());
 
 /**
- * Inserts the notes of the chord into the score at the specified time.
+ * Returns which of the voiceleadings (source to d1, source to d2)
+ * is the simpler (fewest moves), optionally avoiding parallel fifths.
  */
-inline SILENCE_PUBLIC void insert(Score &score,
-                                  const Chord &chord,
-                                  double time_) {
-    chord.toScore(score, time_);
-}
-
-/**
- * Returns a slice of the Score starting at the start time and extending up
- * to but not including the end time. The slice contains pointers to the Events
- * in the Score.
- */
-inline SILENCE_PUBLIC std::vector<Event *> slice(Score &score, double startTime, double endTime) {
-    std::vector<Event *> result;
-    for (int i = 0, n = score.size(); i < n; ++i) {
-        Event *event = &score[i];
-        if (event->isNoteOn()) {
-            double eventStart = event->getTime();
-            if (eventStart >= startTime && eventStart < endTime) {
-                result.push_back(event);
-            }
-        }
-    }
-    return result;
-}
-
-/**
- * For all the notes in the Score
- * beginning at or later than the start time,
- * and up to but not including the end time,
- * moves the pitch of the note to belong to the chord, using the
- * conformToChord function.
- */
-inline SILENCE_PUBLIC void apply(Score &score, const Chord &chord, double startTime, double endTime, bool octaveEquivalence = true) {
-    std::vector<Event *> slice_ = slice(score, startTime, endTime);
-    for (int i = 0; i < slice_.size(); ++i) {
-        Event &event = *slice_[i];
-        conformToChord(event, chord, octaveEquivalence);
-    }
-}
-
-/**
- * Returns a chord containing all the pitches of the score
- * beginning at or later than the start time,
- * and up to but not including the end time.
- */
-inline SILENCE_PUBLIC Chord gather(Score &score, double startTime, double endTime) {
-    std::vector<Event *> slice_ = slice(score, startTime, endTime);
-    std::set<double> pitches;
-    for (int i = 0; i < slice_.size(); ++i) {
-        pitches.insert(slice_[i]->getKey());
-    }
-    Chord chord;
-    chord.resize(pitches.size());
-    int voice = 0;
-    for (std::set<double>::iterator it = pitches.begin(); it != pitches.end(); ++it) {
-        chord.setPitch(voice, *it);
-        voice++;
-    }
-    return chord;
-}
+SILENCE_PUBLIC Chord voiceleadingSimpler(const Chord &source, const Chord &d1, const Chord &d2, bool avoidParallels = false);
 
 inline SILENCE_PUBLIC int octavewiseRevoicings(const Chord &chord,
         double range = OCTAVE()) {
@@ -3309,6 +3179,14 @@ inline SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voiceN, std::
     return result;
 }
 
+inline SILENCE_PUBLIC void apply(Score &score, const Chord &chord, double startTime, double endTime, bool octaveEquivalence) {
+    std::vector<Event *> slice_ = slice(score, startTime, endTime);
+    for (int i = 0; i < slice_.size(); ++i) {
+        Event &event = *slice_[i];
+        conformToChord(event, chord, octaveEquivalence);
+    }
+}
+
 inline SILENCE_PUBLIC double C4() {
     return MIDDLE_C();
 }
@@ -3963,6 +3841,38 @@ inline bool Chord::equals(const Chord &other) const {
     return *this == other;
 }
 
+inline SILENCE_PUBLIC double closestPitch(double pitch, const Chord &chord) {
+    std::map<double, double> pitchesForDistances;
+    for (int voice = 0; voice < chord.voices(); ++voice) {
+        double chordPitch = chord.getPitch(voice);
+        double distance = std::fabs(chordPitch - pitch);
+        pitchesForDistances[distance] = chordPitch;
+    }
+    return pitchesForDistances.begin()->second;
+}
+
+inline SILENCE_PUBLIC void conformToChord(Event &event, const Chord &chord, bool octaveEquivalence) {
+    if (!event.isNoteOn()) {
+        return;
+    }
+    double pitch = event.getKey();
+    if (octaveEquivalence) {
+        Chord pcs = chord.epcs();
+        pitch = conformToPitchClassSet(pitch, pcs);
+    } else {
+        pitch = closestPitch(pitch, chord);
+    }
+    event.setKey(pitch);
+}
+
+inline SILENCE_PUBLIC double conformToPitchClassSet(double pitch, const Chord &pcs) {
+    double pc_ = epc(pitch);
+    double closestPc = closestPitch(pc_, pcs);
+    double register_ = std::floor(pitch / OCTAVE()) * OCTAVE();
+    double closestPitch = register_ + closestPc;
+    return closestPitch;
+}
+
 inline SILENCE_PUBLIC double epc(double pitch) {
     double pc = modulo(pitch, OCTAVE());
     return pc;
@@ -4014,6 +3924,22 @@ inline SILENCE_PUBLIC double factorial(double n) {
     return result;
 }
 
+inline SILENCE_PUBLIC Chord gather(Score &score, double startTime, double endTime) {
+    std::vector<Event *> slice_ = slice(score, startTime, endTime);
+    std::set<double> pitches;
+    for (int i = 0; i < slice_.size(); ++i) {
+        pitches.insert(slice_[i]->getKey());
+    }
+    Chord chord;
+    chord.resize(pitches.size());
+    int voice = 0;
+    for (std::set<double>::iterator it = pitches.begin(); it != pitches.end(); ++it) {
+        chord.setPitch(voice, *it);
+        voice++;
+    }
+    return chord;
+}
+
 inline SILENCE_PUBLIC bool ge_epsilon(double a, double b) {
     if (eq_epsilon(a, b)) {
         return true;
@@ -4034,10 +3960,12 @@ inline SILENCE_PUBLIC double I(double pitch, double center) {
     return center - pitch;
 }
 
-/**
- * Returns a chord with the specified number of voices all set to a first
- * pitch, useful as an iterator.
- */
+inline SILENCE_PUBLIC void insert(Score &score,
+                                  const Chord &chord,
+                                  double time_) {
+    chord.toScore(score, time_);
+}
+
 inline SILENCE_PUBLIC Chord iterator(int voiceN, double first) {
     Chord odometer;
     odometer.resize(voiceN);
@@ -4147,6 +4075,20 @@ inline SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b) {
     }
 }
 
+inline SILENCE_PUBLIC std::vector<Event *> slice(Score &score, double startTime, double endTime) {
+    std::vector<Event *> result;
+    for (int i = 0, n = score.size(); i < n; ++i) {
+        Event *event = &score[i];
+        if (event->isNoteOn()) {
+            double eventStart = event->getTime();
+            if (eventStart >= startTime && eventStart < endTime) {
+                result.push_back(event);
+            }
+        }
+    }
+    return result;
+}
+
 inline SILENCE_PUBLIC double T(double pitch, double semitones) {
     return pitch + semitones;
 }
@@ -4159,6 +4101,87 @@ inline SILENCE_PUBLIC Chord voiceleading(const Chord &a, const Chord &b) {
     return voiceleading_;
 }
 
+inline SILENCE_PUBLIC Chord voiceleadingCloser(const Chord &source, const Chord &d1, const Chord &d2, bool avoidParallels) {
+    if (avoidParallels) {
+        if (parallelFifth(source, d1)) {
+            return d2;
+        }
+        if (parallelFifth(source, d2)) {
+            return d1;
+        }
+    }
+    double s1 = voiceleadingSmoothness(source, d1);
+    double s2 = voiceleadingSmoothness(source, d2);
+    if (s1 < s2) {
+        return d1;
+    }
+    if (s2 > s1) {
+        return d2;
+    }
+    return voiceleadingSimpler(source, d1, d2, avoidParallels);
+}
+
+inline SILENCE_PUBLIC Chord voiceleadingClosestRange(const Chord &source, const Chord &destination, double range, bool avoidParallels) {
+    Chord destinationOP = destination.eOP();
+    Chord d = destinationOP;
+    Chord origin = source.eOP();
+    Chord odometer = origin;
+    while (next(odometer, origin, range, OCTAVE())) {
+        Chord revoicing = odometer;
+        for (int voice = 0; voice < revoicing.voices(); ++voice) {
+            revoicing.setPitch(voice, revoicing.getPitch(voice) + destinationOP.getPitch(voice));
+        }
+        d = voiceleadingCloser(source, d, revoicing, avoidParallels);
+    }
+    return d;
+}
+
+inline SILENCE_PUBLIC Chord voiceleadingSimpler(const Chord &source, const Chord &d1, const Chord &d2, bool avoidParallels) {
+    if (avoidParallels) {
+        if (parallelFifth(source, d1)) {
+            return d2;
+        }
+        if (parallelFifth(source, d2)) {
+            return d1;
+        }
+    }
+    // TODO: Verify this.
+    int s1 = voiceleading(source, d1).count(0.0);
+    int s2 = voiceleading(source, d2).count(0.0);
+    if (s1 > s2) {
+        return d1;
+    }
+    if (s2 > s1) {
+        return d2;
+    }
+    return d1;
+}
+
+inline SILENCE_PUBLIC Chord voiceleadingSmoother(const Chord &source, const Chord &d1, const Chord &d2, bool avoidParallels, double range) {
+    if (avoidParallels) {
+        if (parallelFifth(source, d1)) {
+            return d2;
+        }
+        if (parallelFifth(source, d2)) {
+            return d1;
+        }
+    }
+    double s1 = voiceleadingSmoothness(source, d1);
+    double s2 = voiceleadingSmoothness(source, d2);
+    if (s1 <= s2) {
+        return d1;
+    } else {
+        return d2;
+    }
+}
+
+inline SILENCE_PUBLIC double voiceleadingSmoothness(const Chord &a, const Chord &b) {
+    double L1 = 0.0;
+    for (int voice = 0; voice < a.voices(); ++voice) {
+        L1 = L1 + std::abs(b.getPitch(voice) - a.getPitch(voice));
+    }
+    return L1;
+}
 
 
 
