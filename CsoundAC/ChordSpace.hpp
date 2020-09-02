@@ -308,6 +308,17 @@ SILENCE_PUBLIC void apply(Score &score, const Chord &chord, double startTime, do
 SILENCE_PUBLIC double C4();
 
 /**
+ * Returns the chord, in scale order, for the specified degree of the scale.
+ * The chord can be composed of seconds, thirds, or larger intervals, and 
+ * can have two or more voices. The scale can have any number of pitch-classes  
+ * and any interval content; it simply has to consists of pitches (not 
+ * pitch-classes) sorted from the tonic pitch-class on up.
+ * PLEASE NOTE: Scale degree is 1-based. A "third" is denoted "3" but is two 
+ * scale degrees, and so on.
+ */
+SILENCE_PUBLIC Chord chord(const Chord &scale, int scale_degree, int chord_voices, int interval = 3);
+
+/**
  * Chords consist of simultaneously sounding pitches. The pitches are
  * represented as semitones with 0 at the origin and middle C as 60.
  * Each voice also has a duration, velocity, channel, and pan.
@@ -764,6 +775,89 @@ public:
 SILENCE_PUBLIC const Chord &chordForName(std::string name);
 
 /**
+ * Orthogonal additive groups for unordered chords of given arity under range
+ * equivalence (RP): prime form or P, inversion or I, transposition or T, and
+ * voicing or V. P x I x T = OP, P x I x T x V = RP. Therefore, an
+ * operation on P, I, T, or V may be used to independently transform the
+ * respective symmetry of any chord. Some of these operations will reflect
+ * in RP. Please note: some equivalence classes define quotient spaces
+ * with singularities, meaning that more than one chord where the space is 
+ * glued may have the same equivalent. Hence, for each P there must be one and 
+ * only one chord in the representative fundamental domain of the group, yet 
+ * each of several chords at any singular point of the fundamental domain must
+ * have the same P.
+ */
+class SILENCE_PUBLIC ChordSpaceGroup {
+public:
+    virtual ~ChordSpaceGroup();
+    int countI;
+    int countP;
+    int countT;
+    int countV;
+    /**
+     * Loads the group if found, creates and saves it otherwise.
+     */
+    virtual void createChordSpaceGroup(int voices, double range, double g = 1.0);
+    virtual std::string createFilename(int voices, double range, double g = 1.0) const;
+    /**
+     * Returns the indices of prime form, inversion, transposition,
+     * and voicing for a chord, as the first 4 elements, respectively,
+     * of a homogeneous vector.
+     *
+     * Please note: where are there singularities
+     * in the quotient spaces for chords, there may be several chords that
+     * belong to the same equivalence class. In such cases, any of several 
+     * chords at a singular point of the fundamental domain will return the 
+     * same P.
+     */
+    Eigen::VectorXi fromChord(const Chord &chord, bool printme = false) const;
+    /**
+     * The generator of transposition.
+     */
+    double g;
+    virtual int getCountI() const;
+    virtual int getCountP() const;
+    virtual int getCountT() const;
+    virtual int getCountV() const;
+    virtual int getG() const;
+    virtual int getN() const;
+    virtual int getRange() const;
+    std::map<Chord, int> indexesForOpttis;
+    std::map<Chord, int> indexesForVoicings;
+    virtual void initialize(int N_, double range_, double g_ = 1.0);
+    virtual void list(bool listheader = true, bool listopttis = false, bool listvoicings = false) const;
+    virtual void load(std::fstream &stream);
+    int N;
+    /**
+     * Ordered table of all OPTTI chords for g.
+     */
+    std::vector<Chord> opttisForIndexes;
+    virtual void preinitialize(int N_, double range_, double g_ = 1.0);
+    /**
+     * The zero-based range of the chord space.
+     */
+    double range;
+    virtual void save(std::fstream &stream) const;
+    /**
+     * Returns the chord for the indices of prime form, inversion,
+     * transposition, and voicing. The chord is not in RP; rather, each voice of
+     * the chord's OP may have zero or more octaves added to it.
+     *
+     * Please note: where are there singularities
+     * in the quotient spaces for chords, there may be several chords that
+     * belong to the same equivalence class. In such cases, each P will return 
+     * just one chord from the representative fundamental domain.
+     */
+    std::vector<Chord> toChord(int P, int I, int T, int V, bool printme = false) const;
+    std::vector<Chord> toChord_vector(const Eigen::VectorXi &pitv, bool printme = false) const;
+    /**
+     * Ordered table of all octavewise permutations
+     * in RP (note: not OP).
+     */
+    std::vector<Chord> voicingsForIndexes;
+};
+
+/**
  * Returns the pitch from the chord that is closest to the pitch.
  */
 SILENCE_PUBLIC double closestPitch(double pitch, const Chord &chord);
@@ -838,6 +932,12 @@ typedef enum {
 
 SILENCE_PUBLIC double factorial(double n);
 
+void fill(std::string rootName, double rootPitch, std::string typeName, std::string typePitches, bool is_scale = false);
+ 
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> fundamentalDomainByIsNormal(int voiceN, double range, double g);
+
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> fundamentalDomainByNormalize(int voiceN, double range, double g);
+
 /**
  * Returns a chord containing all the pitches of the score
  * beginning at or later than the start time,
@@ -854,6 +954,15 @@ SILENCE_PUBLIC bool gt_epsilon(double a, double b);
  * NOTE: Does NOT return an equivalent under any requivalence relation.
  */
 SILENCE_PUBLIC double I(double pitch, double center = 0.0);
+
+/**
+ * Returns the index of the octavewise revoicing that this chord is,
+ * relative to its OP equivalent, within the indicated range. Returns
+ * -1 if there is no such chord within the range.
+ */
+SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &chord, double range, bool debug=false);
+
+void initializeNames();
 
 /**
  * Inserts the notes of the chord into the score at the specified time.
@@ -960,6 +1069,7 @@ SILENCE_PUBLIC bool next(Chord &iterator_, const Chord &origin, double range, do
 
 SILENCE_PUBLIC Chord octavewiseRevoicing(const Chord &chord, int revoicingNumber_, double range, bool debug);
 
+SILENCE_PUBLIC int octavewiseRevoicings(const Chord &chord, double range = OCTAVE());
 /**
  * Returns whether the voiceleading
  * between chords a and b contains a parallel fifth.
@@ -967,6 +1077,158 @@ SILENCE_PUBLIC Chord octavewiseRevoicing(const Chord &chord, int revoicingNumber
 SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b);
 
 SILENCE_PUBLIC double pitchClassForName(std::string name);
+
+SILENCE_PUBLIC const std::map<std::string, double> &pitchClassesForNames();
+    
+/**
+ * Returns the named chord as a scale, that is, starting with the chord in OP, 
+ * and sorting it from the tonic pitch-class on up. This enables 
+ * transformations in tonal harmony such as transposing by scale degree. If no 
+ * Chord exists for the name, an empty Chord is returned.
+ */
+SILENCE_PUBLIC Chord scale(std::string name);
+
+/**
+ * Scale as a class; must be created with the name of the scale. Inherits 
+ * from Chord. Note that inherited Chord member functions such as T and I 
+ * return Chords, not Scales.
+ */
+class SILENCE_PUBLIC Scale : public Chord {
+    public:
+        /**
+         * Default constructor, an empty Scale.
+         */
+        Scale();
+        /**
+         * Creates a Scale by name, e.g. 'C major'. If the named Scale does 
+         * not already exist, an empty Scale without a name is created.
+         */
+        Scale(std::string name);
+        /** 
+         * Creates a Scale with a new name as a set of pitches. These must 
+         * start in octave 0 and be in ascending order, but otherwise may have 
+         * any value in semitones or fractions of semitones; this permits the 
+         * construction of new scales with any temperament and with any 
+         * interval content. If a Scale with the proposed name already exists, 
+         * that Scale is returned. New Scales are also stored as new named 
+         * Scales.
+         */
+        Scale(std::string name, const Chord &scale_pitches);
+        /** 
+         * Creates a Scale with a new name as a set of pitches. These must 
+         * start in octave 0 and be in ascending order, but otherwise may have 
+         * any value in semitones or fractions of semitones; this permits the 
+         * construction of new scales with any temperament and with any 
+         * interval content. If a Scale with the proposed name already exists, 
+         * that Scale is replaced. New Scales are also stored as new named 
+         * Scales.
+         */
+        Scale(std::string name, const std::vector<double> &scale_pitches);
+        virtual ~Scale();
+        virtual Scale &operator = (const Scale &other);
+        /** 
+         * Returns the chord for the indicated scale degree, number of voices
+         * in the chord, and interval in scale degrees of the chord (defaults 
+         * to thirds, or 3; the actual number of scale steps between chord 
+         * pitches is interval - 1).
+         */
+        virtual Chord chord(int scale_degree, int voices, int interval = 3) const;
+        /**
+         * Returns the scale degree of the Chord in this Scale; if the 
+         * Chord does not belong to this Scale, -1 is returned.
+         */
+        virtual int degree(const Chord &chord_, int interval = 3) const;
+        /**
+         * Returns the type name, e.g. "major" or "whole tone," of this.
+         * This name will probably be invalid if the interval structure of 
+         * this has been changed, e.g. by inversion.  
+         */
+        virtual std::string getTypeName() const;
+        /**
+         * Returns a list of common modulations, that is, other major or 
+         * harmonic minor Scales to which the Chord belongs; optionally the 
+         * Chord can first be resized (e.g. from a 9th chord to a triad) in 
+         * order to find more or fewer possible modulations.
+         */
+        virtual std::vector<Scale> modulations(const Chord &chord, int voices = -1) const;
+        /**
+         * For any Chord belonging to this Scale, returns in the argument a 
+         * list of other Scales to which that Chord also belongs. Switching to 
+         * one of these Scales will perform some sort of modulation. The list 
+         * of scale type names restricts the types of Scale that will be 
+         * returned.
+         */
+        virtual void modulations_for_scale_types(std::vector<Scale> &result, const Chord &current_chord, int voices_, const std::vector<std::string> &type_names) const;
+        /**
+         * Returns the name of this Scale.
+         */
+        virtual std::string name() const;
+        /**
+         * Returns a list of common relative tonicizations for the Chord, that 
+         * is, the other major or harmonic minor Scales for which that Chord 
+         * could be mutated to have the secondary function. If that is not 
+         * possible, an empty result is returned.
+         */
+        virtual std::vector<Scale> relative_tonicizations(const Chord &current_chord, int secondary_function = 5, int voices = -1) const;
+        /**
+         * Returns all major or minor Scales for which the current Chord is 
+         * the tonic (scale degree 1). The number of voices defaults to that 
+         * of the current Chord, but may be larger or smaller.
+         * NOTE: Here, tonicizations are modulations in which the Chord has 
+         * degree 1, i.e. is the tonic chord.
+         */
+        virtual std::vector<Scale> tonicizations(const Chord &current_chord, int voices = -1) const;
+        /**
+         * Returns the _relative_ tonicizations of the Chord, that is, the 
+         * scales for which that Chord could be mutated to have the secondary 
+         * function, if that is possible. The list of scale types is used to 
+         * restrict the types of Scales that are returned.
+         */
+        virtual void relative_tonicizations_for_scale_types(std::vector<Scale> &result, const Chord &current_chord, int secondary_function, int voices, const std::vector<std::string> &type_names) const;
+        /**
+         * Returns the current Chord mutated, if possible, to one or more 
+         * function(s) with respect to another Chord in its Scale. Not 
+         * "secondary function of this chord," but "this chord as secondary 
+         * function of another (tonicized) chord." If that is not 
+         * possible, an empty Chord is returned. The number of voices 
+         * defaults to that of the current Chord. Can be used to generate 
+         * secondary dominants (function = 5), secondary supertonics 
+         * (function = 2), secondary subtonics (function = 6), and so on.
+         * It is then up to the user to perform an appropriate progression 
+         * by number of scale degrees in the original Scale.
+         */
+        virtual std::vector<Chord> secondary(const Chord &current_chord, int secondary_function = 5, int voices_ = -1) const;
+        /**
+         * Returns the number of semitones (may be whole or fractional) from 
+         * the tonic (as 0) of this Scale to the indicated scale degree, which 
+         * is wrapped around by octave equivalence.
+         */
+        virtual double semitones_for_degree(int scale_degree) const;
+        /**
+         * Returns the pitch-class that is the tonic or root of this Scale.
+         */
+        virtual double tonic() const;
+        /** 
+         * Returns a copy of this Scale transposed by the indicated number of 
+         * _semitones_.
+         */
+        virtual Scale transpose(double semitones) const;
+        /**
+         * Returns a Chord transposed by the indicated number of scale 
+         * degrees; the chord as passed must belong to this Scale, and the
+         * interval must be the same as that used to generate the Chord; 
+         * (defaults to thirds, or 3; the actual number of scale steps between 
+         * chord pitches is interval - 1).
+         */
+        virtual Chord transpose_degrees(const Chord &chord, int scale_degrees, int interval = 3) const;
+        /** 
+         * Returns a copy of this Scale transposed to the indicated 
+         * _scale degree_. 
+         */
+        virtual Scale transpose_to_degree(int degrees) const;
+    protected:
+        std::string type_name;
+};
 
 SILENCE_PUBLIC const Scale &scaleForName(std::string name);
 
@@ -986,6 +1248,16 @@ SILENCE_PUBLIC std::vector<std::string> split(std::string);
  * NOTE: Does NOT return an equivalent under any requivalence relation.
  */
 SILENCE_PUBLIC double T(double pitch, double semitones);
+
+/**
+ * Returns the chord, in scale order, transposed within the scale by the 
+ * indicated number of scale degrees, which can be positive or negative.
+ * The original chord may be in any order or voicing. By default,
+ * chords are generated by thirds, but they can be at any interval in scale 
+ * degrees. If the original chord does not belong to the scale, an empty 
+ * Chord is returned.
+ */
+SILENCE_PUBLIC Chord transpose_degrees(const Chord &scale, const Chord &original_chord, int transposition_degrees, int interval = 3);
 
 SILENCE_PUBLIC std::set<Chord> &unique_chords();
 
@@ -1030,98 +1302,6 @@ SILENCE_PUBLIC Chord voiceleadingSmoother(const Chord &source, const Chord &d1, 
  */
 SILENCE_PUBLIC Chord voiceleadingSimpler(const Chord &source, const Chord &d1, const Chord &d2, bool avoidParallels = false);
 
-inline SILENCE_PUBLIC int octavewiseRevoicings(const Chord &chord,
-        double range = OCTAVE()) {
-    Chord origin = chord.eOP();
-    Chord odometer = origin;
-    // Enumerate the permutations.
-    int voicings = 0;
-    while (next(odometer, origin, range, OCTAVE())) {
-        voicings = voicings + 1;
-    }
-    System::debug("octavewiseRevoicings: chord:    %s\n", chord.toString().c_str());
-    System::debug("octavewiseRevoicings: eop:      %s\n", chord.eOP().toString().c_str());
-    System::debug("octavewiseRevoicings: odometer: %s\n", odometer.toString().c_str());
-    System::debug("octavewiseRevoicings: voicings: %5d\n", voicings);
-    return voicings;
-}
-
-SILENCE_PUBLIC Chord octavewiseRevoicing(const Chord &chord, int revoicingNumber_, double range, bool debug=false);
-/**
- * Returns the index of the octavewise revoicing that this chord is,
- * relative to its OP equivalent, within the indicated range. Returns
- * -1 if there is no such chord within the range.
- */
-SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &chord, double range, bool debug=false);
-
-/*
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC bool isNormal(const Chord &chord, double range, double g) {
-	Chord normal = normalize<EQUIVALENCE_RELATION>(chord, range, g);
-	if (normal == chord) {
-		return true;
-	} else {
-		return false;
-	}
-}
-*/
-
-template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC bool isNormal(const Chord &chord, double range) {
-    bool result = isNormal<EQUIVALENCE_RELATION>(chord, range, 1.0);
-    return result;
-}
-
-template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC bool isNormal(const Chord &chord) {
-    bool result = isNormal<EQUIVALENCE_RELATION>(chord, OCTAVE());
-    return result;
-}
-
-template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC bool isEquivalent(const Chord &a, const Chord &b, double range, double g) {
-    if (isNormal<EQUIVALENCE_RELATION>(a, range, g) == false) {
-        return false;
-    }
-    if (isNormal<EQUIVALENCE_RELATION>(b, range, g) == false) {
-        return false;
-    }
-    Chord normalA = normalize<EQUIVALENCE_RELATION>(a, range, g);
-    Chord normalB = normalize<EQUIVALENCE_RELATION>(b, range, g);
-    if (normalA == normalB) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC bool isEquivalent(const Chord &a, const Chord &b, double range) {
-    return isEquivalent<EQUIVALENCE_RELATION>(a, b, range, 1.0);
-}
-
-template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC bool isEquivalent(const Chord &a, const Chord &b) {
-    return isEquivalent<EQUIVALENCE_RELATION>(a, b, OCTAVE());
-}
-
-template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC Chord normalize(const Chord &chord, double range) {
-    return normalize<EQUIVALENCE_RELATION>(chord, range, 1.0);
-}
-
-template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC Chord normalize(const Chord &chord) {
-    return normalize<EQUIVALENCE_RELATION>(chord, OCTAVE());
-}
-
-//	EQUIVALENCE_RELATION_r
-
-template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_r>(const Chord &chord, double range, double g) {
-    for (int voice = 0; voice < chord.voices(); ++voice) {
-        double pitch = chord.getPitch(voice);
-        if (le_epsilon(0.0, pitch) == false) {
-            return false;
-        }
-        if (lt_epsilon(pitch, range) == false) {
-            return false;
-        }
-    }
-    return true;
-}
-
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_r>(const Chord &chord, double range, double g) {
     Chord normal = chord;
     for (int voice = 0; voice < chord.voices(); ++voice) {
@@ -1131,8 +1311,6 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_r>(const C
     }
     return normal;
 }
-
-//	EQUIVALENCE_RELATION_R
 
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_R>(const Chord &chord, double range, double g) {
     double max = chord.max()[0];
@@ -1172,8 +1350,6 @@ inline Chord Chord::eR(double range) const {
     return csound::normalize<EQUIVALENCE_RELATION_R>(*this, range, 1.0);
 }
 
-//	EQUIVALENCE_RELATION_P
-
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_P>(const Chord &chord, double range, double g) {
     for (size_t voice = 1; voice < chord.voices(); voice++) {
         if (gt_epsilon(chord.getPitch(voice - 1), chord.getPitch(voice))) {
@@ -1205,413 +1381,6 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_P>(const C
 inline Chord Chord::eP() const {
     return csound::normalize<EQUIVALENCE_RELATION_P>(*this, OCTAVE(), 1.0);
 }
-
-/**
- * Returns the named chord as a scale, that is, starting with the chord in OP, 
- * and sorting it from the tonic pitch-class on up. This enables 
- * transformations in tonal harmony such as transposing by scale degree. If no 
- * Chord exists for the name, an empty Chord is returned.
- */
-inline SILENCE_PUBLIC Chord scale(std::string name) {
-    System::debug("scale: for name: %s\n", name.c_str());
-    auto scale = chordForName(name);
-    if (scale.size() == 0) {
-        return scale;
-    }
-    auto parts = split(name);
-    auto tonic = pitchClassForName(parts.front());
-    System::debug("scale: tonic: %9.4f\n", tonic);
-    System::debug("scale: initially: %s\n", scale.toString().c_str());
-    while (eq_epsilon(scale.getPitch(0), tonic) == false) {
-        scale = scale.v();
-        System::debug("scale: revoicing: %s\n", scale.toString().c_str());
-    }
-    return scale;
-}
-
-/**
- * Returns the chord, in scale order, for the specified degree of the scale.
- * The chord can be composed of seconds, thirds, or larger intervals, and 
- * can have two or more voices. The scale can have any number of pitch-classes  
- * and any interval content; it simply has to consists of pitches (not 
- * pitch-classes) sorted from the tonic pitch-class on up.
- * PLEASE NOTE: Scale degree is 1-based. A "third" is denoted "3" but is two 
- * scale degrees, and so on.
- */
-inline SILENCE_PUBLIC Chord chord(const Chord &scale, int scale_degree, int chord_voices, int interval = 3) {
-    int scale_index = scale_degree - 1;
-    int scale_interval = interval - 1;
-    Chord result;
-    result.resize(chord_voices);
-    double octave = 0.;
-    for (int chord_voice = 0; chord_voice < chord_voices; ++chord_voice) {
-        if (scale_index >= scale.voices()) {
-            scale_index = scale_index - scale.voices();
-            octave = octave + OCTAVE();
-        }
-        auto pitch = scale.getPitch(scale_index) + octave;
-        result.setPitch(chord_voice, pitch);
-        scale_index = scale_index + scale_interval;
-    }
-    return result;
-}
-
-/**
- * Returns the chord, in scale order, transposed within the scale by the 
- * indicated number of scale degrees, which can be positive or negative.
- * The original chord may be in any order or voicing. By default,
- * chords are generated by thirds, but they can be at any interval in scale 
- * degrees. If the original chord does not belong to the scale, an empty 
- * Chord is returned.
- */
-inline SILENCE_PUBLIC Chord transpose_degrees(const Chord &scale, const Chord &original_chord, int transposition_degrees, int interval = 3) {
-    int scale_degrees = scale.voices();
-    int chord_voices = original_chord.voices();
-    Chord original_eop = original_chord.eOP();
-    for (int original_chord_index = 0; original_chord_index < scale_degrees; ++original_chord_index) {
-        System::debug("transpose_degrees: original_chord_index: %d scale_degrees: %d\n", original_chord_index, scale_degrees);
-        Chord transposed = csound::chord(scale, original_chord_index + 1, chord_voices, interval);
-        Chord transposed_eop = transposed.eOP();
-        System::debug("original_eop: %s\ntransposed_eop: %s\n", original_eop.information().c_str(), transposed_eop.information().c_str());
-        if (original_eop == transposed_eop) {
-            // Found the scale index of the original chord, now get the transposed chord.
-            int target_index = original_chord_index + transposition_degrees;
-            System::debug("found chord, target_index: %d original_chord_index: %d transposition_degrees: %d\n", target_index, original_chord_index, transposition_degrees);
-            // Transposition has sign. If negative, wrap.
-            while (target_index < 0) {
-                target_index = target_index + scale_degrees;
-            }
-            System::debug("wrapped target_index: %d original_chord_index: %d transposition_degrees: %d\n", target_index, original_chord_index, transposition_degrees);
-            Chord transposed_chord = csound::chord(scale, target_index + 1, chord_voices, interval);
-            System::debug("transposed_chord: %s\n", transposed_chord.toString().c_str());
-            return transposed_chord;
-        }
-    }
-    Chord empty_chord;
-    empty_chord.resize(0);
-    return empty_chord;
-}
-
-/**
- * Scale as a class; must be created with the name of the scale. Inherits 
- * from Chord. Note that inherited Chord member functions such as T and I 
- * return Chords, not Scales.
- */
-class SILENCE_PUBLIC Scale : public Chord {
-    public:
-        /**
-         * Default constructor, an empty Scale.
-         */
-        Scale() {
-            resize(0);
-        }
-        /**
-         * Creates a Scale by name, e.g. 'C major'. If the named Scale does 
-         * not already exist, an empty Scale without a name is created.
-         */
-        Scale(std::string name) {
-            const Chord temporary = csound::scale(name);
-            Eigen::MatrixXd::operator=(temporary);
-            if (temporary.voices() > 0) {
-                auto space_at = name.find(' ');
-                type_name = name.substr(space_at + 1);
-            }
-        }
-        /** 
-         * Creates a Scale with a new name as a set of pitches. These must 
-         * start in octave 0 and be in ascending order, but otherwise may have 
-         * any value in semitones or fractions of semitones; this permits the 
-         * construction of new scales with any temperament and with any 
-         * interval content. If a Scale with the proposed name already exists, 
-         * that Scale is returned. New Scales are also stored as new named 
-         * Scales.
-         */
-        Scale(std::string name, const Chord &scale_pitches) {
-            Scale temporary(name);
-            if (temporary.voices() > 0) 
-            {
-                *this = temporary;
-                return;
-            } 
-            resize(scale_pitches.size());
-            for (int index = 0; index < voices(); ++index) {
-                setPitch(index, scale_pitches.getPitch(index));
-            }
-            add_scale(name, *this);
-        }
-        /** 
-         * Creates a Scale with a new name as a set of pitches. These must 
-         * start in octave 0 and be in ascending order, but otherwise may have 
-         * any value in semitones or fractions of semitones; this permits the 
-         * construction of new scales with any temperament and with any 
-         * interval content. If a Scale with the proposed name already exists, 
-         * that Scale is replaced. New Scales are also stored as new named 
-         * Scales.
-         */
-        Scale(std::string name, const std::vector<double> &scale_pitches) {
-            resize(scale_pitches.size());
-            for (int index = 0; index < voices(); ++index) {
-                setPitch(index, scale_pitches[index]);
-            }
-            add_scale(name, *this);
-        }
-        virtual ~Scale() {};
-        virtual Scale &operator = (const Scale &other) {
-            Eigen::MatrixXd::operator=(dynamic_cast<const Chord &>(other));
-            type_name = other.getTypeName();
-            return *this;
-        }
-        /** 
-         * Returns the chord for the indicated scale degree, number of voices
-         * in the chord, and interval in scale degrees of the chord (defaults 
-         * to thirds, or 3; the actual number of scale steps between chord 
-         * pitches is interval - 1).
-         */
-        virtual Chord chord(int scale_degree, int voices, int interval = 3) const {
-            return csound::chord(*this, scale_degree, voices, interval);
-        }
-        /**
-         * Returns a Chord transposed by the indicated number of scale 
-         * degrees; the chord as passed must belong to this Scale, and the
-         * interval must be the same as that used to generate the Chord; 
-         * (defaults to thirds, or 3; the actual number of scale steps between 
-         * chord pitches is interval - 1).
-         */
-        virtual Chord transpose_degrees(const Chord &chord, int scale_degrees, int interval = 3) const {
-            return csound::transpose_degrees(*this, chord, scale_degrees, interval);
-        }
-        /**
-         * Returns the number of semitones (may be whole or fractional) from 
-         * the tonic (as 0) of this Scale to the indicated scale degree, which 
-         * is wrapped around by octave equivalence.
-         */
-        virtual double semitones_for_degree(int scale_degree) const {
-            int scale_degrees = voices();
-            while(scale_degree < 1) {
-                scale_degree = scale_degree + scale_degrees;
-            }
-            while (scale_degree > scale_degrees) {
-                scale_degree = scale_degree - scale_degrees;
-            }
-            double pitch_of_tonic = tonic();
-            double pitch_of_scale_degree = getPitch(scale_degree - 1);
-            double semitones = pitch_of_scale_degree - pitch_of_tonic;
-            return semitones;
-        }
-        /** 
-         * Returns a copy of this Scale transposed to the indicated 
-         * _scale degree_. 
-         */
-        virtual Scale transpose_to_degree(int degrees) const {
-            System::debug("Scale::transpose_to_degree(%9.4f)...\n", degrees);
-            double semitones = semitones_for_degree(degrees);
-            return transpose(semitones);
-        }
-        /** 
-         * Returns a copy of this Scale transposed by the indicated number of 
-         * _semitones_.
-         */
-        virtual Scale transpose(double semitones) const {
-            Chord transposed_pitches = T(semitones);
-            // Make sure the copy starts in octave 0.
-            while (lt_epsilon(transposed_pitches.getPitch(0), 0) == true) {
-                transposed_pitches = transposed_pitches.T(OCTAVE());
-            }
-            while (ge_epsilon(transposed_pitches.getPitch(0), OCTAVE()) == true) {
-                transposed_pitches = transposed_pitches.T( - OCTAVE());
-            }
-            System::debug("Scale::transpose: transposed_pitches(%f): %s\n", semitones, transposed_pitches.toString().c_str());
-            // Create the copy with the name of the new tonic.
-            System::debug("Scale::transpose: original name: %s\n", name().c_str());
-            auto tonic_name = nameForPitchClass(transposed_pitches.getPitch(0));
-            Scale transposed_scale;
-            transposed_scale.type_name = getTypeName();
-            transposed_scale.resize(voices());
-            for (int voice = 0; voice < voices(); ++voice) {
-                transposed_scale.setPitch(voice, transposed_pitches.getPitch(voice));
-            }
-            System::debug("Scale::transpose: new name: %s\n", transposed_scale.name().c_str());
-            System::debug("Scale::transpose: result: %s\n", transposed_scale.information().c_str());
-            return transposed_scale;
-        }
-        /**
-         * Returns the name of this Scale.
-         */
-        virtual std::string name() const {
-            return nameForPitchClass(tonic()) + " " + type_name;
-        }
-        /**
-         * Returns the type name, e.g. "major" or "whole tone," of this.
-         * This name will probably be invalid if the interval structure of 
-         * this has been changed, e.g. by inversion.  
-         */
-        virtual std::string getTypeName() const {
-            return type_name;
-        }
-        /**
-         * Returns the pitch-class that is the tonic or root of this Scale.
-         */
-        virtual double tonic() const {
-            return getPitch(0);
-        }
-        /**
-         * Returns the scale degree of the Chord in this Scale; if the 
-         * Chord does not belong to this Scale, -1 is returned.
-         */
-        virtual int degree(const Chord &chord_, int interval = 3) const {
-            int chord_voices = chord_.voices();
-            int scale_degrees = voices();
-            Chord eop = chord_.eOP();
-            for (int scale_degree = 1; scale_degree <= scale_degrees; ++scale_degree) {
-                Chord chord_for_degree_eop = chord(scale_degree, chord_voices, interval).eOP();
-                if (eop == chord_for_degree_eop) {
-                    return scale_degree;
-                }
-            }
-            return -1;
-        }
-        /**
-         * For any Chord belonging to this Scale, returns in the argument a 
-         * list of other Scales to which that Chord also belongs. Switching to 
-         * one of these Scales will perform some sort of modulation. The list 
-         * of scale type names restricts the types of Scale that will be 
-         * returned.
-         */
-        virtual void modulations_for_scale_types(std::vector<Scale> &result, const Chord &current_chord, int voices_, const std::vector<std::string> &type_names) const {
-            result.clear();
-            int current_degree = degree(current_chord);
-            if (current_degree == -1) {
-                return;
-            }
-            if (voices_ == -1) {
-                voices_ = current_chord.voices();
-            }
-            Chord chord_ = chord(current_degree, voices_);
-            for (auto scale : unique_scales()) {
-                if (scale.degree(chord_) != -1) {
-                    if (std::find(type_names.begin(), type_names.end(), scale.getTypeName()) != type_names.end()) {
-                        if (std::find(result.begin(), result.end(), scale) == result.end()) {
-                            result.push_back(scale);
-                        }
-                    }
-                }
-            }
-        }
-        /**
-         * Returns a list of common modulations, that is, other major or 
-         * harmonic minor Scales to which the Chord belongs; optionally the 
-         * Chord can first be resized (e.g. from a 9th chord to a triad) in 
-         * order to find more or fewer possible modulations.
-         */
-        virtual std::vector<Scale> modulations(const Chord &chord, int voices = -1) const {
-            std::vector<Scale> result;
-            std::vector<std::string> type_names;
-            type_names.push_back("major");
-            type_names.push_back("harmonic minor");
-            modulations_for_scale_types(result, chord, voices, type_names);
-            return result;
-        }
-        /**
-         * Returns the _relative_ tonicizations of the Chord, that is, the 
-         * scales for which that Chord could be mutated to have the secondary 
-         * function, if that is possible. The list of scale types is used to 
-         * restrict the types of Scales that are returned.
-         */
-        virtual void relative_tonicizations_for_scale_types(std::vector<Scale> &result, const Chord &current_chord, int secondary_function, int voices, const std::vector<std::string> &type_names) const {
-            result.clear();
-            int current_degree = degree(current_chord);
-            System::debug("Scale::relative_tonicizations: chord: %.20s (%s) degree: %3d\n", current_chord.name().c_str(), current_chord.toString().c_str(), current_degree);
-            if (current_degree == -1) {
-                return;
-            }
-             if (voices == -1) {
-                voices = current_chord.voices();
-            }
-            Chord chord_ = chord(current_degree, voices);
-            System::debug("Scale::relative_tonicizations: resized: %.20s (%s) degree: %3d\n", chord_.name().c_str(), chord_.toString().c_str(), current_degree);
-            std::vector<Scale> modulations_ = modulations(chord_);
-            for (auto modulation : modulations_) {
-                int degree_in_modulation = modulation.degree(chord_);
-                if (degree_in_modulation == secondary_function) {
-                    if (std::find(result.begin(), result.end(), modulation) == result.end()) {
-                        System::debug("Scale::relative_tonicizations: modulation: %.20s (%s) degree of chord in modulation: %3d\n", modulation.name().c_str(), modulation.toString().c_str(), degree_in_modulation);
-                        result.push_back(modulation);
-                    }
-                }
-            }
-        }
-        /**
-         * Returns a list of common relative tonicizations for the Chord, that 
-         * is, the other major or harmonic minor Scales for which that Chord 
-         * could be mutated to have the secondary function. If that is not 
-         * possible, an empty result is returned.
-         */
-        virtual std::vector<Scale> relative_tonicizations(const Chord &current_chord, int secondary_function = 5, int voices = -1) const {
-            std::vector<Scale> result;
-            std::vector<std::string> scale_types = {"major", "harmonic minor"};
-            relative_tonicizations_for_scale_types(result, current_chord, secondary_function, voices, scale_types);
-            return result;
-        }
-        /**
-         * Returns the current Chord mutated, if possible, to one or more 
-         * function(s) with respect to another Chord in its Scale. Not 
-         * "secondary function of this chord," but "this chord as secondary 
-         * function of another (tonicized) chord." If that is not 
-         * possible, an empty Chord is returned. The number of voices 
-         * defaults to that of the current Chord. Can be used to generate 
-         * secondary dominants (function = 5), secondary supertonics 
-         * (function = 2), secondary subtonics (function = 6), and so on.
-         * It is then up to the user to perform an appropriate progression 
-         * by number of scale degrees in the original Scale.
-         */
-        virtual std::vector<Chord> secondary(const Chord &current_chord, int secondary_function = 5, int voices_ = -1) const {
-            if (voices_ == -1) {
-                voices_ = current_chord.voices();
-            }
-            std::vector<Scale> relative_tonicizations_ = relative_tonicizations(current_chord, secondary_function);
-            std::vector<Chord> result;
-            for (auto tonicization : relative_tonicizations_) {
-                Chord mutation = tonicization.chord(secondary_function, voices_);
-                    if (std::find(result.begin(), result.end(), mutation) == result.end()) {
-                        result.push_back(mutation);
-                    }
-            }
-            return result;
-        }
-        /**
-         * Returns all major or minor Scales for which the current Chord is 
-         * the tonic (scale degree 1). The number of voices defaults to that 
-         * of the current Chord, but may be larger or smaller.
-         * NOTE: Here, tonicizations are modulations in which the Chord has 
-         * degree 1, i.e. is the tonic chord.
-         */
-        virtual std::vector<Scale> tonicizations(const Chord &current_chord, int voices = -1) const {
-            std::vector<Scale> result;
-            int current_degree = degree(current_chord);
-            System::debug("Scale::tonicizations: chord: %.20s (%s) degree: %3d\n", current_chord.name().c_str(), current_chord.toString().c_str(), current_degree);
-            if (current_degree == -1) {
-                return result;
-            }
-            if (voices == -1) {
-                voices = current_chord.voices();
-            }
-            Chord chord_ = chord(current_degree, voices);
-            System::debug("Scale::tonicizations: resized: %.20s (%s) degree: %3d\n", chord_.name().c_str(), chord_.toString().c_str(), current_degree);
-            std::vector<Scale> modulations_ = modulations(chord_);
-            for (auto modulation : modulations_) {
-                int degree_in_modulation = modulation.degree(chord_);
-                if (degree_in_modulation == 1) {
-                    if (std::find(result.begin(), result.end(), modulation) == result.end()) {
-                        System::debug("Scale::tonicizations: modulation: %.20s (%s) degree of chord in modulation: %3d\n", modulation.name().c_str(), modulation.toString().c_str(), degree_in_modulation);
-                        result.push_back(modulation);
-                    }
-                }
-            }
-            return result;
-        }
-    protected:
-        std::string type_name;
-};
 
 //	EQUIVALENCE_RELATION_T
 
@@ -2036,75 +1805,6 @@ inline Chord Chord::eRPTTI(double range) const {
     return csound::normalize<EQUIVALENCE_RELATION_RPTgI>(*this, range, 1.0);
 }
 
-template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundamentalDomainByIsNormal(int voiceN, double range, double g)
-{
-    std::set<Chord> fundamentalDomain;
-    int upperI = 2 * (range + 1);
-    int lowerI = - (range + 1);
-    Chord iterator_ = iterator(voiceN, lowerI);
-    Chord origin = iterator_;
-    int chords = 0;
-    while (next(iterator_, origin, upperI, g) == true) {
-        chords++;
-        bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
-        Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
-        bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
-        if (DEBUGGING && normalized_is_normal == false) {
-            std::cerr << "Inconsistent equivalence class! " << normalized.toString().c_str() << std::endl;
-        }
-        if (iterator_is_normal == true) {
-            auto result = fundamentalDomain.insert(iterator_);
-            if (DEBUGGING && result.second == true) {
-                System::message("By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
-                      namesForEquivalenceRelations[EQUIVALENCE_RELATION],
-                      chords,
-                      fundamentalDomain.size(),
-                      range,
-                      g,
-                      iterator_.toString().c_str(),
-                      iterator_is_normal,
-                      normalized.toString().c_str(),
-                      normalized_is_normal);
-            }
-        }
-    }
-    return fundamentalDomain;
-    
-}
-
-template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundamentalDomainByNormalize(int voiceN, double range, double g)
-{
-    std::set<Chord> fundamentalDomain;
-    int upperI = 2 * (range + 1);
-    int lowerI = - (range + 1);
-    Chord iterator_ = iterator(voiceN, lowerI);
-    Chord origin = iterator_;
-    int chords = 0;
-    while (next(iterator_, origin, upperI, g) == true) {
-        chords++;
-        bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
-        Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
-        bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
-        if (DEBUGGING && normalized_is_normal == false) {
-            std::cerr << "Inconsistent equivalence class! " << normalized.toString().c_str() << std::endl;
-        }
-        auto result = fundamentalDomain.insert(normalized);
-        if (DEBUGGING && result.second == true) {
-            System::message("By normalize %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
-                  namesForEquivalenceRelations[EQUIVALENCE_RELATION],
-                  chords,
-                  fundamentalDomain.size(),
-                  range,
-                  g,
-                  iterator_.toString().c_str(),
-                  iterator_is_normal,
-                  normalized.toString().c_str(),
-                  normalized_is_normal);
-        }
-    }
-    return fundamentalDomain;
-}
-
 inline SILENCE_PUBLIC const std::map<std::string, double> &pitchClassesForNames() {
     static bool pitchClassesForNamesInitialized = false;
     static std::map<std::string, double> pitchClassesForNames_;
@@ -2212,7 +1912,7 @@ inline SILENCE_PUBLIC std::vector<std::string> split(std::string string_) {
     return tokens;
 }
 
-inline void fill(std::string rootName, double rootPitch, std::string typeName, std::string typePitches, bool is_scale = false) {
+inline void fill(std::string rootName, double rootPitch, std::string typeName, std::string typePitches, bool is_scale) {
     Chord chord;
     std::string chordName = rootName + typeName;
     std::vector<std::string> splitPitches = split(typePitches);
@@ -2434,325 +2134,6 @@ inline SILENCE_PUBLIC const Scale &scaleForName(std::string name) {
         return it->second;
     }
 }
-
-/**
- * Orthogonal additive groups for unordered chords of given arity under range
- * equivalence (RP): prime form or P, inversion or I, transposition or T, and
- * voicing or V. P x I x T = OP, P x I x T x V = RP. Therefore, an
- * operation on P, I, T, or V may be used to independently transform the
- * respective symmetry of any chord. Some of these operations will reflect
- * in RP. Please note: some equivalence classes define quotient spaces
- * with singularities, meaning that more than one chord where the space is 
- * glued may have the same equivalent. Hence, for each P there must be one and 
- * only one chord in the representative fundamental domain of the group, yet 
- * each of several chords at any singular point of the fundamental domain must
- * have the same P.
- */
-class SILENCE_PUBLIC ChordSpaceGroup {
-public:
-    virtual ~ChordSpaceGroup() {};
-    /**
-     * Number of voices in the chord space.
-     */
-    int N;
-    virtual int getN() const {
-        return N;
-    }
-    /**
-     * The generator of transposition.
-     */
-    double g;
-    virtual int getG() const {
-        return g;
-    }
-    /**
-     * The zero-based range of the chord space.
-     */
-    double range;
-    virtual int getRange() const {
-        return range;
-    }
-    int countP;
-    virtual int getCountP() const {
-        return countP;
-    }
-    int countI;
-    virtual int getCountI() const {
-        return countI;
-    }
-    int countT;
-    virtual int getCountT() const {
-        return countT;
-    }
-    int countV;
-    virtual int getCountV() const {
-        return countV;
-    }
-    /**
-     * Ordered table of all OPTTI chords for g.
-     */
-    std::vector<Chord> opttisForIndexes;
-    std::map<Chord, int> indexesForOpttis;
-    /**
-     * Ordered table of all octavewise permutations
-     * in RP (note: not OP).
-     */
-    std::vector<Chord> voicingsForIndexes;
-    std::map<Chord, int> indexesForVoicings;
-    virtual void preinitialize(int N_, double range_, double g_ = 1.0) {
-        System::inform("ChordSpaceGroup.preinitialize...\n");
-        opttisForIndexes.clear();
-        indexesForOpttis.clear();
-        voicingsForIndexes.clear();
-        indexesForVoicings.clear();
-        N = N_;
-        range = range_;
-        g = g_;
-        countP = 0;
-        countI = 2;
-        countT = OCTAVE() / g;
-        Chord chord;
-        chord.resize(N);
-        countV = octavewiseRevoicings(chord, range);
-    }
-    virtual void initialize(int N_, double range_, double g_ = 1.0) {
-        System::inform("ChordSpaceGroup.initialize...\n");
-        preinitialize(N_, range_, g_);
-        std::set<Chord> representative_opttis = fundamentalDomainByNormalize<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g);
-        System::inform("ChordSpaceGroup.initialize: representative_opttis: %6d\n", representative_opttis.size());
-        std::set<Chord> equivalent_opttis = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g);
-        System::inform("ChordSpaceGroup.initialize: equivalent_opttis:     %6d\n", equivalent_opttis.size());
-        for (auto it = representative_opttis.begin(); it != representative_opttis.end(); ++it) {
-            opttisForIndexes.push_back(*it);
-        }
-        countP = opttisForIndexes.size();
-        for (auto equivalent_it = equivalent_opttis.begin(); equivalent_it != equivalent_opttis.end(); ++equivalent_it) {
-            const Chord &representative = equivalent_it->eOPTTI();
-            auto representative_it = std::find(opttisForIndexes.begin(), opttisForIndexes.end(), representative);
-            if (representative_it == opttisForIndexes.end()) {
-                System::error("ChordSpaceGroup::initialize: error: representative OPTTI missing: %s\n", representative.information().c_str());
-            } else {
-                auto index = std::distance(opttisForIndexes.begin(), representative_it);
-                indexesForOpttis[*equivalent_it] = index;
-            }
-        }
-        System::inform("ChordSpaceGroup.initialize: indexesForOpttis:      %6d\n", indexesForOpttis.size());
-        System::inform("ChordSpaceGroup.initialize.\n");
-    }
-    virtual void list(bool listheader = true, bool listopttis = false, bool listvoicings = false) const {
-        if (listheader) {
-            System::inform("ChordSpaceGroup.voices: %8d\n", N);
-            System::inform("ChordSpaceGroup.range : %13.4f\n", range);
-            System::inform("ChordSpaceGroup.g     : %13.4f\n", g);
-            System::inform("ChordSpaceGroup.countP: %8d\n", countP);
-            System::inform("ChordSpaceGroup.countI: %8d\n", countI);
-            System::inform("ChordSpaceGroup.countT: %8d\n", countT);
-            System::inform("ChordSpaceGroup.countV: %8d\n", countV);
-        }
-        if (listopttis) {
-            for (auto &entry : indexesForOpttis) {
-                System::inform("index: %5d  optti: %s\n", entry.second, entry.first.toString().c_str());
-            }
-        }
-        // Doesn't currently do anything as these collections are not currently initialized.
-        if (listvoicings) {
-            for (int i = 0, n = voicingsForIndexes.size(); i < n; ++i) {
-                const Chord &voicing = voicingsForIndexes[i];
-                int index = indexesForVoicings.at(voicing);
-                System::inform("voicing index: %5d  voicing: %s  index from voicing: %5d\n", i,  voicing.toString().c_str(), index);
-            }
-        }
-    }
-    virtual std::string createFilename(int voices, double range, double g = 1.0) const {
-        std::string extension = ".txt";
-        char buffer[0x200];
-        std::sprintf(buffer, "ChordSpaceGroup_V%d_R%d_g%d.txt", voices, int(range), int(1000 * g));
-        return buffer;
-    }
-    /**
-     * Loads the group if found, creates and saves it otherwise.
-     */
-    virtual void createChordSpaceGroup(int voices, double range, double g = 1.0) {
-        std::string filename = createFilename(voices, range, g);
-        std::fstream stream;
-        stream.open(filename.c_str());
-        if (!stream.is_open()) {
-            System::inform("No data in ChordSpaceGroup file \"%s\", initializing and saving...\n", filename.c_str());
-            stream.close();
-            stream.open(filename.c_str(), std::fstream::out);
-            initialize(voices, range, g);
-            save(stream);
-        } else {
-            System::inform("Loading ChordSpaceGroup data from file \"%s\"...\n", filename.c_str());
-            load(stream);
-        }
-        stream.close();
-    }
-    virtual void save(std::fstream &stream) const {
-        stream << "N " << N << std::endl;
-        stream << "range " << range << std::endl;
-        stream << "g " << g << std::endl;
-        for (int i = 0, n = opttisForIndexes.size(); i < n; ++i) {
-            stream << opttisForIndexes[i].toString().c_str() << std::endl;
-        }
-    }
-    virtual void load(std::fstream &stream) {
-        std::string junk;
-        stream >> junk >> N;
-        stream >> junk >> range;
-        stream >> junk >> g;
-        preinitialize(N, range, g);
-        char buffer[0x500];
-        for (;;) {
-            stream.getline(buffer, 0x500);
-            if (stream.eof()) {
-                break;
-            }
-            Chord chord;
-            chord.fromString(buffer);
-            if (chord.voices() > 1) {
-                opttisForIndexes.push_back(chord);
-                indexesForOpttis[chord] = opttisForIndexes.size() - 1;
-            }
-        }
-        countP = opttisForIndexes.size();
-    }
-    /**
-     * Returns the indices of prime form, inversion, transposition,
-     * and voicing for a chord, as the first 4 elements, respectively,
-     * of a homogeneous vector.
-     *
-     * Please note: where are there singularities
-     * in the quotient spaces for chords, there may be several chords that
-     * belong to the same equivalence class. In such cases, any of several 
-     * chords at a singular point of the fundamental domain will return the 
-     * same P.
-     */
-    Eigen::VectorXi fromChord(const Chord &chord, bool printme = false) const {
-        bool isNormalOP = csound::isNormal<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), g);
-        if (printme) {
-            System::debug("fromChord...\n");
-            System::debug("chord:          %s  %d\n", chord.toString().c_str(), isNormalOP);
-        }
-        Chord normalOP;
-        if (isNormalOP) {
-            normalOP = chord;
-        } else {
-            normalOP = csound::normalize<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), g);
-        }
-        if (printme) {
-            System::debug("normalOP:       %s  %d\n", normalOP.toString().c_str(), csound::isNormal<EQUIVALENCE_RELATION_RP>(normalOP, OCTAVE(), g));
-        }
-        Chord normalOPTg = csound::normalize<EQUIVALENCE_RELATION_RPTg>(chord, OCTAVE(), g);
-        if (printme) {
-            System::debug("normalOPTg:     %s\n", normalOPTg.toString().c_str());
-        }
-        int T_ = 0;
-        for (double t = 0.0; t < OCTAVE(); t += g) {
-            Chord normalOPTg_t = normalOPTg.T(t);
-            normalOPTg_t = csound::normalize<EQUIVALENCE_RELATION_RP>(normalOPTg_t, OCTAVE(), g);
-            if (printme) {
-                System::debug("normalOPTg_t:   %s    %f\n", normalOPTg_t.toString().c_str(), t);
-            }
-            if (normalOPTg_t == normalOP) {
-                if (printme) {
-                    System::debug("equals\n");
-                }
-                T_ = t;
-                break;
-            }
-        }
-        // Breaks here, this form may not be indexed.
-        // Try iterating over opttis and comparing eO, eP, eT, eI separately.
-        // Alternatively, put in same index for equivalent opttis.
-        Chord normalOPTgI = csound::normalize<EQUIVALENCE_RELATION_RPTgI>(chord, OCTAVE(), g);
-        std::map<Chord, int>::const_iterator it = indexesForOpttis.find(normalOPTgI);
-        if (it == indexesForOpttis.end()) {
-            // Falling through here means there is a bug that I want to know about.
-            System::debug("Error: normalOPTgI %s not found! Please report an issue, this should not appear.\n");
-            exit(1);
-        }
-        int P_ = it->second;
-        if (printme) {
-            System::debug("normalOPTgI:    %s    %d\n", normalOPTgI.toString().c_str(), P_);
-        }
-        int I_;
-        if (normalOPTg == normalOPTgI) {
-            I_ = 0;
-        } else {
-            I_ = 1;
-        }
-        int V_ = indexForOctavewiseRevoicing(chord, range, printme);
-        if (V_ == -1) {
-            V_ = 0;
-        }
-        Eigen::VectorXi pitv(4);
-        pitv(0) = P_;
-        pitv(1) = I_;
-        pitv(2) = T_;
-        pitv(3) = V_;
-        if (printme) {
-            System::debug("PITV:       %8d     %8d     %8d     %8d\n", pitv(0), pitv(1), pitv(2), pitv(3));
-            System::debug("fromChord.\n");
-        }
-        return pitv;
-    }
-    /**
-     * Returns the chord for the indices of prime form, inversion,
-     * transposition, and voicing. The chord is not in RP; rather, each voice of
-     * the chord's OP may have zero or more octaves added to it.
-     *
-     * Please note: where are there singularities
-     * in the quotient spaces for chords, there may be several chords that
-     * belong to the same equivalence class. In such cases, each P will return 
-     * just one chord from the representative fundamental domain.
-     */
-    std::vector<Chord> toChord(int P, int I, int T, int V, bool printme = false) const {
-        P = P % countP;
-        I = I % countI;
-        T = T % countT;
-        V = V % countV;
-        if (printme) {
-            System::debug("toChord...\n");
-            System::debug("PITV:       %8d     %8d     %8d     %8d\n", P, I, T, V);
-        }
-        Chord normalOPTgI = opttisForIndexes[P];
-        if (printme) {
-            System::debug("normalOPTgI:    %s\n", normalOPTgI.toString().c_str());
-        }
-        Chord normalOPTg;
-        if (I == 0) {
-            normalOPTg = normalOPTgI;
-        } else {
-            Chord inverse = normalOPTgI.I();
-            normalOPTg = csound::normalize<EQUIVALENCE_RELATION_RPTg>(inverse, OCTAVE(), g);
-        }
-        if (printme) {
-            System::debug("normalOPTg:     %s\n", normalOPTg.toString().c_str());
-        }
-        Chord normalOPTg_t = normalOPTg.T(T);
-        if (printme) {
-            System::debug("normalOPTg_t:   %s\n", normalOPTg_t.toString().c_str());
-        }
-        Chord normalOP = csound::normalize<EQUIVALENCE_RELATION_RP>(normalOPTg_t, OCTAVE(), g);
-        if (printme) {
-            System::debug("normalOP:       %s\n", normalOP.toString().c_str());
-        }
-        Chord revoicing = octavewiseRevoicing(normalOP, V, range, printme);
-        std::vector<Chord> result(3);
-        result[0] = revoicing;
-        result[1] = normalOPTgI;
-        result[2] = normalOP;
-        if (printme) {
-            System::debug("revoicing:      %s\n", result[0].toString().c_str());
-            System::debug("toChord.\n");
-        }
-        return result;
-    }
-    std::vector<Chord> toChord_vector(const Eigen::VectorXi &pitv, bool printme = false) const {
-        return toChord(pitv(0), pitv(1), pitv(2), pitv(3), printme);
-    }
-};
 
 inline std::string Chord::information() const {
     char buffer[0x1000];
@@ -3189,6 +2570,24 @@ inline SILENCE_PUBLIC void apply(Score &score, const Chord &chord, double startT
 
 inline SILENCE_PUBLIC double C4() {
     return MIDDLE_C();
+}
+
+inline SILENCE_PUBLIC Chord chord(const Chord &scale, int scale_degree, int chord_voices, int interval) {
+    int scale_index = scale_degree - 1;
+    int scale_interval = interval - 1;
+    Chord result;
+    result.resize(chord_voices);
+    double octave = 0.;
+    for (int chord_voice = 0; chord_voice < chord_voices; ++chord_voice) {
+        if (scale_index >= scale.voices()) {
+            scale_index = scale_index - scale.voices();
+            octave = octave + OCTAVE();
+        }
+        auto pitch = scale.getPitch(scale_index) + octave;
+        result.setPitch(chord_voice, pitch);
+        scale_index = scale_index + scale_interval;
+    }
+    return result;
 }
 
 inline Chord::Chord() {
@@ -3851,6 +3250,286 @@ inline SILENCE_PUBLIC double closestPitch(double pitch, const Chord &chord) {
     return pitchesForDistances.begin()->second;
 }
 
+
+inline SILENCE_PUBLIC ChordSpaceGroup::~ChordSpaceGroup() {};
+
+inline SILENCE_PUBLIC int ChordSpaceGroup::getN() const {
+    return N;
+}
+
+inline SILENCE_PUBLIC int ChordSpaceGroup::getG() const {
+    return g;
+}
+
+inline SILENCE_PUBLIC int ChordSpaceGroup::getRange() const {
+    return range;
+}
+
+inline SILENCE_PUBLIC int ChordSpaceGroup::getCountP() const {
+    return countP;
+}
+
+inline SILENCE_PUBLIC int ChordSpaceGroup::getCountI() const {
+    return countI;
+}
+
+inline SILENCE_PUBLIC int ChordSpaceGroup::getCountT() const {
+    return countT;
+}
+
+inline SILENCE_PUBLIC int ChordSpaceGroup::getCountV() const {
+    return countV;
+}
+
+inline SILENCE_PUBLIC void ChordSpaceGroup::preinitialize(int N_, double range_, double g_) {
+    System::inform("ChordSpaceGroup.preinitialize...\n");
+    opttisForIndexes.clear();
+    indexesForOpttis.clear();
+    voicingsForIndexes.clear();
+    indexesForVoicings.clear();
+    N = N_;
+    range = range_;
+    g = g_;
+    countP = 0;
+    countI = 2;
+    countT = OCTAVE() / g;
+    Chord chord;
+    chord.resize(N);
+    countV = octavewiseRevoicings(chord, range);
+}
+
+inline SILENCE_PUBLIC void ChordSpaceGroup::initialize(int N_, double range_, double g_) {
+    System::inform("ChordSpaceGroup.initialize...\n");
+    preinitialize(N_, range_, g_);
+    std::set<Chord> representative_opttis = fundamentalDomainByNormalize<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g);
+    System::inform("ChordSpaceGroup.initialize: representative_opttis: %6d\n", representative_opttis.size());
+    std::set<Chord> equivalent_opttis = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g);
+    System::inform("ChordSpaceGroup.initialize: equivalent_opttis:     %6d\n", equivalent_opttis.size());
+    for (auto it = representative_opttis.begin(); it != representative_opttis.end(); ++it) {
+        opttisForIndexes.push_back(*it);
+    }
+    countP = opttisForIndexes.size();
+    for (auto equivalent_it = equivalent_opttis.begin(); equivalent_it != equivalent_opttis.end(); ++equivalent_it) {
+        const Chord &representative = equivalent_it->eOPTTI();
+        auto representative_it = std::find(opttisForIndexes.begin(), opttisForIndexes.end(), representative);
+        if (representative_it == opttisForIndexes.end()) {
+            System::error("ChordSpaceGroup::initialize: error: representative OPTTI missing: %s\n", representative.information().c_str());
+        } else {
+            auto index = std::distance(opttisForIndexes.begin(), representative_it);
+            indexesForOpttis[*equivalent_it] = index;
+        }
+    }
+    System::inform("ChordSpaceGroup.initialize: indexesForOpttis:      %6d\n", indexesForOpttis.size());
+    System::inform("ChordSpaceGroup.initialize.\n");
+}
+
+inline SILENCE_PUBLIC void ChordSpaceGroup::list(bool listheader, bool listopttis, bool listvoicings) const {
+    if (listheader) {
+        System::inform("ChordSpaceGroup.voices: %8d\n", N);
+        System::inform("ChordSpaceGroup.range : %13.4f\n", range);
+        System::inform("ChordSpaceGroup.g     : %13.4f\n", g);
+        System::inform("ChordSpaceGroup.countP: %8d\n", countP);
+        System::inform("ChordSpaceGroup.countI: %8d\n", countI);
+        System::inform("ChordSpaceGroup.countT: %8d\n", countT);
+        System::inform("ChordSpaceGroup.countV: %8d\n", countV);
+    }
+    if (listopttis) {
+        for (auto &entry : indexesForOpttis) {
+            System::inform("index: %5d  optti: %s\n", entry.second, entry.first.toString().c_str());
+        }
+    }
+    // Doesn't currently do anything as these collections are not currently initialized.
+    if (listvoicings) {
+        for (int i = 0, n = voicingsForIndexes.size(); i < n; ++i) {
+            const Chord &voicing = voicingsForIndexes[i];
+            int index = indexesForVoicings.at(voicing);
+            System::inform("voicing index: %5d  voicing: %s  index from voicing: %5d\n", i,  voicing.toString().c_str(), index);
+        }
+    }
+}
+
+inline SILENCE_PUBLIC std::string ChordSpaceGroup::createFilename(int voices, double range, double g) const {
+    std::string extension = ".txt";
+    char buffer[0x200];
+    std::sprintf(buffer, "ChordSpaceGroup_V%d_R%d_g%d.txt", voices, int(range), int(1000 * g));
+    return buffer;
+}
+
+inline SILENCE_PUBLIC void ChordSpaceGroup::createChordSpaceGroup(int voices, double range, double g) {
+    std::string filename = createFilename(voices, range, g);
+    std::fstream stream;
+    stream.open(filename.c_str());
+    if (!stream.is_open()) {
+        System::inform("No data in ChordSpaceGroup file \"%s\", initializing and saving...\n", filename.c_str());
+        stream.close();
+        stream.open(filename.c_str(), std::fstream::out);
+        initialize(voices, range, g);
+        save(stream);
+    } else {
+        System::inform("Loading ChordSpaceGroup data from file \"%s\"...\n", filename.c_str());
+        load(stream);
+    }
+    stream.close();
+}
+
+inline SILENCE_PUBLIC void ChordSpaceGroup::save(std::fstream &stream) const {
+    stream << "N " << N << std::endl;
+    stream << "range " << range << std::endl;
+    stream << "g " << g << std::endl;
+    for (int i = 0, n = opttisForIndexes.size(); i < n; ++i) {
+        stream << opttisForIndexes[i].toString().c_str() << std::endl;
+    }
+}
+
+inline SILENCE_PUBLIC void ChordSpaceGroup::load(std::fstream &stream) {
+    std::string junk;
+    stream >> junk >> N;
+    stream >> junk >> range;
+    stream >> junk >> g;
+    preinitialize(N, range, g);
+    char buffer[0x500];
+    for (;;) {
+        stream.getline(buffer, 0x500);
+        if (stream.eof()) {
+            break;
+        }
+        Chord chord;
+        chord.fromString(buffer);
+        if (chord.voices() > 1) {
+            opttisForIndexes.push_back(chord);
+            indexesForOpttis[chord] = opttisForIndexes.size() - 1;
+        }
+    }
+    countP = opttisForIndexes.size();
+}
+
+Eigen::VectorXi ChordSpaceGroup::fromChord(const Chord &chord, bool printme) const {
+    bool isNormalOP = csound::isNormal<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), g);
+    if (printme) {
+        System::debug("fromChord...\n");
+        System::debug("chord:          %s  %d\n", chord.toString().c_str(), isNormalOP);
+    }
+    Chord normalOP;
+    if (isNormalOP) {
+        normalOP = chord;
+    } else {
+        normalOP = csound::normalize<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), g);
+    }
+    if (printme) {
+        System::debug("normalOP:       %s  %d\n", normalOP.toString().c_str(), csound::isNormal<EQUIVALENCE_RELATION_RP>(normalOP, OCTAVE(), g));
+    }
+    Chord normalOPTg = csound::normalize<EQUIVALENCE_RELATION_RPTg>(chord, OCTAVE(), g);
+    if (printme) {
+        System::debug("normalOPTg:     %s\n", normalOPTg.toString().c_str());
+    }
+    int T_ = 0;
+    for (double t = 0.0; t < OCTAVE(); t += g) {
+        Chord normalOPTg_t = normalOPTg.T(t);
+        normalOPTg_t = csound::normalize<EQUIVALENCE_RELATION_RP>(normalOPTg_t, OCTAVE(), g);
+        if (printme) {
+            System::debug("normalOPTg_t:   %s    %f\n", normalOPTg_t.toString().c_str(), t);
+        }
+        if (normalOPTg_t == normalOP) {
+            if (printme) {
+                System::debug("equals\n");
+            }
+            T_ = t;
+            break;
+        }
+    }
+    // Breaks here, this form may not be indexed.
+    // Try iterating over opttis and comparing eO, eP, eT, eI separately.
+    // Alternatively, put in same index for equivalent opttis.
+    Chord normalOPTgI = csound::normalize<EQUIVALENCE_RELATION_RPTgI>(chord, OCTAVE(), g);
+    std::map<Chord, int>::const_iterator it = indexesForOpttis.find(normalOPTgI);
+    if (it == indexesForOpttis.end()) {
+        // Falling through here means there is a bug that I want to know about.
+        System::debug("Error: normalOPTgI %s not found! Please report an issue, this should not appear.\n");
+        exit(1);
+    }
+    int P_ = it->second;
+    if (printme) {
+        System::debug("normalOPTgI:    %s    %d\n", normalOPTgI.toString().c_str(), P_);
+    }
+    int I_;
+    if (normalOPTg == normalOPTgI) {
+        I_ = 0;
+    } else {
+        I_ = 1;
+    }
+    int V_ = indexForOctavewiseRevoicing(chord, range, printme);
+    if (V_ == -1) {
+        V_ = 0;
+    }
+    Eigen::VectorXi pitv(4);
+    pitv(0) = P_;
+    pitv(1) = I_;
+    pitv(2) = T_;
+    pitv(3) = V_;
+    if (printme) {
+        System::debug("PITV:       %8d     %8d     %8d     %8d\n", pitv(0), pitv(1), pitv(2), pitv(3));
+        System::debug("fromChord.\n");
+    }
+    return pitv;
+}
+
+/**
+ * Returns the chord for the indices of prime form, inversion,
+ * transposition, and voicing. The chord is not in RP; rather, each voice of
+ * the chord's OP may have zero or more octaves added to it.
+ *
+ * Please note: where are there singularities
+ * in the quotient spaces for chords, there may be several chords that
+ * belong to the same equivalence class. In such cases, each P will return 
+ * just one chord from the representative fundamental domain.
+ */
+std::vector<Chord> ChordSpaceGroup::toChord(int P, int I, int T, int V, bool printme) const {
+    P = P % countP;
+    I = I % countI;
+    T = T % countT;
+    V = V % countV;
+    if (printme) {
+        System::debug("toChord...\n");
+        System::debug("PITV:       %8d     %8d     %8d     %8d\n", P, I, T, V);
+    }
+    Chord normalOPTgI = opttisForIndexes[P];
+    if (printme) {
+        System::debug("normalOPTgI:    %s\n", normalOPTgI.toString().c_str());
+    }
+    Chord normalOPTg;
+    if (I == 0) {
+        normalOPTg = normalOPTgI;
+    } else {
+        Chord inverse = normalOPTgI.I();
+        normalOPTg = csound::normalize<EQUIVALENCE_RELATION_RPTg>(inverse, OCTAVE(), g);
+    }
+    if (printme) {
+        System::debug("normalOPTg:     %s\n", normalOPTg.toString().c_str());
+    }
+    Chord normalOPTg_t = normalOPTg.T(T);
+    if (printme) {
+        System::debug("normalOPTg_t:   %s\n", normalOPTg_t.toString().c_str());
+    }
+    Chord normalOP = csound::normalize<EQUIVALENCE_RELATION_RP>(normalOPTg_t, OCTAVE(), g);
+    if (printme) {
+        System::debug("normalOP:       %s\n", normalOP.toString().c_str());
+    }
+    Chord revoicing = octavewiseRevoicing(normalOP, V, range, printme);
+    std::vector<Chord> result(3);
+    result[0] = revoicing;
+    result[1] = normalOPTgI;
+    result[2] = normalOP;
+    if (printme) {
+        System::debug("revoicing:      %s\n", result[0].toString().c_str());
+        System::debug("toChord.\n");
+    }
+    return result;
+}
+
+inline SILENCE_PUBLIC std::vector<Chord> ChordSpaceGroup::toChord_vector(const Eigen::VectorXi &pitv, bool printme) const {
+    return toChord(pitv(0), pitv(1), pitv(2), pitv(3), printme);
+}
+
 inline SILENCE_PUBLIC void conformToChord(Event &event, const Chord &chord, bool octaveEquivalence) {
     if (!event.isNoteOn()) {
         return;
@@ -3924,6 +3603,74 @@ inline SILENCE_PUBLIC double factorial(double n) {
     return result;
 }
 
+template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundamentalDomainByIsNormal(int voiceN, double range, double g)
+{
+    std::set<Chord> fundamentalDomain;
+    int upperI = 2 * (range + 1);
+    int lowerI = - (range + 1);
+    Chord iterator_ = iterator(voiceN, lowerI);
+    Chord origin = iterator_;
+    int chords = 0;
+    while (next(iterator_, origin, upperI, g) == true) {
+        chords++;
+        bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
+        Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
+        bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
+        if (DEBUGGING && normalized_is_normal == false) {
+            std::cerr << "Inconsistent equivalence class! " << normalized.toString().c_str() << std::endl;
+        }
+        if (iterator_is_normal == true) {
+            auto result = fundamentalDomain.insert(iterator_);
+            if (DEBUGGING && result.second == true) {
+                System::message("By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
+                      namesForEquivalenceRelations[EQUIVALENCE_RELATION],
+                      chords,
+                      fundamentalDomain.size(),
+                      range,
+                      g,
+                      iterator_.toString().c_str(),
+                      iterator_is_normal,
+                      normalized.toString().c_str(),
+                      normalized_is_normal);
+            }
+        }
+    }
+    return fundamentalDomain;
+}
+
+template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundamentalDomainByNormalize(int voiceN, double range, double g)
+{
+    std::set<Chord> fundamentalDomain;
+    int upperI = 2 * (range + 1);
+    int lowerI = - (range + 1);
+    Chord iterator_ = iterator(voiceN, lowerI);
+    Chord origin = iterator_;
+    int chords = 0;
+    while (next(iterator_, origin, upperI, g) == true) {
+        chords++;
+        bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
+        Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
+        bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
+        if (DEBUGGING && normalized_is_normal == false) {
+            std::cerr << "Inconsistent equivalence class! " << normalized.toString().c_str() << std::endl;
+        }
+        auto result = fundamentalDomain.insert(normalized);
+        if (DEBUGGING && result.second == true) {
+            System::message("By normalize %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
+                  namesForEquivalenceRelations[EQUIVALENCE_RELATION],
+                  chords,
+                  fundamentalDomain.size(),
+                  range,
+                  g,
+                  iterator_.toString().c_str(),
+                  iterator_is_normal,
+                  normalized.toString().c_str(),
+                  normalized_is_normal);
+        }
+    }
+    return fundamentalDomain;
+}
+
 inline SILENCE_PUBLIC Chord gather(Score &score, double startTime, double endTime) {
     std::vector<Event *> slice_ = slice(score, startTime, endTime);
     std::set<double> pitches;
@@ -3964,6 +3711,53 @@ inline SILENCE_PUBLIC void insert(Score &score,
                                   const Chord &chord,
                                   double time_) {
     chord.toScore(score, time_);
+}
+
+template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC bool isEquivalent(const Chord &a, const Chord &b, double range, double g) {
+    if (isNormal<EQUIVALENCE_RELATION>(a, range, g) == false) {
+        return false;
+    }
+    if (isNormal<EQUIVALENCE_RELATION>(b, range, g) == false) {
+        return false;
+    }
+    Chord normalA = normalize<EQUIVALENCE_RELATION>(a, range, g);
+    Chord normalB = normalize<EQUIVALENCE_RELATION>(b, range, g);
+    if (normalA == normalB) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC bool isEquivalent(const Chord &a, const Chord &b, double range) {
+    return isEquivalent<EQUIVALENCE_RELATION>(a, b, range, 1.0);
+}
+
+template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC bool isEquivalent(const Chord &a, const Chord &b) {
+    return isEquivalent<EQUIVALENCE_RELATION>(a, b, OCTAVE());
+}
+
+template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC bool isNormal(const Chord &chord, double range) {
+    bool result = isNormal<EQUIVALENCE_RELATION>(chord, range, 1.0);
+    return result;
+}
+
+template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC bool isNormal(const Chord &chord) {
+    bool result = isNormal<EQUIVALENCE_RELATION>(chord, OCTAVE());
+    return result;
+}
+
+template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_r>(const Chord &chord, double range, double g) {
+    for (int voice = 0; voice < chord.voices(); ++voice) {
+        double pitch = chord.getPitch(voice);
+        if (le_epsilon(0.0, pitch) == false) {
+            return false;
+        }
+        if (lt_epsilon(pitch, range) == false) {
+            return false;
+        }
+    }
+    return true;
 }
 
 inline SILENCE_PUBLIC Chord iterator(int voiceN, double first) {
@@ -4036,6 +3830,14 @@ inline SILENCE_PUBLIC bool next(Chord &iterator_, const Chord &origin, double ra
     return true;
 }
 
+template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC Chord normalize(const Chord &chord, double range) {
+    return normalize<EQUIVALENCE_RELATION>(chord, range, 1.0);
+}
+
+template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC Chord normalize(const Chord &chord) {
+    return normalize<EQUIVALENCE_RELATION>(chord, OCTAVE());
+}
+
 inline SILENCE_PUBLIC double OCTAVE() {
     return 12.0;
 }
@@ -4066,6 +3868,22 @@ inline SILENCE_PUBLIC Chord octavewiseRevoicing(const Chord &chord, int revoicin
     return origin;
 }
 
+inline SILENCE_PUBLIC int octavewiseRevoicings(const Chord &chord,
+        double range) {
+    Chord origin = chord.eOP();
+    Chord odometer = origin;
+    // Enumerate the permutations.
+    int voicings = 0;
+    while (next(odometer, origin, range, OCTAVE())) {
+        voicings = voicings + 1;
+    }
+    System::debug("octavewiseRevoicings: chord:    %s\n", chord.toString().c_str());
+    System::debug("octavewiseRevoicings: eop:      %s\n", chord.eOP().toString().c_str());
+    System::debug("octavewiseRevoicings: odometer: %s\n", odometer.toString().c_str());
+    System::debug("octavewiseRevoicings: voicings: %5d\n", voicings);
+    return voicings;
+}
+
 inline SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b) {
     Chord voiceleading_ = voiceleading(a, b);
     if (voiceleading_.count(7) > 1) {
@@ -4073,6 +3891,244 @@ inline SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b) {
     } else {
         return false;
     }
+}
+
+inline SILENCE_PUBLIC Chord scale(std::string name) {
+    System::debug("scale: for name: %s\n", name.c_str());
+    auto scale = chordForName(name);
+    if (scale.size() == 0) {
+        return scale;
+    }
+    auto parts = split(name);
+    auto tonic = pitchClassForName(parts.front());
+    System::debug("scale: tonic: %9.4f\n", tonic);
+    System::debug("scale: initially: %s\n", scale.toString().c_str());
+    while (eq_epsilon(scale.getPitch(0), tonic) == false) {
+        scale = scale.v();
+        System::debug("scale: revoicing: %s\n", scale.toString().c_str());
+    }
+    return scale;
+}
+
+inline SILENCE_PUBLIC Scale::Scale() {
+    resize(0);
+}
+
+inline SILENCE_PUBLIC Scale::Scale(std::string name) {
+    const Chord temporary = csound::scale(name);
+    Eigen::MatrixXd::operator=(temporary);
+    if (temporary.voices() > 0) {
+        auto space_at = name.find(' ');
+        type_name = name.substr(space_at + 1);
+    }
+}
+
+inline SILENCE_PUBLIC Scale::Scale(std::string name, const Chord &scale_pitches) {
+    Scale temporary(name);
+    if (temporary.voices() > 0) 
+    {
+        *this = temporary;
+        return;
+    } 
+    resize(scale_pitches.size());
+    for (int index = 0; index < voices(); ++index) {
+        setPitch(index, scale_pitches.getPitch(index));
+    }
+    add_scale(name, *this);
+}
+
+inline SILENCE_PUBLIC Scale::Scale(std::string name, const std::vector<double> &scale_pitches) {
+    resize(scale_pitches.size());
+    for (int index = 0; index < voices(); ++index) {
+        setPitch(index, scale_pitches[index]);
+    }
+    add_scale(name, *this);
+}
+
+inline SILENCE_PUBLIC Scale::~Scale() {};
+
+inline SILENCE_PUBLIC Scale &Scale::operator = (const Scale &other) {
+    Eigen::MatrixXd::operator=(dynamic_cast<const Chord &>(other));
+    type_name = other.getTypeName();
+    return *this;
+}
+
+inline SILENCE_PUBLIC Chord Scale::chord(int scale_degree, int voices, int interval) const {
+    return csound::chord(*this, scale_degree, voices, interval);
+}
+
+inline SILENCE_PUBLIC Chord Scale::transpose_degrees(const Chord &chord, int scale_degrees, int interval) const {
+    return csound::transpose_degrees(*this, chord, scale_degrees, interval);
+}
+
+inline SILENCE_PUBLIC double Scale::semitones_for_degree(int scale_degree) const {
+    int scale_degrees = voices();
+    while(scale_degree < 1) {
+        scale_degree = scale_degree + scale_degrees;
+    }
+    while (scale_degree > scale_degrees) {
+        scale_degree = scale_degree - scale_degrees;
+    }
+    double pitch_of_tonic = tonic();
+    double pitch_of_scale_degree = getPitch(scale_degree - 1);
+    double semitones = pitch_of_scale_degree - pitch_of_tonic;
+    return semitones;
+}
+
+inline SILENCE_PUBLIC Scale Scale::transpose_to_degree(int degrees) const {
+    System::debug("Scale::transpose_to_degree(%9.4f)...\n", degrees);
+    double semitones = semitones_for_degree(degrees);
+    return transpose(semitones);
+}
+
+inline SILENCE_PUBLIC Scale Scale::transpose(double semitones) const {
+    Chord transposed_pitches = T(semitones);
+    // Make sure the copy starts in octave 0.
+    while (lt_epsilon(transposed_pitches.getPitch(0), 0) == true) {
+        transposed_pitches = transposed_pitches.T(OCTAVE());
+    }
+    while (ge_epsilon(transposed_pitches.getPitch(0), OCTAVE()) == true) {
+        transposed_pitches = transposed_pitches.T( - OCTAVE());
+    }
+    System::debug("Scale::transpose: transposed_pitches(%f): %s\n", semitones, transposed_pitches.toString().c_str());
+    // Create the copy with the name of the new tonic.
+    System::debug("Scale::transpose: original name: %s\n", name().c_str());
+    auto tonic_name = nameForPitchClass(transposed_pitches.getPitch(0));
+    Scale transposed_scale;
+    transposed_scale.type_name = getTypeName();
+    transposed_scale.resize(voices());
+    for (int voice = 0; voice < voices(); ++voice) {
+        transposed_scale.setPitch(voice, transposed_pitches.getPitch(voice));
+    }
+    System::debug("Scale::transpose: new name: %s\n", transposed_scale.name().c_str());
+    System::debug("Scale::transpose: result: %s\n", transposed_scale.information().c_str());
+    return transposed_scale;
+}
+
+inline SILENCE_PUBLIC std::string Scale::name() const {
+    return nameForPitchClass(tonic()) + " " + type_name;
+}
+
+inline SILENCE_PUBLIC std::string Scale::getTypeName() const {
+    return type_name;
+}
+
+inline SILENCE_PUBLIC double Scale::tonic() const {
+    return getPitch(0);
+}
+
+inline SILENCE_PUBLIC int Scale::degree(const Chord &chord_, int interval) const {
+    int chord_voices = chord_.voices();
+    int scale_degrees = voices();
+    Chord eop = chord_.eOP();
+    for (int scale_degree = 1; scale_degree <= scale_degrees; ++scale_degree) {
+        Chord chord_for_degree_eop = chord(scale_degree, chord_voices, interval).eOP();
+        if (eop == chord_for_degree_eop) {
+            return scale_degree;
+        }
+    }
+    return -1;
+}
+
+inline SILENCE_PUBLIC void Scale::modulations_for_scale_types(std::vector<Scale> &result, const Chord &current_chord, int voices_, const std::vector<std::string> &type_names) const {
+    result.clear();
+    int current_degree = degree(current_chord);
+    if (current_degree == -1) {
+        return;
+    }
+    if (voices_ == -1) {
+        voices_ = current_chord.voices();
+    }
+    Chord chord_ = chord(current_degree, voices_);
+    for (auto scale : unique_scales()) {
+        if (scale.degree(chord_) != -1) {
+            if (std::find(type_names.begin(), type_names.end(), scale.getTypeName()) != type_names.end()) {
+                if (std::find(result.begin(), result.end(), scale) == result.end()) {
+                    result.push_back(scale);
+                }
+            }
+        }
+    }
+}
+
+inline SILENCE_PUBLIC std::vector<Scale> Scale::modulations(const Chord &chord, int voices) const {
+    std::vector<Scale> result;
+    std::vector<std::string> type_names;
+    type_names.push_back("major");
+    type_names.push_back("harmonic minor");
+    modulations_for_scale_types(result, chord, voices, type_names);
+    return result;
+}
+
+inline SILENCE_PUBLIC void Scale::relative_tonicizations_for_scale_types(std::vector<Scale> &result, const Chord &current_chord, int secondary_function, int voices, const std::vector<std::string> &type_names) const {
+    result.clear();
+    int current_degree = degree(current_chord);
+    System::debug("Scale::relative_tonicizations: chord: %.20s (%s) degree: %3d\n", current_chord.name().c_str(), current_chord.toString().c_str(), current_degree);
+    if (current_degree == -1) {
+        return;
+    }
+     if (voices == -1) {
+        voices = current_chord.voices();
+    }
+    Chord chord_ = chord(current_degree, voices);
+    System::debug("Scale::relative_tonicizations: resized: %.20s (%s) degree: %3d\n", chord_.name().c_str(), chord_.toString().c_str(), current_degree);
+    std::vector<Scale> modulations_ = modulations(chord_);
+    for (auto modulation : modulations_) {
+        int degree_in_modulation = modulation.degree(chord_);
+        if (degree_in_modulation == secondary_function) {
+            if (std::find(result.begin(), result.end(), modulation) == result.end()) {
+                System::debug("Scale::relative_tonicizations: modulation: %.20s (%s) degree of chord in modulation: %3d\n", modulation.name().c_str(), modulation.toString().c_str(), degree_in_modulation);
+                result.push_back(modulation);
+            }
+        }
+    }
+}
+
+inline SILENCE_PUBLIC std::vector<Scale> Scale::relative_tonicizations(const Chord &current_chord, int secondary_function, int voices) const {
+    std::vector<Scale> result;
+    std::vector<std::string> scale_types = {"major", "harmonic minor"};
+    relative_tonicizations_for_scale_types(result, current_chord, secondary_function, voices, scale_types);
+    return result;
+}
+
+inline SILENCE_PUBLIC std::vector<Chord> Scale::secondary(const Chord &current_chord, int secondary_function, int voices_) const {
+    if (voices_ == -1) {
+        voices_ = current_chord.voices();
+    }
+    std::vector<Scale> relative_tonicizations_ = relative_tonicizations(current_chord, secondary_function);
+    std::vector<Chord> result;
+    for (auto tonicization : relative_tonicizations_) {
+        Chord mutation = tonicization.chord(secondary_function, voices_);
+            if (std::find(result.begin(), result.end(), mutation) == result.end()) {
+                result.push_back(mutation);
+            }
+    }
+    return result;
+}
+
+inline SILENCE_PUBLIC std::vector<Scale> Scale::tonicizations(const Chord &current_chord, int voices) const {
+    std::vector<Scale> result;
+    int current_degree = degree(current_chord);
+    System::debug("Scale::tonicizations: chord: %.20s (%s) degree: %3d\n", current_chord.name().c_str(), current_chord.toString().c_str(), current_degree);
+    if (current_degree == -1) {
+        return result;
+    }
+    if (voices == -1) {
+        voices = current_chord.voices();
+    }
+    Chord chord_ = chord(current_degree, voices);
+    System::debug("Scale::tonicizations: resized: %.20s (%s) degree: %3d\n", chord_.name().c_str(), chord_.toString().c_str(), current_degree);
+    std::vector<Scale> modulations_ = modulations(chord_);
+    for (auto modulation : modulations_) {
+        int degree_in_modulation = modulation.degree(chord_);
+        if (degree_in_modulation == 1) {
+            if (std::find(result.begin(), result.end(), modulation) == result.end()) {
+                System::debug("Scale::tonicizations: modulation: %.20s (%s) degree of chord in modulation: %3d\n", modulation.name().c_str(), modulation.toString().c_str(), degree_in_modulation);
+                result.push_back(modulation);
+            }
+        }
+    }
+    return result;
 }
 
 inline SILENCE_PUBLIC std::vector<Event *> slice(Score &score, double startTime, double endTime) {
@@ -4091,6 +4147,34 @@ inline SILENCE_PUBLIC std::vector<Event *> slice(Score &score, double startTime,
 
 inline SILENCE_PUBLIC double T(double pitch, double semitones) {
     return pitch + semitones;
+}
+
+inline SILENCE_PUBLIC Chord transpose_degrees(const Chord &scale, const Chord &original_chord, int transposition_degrees, int interval) {
+    int scale_degrees = scale.voices();
+    int chord_voices = original_chord.voices();
+    Chord original_eop = original_chord.eOP();
+    for (int original_chord_index = 0; original_chord_index < scale_degrees; ++original_chord_index) {
+        System::debug("transpose_degrees: original_chord_index: %d scale_degrees: %d\n", original_chord_index, scale_degrees);
+        Chord transposed = csound::chord(scale, original_chord_index + 1, chord_voices, interval);
+        Chord transposed_eop = transposed.eOP();
+        System::debug("original_eop: %s\ntransposed_eop: %s\n", original_eop.information().c_str(), transposed_eop.information().c_str());
+        if (original_eop == transposed_eop) {
+            // Found the scale index of the original chord, now get the transposed chord.
+            int target_index = original_chord_index + transposition_degrees;
+            System::debug("found chord, target_index: %d original_chord_index: %d transposition_degrees: %d\n", target_index, original_chord_index, transposition_degrees);
+            // Transposition has sign. If negative, wrap.
+            while (target_index < 0) {
+                target_index = target_index + scale_degrees;
+            }
+            System::debug("wrapped target_index: %d original_chord_index: %d transposition_degrees: %d\n", target_index, original_chord_index, transposition_degrees);
+            Chord transposed_chord = csound::chord(scale, target_index + 1, chord_voices, interval);
+            System::debug("transposed_chord: %s\n", transposed_chord.toString().c_str());
+            return transposed_chord;
+        }
+    }
+    Chord empty_chord;
+    empty_chord.resize(0);
+    return empty_chord;
 }
 
 inline SILENCE_PUBLIC Chord voiceleading(const Chord &a, const Chord &b) {
