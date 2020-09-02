@@ -261,11 +261,17 @@ static int DEBUGGING = false;
 
 // ALL DECLARATIONS BELOW HERE MORE OR LESS IN ALPHABETICAL ORDER -- NO DEFINITIONS HERE.
 
-// But forward class declarations come first.
+// But a few forward declarations come first.
 
 class SILENCE_PUBLIC Chord;
 
 class SILENCE_PUBLIC Scale;
+
+/**
+ * The size of the octave, defined to be consistent with
+ * 12 tone equal temperament and MIDI.
+ */
+SILENCE_PUBLIC double OCTAVE();
 
 SILENCE_PUBLIC bool operator == (const Chord &a, const Chord &b);
 
@@ -281,9 +287,470 @@ SILENCE_PUBLIC void add_chord(std::string, const Chord &chord);
 
 SILENCE_PUBLIC void add_scale(std::string, const Scale &scale);
 
+SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voiceN, std::string equivalence, double g = 1.0);
+
+/**
+ * TODO: Change this to use strictly the representative fundamental domains.
+ * Each iteration must be sent to the representative fundamental domain, then
+ * added to the set.
+ */
 template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> allNormalizedFundamentalDomain(int voices, double range, double g);
 
 SILENCE_PUBLIC double C4();
+
+/**
+ * Chords consist of simultaneously sounding pitches. The pitches are
+ * represented as semitones with 0 at the origin and middle C as 60.
+ * Each voice also has a duration, velocity, channel, and pan.
+ * Eigen matrices are accessed (row, column) and stored as column
+ * vectors, so a Chord is accessed (voice (same as row), attribute).
+ */
+class SILENCE_PUBLIC Chord : public Eigen::MatrixXd {
+public:
+    enum {
+        PITCH = 0,
+        DURATION = 1,
+        LOUDNESS = 2,
+        INSTRUMENT = 3,
+        PAN = 4,
+        COUNT = 5
+    };
+    Chord();
+    Chord(const Chord &other);
+    Chord(const std::vector<double> &other);
+    virtual ~Chord();
+    virtual Chord &operator = (const Chord &other);
+#if __cpplusplus >= 201103L
+    Chord &operator = (Chord &&other) = default;
+#endif
+    virtual Chord &operator = (const std::vector<double> &other);
+    virtual operator std::vector<double>() const;
+    /**
+     * Returns the ith arpeggiation, current voice, and corresponding revoicing
+     * of the chord. Positive arpeggiations start with the lowest voice of the
+     * chord and revoice up; negative arpeggiations start with the highest voice
+     * of the chord and revoice down.
+     */
+    virtual Chord a(int arpeggiation, double &resultPitch, int &resultVoice) const;
+    /**
+     * Returns a new chord whose pitches are the ceilings of this chord's pitches.
+     */
+    virtual Chord ceiling() const;
+    /**
+     * Returns whether or not the chord contains the pitch.
+     */
+    virtual bool contains(double pitch_) const;
+    virtual size_t count(double pitch) const;
+    /**
+     * Returns a copy of the chord cyclically permuted by a stride, by default 1.
+     * The direction of rotation is by default the same as musicians' first
+     * inversion, second inversion, and so on; but negative sign will reverse
+     * the direction of rotation.
+     * + 1 is pop the front and push it on the back, shifting the middle down.
+     * 0 1 2 3 4 => 1 2 3 4 0
+     * - 1 is pop the back and push it on the front, shifting the middle up.
+     * 0 1 2 3 4 => 4 0 1 2 3
+     */
+    virtual Chord cycle(int stride = 1) const;
+    /**
+     * Returns the Euclidean distance of this chord from its space's
+     * origin.
+     */
+    virtual double distanceToOrigin() const;
+    /**
+     * Returns the Euclidean distance from this chord
+     * to the unison diagonal of its chord space.
+     */
+    virtual double distanceToUnisonDiagonal() const;
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of inversional equivalence.
+     */
+    virtual Chord eI() const;
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of octave equivalence.
+     */
+    virtual Chord eO() const;
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of octave and permutational equivalence.
+     */
+    virtual Chord eOP() const;
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of octave, permutational, and inversional equivalence.
+     */
+    virtual Chord eOPI() const;
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of octave, permutational, and transpositional equivalence.
+     */
+    virtual Chord eOPT() const;
+    virtual Chord eOPTT(double g = 1.0) const;
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of range, permutational, transpositional, and inversional
+     * equivalence.
+     */
+    virtual Chord eOPTI() const;
+    virtual Chord eOPTTI() const;
+    /**
+     * Returns the equivalent of the chord within the representative
+     * fundamental domain of permutational equivalence.	The implementation
+     * uses a bubble sort to swap out of order voices in the Eigen matrix.
+     */
+    virtual Chord eP() const;
+    /**
+     * Returns the equivalent of the chord under pitch-class equivalence,
+     * i.e. the pitch-class set of the chord.
+     */
+    virtual Chord epcs() const;
+    /**
+     * Returns whether the voices of this chord equal the voices of the other.
+     */
+    virtual bool equals(const Chord &other) const;
+    /**
+     * Returns the equivalent of the chord within the representative
+     * fundamental domain of a range equivalence.
+     */
+    virtual Chord eR(double range) const;
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of range and permutational equivalence.
+     */
+    virtual Chord eRP(double range) const;
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of range, permutational, and inversional equivalence.
+     */
+    virtual Chord eRPI(double range) const;
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of range, permutational, and transpositional equivalence; the same
+     * as set-class type, or chord type.
+     */
+    virtual Chord eRPT(double range) const;
+    virtual Chord eRPTT(double range, double g = 1.0) const;
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of range, permutational, transpositional, and inversional
+     * equivalence.
+     */
+    virtual Chord eRPTI(double range) const;
+    virtual Chord eRPTTI(double range) const;
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of transpositonal equivalence.
+     */
+    virtual Chord eT() const;
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of transpositonal equivalence and the equal temperament generated
+     * by g. I.e., returns the chord transposed such that its layer is 0 or, under
+     * transposition, the positive layer closest to 0. NOTE: Does NOT return the
+     * result under any other equivalence class.
+     */
+    virtual Chord eTT(double g = 1.0) const;
+    /**
+     * Returns the equivalent of the chord within the fundamental domain of
+     * transposition to 0.
+     */
+    virtual Chord et() const;
+    /**
+     * Returns the equivalent of the chord within the representative fundamental
+     * domain of voicing equivalence.
+     */
+    virtual Chord eV() const;
+    /**
+     * Returns a new chord whose pitches are the floors of this chord's pitches.
+     */
+    virtual Chord floor() const;
+    virtual double getDuration(int voice = 0) const;
+    virtual double getInstrument(int voice = 0) const;
+    virtual double getLoudness(int voice = 0) const ;
+    virtual double getPan(int voice = 0) const;
+    virtual double getPitch(int voice) const;
+    virtual double &getPitchReference(int voice);
+    /**
+     * Rebuilds the chord's pitches (only) from a line of text.
+     */
+    virtual void fromString(std::string text);
+    /**
+     * Inverts the chord by another chord that is on the unison diagonal, by
+     * default the origin.
+     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     */
+    virtual Chord I(double center = 0.0) const;
+    /**
+     * Returns whether the chord is an inversional form of Y with interval size g.
+     * Only works in equal temperament.
+     */
+    virtual bool Iform(const Chord &Y, double g = 1.0) const;
+    /**
+     * Print much information about the chord including whether it is in 
+     * important equivalence classes, or what its equivalent would be.
+     */
+    virtual std::string information() const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of inversional equivalence.
+     */
+    virtual bool iseI_chord(Chord *inverse) const;
+    virtual bool iseI() const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of octave equivalence.
+     */
+    virtual bool iseO() const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of octave and permutational equivalence.
+     */
+    virtual bool iseOP() const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of octave, permutational, and inversional equivalence.
+     */
+    virtual bool iseOPI() const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of octave, permutational, and transpositional equivalence.
+     */
+    virtual bool iseOPT() const;
+    virtual bool iseOPTT(double g = 1.0) const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of octave, permutational, transpositional, and inversional equivalence.
+     */
+    virtual bool iseOPTI() const;
+    virtual bool iseOPTTI() const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of permutational equivalence.
+     */
+    virtual bool iseP() const;
+    /**
+     * Returns whether the chord is within the fundamental domain of
+     * pitch-class equivalence, i.e. is a pitch-class set.
+     */
+    virtual bool isepcs() const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of the indicated range equivalence.
+     */
+    virtual bool iseR(double range_) const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of range and permutational equivalence.
+     */
+    virtual bool iseRP(double range) const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of range, permutational, and inversional equivalence.
+     */
+    virtual bool iseRPI(double range) const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of range, permutational, and transpositional equivalence.
+     */
+    virtual bool iseRPT(double range) const;
+    virtual bool iseRPTT(double range, double g = 1.0) const;
+    /** Returns whether the chord is within the representative fundamental domain
+     * of range, permutational, transpositional, and inversional equivalence.
+     */
+    virtual bool iseRPTI(double range) const;
+    virtual bool iseRPTTI(double range) const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of transpositional equivalence.
+     */
+    virtual bool iseT() const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of translational equivalence and the equal temperament generated by g.
+     */
+    virtual bool iseTT(double g = 1.0) const;
+    /**
+     * Returns whether the chord is within the fundamental domain of
+     * transposition to 0.
+     */
+    virtual bool iset() const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of voicing equivalence.
+     */
+    virtual bool iseV() const;
+    /**
+     * Returns the chord inverted by the sum of its first two voices.
+     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     */
+    virtual Chord K(double range = OCTAVE()) const;
+    /**
+     * Returns the sum of the pitches in the chord.
+     */
+    virtual double layer() const;
+    /**
+    * Returns the highest pitch in the chord,
+    * and also its voice index.
+    */
+    virtual std::vector<double> max() const;
+    /**
+     * Returns the maximally even chord in the chord's space,
+     * e.g. the augmented triad for 3 dimensions.
+     */
+    virtual Chord maximallyEven() const;
+    virtual double maximumInterval() const;
+    /**
+    * Returns the lowest pitch in the chord,
+    * and also its voice index.
+    */
+    virtual std::vector<double> min() const;
+    virtual double minimumInterval() const;
+    /**
+     * Move 1 voice of the chord.
+     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     */
+    virtual Chord move(int voice, double interval) const;
+    /**
+     * Return the jazz-style name of the chord, if possible, or else a 
+     * human-readable list of the voices in the chord.
+     */
+    virtual std::string name() const;
+    /**
+     * Creates a complete "note on" Event for the
+     * indicated voice of the chord. If the optional
+     * duration, channel, velocity, and pan parameters
+     * are not passed, then the Chord's own values for
+     * these are used.
+     */
+    virtual Event note(int voice,
+                       double time_,
+                       double duration_ = DBL_MAX,
+                       double channel_ = DBL_MAX,
+                       double velocity_ = DBL_MAX,
+                       double pan_ = DBL_MAX) const;
+    /**
+     * Returns an individual note for each voice of the chord.
+     * If the optional
+     * duration, channel, velocity, and pan parameters
+     * are not passed, then the Chord's own values for
+     * these are used.
+     */
+    virtual Score notes(double time_,
+                        double duration_ = DBL_MAX,
+                        double channel_ = DBL_MAX,
+                        double velocity_ = DBL_MAX,
+                        double pan_ = DBL_MAX) const;
+    /**
+     * Performs the neo-Riemannian dominant transformation.
+     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     */
+    virtual Chord nrD() const;
+    /**
+     * Performs the neo-Riemannian hexatonic pole transformation.
+     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     */
+    virtual Chord nrH() const;
+    /**
+     * Performs the neo-Riemannian Lettonwechsel transformation.
+     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     */
+    virtual Chord nrL() const;
+    /**
+     * Performs the neo-Riemannian Nebenverwandt transformation.
+     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     */
+    virtual Chord nrN() const;
+    /**
+     * Performs the neo-Riemannian parallel transformation.
+     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     */
+    virtual Chord nrP() const;
+    /**
+     * Performs the neo-Riemannian relative transformation.
+     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     */
+    virtual Chord nrR() const;
+    /**
+     * Performs the neo-Riemannian Slide transformation.
+     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     */
+    virtual Chord nrS() const;
+    /**
+     * Returns the origin of the chord's space.
+     */
+    virtual Chord origin() const;
+    /**
+     * Returns the permutations of the pitches in a chord. The permutations
+     * starting from any particular permutation are always returned in the same order.
+     */
+    virtual std::vector<Chord> permutations() const;
+    /**
+     * Returns the contextual transposition of the chord by x with respect to m
+     * with minimum interval size g.
+     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     */
+    virtual Chord Q(double x, const Chord &m, double g = 1.0) const;
+    virtual void resize(size_t voiceN);
+    virtual void setDuration(double value, int voice = -1);
+    virtual void setInstrument(double value, int voice = -1);
+    virtual void setLoudness(double value, int voice = -1);
+    virtual void setPan(double value, int voice = -1);
+    virtual void setPitch(int voice, double value);
+    /**
+     * Transposes the chord by the indicated interval (may be a fraction).
+     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     */
+    virtual Chord T(double interval) const;
+    /**
+     * Returns whether the chord is a transpositional form of Y with interval size g.
+     * Only works in equal temperament.
+     */
+    virtual bool Tform(const Chord &Y, double g = 1.0) const;
+    /**
+     * Returns an individual note for each voice of the chord.
+     * If the optional
+     * duration, channel, velocity, and pan parameters
+     * are not passed, then the Chord's own values for
+     * these are used.
+     */
+    virtual void toScore(Score &score,
+                         double time_, bool voiceIsInstrument=true) const;
+    /**
+     * Transposes the chord by the indicated voiceleading (passed as a Chord 
+     * of directed intervals). 
+     * NOTE: Does NOT return an equivalent under any equivalence relation.
+     */
+    virtual Chord T_voiceleading(const Chord &voiceleading);
+    /**
+     * Returns a string representation of the chord's pitches (only).
+     * Quadratic complexity, but short enough not to matter.
+     */
+    virtual std::string toString() const;
+    /**
+     * Returns a copy of the chord 'inverted' in the musician's sense,
+     * i.e. revoiced by cyclically permuting the chord and
+     * adding (or subtracting) an octave to the highest (or lowest) voice.
+     * The revoicing will move the chord up or down in pitch.
+     * A positive direction is the same as a musician's first inversion,
+     * second inversion, etc.
+     */
+    virtual Chord v(int direction = 1) const;
+    /**
+     * Returns the transpositions (as a Chord of directed intervals) that 
+     * takes this chord to the destination chord.
+     * NOTE: Makes no assumption that both chords are in the same equivalence 
+     * class.
+     */
+    virtual Chord voiceleading(const Chord &destination) const;
+    virtual size_t voices() const;
+    /**
+     * Returns all the 'inversions' (in the musician's sense)
+     * or octavewise revoicings of the chord.
+     */
+    virtual std::vector<Chord> voicings() const;
+};
 
 SILENCE_PUBLIC const Chord &chordForName(std::string name);
 
@@ -380,6 +847,12 @@ SILENCE_PUBLIC bool le_epsilon(double a, double b);
 
 SILENCE_PUBLIC bool lt_epsilon(double a, double b);
 
+/**
+ * Returns the chord that is the midpoint between two chords,
+ * which must have the same number of voices.
+ */
+SILENCE_PUBLIC Chord midpoint(const Chord &a, const Chord &b);
+
 SILENCE_PUBLIC double MIDDLE_C();
 
 /**
@@ -421,6 +894,8 @@ static const char* namesForEquivalenceRelations[] = {
     "RPTgI"
 };
 
+SILENCE_PUBLIC std::multimap<Scale, std::string> &namesForScales();
+
 /**
  * Increment a chord voicewise through chord space,
  * from a low point on the unison diagonal through a high point
@@ -437,16 +912,15 @@ template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC Chord normalize(const Chord &c
 
 template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC Chord normalize(const Chord &chord);
 
-
-SILENCE_PUBLIC std::multimap<Scale, std::string> &namesForScales();
-
-/**
- * The size of the octave, defined to be consistent with
- * 12 tone equal temperament and MIDI.
- */
-SILENCE_PUBLIC double OCTAVE();
+SILENCE_PUBLIC bool next(Chord &iterator_, const Chord &origin, double range, double g);
 
 SILENCE_PUBLIC Chord octavewiseRevoicing(const Chord &chord, int revoicingNumber_, double range, bool debug);
+
+/**
+ * Returns whether the voiceleading
+ * between chords a and b contains a parallel fifth.
+ */
+SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b);
 
 SILENCE_PUBLIC double pitchClassForName(std::string name);
 
@@ -469,609 +943,11 @@ SILENCE_PUBLIC std::set<Scale> &unique_scales();
 template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> uniqueNormalizedFundamentalDomain(int voices, double range, double g);
 
 /**
- * Chords represent simultaneously sounding pitches. The pitches are
- * represented as semitones with 0 at the origin and middle C as 60.
- * Each voice also has a duration, velocity, channel, and pan.
- * Eigen matrices are accessed (row, column) and stored as column
- * vectors, so a Chord is accessed (voice (same as row), attribute).
- */
-class SILENCE_PUBLIC Chord : public Eigen::MatrixXd {
-public:
-    enum {
-        PITCH = 0,
-        DURATION = 1,
-        LOUDNESS = 2,
-        INSTRUMENT = 3,
-        PAN = 4,
-        COUNT = 5
-    };
-    Chord();
-    Chord(const Chord &other);
-    Chord(const std::vector<double> &other);
-    virtual ~Chord();
-    virtual Chord &operator = (const Chord &other);
-#if __cpplusplus >= 201103L
-    Chord &operator = (Chord &&other) = default;
-#endif
-    virtual Chord &operator = (const std::vector<double> &other);
-    virtual operator std::vector<double>() const;
-    /**
-     * Returns a new chord whose pitches are the ceilings of this chord's pitches.
-     */
-    virtual Chord ceiling() const;
-    /**
-     * Returns whether or not the chord contains the pitch.
-     */
-    virtual bool contains(double pitch_) const;
-    virtual size_t count(double pitch) const;
-    /**
-     * Returns a copy of the chord cyclically permuted by a stride, by default 1.
-     * The direction of rotation is by default the same as musicians' first
-     * inversion, second inversion, and so on; but negative sign will reverse
-     * the direction of rotation.
-     * + 1 is pop the front and push it on the back, shifting the middle down.
-     * 0 1 2 3 4 => 1 2 3 4 0
-     * - 1 is pop the back and push it on the front, shifting the middle up.
-     * 0 1 2 3 4 => 4 0 1 2 3
-     */
-    virtual Chord cycle(int stride = 1) const;
-    /**
-     * Returns the Euclidean distance of this chord from its space's
-     * origin.
-     */
-    virtual double distanceToOrigin() const;
-    /**
-     * Returns the Euclidean distance from this chord
-     * to the unison diagonal of its chord space.
-     */
-    virtual double distanceToUnisonDiagonal() const;
-    /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of inversional equivalence.
-     */
-    virtual Chord eI() const;
-    /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of octave equivalence.
-     */
-    virtual Chord eO() const;
-    /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of octave and permutational equivalence.
-     */
-    virtual Chord eOP() const;
-    /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of octave, permutational, and inversional equivalence.
-     */
-    virtual Chord eOPI() const;
-    /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of octave, permutational, and transpositional equivalence.
-     */
-    virtual Chord eOPT() const;
-    virtual Chord eOPTT(double g = 1.0) const;
-    /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of range, permutational, transpositional, and inversional
-     * equivalence.
-     */
-    virtual Chord eOPTI() const;
-    virtual Chord eOPTTI() const;
-    /**
-     * Returns the equivalent of the chord within the representative
-     * fundamental domain of permutational equivalence.	The implementation
-     * uses a bubble sort to swap out of order voices in the Eigen matrix.
-     */
-    virtual Chord eP() const;
-    /**
-     * Returns the equivalent of the chord under pitch-class equivalence,
-     * i.e. the pitch-class set of the chord.
-     */
-    virtual Chord epcs() const;
-    /**
-     * Returns the equivalent of the chord within the representative
-     * fundamental domain of a range equivalence.
-     */
-    virtual Chord eR(double range) const;
-    /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of range and permutational equivalence.
-     */
-    virtual Chord eRP(double range) const;
-    /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of range, permutational, and inversional equivalence.
-     */
-    virtual Chord eRPI(double range) const;
-    /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of range, permutational, and transpositional equivalence; the same
-     * as set-class type, or chord type.
-     */
-    virtual Chord eRPT(double range) const;
-    virtual Chord eRPTT(double range, double g = 1.0) const;
-    /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of range, permutational, transpositional, and inversional
-     * equivalence.
-     */
-    virtual Chord eRPTI(double range) const;
-    virtual Chord eRPTTI(double range) const;
-    /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of transpositonal equivalence.
-     */
-    virtual Chord eT() const;
-    /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of transpositonal equivalence and the equal temperament generated
-     * by g. I.e., returns the chord transposed such that its layer is 0 or, under
-     * transposition, the positive layer closest to 0. NOTE: Does NOT return the
-     * result under any other equivalence class.
-     */
-    virtual Chord eTT(double g = 1.0) const;
-    /**
-     * Returns the equivalent of the chord within the fundamental domain of
-     * transposition to 0.
-     */
-    virtual Chord et() const;
-    /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of voicing equivalence.
-     */
-    virtual Chord eV() const;
-    /**
-     * Returns a new chord whose pitches are the floors of this chord's pitches.
-     */
-    virtual Chord floor() const;
-    virtual double getDuration(int voice = 0) const;
-    virtual double getInstrument(int voice = 0) const;
-    virtual double getLoudness(int voice = 0) const ;
-    virtual double getPan(int voice = 0) const;
-    virtual double getPitch(int voice) const;
-    virtual double &getPitchReference(int voice);
-    /**
-     * Rebuilds the chord's pitches (only) from a line of text.
-     */
-    virtual void fromString(std::string text);
-    /**
-     * Inverts the chord by another chord that is on the unison diagonal, by
-     * default the origin.
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
-     */
-    virtual Chord I(double center = 0.0) const;
-    /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of inversional equivalence.
-     */
-    virtual bool iseI_chord(Chord *inverse) const;
-    virtual bool iseI() const;
-    /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of octave equivalence.
-     */
-    virtual bool iseO() const;
-    /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of octave and permutational equivalence.
-     */
-    virtual bool iseOP() const;
-    /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of octave, permutational, and inversional equivalence.
-     */
-    virtual bool iseOPI() const;
-    /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of octave, permutational, and transpositional equivalence.
-     */
-    virtual bool iseOPT() const;
-    virtual bool iseOPTT(double g = 1.0) const;
-    /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of octave, permutational, transpositional, and inversional equivalence.
-     */
-    virtual bool iseOPTI() const;
-    virtual bool iseOPTTI() const;
-    /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of permutational equivalence.
-     */
-    virtual bool iseP() const;
-    /**
-     * Returns whether the chord is within the fundamental domain of
-     * pitch-class equivalence, i.e. is a pitch-class set.
-     */
-    virtual bool isepcs() const;
-    /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of the indicated range equivalence.
-     */
-    virtual bool iseR(double range_) const;
-    /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of range and permutational equivalence.
-     */
-    virtual bool iseRP(double range) const;
-    /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of range, permutational, and inversional equivalence.
-     */
-    virtual bool iseRPI(double range) const;
-    /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of range, permutational, and transpositional equivalence.
-     */
-    virtual bool iseRPT(double range) const;
-    virtual bool iseRPTT(double range, double g = 1.0) const;
-    /** Returns whether the chord is within the representative fundamental domain
-     * of range, permutational, transpositional, and inversional equivalence.
-     */
-    virtual bool iseRPTI(double range) const;
-    virtual bool iseRPTTI(double range) const;
-    /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of transpositional equivalence.
-     */
-    virtual bool iseT() const;
-    /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of translational equivalence and the equal temperament generated by g.
-     */
-    virtual bool iseTT(double g = 1.0) const;
-    /**
-     * Returns whether the chord is within the fundamental domain of
-     * transposition to 0.
-     */
-    virtual bool iset() const;
-    /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of voicing equivalence.
-     */
-    virtual bool iseV() const;
-    /**
-     * Returns the sum of the pitches in the chord.
-     */
-    virtual double layer() const;
-    /**
-    * Returns the highest pitch in the chord,
-    * and also its voice index.
-    */
-    virtual std::vector<double> max() const;
-    /**
-     * Returns the maximally even chord in the chord's space,
-     * e.g. the augmented triad for 3 dimensions.
-     */
-    virtual Chord maximallyEven() const;
-    virtual double maximumInterval() const;
-    /**
-    * Returns the lowest pitch in the chord,
-    * and also its voice index.
-    */
-    virtual std::vector<double> min() const;
-    virtual double minimumInterval() const;
-    /**
-     * Returns the origin of the chord's space.
-     */
-    virtual Chord origin() const;
-    /**
-     * Returns the permutations of the pitches in a chord. The permutations
-     * starting from any particular permutation are always returned in the same order.
-     */
-    virtual std::vector<Chord> permutations() const;
-    virtual void resize(size_t voiceN);
-    virtual void setDuration(double value, int voice = -1);
-    virtual void setInstrument(double value, int voice = -1);
-    virtual void setLoudness(double value, int voice = -1);
-    virtual void setPan(double value, int voice = -1);
-    virtual void setPitch(int voice, double value);
-    /**
-     * Transposes the chord by the indicated interval (may be a fraction).
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
-     */
-    virtual Chord T(double interval) const;
-    /**
-     * Returns a copy of the chord 'inverted' in the musician's sense,
-     * i.e. revoiced by cyclically permuting the chord and
-     * adding (or subtracting) an octave to the highest (or lowest) voice.
-     * The revoicing will move the chord up or down in pitch.
-     * A positive direction is the same as a musician's first inversion,
-     * second inversion, etc.
-     */
-    virtual Chord v(int direction = 1) const;
-    /**
-     * Transposes the chord by the indicated voiceleading (passed as a Chord 
-     * of directed intervals). 
-     * NOTE: Does NOT return an equivalent under any equivalence relation.
-     */
-    virtual Chord T_voiceleading(const Chord &voiceleading);
-    /**
-     * Returns a string representation of the chord's pitches (only).
-     * Quadratic complexity, but short enough not to matter.
-     */
-    virtual std::string toString() const;
-    /**
-     * Returns the transpositions (as a Chord of directed intervals) that 
-     * takes this chord to the destination chord.
-     * NOTE: Makes no assumption that both chords are in the same equivalence 
-     * class.
-     */
-    virtual Chord voiceleading(const Chord &destination) const;
-    virtual size_t voices() const;
-    /**
-     * Returns all the 'inversions' (in the musician's sense)
-     * or octavewise revoicings of the chord.
-     */
-    virtual std::vector<Chord> voicings() const;
-    virtual std::string name() const;
-    virtual std::string information() const;
-    /**
-     * Move 1 voice of the chord.
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
-     */
-    virtual Chord move(int voice, double interval) const;
-    /**
-     * Performs the neo-Riemannian Lettonwechsel transformation.
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
-     */
-    virtual Chord nrL() const;
-    /**
-     * Performs the neo-Riemannian parallel transformation.
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
-     */
-    virtual Chord nrP() const;
-    /**
-     * Performs the neo-Riemannian relative transformation.
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
-     */
-    virtual Chord nrR() const;
-    /**
-     * Performs the neo-Riemannian Nebenverwandt transformation.
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
-     */
-    virtual Chord nrN() const;
-    /**
-     * Performs the neo-Riemannian Slide transformation.
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
-     */
-    virtual Chord nrS() const;
-    /**
-     * Performs the neo-Riemannian hexatonic pole transformation.
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
-     */
-    virtual Chord nrH() const;
-    /**
-     * Performs the neo-Riemannian dominant transformation.
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
-     */
-    virtual Chord nrD() const;
-    /**
-     * Returns the chord inverted by the sum of its first two voices.
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
-     */
-    virtual Chord K(double range = OCTAVE()) const;
-    /**
-     * Returns whether the chord is a transpositional form of Y with interval size g.
-     * Only works in equal temperament.
-     */
-    virtual bool Tform(const Chord &Y, double g = 1.0) const;
-    /**
-     * Returns whether the chord is an inversional form of Y with interval size g.
-     * Only works in equal temperament.
-     */
-    virtual bool Iform(const Chord &Y, double g = 1.0) const;
-    /**
-     * Returns the contextual transposition of the chord by x with respect to m
-     * with minimum interval size g.
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
-     */
-    virtual Chord Q(double x, const Chord &m, double g = 1.0) const;
-    /**
-     * Creates a complete "note on" Event for the
-     * indicated voice of the chord. If the optional
-     * duration, channel, velocity, and pan parameters
-     * are not passed, then the Chord's own values for
-     * these are used.
-     */
-    virtual Event note(int voice,
-                       double time_,
-                       double duration_ = DBL_MAX,
-                       double channel_ = DBL_MAX,
-                       double velocity_ = DBL_MAX,
-                       double pan_ = DBL_MAX) const;
-    /**
-     * Returns an individual note for each voice of the chord.
-     * If the optional
-     * duration, channel, velocity, and pan parameters
-     * are not passed, then the Chord's own values for
-     * these are used.
-     */
-    virtual Score notes(double time_,
-                        double duration_ = DBL_MAX,
-                        double channel_ = DBL_MAX,
-                        double velocity_ = DBL_MAX,
-                        double pan_ = DBL_MAX) const;
-    /**
-     * Returns an individual note for each voice of the chord.
-     * If the optional
-     * duration, channel, velocity, and pan parameters
-     * are not passed, then the Chord's own values for
-     * these are used.
-     */
-    virtual void toScore(Score &score,
-                         double time_, bool voiceIsInstrument=true) const;
-    /**
-     * Returns the ith arpeggiation, current voice, and corresponding revoicing
-     * of the chord. Positive arpeggiations start with the lowest voice of the
-     * chord and revoice up; negative arpeggiations start with the highest voice
-     * of the chord and revoice down.
-     */
-    virtual Chord a(int arpeggiation, double &resultPitch, int &resultVoice) const;
-    virtual bool equals(const Chord &other) const;
-};
-
-/**
- * Returns the Euclidean distance between chords a and b,
- * which must have the same number of voices.
- */
-inline SILENCE_PUBLIC double euclidean(const Chord &a, const Chord &b) {
-    double sumOfSquaredDifferences = 0.0;
-    const size_t voices = a.voices();
-    for (size_t voice = 0; voice < voices; ++voice) {
-        sumOfSquaredDifferences += std::pow((a.getPitch(voice) - b.getPitch(voice)), 2.0);
-    }
-    return std::sqrt(sumOfSquaredDifferences);
-}
-
-/**
- * Returns the chord that is the midpoint between two chords,
- * which must have the same number of voices.
- */
-inline SILENCE_PUBLIC Chord midpoint(const Chord &a, const Chord &b) {
-    Chord midpoint_ = a;
-    for (int voice = 0, voices = a.voices(); voice < voices; ++voice) {
-        double voiceSum = a.getPitch(voice) + b.getPitch(voice);
-        double voiceMidpoint = voiceSum / 2.0;
-        midpoint_.setPitch(voice, voiceMidpoint);
-    }
-    System::debug("a: %s  b: %s  mid: %s\n", a.toString().c_str(), b.toString().c_str(), midpoint_.toString().c_str());
-    return midpoint_;
-}
-
-
-inline SILENCE_PUBLIC bool next(Chord &iterator_, const Chord &origin, double range, double g) {
-    int leastSignificantVoice = iterator_.voices() - 1;
-    int mostSignificantVoice = 0;
-    // Increment, as in an odometer.
-    iterator_.setPitch(leastSignificantVoice, iterator_.getPitch(leastSignificantVoice) + g);
-    // If necessary, carry the increment to the next most significant voice.
-    for (int voice = leastSignificantVoice; voice > mostSignificantVoice; --voice) {
-        if (gt_epsilon(iterator_.getPitch(voice), (origin.getPitch(voice) + range))) {
-            iterator_.setPitch(voice, origin.getPitch(voice));
-            iterator_.setPitch(voice - 1, iterator_.getPitch(voice - 1) + g);
-        }
-    }
-    if (gt_epsilon(iterator_.getPitch(mostSignificantVoice), (origin.getPitch(mostSignificantVoice) + range))) {
-        return false;
-    }
-    return true;
-}
-
-/**
- * Returns a chord with the specified number of voices all set to a first
- * pitch, useful as an iterator.
- */
-inline SILENCE_PUBLIC Chord iterator(int voiceN, double first) {
-    Chord odometer;
-    odometer.resize(voiceN);
-    for (int voice = 0; voice < voiceN; ++voice) {
-        odometer.setPitch(voice, first);
-    }
-    return odometer;
-}
-
-/**
- * TODO: Change this to use strictly the representative fundamental domains.
- * Each iteration must be sent to the representative fundamental domain, then
- * added to the set.
- */
-inline SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voiceN, std::string equivalence, double g = 1.0) {
-    std::set<Chord> equivalentChords;
-    int chordCount = 0;
-    int equivalentChordCount = 0;
-    Chord origin = iterator(voiceN, -13.0);
-    Chord iterator_ = origin;
-    if (equivalence == "OP") {
-        while (next(iterator_, origin, 13.0, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseOP() == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    if (equivalence == "OPT") {
-        while (next(iterator_, origin, 13.0, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseOPT() == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    if (equivalence == "OPTT") {
-        while (next(iterator_, origin, 13.0, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseOPTT() == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    if (equivalence == "OPI") {
-        while (next(iterator_, origin, 13.0, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseOPI() == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    if (equivalence == "OPTI") {
-        while (next(iterator_, origin, 13.0, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseOPTI() == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    if (equivalence == "OPTTI") {
-        while (next(iterator_, origin, 13.0, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseOPTTI() == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    std::vector<Chord> result;
-    std::copy(equivalentChords.begin(), equivalentChords.end(), std::back_inserter(result));
-    return result;
-}
-/**
  * Returns the voice-leading between chords a and b,
  * i.e. what you have to add to a to get b, as a
  * chord of directed intervals.
  */
-inline SILENCE_PUBLIC Chord voiceleading(const Chord &a, const Chord &b) {
-    Chord voiceleading_ = a;
-    for (int voice = 0; voice < a.voices(); ++voice) {
-        voiceleading_.setPitch(voice, b.getPitch(voice) - a.getPitch(voice));
-    }
-    return voiceleading_;
-}
-
-/**
- * Returns whether the voiceleading
- * between chords a and b contains a parallel fifth.
- */
-inline SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b) {
-    Chord voiceleading_ = voiceleading(a, b);
-    if (voiceleading_.count(7) > 1) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
+SILENCE_PUBLIC Chord voiceleading(const Chord &a, const Chord &b);
 /**
  * Returns the smoothness of the voiceleading between
  * chords a and b by L1 norm.
@@ -3299,7 +3175,7 @@ public:
     }
 };
 
-// ALL DEFINITIONS BELOW HERE IN ALPHABETICAL ORDER -- NO DECLARATIONS BELOW HERE.
+// ONLY DEFINITIONS BELOW HERE -- NO DECLARATIONS.
 
 inline SILENCE_PUBLIC bool operator == (const Chord &a, const Chord &b) {
     if (&a == &b) {
@@ -3360,6 +3236,77 @@ inline SILENCE_PUBLIC bool operator >= (const Chord &a, const Chord &b) {
         return true;
     }
     return (a > b);
+}
+
+inline SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voiceN, std::string equivalence, double g) {
+    std::set<Chord> equivalentChords;
+    int chordCount = 0;
+    int equivalentChordCount = 0;
+    Chord origin = iterator(voiceN, -13.0);
+    Chord iterator_ = origin;
+    if (equivalence == "OP") {
+        while (next(iterator_, origin, 13.0, g) == true) {
+            chordCount++;
+            Chord chord = iterator_.eP();
+            if (chord.iseOP() == true) {
+                equivalentChordCount++;
+                equivalentChords.insert(chord);
+            }
+        }
+    }
+    if (equivalence == "OPT") {
+        while (next(iterator_, origin, 13.0, g) == true) {
+            chordCount++;
+            Chord chord = iterator_.eP();
+            if (chord.iseOPT() == true) {
+                equivalentChordCount++;
+                equivalentChords.insert(chord);
+            }
+        }
+    }
+    if (equivalence == "OPTT") {
+        while (next(iterator_, origin, 13.0, g) == true) {
+            chordCount++;
+            Chord chord = iterator_.eP();
+            if (chord.iseOPTT() == true) {
+                equivalentChordCount++;
+                equivalentChords.insert(chord);
+            }
+        }
+    }
+    if (equivalence == "OPI") {
+        while (next(iterator_, origin, 13.0, g) == true) {
+            chordCount++;
+            Chord chord = iterator_.eP();
+            if (chord.iseOPI() == true) {
+                equivalentChordCount++;
+                equivalentChords.insert(chord);
+            }
+        }
+    }
+    if (equivalence == "OPTI") {
+        while (next(iterator_, origin, 13.0, g) == true) {
+            chordCount++;
+            Chord chord = iterator_.eP();
+            if (chord.iseOPTI() == true) {
+                equivalentChordCount++;
+                equivalentChords.insert(chord);
+            }
+        }
+    }
+    if (equivalence == "OPTTI") {
+        while (next(iterator_, origin, 13.0, g) == true) {
+            chordCount++;
+            Chord chord = iterator_.eP();
+            if (chord.iseOPTTI() == true) {
+                equivalentChordCount++;
+                equivalentChords.insert(chord);
+            }
+        }
+    }
+    std::vector<Chord> result;
+    std::copy(equivalentChords.begin(), equivalentChords.end(), std::back_inserter(result));
+    return result;
 }
 
 inline SILENCE_PUBLIC double C4() {
@@ -4050,6 +3997,15 @@ inline SILENCE_PUBLIC bool eq_epsilon(double a, double b) {
 
 }
 
+inline SILENCE_PUBLIC double euclidean(const Chord &a, const Chord &b) {
+    double sumOfSquaredDifferences = 0.0;
+    const size_t voices = a.voices();
+    for (size_t voice = 0; voice < voices; ++voice) {
+        sumOfSquaredDifferences += std::pow((a.getPitch(voice) - b.getPitch(voice)), 2.0);
+    }
+    return std::sqrt(sumOfSquaredDifferences);
+}
+
 inline SILENCE_PUBLIC double factorial(double n) {
     double result = 1.0;
     for (int i = 0; i <= n; ++i) {
@@ -4078,6 +4034,19 @@ inline SILENCE_PUBLIC double I(double pitch, double center) {
     return center - pitch;
 }
 
+/**
+ * Returns a chord with the specified number of voices all set to a first
+ * pitch, useful as an iterator.
+ */
+inline SILENCE_PUBLIC Chord iterator(int voiceN, double first) {
+    Chord odometer;
+    odometer.resize(voiceN);
+    for (int voice = 0; voice < voiceN; ++voice) {
+        odometer.setPitch(voice, first);
+    }
+    return odometer;
+}
+
 inline SILENCE_PUBLIC bool le_epsilon(double a, double b) {
     if (eq_epsilon(a, b)) {
         return true;
@@ -4092,6 +4061,17 @@ inline SILENCE_PUBLIC bool lt_epsilon(double a, double b) {
     } else {
         return (a < b);
     }
+}
+
+inline SILENCE_PUBLIC Chord midpoint(const Chord &a, const Chord &b) {
+    Chord midpoint_ = a;
+    for (int voice = 0, voices = a.voices(); voice < voices; ++voice) {
+        double voiceSum = a.getPitch(voice) + b.getPitch(voice);
+        double voiceMidpoint = voiceSum / 2.0;
+        midpoint_.setPitch(voice, voiceMidpoint);
+    }
+    System::debug("a: %s  b: %s  mid: %s\n", a.toString().c_str(), b.toString().c_str(), midpoint_.toString().c_str());
+    return midpoint_;
 }
 
 inline SILENCE_PUBLIC double MIDDLE_C() {
@@ -4110,6 +4090,23 @@ inline SILENCE_PUBLIC double modulo(double dividend, double divisor) {
     return remainder;
 }
 
+inline SILENCE_PUBLIC bool next(Chord &iterator_, const Chord &origin, double range, double g) {
+    int leastSignificantVoice = iterator_.voices() - 1;
+    int mostSignificantVoice = 0;
+    // Increment, as in an odometer.
+    iterator_.setPitch(leastSignificantVoice, iterator_.getPitch(leastSignificantVoice) + g);
+    // If necessary, carry the increment to the next most significant voice.
+    for (int voice = leastSignificantVoice; voice > mostSignificantVoice; --voice) {
+        if (gt_epsilon(iterator_.getPitch(voice), (origin.getPitch(voice) + range))) {
+            iterator_.setPitch(voice, origin.getPitch(voice));
+            iterator_.setPitch(voice - 1, iterator_.getPitch(voice - 1) + g);
+        }
+    }
+    if (gt_epsilon(iterator_.getPitch(mostSignificantVoice), (origin.getPitch(mostSignificantVoice) + range))) {
+        return false;
+    }
+    return true;
+}
 
 inline SILENCE_PUBLIC double OCTAVE() {
     return 12.0;
@@ -4141,8 +4138,25 @@ inline SILENCE_PUBLIC Chord octavewiseRevoicing(const Chord &chord, int revoicin
     return origin;
 }
 
+inline SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b) {
+    Chord voiceleading_ = voiceleading(a, b);
+    if (voiceleading_.count(7) > 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 inline SILENCE_PUBLIC double T(double pitch, double semitones) {
     return pitch + semitones;
+}
+
+inline SILENCE_PUBLIC Chord voiceleading(const Chord &a, const Chord &b) {
+    Chord voiceleading_ = a;
+    for (int voice = 0; voice < a.voices(); ++voice) {
+        voiceleading_.setPitch(voice, b.getPitch(voice) - a.getPitch(voice));
+    }
+    return voiceleading_;
 }
 
 
