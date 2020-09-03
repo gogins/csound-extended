@@ -259,11 +259,17 @@ Q(c, n, m)      Contexual transposition;
 
 static int DEBUGGING = false;
 
+/////////////////////////////////////////////////////////////////////////////////////////
 // ALL DECLARATIONS BELOW HERE MORE OR LESS IN ALPHABETICAL ORDER -- NO DEFINITIONS HERE.
+/////////////////////////////////////////////////////////////////////////////////////////
 
 // But a few forward declarations come first.
 
 class SILENCE_PUBLIC Chord;
+
+class SILENCE_PUBLIC ChordScore;
+
+class SILENCE_PUBLIC ChordSpaceGroup;
 
 class SILENCE_PUBLIC Scale;
 
@@ -775,6 +781,39 @@ public:
 SILENCE_PUBLIC const Chord &chordForName(std::string name);
 
 /**
+ * Score equipped with chords. The notes in the score may be conformed to the
+ * chord that obtains at the time of the notes. The times and durations of
+ * notes and chords are rescaled together. This is done by finding minimum and
+ * maximum times by counting both note times and chord times.
+ */
+class SILENCE_PUBLIC ChordScore : public Score {
+public:
+    std::map<double, Chord> chords_for_times;
+    /**
+     * Conforms the pitch-classes of the events in this to the closest
+     * pitch-class of the chord, if any, that obtains at that time.
+     */
+    virtual void conformToChords(bool tie_overlaps = true, bool octave_equivalence = true);
+    /**
+     * Returns a pointer to the first chord that starts at or after the
+     * specified time. If there is no such chord, a null pointer is returned.
+     */
+    virtual Chord *getChord(double time_);
+    double getDuration();
+    void getScale(std::vector<Event> &score, int dimension, size_t beginAt, size_t endAt, double &minimum, double &range);
+    virtual void insertChord(double tyme, const Chord chord);
+    void setDuration(double targetDuration);
+    void setScale(std::vector<Event> &score,
+                  int dimension,
+                  bool rescaleMinimum,
+                  bool rescaleRange,
+                  size_t beginAt,
+                  size_t endAt,
+                  double targetMinimum,
+                  double targetRange);
+};
+
+/**
  * Orthogonal additive groups for unordered chords of given arity under range
  * equivalence (RP): prime form or P, inversion or I, transposition or T, and
  * voicing or V. P x I x T = OP, P x I x T x V = RP. Therefore, an
@@ -947,6 +986,27 @@ SILENCE_PUBLIC Chord gather(Score &score, double startTime, double endTime);
 
 SILENCE_PUBLIC bool ge_epsilon(double a, double b);
 
+struct HyperplaneEquation {
+    Eigen::MatrixXd unit_normal_vector;
+    double constant_term;
+};
+
+/**
+ * Returns the hyperplane equation derived from the inversion flat of chord 
+ * space for the indicated number of voices. Currently, these equations are 
+ * defined for from 3 through 7 voices.
+ */
+SILENCE_PUBLIC HyperplaneEquation &get_hyperplane_equation(int voices);
+
+/**
+ * Given a set of points sufficient to define a hyperplane, computes the 
+ * scalar equation of the hyperplane. The algorithm derives vectors from the 
+ * points and solves for the scalar equation using the singular value 
+ * decomposition. The equation is returned in the form of a unit normal vector 
+ * of the hyperplane and a constant factor.
+ */
+SILENCE_PUBLIC hyperplane_equation(const std::vector<Chord &points_in_hyperplane, bool make_eT = true);
+
 SILENCE_PUBLIC bool gt_epsilon(double a, double b);
 
 /**
@@ -1075,6 +1135,8 @@ SILENCE_PUBLIC int octavewiseRevoicings(const Chord &chord, double range = OCTAV
  * between chords a and b contains a parallel fifth.
  */
 SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b);
+
+SILENCE_PUBLIC Eigen::VectorXd reflect(const Eigen::VectorXd &point, const Eigen::VectorXd &unit_normal_vector, double constant_term);
 
 SILENCE_PUBLIC double pitchClassForName(std::string name);
 
@@ -1301,6 +1363,10 @@ SILENCE_PUBLIC Chord voiceleadingSmoother(const Chord &source, const Chord &d1, 
  * is the simpler (fewest moves), optionally avoiding parallel fifths.
  */
 SILENCE_PUBLIC Chord voiceleadingSimpler(const Chord &source, const Chord &d1, const Chord &d2, bool avoidParallels = false);
+
+//////////////////////////////////////////////////
+// ONLY DEFINITIONS BELOW HERE -- NO DECLARATIONS.
+//////////////////////////////////////////////////
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_r>(const Chord &chord, double range, double g) {
     Chord normal = chord;
@@ -2227,207 +2293,6 @@ inline SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &chord, double
     }
 }
 
-/**
- * Score equipped with chords. The notes in the score may be conformed to the
- * chord that obtains at the time of the notes. The times and durations of
- * notes and chords are rescaled together. This is done by finding minimum and
- * maximum times by counting both note times and chord times.
- */
-class SILENCE_PUBLIC ChordScore : public Score {
-public:
-    std::map<double, Chord> chords_for_times;
-    virtual void insertChord(double tyme, const Chord chord) {
-        chords_for_times[tyme] = chord;
-    }
-    /**
-     * Returns a pointer to the first chord that starts at or after the
-     * specified time. If there is no such chord, a null pointer is returned.
-     */
-    virtual Chord *getChord(double time_) {
-        auto it = chords_for_times.lower_bound(time_);
-        if (it != chords_for_times.end()) {
-            return &it->second;
-        } else {
-            return nullptr;
-        }
-    }
-
-    /**
-     * Conforms the pitch-classes of the events in this to the closest
-     * pitch-class of the chord, if any, that obtains at that time.
-     */
-    virtual void conformToChords(bool tie_overlaps = true, bool octave_equivalence = true) {
-        sort();
-        if (chords_for_times.begin() != chords_for_times.end()) {
-            for (auto event_iterator = begin(); event_iterator != end(); ++event_iterator) {
-                auto chord_iterator = chords_for_times.lower_bound(event_iterator->getTime());
-                if (chord_iterator != chords_for_times.end()) {
-                    conformToChord(*event_iterator, chord_iterator->second, octave_equivalence);
-                }
-            }
-        }
-        if (tie_overlaps == true) {
-            tieOverlappingNotes(true);
-        }
-    }
-
-    void getScale(std::vector<Event> &score, int dimension, size_t beginAt, size_t endAt, double &minimum, double &range)
-    {
-        if(beginAt == endAt) {
-            return;
-        }
-        const Event &beginEvent = score[beginAt];
-        double maximum = beginEvent[dimension];
-        const Event &endEvent = score[endAt - 1];
-        minimum = endEvent[dimension];
-        if(dimension == Event::TIME) {
-            const Event &e = score[beginAt];
-            maximum = std::max(e.getTime(), e.getTime() + e.getDuration());
-            minimum = std::min(e.getTime(), e.getTime() + e.getDuration());
-            double beginning;
-            double ending;
-            for( ; beginAt != endAt; ++beginAt) {
-                const Event &event = score[beginAt];
-                beginning = std::min(event.getTime(), event.getTime() + event.getDuration());
-                ending = std::max(event.getTime(), event.getTime() + event.getDuration());
-                if(ending > maximum) {
-                    maximum = ending;
-                } else if(beginning < minimum) {
-                    minimum = beginning;
-                }
-            }
-            // Also take into account chord times.
-            auto chord_begin = chords_for_times.begin();
-            auto chord_rbegin = chords_for_times.rbegin();
-            if (chord_begin != chords_for_times.end() && chord_rbegin != chords_for_times.rend()) {
-                minimum = std::min(minimum, chord_begin->first);
-                maximum = std::max(maximum, chord_rbegin->first);
-            }
-        } else {
-            for( ; beginAt != endAt; ++beginAt) {
-                const Event &event = score[beginAt];
-                if(event[dimension] > maximum) {
-                    maximum = event[dimension];
-                }
-                if(event[dimension] < minimum) {
-                    minimum = event[dimension];
-                }
-            }
-        }
-        range = maximum - minimum;
-    }
-
-    void setScale(std::vector<Event> &score,
-                  int dimension,
-                  bool rescaleMinimum,
-                  bool rescaleRange,
-                  size_t beginAt,
-                  size_t endAt,
-                  double targetMinimum,
-                  double targetRange)
-    {
-        if(!(rescaleMinimum || rescaleRange)) {
-            return;
-        }
-        if(beginAt == endAt) {
-            return;
-        }
-        double actualMinimum;
-        double actualRange;
-        getScale(score, dimension, beginAt, endAt, actualMinimum, actualRange);
-        double scale;
-        if(actualRange == 0.0) {
-            scale = 1.0;
-        } else {
-            scale = targetRange / actualRange;
-        }
-        for( ; beginAt != endAt; ++beginAt) {
-            Event &event = score[beginAt];
-            event[dimension] = event[dimension] - actualMinimum;
-            if(rescaleRange) {
-                event[dimension] = event[dimension] * scale;
-            }
-            if(rescaleMinimum) {
-                event[dimension] = event[dimension] + targetMinimum;
-            } else {
-                event[dimension] = event[dimension] + actualMinimum;
-            }
-        }
-        // Also rescale chord times.
-        if (dimension == Event::TIME) {
-            std::map<double, Chord> temp;
-            for (auto it = chords_for_times.begin(); it != chords_for_times.end(); ++it) {
-                double tyme = it->first;
-                const Chord &chord = it->second;
-                tyme = tyme - actualMinimum;
-                if (rescaleRange) {
-                    tyme = tyme * scale;
-                }
-                if (rescaleMinimum) {
-                    tyme = tyme + targetMinimum;
-                } else {
-                    tyme = tyme + actualMinimum;
-                }
-                temp[tyme] = chord;
-            }
-            chords_for_times = temp;
-        }
-    }
-
-    double getDuration()
-    {
-        double start = 0.0;
-        double end = 0.0;
-        for (int i = 0, n = size(); i < n; ++i) {
-            const Event &event = at(i);
-            if (i == 0) {
-                start = event.getTime();
-                end = event.getOffTime();
-            } else {
-                if (event.getTime() < start) {
-                    start = event.getTime();
-                }
-                if (event.getOffTime() > end) {
-                    end = event.getOffTime();
-                }
-            }
-        }
-        auto chord_begin = chords_for_times.begin();
-        auto chord_rbegin = chords_for_times.rbegin();
-        if (chord_begin != chords_for_times.end() && chord_rbegin != chords_for_times.rend()) {
-            start = std::min(start, chord_begin->first);
-            end = std::max(end, chord_rbegin->first);
-        }
-        return end - start;
-    }
-
-    void setDuration(double targetDuration)
-    {
-        double currentDuration = getDuration();
-        if (currentDuration == 0.0) {
-            return;
-        }
-        double factor = targetDuration / currentDuration;
-        for (size_t i = 0, n = size(); i < n; i++) {
-            Event &event = (*this)[i];
-            double time_ = event.getTime();
-            double duration = event.getDuration();
-            event.setTime(time_ * factor);
-            event.setDuration(duration * factor);
-        }
-        std::map<double, Chord> temp;
-        for (auto it = chords_for_times.begin(); it != chords_for_times.end(); ++it) {
-            double tyme = it->first;
-            const Chord &chord = it->second;
-            tyme = tyme * factor;
-            temp[tyme] = chord;
-        }
-        chords_for_times = temp;
-    }
-};
-
-// ONLY DEFINITIONS BELOW HERE -- NO DECLARATIONS.
-
 inline SILENCE_PUBLIC bool operator == (const Chord &a, const Chord &b) {
     if (&a == &b) {
         return true;
@@ -3250,6 +3115,194 @@ inline SILENCE_PUBLIC double closestPitch(double pitch, const Chord &chord) {
     return pitchesForDistances.begin()->second;
 }
 
+inline SILENCE_PUBLIC void ChordScore::insertChord(double tyme, const Chord chord) {
+    chords_for_times[tyme] = chord;
+}
+/**
+ * Returns a pointer to the first chord that starts at or after the
+ * specified time. If there is no such chord, a null pointer is returned.
+ */
+inline SILENCE_PUBLIC Chord *ChordScore::getChord(double time_) {
+    auto it = chords_for_times.lower_bound(time_);
+    if (it != chords_for_times.end()) {
+        return &it->second;
+    } else {
+        return nullptr;
+    }
+}
+
+/**
+ * Conforms the pitch-classes of the events in this to the closest
+ * pitch-class of the chord, if any, that obtains at that time.
+ */
+inline SILENCE_PUBLIC void ChordScore::conformToChords(bool tie_overlaps, bool octave_equivalence) {
+    sort();
+    if (chords_for_times.begin() != chords_for_times.end()) {
+        for (auto event_iterator = begin(); event_iterator != end(); ++event_iterator) {
+            auto chord_iterator = chords_for_times.lower_bound(event_iterator->getTime());
+            if (chord_iterator != chords_for_times.end()) {
+                conformToChord(*event_iterator, chord_iterator->second, octave_equivalence);
+            }
+        }
+    }
+    if (tie_overlaps == true) {
+        tieOverlappingNotes(true);
+    }
+}
+
+inline SILENCE_PUBLIC void ChordScore::getScale(std::vector<Event> &score, int dimension, size_t beginAt, size_t endAt, double &minimum, double &range)
+{
+    if(beginAt == endAt) {
+        return;
+    }
+    const Event &beginEvent = score[beginAt];
+    double maximum = beginEvent[dimension];
+    const Event &endEvent = score[endAt - 1];
+    minimum = endEvent[dimension];
+    if(dimension == Event::TIME) {
+        const Event &e = score[beginAt];
+        maximum = std::max(e.getTime(), e.getTime() + e.getDuration());
+        minimum = std::min(e.getTime(), e.getTime() + e.getDuration());
+        double beginning;
+        double ending;
+        for( ; beginAt != endAt; ++beginAt) {
+            const Event &event = score[beginAt];
+            beginning = std::min(event.getTime(), event.getTime() + event.getDuration());
+            ending = std::max(event.getTime(), event.getTime() + event.getDuration());
+            if(ending > maximum) {
+                maximum = ending;
+            } else if(beginning < minimum) {
+                minimum = beginning;
+            }
+        }
+        // Also take into account chord times.
+        auto chord_begin = chords_for_times.begin();
+        auto chord_rbegin = chords_for_times.rbegin();
+        if (chord_begin != chords_for_times.end() && chord_rbegin != chords_for_times.rend()) {
+            minimum = std::min(minimum, chord_begin->first);
+            maximum = std::max(maximum, chord_rbegin->first);
+        }
+    } else {
+        for( ; beginAt != endAt; ++beginAt) {
+            const Event &event = score[beginAt];
+            if(event[dimension] > maximum) {
+                maximum = event[dimension];
+            }
+            if(event[dimension] < minimum) {
+                minimum = event[dimension];
+            }
+        }
+    }
+    range = maximum - minimum;
+}
+
+inline SILENCE_PUBLIC void ChordScore::setScale(std::vector<Event> &score,
+              int dimension,
+              bool rescaleMinimum,
+              bool rescaleRange,
+              size_t beginAt,
+              size_t endAt,
+              double targetMinimum,
+              double targetRange)
+{
+    if(!(rescaleMinimum || rescaleRange)) {
+        return;
+    }
+    if(beginAt == endAt) {
+        return;
+    }
+    double actualMinimum;
+    double actualRange;
+    getScale(score, dimension, beginAt, endAt, actualMinimum, actualRange);
+    double scale;
+    if(actualRange == 0.0) {
+        scale = 1.0;
+    } else {
+        scale = targetRange / actualRange;
+    }
+    for( ; beginAt != endAt; ++beginAt) {
+        Event &event = score[beginAt];
+        event[dimension] = event[dimension] - actualMinimum;
+        if(rescaleRange) {
+            event[dimension] = event[dimension] * scale;
+        }
+        if(rescaleMinimum) {
+            event[dimension] = event[dimension] + targetMinimum;
+        } else {
+            event[dimension] = event[dimension] + actualMinimum;
+        }
+    }
+    // Also rescale chord times.
+    if (dimension == Event::TIME) {
+        std::map<double, Chord> temp;
+        for (auto it = chords_for_times.begin(); it != chords_for_times.end(); ++it) {
+            double tyme = it->first;
+            const Chord &chord = it->second;
+            tyme = tyme - actualMinimum;
+            if (rescaleRange) {
+                tyme = tyme * scale;
+            }
+            if (rescaleMinimum) {
+                tyme = tyme + targetMinimum;
+            } else {
+                tyme = tyme + actualMinimum;
+            }
+            temp[tyme] = chord;
+        }
+        chords_for_times = temp;
+    }
+}
+
+inline SILENCE_PUBLIC double ChordScore::getDuration()
+{
+    double start = 0.0;
+    double end = 0.0;
+    for (int i = 0, n = size(); i < n; ++i) {
+        const Event &event = at(i);
+        if (i == 0) {
+            start = event.getTime();
+            end = event.getOffTime();
+        } else {
+            if (event.getTime() < start) {
+                start = event.getTime();
+            }
+            if (event.getOffTime() > end) {
+                end = event.getOffTime();
+            }
+        }
+    }
+    auto chord_begin = chords_for_times.begin();
+    auto chord_rbegin = chords_for_times.rbegin();
+    if (chord_begin != chords_for_times.end() && chord_rbegin != chords_for_times.rend()) {
+        start = std::min(start, chord_begin->first);
+        end = std::max(end, chord_rbegin->first);
+    }
+    return end - start;
+}
+
+inline SILENCE_PUBLIC void ChordScore::setDuration(double targetDuration)
+{
+    double currentDuration = getDuration();
+    if (currentDuration == 0.0) {
+        return;
+    }
+    double factor = targetDuration / currentDuration;
+    for (size_t i = 0, n = size(); i < n; i++) {
+        Event &event = (*this)[i];
+        double time_ = event.getTime();
+        double duration = event.getDuration();
+        event.setTime(time_ * factor);
+        event.setDuration(duration * factor);
+    }
+    std::map<double, Chord> temp;
+    for (auto it = chords_for_times.begin(); it != chords_for_times.end(); ++it) {
+        double tyme = it->first;
+        const Chord &chord = it->second;
+        tyme = tyme * factor;
+        temp[tyme] = chord;
+    }
+    chords_for_times = temp;
+}
 
 inline SILENCE_PUBLIC ChordSpaceGroup::~ChordSpaceGroup() {};
 
@@ -3707,6 +3760,62 @@ inline SILENCE_PUBLIC double I(double pitch, double center) {
     return center - pitch;
 }
 
+/*
+def hyperplane_equation_by_svd_from_vectors(points, t_equivalence = 'True'):
+    global debug_
+    debug_ = False
+    t_ = []
+    if t_equivalence == True:
+        debug("original points:", points)
+        for point in points:
+            t_.append( eT(point))
+        points = t_
+    debug("points:", points)
+    vectors = []
+    subtrahend = points[-1]
+    debug("subtrahend:", subtrahend)
+    for i in range(len(points) - 1):
+        vector = scipy.subtract(points[i], subtrahend)
+        debug("vector[", i, "]:", vector)
+        vectors.append(vector)
+    left_singular_vectors, singular_values, right_singular_vectors = scipy.linalg.svd(vectors)    
+    debug("left singular vectors:", left_singular_vectors)
+    debug("singular values:", singular_values)
+    debug("right singular vectors:", right_singular_vectors)
+    minimum_singular_value = min(singular_values)
+    index_ = list(singular_values).index(minimum_singular_value)
+    # There aren't enough singular values, so I am assuming the last singular 
+    # vector is the one required.
+    normal_vector = right_singular_vectors[-1]
+    debug("normal_vector:", normal_vector)
+    norm = scipy.linalg.norm(normal_vector)
+    debug("norm:", norm)
+    unit_normal_vector = scipy.divide(normal_vector, norm)
+    print("Least singular value:", singular_values[-1], minimum_singular_value)
+    print("unit_normal_vector:", scipy.ndarray.flatten(unit_normal_vector))
+    constant_term = scipy.dot(scipy.transpose(unit_normal_vector), subtrahend)
+    print("constant_term:", constant_term)
+    debug_ = False
+    return unit_normal_vector, constant_term
+    */
+inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation(const std::vector<Chord> &points_, bool make_eT) {
+    std::vector<Chord> &points;
+    if (make_eT == true) {
+        for (auto point : points_) {
+            points.append(point.eT();
+        }
+    } else {
+        points = points_;
+    }
+    Eigen::MatrixXd matrix;
+    auto subtrahend = points.back();
+    for (int i = 0, n = points.size() - 1; i < n; ++i) {
+        auto vector = points[i] - subtrahend;
+        matrix.
+    }
+    
+}
+
 inline SILENCE_PUBLIC void insert(Score &score,
                                   const Chord &chord,
                                   double time_) {
@@ -3891,6 +4000,36 @@ inline SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b) {
     } else {
         return false;
     }
+}
+
+/*
+# Ref(v,c) = v - 2 {[(v . u) - c] / (u . u)} u.
+def reflect(v, u, c):
+    print("Reflect by vector math:", v, " in ", u, c)
+    v_dot_u = scipy.dot(v, u)
+    debug("v_dot_u:", v_dot_u)
+    v_dot_u_minus_c = scipy.subtract(v_dot_u, c)
+    debug("v_dot_u_minus_c:", v_dot_u_minus_c)
+    u_dot_u = scipy.dot(u, u)
+    debug("u_dot_u:", u_dot_u)
+    quotient = scipy.divide(v_dot_u_minus_c, u_dot_u)
+    debug("quotient:", quotient)
+    subtrahend = scipy.multiply((2 * quotient), u)
+    debug("subtrahend:", subtrahend)
+    reflection = scipy.subtract(v, subtrahend)
+    print("reflection:", reflection)
+    return reflection
+
+*/
+
+inline SILENCE_PUBLIC Eigen::VectorXd reflect(const Eigen::VectorXd &v, const Eigen::VectorXd &u, double c) {
+    auto v_dot_u = v.dot(u);
+    auto v_dot_u_minus_c = v_dot_u - c;
+    auto u_dot_u = u.dot(u);
+    auto quotient = v_dot_u_minus_c / u_dot_u;
+    auto subtrahend = u * (2. * quotient);
+    auto reflection = v - subtrahend;
+    return reflection;
 }
 
 inline SILENCE_PUBLIC Chord scale(std::string name) {
@@ -4265,6 +4404,14 @@ inline SILENCE_PUBLIC double voiceleadingSmoothness(const Chord &a, const Chord 
         L1 = L1 + std::abs(b.getPitch(voice) - a.getPitch(voice));
     }
     return L1;
+}
+
+inline SILENCE_PUBLIC HyperplaneEquation &get_hyperplane_equation(int voices) {
+    static std::map<int, HyperplaneEquation> hyperplane_equations;
+    static bool initialized = false;
+    if (initialized == false) {
+    }
+    return hyperplane_equations[voices];    
 }
 
 
