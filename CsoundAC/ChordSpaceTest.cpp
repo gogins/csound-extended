@@ -49,6 +49,22 @@ static void printSet(std::string name, const std::set<csound::Chord> &chords) {
     }
 }
 
+static void testHyperplaneEquation() {
+    std::vector<csound::Chord> points;
+    points.push_back(csound::Chord(std::vector<double>({ 4,  0, -1,  0})));
+    points.push_back(csound::Chord(std::vector<double>({ 1,  2,  3, -1})));
+    points.push_back(csound::Chord(std::vector<double>({ 0, -1,  2,  0})));
+    points.push_back(csound::Chord(std::vector<double>({-1,  1, -1,  1})));
+    std::vector<double> expected ({13, 8, 20, 57});
+    /*
+    Least singular value: 2.2652380059769706 2.2652380059769706
+    unit_normal_vector: [0.20864865 0.12839917 0.32099793 0.9148441 ]
+    constant_term: 0.5135966860280752
+    */
+    auto hyperplane_equation_ = hyperplane_equation(points, false);
+
+}
+
 static void testChordSpaceGroup(const csound::ChordSpaceGroup &chordSpaceGroup, std::string chordName) {
     std::fprintf(stderr, "BEGAN test ChordSpaceGroup for %s...\n", chordName.c_str());
     csound::Chord originalChord = csound::chordForName(chordName);
@@ -352,6 +368,7 @@ void testRPIStuff(const csound::Chord &chord)
 
 int main(int argc, char **argv) {
     std::fprintf(stderr, "C H O R D S P A C E   U N I T   T E S T S\n\n");
+    testHyperplaneEquation();
 #if defined(USE_OLD_EQUIVALENCES)
     std::fprintf(stderr, "Using OLD implementation of equivalence relations.\n\n");
 #else

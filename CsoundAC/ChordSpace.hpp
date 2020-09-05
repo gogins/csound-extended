@@ -1005,7 +1005,7 @@ SILENCE_PUBLIC HyperplaneEquation &get_hyperplane_equation(int voices);
  * decomposition. The equation is returned in the form of a unit normal vector 
  * of the hyperplane and a constant factor.
  */
-SILENCE_PUBLIC hyperplane_equation(const std::vector<Chord &points_in_hyperplane, bool make_eT = true);
+SILENCE_PUBLIC HyperplaneEquation hyperplane_equation(const std::vector<Chord> &points_in_hyperplane, bool make_eT = true);
 
 SILENCE_PUBLIC bool gt_epsilon(double a, double b);
 
@@ -3748,6 +3748,14 @@ inline SILENCE_PUBLIC bool ge_epsilon(double a, double b) {
     }
 }
 
+inline SILENCE_PUBLIC HyperplaneEquation &get_hyperplane_equation(int voices) {
+    static std::map<int, HyperplaneEquation> hyperplane_equations;
+    static bool initialized = false;
+    if (initialized == false) {
+    }
+    return hyperplane_equations[voices];    
+}
+
 inline SILENCE_PUBLIC bool gt_epsilon(double a, double b) {
     if (eq_epsilon(a, b)) {
         return false;
@@ -3760,60 +3768,38 @@ inline SILENCE_PUBLIC double I(double pitch, double center) {
     return center - pitch;
 }
 
-/*
-def hyperplane_equation_by_svd_from_vectors(points, t_equivalence = 'True'):
-    global debug_
-    debug_ = False
-    t_ = []
-    if t_equivalence == True:
-        debug("original points:", points)
-        for point in points:
-            t_.append( eT(point))
-        points = t_
-    debug("points:", points)
-    vectors = []
-    subtrahend = points[-1]
-    debug("subtrahend:", subtrahend)
-    for i in range(len(points) - 1):
-        vector = scipy.subtract(points[i], subtrahend)
-        debug("vector[", i, "]:", vector)
-        vectors.append(vector)
-    left_singular_vectors, singular_values, right_singular_vectors = scipy.linalg.svd(vectors)    
-    debug("left singular vectors:", left_singular_vectors)
-    debug("singular values:", singular_values)
-    debug("right singular vectors:", right_singular_vectors)
-    minimum_singular_value = min(singular_values)
-    index_ = list(singular_values).index(minimum_singular_value)
-    # There aren't enough singular values, so I am assuming the last singular 
-    # vector is the one required.
-    normal_vector = right_singular_vectors[-1]
-    debug("normal_vector:", normal_vector)
-    norm = scipy.linalg.norm(normal_vector)
-    debug("norm:", norm)
-    unit_normal_vector = scipy.divide(normal_vector, norm)
-    print("Least singular value:", singular_values[-1], minimum_singular_value)
-    print("unit_normal_vector:", scipy.ndarray.flatten(unit_normal_vector))
-    constant_term = scipy.dot(scipy.transpose(unit_normal_vector), subtrahend)
-    print("constant_term:", constant_term)
-    debug_ = False
-    return unit_normal_vector, constant_term
-    */
 inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation(const std::vector<Chord> &points_, bool make_eT) {
-    std::vector<Chord> &points;
+    std::vector<Chord> points;
     if (make_eT == true) {
         for (auto point : points_) {
-            points.append(point.eT();
+            points.push_back(point.eT());
         }
     } else {
         points = points_;
     }
-    Eigen::MatrixXd matrix;
-    auto subtrahend = points.back();
-    for (int i = 0, n = points.size() - 1; i < n; ++i) {
-        auto vector = points[i] - subtrahend;
-        matrix.
+    std::cout << "hyperplane_equation: data:" << std::endl;
+    for (auto point: points_) {
+        std::cout << "point: " << point.col(0).transpose() << std::endl;
     }
-    
+    auto subtrahend = points.back().col(0);
+    Eigen::MatrixXd matrix(subtrahend.rows(), points.size() - 1);
+    for (int i = 0, n = points.size() - 1; i < n; ++i) {
+        Eigen::VectorXd difference = points[i].col(0) - subtrahend;
+        matrix.col(i) = difference;
+    }
+    std::cout << "hyperplane_equation: vectors:" << std::endl << matrix.transpose() << std::endl;
+    Eigen::JacobiSVD<Eigen::MatrixXd> svd(matrix, Eigen::ComputeFullU | Eigen::ComputeFullV);
+    std::cout << "hyperplane_equation: U:" << std::endl << svd.matrixU() << std::endl;
+    std::cout << "hyperplane_equation: singular values:" << std::endl << svd.singularValues() << std::endl;
+    std::cout << "hyperplane_equation: V:" << std::endl << svd.matrixV() << std::endl;
+    HyperplaneEquation hyperplane_equation_;
+    hyperplane_equation_.unit_normal_vector = svd.matrixU().rightCols(1);
+    hyperplane_equation_.unit_normal_vector = hyperplane_equation_.unit_normal_vector / hyperplane_equation_.unit_normal_vector.norm();
+    auto constant_term = hyperplane_equation_.unit_normal_vector.adjoint() * subtrahend;
+    hyperplane_equation_.constant_term = constant_term(0, 0);
+    std::cout << "hyperplane_equation: unit normal vector: " << std::endl << hyperplane_equation_.unit_normal_vector << std::endl;
+    std::cout << "hyperplane_equation: constant term: " << std::endl << hyperplane_equation_.constant_term << std::endl;
+    return hyperplane_equation_;
 }
 
 inline SILENCE_PUBLIC void insert(Score &score,
@@ -4405,16 +4391,6 @@ inline SILENCE_PUBLIC double voiceleadingSmoothness(const Chord &a, const Chord 
     }
     return L1;
 }
-
-inline SILENCE_PUBLIC HyperplaneEquation &get_hyperplane_equation(int voices) {
-    static std::map<int, HyperplaneEquation> hyperplane_equations;
-    static bool initialized = false;
-    if (initialized == false) {
-    }
-    return hyperplane_equations[voices];    
-}
-
-
 
 
 } // End of namespace csound.
