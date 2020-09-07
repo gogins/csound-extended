@@ -56,6 +56,9 @@ def eT(chord):
         eT_.append(chord[i] - transposition)
     return eT_
     
+def eOPT(chord):
+    pass
+    
 def ceiling(chord):
     ceiling_ = copy.deepcopy(chord)
     for i in range(len(chord)):
@@ -141,11 +144,11 @@ def hyperplane_equation_by_nullspace_from_vectors(points, t_equivalence = 'True'
 def hyperplane_equation_by_nullspace_from_points(points, t_equivalence = 'True'):
     t_ = []
     if t_equivalence == True:
-        debug("original points:", points)
+        debug("original points:\n", points)
         for point in points:
             t_.append( eT(point))
         points = t_
-    debug("points:", points)
+    debug("points:\n", points)
     try:
         debug("determinant of points:", scipy.linalg.det(points))
     except:
@@ -169,37 +172,72 @@ def hyperplane_equation_by_nullspace_from_points(points, t_equivalence = 'True')
     
 def hyperplane_equation_by_svd_from_vectors(points, t_equivalence = 'True'):
     global debug_
-    debug_ = False
+    debug_ = True
     t_ = []
     if t_equivalence == True:
-        debug("original points:", points)
+        debug("original points:\n", points)
         for point in points:
             t_.append( eT(point))
         points = t_
-    debug("points:", points)
+    debug("points:\n", points)
     vectors = []
     subtrahend = points[-1]
     debug("subtrahend:", subtrahend)
     for i in range(len(points) - 1):
         vector = scipy.subtract(points[i], subtrahend)
-        debug("vector[", i, "]:", vector)
         vectors.append(vector)
-    left_singular_vectors, singular_values, right_singular_vectors = scipy.linalg.svd(vectors)    
-    debug("left singular vectors:", left_singular_vectors)
+    # debug("vectors:\n", vectors)
+    vectors = scipy.array(vectors)
+    debug("vectors:\n", vectors)
+    U, singular_values, V = scipy.linalg.svd(vectors)    
+    debug("U:\n", U)
     debug("singular values:", singular_values)
-    debug("right singular vectors:", right_singular_vectors)
-    minimum_singular_value = min(singular_values)
-    index_ = list(singular_values).index(minimum_singular_value)
-    # There aren't enough singular values, so I am assuming the last singular 
-    # vector is the one required.
-    normal_vector = right_singular_vectors[-1]
+    debug("V:\n", V)
+    normal_vector = V[-1]
     debug("normal_vector:", normal_vector)
     norm = scipy.linalg.norm(normal_vector)
     debug("norm:", norm)
     unit_normal_vector = scipy.divide(normal_vector, norm)
-    print("Least singular value:", singular_values[-1], minimum_singular_value)
+    print("Unit normal vector:")
+    for e in unit_normal_vector:
+        print(e)
     print("unit_normal_vector:", scipy.ndarray.flatten(unit_normal_vector))
     constant_term = scipy.dot(scipy.transpose(unit_normal_vector), subtrahend)
+    print("constant_term:", constant_term)
+    debug_ = False
+    return unit_normal_vector, constant_term
+    
+def hyperplane_equation_by_svd_from_vectorsx(points, t_equivalence = 'True'):
+    global debug_
+    debug_ = True
+    t_ = []
+    if t_equivalence == True:
+        debug("original points:\n", points)
+        for point in points:
+            t_.append( eT(point))
+        points = t_
+    points = scipy.array(points)
+    debug("points:\n", points)
+    centroid = scipy.average(points, axis=0)
+    debug("centroid:")
+    debug(centroid)
+    vectors = points - centroid;
+    vectors = scipy.array(vectors)
+    debug("vectors:\n", vectors)
+    U, singular_values, V = scipy.linalg.svd(vectors)    
+    debug("U:\n", U)
+    debug("singular values:", singular_values)
+    debug("V:\n", V)
+    normal_vector = V[-1]
+    debug("normal_vector:", normal_vector)
+    norm = scipy.linalg.norm(normal_vector)
+    debug("norm:", norm)
+    unit_normal_vector = scipy.divide(normal_vector, norm)
+    print("Unit normal vector:")
+    for e in unit_normal_vector:
+        print(e)
+    print("unit_normal_vector:", scipy.ndarray.flatten(unit_normal_vector))
+    constant_term = scipy.dot(scipy.transpose(unit_normal_vector), points[-1])
     print("constant_term:", constant_term)
     debug_ = False
     return unit_normal_vector, constant_term
@@ -372,12 +410,95 @@ print("\nFour Voices\n".upper())
 #~ print("type:", type(c))
 #~ #c = 2.
 
+#~ points = []
+#~ points.append([0, 0, 0,  6])
+#~ points.append([0, 0, 6,  6])
+#~ points.append([0, 3, 6,  9])
+#~ points.append([0, 1, 3,  7])
+#~ #points.append([0, 2, 4,  8])
+
+#~ points = []
+#~ points.append([0, 0, 0,  0])
+#~ points.append([0, 0, 0, 12])
+#~ points.append([0, 1, 2,  9])
+#~ points.append([0, 3, 6,  9])
+#~ points.append([0, 0, 0,  7])
+
+#~ # Try them all...
+
+#~ points = []
+#~ points.append([0, 0, 0,  0])
+#~ points.append([0, 0, 0,  1])
+#~ points.append([0, 0, 0,  2])
+#~ points.append([0, 0, 0,  4])
+#~ points.append([0, 0, 0,  5])
+#~ points.append([0, 0, 0,  6])
+#~ points.append([0, 0, 0,  7])
+#~ points.append([0, 0, 0,  9])
+#~ points.append([0, 0, 0, 10])
+#~ points.append([0, 0, 0, 11])
+#~ points.append([0, 0, 0, 12])
+
+#~ points.append([0, 1, 2,  3])
+#~ points.append([0, 1, 2,  4])
+#~ points.append([0, 1, 2,  5])
+#~ points.append([0, 1, 2,  6])
+#~ points.append([0, 1, 2,  7])
+#~ points.append([0, 1, 2,  8])
+#~ points.append([0, 1, 2,  9])
+#~ points.append([0, 1, 2, 10])
+#~ points.append([0, 1, 2, 11])
+
+#~ points.append([0, 2, 4,  6])
+#~ points.append([0, 2, 4,  7])
+#~ points.append([0, 2, 4,  8])
+#~ points.append([0, 2, 4,  9])
+#~ points.append([0, 2, 4, 10])
+
+#~ points.append([0, 3, 6,  9])
+
+# From _Science_ draft Figure 6.4.5 (a):
 points = []
-points.append([0, 0, 0,  0])
-points.append([0, 0, 0, 12])
-points.append([0, 1, 2,  9])
-points.append([0, 3, 6,  9])
-points.append([0, 0, 0,  7])
+
+points.append([0,  0,  6,  6])
+points.append([0,  1,  6,  7])
+points.append([0,  0,  5,  6])
+points.append([0,  2,  6,  8])
+points.append([0,  1,  5,  7])
+points.append([0,  0,  4,  6])
+points.append([0,  3,  6,  9])
+points.append([0,  2,  5,  8])
+points.append([0,  1,  4,  7])
+points.append([0,  0,  3,  6])
+points.append([0,  4,  6, 10])
+points.append([0,  3,  5,  9])
+points.append([0,  2,  4,  8])
+points.append([0,  1,  3,  7])
+points.append([0,  0,  2,  6])
+points.append([0,  5,  6, 11])
+points.append([0,  4,  5, 10])
+points.append([0,  3,  4,  9])
+points.append([0,  2,  3,  8])
+points.append([0,  1,  2,  7])
+points.append([0,  0,  1,  6])
+points.append([0,  6,  6, 12])
+points.append([0,  5,  5, 11])
+points.append([0,  4,  4, 10])
+points.append([0,  3,  3,  9])
+points.append([0,  2,  2,  8])
+points.append([0,  1,  1,  7])
+points.append([0,  0,  0,  6])
+
+# From _Science_ draft Figure 6.4.5 (c):
+#~ points = []
+
+#~ points.append([0,  0,  0,  0])
+#~ points.append([1,  1,  1,  1])
+#~ points.append([2,  2,  2,  2])
+#~ points.append([0,  3,  6,  9])
+#~ points.append([1,  4,  7, 10])
+
+
 
 #~ print("\nInversion flat for 4 voices by cross product...\n".upper())
 #~ u1, c1 = hyperplane_equation_by_cross_product(points, True)
@@ -386,7 +507,9 @@ points.append([0, 0, 0,  7])
 #~ print("\nInversion flat for 4 voices by nullspace from points...\n".upper())
 #~ u3, c3 = hyperplane_equation_by_nullspace_from_points(points, True)
 print("\nInversion flat for 4 voices by singular value decomposition...\n".upper())
+debug_ = True;
 u4, c4 = hyperplane_equation_by_svd_from_vectors(points, True)
+debug_ = False;
 
 u = u4
 c = c4

@@ -35,9 +35,9 @@ static void fail(std::string message) {
 
 static bool test(bool passes, std::string message) {
     if (passes) {
-        pass(message);
+        pass(message + "\n");
     } else {
-        fail(message);
+        fail(message + "\n");
     }
     return passes;
 }
@@ -49,20 +49,116 @@ static void printSet(std::string name, const std::set<csound::Chord> &chords) {
     }
 }
 
-static void testHyperplaneEquation() {
+static bool equals(const csound::HyperplaneEquation &a, const csound::HyperplaneEquation &b) {
+    if (a.unit_normal_vector.rows() == b.unit_normal_vector.rows() == false) {
+        csound::System::error("equals: size mismatch: %d %d\n", a.unit_normal_vector.rows(), b.unit_normal_vector.rows());
+        return false;
+    }
+    for (int row = 0; row < a.unit_normal_vector.rows(); ++row) {
+        if (csound::eq_epsilon(a.unit_normal_vector(row, 0), b.unit_normal_vector(row, 0)) == false) {
+            csound::System::error("equals: unit normal vector element mismatch: %.17g %.17g\n", a.unit_normal_vector(row, 0), b.unit_normal_vector(row, 0));
+            return false;
+        }
+    }
+    if (csound::eq_epsilon(a.constant_term, b.constant_term) == false) {
+        csound::System::error("equals: constant term mismatch: %.17g %,17g\n", a.constant_term, b.constant_term);
+        return false;
+    }
+    return true;
+}
+
+static void Hyperplane_Equation_for_Test_Points() {
     std::vector<csound::Chord> points;
     points.push_back(csound::Chord(std::vector<double>({ 4,  0, -1,  0})));
     points.push_back(csound::Chord(std::vector<double>({ 1,  2,  3, -1})));
     points.push_back(csound::Chord(std::vector<double>({ 0, -1,  2,  0})));
     points.push_back(csound::Chord(std::vector<double>({-1,  1, -1,  1})));
-    std::vector<double> expected ({13, 8, 20, 57});
-    /*
-    Least singular value: 2.2652380059769706 2.2652380059769706
-    unit_normal_vector: [0.20864865 0.12839917 0.32099793 0.9148441 ]
-    constant_term: 0.5135966860280752
-    */
-    auto hyperplane_equation_ = hyperplane_equation(points, false);
+    // From inversion_flats.py for these points by SVD from vectors:
+    csound::HyperplaneEquation expected;
+    expected.unit_normal_vector.resize(4, 1);
+    expected.unit_normal_vector << 0.20864865369890548, 0.12839917150701868, 0.32099792876754685, 0.9148440969875088;
+    expected.constant_term = 0.5135966860280752;
+    csound::HyperplaneEquation actual = hyperplane_equation(points, false);
+    bool passes = equals(expected, actual);
+    test(passes, __func__);    
+}
 
+/*
+
+INVERSION FLAT FOR 4 VOICES BY SINGULAR VALUE DECOMPOSITION...
+
+original points:
+ [[0, 0, 0, 0], [0, 0, 0, 12], [0, 1, 2, 9], [0, 3, 6, 9], [0, 0, 0, 7]]
+points:
+ [[0.0, 0.0, 0.0, 0.0], [-3.0, -3.0, -3.0, 9.0], [-3.0, -2.0, -1.0, 6.0], [-4.5, -1.5, 1.5, 4.5], [-1.75, -1.75, -1.75, 5.25]]
+subtrahend: [-1.75, -1.75, -1.75, 5.25]
+vectors:
+ [[ 1.75  1.75  1.75 -5.25]
+ [-1.25 -1.25 -1.25  3.75]
+ [-1.25 -0.25  0.75  0.75]
+ [-2.75  0.25  3.25 -0.75]]
+U:
+ [[-0.80008406 -0.08951901 -0.55315943 -0.21416464]
+ [ 0.57148861  0.06394215 -0.81639104 -0.05308325]
+ [ 0.1019949   0.32961289  0.15737939 -0.92530217]
+ [-0.1512062   0.93768496 -0.0524598   0.30843406]]
+singular values: [7.56051967e+00 4.45404787e+00 5.81478041e-16 2.30311389e-16]
+V:
+ [[-0.24154219 -0.28805006 -0.33455793  0.86415018]
+ [-0.72456242 -0.01898676  0.6865889   0.05696028]
+ [ 0.42867847  0.62353653  0.42867847  0.49363116]
+ [ 0.48259863 -0.72654584  0.48259863  0.07955047]]
+normal_vector: [ 0.48259863 -0.72654584  0.48259863  0.07955047]
+norm: 1.0000000000000002
+Unit normal vector:
+0.4825986251911143
+-0.7265458392918117
+0.4825986251911144
+0.0795504703634725
+unit_normal_vector: [ 0.48259863 -0.72654584  0.48259863  0.07955047]
+constant_term: 8.326672684688674e-16
+ 
+*/
+
+static csound::HyperplaneEquation Hyperplane_Equation_for_4_Voices() {
+    //From _Science_ draft 6.4.5 (a):
+    std::vector<csound::Chord> points;
+    points.push_back(csound::Chord(std::vector<double>({ 0,  0,  6,  6})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  1,  6,  7})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  0,  5,  6})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  2,  6,  8})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  1,  5,  7})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  0,  4,  6})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  3,  6,  9})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  2,  5,  8})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  1,  4,  7})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  0,  3,  6})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  4,  6, 10})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  3,  5,  9})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  2,  4,  8})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  1,  3,  7})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  0,  2,  6})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  5,  6, 11})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  4,  5, 10})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  3,  4,  9})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  2,  3,  8})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  1,  2,  7})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  0,  1,  6})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  6,  6, 12})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  5,  5, 11})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  4,  4, 10})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  3,  3,  9})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  2,  2,  8})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  1,  1,  7})));
+    points.push_back(csound::Chord(std::vector<double>({ 0,  0,  0,  6})));
+    //~ csound::HyperplaneEquation expected;
+    //~ expected.unit_normal_vector.resize(4, 1);
+    //~ expected.unit_normal_vector << 0.4825986251911143, -0.7265458392918117, 0.4825986251911144, 0.0795504703634725;
+    //~ expected.constant_term = 8.326672684688674e-16;
+    csound::HyperplaneEquation actual = hyperplane_equation(points, true);
+    //~ bool passes = equals(expected, actual);
+    //~ test(passes, __func__);    
+    return actual;
 }
 
 static void testChordSpaceGroup(const csound::ChordSpaceGroup &chordSpaceGroup, std::string chordName) {
@@ -368,7 +464,8 @@ void testRPIStuff(const csound::Chord &chord)
 
 int main(int argc, char **argv) {
     std::fprintf(stderr, "C H O R D S P A C E   U N I T   T E S T S\n\n");
-    testHyperplaneEquation();
+    Hyperplane_Equation_for_Test_Points();
+    Hyperplane_Equation_for_4_Voices();
 #if defined(USE_OLD_EQUIVALENCES)
     std::fprintf(stderr, "Using OLD implementation of equivalence relations.\n\n");
 #else

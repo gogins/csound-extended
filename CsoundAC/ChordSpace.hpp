@@ -3769,6 +3769,10 @@ inline SILENCE_PUBLIC double I(double pitch, double center) {
 }
 
 inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation(const std::vector<Chord> &points_, bool make_eT) {
+    std::cout << "hyperplane_equation: original points:" << std::endl;
+    for (auto point: points_) {
+        std::cout << "point: " << point.col(0).transpose() << std::endl;
+    }
     std::vector<Chord> points;
     if (make_eT == true) {
         for (auto point : points_) {
@@ -3777,8 +3781,8 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation(const std::vector<C
     } else {
         points = points_;
     }
-    std::cout << "hyperplane_equation: data:" << std::endl;
-    for (auto point: points_) {
+    std::cout << "hyperplane_equation: eT points:" << std::endl;
+    for (auto point: points) {
         std::cout << "point: " << point.col(0).transpose() << std::endl;
     }
     auto subtrahend = points.back().col(0);
@@ -3787,14 +3791,22 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation(const std::vector<C
         Eigen::VectorXd difference = points[i].col(0) - subtrahend;
         matrix.col(i) = difference;
     }
-    std::cout << "hyperplane_equation: vectors:" << std::endl << matrix.transpose() << std::endl;
-    Eigen::JacobiSVD<Eigen::MatrixXd> svd(matrix, Eigen::ComputeFullU | Eigen::ComputeFullV);
+    std::cout << "hyperplane_equation: vectors:" << std::endl << matrix << std::endl;
+    matrix.transposeInPlace();
+    std::cout << "hyperplane_equation: vectors transposed:" << std::endl << matrix << std::endl;
+    Eigen::JacobiSVD<Eigen::MatrixXd, Eigen::FullPivHouseholderQRPreconditioner> svd(matrix, Eigen::ComputeFullU | Eigen::ComputeFullV);
     std::cout << "hyperplane_equation: U:" << std::endl << svd.matrixU() << std::endl;
     std::cout << "hyperplane_equation: singular values:" << std::endl << svd.singularValues() << std::endl;
     std::cout << "hyperplane_equation: V:" << std::endl << svd.matrixV() << std::endl;
+    //~ auto rhs = Eigen::MatrixXd::Zero(svd.singularValues().rows(), 1);
+    //~ auto solution = svd.solve(rhs);
+    //~ std::cout << "solution:\n";
+    //~ std::cout << solution << std::endl;
     HyperplaneEquation hyperplane_equation_;
-    hyperplane_equation_.unit_normal_vector = svd.matrixU().rightCols(1);
-    hyperplane_equation_.unit_normal_vector = hyperplane_equation_.unit_normal_vector / hyperplane_equation_.unit_normal_vector.norm();
+    hyperplane_equation_.unit_normal_vector = svd.matrixV().rightCols(1);
+    auto norm = hyperplane_equation_.unit_normal_vector.norm();
+    std::cout << "hyperplane_equation: norm:" << std::endl << norm << std::endl;
+    hyperplane_equation_.unit_normal_vector = hyperplane_equation_.unit_normal_vector / norm;
     auto constant_term = hyperplane_equation_.unit_normal_vector.adjoint() * subtrahend;
     hyperplane_equation_.constant_term = constant_term(0, 0);
     std::cout << "hyperplane_equation: unit normal vector: " << std::endl << hyperplane_equation_.unit_normal_vector << std::endl;
