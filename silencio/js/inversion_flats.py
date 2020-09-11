@@ -69,8 +69,7 @@ def eTT(chord):
     et_ = eT(chord);
     et_ceiling = ceiling(et_)
     while sum(et_ceiling) < 0:
-        et_ceiling = scipy.add(1, et_ceiling)
-    return et_ceiling;
+     return et_ceiling;
     
 def generalized_cross_product(vectors):
     dim = len(vectors[0])
@@ -107,7 +106,9 @@ def hyperplane_equation_by_cross_product(points, t_equivalence = 'True'):
     norm = scipy.linalg.norm(product)
     debug("norm:", norm)
     unit_normal_vector = scipy.divide(product, norm)
-    print("unit_normal_vector:", unit_normal_vector)
+    print("unit_normal_vector:")
+    for e in unit_normal_vector:
+        print(e)
     constant_term = scipy.dot(scipy.transpose(unit_normal_vector), subtrahend)
     print("constant_term:", constant_term)
     return unit_normal_vector, constant_term
@@ -136,7 +137,9 @@ def hyperplane_equation_by_nullspace_from_vectors(points, t_equivalence = 'True'
     norm = scipy.linalg.norm(nullspace)
     debug("norm:", norm)
     unit_normal_vector = scipy.divide(nullspace, norm)
-    print("unit_normal_vector:", scipy.ndarray.flatten(unit_normal_vector))
+    print("unit_normal_vector:")
+    for e in unit_normal_vector:
+        print(e)
     constant_term = scipy.dot(scipy.transpose(unit_normal_vector), subtrahend)
     print("constant_term:", constant_term)
     return unit_normal_vector, constant_term
@@ -171,13 +174,11 @@ def hyperplane_equation_by_nullspace_from_points(points, t_equivalence = 'True')
     return unit_normal, constant_term
     
 def hyperplane_equation_by_svd_from_vectors(points, t_equivalence = 'True'):
-    global debug_
-    debug_ = True
     t_ = []
     if t_equivalence == True:
         debug("original points:\n", points)
         for point in points:
-            t_.append( eT(point))
+            t_.append(eT(point))
         points = t_
     debug("points:\n", points)
     vectors = []
@@ -191,57 +192,21 @@ def hyperplane_equation_by_svd_from_vectors(points, t_equivalence = 'True'):
     debug("vectors:\n", vectors)
     U, singular_values, V = scipy.linalg.svd(vectors)    
     debug("U:\n", U)
-    debug("singular values:", singular_values)
+    print("singular values:", singular_values)
     debug("V:\n", V)
     normal_vector = V[-1]
     debug("normal_vector:", normal_vector)
     norm = scipy.linalg.norm(normal_vector)
     debug("norm:", norm)
     unit_normal_vector = scipy.divide(normal_vector, norm)
-    print("Unit normal vector:")
+    print("unit_normal_vector:")
     for e in unit_normal_vector:
         print(e)
-    print("unit_normal_vector:", scipy.ndarray.flatten(unit_normal_vector))
     constant_term = scipy.dot(scipy.transpose(unit_normal_vector), subtrahend)
     print("constant_term:", constant_term)
-    debug_ = False
+    print()
     return unit_normal_vector, constant_term
     
-def hyperplane_equation_by_svd_from_vectorsx(points, t_equivalence = 'True'):
-    global debug_
-    debug_ = True
-    t_ = []
-    if t_equivalence == True:
-        debug("original points:\n", points)
-        for point in points:
-            t_.append( eT(point))
-        points = t_
-    points = scipy.array(points)
-    debug("points:\n", points)
-    centroid = scipy.average(points, axis=0)
-    debug("centroid:")
-    debug(centroid)
-    vectors = points - centroid;
-    vectors = scipy.array(vectors)
-    debug("vectors:\n", vectors)
-    U, singular_values, V = scipy.linalg.svd(vectors)    
-    debug("U:\n", U)
-    debug("singular values:", singular_values)
-    debug("V:\n", V)
-    normal_vector = V[-1]
-    debug("normal_vector:", normal_vector)
-    norm = scipy.linalg.norm(normal_vector)
-    debug("norm:", norm)
-    unit_normal_vector = scipy.divide(normal_vector, norm)
-    print("Unit normal vector:")
-    for e in unit_normal_vector:
-        print(e)
-    print("unit_normal_vector:", scipy.ndarray.flatten(unit_normal_vector))
-    constant_term = scipy.dot(scipy.transpose(unit_normal_vector), points[-1])
-    print("constant_term:", constant_term)
-    debug_ = False
-    return unit_normal_vector, constant_term
-
 #~ def hyperplane_equation_by_svd_from_points(points, t_equivalence = 'True'):
     #~ global debug_
     #~ debug_ = True
@@ -304,6 +269,38 @@ def hyperplane_equation_by_svd_from_vectorsx(points, t_equivalence = 'True'):
     #~ debug("singular values:", fit[3])
     #~ debug_ = False
     #~ return fit
+
+'''
+Returns the scalar hyperplane equation, in the form of a unit normal vector 
+and constant term, for the first fundamental domain of OPT equivalence for n dimensions.
+'''
+def hyperplane_equation_from_dimensonality(dimensions, transpositional_equivalence=False):
+    center_ = center(dimensions)
+    upper_point = []
+    lower_point = []
+    for i in range(dimensions):
+        upper_point.append(0)
+        lower_point.append(0)
+    upper_point[-1] = 12
+    upper_point[-2] = 6
+    for i in range(1, dimensions):
+        lower_point[i] = 6
+    if transpositional_equivalence == True:
+        center_ = eT(center_)
+        lower_point = eT(lower_point)
+        upper_point = eT(upper_point)
+    normal_vector = scipy.subtract(upper_point, lower_point)
+    norm = scipy.linalg.norm(normal_vector)
+    unit_normal_vector = scipy.divide(normal_vector, norm)
+    constant_term = unit_normal_vector.dot(center_)
+    debug("hyperplane_equation_from_dimensonality for", dimensions, "voices:")
+    debug("center:", center_)
+    print("unit_normal_vector:")
+    for e in unit_normal_vector:
+        print(e)
+    print("constant_term:", constant_term)
+    print()
+    return unit_normal_vector, constant_term
     
 def distance_to_origin(v, u, c):
     numerator = abs(scipy.dot(v, u) + c)
@@ -348,6 +345,10 @@ def reflect(v, u, c):
     #~ print("reflection by householder:", reflection)
     #~ return reflection
     
+#~ for voices in range(3, 13):
+    #~ hyperplane_equation_from_dimensonality(voices, False)
+    #~ hyperplane_equation_from_dimensonality(voices, True)
+    
 test_points = []
 test_points.append([  4,  0, -1,  0])
 test_points.append([  1,  2,  3, -1])
@@ -389,10 +390,6 @@ print(test_point, reflected_test_point, re_reflected_test_point)
 #~ reflected_test_point = reflect_by_householder(test_point, u, c)
 #~ re_reflected_test_point = reflect(reflected_test_point, u, c)
 #~ print(test_point, reflected_test_point, re_reflected_test_point)
-
-print("\nInversion flats from _Science_...\n".upper())
-
-print("\nFour Voices\n".upper())
 
 #~ normal = scipy.subtract(eT([0, 0,0,6]), eT([0, 0, 6,6]))
 #~ normal = scipy.subtract(eT([0, 0,3,6]), eT([0, 3, 6,9]))
@@ -457,37 +454,39 @@ print("\nFour Voices\n".upper())
 
 #~ points.append([0, 3, 6,  9])
 
-# From _Science_ draft Figure 6.4.5 (a):
-points = []
+points = {}
 
-points.append([0,  0,  6,  6])
-points.append([0,  1,  6,  7])
-points.append([0,  0,  5,  6])
-points.append([0,  2,  6,  8])
-points.append([0,  1,  5,  7])
-points.append([0,  0,  4,  6])
-points.append([0,  3,  6,  9])
-points.append([0,  2,  5,  8])
-points.append([0,  1,  4,  7])
-points.append([0,  0,  3,  6])
-points.append([0,  4,  6, 10])
-points.append([0,  3,  5,  9])
-points.append([0,  2,  4,  8])
-points.append([0,  1,  3,  7])
-points.append([0,  0,  2,  6])
-points.append([0,  5,  6, 11])
-points.append([0,  4,  5, 10])
-points.append([0,  3,  4,  9])
-points.append([0,  2,  3,  8])
-points.append([0,  1,  2,  7])
-points.append([0,  0,  1,  6])
-points.append([0,  6,  6, 12])
-points.append([0,  5,  5, 11])
-points.append([0,  4,  4, 10])
-points.append([0,  3,  3,  9])
-points.append([0,  2,  2,  8])
-points.append([0,  1,  1,  7])
-points.append([0,  0,  0,  6])
+# From _Science_ draft Figure 6.4.5 (a):
+points4 = []
+points4.append([0,  0,  6,  6])
+points4.append([0,  1,  6,  7])
+points4.append([0,  0,  5,  6])
+points4.append([0,  2,  6,  8])
+points4.append([0,  1,  5,  7])
+points4.append([0,  0,  4,  6])
+points4.append([0,  3,  6,  9])
+points4.append([0,  2,  5,  8])
+points4.append([0,  1,  4,  7])
+points4.append([0,  0,  3,  6])
+points4.append([0,  4,  6, 10])
+points4.append([0,  3,  5,  9])
+points4.append([0,  2,  4,  8])
+points4.append([0,  1,  3,  7])
+points4.append([0,  0,  2,  6])
+points4.append([0,  5,  6, 11])
+points4.append([0,  4,  5, 10])
+points4.append([0,  3,  4,  9])
+points4.append([0,  2,  3,  8])
+points4.append([0,  1,  2,  7])
+points4.append([0,  0,  1,  6])
+points4.append([0,  6,  6, 12])
+points4.append([0,  5,  5, 11])
+points4.append([0,  4,  4, 10])
+points4.append([0,  3,  3,  9])
+points4.append([0,  2,  2,  8])
+points4.append([0,  1,  1,  7])
+points4.append([0,  0,  0,  6])
+points[4] = points4
 
 # From _Science_ draft Figure 6.4.5 (c):
 #~ points = []
@@ -498,60 +497,6 @@ points.append([0,  0,  0,  6])
 #~ points.append([0,  3,  6,  9])
 #~ points.append([1,  4,  7, 10])
 
-
-
-#~ print("\nInversion flat for 4 voices by cross product...\n".upper())
-#~ u1, c1 = hyperplane_equation_by_cross_product(points, True)
-#~ print("\nInversion flat for 4 voices by nullspace from vectors...\n".upper())
-#~ u2, c2 = hyperplane_equation_by_nullspace_from_vectors(points, True)
-#~ print("\nInversion flat for 4 voices by nullspace from points...\n".upper())
-#~ u3, c3 = hyperplane_equation_by_nullspace_from_points(points, True)
-print("\nInversion flat for 4 voices by singular value decomposition...\n".upper())
-debug_ = True;
-u4, c4 = hyperplane_equation_by_svd_from_vectors(points, True)
-debug_ = False;
-
-u = u4
-c = c4
-chord = eT([0,2,4,8])
-print("\nChord on inversion flat:", chord)
-reflection = reflect(chord, u, c)
-print("Its reflection should be invariant:", chord, reflection)
-reflection = reflect(reflection, u, c)
-print("Better be an involution:", chord, reflection)
-
-chord = eT([0,0,0,0])
-print("\nChord on inversion flat:", chord)
-reflection = reflect(chord, u, c)
-print("Its reflection should be invariant:", chord, reflection)
-reflection = reflect(reflection, u, c)
-print("Better be an involution:", chord, reflection)
-#~ reflection = reflect_by_householder(chord, u, scipy.float64(0))
-#~ print("Its reflection should be invariant:", chord, reflection)
-#~ reflection = reflect_by_householder(reflection, u, scipy.float64(0))
-#~ print("Better be an involution:", reflection)
-
-chord = eT([0,1,2,7])
-print("\nChord on inversion flat:", chord)
-reflection = reflect(chord, u, c)
-print("Its reflection should be invariant:", chord, reflection)
-reflection = reflect(reflection, u, c)
-print("Better be an involution:", chord, reflection)
-#~ reflection = reflect_by_householder(chord, u, scipy.float64(0))
-#~ print("Its reflection should be invariant:", chord, reflection)
-#~ reflection = reflect_by_householder(reflection, u, scipy.float64(0))
-#~ print("Better be an involution:", reflection)
-
-chord = eT([0,0,3,5])
-print("\nChord not on inversion flat:", chord)
-reflection = reflect(chord, u, c)
-reflection = reflect(reflection, u, c)
-print("Better be an involution:", chord, reflection)
-#~ reflection = reflect_by_householder(non_flat_chord, u, scipy.float64(0))
-#~ print("Its reflection should be eI:", reflection)
-#~ reflection = reflect_by_householder(reflection, u, scipy.float64(0))
-#~ print("Better be an involution:", reflection)
-
 print('''
 SAMPLE OPT CHORDS FOR 4 VOICES
 
@@ -561,80 +506,143 @@ OPT:   17 [  -6.0000000   -3.0000000    4.0000000    5.0000000 ] sum:    0.0000 
 OPT:   18 [  -6.0000000   -2.0000000    2.0000000    6.0000000 ] sum:    0.0000 span:   12.0000 chord type: [   0.0000000    0.0000000    4.0000000    8.0000000 ] iseI: true
 OPT:   19 [  -6.0000000   -2.0000000    3.0000000    5.0000000 ] sum:    0.0000 span:   11.0000 chord type: [   0.0000000    1.0000000    5.0000000   10.0000000 ] iseI: false''')
 
-chord = eT([-6,-2,3,5])
-print("\nChord not on inversion flat and not inversionally equivalent:", chord)
-reflection = reflect(chord, u, c)
-reflection = reflect(reflection, u, c)
-print("Better be an involution:", chord, reflection)
+# From _Science_ draft Figure 6.4.6 (b):
+points5 = []
+points5.append([0,  6,  6,  6, 12])
+points5.append([0,  0,  0,  6,  6])
+points5.append([0,  5,  5,  5, 10])
+points5.append([0,  1,  6, 11, 12])
+points5.append([0,  1,  1,  2,  7])
+points5.append([0,  4,  4,  4,  8])
+points5.append([0,  4,  5,  6, 10])
+points5.append([0,  1,  2,  6,  8])
+points5.append([0,  2,  6, 10, 12])
+points5.append([0,  2,  2,  4,  8])
+points5.append([0,  3,  3,  3,  6])
+points5.append([0,  3,  4,  5,  8])
+points5.append([0,  3,  5,  7, 10])
+points5.append([0,  2,  4,  7,  9])
+points5.append([0,  3,  6,  9, 12])
+points5.append([0,  0,  3,  6,  9])
+points5.append([0,  2,  2,  2,  4])
+points5.append([0,  2,  3,  4,  6])
+points5.append([0,  2,  4,  6,  8])
+points5.append([0,  2,  5,  8, 10])
+points5.append([0,  2,  4,  6,  9])
+points5.append([0,  4,  6,  8, 12])
+points5.append([0,  2,  4,  8,  8])
+points5.append([0,  1,  1,  1,  2])
+points5.append([0,  1,  2,  3,  4])
+points5.append([0,  1,  3,  5,  6])
+points5.append([0,  1,  4,  7,  8])
+points5.append([0,  1,  5,  9, 10])
+points5.append([0,  1,  3,  4,  8])
+points5.append([0,  5,  6,  7, 12])
+points5.append([0,  1,  2,  7,  7])
+points5.append([0,  0,  0,  0,  0])
+points5.append([0,  0,  1,  2,  2])
+points5.append([0,  0,  2,  4,  4])
+points5.append([0,  0,  3,  6,  6])
+points5.append([0,  0,  4,  8,  8])
+points5.append([0,  0,  5, 10, 10])
+points5.append([0,  0,  6, 12, 12])
+points5.append([0,  0,  0,  0,  6])
+points5.append(center(5))
+points[5] = points5
 
-chord = eT([-6,-4,4,6])
-print("\nChord not on inversion flat but inversionally equivalent:", chord)
-reflection = reflect(chord, u, c)
-print("In equal temperament:", eTT(reflection))
-reflection = reflect(reflection, u, c)
-print("Better be an involution:", chord, reflection)
-print("In equal temperament:", eTT(reflection))
+points6 = []
+points6.append([0,  6,  6,  6,  6, 12])
+points6.append([0,  0,  0,  0,  6,  6])
+points6.append([0,  0,  6,  6, 12, 12])
+points6.append([0,  0,  0,  0,  6,  6])
+points6.append([0,  0,  0,  0,  0,  0])
+points6.append([0,  0,  0, 12, 12, 12])
+points6.append([0,  0,  0,  0,  0,  0])
+points[6] = points6
 
-print("\nFive Voices\n".upper())
+points7 = []
+points7.append([0,  0,  0,  0,  0,  0,  0])
+points7.append([0,  6,  6,  6,  6,  6, 12])
+points7.append([0,  0,  6,  6,  6, 12, 12])
+points7.append([0,  0,  0,  6, 12, 12, 12])
+#~points7.append(center(7))
+points[7] = points7
 
-points = []
-points.append([0,  0,  0,  0,  0])
-points.append([0,  0,  0,  0,  6])
-points.append([0,  0,  0,  6,  6])
-points.append([0,  1,  2,  3,  4])
-points.append([0,  2,  4,  6,  8])
-#~ points.append([0,  1,  5,  9, 10])
+hyperplane_equations_for_dimensions = {}
 
-print("Points in inversion flat:\n", points)
-
-#~ print("\nInversion flat for 5 voices by cross product...\n".upper())
-#~ u1, c1 = hyperplane_equation_by_cross_product(points, True)
-#~ print("\nInversion flat for 5 voices by nullspace from vectors...\n".upper())
-#~ u2, c2 = hyperplane_equation_by_nullspace_from_vectors(points, True)
-#~ print("\nInversion flat for 5 voices by nullspace from points...\n".upper())
-#~ u3, c3 = hyperplane_equation_by_nullspace_from_points(points, True)
-print("\nInversion flat for 5 voices by singular value decomposition...\n".upper())
-u4, c4 = hyperplane_equation_by_svd_from_vectors(points, True)
-
-print("\nSix Voices\n".upper())
-
-points = []
-points.append([0,  0,  0,  0,  0,  0])
-points.append([0,  0,  0,  6,  6,  6])
-points.append([0,  0,  6,  6, 12, 12])
-points.append([0,  6,  6,  6,  6, 12])
-points.append(center(6))
-
-print("Points in inversion flat:\n", points)
-
-#~ print("\nInversion flat for 6 voices by cross product...\n".upper())
-#~ u1, c1 = hyperplane_equation_by_cross_product(points, True)
-#~ print("\nInversion flat for 6 voices by nullspace from vectors...\n".upper())
-#~ u2, c2 = hyperplane_equation_by_nullspace_from_vectors(points, True)
-#~ print("\nInversion flat for 6 voices by nullspace from points...\n".upper())
-#~ u3, c3 = hyperplane_equation_by_nullspace_from_points(points, True)
-print("\nInversion flat for 6 voices by singular value decomposition...\n".upper())
-u4, c4 = hyperplane_equation_by_svd_from_vectors(points, True)
-
-print("\nSeven Voices\n".upper())
-
-points = []
-points.append([0,  0,  0,  0,  0,  0,  6])
-points.append([0,  0,  0,  0,  0,  6,  6])
-points.append([0,  0,  0,  0,  6,  6,  6])
-points.append(center(7))
-
-print("Points in inversion flat:\n", points)
-
-#~ print("\nInversion flat for 7 voices by cross product...\n".upper())
-#~ u1, c1 = hyperplane_equation_by_cross_product(points, True)
-#~ print("\nInversion flat for 7 voices by nullspace from vectors...\n".upper())
-#~ u2, c2 = hyperplane_equation_by_nullspace_from_vectors(points, True)
-#~ print("\nInversion flat for 7 voices by nullspace from points...\n".upper())
-#~ u3, c3 = hyperplane_equation_by_nullspace_from_points(points, True)
-print("\nInversion flat for 7 voices by singular value decomposition...\n".upper())
-u4, c4 = hyperplane_equation_by_svd_from_vectors(points, True)
-
-
-
-
+def print_hyperplane_equation(dimensions):
+    global points
+    global hyperplane_equations_for_dimensions
+    print("hyperplane equations for dimensionality".upper(), dimensions)
+    print()
+    if dimensions not in hyperplane_equations_for_dimensions:
+        hyperplane_equations_for_dimensions[dimensions] = {}
+    if dimensions in points:
+        points_ = points[dimensions]
+        print("Points in inversion flat:".upper())
+        for point in points_:
+            print(point)
+        print()
+        try:
+            print("Using cross product:".upper())
+            u, c = hyperplane_equation_by_cross_product(points_, True)
+            hyperplane_equations_for_dimensions[dimensions]["Cross Product"] = (u, c)
+            print()
+        except:
+            pass
+        try:
+            print("Using nullspace of vectors:".upper())
+            u, c = hyperplane_equation_by_nullspace_from_vectors(points_, True)
+            hyperplane_equations_for_dimensions[dimensions]["Nullspace of Vectors"] = (u, c)
+            print()
+        except:
+            pass
+        try:
+            print("Using singular value decomposition of vectors:".upper())
+            u, c = hyperplane_equation_by_svd_from_vectors(points_, True)
+            hyperplane_equations_for_dimensions[dimensions]["Singular Value Decomposition"] = (u, c)
+            print()
+        except:
+            pass
+    print("Using cyclical region of OPT:".upper())
+    u, c = hyperplane_equation_from_dimensonality(dimensions, True)  
+    hyperplane_equations_for_dimensions[dimensions]["Cyclical Region"] = (u, c)
+    print()
+    
+def print_hyperplane_equations():
+    for dimensions in range(3, 12):
+        print_hyperplane_equation(dimensions)
+        
+def test_hyperplane_equation(u, c, chord, is_invariant):
+    print("chord:")
+    print(chord)
+    reflection = reflect(chord, u, c)
+    if is_invariant == True:
+        print("reflection should be invariant:     %s %s" % (chord, reflection))
+    else:
+        print("reflection should not be invariant: %s %s" % (chord, reflection))
+    involution = reflect(reflection, u, c)
+    print("should be an involution:            %  %s" % (chord, involution))
+    print()
+    
+test_chords = []
+test_chords.append((center(3), True))
+test_chords.append((center(4), True))
+test_chords.append((center(5), True))
+    
+def test_hyperplane_equations():
+    global hyperplane_equations_for_dimensions
+    print(hyperplane_equations_for_dimensions)
+    global test_chords
+    for chord in test_chords:
+        n = len(chord)
+        for equations in hyperplane_equations_for_dimensions[n]:
+            for label, equation in equations.iteritems():
+                print("Testing", label)
+                print()
+                test_hyperplane_equation(equation[0], equation[1], chord[0], chord[1])
+        print()
+        
+        
+print_hyperplane_equations()
+test_hyperplane_equations()
