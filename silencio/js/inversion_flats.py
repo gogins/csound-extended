@@ -310,7 +310,7 @@ def distance_to_origin(v, u, c):
     
 # Ref(v,c) = v - 2 {[(v . u) - c] / (u . u)} u.
 def reflect(v, u, c):
-    print("Reflect by vector math:", v, " in ", u, c)
+    debug("Reflect by vector math:", v, " in ", u, c)
     v_dot_u = scipy.dot(v, u)
     debug("v_dot_u:", v_dot_u)
     v_dot_u_minus_c = scipy.subtract(v_dot_u, c)
@@ -322,7 +322,7 @@ def reflect(v, u, c):
     subtrahend = scipy.multiply((2 * quotient), u)
     debug("subtrahend:", subtrahend)
     reflection = scipy.subtract(v, subtrahend)
-    print("reflection:", reflection)
+    debug("reflection:", reflection)
     return reflection
     
 #~ def reflect_by_householder(v, u, c):
@@ -554,10 +554,9 @@ points6 = []
 points6.append([0,  6,  6,  6,  6, 12])
 points6.append([0,  0,  0,  0,  6,  6])
 points6.append([0,  0,  6,  6, 12, 12])
-points6.append([0,  0,  0,  0,  6,  6])
 points6.append([0,  0,  0,  0,  0,  0])
 points6.append([0,  0,  0, 12, 12, 12])
-points6.append([0,  0,  0,  0,  0,  0])
+points6.append([0,  0,  0,  6,  6,  6])
 points[6] = points6
 
 points7 = []
@@ -610,39 +609,53 @@ def print_hyperplane_equation(dimensions):
     print()
     
 def print_hyperplane_equations():
-    for dimensions in range(3, 12):
+    for dimensions in range(3, 13):
         print_hyperplane_equation(dimensions)
         
 def test_hyperplane_equation(u, c, chord, is_invariant):
-    print("chord:")
-    print(chord)
     reflection = reflect(chord, u, c)
     if is_invariant == True:
-        print("reflection should be invariant:     %s %s" % (chord, reflection))
+        print("reflection should be invariant:\n    %s\n    %s" % (chord, reflection))
     else:
-        print("reflection should not be invariant: %s %s" % (chord, reflection))
+        print("reflection should not be invariant:\n    %s\n    %s" % (chord, reflection))
     involution = reflect(reflection, u, c)
-    print("should be an involution:            %  %s" % (chord, involution))
+    print("should be an involution:\n    %s\n    %s" % (chord, involution))
     print()
     
 test_chords = []
 test_chords.append((center(3), True))
+test_chords.append(([0, 2, 7], True))
+test_chords.append(([0, 0, 6], True))
+test_chords.append(([0, 1, 4], False))
+test_chords.append(([0, 3, 6], False))
+test_chords.append(([-1, 2, 8], False))
 test_chords.append((center(4), True))
 test_chords.append((center(5), True))
+test_chords.append((center(6), True))
+test_chords.append((center(7), True))
+test_chords.append((center(8), True))
+test_chords.append((center(9), True))
+test_chords.append((center(7), True))
+test_chords.append((center(10), True))
+test_chords.append((center(11), True))
+test_chords.append((center(12), True))
     
 def test_hyperplane_equations():
     global hyperplane_equations_for_dimensions
-    print(hyperplane_equations_for_dimensions)
     global test_chords
     for chord in test_chords:
-        n = len(chord)
-        for equations in hyperplane_equations_for_dimensions[n]:
-            for label, equation in equations.iteritems():
-                print("Testing", label)
+        n = len(chord[0])
+        for name in hyperplane_equations_for_dimensions[n]:
+            try:
+                equation = hyperplane_equations_for_dimensions[n][name]
+                print("Testing", name, "Dimensionality", n)
                 print()
                 test_hyperplane_equation(equation[0], equation[1], chord[0], chord[1])
+            except:
+                print("Exception...")
+                print()
         print()
-        
-        
+print()
 print_hyperplane_equations()
+print()
 test_hyperplane_equations()
