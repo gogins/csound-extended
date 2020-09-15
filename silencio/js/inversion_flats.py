@@ -33,12 +33,37 @@ def debug(*args):
 
 print("\nSee 'generalized cross product' from https://math.stackexchange.com/questions/2723294/how-to-determine-the-equation-of-the-hyperplane-that-contains-several-points and https://madoshakalaka.github.io/2019/03/02/generalized-cross-product-for-high-dimensions.html...\n")
 
+def normalized_vector(a, b):
+    vector = scipy.subtract(a, b)
+    norm = scipy.linalg.norm(vector)
+    normalized_vector_ = scipy.divide(vector, norm)
+    return normalized_vector_
+    
 def center(n):
     center_ = []
     g = 12. / n
     for i in range(n):
         center_.append(i * g)
     return center_
+    
+def cyclical_region_vertices(n, transpositional_equivalence=False):
+    vertices = []
+    for i in range(n):
+        vertex = []
+        for j in range(n):
+            if j > i:
+                vertex.append(12)
+            else:
+                vertex.append(0)
+        if transpositional_equivalence == True:
+            vertices.append(eT(vertex))
+        else:
+            vertices.append(vertex)
+    print("vertices:")
+    vertices.sort()
+    for vertex in vertices:
+        print(vertex)
+    return vertices
     
 def midpoint(a, b):
     midpoint_ = []
@@ -276,25 +301,23 @@ and constant term, for the first fundamental domain of OPT equivalence for n dim
 '''
 def hyperplane_equation_from_dimensonality(dimensions, transpositional_equivalence=False):
     center_ = center(dimensions)
-    upper_point = []
-    lower_point = []
-    for i in range(dimensions):
-        upper_point.append(0)
-        lower_point.append(0)
-    upper_point[-1] = 12
-    upper_point[-2] = 6
-    for i in range(1, dimensions):
-        lower_point[i] = 6
+    cyclical_region_vertices_ = cyclical_region_vertices(dimensions, transpositional_equivalence)
+    upper_point = midpoint(cyclical_region_vertices_[1], cyclical_region_vertices_[2])
+    lower_point = midpoint(cyclical_region_vertices_[0], cyclical_region_vertices_[-1])
+    print("upper_point:", upper_point)
+    print("lower_point:", lower_point)
     if transpositional_equivalence == True:
         center_ = eT(center_)
-        lower_point = eT(lower_point)
-        upper_point = eT(upper_point)
+        #~ lower_point = eT(lower_point)
+        #~ upper_point = eT(upper_point)
     normal_vector = scipy.subtract(upper_point, lower_point)
     norm = scipy.linalg.norm(normal_vector)
     unit_normal_vector = scipy.divide(normal_vector, norm)
     constant_term = unit_normal_vector.dot(center_)
     debug("hyperplane_equation_from_dimensonality for", dimensions, "voices:")
-    debug("center:", center_)
+    print("center:")
+    for e in center_:
+        print(e)
     print("unit_normal_vector:")
     for e in unit_normal_vector:
         print(e)
@@ -324,6 +347,26 @@ def reflect(v, u, c):
     reflection = scipy.subtract(v, subtrahend)
     debug("reflection:", reflection)
     return reflection
+    
+'''
+Rotates a chord to a different fundamental domain of the cyclical region.
+From the origin up is the 0th domain, and so on. First the chord is 
+octavewise revoiced into the target domain, then it is normalized to OP.
+'''
+def cycle_domain(chord, by):
+    pass
+    
+    
+    
+def reflect_in_center(chord):
+    print("reflect in center:")
+    center_ = center(len(chord))
+    print("center:", center)
+    center_2 = scipy.multiply(center_, 2)
+    print("2 * center:", center_2)
+    reflected = scipy.subtract(center_2, chord)
+    print(chord, reflected)
+    return reflected
     
 #~ def reflect_by_householder(v, u, c):
     #~ print("Reflect by Householder:", v, " in ", u, c)
@@ -508,68 +551,78 @@ OPT:   19 [  -6.0000000   -2.0000000    3.0000000    5.0000000 ] sum:    0.0000 
 
 # From _Science_ draft Figure 6.4.6 (b):
 points5 = []
+
+# Vertices only.
 points5.append([0,  6,  6,  6, 12])
-points5.append([0,  0,  0,  6,  6])
-points5.append([0,  5,  5,  5, 10])
-points5.append([0,  1,  6, 11, 12])
-points5.append([0,  1,  1,  2,  7])
-points5.append([0,  4,  4,  4,  8])
-points5.append([0,  4,  5,  6, 10])
-points5.append([0,  1,  2,  6,  8])
-points5.append([0,  2,  6, 10, 12])
-points5.append([0,  2,  2,  4,  8])
-points5.append([0,  3,  3,  3,  6])
-points5.append([0,  3,  4,  5,  8])
-points5.append([0,  3,  5,  7, 10])
-points5.append([0,  2,  4,  7,  9])
-points5.append([0,  3,  6,  9, 12])
-points5.append([0,  0,  3,  6,  9])
-points5.append([0,  2,  2,  2,  4])
-points5.append([0,  2,  3,  4,  6])
-points5.append([0,  2,  4,  6,  8])
-points5.append([0,  2,  5,  8, 10])
-points5.append([0,  2,  4,  6,  9])
-points5.append([0,  4,  6,  8, 12])
-points5.append([0,  2,  4,  8,  8])
-points5.append([0,  1,  1,  1,  2])
-points5.append([0,  1,  2,  3,  4])
-points5.append([0,  1,  3,  5,  6])
-points5.append([0,  1,  4,  7,  8])
-points5.append([0,  1,  5,  9, 10])
-points5.append([0,  1,  3,  4,  8])
-points5.append([0,  5,  6,  7, 12])
-points5.append([0,  1,  2,  7,  7])
-points5.append([0,  0,  0,  0,  0])
-points5.append([0,  0,  1,  2,  2])
-points5.append([0,  0,  2,  4,  4])
-points5.append([0,  0,  3,  6,  6])
-points5.append([0,  0,  4,  8,  8])
-points5.append([0,  0,  5, 10, 10])
 points5.append([0,  0,  6, 12, 12])
-points5.append([0,  0,  0,  0,  6])
+points5.append([0,  0,  0,  0,  0])
+points5.append([0,  1,  2,  3,  4]
+)
+
+#~ # All 12TET chord types in flat.
+#~ ## points5.append([0,  6,  6,  6, 12])
+#~ points5.append([0,  0,  0,  6,  6])
+#~ points5.append([0,  5,  5,  5, 10])
+#~ ## points5.append([0,  1,  6, 11, 12])
+#~ points5.append([0,  1,  1,  2,  7])
+#~ points5.append([0,  4,  4,  4,  8])
+#~ ## points5.append([0,  4,  5,  6, 10])
+#~ points5.append([0,  1,  2,  6,  8])
+#~ ## points5.append([0,  2,  6, 10, 12])
+#~ points5.append([0,  2,  2,  4,  8])
+#~ points5.append([0,  3,  3,  3,  6])
+#~ points5.append([0,  3,  4,  5,  8])
+#~ ## points5.append([0,  3,  5,  7, 10])
+#~ points5.append([0,  2,  4,  7,  9])
+#~ ## points5.append([0,  3,  6,  9, 12])
+#~ points5.append([0,  0,  3,  6,  9])
+#~ points5.append([0,  2,  2,  2,  4])
+#~ points5.append([0,  2,  3,  4,  6])
+#~ points5.append([0,  2,  4,  6,  8])
+#~ ## points5.append([0,  2,  5,  8, 10])
+#~ points5.append([0,  2,  4,  6,  9])
+#~ ## points5.append([0,  4,  6,  8, 12])
+#~ points5.append([0,  2,  4,  8,  8])
+#~ points5.append([0,  1,  1,  1,  2])
+#~ points5.append([0,  1,  2,  3,  4])
+#~ points5.append([0,  1,  3,  5,  6])
+#~ points5.append([0,  1,  4,  7,  8])
+#~ ## points5.append([0,  1,  5,  9, 10])
+#~ points5.append([0,  1,  3,  4,  8])
+#~ ## points5.append([0,  5,  6,  7, 12])
+#~ points5.append([0,  1,  2,  7,  7])
+#~ points5.append([0,  0,  0,  0,  0])
+#~ points5.append([0,  0,  1,  2,  2])
+#~ points5.append([0,  0,  2,  4,  4])
+#~ points5.append([0,  0,  3,  6,  6])
+#~ points5.append([0,  0,  4,  8,  8])
+#~ ## points5.append([0,  0,  5, 10, 10])
+#~ ## points5.append([0,  0,  6, 12, 12])
+#~ points5.append([0,  0,  0,  0,  6])
+
 points5.append(center(5))
 points[5] = points5
 
 points6 = []
+points6.append(center(6))
 points6.append([0,  6,  6,  6,  6, 12])
 points6.append([0,  0,  0,  0,  6,  6])
 points6.append([0,  0,  6,  6, 12, 12])
-points6.append([0,  0,  0,  0,  0,  0])
-points6.append([0,  0,  0, 12, 12, 12])
 points6.append([0,  0,  0,  6,  6,  6])
+points6.append([0,  0,  0,  0,  0,  0])
 points[6] = points6
 
 points7 = []
-points7.append([0,  0,  0,  0,  0,  0,  0])
+points7.append(center(7))
 points7.append([0,  6,  6,  6,  6,  6, 12])
 points7.append([0,  0,  6,  6,  6, 12, 12])
 points7.append([0,  0,  0,  6, 12, 12, 12])
-#~points7.append(center(7))
+points7.append([0,  0,  0,  0,  0,  0,  0])
 points[7] = points7
 
 hyperplane_equations_for_dimensions = {}
 
-def print_hyperplane_equation(dimensions):
+def print_hyperplane_equation(dimensions, transpositional_equivalence=True):
     global points
     global hyperplane_equations_for_dimensions
     print("hyperplane equations for dimensionality".upper(), dimensions)
@@ -584,61 +637,80 @@ def print_hyperplane_equation(dimensions):
         print()
         try:
             print("Using cross product:".upper())
-            u, c = hyperplane_equation_by_cross_product(points_, True)
+            u, c = hyperplane_equation_by_cross_product(points_, transpositional_equivalence)
             hyperplane_equations_for_dimensions[dimensions]["Cross Product"] = (u, c)
             print()
         except:
             pass
         try:
             print("Using nullspace of vectors:".upper())
-            u, c = hyperplane_equation_by_nullspace_from_vectors(points_, True)
+            u, c = hyperplane_equation_by_nullspace_from_vectors(points_, transpositional_equivalence)
             hyperplane_equations_for_dimensions[dimensions]["Nullspace of Vectors"] = (u, c)
             print()
         except:
             pass
         try:
             print("Using singular value decomposition of vectors:".upper())
-            u, c = hyperplane_equation_by_svd_from_vectors(points_, True)
+            u, c = hyperplane_equation_by_svd_from_vectors(points_, transpositional_equivalence)
             hyperplane_equations_for_dimensions[dimensions]["Singular Value Decomposition"] = (u, c)
             print()
         except:
             pass
     print("Using cyclical region of OPT:".upper())
-    u, c = hyperplane_equation_from_dimensonality(dimensions, True)  
+    u, c = hyperplane_equation_from_dimensonality(dimensions, transpositional_equivalence)  
     hyperplane_equations_for_dimensions[dimensions]["Cyclical Region"] = (u, c)
     print()
     
-def print_hyperplane_equations():
+def print_hyperplane_equations(transpositional_equivalence=True):
     for dimensions in range(3, 13):
-        print_hyperplane_equation(dimensions)
+        print_hyperplane_equation(dimensions, transpositional_equivalence)
         
-def test_hyperplane_equation(u, c, chord, is_invariant):
+def test_hyperplane_equation(u, c, chord, equivalence_):
     reflection = reflect(chord, u, c)
-    if is_invariant == True:
-        print("reflection should be invariant:\n    %s\n    %s" % (chord, reflection))
-    else:
-        print("reflection should not be invariant:\n    %s\n    %s" % (chord, reflection))
+    if equivalence_ == 1:
+        print("reflection should be OPT and invariant:")
+    elif equivalence_ == 2:
+        print("reflection should be OPT but not invariant:")
+    elif equivalence == 3:
+         print("reflection should be OP but not OPT:")
+    for i in range(len(chord)):
+        print("     %9.4f  %9.4f" % (chord[i], reflection[i]))
+    print("sum: %9.4f  %9.4f" % (sum(chord), sum(reflection)))
     involution = reflect(reflection, u, c)
-    print("should be an involution:\n    %s\n    %s" % (chord, involution))
+    print("should be an involution:")
+    for i in range(len(chord)):
+        print("     %9.4f  %9.4f" % (chord[i], involution[i]))
+    print("sum: %9.4f  %9.4f" % (sum(chord), sum(involution)))
     print()
     
+'''
+Kinds of chords to test:
+1. On the inversion flat that bisects OPT.
+2. In OPT but off the inversion flat.
+3. In OP but off OPT.
+'''
 test_chords = []
-test_chords.append((center(3), True))
-test_chords.append(([0, 2, 7], True))
-test_chords.append(([0, 0, 6], True))
-test_chords.append(([0, 1, 4], False))
-test_chords.append(([0, 3, 6], False))
-test_chords.append(([-1, 2, 8], False))
-test_chords.append((center(4), True))
-test_chords.append((center(5), True))
-test_chords.append((center(6), True))
-test_chords.append((center(7), True))
-test_chords.append((center(8), True))
-test_chords.append((center(9), True))
-test_chords.append((center(7), True))
-test_chords.append((center(10), True))
-test_chords.append((center(11), True))
-test_chords.append((center(12), True))
+test_chords.append((center(3), 1))
+test_chords.append(([0, 2, 7], 1))
+test_chords.append(([0, 0, 6], 1))
+test_chords.append(([0, 1, 4], 2))
+test_chords.append(([0, 2, 5], 2))
+test_chords.append(([-1, 2, 8], 2))
+test_chords.append((center(4), 1))
+test_chords.append(([0, 6, 6, 12], 1))
+test_chords.append(([0, 1, 1, 4], 2))
+test_chords.append(([0,  5,  5,  5, 10], 1))
+test_chords.append(([0,  0,  0,  6,  6], 1))
+test_chords.append(([0,  5,  5,  5, 10], 1))
+test_chords.append(([0,  0,  0, 12, 12], 2))
+test_chords.append((center(6), 1))
+test_chords.append((center(7), 1))
+test_chords.append((center(8), 1))
+test_chords.append((center(9), 1))
+test_chords.append((center(7), 1))
+test_chords.append((center(10), 1))
+test_chords.append((center(11), 1))
+test_chords.append((center(12), 1))
     
 def test_hyperplane_equations():
     global hyperplane_equations_for_dimensions
@@ -650,12 +722,38 @@ def test_hyperplane_equations():
                 equation = hyperplane_equations_for_dimensions[n][name]
                 print("Testing", name, "Dimensionality", n)
                 print()
-                test_hyperplane_equation(equation[0], equation[1], chord[0], chord[1])
+                chord_ = scipy.asarray(eT(chord[0]))
+                test_hyperplane_equation(equation[0], equation[1], chord_, chord[1])
             except:
                 print("Exception...")
                 print()
         print()
 print()
-print_hyperplane_equations()
+#~ print_hyperplane_equations(False)
+#~ print()
+print_hyperplane_equations(True)
 print()
 test_hyperplane_equations()
+
+vertices = cyclical_region_vertices(6)
+print("EA:", normalized_vector(vertices[0], vertices[4]))
+print("AB:", normalized_vector(vertices[0], vertices[1]))
+print("EB:", normalized_vector(vertices[1], vertices[4]))
+print("DC:", normalized_vector(vertices[2], vertices[3]))
+mAE = midpoint(vertices[0], vertices[4])
+mAB = midpoint(vertices[0], vertices[1])
+print("mAE-mAB", normalized_vector(mAE, mAB))
+mED = midpoint(vertices[4], vertices[3])
+mBC = midpoint(vertices[2], vertices[1])
+print("mED-mBC", normalized_vector(mED, mBC))
+print(normalized_vector([0, 6, 6], [0, 6, 12]))
+print(normalized_vector([0, 6, 6, 6], [0, 0, 6, 12]))
+print(midpoint([0, 6, 6, 6], [0, 0, 6, 12]))
+print(midpoint([0, 0, 6, 6], [0, 6, 6, 12]))
+print(center(5))
+print('''
+Try just reflecting in the central point, then rotating the reflection 
+back into the original fundamental domain.
+''')
+print(reflect_in_center([0, 4, 8]))
+print(reflect_in_center([0, 4, 7]))

@@ -1138,6 +1138,8 @@ SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b);
 
 SILENCE_PUBLIC Eigen::VectorXd reflect(const Eigen::VectorXd &point, const Eigen::VectorXd &unit_normal_vector, double constant_term);
 
+SILENCE_PUBLIC Chord reflect_in_center(const Chord &chord);
+
 SILENCE_PUBLIC double pitchClassForName(std::string name);
 
 SILENCE_PUBLIC const std::map<std::string, double> &pitchClassesForNames();
@@ -1808,7 +1810,8 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTI>(cons
     if (isNormal<EQUIVALENCE_RELATION_I>(normalRPT, range, g) == true) {
         return normalRPT;
     } else {
-        Chord normalI = normalize<EQUIVALENCE_RELATION_RPI>(normalRPT, range, g);
+        //~ Chord normalI = normalize<EQUIVALENCE_RELATION_RPI>(normalRPT, range, g);
+        Chord normalI = reflect_in_center(normalRPT);
         Chord normalRPT = normalize<EQUIVALENCE_RELATION_RPT>(normalI, range, g);
         return normalRPT;
     }
@@ -4046,6 +4049,16 @@ inline SILENCE_PUBLIC Chord scale(std::string name) {
     }
     return scale;
 }
+
+inline SILENCE_PUBLIC Chord reflect_in_center(const Chord &chord) {
+    auto result = chord.maximallyEven();
+    for (int i = 0, n = chord.voices(); i < n; ++i) {
+        result.setPitch(i, result.getPitch(i) * 2.);
+        result.setPitch(i,result.getPitch(i) - chord.getPitch(i));
+    }
+    return result;
+}
+
 
 inline SILENCE_PUBLIC Scale::Scale() {
     resize(0);

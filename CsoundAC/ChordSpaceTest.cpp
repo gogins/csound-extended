@@ -792,6 +792,14 @@ int main(int argc, char **argv) {
     } else {
         std::fprintf(stderr, "optgiByNormalize != optgiByIsNormal\n");
     }
+
+    csound::Chord CM = csound::chordForName("CM");
+    std::cout << CM.information() << std::endl;
+    auto reflection = reflect_in_center(CM);
+    std::cout << reflection.information() << std::endl;
+    auto reflection_OPTT = reflect_in_center(CM).eOPTT();
+    std::cout << reflection_OPTT.information() << std::endl;
+
     csound::ChordSpaceGroup chordSpaceGroup;
     chordSpaceGroup.createChordSpaceGroup(4, csound::OCTAVE() * 5.0, 1.0);
     chordSpaceGroup.list(true, true, true);
@@ -799,5 +807,8 @@ int main(int argc, char **argv) {
     std::fprintf(stderr, "\nTesting all of chord space groups...\n\n");
     testAllOfChordSpaceGroup(3, maximumVoiceCountToTest);
     std::fprintf(stderr, "\nFINISHED.\n\n");
+    
+     
+    
     return 0;
 }
