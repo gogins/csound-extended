@@ -1,10 +1,12 @@
-#include "ChordSpace.hpp"
+ #include "ChordSpace.hpp"
 #include <System.hpp>
 #include <algorithm>
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
 #include <string>
+
+#pragma GCC diagnostic ignored "-Wformat"
 
 static bool printPass = true;
 static bool failureExits = false;
@@ -18,7 +20,7 @@ static void pass(std::string message) {
     passCount = passCount + 1;
     testCount = passCount + failureCount;
     if (printPass) {
-        std::fprintf(stderr, "\nPASSED (pass %9d fail %9d of %9d): %s\n", passCount, failureCount, testCount, message.c_str());
+        std::fprintf(stderr, "\nPASSED (passed: %-9d failed: %-9d of %9d): %s\n", passCount, failureCount, testCount, message.c_str());
     }
 }
 
@@ -26,7 +28,7 @@ static void fail(std::string message) {
     failureCount = failureCount + 1;
     testCount = passCount + failureCount;
     std::fprintf(stderr, "================================================================================================================\n");
-    std::fprintf(stderr, "FAILED (pass %9d fail %9d of %9d): %s", passCount, failureCount, testCount, message.c_str());
+    std::fprintf(stderr, "FAILED (passed: %-9d failed: %-9d of %d): %s", passCount, failureCount, testCount, message.c_str());
     std::fprintf(stderr, "================================================================================================================\n");
     if (failureExits && (failureCount >= exitAfterFailureCount)) {
         std::exit(-1);
@@ -188,7 +190,7 @@ static void testChordSpaceGroup(const csound::ChordSpaceGroup &chordSpaceGroup, 
     std::fprintf(stderr, "\n");
 }
 
-static void testAllOfChordSpaceGroup(int initialVoiceCount, int finalVoiceCount) {
+static void testFChordSpaceGroup(int initialVoiceCount, int finalVoiceCount) {
     double range = 48.0;
     for (int voiceCount = initialVoiceCount; voiceCount <= finalVoiceCount; ++voiceCount) {
         bool passes = true;
@@ -249,7 +251,7 @@ static void testAllOfChordSpaceGroup(int initialVoiceCount, int finalVoiceCount)
     }
 }
 
-std::vector<std::string> equivalenceRelationsToTest = {"RP", "RPTg", "RPI", "RPTgI"};
+std::vector<std::string> equivalenceRelationsToTest = {"RP", "RPTg", "RPI", "RPTI", "RPTgI"};
 typedef csound::Chord(*normalize_t)(const csound::Chord &, double, double);
 typedef bool (*isNormal_t)(const csound::Chord &, double, double);
 typedef bool (*isEquivalent_t)(const csound::Chord &, const csound::Chord &, double, double);
@@ -266,129 +268,75 @@ std::map<std::string, fundamentalDomainByIsNormal_t> fundamentalDomainByIsNormal
  * The correctness and consistency of the equivalence relations are tested as
  * follows. We identify the elements of a representative fundamental domain
  * for an equivalence relation R both by sending all chords in chord space to
- * R's representative fundamental domain ("normalize") and by identifying those
- * chords in the space that belong to R ("isNormal") (for some equivalence
- * classes, there may be several elements, on opposing facets of the domain).
- * Then, we ensure that the following conditions obtain for a domain:
- * (1) Each element of "normalize" is a member of "isNormal".
- * (2) Each element of "isNormal" is equivalent to some element in
- *     "normalize".
- * For informational purposes, we also print out all elements of "isNormal"
- * that do not belong to "normalize," as this may help when building
- * ChordSpaceGroup.
+ * R's representative fundamental domain ("made_equivalents") and by 
+ * identifying each chord in the space that belongs to R 
+ * ("found_equivalents"). Because of singularities in the orbifolds, 
+ * "found_equivalents" may have more chords than "made_equivalents." Then, we 
+ * test that the following conditions obtain:
+ * (1) Each element in "made_equivalents" also returns true for "is_equivalent".
+ * (2) Each element in "found_equivalents" is also found in "made_equivalents".
  */
 static bool testNormalsAndEquivalents(std::string equivalence,
-                                      std::set<csound::Chord> &normalized_,
-                                      std::set<csound::Chord> &is_normal_,
+                                      std::set<csound::Chord> &made_equivalents,
+                                      std::set<csound::Chord> &found_equivalents,
                                       double range,
                                       double g) {
     char buffer[0x200];
-    std::fprintf(stderr, "\nequivalence: %s  normalized: %ld  is_normal: %ld  range: %f  g: %f\n", equivalence.c_str(), normalized_.size(), is_normal_.size(), range, g);
-    auto normalize = normalizesForEquivalenceRelations[equivalence];
+    auto is_equivalent = isNormalsForEquivalenceRelations[equivalence];
+    std::fprintf(stderr, "\nequivalence: %s  normalized: %ld  is_normal: %ld  range: %f  g: %f\n", equivalence.c_str(), made_equivalents.size(), found_equivalents.size(), range, g);
+    auto make_equivalent = normalizesForEquivalenceRelations[equivalence];
     auto isEquivalent = isEquivalentsForEquivalenceRelations[equivalence];
-    bool passes = true;
-    for (auto it = normalized_.begin(); it != normalized_.end(); ++it) {
-        if (is_normal_.find(*it) == is_normal_.end()) {
-            passes = false;
-            std::fprintf(stderr, "testNormalsAndEquivalents: %s range %f g %f: normalized %s not in isNormal.\n",
+    bool passes1 = true;
+    for (auto made_equivalent = made_equivalents.begin(); made_equivalent != made_equivalents.end(); ++made_equivalent) {
+        if (is_equivalent(*made_equivalent, range, g) == false) {
+            passes1 = false;
+            std::fprintf(stderr, "testNormalsAndEquivalents: %s range %f g %f: 'made_equivalents' %s is not 'is_equivalent'.\n",
                           equivalence.c_str(),
                           range,
                           g,
-                          it->toString().c_str());
+                          made_equivalent->toString().c_str());
         }
     }
-    std::sprintf(buffer, "testNormalsAndEquivalents: %s range %f g %f: all normalized must be in isNormal.\n",
+    std::sprintf(buffer, "testNormalsAndEquivalents: %s range %f g %f: all 'made_equivalents' chords must return 'true' for 'is_equivalent'.\n",
                  equivalence.c_str(),
                  range,
                  g);
-    test(passes, buffer);
+    test(passes1, buffer);
     bool passes2 = true;
-    std::set<csound::Chord> elementsInIsNormalButNotInNormalize;
-    for (auto it = is_normal_.begin(); it != is_normal_.end(); ++it) {
-        if (normalized_.find(*it) == normalized_.end()) {
-            elementsInIsNormalButNotInNormalize.insert(*it);
-        }
-    }
-    for (auto it = elementsInIsNormalButNotInNormalize.begin(); it != elementsInIsNormalButNotInNormalize.end(); ++it) {
-        std::fprintf(stderr, "elementsInIsNormalButNotInNormalize: %s %s.\n", equivalence.c_str(), it->toString().c_str());
+    for (auto found_equivalent = found_equivalents.begin(); found_equivalent != found_equivalents.end(); ++found_equivalent) {
+        ///std::fprintf(stderr, ">>> %s 'found_equivalents:' %s.\n", equivalence.c_str(), found_equivalent->toString().c_str());
         bool equivalenceFound = false;
-        for (auto jt = normalized_.begin(); jt != normalized_.end(); ++jt) {
-            if (isEquivalent(*it, *jt, range, g) == true) {
+        for (auto made_equivalent = made_equivalents.begin(); made_equivalent != made_equivalents.end(); ++made_equivalent) {
+            if (isEquivalent(*found_equivalent, *made_equivalent, range, g) == true) {
                 equivalenceFound = true;
-                std::fprintf(stderr, "  Equivalent: %s\n", jt->toString().c_str());
+                ///std::fprintf(stderr, "    %s 'made_equivalents:'  %s.\n", equivalence.c_str(), made_equivalent->toString().c_str());
             }
         }
         if (equivalenceFound == false) {
             passes2 = false;
-            std::sprintf(buffer, "testNormalsAndEquivalents: %s range %f g %f: no normalized found for isNormal: %s\n",
+            std::sprintf(buffer, "testNormalsAndEquivalents: %s range %f g %f: no 'made_equivalent' found for 'found_equivalent': %s\n",
                          equivalence.c_str(),
                          range,
                          g,
-                         it->toString().c_str());
+                         found_equivalent->toString().c_str());
             fail(buffer);
         }
     }
-    std::sprintf(buffer, "normals and equivalents: %s range %f g %f: all isNormal must have equivalent in normalized.\n",
+    std::sprintf(buffer, "normals and equivalents: %s range %f g %f: each 'found_equivalent' must have equivalent in 'made_equivalents'.\n",
                  equivalence.c_str(),
                  range,
                  g);
     pass(buffer);
-    return passes && passes2;
-}
-
-/**
- * Next, we test the consistency of the relationships between different
- * equivalence relations and their fundamental domains:
- * RP <=> R and P
- * RPT <=> RP and R and P and T and V
- * RPTg <=> RP and R and P and Tg and V
- * RPI <=> RP and R and P and I
- * RPTI <=> RPT and RPI and RP and R and P and T and I and V
- * RPTgI <=> RPTg and RPI and RP and R and P and Tg and I and V
- * In doing this, the LHS is the set of "equivalents" under R from above, and
- * the RHS tests each element of that set for belonging to each of the
- * equivalence relations' representative fundamental domain.
- */
-static bool testConsistency(std::string compoundEquivalenceRelation, const std::set<csound::Chord> &equivalents, double range, double g) {
-    char buffer[0x200];
-    bool passes = true;
-    auto equivalenceRelations = equivalenceRelationsForCompoundEquivalenceRelations[compoundEquivalenceRelation];
-    for (auto equivalenceRelationsI = equivalenceRelations.begin(); equivalenceRelationsI != equivalenceRelations.end(); ++equivalenceRelationsI) {
-        auto isNormal = isNormalsForEquivalenceRelations[*equivalenceRelationsI];
-        for (auto chordI = equivalents.begin(); chordI != equivalents.end(); ++chordI) {
-            if (isNormal(*chordI, range, g) == false) {
-                passes = false;
-                std::sprintf(buffer, "testConsistency: chord %s in the domain of %s is not in the domain of %s voices %ld range %f g %f.\n",
-                             chordI->toString().c_str(),
-                             compoundEquivalenceRelation.c_str(),
-                             equivalenceRelationsI->c_str(),
-                             chordI->voices(),
-                             range,
-                             g);
-                fail(buffer);
-            }
-        }
-        if (passes) {
-            std::sprintf(buffer, "testConsistency: range %f g %f: %s is consistent with %s.\n",
-                         range,
-                         g,
-                         compoundEquivalenceRelation.c_str(),
-                         equivalenceRelationsI->c_str());
-            pass(buffer);
-        }
-    }
-    std::sprintf(buffer, "testConsistency: %s for %ld voices range %f g %f.\n", compoundEquivalenceRelation.c_str(), equivalents.begin()->voices(), range, g);
-    pass(buffer);
-    return passes;
+    return passes1 && passes2;
 }
 
 static bool testEquivalenceRelation(std::string equivalenceRelation, int voiceCount, double range, double g) {
     bool passes = true;
     char buffer[0x200];
     auto normalsForEquivalenceRelation = fundamentalDomainByNormalizesForEquivalenceRelations[equivalenceRelation](voiceCount, range, g);
-    std::sprintf(buffer, "%-8s by normalize", equivalenceRelation.c_str());
+    std::sprintf(buffer, "%-8s 'made_equivalents': ", equivalenceRelation.c_str());
     printSet(buffer, normalsForEquivalenceRelation);
-    std::sprintf(buffer, "%-8s by isNormal ", equivalenceRelation.c_str());
+    std::sprintf(buffer, "%-8s 'found_equivalents':", equivalenceRelation.c_str());
     auto equivalentsForEquivalenceRelation = fundamentalDomainByIsNormalsForEquivalenceRelations[equivalenceRelation](voiceCount, range, g);
     printSet(buffer, equivalentsForEquivalenceRelation);
     if (!testNormalsAndEquivalents(equivalenceRelation,
@@ -398,20 +346,17 @@ static bool testEquivalenceRelation(std::string equivalenceRelation, int voiceCo
                                    g)) {
         passes = false;
     }
-    if (!testConsistency(equivalenceRelation, equivalentsForEquivalenceRelation, range, g)) {
-        passes = false;
-    }
     if (equivalenceRelation == "RPTgI") {
         if (voiceCount == 3) {
             if (equivalentsForEquivalenceRelation.size() != 19) {
-                std::sprintf(buffer, "%-8s by isNormal size should be 19 but is %ld.\n", equivalenceRelation.c_str(), equivalentsForEquivalenceRelation.size());
+                std::sprintf(buffer, "%-8s 'found_equivalents' size should be 19 but is %ld.\n", equivalenceRelation.c_str(), equivalentsForEquivalenceRelation.size());
                 std::fprintf(stderr, buffer);
             }
             passes = false;
         }
         if (voiceCount == 4) {
             if (equivalentsForEquivalenceRelation.size() != 83) {
-                std::sprintf(buffer, "%-8s by isNormal size should be 83 but is %ld.\n", equivalenceRelation.c_str(), equivalentsForEquivalenceRelation.size());
+                std::sprintf(buffer, "%-8s 'found_equivalents' size should be 83 but is %ld.\n", equivalenceRelation.c_str(), equivalentsForEquivalenceRelation.size());
                 std::fprintf(stderr, buffer);
             }
             passes = false;    
@@ -688,7 +633,7 @@ int main(int argc, char **argv) {
     std::cerr << "chord: " << chord.toString() << std::endl;
     std::cerr << "chord.distanceToOrigin(): " << chord.distanceToOrigin() << std::endl;
     std::cerr << "chord.distanceToUnisonDiagonal(): " << chord.distanceToUnisonDiagonal() << std::endl;
-    std::cerr << "chord.maximallyEven(): " << chord.maximallyEven().toString() << std::endl;
+    std::cerr << "chord.center(): " << chord.center().toString() << std::endl;
     std::cerr << "chord.T(3): " << chord.T(3).toString() << std::endl;
     std::cerr << "chord.I(): " << chord.I().toString() << std::endl;
     std::cerr << "csound::epc(13.2): " << csound::epc(13.2) << std::endl;
@@ -792,23 +737,50 @@ int main(int argc, char **argv) {
     } else {
         std::fprintf(stderr, "optgiByNormalize != optgiByIsNormal\n");
     }
+    
+    //csound::Chord original;
+    csound::Chord reflected;
+    csound::Chord spun_back;
+    
+    std::cout << "HYPERPLANE EQUATIONS FOR DIMENSIONS" << std::endl;
+    for (int i = 3; i < 12; ++i) {
+        auto hp = csound::hyperplane_equation_from_dimensionality(i);
+    }
+    
+    original = csound::chordForName("CM7");
+    std::cout << "original:" << std::endl;
+    std::cout << original.information() << std::endl;
+    reflected = reflect_in_inversion_flat(original);
+    std::cout << "reflected:" << std::endl;
+    std::cout << reflected.information() << std::endl;
+    spun_back = reflected.eOPTT();
+    std::cout << "spun_back:" << std::endl;
+    std::cout << spun_back.information() << std::endl;
 
-    csound::Chord CM = csound::chordForName("CM");
-    std::cout << CM.information() << std::endl;
-    auto reflection = reflect_in_center(CM);
-    std::cout << reflection.information() << std::endl;
-    auto reflection_OPTT = reflect_in_center(CM).eOPTT();
-    std::cout << reflection_OPTT.information() << std::endl;
+    original = csound::chordForName("C7");
+    std::cout << "original:" << std::endl;
+    std::cout << original.information() << std::endl;
+    reflected = reflect_in_inversion_flat(original);
+    std::cout << "reflected:" << std::endl;
+    std::cout << reflected.information() << std::endl;
+    spun_back = reflected.eOPTT();
+    std::cout << "spun_back:" << std::endl;
+    std::cout << spun_back.information() << std::endl;
 
+#if 0
     csound::ChordSpaceGroup chordSpaceGroup;
     chordSpaceGroup.createChordSpaceGroup(4, csound::OCTAVE() * 5.0, 1.0);
     chordSpaceGroup.list(true, true, true);
     testChordSpaceGroup(chordSpaceGroup, "Gb7");
     std::fprintf(stderr, "\nTesting all of chord space groups...\n\n");
     testAllOfChordSpaceGroup(3, maximumVoiceCountToTest);
+#endif     
+
+    csound::Chord c1({-7, 2, 5});
+    std::cout << c1.information() << std::endl;
+    csound::Chord c2({-5, -2, 7});
+    std::cout << c2.information() << std::endl;
+    
     std::fprintf(stderr, "\nFINISHED.\n\n");
-    
-     
-    
     return 0;
 }

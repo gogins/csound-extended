@@ -831,7 +831,7 @@ if (typeof console === 'undefined') {
         }
         return sum_;
     };
-    
+    f
     Chord.prototype.unisonAtSum = function() {
         let unison_ = this.origin();
         let pitch = this.sum() / this.size();
@@ -1125,10 +1125,11 @@ if (typeof console === 'undefined') {
      */
     Chord.prototype.iseT = function() {
         let sum_ = this.sum();
-        if (ChordSpace.eq_epsilon(sum_, 0) === true) {
+        if (ChordSpace.eq_epsilon(sum_, 0) === false) {
+            return false;
+        } else {
             return true;
         }
-        return false;
     };
 
     /**
@@ -1196,13 +1197,14 @@ if (typeof console === 'undefined') {
 
     /**
      * Returns the equivalent of the chord within the representative fundamental
-     * domain of inversional equivalence.
+     * domain of inversional equivalence; in this context, reflection through the 
+     * point at the center of chord space.
      */
     Chord.prototype.eI = function() {
         if (this.iseI()) {
             return this.clone();
         }
-        return this.I();
+        return this.eI();
     };
 
     /**

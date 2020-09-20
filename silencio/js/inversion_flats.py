@@ -297,13 +297,20 @@ def hyperplane_equation_by_svd_from_vectors(points, t_equivalence = 'True'):
 
 '''
 Returns the scalar hyperplane equation, in the form of a unit normal vector 
-and constant term, for the first fundamental domain of OPT equivalence for n dimensions.
+and constant term, for the first fundamental domain of OPT equivalence for n 
+dimensions. The unit normal vector can be rotated from sector to sector by 
+permuting its terms, and the constant term is the dot product of the unit 
+normal and the center.
 '''
-def hyperplane_equation_from_dimensonality(dimensions, transpositional_equivalence=False):
+def hyperplane_equation_from_dimensonality(dimensions, transpositional_equivalence=False, sector=1):
     center_ = center(dimensions)
     cyclical_region_vertices_ = cyclical_region_vertices(dimensions, transpositional_equivalence)
+    for i in range(sector):
+        front = cyclical_region_vertices_.pop(0);
+        cyclical_region_vertices_.append(front);
     upper_point = midpoint(cyclical_region_vertices_[1], cyclical_region_vertices_[2])
     lower_point = midpoint(cyclical_region_vertices_[0], cyclical_region_vertices_[-1])
+    print("sector:", sector)
     print("upper_point:", upper_point)
     print("lower_point:", lower_point)
     if transpositional_equivalence == True:
@@ -333,30 +340,34 @@ def distance_to_origin(v, u, c):
     
 # Ref(v,c) = v - 2 {[(v . u) - c] / (u . u)} u.
 def reflect(v, u, c):
-    debug("Reflect by vector math:", v, " in ", u, c)
+    print("Reflect by vector math:")
+    print("v:", v)
+    print("u:", u)
+    print("c:", c)
     v_dot_u = scipy.dot(v, u)
-    debug("v_dot_u:", v_dot_u)
+    print("v_dot_u:", v_dot_u)
     v_dot_u_minus_c = scipy.subtract(v_dot_u, c)
-    debug("v_dot_u_minus_c:", v_dot_u_minus_c)
+    print("v_dot_u_minus_c:", v_dot_u_minus_c)
     u_dot_u = scipy.dot(u, u)
-    debug("u_dot_u:", u_dot_u)
+    print("u_dot_u:", u_dot_u)
     quotient = scipy.divide(v_dot_u_minus_c, u_dot_u)
-    debug("quotient:", quotient)
+    print("quotient:", quotient)
     subtrahend = scipy.multiply((2 * quotient), u)
-    debug("subtrahend:", subtrahend)
+    print("subtrahend:", subtrahend)
     reflection = scipy.subtract(v, subtrahend)
-    debug("reflection:", reflection)
+    print("reflection:", reflection)
     return reflection
     
-'''
-Rotates a chord to a different fundamental domain of the cyclical region.
-From the origin up is the 0th domain, and so on. First the chord is 
-octavewise revoiced into the target domain, then it is normalized to OP.
-'''
-def cycle_domain(chord, by):
-    pass
-    
-    
+#~ '''
+#~ Rotates a chord up or down a different fundamental domain of the cyclical 
+#~ region.
+
+#~ '''
+#~ def cycle_domain(chord, direction):
+    #~ if direction > 0:
+        #~ chord.append(chord[0] + 12
+        #~ chord.remove(0)
+    #~ else direction by < 0:
     
 def reflect_in_center(chord):
     print("reflect in center:")
@@ -666,6 +677,7 @@ def print_hyperplane_equations(transpositional_equivalence=True):
         print_hyperplane_equation(dimensions, transpositional_equivalence)
         
 def test_hyperplane_equation(u, c, chord, equivalence_):
+    print(u, c, chord)
     reflection = reflect(chord, u, c)
     if equivalence_ == 1:
         print("reflection should be OPT and invariant:")
@@ -755,5 +767,8 @@ print('''
 Try just reflecting in the central point, then rotating the reflection 
 back into the original fundamental domain.
 ''')
-print(reflect_in_center([0, 4, 8]))
-print(reflect_in_center([0, 4, 7]))
+#~ print(reflect_in_center(eT([0, 4, 8])))
+#~ print(reflect_in_center([0, 4, 7]))
+CM7 = [-1, 0, 4, 7]
+u, c = hyperplane_equation_from_dimensonality(4, True, 1)
+print(reflect(CM7, u, c))
