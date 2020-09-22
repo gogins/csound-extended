@@ -163,6 +163,88 @@ static csound::HyperplaneEquation Hyperplane_Equation_for_4_Voices() {
     return actual;
 }
 
+/**
+ * The idea here is that in a given fundamental domain of OPT, the centroid of 
+ * the OPTI subset should be perfectly reflected as the centroid of the ~OPTI 
+ * subset, and the vector from one centroid to the other should be normal to 
+ * the inversion flat.
+ */
+namespace csound {
+    
+static HyperplaneEquation hyperplane_equation_from_centroids(int dimensions) {
+    auto opts = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPT>(dimensions, OCTAVE(), 1.);
+    Chord opti_centroid(dimensions);
+    Chord not_opti_centroid(dimensions);
+    Chord center = opti_centroid.center();
+    int opti_count = 0;
+    int not_opti_count = 0;
+    for (auto opt : opts) {
+        if (opt.iseOPTI() == true) {
+            opti_count = opti_count + 1;
+            for (int voice = 0; voice < dimensions; ++voice) {
+                auto sum = opti_centroid.getPitch(voice) + opt.getPitch(voice);
+                opti_centroid.setPitch(voice, sum);
+            }
+        } else {
+            not_opti_count = not_opti_count + 1;
+            for (int voice = 0; voice < dimensions; ++voice) {
+                auto sum = not_opti_centroid.getPitch(voice) + opt.getPitch(voice);
+                not_opti_centroid.setPitch(voice, sum);
+            }
+        }
+    }
+    for (int voice = 0; voice < dimensions; ++voice) {
+        opti_centroid.setPitch(voice, opti_centroid.getPitch(voice) / opti_count);
+        not_opti_centroid.setPitch(voice, not_opti_centroid.getPitch(voice) / not_opti_count);
+    }
+    auto normal_vector = voiceleading(opti_centroid, not_opti_centroid);
+    auto norm = normal_vector.col(0).norm();
+    HyperplaneEquation hyperplane_equation_;
+    hyperplane_equation_.unit_normal_vector = normal_vector.col(0) / norm;
+    auto temp = center.col(0).adjoint() * hyperplane_equation_.unit_normal_vector;    
+    hyperplane_equation_.constant_term = temp(0, 0);
+    std::fprintf(stderr, "hyperplane_equation_from_centroids: center:\n");
+    for(int i = 0; i < dimensions; i++) {
+        std::fprintf(stderr, "  %9.4f\n", center.getPitch(i));
+    }
+    std::fprintf(stderr, "hyperplane_equation_from_centroids: unit_normal_vector:\n");
+    for(int i = 0; i < dimensions; i++) {
+        std::fprintf(stderr, "  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
+    }
+    std::fprintf(stderr, "hyperplane_equation_from_centroids: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
+    return hyperplane_equation_;
+}
+
+};
+
+static bool test_chord_type(int dimensions) {
+    bool passes = true;
+    auto ops = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RP>(dimensions, csound::OCTAVE(), 1.);
+    for (auto op : ops) {
+        auto opt = op.eOPTT();
+        auto chord_type_ = opt.chord_type();
+        auto tt_of_chord_type = chord_type_.eTT();
+        if (true) {
+            std::fprintf(stderr, "test_chord_types:\n  OP:               %s %s\n  OPT:              %s\n  chord_type:       %s\n  TT of chord_type: %s\n", 
+                op.toString().c_str(), op.name().c_str(),
+                opt.toString().c_str(),
+                chord_type_.toString().c_str(),
+                tt_of_chord_type.toString().c_str());
+        }
+        if (opt.equals(tt_of_chord_type) == false) {
+            std::fprintf(stderr, ">> Oops! OPT of %s != TT of chord type %s\n", opt.toString().c_str(), tt_of_chord_type.toString().c_str());
+            passes = false;
+        }
+    }
+    return passes;
+}
+
+static void test_chord_types() {
+    for (int dimensions = 3; dimensions < 5; ++dimensions) {
+        test(test_chord_type(dimensions), "chord_type: OPTs of chords should equal OPTs of chord.chord_types.");
+    }
+}
+
 static void testChordSpaceGroup(const csound::ChordSpaceGroup &chordSpaceGroup, std::string chordName) {
     std::fprintf(stderr, "BEGAN test ChordSpaceGroup for %s...\n", chordName.c_str());
     csound::Chord originalChord = csound::chordForName(chordName);
@@ -743,29 +825,10 @@ int main(int argc, char **argv) {
     csound::Chord spun_back;
     
     std::cout << "HYPERPLANE EQUATIONS FOR DIMENSIONS" << std::endl;
-    for (int i = 3; i < 12; ++i) {
-        auto hp = csound::hyperplane_equation_from_dimensionality(i);
+    for (int i = 3; i < 11 ; ++i) {
+        auto hpd = csound::hyperplane_equation_from_dimensionality(i);
+        //~ auto hpc = csound::hyperplane_equation_from_centroids(i);
     }
-    
-    original = csound::chordForName("CM7");
-    std::cout << "original:" << std::endl;
-    std::cout << original.information() << std::endl;
-    reflected = reflect_in_inversion_flat(original);
-    std::cout << "reflected:" << std::endl;
-    std::cout << reflected.information() << std::endl;
-    spun_back = reflected.eOPTT();
-    std::cout << "spun_back:" << std::endl;
-    std::cout << spun_back.information() << std::endl;
-
-    original = csound::chordForName("C7");
-    std::cout << "original:" << std::endl;
-    std::cout << original.information() << std::endl;
-    reflected = reflect_in_inversion_flat(original);
-    std::cout << "reflected:" << std::endl;
-    std::cout << reflected.information() << std::endl;
-    spun_back = reflected.eOPTT();
-    std::cout << "spun_back:" << std::endl;
-    std::cout << spun_back.information() << std::endl;
 
 #if 0
     csound::ChordSpaceGroup chordSpaceGroup;
@@ -780,6 +843,32 @@ int main(int argc, char **argv) {
     std::cout << c1.information() << std::endl;
     csound::Chord c2({-5, -2, 7});
     std::cout << c2.information() << std::endl;
+    
+    test_chord_types();
+    
+    original = csound::chordForName({0, 4, 7});
+    std::cout << "original:" << std::endl;
+    std::cout << original.information() << std::endl;
+    csound::HyperplaneEquation hyperplane_equation = csound::get_hyperplane_equation(3);
+    reflected = csound::reflect_by_householder(original, hyperplane_equation.unit_normal_vector);
+    std::cout << "reflect_by_householder:" << std::endl;
+    std::cout << reflected.information() << std::endl;
+    reflected = reflect_in_inversion_flat(original);
+    std::cout << "reflect_in_inversion_flat:" << std::endl;
+    std::cout << reflected.information() << std::endl;
+    spun_back = reflected.eOPTT();
+    std::cout << "spun_back:" << std::endl;
+    std::cout << spun_back.information() << std::endl;
+
+    original = csound::chordForName("C7");
+    std::cout << "original:" << std::endl;
+    std::cout << original.information() << std::endl;
+    reflected = reflect_in_inversion_flat(original);
+    std::cout << "reflected:" << std::endl;
+    std::cout << reflected.information() << std::endl;
+    spun_back = reflected.eOPTT();
+    std::cout << "spun_back:" << std::endl;
+    std::cout << spun_back.information() << std::endl;    
     
     std::fprintf(stderr, "\nFINISHED.\n\n");
     return 0;

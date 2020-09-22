@@ -367,6 +367,12 @@ public:
      */
     virtual Chord ceiling() const;
     /**
+     * Returns the standard "chord type" of this chord, pitch-classes in the 
+     * "root position" sector of the cyclical region transposed so the 
+     * "root pitch" is 0.
+     */
+    virtual Chord chord_type() const;
+    /**
      * Returns whether or not the chord contains the pitch.
      */
     virtual bool contains(double pitch_) const;
@@ -1577,8 +1583,8 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_I>(const C
     if (isNormal<EQUIVALENCE_RELATION_I>(chord, range, g)) {
         return chord;
     } else {
-        return reflect_in_inversion_flat(chord);
-        //~ return reflect_in_center(chord);
+        //~ return reflect_in_inversion_flat(chord);
+        return reflect_in_center(chord);
     }
 }
 
@@ -1867,8 +1873,8 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTgI>(con
     if (isNormal<EQUIVALENCE_RELATION_I>(normalRPTg, range, g) == true) {
         return normalRPTg;
     } else {
-        Chord normalI = normalize<EQUIVALENCE_RELATION_I>(normalRPTg, range, g);
-        Chord normalRPTg = normalize<EQUIVALENCE_RELATION_RPTg>(normalI, range, g);
+        Chord normalI = normalize<EQUIVALENCE_RELATION_RPTg>(normalRPTg, range, g);
+        normalRPTg = normalize<EQUIVALENCE_RELATION_RPTg>(normalI, range, g);
         return normalRPTg;
         //~ return normalI;
     }
@@ -2225,7 +2231,7 @@ inline std::string Chord::information() const {
     Chord normalpcs =   epcs().eP();
     Chord normalOPT =   csound::normalize<EQUIVALENCE_RELATION_RPT>(*this, OCTAVE(), 1.0);
     Chord normalOPTg =  csound::normalize<EQUIVALENCE_RELATION_RPTg>(*this, OCTAVE(), 1.0);
-    Chord normalopt =   normalOPT.et();
+    Chord chord_type_ = chord_type();
     Chord normalOPI =   csound::normalize<EQUIVALENCE_RELATION_RPI>(*this, OCTAVE(), 1.0);
     Chord normalOPTI =  csound::normalize<EQUIVALENCE_RELATION_RPTI>(*this, OCTAVE(), 1.0);
     Chord normalopti =  normalOPTI.et();
@@ -2251,7 +2257,7 @@ inline std::string Chord::information() const {
                  toString().c_str(),             
                  chordName.c_str(),
                  normalpcs.toString().c_str(),
-                 normalopt.toString().c_str(),
+                 chord_type_.toString().c_str(),
                  isNormal<EQUIVALENCE_RELATION_R>(*this, OCTAVE(), 1.0), normalO.toString().c_str(),     
                  isNormal<EQUIVALENCE_RELATION_P>(*this, OCTAVE(), 1.0), normalP.toString().c_str(),     
                  isNormal<EQUIVALENCE_RELATION_T>(*this, OCTAVE(), 1.0), normalT.toString().c_str(),     
@@ -2628,6 +2634,13 @@ inline bool Chord::contains(double pitch_) const {
         }
     }
     return false;
+}
+
+inline Chord Chord::chord_type() const {
+    Chord ev = eOPTT();
+    Chord ev_0 = ev.v(-2);
+    Chord ev_0_et = ev.et();
+    return ev_0_et;  
 }
 
 inline std::vector<double> Chord::min() const {
@@ -3712,8 +3725,8 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
         bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
         Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
         bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
-        if (DEBUGGING && normalized_is_normal == false) {
-            std::cerr << "Inconsistency in byNormalize! iterator:" << iterator_.toString().c_str() << " normalized:" << normalized.toString().c_str() << std::endl;
+        if (normalized_is_normal == false) {
+            std::cerr << "Inconsistency in byNormalize for " <<  namesForEquivalenceRelations[EQUIVALENCE_RELATION] << "! iterator:" << iterator_.toString().c_str() << " OPTT: " << iterator_.eOPTT().toString().c_str() << " normalized:" << normalized.toString().c_str() << std::endl;
         }
         auto result = fundamentalDomain.insert(normalized);
         if (DEBUGGING && result.second == true) {
@@ -3760,7 +3773,7 @@ inline SILENCE_PUBLIC HyperplaneEquation &get_hyperplane_equation(int voices) {
     static std::map<int, HyperplaneEquation> hyperplane_equations;
     if (hyperplane_equations.size() == 0) {
         for (int dimensions = 3; dimensions < 12; ++dimensions) {
-            hyperplane_equations[dimensions] = hyperplane_equation_from_dimensionality(dimensions);
+            hyperplane_equations[dimensions] = hyperplane_equation_from_dimensionality(dimensions, 1);
         }
     }
     return hyperplane_equations[voices];    
@@ -3859,6 +3872,23 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality
     Chord center = chord.center();
     if (transpositional_equivalence == true) {
         center = center.eT();
+    }
+    if (dimensions == 3) {
+        HyperplaneEquation hyperplane_equation_;
+        hyperplane_equation_.unit_normal_vector.resize(3, 1);
+        hyperplane_equation_.unit_normal_vector << -1./3., 2./3., -1./3.;
+        auto temp = center.col(0).adjoint() * hyperplane_equation_.unit_normal_vector;    
+        hyperplane_equation_.constant_term = temp(0, 0);
+        std::fprintf(stderr, "hyperplane_equation_from_dimensionality: center:\n");
+        for(int i = 0; i < dimensions; i++) {
+            std::fprintf(stderr, "  %9.4f\n", center.getPitch(i));
+        }
+        std::fprintf(stderr, "hyperplane_equation_from_dimensionality: unit_normal_vector:\n");
+        for(int i = 0; i < dimensions; i++) {
+            std::fprintf(stderr, "  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
+        }
+        std::fprintf(stderr, "hyperplane_equation_from_dimensionality: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
+        return hyperplane_equation_;
     }
     std::vector<Chord> cyclical_region_vertices_ = cyclical_region_vertices(dimensions, transpositional_equivalence);
     for (int sector = 0; sector < sector_; ++sector) {
@@ -4077,6 +4107,44 @@ inline SILENCE_PUBLIC Eigen::VectorXd reflect(const Eigen::VectorXd &v, const Ei
     auto subtrahend = u * (2. * quotient);
     auto reflection = v - subtrahend;
     return reflection;
+}
+
+/*
+// H = I_n - 2 * ( u x u), x is outer product.
+// For an affine hyperplane, the reflection is:
+// Ref(v) = v - 2 {[(v . u) - c] / (u . u)} . u, where c is the distance of the
+// hyperplane from the origin.
+let translate_to_origin = numeric.sub(origin, unit_normal_vector);
+let tensor_ = numeric.tensor(unit_normal_vector, unit_normal_vector);
+let product_ = numeric.mul(tensor_, 2);
+let identity_ = numeric.identity(this.size());
+let householder = numeric.sub(identity_, product_);
+let translated_voices = numeric.add(this.voices, translate_to_origin);
+let reflected_translated_voices = numeric.dot(householder, translated_voices); 
+let reflected_voices = numeric.sub(reflected_translated_voices, translate_to_origin);
+reflection = new ChordSpace.Chord(reflected_voices);
+*/
+inline SILENCE_PUBLIC Chord reflect_by_householder(const Chord &chord, const Eigen::VectorXd &u) {
+    //std::cout << "chord:" << chord << std::endl;
+    //std::cout << "u:" << u << std::endl;
+    auto center_ = chord.center();
+    //std::cout << "center_:" << center_ << std::endl;
+    auto tensor = u.col(0) * u.col(0).transpose();
+    //std::cout << "tensor:" << tensor << std::endl;
+    auto product = tensor * 2.;
+    //std::cout << "product:" << product << std::endl;
+    auto identity = Eigen::MatrixXd::Identity(center_.voices(), center_.voices());
+    //std::cout << "identity:" << identity << std::endl;
+    auto householder = identity - product;
+    //std::cout << "householder:" << householder << std::endl;
+    auto moved_to_origin = chord.col(0) - center_.col(0);
+    auto reflected = householder * moved_to_origin;
+    auto moved_from_origin = reflected + center_.col(0);
+    Chord reflection_ = chord;
+    for (int voice = 0, n = chord.voices(); voice < n; ++voice) {
+        reflection_.setPitch(voice, moved_from_origin(voice, 0));
+    }
+    return reflection_;
 }
 
 inline SILENCE_PUBLIC Chord reflect_in_center(const Chord &chord) {

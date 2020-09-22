@@ -379,25 +379,24 @@ def reflect_in_center(chord):
     print(chord, reflected)
     return reflected
     
-#~ def reflect_by_householder(v, u, c):
-    #~ print("Reflect by Householder:", v, " in ", u, c)
-    #~ distance = c #distance_to_origin([4,0,-1,0], u, c)
-    
-    #~ tensor_ = scipy.outer(u, u);
-    #~ print("tensor_:", tensor_)
-    #~ product_ = scipy.multiply(tensor_, 2)
-    #~ print("product_:", product_)
-    #~ identity_ = scipy.eye(len(v))
-    #~ print("identity_:", identity_)
-    #~ householder = scipy.subtract(identity_, tensor_);
-    #~ print("householder:", householder)
-    #~ translated_voices = scipy.subtract(v, distance)
-    #~ print("translated_voices:", translated_voices)
-    #~ reflected_translated_voices = scipy.matmul(householder, translated_voices) 
-    #~ print("reflected_translated_voices:", reflected_translated_voices)
-    #~ reflection = scipy.add(reflected_translated_voices, distance)
-    #~ print("reflection by householder:", reflection)
-    #~ return reflection
+def reflect_by_householder(v, u, c):
+    print("Reflect by Householder:", v, " in ", u, c)
+    center_ = center(len(v))
+    tensor_ = scipy.outer(u, u);
+    print("tensor_:", tensor_)
+    product_ = scipy.multiply(tensor_, 2)
+    print("product_:", product_)
+    identity_ = scipy.eye(len(v))
+    print("identity_:", identity_)
+    householder = scipy.subtract(identity_, tensor_);
+    print("householder:", householder)
+    translated_voices = scipy.subtract(v, center_)
+    print("translated_voices:", translated_voices)
+    reflected_translated_voices = scipy.matmul(householder, translated_voices) 
+    print("reflected_translated_voices:", reflected_translated_voices)
+    reflection = scipy.add(reflected_translated_voices, center_)
+    print("reflection by householder:", reflection)
+    return reflection
     
 #~ for voices in range(3, 13):
     #~ hyperplane_equation_from_dimensonality(voices, False)
@@ -440,10 +439,10 @@ print("\nRotation of test point by vector math\n".upper())
 reflected_test_point = reflect(test_point, u, c)
 re_reflected_test_point = reflect(reflected_test_point, u, c)
 print(test_point, reflected_test_point, re_reflected_test_point)
-#~ print("\nRotation of test point by Householder reflector\n".upper())
-#~ reflected_test_point = reflect_by_householder(test_point, u, c)
-#~ re_reflected_test_point = reflect(reflected_test_point, u, c)
-#~ print(test_point, reflected_test_point, re_reflected_test_point)
+print("\nRotation of test point by Householder reflector\n".upper())
+reflected_test_point = reflect_by_householder(test_point, u, c)
+re_reflected_test_point = reflect(reflected_test_point, u, c)
+print(test_point, reflected_test_point, re_reflected_test_point)
 
 #~ normal = scipy.subtract(eT([0, 0,0,6]), eT([0, 0, 6,6]))
 #~ normal = scipy.subtract(eT([0, 0,3,6]), eT([0, 3, 6,9]))
@@ -668,7 +667,7 @@ def print_hyperplane_equation(dimensions, transpositional_equivalence=True):
         except:
             pass
     print("Using cyclical region of OPT:".upper())
-    u, c = hyperplane_equation_from_dimensonality(dimensions, transpositional_equivalence)  
+    u, c = hyperplane_equation_from_dimensonality(dimensions, transpositional_equivalence, 0)  
     hyperplane_equations_for_dimensions[dimensions]["Cyclical Region"] = (u, c)
     print()
     
@@ -741,8 +740,8 @@ def test_hyperplane_equations():
                 print()
         print()
 print()
-#~ print_hyperplane_equations(False)
-#~ print()
+print_hyperplane_equations(False)
+print()
 print_hyperplane_equations(True)
 print()
 test_hyperplane_equations()
@@ -770,5 +769,5 @@ back into the original fundamental domain.
 #~ print(reflect_in_center(eT([0, 4, 8])))
 #~ print(reflect_in_center([0, 4, 7]))
 CM7 = [-1, 0, 4, 7]
-u, c = hyperplane_equation_from_dimensonality(4, True, 1)
+u, c = hyperplane_equation_from_dimensonality(4, False, 3)
 print(reflect(CM7, u, c))
