@@ -224,7 +224,7 @@ static bool test_chord_type(int dimensions) {
         auto opt = op.eOPTT();
         auto chord_type_ = opt.chord_type();
         auto tt_of_chord_type = chord_type_.eTT();
-        if (true) {
+        if (false) {
             std::fprintf(stderr, "test_chord_types:\n  OP:               %s %s\n  OPT:              %s\n  chord_type:       %s\n  TT of chord_type: %s\n", 
                 op.toString().c_str(), op.name().c_str(),
                 opt.toString().c_str(),
@@ -810,15 +810,15 @@ int main(int argc, char **argv) {
     for (int voiceCount = 3; voiceCount <= maximumVoiceCountToTest; ++voiceCount) {
         testEquivalenceRelations(voiceCount, csound::OCTAVE(), 1.0);
     }
-    auto optgiByNormalize = csound::fundamentalDomainByNormalize<csound::EQUIVALENCE_RELATION_RPTgI>(4, 12.0, 1.0);
-    printSet("optgiByNormalize", optgiByNormalize);
-    auto optgiByIsNormal = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(4, 12.0, 1.0);
-    printSet("optgiByIsNormal", optgiByIsNormal);
-    if (optgiByNormalize == optgiByIsNormal) {
-        std::fprintf(stderr, "optgiByNormalize == optgiByIsNormal\n");
-    } else {
-        std::fprintf(stderr, "optgiByNormalize != optgiByIsNormal\n");
-    }
+    //~ auto optgiByNormalize = csound::fundamentalDomainByNormalize<csound::EQUIVALENCE_RELATION_RPTgI>(4, 12.0, 1.0);
+    //~ printSet("optgiByNormalize", optgiByNormalize);
+    //~ auto optgiByIsNormal = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(4, 12.0, 1.0);
+    //~ printSet("optgiByIsNormal", optgiByIsNormal);
+    //~ if (optgiByNormalize == optgiByIsNormal) {
+        //~ std::fprintf(stderr, "optgiByNormalize == optgiByIsNormal\n");
+    //~ } else {
+        //~ std::fprintf(stderr, "optgiByNormalize != optgiByIsNormal\n");
+    //~ }
     
     //csound::Chord original;
     csound::Chord reflected;
@@ -846,17 +846,18 @@ int main(int argc, char **argv) {
     
     test_chord_types();
     
-    original = csound::chordForName({0, 4, 7});
+    auto prior_level = csound::System::setMessageLevel(15);
+    
+    original = csound::Chord({0, 3, 7}).eOPT();
     std::cout << "original:" << std::endl;
     std::cout << original.information() << std::endl;
-    csound::HyperplaneEquation hyperplane_equation = csound::get_hyperplane_equation(3);
-    reflected = csound::reflect_by_householder(original, hyperplane_equation.unit_normal_vector);
+    reflected = csound::reflect_by_householder(original);
     std::cout << "reflect_by_householder:" << std::endl;
     std::cout << reflected.information() << std::endl;
     reflected = reflect_in_inversion_flat(original);
     std::cout << "reflect_in_inversion_flat:" << std::endl;
     std::cout << reflected.information() << std::endl;
-    spun_back = reflected.eOPTT();
+    spun_back = reflected.eOPT();
     std::cout << "spun_back:" << std::endl;
     std::cout << spun_back.information() << std::endl;
 
@@ -869,6 +870,29 @@ int main(int argc, char **argv) {
     spun_back = reflected.eOPTT();
     std::cout << "spun_back:" << std::endl;
     std::cout << spun_back.information() << std::endl;    
+
+    // These are for printing OPTI and ~OPTI to see if there some obvious way to match them.
+    // Print as index, pitches, is_opti, chord type, and name.
+    auto opt3s = csound::fundamentalDomainByNormalize<csound::EQUIVALENCE_RELATION_RPT>(3, 12.0, 1.0);
+    index = 0;
+    for (auto opt : opt3s) {
+        std::fprintf(stderr, "%d\tchord:\t", index);
+        for (int voice = 0; voice < opt.voices(); ++voice) {
+            std::fprintf(stderr, "%9.4f\t", opt.getPitch(voice));
+        }
+        std::fprintf(stderr, "OPT %d\t", opt.iseOPT());
+        std::fprintf(stderr, "OPTI %d\tOPTT:\t", opt.iseOPTI());
+        auto normalized = opt.eOPTT();
+        for (int voice = 0; voice < opt.voices(); ++voice) {
+            std::fprintf(stderr, "%9.4f\t", normalized.getPitch(voice));
+        }
+        std::fprintf(stderr, "%s\n", normalized.name().c_str());
+        index = index + 1;
+    }
+    auto opt4s = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPT>(4, 12.0, 1.0);
+    for (auto opt : opt4s) {
+    }
+
     
     std::fprintf(stderr, "\nFINISHED.\n\n");
     return 0;

@@ -1158,6 +1158,8 @@ SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b);
 
 SILENCE_PUBLIC Eigen::VectorXd reflect(const Eigen::VectorXd &point, const Eigen::VectorXd &unit_normal_vector, double constant_term);
 
+SILENCE_PUBLIC Chord reflect_by_householder(const Chord &chord);
+
 SILENCE_PUBLIC Chord reflect_in_center(const Chord &chord);
 
 SILENCE_PUBLIC Chord reflect_in_inversion_flat(const Chord &chord);
@@ -1392,6 +1394,12 @@ SILENCE_PUBLIC Chord voiceleadingSimpler(const Chord &source, const Chord &d1, c
 // ONLY DEFINITIONS BELOW HERE -- NO DECLARATIONS.
 //////////////////////////////////////////////////
 
+inline SILENCE_PUBLIC std::string toString(const Eigen::MatrixXd& mat){
+    std::stringstream ss;
+    ss << mat;
+    return ss.str();
+}
+
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_r>(const Chord &chord, double range, double g) {
     Chord normal = chord;
     for (int voice = 0; voice < chord.voices(); ++voice) {
@@ -1583,8 +1591,9 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_I>(const C
     if (isNormal<EQUIVALENCE_RELATION_I>(chord, range, g)) {
         return chord;
     } else {
-        //~ return reflect_in_inversion_flat(chord);
-        return reflect_in_center(chord);
+        return reflect_in_inversion_flat(chord);
+        //~ return reflect_by_householder(chord);
+        //~ return reflect_in_center(chord);
     }
 }
 
@@ -1873,7 +1882,7 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTgI>(con
     if (isNormal<EQUIVALENCE_RELATION_I>(normalRPTg, range, g) == true) {
         return normalRPTg;
     } else {
-        Chord normalI = normalize<EQUIVALENCE_RELATION_RPTg>(normalRPTg, range, g);
+        Chord normalI = normalize<EQUIVALENCE_RELATION_I>(normalRPTg, range, g);
         normalRPTg = normalize<EQUIVALENCE_RELATION_RPTg>(normalI, range, g);
         return normalRPTg;
         //~ return normalI;
@@ -3773,7 +3782,7 @@ inline SILENCE_PUBLIC HyperplaneEquation &get_hyperplane_equation(int voices) {
     static std::map<int, HyperplaneEquation> hyperplane_equations;
     if (hyperplane_equations.size() == 0) {
         for (int dimensions = 3; dimensions < 12; ++dimensions) {
-            hyperplane_equations[dimensions] = hyperplane_equation_from_dimensionality(dimensions, 1);
+            hyperplane_equations[dimensions] = hyperplane_equation_from_dimensionality(dimensions, true, 1);
         }
     }
     return hyperplane_equations[voices];    
@@ -3876,7 +3885,30 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality
     if (dimensions == 3) {
         HyperplaneEquation hyperplane_equation_;
         hyperplane_equation_.unit_normal_vector.resize(3, 1);
-        hyperplane_equation_.unit_normal_vector << -1./3., 2./3., -1./3.;
+        /*
+-0.3333333333
+-0.3333333333
+ 0.6666666667
+
+-0.3333333333
+ 0.6666666667
+-0.3333333333
+
+ 0.6666666667
+-0.3333333333
+-0.3333333333
+        */
+        switch(sector_) {
+            case 0:
+                hyperplane_equation_.unit_normal_vector << -1./3., -1./3.,  2./3.;
+                break;
+            case 1:
+                hyperplane_equation_.unit_normal_vector << -1./3.,  2./3., -1./3.;
+                break;
+            case 2:
+                hyperplane_equation_.unit_normal_vector <<  2./3., -1./3., -1./3.;
+                break;
+        }
         auto temp = center.col(0).adjoint() * hyperplane_equation_.unit_normal_vector;    
         hyperplane_equation_.constant_term = temp(0, 0);
         std::fprintf(stderr, "hyperplane_equation_from_dimensionality: center:\n");
@@ -4108,52 +4140,47 @@ inline SILENCE_PUBLIC Eigen::VectorXd reflect(const Eigen::VectorXd &v, const Ei
     auto reflection = v - subtrahend;
     return reflection;
 }
-
-/*
-// H = I_n - 2 * ( u x u), x is outer product.
-// For an affine hyperplane, the reflection is:
-// Ref(v) = v - 2 {[(v . u) - c] / (u . u)} . u, where c is the distance of the
-// hyperplane from the origin.
-let translate_to_origin = numeric.sub(origin, unit_normal_vector);
-let tensor_ = numeric.tensor(unit_normal_vector, unit_normal_vector);
-let product_ = numeric.mul(tensor_, 2);
-let identity_ = numeric.identity(this.size());
-let householder = numeric.sub(identity_, product_);
-let translated_voices = numeric.add(this.voices, translate_to_origin);
-let reflected_translated_voices = numeric.dot(householder, translated_voices); 
-let reflected_voices = numeric.sub(reflected_translated_voices, translate_to_origin);
-reflection = new ChordSpace.Chord(reflected_voices);
-*/
-inline SILENCE_PUBLIC Chord reflect_by_householder(const Chord &chord, const Eigen::VectorXd &u) {
-    //std::cout << "chord:" << chord << std::endl;
-    //std::cout << "u:" << u << std::endl;
-    auto center_ = chord.center();
-    //std::cout << "center_:" << center_ << std::endl;
-    auto tensor = u.col(0) * u.col(0).transpose();
-    //std::cout << "tensor:" << tensor << std::endl;
-    auto product = tensor * 2.;
-    //std::cout << "product:" << product << std::endl;
+/**
+ * Computes the Householder reflector matrix and applies it to the chord.
+ * The transformation is: H(p) = p - 2 * u * (u^T * p).
+ * The corresponding matrix is: I - 2 * u * u^T.
+ */
+inline SILENCE_PUBLIC Chord reflect_by_householder(const Chord &chord) {
+    auto hyperplane_equation = get_hyperplane_equation(chord.voices());
+    System::debug("reflect_by_householder: chord:              %s\n", chord.toString().c_str());
+    System::debug("reflect_by_householder: unit normal vector: \n%s\n", toString(hyperplane_equation.unit_normal_vector).c_str());
+    auto center_ = chord.center().eT();
+    System::debug("reflect_by_householder: center:             %s\n", center_.toString().c_str());
+    auto tensor = hyperplane_equation.unit_normal_vector.col(0) * hyperplane_equation.unit_normal_vector.col(0).transpose();
+    System::debug("reflect_by_householder: tensor: \n%s\n", toString(tensor).c_str());
+    auto product = 2. * tensor;
+    System::debug("reflect_by_householder: product:  \n%s\n", toString(product).c_str());
     auto identity = Eigen::MatrixXd::Identity(center_.voices(), center_.voices());
-    //std::cout << "identity:" << identity << std::endl;
+    System::debug("reflect_by_householder: identity:  \n%s\n", toString(identity).c_str());
     auto householder = identity - product;
-    //std::cout << "householder:" << householder << std::endl;
+    System::debug("reflect_by_householder: householder:  \n%s\n", toString(householder).c_str());
     auto moved_to_origin = chord.col(0) - center_.col(0);
+    System::debug("reflect_by_householder: moved_to_origin:  \n%s\n", toString(moved_to_origin).c_str());
     auto reflected = householder * moved_to_origin;
+    System::debug("reflect_by_householder: reflected:  \n%s\n", toString(reflected).c_str());
     auto moved_from_origin = reflected + center_.col(0);
+    System::debug("reflect_by_householder: moved_from_origin:  \n%s\n", toString(moved_from_origin).c_str());
     Chord reflection_ = chord;
     for (int voice = 0, n = chord.voices(); voice < n; ++voice) {
         reflection_.setPitch(voice, moved_from_origin(voice, 0));
     }
+    System::debug("reflect_by_householder: reflection_:        %s\n\n", reflection_.toString().c_str());
     return reflection_;
 }
 
 inline SILENCE_PUBLIC Chord reflect_in_center(const Chord &chord) {
-    auto result = chord.center();
-    for (int i = 0, n = chord.voices(); i < n; ++i) {
-        result.setPitch(i, result.getPitch(i) * 2.);
-        result.setPitch(i,result.getPitch(i) - chord.getPitch(i));
+    auto center_ = chord.center().eOPT();
+    auto reflection_ = chord.origin();
+    for (int voice = 0, n = chord.voices(); voice < n; ++voice) {
+        // reflection = 2 * center - chord
+        reflection_.setPitch(voice, 2. * center_.getPitch(voice) - chord.getPitch(voice));
     }
-    return result;
+    return reflection_;
 }
 
 inline SILENCE_PUBLIC Chord reflect_in_inversion_flat(const Chord &chord) {

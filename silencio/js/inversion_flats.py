@@ -140,7 +140,7 @@ def hyperplane_equation_by_cross_product(points, t_equivalence = 'True'):
     
 def hyperplane_equation_by_nullspace_from_vectors(points, t_equivalence = 'True'):
     vectors = []
-    t_ = []
+    t_ = [] 
     if t_equivalence == True:
         debug("original points:", points)
         for point in points:
@@ -358,6 +358,32 @@ def reflect(v, u, c):
     print("reflection:", reflection)
     return reflection
     
+def reflect1(v, u, c):
+    print("Reflect by vector math variant 1:")
+    c = 0
+    center_ = eT(center(len(v)))
+    print("center_:", center_)
+    print("v:", v)
+    v = scipy.subtract(v, center_)
+    print("v:", v)
+    print("u:", u)
+    print("c:", c)
+    v_dot_u = scipy.dot(v, u)
+    print("v_dot_u:", v_dot_u)
+    v_dot_u_minus_c = scipy.subtract(v_dot_u, c)
+    print("v_dot_u_minus_c:", v_dot_u_minus_c)
+    u_dot_u = scipy.dot(u, u)
+    print("u_dot_u:", u_dot_u)
+    quotient = scipy.divide(v_dot_u_minus_c, u_dot_u)
+    print("quotient:", quotient)
+    subtrahend = scipy.multiply((2 * quotient), u)
+    print("subtrahend:", subtrahend)
+    reflection = scipy.subtract(v, subtrahend)
+    print("reflection:", reflection)
+    reflection = scipy.add(reflection, center_)
+    print("reflection:", reflection)
+    return reflection
+    
 #~ '''
 #~ Rotates a chord up or down a different fundamental domain of the cyclical 
 #~ region.
@@ -370,37 +396,45 @@ def reflect(v, u, c):
     #~ else direction by < 0:
     
 def reflect_in_center(chord):
+    print("chord:", chord)
     print("reflect in center:")
-    center_ = center(len(chord))
-    print("center:", center)
+    center_ = eT(center(len(chord)))
+    print("center:", center_)
     center_2 = scipy.multiply(center_, 2)
     print("2 * center:", center_2)
     reflected = scipy.subtract(center_2, chord)
-    print(chord, reflected)
+    print("reflected:", reflected)
     return reflected
-    
+'''
+Computes the Householder reflector matrix and applies it to the chord.
+The transformation is: H(p) = p - 2 * u * (u^T * p).
+The corresponding matrix H is: H = I - 2 * u * u^T.
+All vectors are column vectors.
+'''
 def reflect_by_householder(v, u, c):
-    print("Reflect by Householder:", v, " in ", u, c)
+    print("Reflect by Householder:")
+    print("chord:", v)
+    print("Unit normal vector:", u)
     center_ = center(len(v))
     tensor_ = scipy.outer(u, u);
-    print("tensor_:", tensor_)
+    print("tensor_:\n", tensor_)
     product_ = scipy.multiply(tensor_, 2)
     print("product_:", product_)
     identity_ = scipy.eye(len(v))
-    print("identity_:", identity_)
-    householder = scipy.subtract(identity_, tensor_);
-    print("householder:", householder)
+    print("identity_:\n", identity_)
+    householder = scipy.subtract(identity_, product_);
+    print("householder:\n", householder)
+    reflected_voices = scipy.matmul(householder, v) 
+    print("reflected_voices:", reflected_voices)
     translated_voices = scipy.subtract(v, center_)
-    print("translated_voices:", translated_voices)
+    print("moved to origin:", translated_voices)
     reflected_translated_voices = scipy.matmul(householder, translated_voices) 
     print("reflected_translated_voices:", reflected_translated_voices)
     reflection = scipy.add(reflected_translated_voices, center_)
+    print("moved from origin:", reflection)
     print("reflection by householder:", reflection)
     return reflection
     
-#~ for voices in range(3, 13):
-    #~ hyperplane_equation_from_dimensonality(voices, False)
-    #~ hyperplane_equation_from_dimensonality(voices, True)
     
 test_points = []
 test_points.append([  4,  0, -1,  0])
@@ -767,7 +801,25 @@ Try just reflecting in the central point, then rotating the reflection
 back into the original fundamental domain.
 ''')
 #~ print(reflect_in_center(eT([0, 4, 8])))
-#~ print(reflect_in_center([0, 4, 7]))
 CM7 = [-1, 0, 4, 7]
 u, c = hyperplane_equation_from_dimensonality(4, False, 3)
 print(reflect(CM7, u, c))
+print()
+print(reflect_by_householder(eT([0, 4, 7]), [-1/3,-1/3,2/3], 0))
+print()
+print(reflect_by_householder(eT([0, 4, 7]), [-1/3,2/3,-1/3], 0))
+print()
+print(reflect_by_householder(eT([0, 4, 7]), [2/3,-1/3,-1/3], 0))
+print()
+print(reflect_by_householder(eT([0, 3, 7]), [-1/3,-1/3,2/3], 0))
+print()
+print(reflect_by_householder(eT([0, 3, 7]), [2/3,-1/3,-1/3], 0))
+print()
+print(reflect_in_center(eT([0, 4, 7])))
+print()
+print(reflect(eT([0, 3, 7]), [-1/3,2/3,-1/3], scipy.dot([-1/3,2/3,-1/3], eT(center(3)))))
+print()
+print(reflect1(eT([0, 3, 7]), [-1/3,2/3,-1/3], scipy.dot([-1/3,2/3,-1/3], eT(center(3)))))
+print()
+print(reflect_by_householder(eT([0, 3, 7]), [-1/3,2/3,-1/3], 0))
+print()
