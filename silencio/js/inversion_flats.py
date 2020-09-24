@@ -670,13 +670,13 @@ def hyperplane_equation_from_random_flat(dimensions, count, transpositional_equi
     for i in range(count):
         chord = [0.] * dimensions
         for voice in range(math.floor(dimensions/2)):
-            pitch = random.uniform(-24, 24)
+            pitch = random.uniform(-6, 6)
             chord[voice] = -pitch
             chord[-voice-1] = pitch
         if transpositional_equivalence == True:
             chord = eT(chord)
-        #chord.sort()
-        #print(chord)
+        chord.sort()
+        print(chord)
         flat.append(chord)
     return hyperplane_equation_by_svd_from_vectors(flat, transpositional_equivalence)
         

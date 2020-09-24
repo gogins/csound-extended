@@ -56,6 +56,7 @@
 #include <iostream>
 #include <iterator>
 #include <map>
+#include <random>
 #include "Score.hpp"
 #include "System.hpp"
 #include <set>
@@ -1025,6 +1026,8 @@ SILENCE_PUBLIC HyperplaneEquation &get_hyperplane_equation(int voices);
  */
 SILENCE_PUBLIC HyperplaneEquation hyperplane_equation(const std::vector<Chord> &points_in_hyperplane, bool make_eT = true);
 
+SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_random_inversion_flat(int dimensions, bool transpositional_equivalence = true, int sector_ = 1);
+
 SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality(int dimensions, bool transpositional_equivalence = true, int sector = 1);
 
 SILENCE_PUBLIC bool gt_epsilon(double a, double b);
@@ -1394,6 +1397,8 @@ SILENCE_PUBLIC Chord voiceleadingSimpler(const Chord &source, const Chord &d1, c
 // ONLY DEFINITIONS BELOW HERE -- NO DECLARATIONS.
 //////////////////////////////////////////////////
 
+static std::mt19937 mersenne_twister;
+
 inline SILENCE_PUBLIC std::string toString(const Eigen::MatrixXd& mat){
     std::stringstream ss;
     ss << mat;
@@ -1455,7 +1460,6 @@ while (ChordSpace.le_epsilon(er.sum(), range) === false) {
 }
 return most_compact_er;
 */
-
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_R>(const Chord &chord, double range, double g) {
     if (isNormal<EQUIVALENCE_RELATION_R>(chord, range, g) == true) {
         Chord copy = chord;
@@ -3782,7 +3786,8 @@ inline SILENCE_PUBLIC HyperplaneEquation &get_hyperplane_equation(int voices) {
     static std::map<int, HyperplaneEquation> hyperplane_equations;
     if (hyperplane_equations.size() == 0) {
         for (int dimensions = 3; dimensions < 12; ++dimensions) {
-            hyperplane_equations[dimensions] = hyperplane_equation_from_dimensionality(dimensions, true, 1);
+            //~ hyperplane_equations[dimensions] = hyperplane_equation_from_dimensionality(dimensions, true, 1);
+            hyperplane_equations[dimensions] = hyperplane_equation_from_random_inversion_flat(dimensions, true, 1);
         }
     }
     return hyperplane_equations[voices];    
@@ -3800,8 +3805,8 @@ inline SILENCE_PUBLIC double I(double pitch, double center) {
     return center - pitch;
 }
 
-inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation(const std::vector<Chord> &points_, bool make_eT) {
-    std::cout << "hyperplane_equation: original points:" << std::endl;
+inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_by_singular_value_decomposition(const std::vector<Chord> &points_, bool make_eT) {
+    std::cout << "hyperplane_equation_by_singular_value_decomposition: original points:" << std::endl;
     for (auto point: points_) {
         std::cout << "point: " << point.col(0).transpose() << std::endl;
     }
@@ -3813,9 +3818,9 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation(const std::vector<C
     } else {
         points = points_;
     }
-    std::cout << "hyperplane_equation: eT points:" << std::endl;
+    std::cout << "hyperplane_equation_by_singular_value_decomposition: eT points:" << std::endl;
     for (auto point: points) {
-        std::cout << "point: " << point.col(0).transpose() << std::endl;
+        std::cout << "eT(point): " << point.col(0).transpose() << std::endl;
     }
     auto subtrahend = points.back().col(0);
     Eigen::MatrixXd matrix(subtrahend.rows(), points.size() - 1);
@@ -3823,13 +3828,13 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation(const std::vector<C
         Eigen::VectorXd difference = points[i].col(0) - subtrahend;
         matrix.col(i) = difference;
     }
-    std::cout << "hyperplane_equation: vectors:" << std::endl << matrix << std::endl;
+    std::cout << "hyperplane_equation_by_singular_value_decomposition: vectors:" << std::endl << matrix << std::endl;
     matrix.transposeInPlace();
-    std::cout << "hyperplane_equation: vectors transposed:" << std::endl << matrix << std::endl;
+    std::cout << "hyperplane_equation_by_singular_value_decomposition: vectors transposed:" << std::endl << matrix << std::endl;
     Eigen::JacobiSVD<Eigen::MatrixXd, Eigen::FullPivHouseholderQRPreconditioner> svd(matrix, Eigen::ComputeFullU | Eigen::ComputeFullV);
-    std::cout << "hyperplane_equation: U:" << std::endl << svd.matrixU() << std::endl;
-    std::cout << "hyperplane_equation: singular values:" << std::endl << svd.singularValues() << std::endl;
-    std::cout << "hyperplane_equation: V:" << std::endl << svd.matrixV() << std::endl;
+    std::cout << "hyperplane_equation_by_singular_value_decomposition: U:" << std::endl << svd.matrixU() << std::endl;
+    std::cout << "hyperplane_equation_by_singular_value_decomposition: singular values:" << std::endl << svd.singularValues() << std::endl;
+    std::cout << "hyperplane_equation_by_singular_value_decomposition: V:" << std::endl << svd.matrixV() << std::endl;
     //~ auto rhs = Eigen::MatrixXd::Zero(svd.singularValues().rows(), 1);
     //~ auto solution = svd.solve(rhs);
     //~ std::cout << "solution:\n";
@@ -3837,12 +3842,12 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation(const std::vector<C
     HyperplaneEquation hyperplane_equation_;
     hyperplane_equation_.unit_normal_vector = svd.matrixV().rightCols(1);
     auto norm = hyperplane_equation_.unit_normal_vector.norm();
-    std::cout << "hyperplane_equation: norm:" << std::endl << norm << std::endl;
+    std::cout << "hyperplane_equation_by_singular_value_decomposition: norm:" << std::endl << norm << std::endl;
     hyperplane_equation_.unit_normal_vector = hyperplane_equation_.unit_normal_vector / norm;
     auto constant_term = hyperplane_equation_.unit_normal_vector.adjoint() * subtrahend;
     hyperplane_equation_.constant_term = constant_term(0, 0);
-    std::cout << "hyperplane_equation: unit normal vector: " << std::endl << hyperplane_equation_.unit_normal_vector << std::endl;
-    std::cout << "hyperplane_equation: constant term: " << std::endl << hyperplane_equation_.constant_term << std::endl;
+    std::cout << "hyperplane_equation_by_singular_value_decomposition: unit normal vector: " << std::endl << hyperplane_equation_.unit_normal_vector << std::endl;
+    std::cout << "hyperplane_equation_by_singular_value_decomposition: constant term: " << std::endl << hyperplane_equation_.constant_term << std::endl;
     return hyperplane_equation_;
 }
 
@@ -3950,6 +3955,46 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality
     return hyperplane_equation_;
 }
 
+inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_random_inversion_flat(int dimensions, bool transpositional_equivalence, int sector_) {
+    std::uniform_real_distribution<> uniform(-6., 6.);
+    std::vector<Chord> inversion_flat;
+    Chord center = Chord(dimensions)
+    .center();
+    for (int i = 0; i < 100; ++i) {
+        Chord chord(dimensions);
+        if (i == 0) {
+            if (transpositional_equivalence == true) {
+                center = center.eOPT();
+            }
+            inversion_flat.push_back(center);
+        }
+        int side = std::floor(dimensions / 2.);
+        int lower_voice = 0;
+        int upper_voice = dimensions - 1;
+        for (lower_voice = 0; lower_voice < side; ++lower_voice, --upper_voice) {
+            double random_pitch = uniform(mersenne_twister);
+            chord.setPitch(lower_voice, -random_pitch);
+            chord.setPitch(upper_voice,  random_pitch);
+        }
+        if (transpositional_equivalence == true) {
+            chord = chord.eT();
+        }
+        chord = chord.eP();
+        inversion_flat.push_back(chord);
+    }
+    HyperplaneEquation hyperplane_equation_ = hyperplane_equation_by_singular_value_decomposition(inversion_flat, transpositional_equivalence);
+    std::fprintf(stderr, "hyperplane_equation_from_random_inversion_flat: sector: %d\n", sector_);
+    std::fprintf(stderr, "hyperplane_equation_from_random_inversion_flat: center:\n");
+    for(int i = 0; i < dimensions; i++) {
+        std::fprintf(stderr, "  %9.4f\n", center.getPitch(i));
+    }
+    std::fprintf(stderr, "hyperplane_equation_from_random_inversion_flat: unit_normal_vector:\n");
+    for(int i = 0; i < dimensions; i++) {
+        std::fprintf(stderr, "  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
+    }
+    std::fprintf(stderr, "hyperplane_equation_from_random_inversion_flat: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
+    return hyperplane_equation_;
+}
 
 inline SILENCE_PUBLIC void insert(Score &score,
                                   const Chord &chord,

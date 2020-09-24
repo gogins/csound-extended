@@ -80,142 +80,64 @@ static void Hyperplane_Equation_for_Test_Points() {
     expected.unit_normal_vector.resize(4, 1);
     expected.unit_normal_vector << 0.20864865369890548, 0.12839917150701868, 0.32099792876754685, 0.9148440969875088;
     expected.constant_term = 0.5135966860280752;
-    csound::HyperplaneEquation actual = hyperplane_equation(points, false);
+    csound::HyperplaneEquation actual = hyperplane_equation_by_singular_value_decomposition(points, false);
     bool passes = equals(expected, actual);
     test(passes, __func__);    
 }
 
-/*
-
-INVERSION FLAT FOR 4 VOICES BY SINGULAR VALUE DECOMPOSITION...
-
-original points:
- [[0, 0, 0, 0], [0, 0, 0, 12], [0, 1, 2, 9], [0, 3, 6, 9], [0, 0, 0, 7]]
-points:
- [[0.0, 0.0, 0.0, 0.0], [-3.0, -3.0, -3.0, 9.0], [-3.0, -2.0, -1.0, 6.0], [-4.5, -1.5, 1.5, 4.5], [-1.75, -1.75, -1.75, 5.25]]
-subtrahend: [-1.75, -1.75, -1.75, 5.25]
-vectors:
- [[ 1.75  1.75  1.75 -5.25]
- [-1.25 -1.25 -1.25  3.75]
- [-1.25 -0.25  0.75  0.75]
- [-2.75  0.25  3.25 -0.75]]
-U:
- [[-0.80008406 -0.08951901 -0.55315943 -0.21416464]
- [ 0.57148861  0.06394215 -0.81639104 -0.05308325]
- [ 0.1019949   0.32961289  0.15737939 -0.92530217]
- [-0.1512062   0.93768496 -0.0524598   0.30843406]]
-singular values: [7.56051967e+00 4.45404787e+00 5.81478041e-16 2.30311389e-16]
-V:
- [[-0.24154219 -0.28805006 -0.33455793  0.86415018]
- [-0.72456242 -0.01898676  0.6865889   0.05696028]
- [ 0.42867847  0.62353653  0.42867847  0.49363116]
- [ 0.48259863 -0.72654584  0.48259863  0.07955047]]
-normal_vector: [ 0.48259863 -0.72654584  0.48259863  0.07955047]
-norm: 1.0000000000000002
-Unit normal vector:
-0.4825986251911143
--0.7265458392918117
-0.4825986251911144
-0.0795504703634725
-unit_normal_vector: [ 0.48259863 -0.72654584  0.48259863  0.07955047]
-constant_term: 8.326672684688674e-16
- 
-*/
-
-static csound::HyperplaneEquation Hyperplane_Equation_for_4_Voices() {
-    //From _Science_ draft 6.4.5 (a):
-    std::vector<csound::Chord> points;
-    points.push_back(csound::Chord(std::vector<double>({ 0,  0,  6,  6})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  1,  6,  7})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  0,  5,  6})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  2,  6,  8})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  1,  5,  7})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  0,  4,  6})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  3,  6,  9})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  2,  5,  8})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  1,  4,  7})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  0,  3,  6})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  4,  6, 10})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  3,  5,  9})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  2,  4,  8})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  1,  3,  7})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  0,  2,  6})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  5,  6, 11})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  4,  5, 10})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  3,  4,  9})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  2,  3,  8})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  1,  2,  7})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  0,  1,  6})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  6,  6, 12})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  5,  5, 11})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  4,  4, 10})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  3,  3,  9})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  2,  2,  8})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  1,  1,  7})));
-    points.push_back(csound::Chord(std::vector<double>({ 0,  0,  0,  6})));
-    //~ csound::HyperplaneEquation expected;
-    //~ expected.unit_normal_vector.resize(4, 1);
-    //~ expected.unit_normal_vector << 0.4825986251911143, -0.7265458392918117, 0.4825986251911144, 0.0795504703634725;
-    //~ expected.constant_term = 8.326672684688674e-16;
-    csound::HyperplaneEquation actual = hyperplane_equation(points, true);
-    //~ bool passes = equals(expected, actual);
-    //~ test(passes, __func__);    
-    return actual;
-}
-
-/**
- * The idea here is that in a given fundamental domain of OPT, the centroid of 
- * the OPTI subset should be perfectly reflected as the centroid of the ~OPTI 
- * subset, and the vector from one centroid to the other should be normal to 
- * the inversion flat.
- */
-namespace csound {
+//~ /**
+ //~ * The idea here is that in a given fundamental domain of OPT, the centroid of 
+ //~ * the OPTI subset should be perfectly reflected as the centroid of the ~OPTI 
+ //~ * subset, and the vector from one centroid to the other should be normal to 
+ //~ * the inversion flat.
+ //~ */
+//~ namespace csound {
     
-static HyperplaneEquation hyperplane_equation_from_centroids(int dimensions) {
-    auto opts = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPT>(dimensions, OCTAVE(), 1.);
-    Chord opti_centroid(dimensions);
-    Chord not_opti_centroid(dimensions);
-    Chord center = opti_centroid.center();
-    int opti_count = 0;
-    int not_opti_count = 0;
-    for (auto opt : opts) {
-        if (opt.iseOPTI() == true) {
-            opti_count = opti_count + 1;
-            for (int voice = 0; voice < dimensions; ++voice) {
-                auto sum = opti_centroid.getPitch(voice) + opt.getPitch(voice);
-                opti_centroid.setPitch(voice, sum);
-            }
-        } else {
-            not_opti_count = not_opti_count + 1;
-            for (int voice = 0; voice < dimensions; ++voice) {
-                auto sum = not_opti_centroid.getPitch(voice) + opt.getPitch(voice);
-                not_opti_centroid.setPitch(voice, sum);
-            }
-        }
-    }
-    for (int voice = 0; voice < dimensions; ++voice) {
-        opti_centroid.setPitch(voice, opti_centroid.getPitch(voice) / opti_count);
-        not_opti_centroid.setPitch(voice, not_opti_centroid.getPitch(voice) / not_opti_count);
-    }
-    auto normal_vector = voiceleading(opti_centroid, not_opti_centroid);
-    auto norm = normal_vector.col(0).norm();
-    HyperplaneEquation hyperplane_equation_;
-    hyperplane_equation_.unit_normal_vector = normal_vector.col(0) / norm;
-    auto temp = center.col(0).adjoint() * hyperplane_equation_.unit_normal_vector;    
-    hyperplane_equation_.constant_term = temp(0, 0);
-    std::fprintf(stderr, "hyperplane_equation_from_centroids: center:\n");
-    for(int i = 0; i < dimensions; i++) {
-        std::fprintf(stderr, "  %9.4f\n", center.getPitch(i));
-    }
-    std::fprintf(stderr, "hyperplane_equation_from_centroids: unit_normal_vector:\n");
-    for(int i = 0; i < dimensions; i++) {
-        std::fprintf(stderr, "  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
-    }
-    std::fprintf(stderr, "hyperplane_equation_from_centroids: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
-    return hyperplane_equation_;
-}
+//~ static HyperplaneEquation hyperplane_equation_from_centroids(int dimensions) {
+    //~ auto opts = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPT>(dimensions, OCTAVE(), 1.);
+    //~ Chord opti_centroid(dimensions);
+    //~ Chord not_opti_centroid(dimensions);
+    //~ Chord center = opti_centroid.center();
+    //~ int opti_count = 0;
+    //~ int not_opti_count = 0;
+    //~ for (auto opt : opts) {
+        //~ if (opt.iseOPTI() == true) {
+            //~ opti_count = opti_count + 1;
+            //~ for (int voice = 0; voice < dimensions; ++voice) {
+                //~ auto sum = opti_centroid.getPitch(voice) + opt.getPitch(voice);
+                //~ opti_centroid.setPitch(voice, sum);
+            //~ }
+        //~ } else {
+            //~ not_opti_count = not_opti_count + 1;
+            //~ for (int voice = 0; voice < dimensions; ++voice) {
+                //~ auto sum = not_opti_centroid.getPitch(voice) + opt.getPitch(voice);
+                //~ not_opti_centroid.setPitch(voice, sum);
+            //~ }
+        //~ }
+    //~ }
+    //~ for (int voice = 0; voice < dimensions; ++voice) {
+        //~ opti_centroid.setPitch(voice, opti_centroid.getPitch(voice) / opti_count);
+        //~ not_opti_centroid.setPitch(voice, not_opti_centroid.getPitch(voice) / not_opti_count);
+    //~ }
+    //~ auto normal_vector = voiceleading(opti_centroid, not_opti_centroid);
+    //~ auto norm = normal_vector.col(0).norm();
+    //~ HyperplaneEquation hyperplane_equation_;
+    //~ hyperplane_equation_.unit_normal_vector = normal_vector.col(0) / norm;
+    //~ auto temp = center.col(0).adjoint() * hyperplane_equation_.unit_normal_vector;    
+    //~ hyperplane_equation_.constant_term = temp(0, 0);
+    //~ std::fprintf(stderr, "hyperplane_equation_from_centroids: center:\n");
+    //~ for(int i = 0; i < dimensions; i++) {
+        //~ std::fprintf(stderr, "  %9.4f\n", center.getPitch(i));
+    //~ }
+    //~ std::fprintf(stderr, "hyperplane_equation_from_centroids: unit_normal_vector:\n");
+    //~ for(int i = 0; i < dimensions; i++) {
+        //~ std::fprintf(stderr, "  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
+    //~ }
+    //~ std::fprintf(stderr, "hyperplane_equation_from_centroids: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
+    //~ return hyperplane_equation_;
+//~ }
 
-};
+//~ };
 
 static bool test_chord_type(int dimensions) {
     bool passes = true;
@@ -245,7 +167,7 @@ static void test_chord_types() {
     }
 }
 
-static void testChordSpaceGroup(const csound::ChordSpaceGroup &chordSpaceGroup, std::string chordName) {
+static void test_chord_space_group(const csound::ChordSpaceGroup &chordSpaceGroup, std::string chordName) {
     std::fprintf(stderr, "BEGAN test ChordSpaceGroup for %s...\n", chordName.c_str());
     csound::Chord originalChord = csound::chordForName(chordName);
     csound::Chord optti = originalChord.eOPTTI();
@@ -272,7 +194,7 @@ static void testChordSpaceGroup(const csound::ChordSpaceGroup &chordSpaceGroup, 
     std::fprintf(stderr, "\n");
 }
 
-static void testFChordSpaceGroup(int initialVoiceCount, int finalVoiceCount) {
+static void test_chord_space_group(int initialVoiceCount, int finalVoiceCount) {
     double range = 48.0;
     for (int voiceCount = initialVoiceCount; voiceCount <= finalVoiceCount; ++voiceCount) {
         bool passes = true;
@@ -431,16 +353,14 @@ static bool testEquivalenceRelation(std::string equivalenceRelation, int voiceCo
     if (equivalenceRelation == "RPTgI") {
         if (voiceCount == 3) {
             if (equivalentsForEquivalenceRelation.size() != 19) {
-                std::sprintf(buffer, "%-8s 'found_equivalents' size should be 19 but is %ld.\n", equivalenceRelation.c_str(), equivalentsForEquivalenceRelation.size());
-                std::fprintf(stderr, buffer);
+                std::fprintf(stderr, "%-8s 'found_equivalents' size should be 19 but is %ld.\n", equivalenceRelation.c_str(), equivalentsForEquivalenceRelation.size());
             }
             passes = false;
         }
         if (voiceCount == 4) {
             if (equivalentsForEquivalenceRelation.size() != 83) {
-                std::sprintf(buffer, "%-8s 'found_equivalents' size should be 83 but is %ld.\n", equivalenceRelation.c_str(), equivalentsForEquivalenceRelation.size());
-                std::fprintf(stderr, buffer);
-            }
+                std::fprintf(stderr, "%-8s 'found_equivalents' size should be 83 but is %ld.\n", equivalenceRelation.c_str(), equivalentsForEquivalenceRelation.size());
+             }
             passes = false;    
         }
     }
@@ -492,7 +412,6 @@ void testRPIStuff(const csound::Chord &chord)
 int main(int argc, char **argv) {
     std::fprintf(stderr, "C H O R D S P A C E   U N I T   T E S T S\n\n");
     Hyperplane_Equation_for_Test_Points();
-    Hyperplane_Equation_for_4_Voices();
 #if defined(USE_OLD_EQUIVALENCES)
     std::fprintf(stderr, "Using OLD implementation of equivalence relations.\n\n");
 #else
@@ -824,10 +743,14 @@ int main(int argc, char **argv) {
     csound::Chord reflected;
     csound::Chord spun_back;
     
-    std::cout << "HYPERPLANE EQUATIONS FOR DIMENSIONS" << std::endl;
-    for (int i = 3; i < 11 ; ++i) {
+    std::cout << "HYPERPLANE EQUATIONS FOR DIMENSIONS\n" << std::endl;
+    for (int i = 3; i < 6 ; ++i) {
+        std::cerr << "\nDIMENSIONALITY\n" << std::endl;
         auto hpd = csound::hyperplane_equation_from_dimensionality(i);
+        //~ std::cerr << "\nCENTROIDS\n" << std::endl;
         //~ auto hpc = csound::hyperplane_equation_from_centroids(i);
+        std::cerr << "\nRANDOM INVERSION FLAT\n" << std::endl;
+        auto hpr = csound::hyperplane_equation_from_random_inversion_flat(i);
     }
 
 #if 0
@@ -837,7 +760,6 @@ int main(int argc, char **argv) {
     testChordSpaceGroup(chordSpaceGroup, "Gb7");
     std::fprintf(stderr, "\nTesting all of chord space groups...\n\n");
     testAllOfChordSpaceGroup(3, maximumVoiceCountToTest);
-#endif     
 
     csound::Chord c1({-7, 2, 5});
     std::cout << c1.information() << std::endl;
@@ -892,8 +814,8 @@ int main(int argc, char **argv) {
     auto opt4s = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPT>(4, 12.0, 1.0);
     for (auto opt : opt4s) {
     }
+#endif     
 
-    
     std::fprintf(stderr, "\nFINISHED.\n\n");
     return 0;
 }
