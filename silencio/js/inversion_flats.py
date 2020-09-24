@@ -15,6 +15,7 @@ print(__doc__)
 
 import copy
 import math
+import random
 import mpmath
 import scipy
 import scipy.linalg
@@ -664,6 +665,21 @@ points7.append([0,  0,  0,  6, 12, 12, 12])
 points7.append([0,  0,  0,  0,  0,  0,  0])
 points[7] = points7
 
+def hyperplane_equation_from_random_flat(dimensions, count, transpositional_equivalence=True):
+    flat = []
+    for i in range(count):
+        chord = [0.] * dimensions
+        for voice in range(math.floor(dimensions/2)):
+            pitch = random.uniform(-24, 24)
+            chord[voice] = -pitch
+            chord[-voice-1] = pitch
+        if transpositional_equivalence == True:
+            chord = eT(chord)
+        #chord.sort()
+        #print(chord)
+        flat.append(chord)
+    return hyperplane_equation_by_svd_from_vectors(flat, transpositional_equivalence)
+        
 hyperplane_equations_for_dimensions = {}
 
 def print_hyperplane_equation(dimensions, transpositional_equivalence=True):
@@ -700,6 +716,13 @@ def print_hyperplane_equation(dimensions, transpositional_equivalence=True):
             print()
         except:
             pass
+    try:
+        print("Using singular value decomposition of random flat:".upper())
+        u, c = hyperplane_equation_from_random_flat(dimensions, 10000, transpositional_equivalence)
+        hyperplane_equations_for_dimensions[dimensions]["Random Inversion Flat"] = (u, c)
+        print()
+    except:
+        pass
     print("Using cyclical region of OPT:".upper())
     u, c = hyperplane_equation_from_dimensonality(dimensions, transpositional_equivalence, 0)  
     hyperplane_equations_for_dimensions[dimensions]["Cyclical Region"] = (u, c)
@@ -823,3 +846,5 @@ print(reflect1(eT([0, 3, 7]), [-1/3,2/3,-1/3], scipy.dot([-1/3,2/3,-1/3], eT(cen
 print()
 print(reflect_by_householder(eT([0, 3, 7]), [-1/3,2/3,-1/3], 0))
 print()
+
+ 
