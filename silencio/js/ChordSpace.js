@@ -1465,16 +1465,16 @@ if (typeof console === 'undefined') {
      * of range, permutational, and inversional equivalence.
      */
     Chord.prototype.iseRPI = function(range) {
-        if (this.iseRP(range) === false) {
+        if (this.eP(range) == false) {
             return false;
         }
-        let ei = this.I();
-        let ierp = ei.eRP(range);
-        //assert(inverse, 'Inverse is nil.');
-        if (this.le_epsilon(ierp) === true) {
-            return true;
+        if (this.eR(range) == false) {
+            return false;
         }
-        return false;
+        if (this.eI() == false) {
+            return false;
+        }
+        return true;
     };
 
     /**
@@ -1488,20 +1488,14 @@ if (typeof console === 'undefined') {
     /**
      * Returns the equivalent of the chord within the representative fundamental
      * domain of range, permutational, and inversional equivalence.
+     * TODO: Verify.
      */
     Chord.prototype.eRPI = function(range) {
         if (this.iseRPI(range) === true) {
             return this.clone();
         }
-        let erp = this.eRP(range);
-        let erpi = erp.I();
-        let erpierp = erpi.eRP(range);
-        if (erp.le_epsilon(erpierp) === true) {
-            return erp;
-        } else {
-            return erpierp;
-        }
-    };
+        return this.eI().eRP(range);
+     };
 
     /**
      * Returns the equivalent of the chord within the representative fundamental

@@ -718,7 +718,7 @@ def print_hyperplane_equation(dimensions, transpositional_equivalence=True):
             pass
     try:
         print("Using singular value decomposition of random flat:".upper())
-        u, c = hyperplane_equation_from_random_flat(dimensions, 10000, transpositional_equivalence)
+        u, c = hyperplane_equation_from_random_flat(dimensions, 100, transpositional_equivalence)
         hyperplane_equations_for_dimensions[dimensions]["Random Inversion Flat"] = (u, c)
         print()
     except:

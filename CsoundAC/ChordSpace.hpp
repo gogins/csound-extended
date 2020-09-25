@@ -1527,11 +1527,11 @@ inline bool Chord::iseT() const {
 }
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_T>(const Chord &chord, double range, double g) {
-    Chord normal = chord;
-    double layer_ = normal.layer();
-    double sumPerVoice = layer_ / double(normal.voices());
-    normal = normal.T(-sumPerVoice);
-    return normal;
+    Chord result = chord;
+    double sum = chord.layer();
+    double sum_per_voice = sum / double(chord.voices());
+    result = result.T(-sum_per_voice);
+    return result;
 }
 
 inline Chord Chord::eT() const {
@@ -1769,46 +1769,30 @@ inline Chord Chord::eRPTT(double range, double g) const {
 
 //	EQUIVALENCE_RELATION_RPI
 
-/*
-That Ic acts on R 2 / P by reflection in the line of Ic -invariant P-classes, or the
-inversion flat, points to a general principle of the action of Ic on any of the spaces from
-sections four and five: Ic corresponds to a reflection in the flat of chords or equivalence
-classes of chords that remain invariant under Ic . Therefore, the operative question when
-considering Ic -equivalence on any space is "Where are the Ic -invariant points?" Once
-we know the answer to this question, we know the precise action of Ic on the original
-space. We have already seen this principle at work in the quotient spaces R n / Ic : there is
-precisely one fixed point, A, such that Ic ( A) = A , and R n is transformed into R n / Ic by
-gluing together points with their reflection in A. (Callender, Quinn, and Tymoczko, draft.)
-*/
-
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RPI>(const Chord &chord, double range, double g) {
-    if (isNormal<EQUIVALENCE_RELATION_RP>(chord, range, g) == false) {
+    if (isNormal<EQUIVALENCE_RELATION_R>(chord, range, g) == false) {
         return false;
     }
-    Chord inverse = chord.I();
-    Chord inverseRP = normalize<EQUIVALENCE_RELATION_RP>(inverse, range, g);
-    if (chord <= inverseRP) {
-        return true;
+    if (isNormal<EQUIVALENCE_RELATION_P>(chord, range, g) == false) {
+        return false;
     }
-    return false;
+    if (isNormal<EQUIVALENCE_RELATION_I>(chord, range, g) == false) {
+        return false;
+    }
+    return true;
 }
 
 inline bool Chord::iseRPI(double range) const {
     return isNormal<EQUIVALENCE_RELATION_RPI>(*this, range, 1.0);
 }
 
+// TODO: Verify.
+
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPI>(const Chord &chord, double range, double g) {
     if (isNormal<EQUIVALENCE_RELATION_RPI>(chord, range, g) == true) {
         return chord;
     }
-    Chord normalRP = normalize<EQUIVALENCE_RELATION_RP>(chord, range, g);
-    Chord normalRPInverse = normalRP.I();
-    Chord normalRPInverseRP = normalize<EQUIVALENCE_RELATION_RP>(normalRPInverse, range, g);
-    if (normalRP <= normalRPInverseRP) {
-        return normalRP;
-    } else {
-        return normalRPInverseRP;
-    }
+    return chord.eI().eRP(range);
 }
 
 inline Chord Chord::eRPI(double range) const {
@@ -1845,14 +1829,14 @@ inline bool Chord::iseRPTI(double range) const {
 }
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTI>(const Chord &chord, double range, double g) {
-    Chord normalRPT = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
-    if (isNormal<EQUIVALENCE_RELATION_I>(normalRPT, range, g) == true) {
-        return normalRPT;
+    Chord rpt = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
+    if (isNormal<EQUIVALENCE_RELATION_I>(rpt, range, g) == true) {
+        return rpt;
     } else {
-        Chord normalI = normalize<EQUIVALENCE_RELATION_I>(normalRPT, range, g);
-        Chord normalRPT = normalize<EQUIVALENCE_RELATION_RPT>(normalI, range, g);
+        Chord rpt_i = normalize<EQUIVALENCE_RELATION_I>(rpt, range, g);
+        Chord rpt_i_t = normalize<EQUIVALENCE_RELATION_T>(rpt_i, range, g);
         //~ Chord normalRPT = normalize<EQUIVALENCE_RELATION_RPT>(normalI, range, g);
-        return normalRPT;
+        return rpt_i_t;
         //~ return normalI;
     }
 }
@@ -1864,19 +1848,19 @@ inline Chord Chord::eRPTI(double range) const {
 //	EQUIVALENCE_RELATION_RPTgI
 
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RPTgI>(const Chord &chord, double range, double g) {
-    if (!isNormal<EQUIVALENCE_RELATION_P>(chord, range, g)) {
+    if (isNormal<EQUIVALENCE_RELATION_P>(chord, range, g) == false) {
         return false;
     }
-    if (!isNormal<EQUIVALENCE_RELATION_R>(chord, range, g)) {
+    if (isNormal<EQUIVALENCE_RELATION_R>(chord, range, g) == false) {
         return false;
     }
-    if (!isNormal<EQUIVALENCE_RELATION_V>(chord, range, g)) {
+    if (isNormal<EQUIVALENCE_RELATION_V>(chord, range, g) == false) {
         return false;
     }
-    if (!isNormal<EQUIVALENCE_RELATION_Tg>(chord, range, g)) {
+    if (isNormal<EQUIVALENCE_RELATION_Tg>(chord, range, g) == false) {
         return false;
     }
-    if (!isNormal<EQUIVALENCE_RELATION_I>(chord, range, g)) {
+    if (isNormal<EQUIVALENCE_RELATION_I>(chord, range, g) == false) {
         return false;
     }
     return true;
@@ -1887,14 +1871,13 @@ inline bool Chord::iseRPTTI(double range) const {
 }
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTgI>(const Chord &chord, double range, double g) {
-    Chord normalRPTg = normalize<EQUIVALENCE_RELATION_RPTg>(chord, range, g);
-    if (isNormal<EQUIVALENCE_RELATION_I>(normalRPTg, range, g) == true) {
-        return normalRPTg;
+    Chord rptt = normalize<EQUIVALENCE_RELATION_RPTg>(chord, range, g);
+    if (isNormal<EQUIVALENCE_RELATION_I>(rptt, range, g) == true) {
+        return rptt;
     } else {
-        Chord normalI = normalize<EQUIVALENCE_RELATION_I>(normalRPTg, range, g);
-        normalRPTg = normalize<EQUIVALENCE_RELATION_RPTg>(normalI, range, g);
-        return normalRPTg;
-        //~ return normalI;
+        Chord rptt_i = normalize<EQUIVALENCE_RELATION_I>(rptt, range, g);
+        auto rptt_i_t = normalize<EQUIVALENCE_RELATION_Tg>(rptt_i, range, g);
+        return rptt_i_t;
     }
 }
 
@@ -2242,6 +2225,7 @@ inline std::string Chord::information() const {
     Chord normalO =     csound::normalize<EQUIVALENCE_RELATION_R>(*this, OCTAVE(), 1.0);
     Chord normalP =     csound::normalize<EQUIVALENCE_RELATION_P>(*this, OCTAVE(), 1.0);
     Chord normalT =     csound::normalize<EQUIVALENCE_RELATION_T>(*this, OCTAVE(), 1.0);
+    Chord normalTT =    csound::normalize<EQUIVALENCE_RELATION_Tg>(*this, OCTAVE(), 1.0);
     Chord normalt =     normalT.et();
     Chord normalI =     csound::normalize<EQUIVALENCE_RELATION_I>(*this, OCTAVE(), 1.0);
     Chord normalV =     csound::normalize<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0);
@@ -2264,6 +2248,7 @@ inline std::string Chord::information() const {
                 "O:           %d => %s\n"
                 "P:           %d => %s\n"
                 "T:           %d => %s\n"
+                "TT:          %d => %s\n"
                 "I:           %d => %s\n"
                 "V:           %d => %s\n"
                 "vt:               %s\n"
@@ -2281,6 +2266,7 @@ inline std::string Chord::information() const {
                  isNormal<EQUIVALENCE_RELATION_R>(*this, OCTAVE(), 1.0), normalO.toString().c_str(),     
                  isNormal<EQUIVALENCE_RELATION_P>(*this, OCTAVE(), 1.0), normalP.toString().c_str(),     
                  isNormal<EQUIVALENCE_RELATION_T>(*this, OCTAVE(), 1.0), normalT.toString().c_str(),     
+                 isNormal<EQUIVALENCE_RELATION_Tg>(*this, OCTAVE(), 1.0), normalTT.toString().c_str(),     
                  isNormal<EQUIVALENCE_RELATION_I>(*this, OCTAVE(), 1.0), normalI.toString().c_str(),     
                  isNormal<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0), normalV.toString().c_str(),     
                  normalvt.toString().c_str(),
@@ -2731,17 +2717,17 @@ inline Chord Chord::floor() const {
 }
 
 inline Chord Chord::ceiling() const {
-    Chord clone = *this;
+    Chord ceiling_ = *this;
     for (size_t voice = 0; voice  < voices(); voice++) {
-        clone.setPitch(voice, std::ceil(getPitch(voice)));
+        ceiling_.setPitch(voice, std::ceil(getPitch(voice)));
     }
-    return clone;
+    return ceiling_;
 }
 
 inline Chord Chord::origin() const {
-    Chord clone;
-    clone.resize(voices());
-    return clone;
+    Chord origin_;
+    origin_.resize(voices());
+    return origin_;
 }
 
 inline double Chord::distanceToOrigin() const {
@@ -3710,7 +3696,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
         bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
         Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
         bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
-        if (DEBUGGING && normalized_is_normal == false) {
+        if ((DEBUGGING == true) && (normalized_is_normal == false)) {
             std::cerr << "Inconsistency in byIsNormal! iterator:" << iterator_.toString().c_str() << " normalized:" << normalized.toString().c_str() << std::endl;
         }
         if (iterator_is_normal == true) {
@@ -3745,7 +3731,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
         bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
         Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
         bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
-        if (normalized_is_normal == false) {
+        if ((DEBUGGING == true) && (normalized_is_normal == false)) {
             std::cerr << "Inconsistency in byNormalize for " <<  namesForEquivalenceRelations[EQUIVALENCE_RELATION] << "! iterator:" << iterator_.toString().c_str() << " OPTT: " << iterator_.eOPTT().toString().c_str() << " normalized:" << normalized.toString().c_str() << std::endl;
         }
         auto result = fundamentalDomain.insert(normalized);
@@ -3793,8 +3779,8 @@ inline SILENCE_PUBLIC HyperplaneEquation &get_hyperplane_equation(int voices) {
     static std::map<int, HyperplaneEquation> hyperplane_equations;
     if (hyperplane_equations.size() == 0) {
         for (int dimensions = 3; dimensions < 12; ++dimensions) {
-            //~ hyperplane_equations[dimensions] = hyperplane_equation_from_dimensionality(dimensions, true, 1);
-            hyperplane_equations[dimensions] = hyperplane_equation_from_random_inversion_flat(dimensions, true, 1);
+            hyperplane_equations[dimensions] = hyperplane_equation_from_dimensionality(dimensions, true, 1);
+            //~ hyperplane_equations[dimensions] = hyperplane_equation_from_random_inversion_flat(dimensions, true, 1);
         }
     }
     return hyperplane_equations[voices];    
@@ -3820,14 +3806,14 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_by_singular_value_d
     std::vector<Chord> points;
     if (make_eT == true) {
         for (auto point : points_) {
-            points.push_back(point.eT());
+            points.push_back(point.eOPT());
         }
     } else {
         points = points_;
     }
-    std::cout << "hyperplane_equation_by_singular_value_decomposition: eT points:" << std::endl;
+    std::cout << "hyperplane_equation_by_singular_value_decomposition: eOPT points:" << std::endl;
     for (auto point: points) {
-        std::cout << "eT(point): " << point.col(0).transpose() << std::endl;
+        std::cout << "eOPT(point): " << point.col(0).transpose() << std::endl;
     }
     auto subtrahend = points.back().col(0);
     Eigen::MatrixXd matrix(subtrahend.rows(), points.size() - 1);
@@ -3872,7 +3858,7 @@ inline SILENCE_PUBLIC std::vector<Chord> cyclical_region_vertices(int dimensions
         if (transpositional_equivalence == true) {
             vertex = vertex.eT();
         }
-        vertices.push_back(vertex.eT());
+        vertices.insert(vertices.begin(), vertex);
     }
     std::fprintf(stderr, "cyclical_region_vertices:\n");
     for (int i = 0; i < vertices.size(); ++i) {
@@ -3886,53 +3872,15 @@ inline SILENCE_PUBLIC std::vector<Chord> cyclical_region_vertices(int dimensions
  * and constant term, for the first fundamental domain of OPT equivalence for n 
  * dimensions. The unit normal vector can be rotated from sector to sector by 
  * permuting its terms, and the constant term is the dot product of the unit 
- * normal and the center.
+ * normal vector and the center.
  */
 inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality(int dimensions, bool transpositional_equivalence, int sector_) {
     Chord chord(dimensions);
     Chord center = chord.center();
+    Chord upper_point;
+    Chord lower_point;
     if (transpositional_equivalence == true) {
-        center = center.eT();
-    }
-    if (dimensions == 3) {
-        HyperplaneEquation hyperplane_equation_;
-        hyperplane_equation_.unit_normal_vector.resize(3, 1);
-        /*
--0.3333333333
--0.3333333333
- 0.6666666667
-
--0.3333333333
- 0.6666666667
--0.3333333333
-
- 0.6666666667
--0.3333333333
--0.3333333333
-        */
-        switch(sector_) {
-            case 0:
-                hyperplane_equation_.unit_normal_vector << -1./3., -1./3.,  2./3.;
-                break;
-            case 1:
-                hyperplane_equation_.unit_normal_vector << -1./3.,  2./3., -1./3.;
-                break;
-            case 2:
-                hyperplane_equation_.unit_normal_vector <<  2./3., -1./3., -1./3.;
-                break;
-        }
-        auto temp = center.col(0).adjoint() * hyperplane_equation_.unit_normal_vector;    
-        hyperplane_equation_.constant_term = temp(0, 0);
-        std::fprintf(stderr, "hyperplane_equation_from_dimensionality: center:\n");
-        for(int i = 0; i < dimensions; i++) {
-            std::fprintf(stderr, "  %9.4f\n", center.getPitch(i));
-        }
-        std::fprintf(stderr, "hyperplane_equation_from_dimensionality: unit_normal_vector:\n");
-        for(int i = 0; i < dimensions; i++) {
-            std::fprintf(stderr, "  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
-        }
-        std::fprintf(stderr, "hyperplane_equation_from_dimensionality: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
-        return hyperplane_equation_;
+        center = center.eOPT();
     }
     std::vector<Chord> cyclical_region_vertices_ = cyclical_region_vertices(dimensions, transpositional_equivalence);
     for (int sector = 0; sector < sector_; ++sector) {
@@ -3940,8 +3888,8 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality
         cyclical_region_vertices_.erase(cyclical_region_vertices_.begin());
         cyclical_region_vertices_.push_back(vertex);
     }        
-    Chord upper_point = midpoint(cyclical_region_vertices_[1], cyclical_region_vertices_[2]);
-    Chord lower_point = midpoint(cyclical_region_vertices_[0], cyclical_region_vertices_[dimensions - 1]);
+    upper_point = cyclical_region_vertices_[1];
+    lower_point = cyclical_region_vertices_[0];
     // Order is reversed!
     auto normal_vector = voiceleading(lower_point, upper_point);
     auto norm = normal_vector.col(0).norm();
@@ -3965,29 +3913,23 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality
 inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_random_inversion_flat(int dimensions, bool transpositional_equivalence, int sector_) {
     std::uniform_real_distribution<> uniform(-6., 6.);
     std::vector<Chord> inversion_flat;
-    Chord center = Chord(dimensions)
-    .center();
+    Chord center = Chord(dimensions).center();
     for (int i = 0; i < 100; ++i) {
         Chord chord(dimensions);
         if (i == 0) {
-            if (transpositional_equivalence == true) {
-                center = center.eOPT();
-            }
             inversion_flat.push_back(center);
+        } else {
+            int side = std::floor(dimensions / 2.);
+            int lower_voice = 0;
+            int upper_voice = dimensions - 1;
+            for (lower_voice = 0; lower_voice < side; ++lower_voice, --upper_voice) {
+                double random_pitch = uniform(mersenne_twister);
+                chord.setPitch(lower_voice, -random_pitch);
+                chord.setPitch(upper_voice,  random_pitch);
+            }
+            chord = chord.eP();
+            inversion_flat.push_back(chord);
         }
-        int side = std::floor(dimensions / 2.);
-        int lower_voice = 0;
-        int upper_voice = dimensions - 1;
-        for (lower_voice = 0; lower_voice < side; ++lower_voice, --upper_voice) {
-            double random_pitch = uniform(mersenne_twister);
-            chord.setPitch(lower_voice, -random_pitch);
-            chord.setPitch(upper_voice,  random_pitch);
-        }
-        if (transpositional_equivalence == true) {
-            chord = chord.eT();
-        }
-        chord = chord.eP();
-        inversion_flat.push_back(chord);
     }
     HyperplaneEquation hyperplane_equation_ = hyperplane_equation_by_singular_value_decomposition(inversion_flat, transpositional_equivalence);
     std::fprintf(stderr, "hyperplane_equation_from_random_inversion_flat: sector: %d\n", sector_);
