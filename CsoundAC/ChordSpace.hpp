@@ -1541,12 +1541,12 @@ inline Chord Chord::eT() const {
 //	EQUIVALENCE_RELATION_Tg
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_Tg>(const Chord &chord, double range, double g) {
-    Chord normal = normalize<EQUIVALENCE_RELATION_T>(chord, range, g);
-    // Make it work for any g not just 1: double transposition = std::ceil(normal.getPitch(0)) - normal.getPitch(0);
-    double ng = std::ceil(normal.getPitch(0) / g);
-    double transposition = (ng * g) - normal.getPitch(0);
-    normal = normal.T(transposition);
-    return normal;
+    auto t_ = normalize<EQUIVALENCE_RELATION_T>(chord, range, g);
+    auto t_ceiling = t_.ceiling();
+    while (lt_epsilon(t_ceiling.layer(), 0.) == true) {
+        t_ceiling = t_ceiling.T(g);
+    }
+    return t_ceiling;
 }
 
 inline Chord Chord::eTT(double g) const {
@@ -1554,9 +1554,13 @@ inline Chord Chord::eTT(double g) const {
 }
 
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_Tg>(const Chord &chord, double range, double g) {
-    Chord normalP = normalize<EQUIVALENCE_RELATION_P>(chord, range, g);
-    Chord normalPTg = normalize<EQUIVALENCE_RELATION_Tg>(normalP, range, g);
-    if (normalP == normalPTg) {
+    auto sum = chord.layer();
+    if (eq_epsilon(sum, 0.) == true) {
+        return true;
+    }
+    auto t_ = normalize<EQUIVALENCE_RELATION_T>(chord, range, g);
+    auto tt = normalize<EQUIVALENCE_RELATION_Tg>(chord, range, g);
+    if (chord.equals(tt) == true) {
         return true;
     } else {
         return false;
@@ -1847,6 +1851,7 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTI>(cons
     } else {
         Chord normalI = normalize<EQUIVALENCE_RELATION_I>(normalRPT, range, g);
         Chord normalRPT = normalize<EQUIVALENCE_RELATION_RPT>(normalI, range, g);
+        //~ Chord normalRPT = normalize<EQUIVALENCE_RELATION_RPT>(normalI, range, g);
         return normalRPT;
         //~ return normalI;
     }
@@ -2239,8 +2244,8 @@ inline std::string Chord::information() const {
     Chord normalT =     csound::normalize<EQUIVALENCE_RELATION_T>(*this, OCTAVE(), 1.0);
     Chord normalt =     normalT.et();
     Chord normalI =     csound::normalize<EQUIVALENCE_RELATION_I>(*this, OCTAVE(), 1.0);
-///    Chord normalV =     csound::normalize<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0);
-///    Chord normalvt =    normalV.et();
+    Chord normalV =     csound::normalize<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0);
+    Chord normalvt =    normalV.et();
     Chord normalpcs =   epcs().eP();
     Chord normalOPT =   csound::normalize<EQUIVALENCE_RELATION_RPT>(*this, OCTAVE(), 1.0);
     Chord normalOPTg =  csound::normalize<EQUIVALENCE_RELATION_RPTg>(*this, OCTAVE(), 1.0);
@@ -2260,13 +2265,15 @@ inline std::string Chord::information() const {
                 "P:           %d => %s\n"
                 "T:           %d => %s\n"
                 "I:           %d => %s\n"
+                "V:           %d => %s\n"
+                "vt:               %s\n"
                 "OP:          %d => %s\n"
                 "OPT:         %d => %s\n"
                 "OPTT:        %d => %s\n"
                 "OPI:         %d => %s\n"
                 "OPTI:        %d => %s\n"
                 "OPTTI:       %d => %s\n"
-                "sum:                 %6.7f\n",
+                "sum:               %12.7f\n",
                  toString().c_str(),             
                  chordName.c_str(),
                  normalpcs.toString().c_str(),
@@ -2275,8 +2282,8 @@ inline std::string Chord::information() const {
                  isNormal<EQUIVALENCE_RELATION_P>(*this, OCTAVE(), 1.0), normalP.toString().c_str(),     
                  isNormal<EQUIVALENCE_RELATION_T>(*this, OCTAVE(), 1.0), normalT.toString().c_str(),     
                  isNormal<EQUIVALENCE_RELATION_I>(*this, OCTAVE(), 1.0), normalI.toString().c_str(),     
-///                 normalV.toString().c_str(),     isNormal<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0),
-///                 normalvt.toString().c_str(),
+                 isNormal<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0), normalV.toString().c_str(),     
+                 normalvt.toString().c_str(),
                  isNormal<EQUIVALENCE_RELATION_RP>(*this, OCTAVE(), 1.0), normalOP.toString().c_str(),    
                  isNormal<EQUIVALENCE_RELATION_RPT>(*this, OCTAVE(), 1.0), normalOPT.toString().c_str(),   
                  isNormal<EQUIVALENCE_RELATION_RPTg>(*this, OCTAVE(), 1.0), normalOPTg.toString().c_str(),  

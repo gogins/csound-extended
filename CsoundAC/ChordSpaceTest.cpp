@@ -725,10 +725,12 @@ int main(int argc, char **argv) {
     std::cerr << "Should be Dm9:" << std::endl << Dm9.information().c_str() << std::endl;
     csound::Chord chordForName_ = csound::chordForName("CM9");
     std::fprintf(stderr, "chordForName(%s): %s\n", "CM9", chordForName_.information().c_str());
-    std::fprintf(stderr, "\nTesting all equivalence relations...\n\n");
+    
+    std::fprintf(stderr, "\nTesting equivalence relations...\n\n");
     for (int voiceCount = 3; voiceCount <= maximumVoiceCountToTest; ++voiceCount) {
         testEquivalenceRelations(voiceCount, csound::OCTAVE(), 1.0);
     }
+    
     //~ auto optgiByNormalize = csound::fundamentalDomainByNormalize<csound::EQUIVALENCE_RELATION_RPTgI>(4, 12.0, 1.0);
     //~ printSet("optgiByNormalize", optgiByNormalize);
     //~ auto optgiByIsNormal = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(4, 12.0, 1.0);
@@ -792,6 +794,7 @@ int main(int argc, char **argv) {
     spun_back = reflected.eOPTT();
     std::cout << "spun_back:" << std::endl;
     std::cout << spun_back.information() << std::endl;    
+#endif     
 
     // These are for printing OPTI and ~OPTI to see if there some obvious way to match them.
     // Print as index, pitches, is_opti, chord type, and name.
@@ -814,7 +817,23 @@ int main(int argc, char **argv) {
     auto opt4s = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPT>(4, 12.0, 1.0);
     for (auto opt : opt4s) {
     }
-#endif     
+    
+    original = csound::Chord({-13, -13, -6});
+    std::cout << "original:" << std::endl;
+    std::cout << original.information() << std::endl;
+    auto opti = csound::Chord({-13, -13, -6}).eOPTI();
+    std::cout << "opti:" << std::endl;
+    std::cout << opti.information() << std::endl;
+    reflected = csound::reflect_by_householder(opti);
+    std::cout << "reflect_by_householder:" << std::endl;
+    std::cout << reflected.information() << std::endl;
+    reflected = reflect_in_inversion_flat(opti);
+    std::cout << "reflect_in_inversion_flat:" << std::endl;
+    std::cout << reflected.information() << std::endl;
+    spun_back = reflected.eOPT();
+    std::cout << "spun_back:" << std::endl;
+    std::cout << spun_back.information() << std::endl;
+
 
     std::fprintf(stderr, "\nFINISHED.\n\n");
     return 0;
