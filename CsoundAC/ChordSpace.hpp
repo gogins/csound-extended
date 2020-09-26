@@ -261,7 +261,7 @@ Q(c, n, m)      Contexual transposition;
                 
 */
 
-static int DEBUGGING = false;
+static int DEBUGGING = true;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // ALL DECLARATIONS BELOW HERE MORE OR LESS IN ALPHABETICAL ORDER -- NO DEFINITIONS HERE.
@@ -1576,9 +1576,8 @@ inline bool Chord::iseTT(double g) const {
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_I>(const Chord &chord, double range, double g) {
     int lowerVoice = 0;
     int upperVoice = chord.voices() - 2;
-    // Compare the intervals in a chord with those in its inverse,
-    // starting with the "first." This is NOT the same as
-    // whether the chord is less than or equal to its inverse.
+    // Compare the intervals in a chord with those in its inverse. This is NOT 
+    // the same as whether the chord is less than or equal to its inverse.
     while (lowerVoice < upperVoice) {
         int lowerInterval = chord.getPitch(lowerVoice + 1) - chord.getPitch(lowerVoice);
         int upperInterval = chord.getPitch(upperVoice + 1) - chord.getPitch(upperVoice);
@@ -1612,8 +1611,7 @@ inline Chord Chord::eI() const {
 //	EQUIVALENCE_RELATION_V
 
 // Returns whether the chord is within the representative fundamental 
-// domain of voicing equivalence, i.e. the sector of the cyclical region that 
-// corresponds to "first inversion." In Tymoczko's 1-based notation:
+// domain of voicing equivalence. In Tymoczko's 1-based notation:
 // x[1] + 12 - x[N] <= x[i + 1] - x[i], 1 <= i < N - 1
 // In 0-based notation:
 // x[0] + 12 - x[N-1] <= x[i + 1] - x[i], 0 <= i < N - 2
@@ -1806,10 +1804,10 @@ inline Chord Chord::eRPI(double range) const {
 //	EQUIVALENCE_RELATION_RPTI
 
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RPTI>(const Chord &chord, double range, double g) {
-    if (!isNormal<EQUIVALENCE_RELATION_P>(chord, range, g)) {
+    if (!isNormal<EQUIVALENCE_RELATION_R>(chord, range, g)) {
         return false;
     }
-    if (!isNormal<EQUIVALENCE_RELATION_R>(chord, range, g)) {
+    if (!isNormal<EQUIVALENCE_RELATION_P>(chord, range, g)) {
         return false;
     }
     if (!isNormal<EQUIVALENCE_RELATION_V>(chord, range, g)) {
@@ -1834,10 +1832,8 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTI>(cons
         return rpt;
     } else {
         Chord rpt_i = normalize<EQUIVALENCE_RELATION_I>(rpt, range, g);
-        Chord rpt_i_t = normalize<EQUIVALENCE_RELATION_T>(rpt_i, range, g);
-        //~ Chord normalRPT = normalize<EQUIVALENCE_RELATION_RPT>(normalI, range, g);
+        Chord rpt_i_t = normalize<EQUIVALENCE_RELATION_RPT>(rpt_i, range, g);
         return rpt_i_t;
-        //~ return normalI;
     }
 }
 
@@ -1848,10 +1844,10 @@ inline Chord Chord::eRPTI(double range) const {
 //	EQUIVALENCE_RELATION_RPTgI
 
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RPTgI>(const Chord &chord, double range, double g) {
-    if (isNormal<EQUIVALENCE_RELATION_P>(chord, range, g) == false) {
+    if (isNormal<EQUIVALENCE_RELATION_R>(chord, range, g) == false) {
         return false;
     }
-    if (isNormal<EQUIVALENCE_RELATION_R>(chord, range, g) == false) {
+    if (isNormal<EQUIVALENCE_RELATION_P>(chord, range, g) == false) {
         return false;
     }
     if (isNormal<EQUIVALENCE_RELATION_V>(chord, range, g) == false) {
@@ -1875,8 +1871,9 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTgI>(con
     if (isNormal<EQUIVALENCE_RELATION_I>(rptt, range, g) == true) {
         return rptt;
     } else {
-        Chord rptt_i = normalize<EQUIVALENCE_RELATION_I>(rptt, range, g);
-        auto rptt_i_t = normalize<EQUIVALENCE_RELATION_Tg>(rptt_i, range, g);
+        auto rptt_i = normalize<EQUIVALENCE_RELATION_I>(rptt, range, g);
+        //~ return rptt_i;
+        auto rptt_i_t = normalize<EQUIVALENCE_RELATION_RPTg>(rptt_i, range, g);
         return rptt_i_t;
     }
 }
@@ -2229,7 +2226,7 @@ inline std::string Chord::information() const {
     Chord normalt =     normalT.et();
     Chord normalI =     csound::normalize<EQUIVALENCE_RELATION_I>(*this, OCTAVE(), 1.0);
     Chord normalV =     csound::normalize<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0);
-    Chord normalvt =    normalV.et();
+    //~ Chord normalvt =    normalV.et();
     Chord normalpcs =   epcs().eP();
     Chord normalOPT =   csound::normalize<EQUIVALENCE_RELATION_RPT>(*this, OCTAVE(), 1.0);
     Chord normalOPTg =  csound::normalize<EQUIVALENCE_RELATION_RPTg>(*this, OCTAVE(), 1.0);
@@ -2251,14 +2248,14 @@ inline std::string Chord::information() const {
                 "TT:          %d => %s\n"
                 "I:           %d => %s\n"
                 "V:           %d => %s\n"
-                "vt:               %s\n"
+                //~ "vt:               %s\n"
                 "OP:          %d => %s\n"
                 "OPT:         %d => %s\n"
                 "OPTT:        %d => %s\n"
                 "OPI:         %d => %s\n"
                 "OPTI:        %d => %s\n"
                 "OPTTI:       %d => %s\n"
-                "sum:               %12.7f\n",
+                "sum:              %12.7f\n",
                  toString().c_str(),             
                  chordName.c_str(),
                  normalpcs.toString().c_str(),
@@ -2269,7 +2266,7 @@ inline std::string Chord::information() const {
                  isNormal<EQUIVALENCE_RELATION_Tg>(*this, OCTAVE(), 1.0), normalTT.toString().c_str(),     
                  isNormal<EQUIVALENCE_RELATION_I>(*this, OCTAVE(), 1.0), normalI.toString().c_str(),     
                  isNormal<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0), normalV.toString().c_str(),     
-                 normalvt.toString().c_str(),
+                 //~ normalvt.toString().c_str(),
                  isNormal<EQUIVALENCE_RELATION_RP>(*this, OCTAVE(), 1.0), normalOP.toString().c_str(),    
                  isNormal<EQUIVALENCE_RELATION_RPT>(*this, OCTAVE(), 1.0), normalOPT.toString().c_str(),   
                  isNormal<EQUIVALENCE_RELATION_RPTg>(*this, OCTAVE(), 1.0), normalOPTg.toString().c_str(),  
@@ -3694,24 +3691,22 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
     while (next(iterator_, origin, upperI, g) == true) {
         chords++;
         bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
-        Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
-        bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
-        if ((DEBUGGING == true) && (normalized_is_normal == false)) {
-            std::cerr << "Inconsistency in byIsNormal! iterator:" << iterator_.toString().c_str() << " normalized:" << normalized.toString().c_str() << std::endl;
-        }
         if (iterator_is_normal == true) {
             auto result = fundamentalDomain.insert(iterator_);
             if (DEBUGGING && result.second == true) {
-                std::fprintf(stderr, "By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
-                      namesForEquivalenceRelations[EQUIVALENCE_RELATION],
-                      chords,
-                      fundamentalDomain.size(),
-                      range,
-                      g,
-                      iterator_.toString().c_str(),
-                      iterator_is_normal,
-                      normalized.toString().c_str(),
-                      normalized_is_normal);
+                Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
+                bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
+                std::fprintf(stderr, "%s By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
+                    (normalized_is_normal ? "      " : "WRONG "),
+                    namesForEquivalenceRelations[EQUIVALENCE_RELATION],
+                    chords,
+                    fundamentalDomain.size(),
+                    range,
+                    g,
+                    iterator_.toString().c_str(),
+                    iterator_is_normal,
+                    normalized.toString().c_str(),
+                    normalized_is_normal);
             }
         }
     }
@@ -3731,21 +3726,19 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
         bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
         Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
         bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
-        if ((DEBUGGING == true) && (normalized_is_normal == false)) {
-            std::cerr << "Inconsistency in byNormalize for " <<  namesForEquivalenceRelations[EQUIVALENCE_RELATION] << "! iterator:" << iterator_.toString().c_str() << " OPTT: " << iterator_.eOPTT().toString().c_str() << " normalized:" << normalized.toString().c_str() << std::endl;
-        }
         auto result = fundamentalDomain.insert(normalized);
         if (DEBUGGING && result.second == true) {
-            std::fprintf(stderr, "By normalize %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
-                  namesForEquivalenceRelations[EQUIVALENCE_RELATION],
-                  chords,
-                  fundamentalDomain.size(),
-                  range,
-                  g,
-                  iterator_.toString().c_str(),
-                  iterator_is_normal,
-                  normalized.toString().c_str(),
-                  normalized_is_normal);
+            std::fprintf(stderr, "%s By normalize %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
+                (normalized_is_normal ? "      " : "WRONG "),
+                namesForEquivalenceRelations[EQUIVALENCE_RELATION],
+                chords,
+                fundamentalDomain.size(),
+                range,
+                g,
+                iterator_.toString().c_str(),
+                iterator_is_normal,
+                normalized.toString().c_str(),
+                normalized_is_normal);
         }
     }
     return fundamentalDomain;
@@ -3779,7 +3772,7 @@ inline SILENCE_PUBLIC HyperplaneEquation &get_hyperplane_equation(int voices) {
     static std::map<int, HyperplaneEquation> hyperplane_equations;
     if (hyperplane_equations.size() == 0) {
         for (int dimensions = 3; dimensions < 12; ++dimensions) {
-            hyperplane_equations[dimensions] = hyperplane_equation_from_dimensionality(dimensions, true, 1);
+            hyperplane_equations[dimensions] = hyperplane_equation_from_dimensionality(dimensions, true, dimensions - 1);
             //~ hyperplane_equations[dimensions] = hyperplane_equation_from_random_inversion_flat(dimensions, true, 1);
         }
     }
@@ -3888,13 +3881,12 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality
         cyclical_region_vertices_.erase(cyclical_region_vertices_.begin());
         cyclical_region_vertices_.push_back(vertex);
     }        
-    upper_point = cyclical_region_vertices_[1];
     lower_point = cyclical_region_vertices_[0];
-    // Order is reversed!
-    auto normal_vector = voiceleading(lower_point, upper_point);
-    auto norm = normal_vector.col(0).norm();
+    upper_point = cyclical_region_vertices_[1];
+    auto normal_vector = upper_point.col(0) - lower_point.col(0);
+    auto norm = normal_vector.norm();
     HyperplaneEquation hyperplane_equation_;
-    hyperplane_equation_.unit_normal_vector = normal_vector.col(0) / norm;
+    hyperplane_equation_.unit_normal_vector = normal_vector / norm;
     auto temp = center.col(0).adjoint() * hyperplane_equation_.unit_normal_vector;    
     hyperplane_equation_.constant_term = temp(0, 0);
     std::fprintf(stderr, "hyperplane_equation_from_dimensionality: sector: %d\n", sector_);
@@ -4167,14 +4159,24 @@ inline SILENCE_PUBLIC Chord reflect_by_householder(const Chord &chord) {
     return reflection_;
 }
 
+/**
+ * Moves the chord down to the sum 0 layer, 
+ * reflects the chord in the central point,
+ * moves the chord back up from the sum 0 layer.
+ */
 inline SILENCE_PUBLIC Chord reflect_in_center(const Chord &chord) {
     auto center_ = chord.center().eOPT();
-    auto reflection_ = chord.origin();
+    auto translation = chord.layer() / chord.voices();
+    auto zero = chord.eT();
     for (int voice = 0, n = chord.voices(); voice < n; ++voice) {
         // reflection = 2 * center - chord
-        reflection_.setPitch(voice, 2. * center_.getPitch(voice) - chord.getPitch(voice));
-    }
-    return reflection_;
+        auto center_voice = center_.getPitch(voice) * 2.;
+        auto zero_voice = zero.getPitch(voice);
+        auto reflected_voice = center_voice - zero_voice;
+        auto reflected_translated_voice = reflected_voice + translation;
+        zero.setPitch(voice, reflected_translated_voice);
+     }
+    return zero;
 }
 
 inline SILENCE_PUBLIC Chord reflect_in_inversion_flat(const Chord &chord) {

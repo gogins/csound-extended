@@ -255,7 +255,7 @@ static void test_chord_space_group(int initialVoiceCount, int finalVoiceCount) {
     }
 }
 
-std::vector<std::string> equivalenceRelationsToTest = {"RP", "RPTg", "RPI", "RPTI", "RPTgI"};
+std::vector<std::string> equivalenceRelationsToTest = {"RP", "RPT", "RPTg", "RPTI", "RPTgI"};
 typedef csound::Chord(*normalize_t)(const csound::Chord &, double, double);
 typedef bool (*isNormal_t)(const csound::Chord &, double, double);
 typedef bool (*isEquivalent_t)(const csound::Chord &, const csound::Chord &, double, double);
@@ -338,11 +338,11 @@ static bool testEquivalenceRelation(std::string equivalenceRelation, int voiceCo
     bool passes = true;
     char buffer[0x200];
     auto normalsForEquivalenceRelation = fundamentalDomainByNormalizesForEquivalenceRelations[equivalenceRelation](voiceCount, range, g);
-    std::sprintf(buffer, "%-8s 'made_equivalents': ", equivalenceRelation.c_str());
-    printSet(buffer, normalsForEquivalenceRelation);
-    std::sprintf(buffer, "%-8s 'found_equivalents':", equivalenceRelation.c_str());
+    //~ std::sprintf(buffer, "%-8s 'made_equivalents': ", equivalenceRelation.c_str());
+    //~ printSet(buffer, normalsForEquivalenceRelation);
     auto equivalentsForEquivalenceRelation = fundamentalDomainByIsNormalsForEquivalenceRelations[equivalenceRelation](voiceCount, range, g);
-    printSet(buffer, equivalentsForEquivalenceRelation);
+    //~ std::sprintf(buffer, "%-8s 'found_equivalents':", equivalenceRelation.c_str());
+    //~ printSet(buffer, equivalentsForEquivalenceRelation);
     if (!testNormalsAndEquivalents(equivalenceRelation,
                                    normalsForEquivalenceRelation,
                                    equivalentsForEquivalenceRelation,
@@ -380,34 +380,34 @@ static bool testEquivalenceRelations(int voiceCount, double range, double g) {
     return passes;
 }
 
-void printRPIStuff(const csound::Chord &chord)
-{
-    std::fprintf(stderr, "%s\n", chord.information().c_str());
-}
+//~ void printRPIStuff(const csound::Chord &chord)
+//~ {
+    //~ std::fprintf(stderr, "%s\n", chord.information().c_str());
+//~ }
 
-void testRPIStuff(const csound::Chord &chord)
-{
-    std::fprintf(stderr, "\nTESTING RPI STUFF\n");
-    std::fprintf(stderr, "chord...\n");
-    printRPIStuff(chord);
-    auto chordRP = csound::normalize<csound::EQUIVALENCE_RELATION_RP>(chord, 12.0, 1.0);
-    auto inverse = chord.I().eP();
-    std::fprintf(stderr, "inverse...\n");
-    printRPIStuff(inverse);
-    auto inverseRP = csound::normalize<csound::EQUIVALENCE_RELATION_RP>(inverse, 12.0, 1.0);
-    std::fprintf(stderr, "inverseRP...\n");
-    printRPIStuff(inverseRP);
-    auto midpoint = csound::midpoint(chord.eP(), inverseRP.eP());
-    std::fprintf(stderr, "midpoint of chord and inverseRP: %s\n", midpoint.eOP().toString().c_str());
-    std::fprintf(stderr, "inverse of midpoint:             %s\n", midpoint.I().eOP().toString().c_str());
-    auto inverseInverseRP = inverseRP.I();
-    std::fprintf(stderr, "inverseInverseRP...\n");
-    printRPIStuff(inverseInverseRP);
-    auto inverseRPinverseRP = csound::normalize<csound::EQUIVALENCE_RELATION_RP>(inverseInverseRP, 12.0, 1.0);
-    std::fprintf(stderr, "inverseRPinverseRP...\n");
-    printRPIStuff(inverseRPinverseRP);
-    test(inverseRPinverseRP == chordRP, "chordRP must equal inverseRPinverseRP.");
-}
+//~ void testRPIStuff(const csound::Chord &chord)
+//~ {
+    //~ std::fprintf(stderr, "\nTESTING RPI STUFF\n");
+    //~ std::fprintf(stderr, "chord...\n");
+    //~ printRPIStuff(chord);
+    //~ auto chordRP = csound::normalize<csound::EQUIVALENCE_RELATION_RP>(chord, 12.0, 1.0);
+    //~ auto inverse = chord.I().eP();
+    //~ std::fprintf(stderr, "inverse...\n");
+    //~ printRPIStuff(inverse);
+    //~ auto inverseRP = csound::normalize<csound::EQUIVALENCE_RELATION_RP>(inverse, 12.0, 1.0);
+    //~ std::fprintf(stderr, "inverseRP...\n");
+    //~ printRPIStuff(inverseRP);
+    //~ auto midpoint = csound::midpoint(chord.eP(), inverseRP.eP());
+    //~ std::fprintf(stderr, "midpoint of chord and inverseRP: %s\n", midpoint.eOP().toString().c_str());
+    //~ std::fprintf(stderr, "inverse of midpoint:             %s\n", midpoint.I().eOP().toString().c_str());
+    //~ auto inverseInverseRP = inverseRP.I();
+    //~ std::fprintf(stderr, "inverseInverseRP...\n");
+    //~ printRPIStuff(inverseInverseRP);
+    //~ auto inverseRPinverseRP = csound::normalize<csound::EQUIVALENCE_RELATION_RP>(inverseInverseRP, 12.0, 1.0);
+    //~ std::fprintf(stderr, "inverseRPinverseRP...\n");
+    //~ printRPIStuff(inverseRPinverseRP);
+    //~ test(inverseRPinverseRP == chordRP, "chordRP must equal inverseRPinverseRP.");
+//~ }
 
 int main(int argc, char **argv) {
     std::fprintf(stderr, "C H O R D S P A C E   U N I T   T E S T S\n\n");
@@ -489,95 +489,95 @@ int main(int argc, char **argv) {
     auto normalized = csound::normalize<csound::EQUIVALENCE_RELATION_R>(original, 24.0, 1.0);
     std::fprintf(stderr, "R:     original: %s  normalized: %s:\n", original.toString().c_str(), normalized.toString().c_str());
 
-    original.setPitch(0,  3.0);
-    original.setPitch(1,  4.0);
-    original.setPitch(2,  4.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0,  3.0);
+    //~ original.setPitch(1,  4.0);
+    //~ original.setPitch(2,  4.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0, -5.0);
-    original.setPitch(1, -2.0);
-    original.setPitch(2,  7.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0, -5.0);
+    //~ original.setPitch(1, -2.0);
+    //~ original.setPitch(2,  7.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0, -7.0);
-    original.setPitch(1,  3.0);
-    original.setPitch(2,  5.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0, -7.0);
+    //~ original.setPitch(1,  3.0);
+    //~ original.setPitch(2,  5.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0, -7.0);
-    original.setPitch(1,  3.0);
-    original.setPitch(2,  3.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0, -7.0);
+    //~ original.setPitch(1,  3.0);
+    //~ original.setPitch(2,  3.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0, -7.0);
-    original.setPitch(1,  3.0);
-    original.setPitch(2,  5.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0, -7.0);
+    //~ original.setPitch(1,  3.0);
+    //~ original.setPitch(2,  5.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0, -5.0);
-    original.setPitch(1,  2.0);
-    original.setPitch(2,  7.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0, -5.0);
+    //~ original.setPitch(1,  2.0);
+    //~ original.setPitch(2,  7.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0, -3.0);
-    original.setPitch(1,  7.0);
-    original.setPitch(2,  7.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0, -3.0);
+    //~ original.setPitch(1,  7.0);
+    //~ original.setPitch(2,  7.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0, -5.0);
-    original.setPitch(1,  5.0);
-    original.setPitch(2,  7.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0, -5.0);
+    //~ original.setPitch(1,  5.0);
+    //~ original.setPitch(2,  7.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0, -8.0);
-    original.setPitch(1,  4.0);
-    original.setPitch(2,  4.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0, -8.0);
+    //~ original.setPitch(1,  4.0);
+    //~ original.setPitch(2,  4.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0, -5.0);
-    original.setPitch(1,  5.0);
-    original.setPitch(2,  5.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0, -5.0);
+    //~ original.setPitch(1,  5.0);
+    //~ original.setPitch(2,  5.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0, -4.0);
-    original.setPitch(1,  1.0);
-    original.setPitch(2,  3.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0, -4.0);
+    //~ original.setPitch(1,  1.0);
+    //~ original.setPitch(2,  3.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0, -3.0);
-    original.setPitch(1, -1.0);
-    original.setPitch(2,  4.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0, -3.0);
+    //~ original.setPitch(1, -1.0);
+    //~ original.setPitch(2,  4.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0, -3.0);
-    original.setPitch(1, -1.0);
-    original.setPitch(2,  4.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0, -3.0);
+    //~ original.setPitch(1, -1.0);
+    //~ original.setPitch(2,  4.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0,  0.0);
-    original.setPitch(1,  0.0);
-    original.setPitch(2,  1.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0,  0.0);
+    //~ original.setPitch(1,  0.0);
+    //~ original.setPitch(2,  1.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0,  0.0);
-    original.setPitch(1,  1.0);
-    original.setPitch(2,  1.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0,  0.0);
+    //~ original.setPitch(1,  1.0);
+    //~ original.setPitch(2,  1.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0,  0.0);
-    original.setPitch(1,  0.0);
-    original.setPitch(2,  1.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0,  0.0);
+    //~ original.setPitch(1,  0.0);
+    //~ original.setPitch(2,  1.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0, -3.0);
-    original.setPitch(1,  3.0);
-    original.setPitch(2,  9.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0, -3.0);
+    //~ original.setPitch(1,  3.0);
+    //~ original.setPitch(2,  9.0);
+    //~ testRPIStuff(original);
 
-    original.setPitch(0, -1.0);
-    original.setPitch(1, -1.0);
-    original.setPitch(2, 12.0);
-    testRPIStuff(original);
+    //~ original.setPitch(0, -1.0);
+    //~ original.setPitch(1, -1.0);
+    //~ original.setPitch(2, 12.0);
+    //~ testRPIStuff(original);
 
     auto index = csound::indexForOctavewiseRevoicing(original, 48.0, true);
     index = csound::indexForOctavewiseRevoicing(original.eOP(), 48.0, true);
@@ -748,7 +748,7 @@ int main(int argc, char **argv) {
     std::cout << "HYPERPLANE EQUATIONS FOR DIMENSIONS\n" << std::endl;
     for (int i = 3; i < 6 ; ++i) {
         std::cerr << "\nDIMENSIONALITY\n" << std::endl;
-        auto hpd = csound::hyperplane_equation_from_dimensionality(i);
+        auto hpd = csound::hyperplane_equation_from_dimensionality(i, true);
         //~ std::cerr << "\nCENTROIDS\n" << std::endl;
         //~ auto hpc = csound::hyperplane_equation_from_centroids(i);
         std::cerr << "\nRANDOM INVERSION FLAT\n" << std::endl;
@@ -818,7 +818,7 @@ int main(int argc, char **argv) {
     //~ for (auto opt : opt4s) {
     //~ }
     
-    csound::hyperplane_equation_from_dimensionality(3);
+    csound::hyperplane_equation_from_dimensionality(3, true, 2);
     original = csound::Chord({-13, -13, -6});
     std::cout << "original:" << std::endl;
     std::cout << original.information() << std::endl;
@@ -847,7 +847,66 @@ int main(int argc, char **argv) {
     std::cout << "opt_i_opt:" << std::endl;
     std::cout << opt_i_opt.information() << std::endl;
    
+    original = csound::Chord({-3, -3, 6});
+    std::cout << "original:" << std::endl;
+    std::cout << original.information() << std::endl;
+    opt = original.eOPT();
+    std::cout << "opt:" << std::endl;
+    std::cout << opt.information() << std::endl;
+    opt_i = opt.eI();
+    std::cout << "opt_i:" << std::endl;
+    std::cout << opt_i .information() << std::endl;
+    opt_i_opt = opt_i.eOPT();
+    std::cout << "opt_i_opt:" << std::endl;
+    std::cout << opt_i_opt.information() << std::endl;
 
+    original = csound::Chord({-8, -8, -5});
+    std::cout << "original:" << std::endl;
+    std::cout << original.information() << std::endl;
+    opt = original.eOPTT();
+    std::cout << "opt:" << std::endl;
+    std::cout << opt.information() << std::endl;
+    opt_i = opt.eI();
+    std::cout << "opt_i:" << std::endl;
+    std::cout << opt_i .information() << std::endl;
+    opt_i_opt = opt_i.eOPTT();
+    std::cout << "opt_i_opt:" << std::endl;
+    std::cout << opt_i_opt.information() << std::endl;
+    
+    original = csound::Chord({0, 4, 7});
+    std::cout << "original:" << std::endl;
+    std::cout << original.information() << std::endl;
+    for (auto revoicing : original.voicings()) {
+        std::cout << "revoicing:" << revoicing.toString() << " V:" << revoicing.iseV() << std::endl;
+    }
+    opt = original.eOPT();
+    std::cout << "opt:" << std::endl;
+    std::cout << opt.information() << std::endl;
+    for (auto revoicing : opt.voicings()) {
+        std::cout << "revoicing:" << revoicing.toString() << " V:" << revoicing.iseV() << std::endl;
+    }
+    opt_i = opt.eI();
+    std::cout << "opt_i:" << std::endl;
+    std::cout << opt_i .information() << std::endl;
+    opt_i_opt = opt_i.eOPTT();
+    std::cout << "opt_i_opt:" << std::endl;
+    std::cout << opt_i_opt.information() << std::endl;
+ 
+    original = csound::Chord({0, 4, 7, 11});
+    std::cout << "original:" << std::endl;
+    std::cout << original.information() << std::endl;
+    for (auto revoicing : original.voicings()) {
+        std::cout << "revoicing:" << revoicing.toString() << " V:" << revoicing.iseV() << std::endl;
+    }
+    opt = original.eOPT();
+    std::cout << "opt:" << std::endl;
+    std::cout << opt.information() << std::endl;
+    for (auto revoicing : opt.voicings()) {
+        std::cout << "revoicing:" << revoicing.toString() << " V:" << revoicing.iseV() << std::endl;
+    }
+    
+    original = csound::Chord({-8, -8, -5});
+   
 
     std::fprintf(stderr, "\nFINISHED.\n\n");
     return 0;
