@@ -116,8 +116,8 @@ in the chord.
 A scale is a chord with a tonic pitch-class as its first and lowest voice, 
 all other voices being pitches, not pitch-classes, sorted in ascending order.
 
-For the purposes of algorithmic composition in CsoundAC, a score is considered
-to be a sequence of more or less fleeting chords.
+For the purposes of algorithmic composition, a score can be considered to be a 
+sequence of more or less fleeting chords.
 
 EQUIVALENCE RELATIONS AND CLASSES
 
@@ -151,7 +151,7 @@ such that the representative fundamental domain of OP / the representative
 fundamental domain of PI equals the representative fundamental domain of OPI.
 And this in turn may require accounting for duplicate elements of the
 representative fundamental domain caused by reflections or singularities in
-the orbifold.
+the orbifold, or by doubled pitches in a chord.
 
 C       Cardinality equivalence, e.g. {1, 1, 2} == {1, 2}. _Not_ assuming
         cardinality equivalence ensures that there is a proto-metric in plain
@@ -169,7 +169,7 @@ P       Permutational equivalence. The fundamental domain is defined by a
         sorted by pitch.
 
 T       Transpositional equivalence, e.g. {1, 2} == {7, 8}. The fundamental
-        domain is defined as a plane in chord space at right angles to the
+        domain is defined as a hyperplane in chord space at right angles to the
         diagonal of unison chords. Represented by the chord always having a
         sum of pitches equal to 0.
 
@@ -183,12 +183,11 @@ I       Inversional equivalence. Care is needed to distinguish the
         inversion' or 'revoice by adding an octave to the lowest tone of a
         chord.' Here, we use 'invert' and 'inversion' in the mathematician's
         sense, and we use the terms 'revoice' and 'voicing' for the musician's
-        'invert' and 'inversion'. The inversion point for any inversion lies
-        on the unison diagonal. A fundamental domain is defined as any half of
-        chord space that is bounded by a plane containing the inversion point.
-        Represented as the chord having the first interval between voices be
-        smaller than or equal to the final interval (recursing for chords of
-        more than 3 voices).
+        'invert' and 'inversion'. Here, the inversion of a chord is its 
+        reflection in a hyperplane (the inversion flat) that divides a 
+        fundamental domain of pitch. Represented as the chord having the first 
+        interval between voices be smaller than or equal to the final interval 
+        (recursing for chords of more than 3 voices).
 
 PI      Inversional equivalence with permutational equivalence. The
         'inversion flat' of unordered chord space is a hyperplane consisting
@@ -215,11 +214,11 @@ OPT     The layer of the OP prism as close as possible to the origin, modulo
         pitch in each OPT chord (excepting the origin itself) is negative.
 
 OPI     The OP prism modulo inversion, i.e. 1/2 of the OP prism. The
-        representative fundamental consits of those chords less than or equal
-        to their inversions modulo OP.
+        representative fundamental consits of those chords having inversional 
+        equivalence.
 
 OPTI    The OPT layer modulo inversion, i.e. 1/2 of the OPT layer.
-        Set-class. Note that CM and Cm are the same OPTI.
+        Set-class. Note that minor and major triads are are the same OPTI.
 
 OPERATIONS
 
@@ -470,6 +469,15 @@ public:
     virtual Chord eRPT(double range) const;
     virtual Chord eRPTT(double range, double g = 1.0) const;
     /**
+     * Returns one or more equivalents of the chord within the representative 
+     * fundamental domain of range, permutational, and transpositional 
+     * equivalence; the same as set-class type, or chord type. Chords with 
+     * doubled pitches may have more than one equivalent within the same 
+     * fundamental domain.
+     */
+    virtual std::vector<Chord> eRPTs(double range) const;
+    virtual std::vector<Chord> eRPTTs(double range, double g = 1.0) const;
+    /**
      * Returns the equivalent of the chord within the representative fundamental
      * domain of range, permutational, transpositional, and inversional
      * equivalence.
@@ -495,10 +503,18 @@ public:
      */
     virtual Chord et() const;
     /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of voicing equivalence.
+     * Returns an equivalent of the chord within the representative 
+     * fundamental domain of voicing equivalence. That is a chord that 
+     * has the smallest "wraparound" intervals.
      */
     virtual Chord eV() const;
+    /**
+     * Returns one or more equivalent(s) of the chord within the 
+     * representative fundamental domain of voicing equivalence. If a chord 
+     * has doubled pitches, there may be more than one equivalent within 
+     * the same fundamental domain.
+     */
+    virtual std::vector<Chord> eVs() const;
     /**
      * Returns a new chord whose pitches are the floors of this chord's pitches.
      */
@@ -1649,6 +1665,16 @@ inline Chord Chord::eV() const {
     return csound::normalize<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0);
 }
 
+inline std::vector<Chord> Chord::eVs() const {
+    std::vector<Chord> evs;
+    for (auto voicing : voicings()) {
+        if (voicing.iseV() == true) {
+            evs.push_back(voicing);
+        }
+    }
+    return evs;
+}
+
 //  EQUIVALENCE_RELATION_RP
 
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RP>(const Chord &chord, double range, double g) {
@@ -1726,6 +1752,20 @@ inline Chord Chord::eRPT(double range) const {
     return csound::normalize<EQUIVALENCE_RELATION_RPT>(*this, range, 1.0);
 }
 
+inline std::vector<Chord> Chord::eRPTs(double range) const {
+    std::vector<Chord> rpts;
+    auto rp = eRP(range);
+    auto rp_vs = rp.voicings();
+    for (auto rp_v : rp_vs) {
+        auto rp_v_t = rp_v.eT();
+        // I don't think we need eR.
+        if (rp_v_t.iseV() == true) {
+            rpts.push_back(rp_v_t);
+        }
+    }
+    return rpts;
+}
+
 //	EQUIVALENCE_RELATION_RPTg
 
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RPTg>(const Chord &chord, double range, double g) {
@@ -1763,6 +1803,20 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTg>(cons
 
 inline Chord Chord::eRPTT(double range, double g) const {
     return csound::normalize<EQUIVALENCE_RELATION_RPTg>(*this, range, g);
+}
+
+inline std::vector<Chord> Chord::eRPTTs(double range, double g) const {
+    auto rp = eRP(range);
+    std::vector<Chord> rptts;
+    auto rp_vs = rp.voicings();
+    for (auto rp_v : rp_vs) {
+        auto rp_v_tt = rp_v.eTT(g);
+        // I don't think we need eR.
+        if (rp_v_tt.iseV() == true) {
+            rptts.push_back(rp_v_tt);
+        }
+    }
+    return rptts;
 }
 
 //	EQUIVALENCE_RELATION_RPI
@@ -1827,13 +1881,32 @@ inline bool Chord::iseRPTI(double range) const {
 }
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTI>(const Chord &chord, double range, double g) {
-    Chord rpt = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
+    //~ auto rpt = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
+    //~ if (isNormal<EQUIVALENCE_RELATION_I>(rpt, range, g) == true) {
+        //~ return rpt;
+    //~ } else {
+        //~ auto rpt_i = normalize<EQUIVALENCE_RELATION_I>(rpt, range, g);
+        //~ auto rpt_i_rpt = normalize<EQUIVALENCE_RELATION_RPT>(rpt_i, range, g);
+        //~ return rpt_i_rpt;
+    //~ }
+    auto rpt = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
     if (isNormal<EQUIVALENCE_RELATION_I>(rpt, range, g) == true) {
         return rpt;
     } else {
-        Chord rpt_i = normalize<EQUIVALENCE_RELATION_I>(rpt, range, g);
-        Chord rpt_i_t = normalize<EQUIVALENCE_RELATION_RPT>(rpt_i, range, g);
-        return rpt_i_t;
+        std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: chord:" << chord.toString() << std::endl;
+        auto rpt_i = normalize<EQUIVALENCE_RELATION_I>(rpt, range, g);
+        std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: rpt_i" << rpt_i.toString() << std::endl;
+        auto rpt_i_rpts = rpt_i.eRPTs(range);
+        std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: rpt_i_rpts:" << rpt_i_rpts. size() << std::endl;
+        for (auto rpt_i_rpt : rpt_i_rpts) {
+            std::cerr << rpt_i_rpt.information() << std::endl;
+            if (rpt_i_rpt.iseRPTI(range) == true) {
+                std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: matched:" << rpt_i_rpt.toString() << std::endl;
+                return rpt_i_rpt;
+            }
+        }
+        std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: no match:" << chord.toString() << std::endl;
+        throw "Error in normalize<EQUIVALENCE_RELATION_RPTI>!";    
     }
 }
 
@@ -1867,15 +1940,16 @@ inline bool Chord::iseRPTTI(double range) const {
 }
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTgI>(const Chord &chord, double range, double g) {
-    Chord rptt = normalize<EQUIVALENCE_RELATION_RPTg>(chord, range, g);
+    auto rptt = normalize<EQUIVALENCE_RELATION_RPTg>(chord, range, g);
     if (isNormal<EQUIVALENCE_RELATION_I>(rptt, range, g) == true) {
         return rptt;
     } else {
         auto rptt_i = normalize<EQUIVALENCE_RELATION_I>(rptt, range, g);
-        //~ return rptt_i;
         auto rptt_i_t = normalize<EQUIVALENCE_RELATION_RPTg>(rptt_i, range, g);
         return rptt_i_t;
     }
+    //~ auto rpti = chord.eRPTI(range);
+    //~ return rpti.eRPTT(range, g);
 }
 
 inline Chord Chord::eRPTTI(double range) const {
@@ -3894,6 +3968,11 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality
     for(int i = 0; i < dimensions; i++) {
         std::fprintf(stderr, "  %9.4f\n", center.getPitch(i));
     }
+    std::fprintf(stderr, "hyperplane_equation_from_dimensionality: normal_vector:\n");
+    for(int i = 0; i < dimensions; i++) {
+        std::fprintf(stderr, "  %9.4f\n", normal_vector(i, 0));
+    }
+    std::fprintf(stderr, "hyperplane_equation_from_dimensionality: norm: %9.4f\n", norm);
     std::fprintf(stderr, "hyperplane_equation_from_dimensionality: unit_normal_vector:\n");
     for(int i = 0; i < dimensions; i++) {
         std::fprintf(stderr, "  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));

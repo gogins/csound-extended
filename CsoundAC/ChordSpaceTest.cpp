@@ -795,29 +795,7 @@ int main(int argc, char **argv) {
     std::cout << "spun_back:" << std::endl;
     std::cout << spun_back.information() << std::endl;    
 #endif     
-
-    //~ // These are for printing OPTI and ~OPTI to see if there some obvious way to match them.
-    //~ // Print as index, pitches, is_opti, chord type, and name.
-    //~ auto opt3s = csound::fundamentalDomainByNormalize<csound::EQUIVALENCE_RELATION_RPT>(3, 12.0, 1.0);
-    //~ index = 0;
-    //~ for (auto opt : opt3s) {
-        //~ std::fprintf(stderr, "%d\tchord:\t", index);
-        //~ for (int voice = 0; voice < opt.voices(); ++voice) {
-            //~ std::fprintf(stderr, "%9.4f\t", opt.getPitch(voice));
-        //~ }
-        //~ std::fprintf(stderr, "OPT %d\t", opt.iseOPT());
-        //~ std::fprintf(stderr, "OPTI %d\tOPTT:\t", opt.iseOPTI());
-        //~ auto normalized = opt.eOPTT();
-        //~ for (int voice = 0; voice < opt.voices(); ++voice) {
-            //~ std::fprintf(stderr, "%9.4f\t", normalized.getPitch(voice));
-        //~ }
-        //~ std::fprintf(stderr, "%s\n", normalized.name().c_str());
-        //~ index = index + 1;
-    //~ }
-    //~ auto opt4s = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPT>(4, 12.0, 1.0);
-    //~ for (auto opt : opt4s) {
-    //~ }
-    
+ 
     csound::hyperplane_equation_from_dimensionality(3, true, 2);
     original = csound::Chord({-13, -13, -6});
     std::cout << "original:" << std::endl;
@@ -877,13 +855,13 @@ int main(int argc, char **argv) {
     std::cout << "original:" << std::endl;
     std::cout << original.information() << std::endl;
     for (auto revoicing : original.voicings()) {
-        std::cout << "revoicing:" << revoicing.toString() << " V:" << revoicing.iseV() << std::endl;
+        std::cout << "revoicing:" << revoicing.toString() << " V:" << revoicing.iseV() << " I:" << revoicing.iseI() << std::endl;
     }
     opt = original.eOPT();
     std::cout << "opt:" << std::endl;
     std::cout << opt.information() << std::endl;
     for (auto revoicing : opt.voicings()) {
-        std::cout << "revoicing:" << revoicing.toString() << " V:" << revoicing.iseV() << std::endl;
+        std::cout << "revoicing:" << revoicing.toString() << " V:" << revoicing.iseV() << " I:" << revoicing.iseI() << std::endl;
     }
     opt_i = opt.eI();
     std::cout << "opt_i:" << std::endl;
@@ -896,17 +874,35 @@ int main(int argc, char **argv) {
     std::cout << "original:" << std::endl;
     std::cout << original.information() << std::endl;
     for (auto revoicing : original.voicings()) {
-        std::cout << "revoicing:" << revoicing.toString() << " V:" << revoicing.iseV() << std::endl;
+        std::cout << "revoicing:" << revoicing.toString() << " V:" << revoicing.iseV() << " I:" << revoicing.iseI() << std::endl;
     }
     opt = original.eOPT();
     std::cout << "opt:" << std::endl;
     std::cout << opt.information() << std::endl;
     for (auto revoicing : opt.voicings()) {
-        std::cout << "revoicing:" << revoicing.toString() << " V:" << revoicing.iseV() << std::endl;
+        std::cout << "revoicing:" << revoicing.toString() << " V:" << revoicing.iseV() << " I:" << revoicing.iseI() << std::endl;
     }
     
-    original = csound::Chord({-8, -8, -5});
-   
+    original = csound::Chord({-13,-8,-6});
+    std::cout << original.information() << std::endl;
+    for (auto revoicing : original.voicings()) {
+        std::cout << "revoicing:" << revoicing.toString() << " V:" << revoicing.iseV() << " I:" << revoicing.iseI() << std::endl;
+    }
+    original = csound::Chord({-4, 1, 3});
+    std::cout << original.information() << std::endl;
+    for (auto revoicing : original.voicings()) {
+        std::cout << "revoicing:" << revoicing.toString() << " V:" << revoicing.iseV() << " I:" << revoicing.iseI() << std::endl;
+    }   
+    auto opts = original.eRPTs(12.);
+    for (auto opt : opts) {
+        std::cout << "opt:\n" << opt.information() << std::endl;
+    }
+
+    original = csound::Chord({-13,-8,-6});
+    opts = original.eRPTs(12.);
+    for (auto opt : opts) {
+        std::cout << "opt:\n" << opt.information() << std::endl;
+    }
 
     std::fprintf(stderr, "\nFINISHED.\n\n");
     return 0;
