@@ -1183,6 +1183,8 @@ SILENCE_PUBLIC Chord reflect_in_center(const Chord &chord);
 
 SILENCE_PUBLIC Chord reflect_in_inversion_flat(const Chord &chord);
 
+SILENCE_PUBLIC Chord reflect_in_unison_diagonal(const Chord &chord);
+
 SILENCE_PUBLIC double pitchClassForName(std::string name);
 
 SILENCE_PUBLIC const std::map<std::string, double> &pitchClassesForNames();
@@ -1592,8 +1594,6 @@ inline bool Chord::iseTT(double g) const {
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_I>(const Chord &chord, double range, double g) {
     int lowerVoice = 0;
     int upperVoice = chord.voices() - 2;
-    // Compare the intervals in a chord with those in its inverse. This is NOT 
-    // the same as whether the chord is less than or equal to its inverse.
     while (lowerVoice < upperVoice) {
         int lowerInterval = chord.getPitch(lowerVoice + 1) - chord.getPitch(lowerVoice);
         int upperInterval = chord.getPitch(upperVoice + 1) - chord.getPitch(upperVoice);
@@ -1614,9 +1614,11 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_I>(const C
     if (isNormal<EQUIVALENCE_RELATION_I>(chord, range, g)) {
         return chord;
     } else {
-        return reflect_in_inversion_flat(chord);
+        //~ return reflect_in_inversion_flat(chord);
         //~ return reflect_by_householder(chord);
         //~ return reflect_in_center(chord);
+        return reflect_in_unison_diagonal(chord);
+        //~ return chord.I();
     }
 }
 
@@ -1658,7 +1660,8 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_V>(const C
             return voicing;
         }
     }
-    throw "normalize<EQUIVALENCE_RELATION_V>: no voicing equivalent found.\n";
+    System::error("Error in normalize<EQUIVALENCE_RELATION_V>: no voicing equivalent found for: %s\n", chord.toString().c_str());
+    return voicings.front();
 }
 
 inline Chord Chord::eV() const {
@@ -1758,10 +1761,7 @@ inline std::vector<Chord> Chord::eRPTs(double range) const {
     auto rp_vs = rp.voicings();
     for (auto rp_v : rp_vs) {
         auto rp_v_t = rp_v.eT();
-        // I don't think we need eR.
-        if (rp_v_t.iseV() == true) {
-            rpts.push_back(rp_v_t);
-        }
+        rpts.push_back(rp_v_t);
     }
     return rpts;
 }
@@ -1811,10 +1811,7 @@ inline std::vector<Chord> Chord::eRPTTs(double range, double g) const {
     auto rp_vs = rp.voicings();
     for (auto rp_v : rp_vs) {
         auto rp_v_tt = rp_v.eTT(g);
-        // I don't think we need eR.
-        if (rp_v_tt.iseV() == true) {
-            rptts.push_back(rp_v_tt);
-        }
+        rptts.push_back(rp_v_tt);
     }
     return rptts;
 }
@@ -1889,24 +1886,38 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTI>(cons
         //~ auto rpt_i_rpt = normalize<EQUIVALENCE_RELATION_RPT>(rpt_i, range, g);
         //~ return rpt_i_rpt;
     //~ }
+    
+    //~ auto rpt = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
+    //~ if (isNormal<EQUIVALENCE_RELATION_I>(rpt, range, g) == true) {
+        //~ return rpt;
+    //~ } else {
+        //~ std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: chord:      " << chord.toString() << std::endl;
+        //~ auto rpt_i = normalize<EQUIVALENCE_RELATION_I>(rpt, range, g);
+        //~ std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: rpt_i       " << rpt_i.toString() << std::endl;
+        //~ auto rpt_i_rpts = rpt_i.eRPTs(range);
+        //~ std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: rpt_i_rpts: " << rpt_i_rpts. size() << std::endl;
+        //~ for (auto rpt_i_rpt : rpt_i_rpts) {
+            //~ //std::cerr << rpt_i_rpt.information() << std::endl;
+            //~ if (rpt_i_rpt.iseRPTI(range) == true) {
+                //~ std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: matched:" << rpt_i_rpt.toString() << std::endl;
+                //~ return rpt_i_rpt;
+            //~ }
+        //~ }
+         //~ for (auto rpt_i_rpt : rpt_i_rpts) {
+            //~ //std::cerr << rpt_i_rpt.information() << std::endl;
+            //~ System::error("normalize<EQUIVALENCE_RELATION_RPTI>: rpt_i_rpt: %s V: %d I: %d\n", rpt_i_rpt.toString().c_str(), rpt_i_rpt.iseV(), rpt_i_rpt.iseI());
+        //~ }
+        //~ std::cerr << "Error: normalize<EQUIVALENCE_RELATION_RPTI>: no match for:" << chord.toString() << std::endl;
+        //~ return rpt_i_rpts.front();   
+    //~ }
+    
     auto rpt = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
     if (isNormal<EQUIVALENCE_RELATION_I>(rpt, range, g) == true) {
         return rpt;
     } else {
-        std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: chord:" << chord.toString() << std::endl;
         auto rpt_i = normalize<EQUIVALENCE_RELATION_I>(rpt, range, g);
-        std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: rpt_i" << rpt_i.toString() << std::endl;
-        auto rpt_i_rpts = rpt_i.eRPTs(range);
-        std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: rpt_i_rpts:" << rpt_i_rpts. size() << std::endl;
-        for (auto rpt_i_rpt : rpt_i_rpts) {
-            std::cerr << rpt_i_rpt.information() << std::endl;
-            if (rpt_i_rpt.iseRPTI(range) == true) {
-                std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: matched:" << rpt_i_rpt.toString() << std::endl;
-                return rpt_i_rpt;
-            }
-        }
-        std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: no match:" << chord.toString() << std::endl;
-        throw "Error in normalize<EQUIVALENCE_RELATION_RPTI>!";    
+        auto rpt_i_p = normalize<EQUIVALENCE_RELATION_RPT>(rpt_i, range, g);
+        return rpt_i_p;
     }
 }
 
@@ -1940,16 +1951,16 @@ inline bool Chord::iseRPTTI(double range) const {
 }
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTgI>(const Chord &chord, double range, double g) {
-    auto rptt = normalize<EQUIVALENCE_RELATION_RPTg>(chord, range, g);
-    if (isNormal<EQUIVALENCE_RELATION_I>(rptt, range, g) == true) {
-        return rptt;
-    } else {
-        auto rptt_i = normalize<EQUIVALENCE_RELATION_I>(rptt, range, g);
-        auto rptt_i_t = normalize<EQUIVALENCE_RELATION_RPTg>(rptt_i, range, g);
-        return rptt_i_t;
-    }
-    //~ auto rpti = chord.eRPTI(range);
-    //~ return rpti.eRPTT(range, g);
+    //~ auto rptt = normalize<EQUIVALENCE_RELATION_RPTg>(chord, range, g);
+    //~ if (isNormal<EQUIVALENCE_RELATION_I>(rptt, range, g) == true) {
+        //~ return rptt;
+    //~ } else {
+        //~ auto rptt_i = normalize<EQUIVALENCE_RELATION_I>(rptt, range, g);
+        //~ auto rptt_i_t = normalize<EQUIVALENCE_RELATION_RPTg>(rptt_i, range, g);
+        //~ return rptt_i_t;
+    //~ }
+    auto rpti = chord.eRPTI(range);
+    return rpti.eRPTT(range, g);
 }
 
 inline Chord Chord::eRPTTI(double range) const {
@@ -3595,7 +3606,7 @@ Eigen::VectorXi ChordSpaceGroup::fromChord(const Chord &chord, bool printme) con
     std::map<Chord, int>::const_iterator it = indexesForOpttis.find(normalOPTgI);
     if (it == indexesForOpttis.end()) {
         // Falling through here means there is a bug that I want to know about.
-        System::debug("Error: normalOPTgI %s not found! Please report an issue, this should not appear.\n");
+        System::error("Error: normalOPTgI %s not found! Please report an issue, this should not appear.\n");
         exit(1);
     }
     int P_ = it->second;
@@ -3770,7 +3781,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
             if (DEBUGGING && result.second == true) {
                 Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
                 bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
-                std::fprintf(stderr, "%s By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
+                System::debug("%s By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
                     (normalized_is_normal ? "      " : "WRONG "),
                     namesForEquivalenceRelations[EQUIVALENCE_RELATION],
                     chords,
@@ -3802,7 +3813,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
         bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
         auto result = fundamentalDomain.insert(normalized);
         if (DEBUGGING && result.second == true) {
-            std::fprintf(stderr, "%s By normalize %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
+            System::debug("%s By normalize %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
                 (normalized_is_normal ? "      " : "WRONG "),
                 namesForEquivalenceRelations[EQUIVALENCE_RELATION],
                 chords,
@@ -3846,7 +3857,7 @@ inline SILENCE_PUBLIC HyperplaneEquation &get_hyperplane_equation(int voices) {
     static std::map<int, HyperplaneEquation> hyperplane_equations;
     if (hyperplane_equations.size() == 0) {
         for (int dimensions = 3; dimensions < 12; ++dimensions) {
-            hyperplane_equations[dimensions] = hyperplane_equation_from_dimensionality(dimensions, true, dimensions - 1);
+            hyperplane_equations[dimensions] = hyperplane_equation_from_dimensionality(dimensions, true, dimensions - 2);
             //~ hyperplane_equations[dimensions] = hyperplane_equation_from_random_inversion_flat(dimensions, true, 1);
         }
     }
@@ -3862,7 +3873,7 @@ inline SILENCE_PUBLIC bool gt_epsilon(double a, double b) {
 }
 
 inline SILENCE_PUBLIC double I(double pitch, double center) {
-    return center - pitch;
+    return 2 * center - pitch;
 }
 
 inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_by_singular_value_decomposition(const std::vector<Chord> &points_, bool make_eT) {
@@ -3927,9 +3938,9 @@ inline SILENCE_PUBLIC std::vector<Chord> cyclical_region_vertices(int dimensions
         }
         vertices.insert(vertices.begin(), vertex);
     }
-    std::fprintf(stderr, "cyclical_region_vertices:\n");
+    System::debug("cyclical_region_vertices:\n");
     for (int i = 0; i < vertices.size(); ++i) {
-        std::fprintf(stderr, "  %s\n", vertices[i].toString().c_str());
+        System::debug("  %s\n", vertices[i].toString().c_str());
     }
     return vertices;
 }
@@ -3963,21 +3974,21 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality
     hyperplane_equation_.unit_normal_vector = normal_vector / norm;
     auto temp = center.col(0).adjoint() * hyperplane_equation_.unit_normal_vector;    
     hyperplane_equation_.constant_term = temp(0, 0);
-    std::fprintf(stderr, "hyperplane_equation_from_dimensionality: sector: %d\n", sector_);
-    std::fprintf(stderr, "hyperplane_equation_from_dimensionality: center:\n");
+    System::debug("hyperplane_equation_from_dimensionality: sector: %d\n", sector_);
+    System::debug("hyperplane_equation_from_dimensionality: center:\n");
     for(int i = 0; i < dimensions; i++) {
-        std::fprintf(stderr, "  %9.4f\n", center.getPitch(i));
+        System::debug("  %9.4f\n", center.getPitch(i));
     }
-    std::fprintf(stderr, "hyperplane_equation_from_dimensionality: normal_vector:\n");
+    System::debug("hyperplane_equation_from_dimensionality: normal_vector:\n");
     for(int i = 0; i < dimensions; i++) {
-        std::fprintf(stderr, "  %9.4f\n", normal_vector(i, 0));
+        System::debug("  %9.4f\n", normal_vector(i, 0));
     }
-    std::fprintf(stderr, "hyperplane_equation_from_dimensionality: norm: %9.4f\n", norm);
-    std::fprintf(stderr, "hyperplane_equation_from_dimensionality: unit_normal_vector:\n");
+    System::debug("hyperplane_equation_from_dimensionality: norm: %9.4f\n", norm);
+    System::debug("hyperplane_equation_from_dimensionality: unit_normal_vector:\n");
     for(int i = 0; i < dimensions; i++) {
-        std::fprintf(stderr, "  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
+        System::debug("  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
     }
-    std::fprintf(stderr, "hyperplane_equation_from_dimensionality: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
+    System::debug("hyperplane_equation_from_dimensionality: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
     return hyperplane_equation_;
 }
 
@@ -4003,16 +4014,16 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_random_inversi
         }
     }
     HyperplaneEquation hyperplane_equation_ = hyperplane_equation_by_singular_value_decomposition(inversion_flat, transpositional_equivalence);
-    std::fprintf(stderr, "hyperplane_equation_from_random_inversion_flat: sector: %d\n", sector_);
-    std::fprintf(stderr, "hyperplane_equation_from_random_inversion_flat: center:\n");
+    System::debug("hyperplane_equation_from_random_inversion_flat: sector: %d\n", sector_);
+    System::debug("hyperplane_equation_from_random_inversion_flat: center:\n");
     for(int i = 0; i < dimensions; i++) {
-        std::fprintf(stderr, "  %9.4f\n", center.getPitch(i));
+        System::debug("  %9.4f\n", center.getPitch(i));
     }
-    std::fprintf(stderr, "hyperplane_equation_from_random_inversion_flat: unit_normal_vector:\n");
+    System::debug("hyperplane_equation_from_random_inversion_flat: unit_normal_vector:\n");
     for(int i = 0; i < dimensions; i++) {
-        std::fprintf(stderr, "  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
+        System::debug("  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
     }
-    std::fprintf(stderr, "hyperplane_equation_from_random_inversion_flat: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
+    System::debug("hyperplane_equation_from_random_inversion_flat: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
     return hyperplane_equation_;
 }
 
@@ -4238,25 +4249,34 @@ inline SILENCE_PUBLIC Chord reflect_by_householder(const Chord &chord) {
     return reflection_;
 }
 
-/**
- * Moves the chord down to the sum 0 layer, 
- * reflects the chord in the central point,
- * moves the chord back up from the sum 0 layer.
- */
 inline SILENCE_PUBLIC Chord reflect_in_center(const Chord &chord) {
     auto center_ = chord.center().eOPT();
-    auto translation = chord.layer() / chord.voices();
     auto zero = chord.eT();
     for (int voice = 0, n = chord.voices(); voice < n; ++voice) {
-        // reflection = 2 * center - chord
+        // reflection = 2 * center - point
         auto center_voice = center_.getPitch(voice) * 2.;
         auto zero_voice = zero.getPitch(voice);
         auto reflected_voice = center_voice - zero_voice;
-        auto reflected_translated_voice = reflected_voice + translation;
-        zero.setPitch(voice, reflected_translated_voice);
+        zero.setPitch(voice, reflected_voice);
      }
     return zero;
 }
+
+inline SILENCE_PUBLIC Chord reflect_in_unison_diagonal(const Chord &chord) {
+    auto origin_ = chord.origin();
+    auto sum = chord.layer();
+    auto transposition = sum / chord.voices();
+    auto inversion_point = origin_.T(sum);
+    for (int voice = 0, n = chord.voices(); voice < n; ++voice) {
+        // reflection = 2 * center - point
+        auto inversion_point_voice = inversion_point.getPitch(voice) * 2.;
+        auto reflected_voice = inversion_point_voice - chord.getPitch(voice);
+        origin_.setPitch(voice, reflected_voice);
+     }
+    return origin_;
+}
+
+
 
 inline SILENCE_PUBLIC Chord reflect_in_inversion_flat(const Chord &chord) {
     Chord result = chord;
