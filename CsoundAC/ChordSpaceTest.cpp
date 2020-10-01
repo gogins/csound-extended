@@ -99,14 +99,14 @@ void print_chord(const csound::Chord &chord, const char *label="") {
         iseoptti = "OPTTI";
     }
     fprintf(stderr, 
-        "%s %s %s %s %s %s %s %s %s %s %s %s %s\n", 
-        label, 
+        "%s %s %s %s %s %s %s %s %s %s %s %s\n", 
         chord.toString().c_str(), 
         iseo, isep, iset, isett, isei, isev, iseop, iseopt, iseoptti, iseopti, iseoptti);  
 }
 
 static void print_information(const csound::Chord &chord, const char *label="") {
-    print_chord(chord, label);
+    std::fprintf(stderr, "==============================================================================\n");
+    std::fprintf(stderr, "%s\n", label);
     std::fprintf(stderr, "%s", chord.information().c_str());
     auto vs = chord.voicings();
     for (auto i = 0; i < vs.size(); ++i) {
@@ -119,21 +119,9 @@ static void print_information(const csound::Chord &chord, const char *label="") 
         if (v.iseI()) {
             isei = "I";
         }
-        fprintf(stderr, "      voicing[%2d] %s %s %s\n", i, v.toString().c_str(), isev, isei);
+        fprintf(stderr, "           vs[%2d] %s %s %s\n", i, v.toString().c_str(), isev, isei);
     }
-    auto opts = chord.eRPTTs(12.);
-    for (auto i = 0; i < opts.size(); ++i) {
-        auto v = opts[i];
-        auto isev = " ";
-        if (v.iseV()) {
-            isev = "V";
-        }
-        auto isei = " ";
-        if (v.iseI()) {
-            isei = "I";
-        }
-        fprintf(stderr, "          opt[%2d] %s %s %s\n", i, v.toString().c_str(), isev, isei);
-    }
+    std::fprintf(stderr, "\n");
     auto tvs = chord.eT().voicings();
     for (auto i = 0; i < tvs.size(); ++i) {
         auto v = tvs[i].eT();
@@ -145,9 +133,23 @@ static void print_information(const csound::Chord &chord, const char *label="") 
         if (v.iseI()) {
             isei = "I";
         }
-        fprintf(stderr, "           tv[%2d] %s %s %s\n", i, v.toString().c_str(), isev, isei);
+        fprintf(stderr, "          tvs[%2d] %s %s %s\n", i, v.toString().c_str(), isev, isei);
     }
-    fprintf(stderr, "\n");
+    std::fprintf(stderr, "\n");
+    auto ttvs = chord.eRPTTs(12.);
+    for (auto i = 0; i < ttvs.size(); ++i) {
+        auto v = ttvs[i];
+        auto isev = " ";
+        if (v.iseV()) {
+            isev = "V";
+        }
+        auto isei = " ";
+        if (v.iseI()) {
+            isei = "I";
+        }
+        fprintf(stderr, "         ttvs[%2d] %s %s %s\n", i, v.toString().c_str(), isev, isei);
+    }
+    std::fprintf(stderr, "==============================================================================\n");
 }
 
 /**
@@ -266,9 +268,6 @@ bool test_chord(const csound::Chord &chord, const char *label="") {
     } else {
         pass("Chord::eOPTTI is consistent with Chord::iseOPTTI.");
     }
-    // Print a one-line summary of the chord.
-    print_chord(chord, label);
-    // If there was a failure, print full information about the chord.
     if (passed == true) {
         print_chord(chord, label);
     } else {
@@ -829,8 +828,9 @@ int main(int argc, char **argv) {
     std::cout << spun_back.information() << std::endl;    
 #endif     
 
-    //~ auto optts = csound::fundamentalDomainByNormalize<csound::EQUIVALENCE_RELATION_RPTg>(3, 12., 1.);
-    //~ int index_;
+    auto opts = csound::fundamentalDomainByNormalize<csound::EQUIVALENCE_RELATION_RPT>(3, 12., 1.);
+    int index_;
+    
     //~ index_ = 0;
     //~ csound::System::message("reflect_in_unison_diagonal\n");
     //~ for (auto opt : opts) {
@@ -903,16 +903,21 @@ int main(int argc, char **argv) {
 
     //~ csound::System::message("reflect_by_householder\n");
     //~ index_ = 0;
-    //~ for (auto opt : opts) {
-        //~ csound::System::message("%d\n", index_);
-        //~ index_ = index_ + 1;
-        //~ test_chord("opt      ", opt);
-        //~ auto opt_i = csound::reflect_by_householder(opt);
-        //~ test_chord("opt_i    ", opt_i);
-        //~ auto opt_i_opt = opt_i.eOPT();
-        //~ test_chord("opt_i_opt", opt_i_opt);
-        //~ csound::System::message("\n");
-    //~ }
+    for (auto opt : opts) {
+        csound::System::message("OPTS %d\n", index_);
+        index_ = index_ + 1;
+        test_chord(opt, "opt");
+    }
+    print_information(csound::Chord({0., 4, 7}));
+    print_information(csound::Chord({0., 4, 7}).eI());
+    print_information(csound::Chord({0., 4, 7, 11}));
+    print_information(csound::Chord({0., 4, 7, 11}).eI());
+    print_information(csound::Chord({0., 4, 7, 11, 14}));
+    print_information(csound::Chord({0., 4, 7, 11, 14}).eI());
+    print_information(csound::Chord({0., 4, 7, 11, 14, 17}));
+    print_information(csound::Chord({0., 4, 7, 11, 14, 17}).eI());
+    print_information(csound::Chord({0., 4, 7, 11, 14, 17, 21}));
+    print_information(csound::Chord({0., 4, 7, 11, 14, 17, 21}).eI());
     summary();
     return 0;
 }

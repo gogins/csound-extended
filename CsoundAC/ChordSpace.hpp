@@ -1876,14 +1876,14 @@ inline bool Chord::iseRPTI(double range) const {
 }
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTI>(const Chord &chord, double range, double g) {
-    //~ auto rpt = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
-    //~ if (isNormal<EQUIVALENCE_RELATION_I>(rpt, range, g) == true) {
-        //~ return rpt;
-    //~ } else {
-        //~ auto rpt_i = normalize<EQUIVALENCE_RELATION_I>(rpt, range, g);
-        //~ auto rpt_i_rpt = normalize<EQUIVALENCE_RELATION_RPT>(rpt_i, range, g);
-        //~ return rpt_i_rpt;
-    //~ }
+    auto rpt = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
+    if (isNormal<EQUIVALENCE_RELATION_I>(rpt, range, g) == true) {
+        return rpt;
+    } else {
+        auto rpt_i = normalize<EQUIVALENCE_RELATION_I>(rpt, range, g);
+        auto rpt_i_rpt = normalize<EQUIVALENCE_RELATION_RPT>(rpt_i, range, g);
+        return rpt_i_rpt;
+    }
     
     //~ auto rpt = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
     //~ if (isNormal<EQUIVALENCE_RELATION_I>(rpt, range, g) == true) {
@@ -1908,19 +1908,20 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTI>(cons
         //~ std::cerr << "Error: normalize<EQUIVALENCE_RELATION_RPTI>: no match for:" << chord.toString() << std::endl;
         //~ return rpt_i_rpts.front();   
     //~ }
-    auto rpt = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
-    if (isNormal<EQUIVALENCE_RELATION_I>(rpt, range, g) == true) {
-        return rpt;
-    } else {
-        auto rpt_i = normalize<EQUIVALENCE_RELATION_I>(rpt, range, g);
-        auto rpt_i_ts = rpt_i.eRPTs(12.);
-        for (auto rpt_i_t : rpt_i_ts) {
-            if (rpt_i_t.iseI() == true &&
-                rpt_i_t.iseV() == true) {
-                    return rpt_i_t;
-                };
-        }
-    }
+    
+    //~ auto rpt = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
+    //~ if (isNormal<EQUIVALENCE_RELATION_I>(rpt, range, g) == true) {
+        //~ return rpt;
+    //~ } else {
+        //~ auto rpt_i = normalize<EQUIVALENCE_RELATION_I>(rpt, range, g);
+        //~ auto rpt_i_ts = rpt_i.eRPTs(12.);
+        //~ for (auto rpt_i_t : rpt_i_ts) {
+            //~ if (rpt_i_t.iseI() == true &&
+                //~ rpt_i_t.iseV() == true) {
+                    //~ return rpt_i_t;
+                //~ };
+        //~ }
+    //~ }
 }
 
 inline Chord Chord::eRPTI(double range) const {
@@ -1958,16 +1959,15 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTgI>(con
         return rptt;
     } else {
         auto rptt_i = normalize<EQUIVALENCE_RELATION_I>(rptt, range, g);
-        auto rptt_i_ts = rptt_i.eRPTTs(12.);
-        for (auto rptt_i_t : rptt_i_ts) {
-            if (rptt_i_t.iseI() == true &&
-                rptt_i_t.iseV() == true) {
-                    return rptt_i;
-                }
-        }
+        return rptt_i.eRPTT(range, g);
+        //~ auto rptt_i_ts = rptt_i.eRPTTs(12.);
+        //~ for (auto rptt_i_t : rptt_i_ts) {
+            //~ if (rptt_i_t.iseI() == true &&
+                //~ rptt_i_t.iseV() == true) {
+                    //~ return rptt_i;
+                //~ }
+        //~ }
      }
-    //~ auto rpti = chord.eRPTI(range);
-    //~ return rpti.eRPTT(range, g);
 }
 
 inline Chord Chord::eRPTTI(double range) const {
