@@ -1179,7 +1179,9 @@ SILENCE_PUBLIC Eigen::VectorXd reflect(const Eigen::VectorXd &point, const Eigen
 
 SILENCE_PUBLIC Chord reflect_by_householder(const Chord &chord);
 
-SILENCE_PUBLIC Chord reflect_in_center(const Chord &chord);
+SILENCE_PUBLIC Chord reflect_in_central_diagonal(const Chord &chord);
+
+SILENCE_PUBLIC Chord reflect_in_central_point(const Chord &chord);
 
 SILENCE_PUBLIC Chord reflect_in_inversion_flat(const Chord &chord);
 
@@ -1614,11 +1616,7 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_I>(const C
     if (isNormal<EQUIVALENCE_RELATION_I>(chord, range, g)) {
         return chord;
     } else {
-        //~ return reflect_in_inversion_flat(chord);
-        //~ return reflect_by_householder(chord);
-        //~ return reflect_in_center(chord);
-        return reflect_in_unison_diagonal(chord);
-        //~ return chord.I();
+        return reflect_in_inversion_flat(chord);
     }
 }
 
@@ -1910,14 +1908,18 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTI>(cons
         //~ std::cerr << "Error: normalize<EQUIVALENCE_RELATION_RPTI>: no match for:" << chord.toString() << std::endl;
         //~ return rpt_i_rpts.front();   
     //~ }
-    
     auto rpt = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
     if (isNormal<EQUIVALENCE_RELATION_I>(rpt, range, g) == true) {
         return rpt;
     } else {
         auto rpt_i = normalize<EQUIVALENCE_RELATION_I>(rpt, range, g);
-        auto rpt_i_p = normalize<EQUIVALENCE_RELATION_RPT>(rpt_i, range, g);
-        return rpt_i_p;
+        auto rpt_i_ts = rpt_i.eRPTs(12.);
+        for (auto rpt_i_t : rpt_i_ts) {
+            if (rpt_i_t.iseI() == true &&
+                rpt_i_t.iseV() == true) {
+                    return rpt_i_t;
+                };
+        }
     }
 }
 
@@ -1951,16 +1953,21 @@ inline bool Chord::iseRPTTI(double range) const {
 }
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTgI>(const Chord &chord, double range, double g) {
-    //~ auto rptt = normalize<EQUIVALENCE_RELATION_RPTg>(chord, range, g);
-    //~ if (isNormal<EQUIVALENCE_RELATION_I>(rptt, range, g) == true) {
-        //~ return rptt;
-    //~ } else {
-        //~ auto rptt_i = normalize<EQUIVALENCE_RELATION_I>(rptt, range, g);
-        //~ auto rptt_i_t = normalize<EQUIVALENCE_RELATION_RPTg>(rptt_i, range, g);
-        //~ return rptt_i_t;
-    //~ }
-    auto rpti = chord.eRPTI(range);
-    return rpti.eRPTT(range, g);
+    auto rptt = normalize<EQUIVALENCE_RELATION_RPTg>(chord, range, g);
+    if (isNormal<EQUIVALENCE_RELATION_I>(rptt, range, g) == true) {
+        return rptt;
+    } else {
+        auto rptt_i = normalize<EQUIVALENCE_RELATION_I>(rptt, range, g);
+        auto rptt_i_ts = rptt_i.eRPTTs(12.);
+        for (auto rptt_i_t : rptt_i_ts) {
+            if (rptt_i_t.iseI() == true &&
+                rptt_i_t.iseV() == true) {
+                    return rptt_i;
+                }
+        }
+     }
+    //~ auto rpti = chord.eRPTI(range);
+    //~ return rpti.eRPTT(range, g);
 }
 
 inline Chord Chord::eRPTTI(double range) const {
@@ -4249,34 +4256,45 @@ inline SILENCE_PUBLIC Chord reflect_by_householder(const Chord &chord) {
     return reflection_;
 }
 
-inline SILENCE_PUBLIC Chord reflect_in_center(const Chord &chord) {
-    auto center_ = chord.center().eOPT();
-    auto zero = chord.eT();
-    for (int voice = 0, n = chord.voices(); voice < n; ++voice) {
-        // reflection = 2 * center - point
-        auto center_voice = center_.getPitch(voice) * 2.;
-        auto zero_voice = zero.getPitch(voice);
-        auto reflected_voice = center_voice - zero_voice;
-        zero.setPitch(voice, reflected_voice);
-     }
-    return zero;
+inline SILENCE_PUBLIC Chord reflect_in_central_diagonal(const Chord &chord) {
+    auto sum = chord.layer();
+    auto transposition = sum / chord.voices();
+    auto inversion_point = chord.center().T(transposition);
+    auto reflection = chord;
+    for (auto voice = 0; voice < chord.voices(); ++voice) {
+        auto chord_voice = reflection.getPitch(voice);
+        auto center_voice = inversion_point.getPitch(voice);
+        auto reflected_voice = (2. * center_voice) - chord_voice;
+        reflection.setPitch(voice, reflected_voice);
+    }
+    return reflection;
+}
+
+inline SILENCE_PUBLIC Chord reflect_in_central_point(const Chord &chord) {
+    auto inversion_point = chord.center();
+    auto reflection = chord;
+    for (auto voice = 0; voice < chord.voices(); ++voice) {
+        auto chord_voice = reflection.getPitch(voice);
+        auto center_voice = inversion_point.getPitch(voice);
+        auto reflected_voice = (2. * center_voice) - chord_voice;
+        reflection.setPitch(voice, reflected_voice);
+    }
+    return reflection;
 }
 
 inline SILENCE_PUBLIC Chord reflect_in_unison_diagonal(const Chord &chord) {
-    auto origin_ = chord.origin();
     auto sum = chord.layer();
     auto transposition = sum / chord.voices();
-    auto inversion_point = origin_.T(sum);
-    for (int voice = 0, n = chord.voices(); voice < n; ++voice) {
-        // reflection = 2 * center - point
-        auto inversion_point_voice = inversion_point.getPitch(voice) * 2.;
-        auto reflected_voice = inversion_point_voice - chord.getPitch(voice);
-        origin_.setPitch(voice, reflected_voice);
-     }
-    return origin_;
+    auto inversion_point = chord.origin().T(transposition);
+    auto reflection = chord;
+    for (auto voice = 0; voice < chord.voices(); ++voice) {
+        auto chord_voice = reflection.getPitch(voice);
+        auto center_voice = inversion_point.getPitch(voice);
+        auto reflected_voice = (2. * center_voice) - chord_voice;
+        reflection.setPitch(voice, reflected_voice);
+    }
+    return reflection;
 }
-
-
 
 inline SILENCE_PUBLIC Chord reflect_in_inversion_flat(const Chord &chord) {
     Chord result = chord;
