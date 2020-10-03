@@ -139,6 +139,7 @@ static void print_information(const csound::Chord &chord, const char *label="") 
     auto ttvs = chord.eRPTTs(12.);
     for (auto i = 0; i < ttvs.size(); ++i) {
         auto v = ttvs[i];
+        auto sectors = csound::cyclical_region_sector(chord, true);
         auto isev = " ";
         if (v.iseV()) {
             isev = "V";
@@ -147,9 +148,12 @@ static void print_information(const csound::Chord &chord, const char *label="") 
         if (v.iseI()) {
             isei = "I";
         }
-        fprintf(stderr, "         ttvs[%2d] %s %s %s\n", i, v.toString().c_str(), isev, isei);
+        fprintf(stderr, "         ttvs[%2d] %s %s %s", i, v.toString().c_str(), isev, isei);
+        for (auto sector : sectors) {
+            fprintf(stderr, "%d ", sector);
+        }
     }
-    std::fprintf(stderr, "==============================================================================\n");
+    std::fprintf(stderr, "\n==============================================================================\n");
 }
 
 /**
