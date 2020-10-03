@@ -105,7 +105,7 @@ void print_chord(const csound::Chord &chord, const char *label="") {
 }
 
 static void print_information(const csound::Chord &chord, const char *label="") {
-    std::fprintf(stderr, "==============================================================================\n");
+    std::fprintf(stderr, "================================================================================================================\n");
     std::fprintf(stderr, "%s\n", label);
     std::fprintf(stderr, "%s", chord.information().c_str());
     auto vs = chord.voicings();
@@ -139,7 +139,7 @@ static void print_information(const csound::Chord &chord, const char *label="") 
     auto ttvs = chord.eRPTTs(12.);
     for (auto i = 0; i < ttvs.size(); ++i) {
         auto v = ttvs[i];
-        auto sectors = csound::cyclical_region_sector(chord, true);
+        auto sectors = csound::cyclical_region_sector(v, true);
         auto isev = " ";
         if (v.iseV()) {
             isev = "V";
@@ -150,10 +150,11 @@ static void print_information(const csound::Chord &chord, const char *label="") 
         }
         fprintf(stderr, "         ttvs[%2d] %s %s %s", i, v.toString().c_str(), isev, isei);
         for (auto sector : sectors) {
-            fprintf(stderr, "%d ", sector);
+            fprintf(stderr, " %d", sector);
         }
+        std::fprintf(stderr, "\n");
     }
-    std::fprintf(stderr, "\n==============================================================================\n");
+    std::fprintf(stderr, "\n================================================================================================================\n");
 }
 
 /**
@@ -922,6 +923,8 @@ int main(int argc, char **argv) {
     print_information(csound::Chord({0., 4, 7, 11, 14, 17}).eI());
     print_information(csound::Chord({0., 4, 7, 11, 14, 17, 21}));
     print_information(csound::Chord({0., 4, 7, 11, 14, 17, 21}).eI());
+    print_information(csound::Chord({0.,4.,8.}).eT());
+    print_information(csound::Chord({-6.,0.,6.}).eT());
     summary();
     return 0;
 }
