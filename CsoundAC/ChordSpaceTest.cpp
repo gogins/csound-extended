@@ -99,9 +99,14 @@ void print_chord(const csound::Chord &chord, const char *label="") {
         iseoptti = "OPTTI";
     }
     fprintf(stderr, 
-        "%s %s %s %s %s %s %s %s %s %s %s %s\n", 
+        "%s %s %s %s %s %s %s %s %s %s %s", 
         chord.toString().c_str(), 
-        iseo, isep, iset, isett, isei, isev, iseop, iseopt, iseoptti, iseopti, iseoptti);  
+        iseo, isep, iset, isett, isei, isev, iseop, iseopt, iseopti, iseoptti);  
+        auto sectors = csound::cyclical_region_sector(chord, true);
+        for (auto sector : sectors) {
+            fprintf(stderr, " %d", sector);
+        }
+        std::fprintf(stderr, "\n");
 }
 
 static void print_information(const csound::Chord &chord, const char *label="") {
@@ -781,7 +786,7 @@ int main(int argc, char **argv) {
         testEquivalenceRelations(voiceCount, csound::OCTAVE(), 1.0);
     }
     
-    csound::System::setMessageLevel(15);
+    auto old_level = csound::System::setMessageLevel(15);
     std::cout << "HYPERPLANE EQUATIONS FOR DIMENSIONS\n" << std::endl;
     for (int i = 3; i < 6 ; ++i) {
         std::cerr << "\nDIMENSIONALITY\n" << std::endl;
@@ -791,6 +796,7 @@ int main(int argc, char **argv) {
         std::cerr << "\nRANDOM INVERSION FLAT\n" << std::endl;
         auto hpr = csound::hyperplane_equation_from_random_inversion_flat(i);
     }
+    csound::System::setMessageLevel(old_level);
 
 #if 0
     csound::ChordSpaceGroup chordSpaceGroup;
@@ -833,7 +839,7 @@ int main(int argc, char **argv) {
     std::cout << spun_back.information() << std::endl;    
 #endif     
 
-    auto opts = csound::fundamentalDomainByNormalize<csound::EQUIVALENCE_RELATION_RPT>(3, 12., 1.);
+    auto opts = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTg>(3, 12., 1.);
     int index_;
     
     //~ index_ = 0;
@@ -925,6 +931,11 @@ int main(int argc, char **argv) {
     print_information(csound::Chord({0., 4, 7, 11, 14, 17, 21}).eI());
     print_information(csound::Chord({0.,4.,8.}).eT());
     print_information(csound::Chord({-6.,0.,6.}).eT());
+    for (auto opt : opts) {
+        csound::System::message("OPTS %d\n", index_);
+        index_ = index_ + 1;
+        print_chord(opt, "opt");
+    }
     summary();
     return 0;
 }

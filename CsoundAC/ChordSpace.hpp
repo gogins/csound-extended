@@ -1652,21 +1652,34 @@ inline Chord Chord::eI() const {
 
 //	EQUIVALENCE_RELATION_V
 
+//~ // Returns whether the chord is within the representative fundamental 
+//~ // domain of voicing equivalence. In Tymoczko's 1-based notation:
+//~ // x[1] + 12 - x[N] <= x[i + 1] - x[i], 1 <= i < N - 1
+//~ // In 0-based notation:
+//~ // x[0] + 12 - x[N-1] <= x[i + 1] - x[i], 0 <= i < N - 2
+//~ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_V>(const Chord &chord, double range, double g) {
+    //~ double outer_interval = chord.getPitch(0) + range - chord.getPitch(chord.voices() - 1);
+    //~ for (size_t voice = 0, n = chord.voices() - 2; voice < n; ++voice) {
+        //~ double inner_interval = chord.getPitch(voice + 1) - chord.getPitch(voice);
+        //~ if (le_epsilon(outer_interval, inner_interval) == false) {
+            //~ return false;
+        //~ }
+    //~ }
+    //~ return true;
+//~ }
+
 // Returns whether the chord is within the representative fundamental 
-// domain of voicing equivalence. In Tymoczko's 1-based notation:
-// x[1] + 12 - x[N] <= x[i + 1] - x[i], 1 <= i < N - 1
-// In 0-based notation:
-// x[0] + 12 - x[N-1] <= x[i + 1] - x[i], 0 <= i < N - 2
+// domain of voicing equivalence, sector 0 of the cyclical region.
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_V>(const Chord &chord, double range, double g) {
-    double outer_interval = chord.getPitch(0) + range - chord.getPitch(chord.voices() - 1);
-    for (size_t voice = 0, n = chord.voices() - 2; voice < n; ++voice) {
-        double inner_interval = chord.getPitch(voice + 1) - chord.getPitch(voice);
-        if (le_epsilon(outer_interval, inner_interval) == false) {
-            return false;
+    auto sectors = cyclical_region_sector(chord);
+    for (auto sector : sectors) {
+        if (sector == 0) {
+            return true;
         }
     }
-    return true;
+    return false;
 }
+
 
 inline bool Chord::iseV() const {
     return isNormal<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0);
@@ -3961,7 +3974,7 @@ SILENCE_PUBLIC std::vector<int> cyclical_region_sector(const Chord &chord, bool 
     double minimum_distance = std::numeric_limits<double>::max();
     for (int sector = 0, n = sectors.size(); sector < n; ++sector) {
         auto distance = distance_to_cyclical_sector_vertices(chord, sectors[sector]);
-        System::message("cyclical_region_sector: chord: %s distance: %9.4f sector: %2d\n", chord.toString().c_str(), distance, sector);
+        System::debug("cyclical_region_sector: chord: %s distance: %9.4f sector: %2d\n", chord.toString().c_str(), distance, sector);
         if (distance < minimum_distance) {
             minimum_distance = distance;
         }
