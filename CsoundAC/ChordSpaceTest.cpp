@@ -53,239 +53,6 @@ static bool test(bool passes, std::string message) {
     return passes;
 }
 
-void print_chord(const csound::Chord &chord, const char *label="") {
-    auto iseo = " ";
-    if (chord.iseO()) {
-        iseo = "O";
-    }
-    auto isep = " ";
-    if (chord.iseP()) {
-        isep = "P";
-    }
-    auto iset = " ";
-    if (chord.iseT()) {
-        iset = "T";
-    }
-    auto isett = "  ";
-    if (chord.iseTT()) {
-        isett = "TT";
-    }
-    auto isei = " ";
-    if (chord.iseI()) {
-        isei = "I";
-    }
-    auto isev = " ";
-    if (chord.iseV()) {
-        isev = "V";
-    }
-    auto iseop = "  ";
-    if (chord.iseOP()) {
-        iseop = "OP";
-    }
-    auto iseopt = "   ";
-    if (chord.iseOPT()) {
-        iseopt = "OPT";
-    }
-    auto iseoptt = "    ";
-    if (chord.iseOPTT()) {
-        iseoptt = "OPTT";
-    }
-    auto iseopti = "    ";
-    if (chord.iseOPTI()) {
-        iseopti = "OPTI";
-    }
-    auto iseoptti = "     ";
-    if (chord.iseOPTTI()) {
-        iseoptti = "OPTTI";
-    }
-    fprintf(stderr, 
-        "%s %s %s %s %s %s %s %s %s %s %s", 
-        chord.toString().c_str(), 
-        iseo, isep, iset, isett, isei, isev, iseop, iseopt, iseopti, iseoptti);  
-        auto sectors = csound::cyclical_region_sector(chord, true);
-        for (auto sector : sectors) {
-            fprintf(stderr, " %d", sector);
-        }
-        std::fprintf(stderr, "\n");
-}
-
-static void print_information(const csound::Chord &chord, const char *label="") {
-    std::fprintf(stderr, "================================================================================================================\n");
-    std::fprintf(stderr, "%s\n", label);
-    std::fprintf(stderr, "%s", chord.information().c_str());
-    auto vs = chord.voicings();
-    for (auto i = 0; i < vs.size(); ++i) {
-        auto v = vs[i];
-        auto isev = " ";
-        if (v.iseV()) {
-            isev = "V";
-        }
-        auto isei = " ";
-        if (v.iseI()) {
-            isei = "I";
-        }
-        fprintf(stderr, "           vs[%2d] %s %s %s\n", i, v.toString().c_str(), isev, isei);
-    }
-    std::fprintf(stderr, "\n");
-    auto tvs = chord.eT().voicings();
-    for (auto i = 0; i < tvs.size(); ++i) {
-        auto v = tvs[i].eT();
-        auto isev = " ";
-        if (v.iseV()) {
-            isev = "V";
-        }
-        auto isei = " ";
-        if (v.iseI()) {
-            isei = "I";
-        }
-        fprintf(stderr, "          tvs[%2d] %s %s %s\n", i, v.toString().c_str(), isev, isei);
-    }
-    std::fprintf(stderr, "\n");
-    auto ttvs = chord.eRPTTs(12.);
-    for (auto i = 0; i < ttvs.size(); ++i) {
-        auto v = ttvs[i];
-        auto sectors = csound::cyclical_region_sector(v, true);
-        auto isev = " ";
-        if (v.iseV()) {
-            isev = "V";
-        }
-        auto isei = " ";
-        if (v.iseI()) {
-            isei = "I";
-        }
-        fprintf(stderr, "         ttvs[%2d] %s %s %s", i, v.toString().c_str(), isev, isei);
-        for (auto sector : sectors) {
-            fprintf(stderr, " %d", sector);
-        }
-        std::fprintf(stderr, "\n");
-    }
-    std::fprintf(stderr, "\n================================================================================================================\n");
-}
-
-/**
- * Most of the unit tests are right here. This function analyzes for a chord  
- * the consistency both of predicates for the most useful equivalence classes, 
- * and of all implemented transformations to representative forms of 
- * equivalence classes. If there is an error, a failure is logged and full 
- * information about the chord is printed.
- */
-bool test_chord(const csound::Chord &chord, const char *label="") {
-    bool passed = true;
-    // Test the consistency of the predicates.
-    if (chord.iseOP() == true) {
-        if (chord.iseO() == false ||
-            chord.iseP() == false) {
-            passed = fail("Chord::iseOP is not consistent.");
-        } else {
-            pass("Chord::iseOP is consistent.");
-        }
-    }
-    if (chord.iseOPT() == true) {
-        if (chord.iseO() == false ||
-            chord.iseP() == false || 
-            chord.iseV() == false || 
-            chord.iseT() == false) {
-            passed = fail("Chord::iseOPT is not consistent.");
-        } else {
-            pass("Chord::iseOPT is consistent.");
-        }
-    }
-    if (chord.iseOPTT() == true) {
-        if (chord.iseO() == false ||
-            chord.iseP() == false || 
-            chord.iseV() == false || 
-            chord.iseTT() == false) {
-            passed = fail("Chord::iseOPTT is not consistent.");
-        } else {
-            pass("Chord::iseOPTT is consistent");
-        }
-    }
-    if (chord.iseOPTI() == true) {
-        if (chord.iseO() == false ||
-            chord.iseP() == false || 
-            chord.iseV() == false || 
-            chord.iseT() == false || 
-            chord.iseI() == false) {
-            passed = fail("Chord::iseOPTI is not consistent.");
-        } else {
-            pass("Chord::iseOPTI is consistent.");
-        }
-    }
-    if (chord.iseOPTTI() == true) {
-        if (chord.iseO() == false ||
-            chord.iseP() == false || 
-            chord.iseV() == false || 
-            chord.iseTT() == false || 
-            chord.iseI() == false) {
-            passed = fail("Chord::iseOPTTI is not consistent.");
-        } else {
-            pass("Chord::iseOPTTI is consistent");
-        }
-    }
-    // Test the consistency of the transformations.
-    if (chord.eO().iseO() == false) {
-        passed = fail("Chord::eO is not consistent with Chord::iseO.");
-    } else {
-        pass("Chord::eO is consistent with Chord::iseO.");
-    }
-    if (chord.eP().iseP() == false) {
-        passed = fail("Chord::eP is not consistent with Chord::iseP.");
-    } else {
-        pass("Chord::eP is consistent with Chord::iseP.");
-    }
-    if (chord.eT().iseT() == false) {
-        passed = fail("Chord::eT is not consistent with Chord::iseT.");
-    } else {
-        pass("Chord::eT is consistent with Chord::iseT.");
-    }
-    if (chord.eV().iseV() == false) {
-        passed = fail("Chord::eV is not consistent with Chord::iseV.");
-    } else {
-        pass("Chord::eV is consistent with Chord::iseV.");
-    }
-    if (chord.eTT().iseTT() == false) {
-        passed = fail("Chord::eTT is not consistent with Chord::iseTT.");
-    } else {
-        pass("Chord::eTT is consistent with Chord::iseTT.");
-    }
-    if (chord.eI().iseI() == false) {
-        passed = fail("Chord::eI is not consistent with Chord::iseI.");
-    } else {
-        pass("Chord::eI is consistent with Chord::iseI.");
-    }
-    if (chord.eOP().iseOP() == false) {
-        passed = fail("Chord::eOP is not consistent with Chord::iseOP.");
-    } else {
-        pass("Chord::eOP is consistent with Chord::iseOP.");
-    }
-    if (chord.eOPT().iseOPT() == false) {
-        passed = fail("Chord::eOPT is not consistent with Chord::iseOPT.");
-    } else {
-        pass("Chord::eOPT is consistent with Chord::iseOPT.");
-    }
-    if (chord.eOPTT().iseOPTT() == false) {
-        passed = fail("Chord::eOPTT is not consistent with Chord::iseOPTT.");
-    } else {
-        pass("Chord::eOPTT is consistent with Chord::iseOPTT.");
-    }
-    if (chord.eOPTI().iseOPTI() == false) {
-        passed = fail("Chord::eOPTI is not consistent with Chord::iseOPTI.");
-    } else {
-        pass("Chord::eOPTI is consistent with Chord::iseOPTI.");
-    }
-    if (chord.eOPTTI().iseOPTTI() == false) {
-        passed = fail("Chord::eOPTTI is not consistent with Chord::iseOPTTI.");
-    } else {
-        pass("Chord::eOPTTI is consistent with Chord::iseOPTTI.");
-    }
-    if (passed == true) {
-        print_chord(chord, label);
-    } else {
-        print_information(chord, label);
-    }
-    return passed;
-}
-
 static bool test_chord_type(int dimensions) {
     bool passes = true;
     auto ops = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RP>(dimensions, csound::OCTAVE(), 1.);
@@ -467,61 +234,25 @@ static bool testNormalsAndEquivalents(std::string equivalence,
     auto make_equivalent = normalizesForEquivalenceRelations[equivalence];
     auto isEquivalent = isEquivalentsForEquivalenceRelations[equivalence];
     bool passes1 = true;
+    int count = 1;
     for (auto made_equivalent = made_equivalents.begin(); made_equivalent != made_equivalents.end(); ++made_equivalent) {
-        if (is_equivalent(*made_equivalent, range, g) == false) {
-            passes1 = false;
-            std::sprintf(buffer, "testNormalsAndEquivalents: %s range %f g %f: 'made_equivalent' %s is not 'is_equivalent'.\n",
-                          equivalence.c_str(),
-                          range,
-                          g,
-                          made_equivalent->toString().c_str());
-            test_chord(*made_equivalent, buffer);
-            print_information(*made_equivalent, equivalence.c_str());
-        }
+        std::sprintf(buffer, "MADE EQUIVALENT %d\n", count);
+        test(made_equivalent->test(), std::string(buffer));
+        count = count + 1;
     }
-    std::sprintf(buffer, "testNormalsAndEquivalents: %s range %f g %f: all 'made_equivalents' chords must return 'true' for 'is_equivalent'.\n",
-                 equivalence.c_str(),
-                 range,
-                 g);
-    test(passes1, buffer);
-    bool passes2 = true;
+    count = 1;
     for (auto found_equivalent = found_equivalents.begin(); found_equivalent != found_equivalents.end(); ++found_equivalent) {
-        ///csound::System::message(">>> %s 'found_equivalents:' %s.\n", equivalence.c_str(), found_equivalent->toString().c_str());
-        bool equivalenceFound = false;
-        for (auto made_equivalent = made_equivalents.begin(); made_equivalent != made_equivalents.end(); ++made_equivalent) {
-            if (isEquivalent(*found_equivalent, *made_equivalent, range, g) == true) {
-                equivalenceFound = true;
-                ///csound::System::message("    %s 'made_equivalents:'  %s.\n", equivalence.c_str(), made_equivalent->toString().c_str());
-            }
-        }
-        if (equivalenceFound == false) {
-            passes2 = false;
-            std::sprintf(buffer, "testNormalsAndEquivalents: %s range %f g %f: no 'made_equivalent' found for 'found_equivalent': %s\n",
-                         equivalence.c_str(),
-                         range,
-                         g,
-                         found_equivalent->toString().c_str());
-            test_chord(*found_equivalent, buffer);
-            print_information(*found_equivalent, equivalence.c_str());
-        }
+        std::sprintf(buffer, "FOUND EQUIVALENT %d\n", count);
+        test(found_equivalent->test(), std::string(buffer));
+        count = count + 1;
     }
-    std::sprintf(buffer, "normals and equivalents: %s range %f g %f: each 'found_equivalent' must have equivalent in 'made_equivalents'.\n",
-                 equivalence.c_str(),
-                 range,
-                 g);
-    pass(buffer);
-    return passes1 && passes2;
-}
+ }
 
 static bool testEquivalenceRelation(std::string equivalenceRelation, int voiceCount, double range, double g) {
     bool passes = true;
     char buffer[0x200];
     auto normalsForEquivalenceRelation = fundamentalDomainByNormalizesForEquivalenceRelations[equivalenceRelation](voiceCount, range, g);
-    //~ std::sprintf(buffer, "%-8s 'made_equivalents': ", equivalenceRelation.c_str());
-    //~ printSet(buffer, normalsForEquivalenceRelation);
     auto equivalentsForEquivalenceRelation = fundamentalDomainByIsNormalsForEquivalenceRelations[equivalenceRelation](voiceCount, range, g);
-    //~ std::sprintf(buffer, "%-8s 'found_equivalents':", equivalenceRelation.c_str());
-    //~ printSet(buffer, equivalentsForEquivalenceRelation);
     if (!testNormalsAndEquivalents(equivalenceRelation,
                                    normalsForEquivalenceRelation,
                                    equivalentsForEquivalenceRelation,
@@ -781,12 +512,7 @@ int main(int argc, char **argv) {
     csound::Chord chordForName_ = csound::chordForName("CM9");
     csound::System::message("chordForName(%s): %s\n", "CM9", chordForName_.information().c_str());
     
-    csound::System::message("\nTesting equivalence relations...\n\n");
-    for (int voiceCount = 3; voiceCount <= maximumVoiceCountToTest; ++voiceCount) {
-        testEquivalenceRelations(voiceCount, csound::OCTAVE(), 1.0);
-    }
-    
-    auto old_level = csound::System::setMessageLevel(15);
+    ///auto old_level = csound::System::setMessageLevel(15);
     std::cout << "HYPERPLANE EQUATIONS FOR DIMENSIONS\n" << std::endl;
     for (int i = 3; i < 6 ; ++i) {
         std::cerr << "\nDIMENSIONALITY\n" << std::endl;
@@ -796,7 +522,7 @@ int main(int argc, char **argv) {
         std::cerr << "\nRANDOM INVERSION FLAT\n" << std::endl;
         auto hpr = csound::hyperplane_equation_from_random_inversion_flat(i);
     }
-    csound::System::setMessageLevel(old_level);
+    ///csound::System::setMessageLevel(old_level);
 
 #if 0
     csound::ChordSpaceGroup chordSpaceGroup;
@@ -839,103 +565,28 @@ int main(int argc, char **argv) {
     std::cout << spun_back.information() << std::endl;    
 #endif     
 
-    auto opts = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTg>(3, 12., 1.);
-    int index_;
-    
-    //~ index_ = 0;
-    //~ csound::System::message("reflect_in_unison_diagonal\n");
-    //~ for (auto opt : opts) {
-        //~ csound::System::message("%d\n", index_);
-        //~ index_ = index_ + 1;
-        //~ test_chord("opt      ", opt);
-        //~ auto opt_i = csound::reflect_in_unison_diagonal(opt);
-        //~ test_chord("opt_i    ", opt_i);
-        //~ auto opt_i_opt = opt_i.eOPT();
-        //~ test_chord("opt_i_opt", opt_i_opt);
-        //~ csound::System::message("\n");
-    //~ }
-    
-    //~ csound::System::message("reflect_in_central_diagonal\n");
-    //~ index_ = 0;
-    //~ for (auto opt : opts) {
-        //~ csound::System::message("%d\n", index_);
-        //~ index_ = index_ + 1;
-        //~ test_chord("opt      ", opt);
-        //~ auto opt_i = csound::reflect_in_central_diagonal(opt);
-        //~ test_chord("opt_i    ", opt_i);
-        //~ auto opt_i_opt = opt_i.eOPT();
-        //~ test_chord("opt_i_opt", opt_i_opt);
-        //~ csound::System::message("\n");
-    //~ }
-    
-    //~ csound::System::message("reflect_in_inversion_flat\n");
-    //~ index_ = 0;
-    //~ for (auto optt : optts) {
-        //~ csound::System::message("%d\n", index_);
-        //~ index_ = index_ + 1;
-        //~ test_chord(optt, "optt       ");
-        //~ auto optt_i = csound::reflect_in_inversion_flat(optt);
-        //~ test_chord(optt_i, "optt_i     ");
-        //~ auto optt_i_optt = optt_i.eOPTT();
-        //~ test_chord(optt_i_optt, "optt_i_optt");
-        //~ auto optti = chord.eOPTTI();
-        //~ if (optti.iseOPTTI() == false) {
-            //~ fprintf(stderr, "ERROR: eOPTTI is not iseOPTTI!\n%s", chord.information().c_str());
-            //~ auto vs = optti.voicings();
-            //~ for (auto i = 0; i < vs.size(); ++i) {
-                //~ auto v = vs[i];
-                //~ auto isev = " ";
-                //~ if (v.iseV()) {
-                    //~ isev = "V";
-                //~ }
-                //~ auto isei = " ";
-                //~ if (v.iseI()) {
-                    //~ isei = "I";
-                //~ }
-                //~ fprintf(stderr, "      voicing[%2d] %s %s %s\n", i, v.toString().c_str(), isev, isei);
-            //~ }
-            //~ auto opts = optti.eRPTTs(12.);
-            //~ for (auto i = 0; i < opts.size(); ++i) {
-                //~ auto v = opts[i];
-                //~ auto isev = " ";
-                //~ if (v.iseV()) {
-                    //~ isev = "V";
-                //~ }
-                //~ auto isei = " ";
-                //~ if (v.iseI()) {
-                    //~ isei = "I";
-                //~ }
-                //~ fprintf(stderr, "          opt[%2d] %s %s %s\n", i, v.toString().c_str(), isev, isei);
-            //~ }
-            //~ fprintf(stderr, "\n");
-        //~ }
-        //~ csound::System::message("\n");
-    //~ }
+    std::cerr << csound::Chord({0., 4, 7}).information(true) << std::endl;
+    std::cerr << csound::Chord({0., 4, 7}).eI().information(true) << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11}).information(true) << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11}).eI().information(true) << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11, 14}).information(true) << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11, 14}).eI().information(true) << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11, 14, 17}).information(true) << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11, 14, 17}).eI().information(true) << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11, 14, 17, 21}).information(true) << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11, 14, 17, 21}).eI().information(true) << std::endl;
+    std::cerr << csound::Chord({0.,4.,8.}).eT().information(true) << std::endl;
+    std::cerr << csound::Chord({-6.,0.,6.}).eT().information(true) << std::endl;
 
-    //~ csound::System::message("reflect_by_householder\n");
-    //~ index_ = 0;
-    for (auto opt : opts) {
-        csound::System::message("OPTS %d\n", index_);
-        index_ = index_ + 1;
-        test_chord(opt, "opt");
+    csound::System::message("\nTesting equivalence relations...\n\n");
+    for (int voiceCount = 3; voiceCount <= maximumVoiceCountToTest; ++voiceCount) {
+        testEquivalenceRelations(voiceCount, csound::OCTAVE(), 1.0);
     }
-    print_information(csound::Chord({0., 4, 7}));
-    print_information(csound::Chord({0., 4, 7}).eI());
-    print_information(csound::Chord({0., 4, 7, 11}));
-    print_information(csound::Chord({0., 4, 7, 11}).eI());
-    print_information(csound::Chord({0., 4, 7, 11, 14}));
-    print_information(csound::Chord({0., 4, 7, 11, 14}).eI());
-    print_information(csound::Chord({0., 4, 7, 11, 14, 17}));
-    print_information(csound::Chord({0., 4, 7, 11, 14, 17}).eI());
-    print_information(csound::Chord({0., 4, 7, 11, 14, 17, 21}));
-    print_information(csound::Chord({0., 4, 7, 11, 14, 17, 21}).eI());
-    print_information(csound::Chord({0.,4.,8.}).eT());
-    print_information(csound::Chord({-6.,0.,6.}).eT());
-    for (auto opt : opts) {
-        csound::System::message("OPTS %d\n", index_);
-        index_ = index_ + 1;
-        print_chord(opt, "opt");
-    }
+    
+    //~ // Find the sector of the "normal" inversion flat.
+    //~ test_chord(csound::Chord({-1.,0.,1.}).eOPT());
+    //~ test_chord(csound::Chord({-2.,-1.,1.,2.}).eOPT());
+    std::cerr << csound::Chord({0., 4, 7}).information(true) << std::endl;
     summary();
     return 0;
 }

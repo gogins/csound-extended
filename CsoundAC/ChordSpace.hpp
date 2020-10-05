@@ -542,9 +542,10 @@ public:
     virtual bool Iform(const Chord &Y, double g = 1.0) const;
     /**
      * Print much information about the chord including whether it is in 
-     * important equivalence classes, or what its equivalent would be.
+     * important equivalence classes, or what its equivalent would be. 
+     * Optionally, print information about consistency and voicings.
      */
-    virtual std::string information() const;
+    virtual std::string information(bool print_extra=false) const;
     /**
      * Returns whether the chord is within the representative fundamental domain
      * of inversional equivalence.
@@ -756,6 +757,11 @@ public:
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord T(double interval) const;
+    /**
+     * Tests the internal consistency of the predicates ("iseX") and 
+     * transformations ("eX") of this chord, and prints a report.
+     */
+    virtual bool test(const char *caption="") const;
     /**
      * Returns whether the chord is a transpositional form of Y with interval size g.
      * Only works in equal temperament.
@@ -1815,7 +1821,8 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RPTg>(const 
     if (isNormal<EQUIVALENCE_RELATION_Tg>(chord, range, g) == false) {
         return false;
     }
-    if (isNormal<EQUIVALENCE_RELATION_V>(chord, range, g) == false) {
+    //~ if (isNormal<EQUIVALENCE_RELATION_V>(chord, range, g) == false) {
+    if (isNormal<EQUIVALENCE_RELATION_V>(chord.eRPT(range), range, g) == false) {
         return false;
     }
     return true;
@@ -2343,7 +2350,7 @@ inline SILENCE_PUBLIC const Scale &scaleForName(std::string name) {
     }
 }
 
-inline std::string Chord::information() const {
+inline std::string Chord::information(bool print_extra) const {
     char buffer[0x1000];
     if (voices() < 1) {
         return "Empty chord.";
@@ -2405,6 +2412,71 @@ inline std::string Chord::information() const {
                  isNormal<EQUIVALENCE_RELATION_RPTI>(*this, OCTAVE(), 1.0), normalOPTI.toString().c_str(),  
                  isNormal<EQUIVALENCE_RELATION_RPTgI>(*this, OCTAVE(), 1.0), normalOPTgI.toString().c_str(), 
                  layer());
+    if (print_extra == true) {
+        char extra_buffer[0x200];
+        auto vs = voicings();
+        for (auto i = 0; i < vs.size(); ++i) {
+            auto v = vs[i];
+            auto sectors = csound::cyclical_region_sector(v, true);
+            auto isev = " ";
+            if (v.iseV()) {
+                isev = "V";
+            }
+            auto isei = " ";
+            if (v.iseI()) {
+                isei = "I";
+            }
+            std::sprintf(extra_buffer, "           vs[%2d] %s %s %s", i, v.toString().c_str(), isev, isei);
+            std::strcat(buffer, extra_buffer);
+            for (auto sector : sectors) {
+                std::sprintf(extra_buffer, " %d", sector);
+                std::strcat(buffer, extra_buffer);
+            }
+            std::strcat(buffer, "\n");
+        }
+        std::strcat(buffer, "\n");
+        auto tvs = eT().voicings();
+        for (auto i = 0; i < tvs.size(); ++i) {
+            auto v = tvs[i].eT();
+            auto sectors = csound::cyclical_region_sector(v, true);
+            auto isev = " ";
+            if (v.iseV()) {
+                isev = "V";
+            }
+            auto isei = " ";
+            if (v.iseI()) {
+                isei = "I";
+            }
+            std::sprintf(extra_buffer, "          tvs[%2d] %s %s %s", i, v.toString().c_str(), isev, isei);
+            std::strcat(buffer, extra_buffer);
+            for (auto sector : sectors) {
+                std::sprintf(extra_buffer, " %d", sector);
+                std::strcat(buffer, extra_buffer);
+            }
+            std::strcat(buffer, "\n");
+        }
+        std::strcat(buffer, "\n");
+        auto ttvs = eRPTTs(12.);
+        for (auto i = 0; i < ttvs.size(); ++i) {
+            auto v = ttvs[i];
+            auto sectors = csound::cyclical_region_sector(v, true);
+            auto isev = " ";
+            if (v.iseV()) {
+                isev = "V";
+            }
+            auto isei = " ";
+            if (v.iseI()) {
+                isei = "I";
+            }
+            std::sprintf(extra_buffer, "         ttvs[%2d] %s %s %s", i, v.toString().c_str(), isev, isei);
+            std::strcat(buffer, extra_buffer);
+            for (auto sector : sectors) {
+                std::sprintf(extra_buffer, " %d", sector);
+                std::strcat(buffer, extra_buffer);
+            }
+            std::strcat(buffer, "\n");
+        }
+    }
     return buffer;
 }
 
@@ -2649,6 +2721,143 @@ inline size_t Chord::voices() const {
 
 inline void Chord::resize(size_t voiceN) {
     Eigen::MatrixXd::resize(voiceN, COUNT);
+}
+
+inline bool Chord::test(const char *label) const {
+    std::fprintf(stderr, "%s\n", label);
+    char buffer[0x1000];
+    bool passed = true;
+    // Test the consistency of the predicates.
+    if (iseOP() == true) {
+        if (iseO() == false ||
+            iseP() == false) {
+            passed = false;
+            std::fprintf(stderr, "Chord::iseOP is not consistent.\n");
+        
+        } else {
+            std::fprintf(stderr, "Chord::iseOP is consistent.\n");
+        }
+    }
+    if (iseOPT() == true) {
+        if (iseO() == false ||
+            iseP() == false || 
+            iseV() == false || 
+            iseT() == false) {
+            passed = false;
+            std::fprintf(stderr, "Chord::iseOPT is not consistent.\n");
+        } else {
+            std::fprintf(stderr, "Chord::iseOPT is consistent.\n");
+        }
+    }
+    if (iseOPTT() == true) {
+        if (iseO() == false ||
+            iseP() == false || 
+            iseV() == false || 
+            iseTT() == false) {
+            passed = false;
+            std::fprintf(stderr, "Chord::iseOPTT is not consistent.\n");
+        } else {
+            std::fprintf(stderr, "Chord::iseOPTT is consistent.\n");
+        }
+    }
+    if (iseOPTI() == true) {
+        if (iseO() == false ||
+            iseP() == false || 
+            iseV() == false || 
+            iseT() == false || 
+            iseI() == false) {
+            passed = false;
+            std::fprintf(stderr, "Chord::iseOPTI is not consistent.\n");
+        } else {
+            std::fprintf(stderr, "Chord::iseOPTI is consistent.\n");
+        }
+    }
+    if (iseOPTTI() == true) {
+        if (iseO() == false ||
+            iseP() == false || 
+            iseV() == false || 
+            iseTT() == false || 
+            iseI() == false) {
+            passed = false;
+            std::fprintf(stderr, "Chord::iseOPTTI is not consistent.\n");
+        } else {
+            std::fprintf(stderr, "Chord::iseOPTTI is consistent.\n");
+        }
+    }
+    // Test the consistency of the transformations.
+    if (eO().iseO() == false) {
+        passed = false;
+        std::fprintf(stderr, "Chord::eO is not consistent with Chord::iseO.\n");
+    } else {
+        std::fprintf(stderr, "Chord::eO is consistent with Chord::iseO.\n");
+    }
+    if (eP().iseP() == false) {
+        passed = false;
+        std::fprintf(stderr, "Chord::eP is not consistent with Chord::iseP.\n");
+    } else {
+        std::fprintf(stderr, "Chord::eP is consistent with Chord::iseP.\n");
+    }
+    if (eT().iseT() == false) {
+        passed = false;
+        std::fprintf(stderr, "Chord::eT is not consistent with Chord::iseT.\n");
+    } else {
+        std::fprintf(stderr, "Chord::eT is consistent with Chord::iseT.\n");
+    }
+    if (eV().iseV() == false) {
+        passed = false;
+        std::fprintf(stderr, "Chord::eV is not consistent with Chord::iseV.\n");
+    } else {
+        std::fprintf(stderr, "Chord::eV is consistent with Chord::iseV.\n");
+    }
+    if (eTT().iseTT() == false) {
+        passed = false;
+        std::fprintf(stderr, "Chord::eTT is not consistent with Chord::iseTT.\n");
+    } else {
+        std::fprintf(stderr, "Chord::eTT is consistent with Chord::iseTT.\n");
+    }
+    if (eI().iseI() == false) {
+        passed = false;
+        std::fprintf(stderr, "Chord::eI is not consistent with Chord::iseI.\n");
+    } else {
+        std::fprintf(stderr, "Chord::eI is consistent with Chord::iseI.\n");
+    }
+    if (eOP().iseOP() == false) {
+        passed = false;
+        std::fprintf(stderr, "Chord::eOP is not consistent with Chord::iseOP.\n");
+    } else {
+        std::fprintf(stderr, "Chord::eOP is consistent with Chord::iseOP.\n");
+    }
+    if (eOPT().iseOPT() == false) {
+        passed = false;
+        std::fprintf(stderr, "Chord::eOPT is not consistent with Chord::iseOPT.\n");
+    } else {
+        std::fprintf(stderr, "Chord::eOPT is consistent with Chord::iseOPT.\n");
+    }
+    if (eOPTT().iseOPTT() == false) {
+        passed = false;
+        std::fprintf(stderr, "Chord::eOPTT is not consistent with Chord::iseOPTT.\n");
+    } else {
+        std::fprintf(stderr, "Chord::eOPTT is consistent with Chord::iseOPTT.\n");
+    }
+    auto opti_chord = eOPTI();
+    if (opti_chord.iseOPTI() == false) {
+        std::fprintf(stderr, "\n*** Chord::eOPTI (%s => %s) is not consistent with Chord::iseOPTI.\n", toString().c_str(), opti_chord.toString().c_str());
+        passed = false;
+    } else {
+        std::fprintf(stderr, "Chord::eOPTI is consistent with Chord::iseOPTI.\n");
+    }
+    auto optti_chord = eOPTTI();
+    if (optti_chord.iseOPTTI() == false) {
+        std::fprintf(stderr, "\n*** Chord::eOPTTI (%s => %s) is not consistent with Chord::iseOPTTI.\n", toString().c_str(), optti_chord.toString().c_str());
+    } else {
+        std::fprintf(stderr, "Chord::eOPTTI is consistent with Chord::iseOPTTI.\n");
+    }
+    if (passed == true) {
+        std::fprintf(stderr, information().c_str());
+    } else {
+        std::fprintf(stderr, information(true).c_str());
+    }
+    return passed;
 }
 
 /**
@@ -3922,7 +4131,7 @@ inline SILENCE_PUBLIC double I(double pitch, double center) {
     return 2 * center - pitch;
 }
 
-inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_by_singular_value_decomposition(const std::vector<Chord> &points_, bool make_eT) {
+inline SILENCE_PUBLIC HyperplaneEquation  hyperplane_equation_by_singular_value_decomposition(const std::vector<Chord> &points_, bool make_eT) {
     std::cout << "hyperplane_equation_by_singular_value_decomposition: original points:" << std::endl;
     for (auto point: points_) {
         std::cout << "point: " << point.col(0).transpose() << std::endl;
