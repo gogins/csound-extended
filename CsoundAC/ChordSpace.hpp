@@ -1590,7 +1590,7 @@ inline Chord Chord::eT() const {
     return csound::normalize<EQUIVALENCE_RELATION_T>(*this, OCTAVE(), 1.0);
 }
 
-//	EQUIVALENCE_RELATION_Tg
+//	EQUIVALENCE_F
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_Tg>(const Chord &chord, double range, double g) {
     auto t_ = normalize<EQUIVALENCE_RELATION_T>(chord, range, g);
@@ -1610,9 +1610,9 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_Tg>(const Ch
     if (eq_epsilon(sum, 0.) == true) {
         return true;
     }
-    auto t_ = normalize<EQUIVALENCE_RELATION_T>(chord, range, g);
     auto tt = normalize<EQUIVALENCE_RELATION_Tg>(chord, range, g);
-    if (chord.equals(tt) == true) {
+    auto tt_sum = tt.sum();
+    if (eq_epsilon(sum, tt_sum) == true) {
         return true;
     } else {
         return false;
@@ -1782,16 +1782,17 @@ inline bool Chord::iseRPT(double range) const {
 }
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPT>(const Chord &chord, double range, double g) {
-    Chord normalRP = normalize<EQUIVALENCE_RELATION_RP>(chord, range, g);
-    std::vector<Chord> voicings_ = normalRP.voicings();
-    Chord voicing;
-    for (size_t i = 0; i < voicings_.size(); i++) {
-        voicing = voicings_[i];
-        if (isNormal<EQUIVALENCE_RELATION_V>(voicing, range, g)) {
-            break;
+    auto rp = normalize<EQUIVALENCE_RELATION_RP>(chord, range, g);
+    auto rp_t = normalize<EQUIVALENCE_RELATION_T>(rp, range, g);
+    auto voicings_ = rp_t.voicings();
+    for (auto voicing : voicings_) {
+        if (isNormal<EQUIVALENCE_RELATION_V>(voicing, range, g) == true) {
+            auto voicing_t = normalize<EQUIVALENCE_RELATION_T>(voicing, range, g);  
+            return voicing_t;
         }
     }
-    return normalize<EQUIVALENCE_RELATION_T>(voicing, range, g);
+    System::error("ERROR: normalize<EQUIVALENCE_RELATION_RPT> has no matching voicing.\n");
+    return normalize<EQUIVALENCE_RELATION_T>(rp_t, range, g);    
 }
 
 inline Chord Chord::eRPT(double range) const {
@@ -1821,8 +1822,8 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RPTg>(const 
     if (isNormal<EQUIVALENCE_RELATION_Tg>(chord, range, g) == false) {
         return false;
     }
-    //~ if (isNormal<EQUIVALENCE_RELATION_V>(chord, range, g) == false) {
-    if (isNormal<EQUIVALENCE_RELATION_V>(chord.eRPT(range), range, g) == false) {
+    if (isNormal<EQUIVALENCE_RELATION_V>(chord, range, g) == false) {
+    //~ if (isNormal<EQUIVALENCE_RELATION_V>(chord.eRPT(range), range, g) == false) {
         return false;
     }
     return true;
@@ -1833,16 +1834,9 @@ inline bool Chord::iseRPTT(double range, double g) const {
 }
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTg>(const Chord &chord, double range, double g) {
-    Chord normalRP = normalize<EQUIVALENCE_RELATION_RP>(chord, range, g);
-    std::vector<Chord> voicings_ = normalRP.voicings();
-    Chord voicing;
-    for (size_t i = 0; i < voicings_.size(); i++) {
-        voicing = voicings_[i];
-        if (isNormal<EQUIVALENCE_RELATION_V>(voicing, range, g)) {
-            break;
-        }
-    }
-    return normalize<EQUIVALENCE_RELATION_Tg>(voicing, range, g);
+    auto rpt = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
+    auto rpt_tt = normalize<EQUIVALENCE_RELATION_Tg>(rpt, range, g);
+    return rpt_tt;
 }
 
 inline Chord Chord::eRPTT(double range, double g) const {
@@ -2733,7 +2727,6 @@ inline bool Chord::test(const char *label) const {
             iseP() == false) {
             passed = false;
             std::fprintf(stderr, "Chord::iseOP is not consistent.\n");
-        
         } else {
             std::fprintf(stderr, "Chord::iseOP is consistent.\n");
         }
@@ -2749,6 +2742,8 @@ inline bool Chord::test(const char *label) const {
             std::fprintf(stderr, "Chord::iseOPT is consistent.\n");
         }
     }
+    // If it is transformed to T, is it OPT? 
+    // After that, is it Tg?
     if (iseOPTT() == true) {
         if (iseO() == false ||
             iseP() == false || 
@@ -2829,7 +2824,11 @@ inline bool Chord::test(const char *label) const {
     }
     if (eOPT().iseOPT() == false) {
         passed = false;
-        std::fprintf(stderr, "Chord::eOPT is not consistent with Chord::iseOPT.\n");
+        auto opt_chord = eOPT();
+        std::fprintf(stderr, "\n"
+"****************************************************************************************************************\n"
+"Chord::eOPT (%s => %s) is not consistent with Chord::iseOPT.\n"
+"****************************************************************************************************************\n", toString().c_str(), opt_chord.toString().c_str());
     } else {
         std::fprintf(stderr, "Chord::eOPT is consistent with Chord::iseOPT.\n");
     }
@@ -2841,14 +2840,20 @@ inline bool Chord::test(const char *label) const {
     }
     auto opti_chord = eOPTI();
     if (opti_chord.iseOPTI() == false) {
-        std::fprintf(stderr, "\n*** Chord::eOPTI (%s => %s) is not consistent with Chord::iseOPTI.\n", toString().c_str(), opti_chord.toString().c_str());
+        std::fprintf(stderr, "\n"
+"****************************************************************************************************************\n"
+"Chord::eOPTI (%s => %s) is not consistent with Chord::iseOPTI.\n"
+"****************************************************************************************************************\n", toString().c_str(), opti_chord.toString().c_str());
         passed = false;
     } else {
         std::fprintf(stderr, "Chord::eOPTI is consistent with Chord::iseOPTI.\n");
     }
     auto optti_chord = eOPTTI();
     if (optti_chord.iseOPTTI() == false) {
-        std::fprintf(stderr, "\n*** Chord::eOPTTI (%s => %s) is not consistent with Chord::iseOPTTI.\n", toString().c_str(), optti_chord.toString().c_str());
+        std::fprintf(stderr, "\n"
+"****************************************************************************************************************\n"
+"Chord::eOPTI (%s => %s) is not consistent with Chord::iseOPTTI.\n"
+"****************************************************************************************************************\n", toString().c_str(), optti_chord.toString().c_str());
     } else {
         std::fprintf(stderr, "Chord::eOPTTI is consistent with Chord::iseOPTTI.\n");
     }
@@ -4112,7 +4117,7 @@ inline SILENCE_PUBLIC HyperplaneEquation &get_hyperplane_equation(int voices) {
     static std::map<int, HyperplaneEquation> hyperplane_equations;
     if (hyperplane_equations.size() == 0) {
         for (int dimensions = 3; dimensions < 12; ++dimensions) {
-            hyperplane_equations[dimensions] = hyperplane_equation_from_dimensionality(dimensions, true, dimensions - 2);
+            hyperplane_equations[dimensions] = hyperplane_equation_from_dimensionality(dimensions, true, 0);
             //~ hyperplane_equations[dimensions] = hyperplane_equation_from_random_inversion_flat(dimensions, true, 1);
         }
     }
@@ -4277,10 +4282,9 @@ SILENCE_PUBLIC double distance_to_cyclical_sector_vertices(const Chord &chord, c
 
 /**
  * Returns the scalar hyperplane equation, in the form of a unit normal vector 
- * and constant term, for the first fundamental domain of OPT equivalence for n 
- * dimensions. The unit normal vector can be rotated from sector to sector by 
- * permuting its terms, and the constant term is the dot product of the unit 
- * normal vector and the center.
+ * and constant term, for a fundamental domain of OPT equivalence for n 
+ * dimensions. The constant term is the dot product of the unit normal vector 
+ * and the center.
  */
 inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality(int dimensions, bool transpositional_equivalence, int sector_) {
     Chord chord(dimensions);
@@ -4290,14 +4294,14 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality
     if (transpositional_equivalence == true) {
         center = center.eOPT();
     }
-    std::vector<Chord> cyclical_region_vertices_ = cyclical_region_vertices(dimensions, transpositional_equivalence);
-    for (int sector = 0; sector < sector_; ++sector) {
-        Chord vertex = cyclical_region_vertices_.front();
-        cyclical_region_vertices_.erase(cyclical_region_vertices_.begin());
-        cyclical_region_vertices_.push_back(vertex);
-    }        
-    lower_point = cyclical_region_vertices_[0];
-    upper_point = cyclical_region_vertices_[1];
+    auto cyclical_region_sectors_ = cyclical_region_sectors(transpositional_equivalence)[chord.voices()];
+    auto sector = cyclical_region_sectors_[sector_];
+    auto old_level = System::setMessageLevel(15);
+    // Slot 0 is always the center.
+    lower_point = sector[1];
+    System::debug("hyperplane_equation_from_dimensionality: lower point: %s\n", lower_point.toString().c_str());
+    upper_point = sector[2];
+    System::debug("hyperplane_equation_from_dimensionality: upper_point: %s\n", upper_point.toString().c_str());
     auto normal_vector = upper_point.col(0) - lower_point.col(0);
     auto norm = normal_vector.norm();
     HyperplaneEquation hyperplane_equation_;
@@ -4319,6 +4323,7 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality
         System::debug("  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
     }
     System::debug("hyperplane_equation_from_dimensionality: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
+    System::setMessageLevel(old_level);
     return hyperplane_equation_;
 }
 
@@ -4329,7 +4334,7 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_random_inversi
     for (int i = 0; i < 100; ++i) {
         Chord chord(dimensions);
         if (i == 0) {
-            inversion_flat.push_back(center);
+            //inversion_flat.push_back(center);
         } else {
             int side = std::floor(dimensions / 2.);
             int lower_voice = 0;
@@ -4343,7 +4348,7 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_random_inversi
             inversion_flat.push_back(chord);
         }
     }
-    HyperplaneEquation hyperplane_equation_ = hyperplane_equation_by_singular_value_decomposition(inversion_flat, transpositional_equivalence);
+    HyperplaneEquation hyperplane_equation_ = hyperplane_equation_by_singular_value_decomposition(inversion_flat, false);
     System::debug("hyperplane_equation_from_random_inversion_flat: sector: %d\n", sector_);
     System::debug("hyperplane_equation_from_random_inversion_flat: center:\n");
     for(int i = 0; i < dimensions; i++) {

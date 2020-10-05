@@ -245,7 +245,7 @@ static bool testNormalsAndEquivalents(std::string equivalence,
         std::sprintf(buffer, "FOUND EQUIVALENT %d\n", count);
         test(found_equivalent->test(), std::string(buffer));
         count = count + 1;
-    }
+     }
  }
 
 static bool testEquivalenceRelation(std::string equivalenceRelation, int voiceCount, double range, double g) {
@@ -519,8 +519,8 @@ int main(int argc, char **argv) {
         auto hpd = csound::hyperplane_equation_from_dimensionality(i, true, 0);
         //~ std::cerr << "\nCENTROIDS\n" << std::endl;
         //~ auto hpc = csound::hyperplane_equation_from_centroids(i);
-        std::cerr << "\nRANDOM INVERSION FLAT\n" << std::endl;
-        auto hpr = csound::hyperplane_equation_from_random_inversion_flat(i);
+        //~ std::cerr << "\nRANDOM INVERSION FLAT\n" << std::endl;
+        //~ auto hpr = csound::hyperplane_equation_from_random_inversion_flat(i);
     }
     ///csound::System::setMessageLevel(old_level);
 
