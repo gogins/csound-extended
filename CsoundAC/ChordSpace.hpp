@@ -1786,8 +1786,9 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPT>(const
     auto rp_t = normalize<EQUIVALENCE_RELATION_T>(rp, range, g);
     auto voicings_ = rp_t.voicings();
     for (auto voicing : voicings_) {
+        auto voicing_t = normalize<EQUIVALENCE_RELATION_T>(voicing, range, g);  
         if (isNormal<EQUIVALENCE_RELATION_V>(voicing, range, g) == true) {
-            auto voicing_t = normalize<EQUIVALENCE_RELATION_T>(voicing, range, g);  
+            //~ auto voicing_t = normalize<EQUIVALENCE_RELATION_T>(voicing, range, g);  
             return voicing_t;
         }
     }
@@ -1924,44 +1925,6 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTI>(cons
         auto rpt_i_rpt = normalize<EQUIVALENCE_RELATION_RPT>(rpt_i, range, g);
         return rpt_i_rpt;
     }
-    
-    //~ auto rpt = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
-    //~ if (isNormal<EQUIVALENCE_RELATION_I>(rpt, range, g) == true) {
-        //~ return rpt;
-    //~ } else {
-        //~ std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: chord:      " << chord.toString() << std::endl;
-        //~ auto rpt_i = normalize<EQUIVALENCE_RELATION_I>(rpt, range, g);
-        //~ std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: rpt_i       " << rpt_i.toString() << std::endl;
-        //~ auto rpt_i_rpts = rpt_i.eRPTs(range);
-        //~ std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: rpt_i_rpts: " << rpt_i_rpts. size() << std::endl;
-        //~ for (auto rpt_i_rpt : rpt_i_rpts) {
-            //~ //std::cerr << rpt_i_rpt.information() << std::endl;
-            //~ if (rpt_i_rpt.iseRPTI(range) == true) {
-                //~ std::cerr << "normalize<EQUIVALENCE_RELATION_RPTI>: matched:" << rpt_i_rpt.toString() << std::endl;
-                //~ return rpt_i_rpt;
-            //~ }
-        //~ }
-         //~ for (auto rpt_i_rpt : rpt_i_rpts) {
-            //~ //std::cerr << rpt_i_rpt.information() << std::endl;
-            //~ System::error("normalize<EQUIVALENCE_RELATION_RPTI>: rpt_i_rpt: %s V: %d I: %d\n", rpt_i_rpt.toString().c_str(), rpt_i_rpt.iseV(), rpt_i_rpt.iseI());
-        //~ }
-        //~ std::cerr << "Error: normalize<EQUIVALENCE_RELATION_RPTI>: no match for:" << chord.toString() << std::endl;
-        //~ return rpt_i_rpts.front();   
-    //~ }
-    
-    //~ auto rpt = normalize<EQUIVALENCE_RELATION_RPT>(chord, range, g);
-    //~ if (isNormal<EQUIVALENCE_RELATION_I>(rpt, range, g) == true) {
-        //~ return rpt;
-    //~ } else {
-        //~ auto rpt_i = normalize<EQUIVALENCE_RELATION_I>(rpt, range, g);
-        //~ auto rpt_i_ts = rpt_i.eRPTs(12.);
-        //~ for (auto rpt_i_t : rpt_i_ts) {
-            //~ if (rpt_i_t.iseI() == true &&
-                //~ rpt_i_t.iseV() == true) {
-                    //~ return rpt_i_t;
-                //~ };
-        //~ }
-    //~ }
 }
 
 inline Chord Chord::eRPTI(double range) const {
@@ -2718,7 +2681,7 @@ inline void Chord::resize(size_t voiceN) {
 }
 
 inline bool Chord::test(const char *label) const {
-    std::fprintf(stderr, "%s\n", label);
+    std::fprintf(stderr, "TESTING %s %s\n\n", toString().c_str(), label);
     char buffer[0x1000];
     bool passed = true;
     // Test the consistency of the predicates.
@@ -2726,9 +2689,9 @@ inline bool Chord::test(const char *label) const {
         if (iseO() == false ||
             iseP() == false) {
             passed = false;
-            std::fprintf(stderr, "Chord::iseOP is not consistent.\n");
+            std::fprintf(stderr, "ERROR Chord::iseOP is not consistent.\n");
         } else {
-            std::fprintf(stderr, "Chord::iseOP is consistent.\n");
+            std::fprintf(stderr, "      Chord::iseOP is consistent.\n");
         }
     }
     if (iseOPT() == true) {
@@ -2737,9 +2700,9 @@ inline bool Chord::test(const char *label) const {
             iseV() == false || 
             iseT() == false) {
             passed = false;
-            std::fprintf(stderr, "Chord::iseOPT is not consistent.\n");
+            std::fprintf(stderr, "ERROR Chord::iseOPT is not consistent.\n");
         } else {
-            std::fprintf(stderr, "Chord::iseOPT is consistent.\n");
+            std::fprintf(stderr, "      Chord::iseOPT is consistent.\n");
         }
     }
     // If it is transformed to T, is it OPT? 
@@ -2750,9 +2713,9 @@ inline bool Chord::test(const char *label) const {
             iseV() == false || 
             iseTT() == false) {
             passed = false;
-            std::fprintf(stderr, "Chord::iseOPTT is not consistent.\n");
+            std::fprintf(stderr, "ERROR Chord::iseOPTT is not consistent.\n");
         } else {
-            std::fprintf(stderr, "Chord::iseOPTT is consistent.\n");
+            std::fprintf(stderr, "      Chord::iseOPTT is consistent.\n");
         }
     }
     if (iseOPTI() == true) {
@@ -2762,9 +2725,9 @@ inline bool Chord::test(const char *label) const {
             iseT() == false || 
             iseI() == false) {
             passed = false;
-            std::fprintf(stderr, "Chord::iseOPTI is not consistent.\n");
+            std::fprintf(stderr, "ERROR Chord::iseOPTI is not consistent.\n");
         } else {
-            std::fprintf(stderr, "Chord::iseOPTI is consistent.\n");
+            std::fprintf(stderr, "      Chord::iseOPTI is consistent.\n");
         }
     }
     if (iseOPTTI() == true) {
@@ -2774,89 +2737,82 @@ inline bool Chord::test(const char *label) const {
             iseTT() == false || 
             iseI() == false) {
             passed = false;
-            std::fprintf(stderr, "Chord::iseOPTTI is not consistent.\n");
+            std::fprintf(stderr, "ERROR Chord::iseOPTTI is not consistent.\n");
         } else {
-            std::fprintf(stderr, "Chord::iseOPTTI is consistent.\n");
+            std::fprintf(stderr, "      Chord::iseOPTTI is consistent.\n");
         }
     }
     // Test the consistency of the transformations.
     if (eO().iseO() == false) {
         passed = false;
-        std::fprintf(stderr, "Chord::eO is not consistent with Chord::iseO.\n");
+        std::fprintf(stderr, "ERROR Chord::eO is not consistent with Chord::iseO.\n");
     } else {
-        std::fprintf(stderr, "Chord::eO is consistent with Chord::iseO.\n");
+        std::fprintf(stderr, "      Chord::eO is consistent with Chord::iseO.\n");
     }
     if (eP().iseP() == false) {
         passed = false;
-        std::fprintf(stderr, "Chord::eP is not consistent with Chord::iseP.\n");
+        std::fprintf(stderr, "ERROR Chord::eP is not consistent with Chord::iseP.\n");
     } else {
-        std::fprintf(stderr, "Chord::eP is consistent with Chord::iseP.\n");
+        std::fprintf(stderr, "      Chord::eP is consistent with Chord::iseP.\n");
     }
     if (eT().iseT() == false) {
         passed = false;
-        std::fprintf(stderr, "Chord::eT is not consistent with Chord::iseT.\n");
+        std::fprintf(stderr, "ERROR Chord::eT is not consistent with Chord::iseT.\n");
     } else {
-        std::fprintf(stderr, "Chord::eT is consistent with Chord::iseT.\n");
+        std::fprintf(stderr, "      Chord::eT is consistent with Chord::iseT.\n");
     }
     if (eV().iseV() == false) {
         passed = false;
-        std::fprintf(stderr, "Chord::eV is not consistent with Chord::iseV.\n");
+        std::fprintf(stderr, "ERROR Chord::eV is not consistent with Chord::iseV.\n");
     } else {
-        std::fprintf(stderr, "Chord::eV is consistent with Chord::iseV.\n");
+        std::fprintf(stderr, "      Chord::eV is consistent with Chord::iseV.\n");
     }
     if (eTT().iseTT() == false) {
         passed = false;
-        std::fprintf(stderr, "Chord::eTT is not consistent with Chord::iseTT.\n");
+        std::fprintf(stderr, "ERROR Chord::eTT is not consistent with Chord::iseTT.\n");
     } else {
-        std::fprintf(stderr, "Chord::eTT is consistent with Chord::iseTT.\n");
+        std::fprintf(stderr, "      Chord::eTT is consistent with Chord::iseTT.\n");
     }
     if (eI().iseI() == false) {
         passed = false;
-        std::fprintf(stderr, "Chord::eI is not consistent with Chord::iseI.\n");
+        std::fprintf(stderr, "ERROR Chord::eI is not consistent with Chord::iseI.\n");
     } else {
-        std::fprintf(stderr, "Chord::eI is consistent with Chord::iseI.\n");
+        std::fprintf(stderr, "      Chord::eI is consistent with Chord::iseI.\n");
     }
     if (eOP().iseOP() == false) {
         passed = false;
-        std::fprintf(stderr, "Chord::eOP is not consistent with Chord::iseOP.\n");
+        std::fprintf(stderr, "ERROR Chord::eOP is not consistent with Chord::iseOP.\n");
     } else {
-        std::fprintf(stderr, "Chord::eOP is consistent with Chord::iseOP.\n");
+        std::fprintf(stderr, "      Chord::eOP is consistent with Chord::iseOP.\n");
     }
     if (eOPT().iseOPT() == false) {
         passed = false;
         auto opt_chord = eOPT();
-        std::fprintf(stderr, "\n"
-"****************************************************************************************************************\n"
-"Chord::eOPT (%s => %s) is not consistent with Chord::iseOPT.\n"
-"****************************************************************************************************************\n", toString().c_str(), opt_chord.toString().c_str());
+        std::fprintf(stderr, "ERROR Chord::eOPT is not consistent with Chord::iseOPT (%s => %s).\n", toString().c_str(), opt_chord.toString().c_str());
     } else {
-        std::fprintf(stderr, "Chord::eOPT is consistent with Chord::iseOPT.\n");
+        std::fprintf(stderr, "      Chord::eOPT is consistent with Chord::iseOPT.\n");
     }
     if (eOPTT().iseOPTT() == false) {
         passed = false;
-        std::fprintf(stderr, "Chord::eOPTT is not consistent with Chord::iseOPTT.\n");
+        auto optt_chord = eOPTT();
+        std::fprintf(stderr, "ERROR Chord::eOPTT is not consistent with Chord::iseOPT (%s => %s).\n", toString().c_str(), optt_chord.toString().c_str());
     } else {
-        std::fprintf(stderr, "Chord::eOPTT is consistent with Chord::iseOPTT.\n");
+        std::fprintf(stderr, "      Chord::eOPTT is consistent with Chord::iseOPTT.\n");
     }
     auto opti_chord = eOPTI();
     if (opti_chord.iseOPTI() == false) {
-        std::fprintf(stderr, "\n"
-"****************************************************************************************************************\n"
-"Chord::eOPTI (%s => %s) is not consistent with Chord::iseOPTI.\n"
-"****************************************************************************************************************\n", toString().c_str(), opti_chord.toString().c_str());
+        std::fprintf(stderr, "ERROR Chord::eOPTI is not consistent with Chord::iseOPTI (%s => %s).\n", toString().c_str(), opti_chord.toString().c_str());
         passed = false;
     } else {
-        std::fprintf(stderr, "Chord::eOPTI is consistent with Chord::iseOPTI.\n");
+        std::fprintf(stderr, "      Chord::eOPTI is consistent with Chord::iseOPTI.\n");
     }
     auto optti_chord = eOPTTI();
     if (optti_chord.iseOPTTI() == false) {
-        std::fprintf(stderr, "\n"
-"****************************************************************************************************************\n"
-"Chord::eOPTI (%s => %s) is not consistent with Chord::iseOPTTI.\n"
-"****************************************************************************************************************\n", toString().c_str(), optti_chord.toString().c_str());
+        std::fprintf(stderr, "ERROR Chord::eOPTTI is not consistent with Chord::iseOPTTI  (%s => %s).\n", toString().c_str(), optti_chord.toString().c_str());
     } else {
-        std::fprintf(stderr, "Chord::eOPTTI is consistent with Chord::iseOPTTI.\n");
+        std::fprintf(stderr, "      Chord::eOPTTI is consistent with Chord::iseOPTTI.\n");
     }
+    std::fprintf(stderr, "\n");
     if (passed == true) {
         std::fprintf(stderr, information().c_str());
     } else {
@@ -4136,22 +4092,23 @@ inline SILENCE_PUBLIC double I(double pitch, double center) {
     return 2 * center - pitch;
 }
 
-inline SILENCE_PUBLIC HyperplaneEquation  hyperplane_equation_by_singular_value_decomposition(const std::vector<Chord> &points_, bool make_eT) {
-    std::cout << "hyperplane_equation_by_singular_value_decomposition: original points:" << std::endl;
-    for (auto point: points_) {
-        std::cout << "point: " << point.col(0).transpose() << std::endl;
-    }
+inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_singular_value_decomposition(const std::vector<Chord> &points_, bool make_eT) {
+    std::cout << "hyperplane_equation_from_singular_value_decomposition: original points:" << std::endl;
     std::vector<Chord> points;
     if (make_eT == true) {
         for (auto point : points_) {
-            points.push_back(point.eOPT());
+            points.push_back(point.eT());
         }
     } else {
         points = points_;
     }
-    std::cout << "hyperplane_equation_by_singular_value_decomposition: eOPT points:" << std::endl;
+    std::cout << "hyperplane_equation_from_singular_value_decomposition: points:" << std::endl;
+    auto opt = "";
+    if (make_eT == true) {
+        opt = "T: ";
+    }
     for (auto point: points) {
-        std::cout << "eOPT(point): " << point.col(0).transpose() << std::endl;
+        std::cout << opt <<  point.col(0).transpose() << std::endl;
     }
     auto subtrahend = points.back().col(0);
     Eigen::MatrixXd matrix(subtrahend.rows(), points.size() - 1);
@@ -4159,13 +4116,13 @@ inline SILENCE_PUBLIC HyperplaneEquation  hyperplane_equation_by_singular_value_
         Eigen::VectorXd difference = points[i].col(0) - subtrahend;
         matrix.col(i) = difference;
     }
-    std::cout << "hyperplane_equation_by_singular_value_decomposition: vectors:" << std::endl << matrix << std::endl;
+    std::cout << "hyperplane_equation_from_singular_value_decomposition: vectors:" << std::endl << matrix << std::endl;
     matrix.transposeInPlace();
-    std::cout << "hyperplane_equation_by_singular_value_decomposition: vectors transposed:" << std::endl << matrix << std::endl;
+    std::cout << "hyperplane_equation_from_singular_value_decomposition: vectors transposed:" << std::endl << matrix << std::endl;
     Eigen::JacobiSVD<Eigen::MatrixXd, Eigen::FullPivHouseholderQRPreconditioner> svd(matrix, Eigen::ComputeFullU | Eigen::ComputeFullV);
-    std::cout << "hyperplane_equation_by_singular_value_decomposition: U:" << std::endl << svd.matrixU() << std::endl;
-    std::cout << "hyperplane_equation_by_singular_value_decomposition: singular values:" << std::endl << svd.singularValues() << std::endl;
-    std::cout << "hyperplane_equation_by_singular_value_decomposition: V:" << std::endl << svd.matrixV() << std::endl;
+    std::cout << "hyperplane_equation_from_singular_value_decomposition: U:" << std::endl << svd.matrixU() << std::endl;
+    std::cout << "hyperplane_equation_from_singular_value_decomposition: singular values:" << std::endl << svd.singularValues() << std::endl;
+    std::cout << "hyperplane_equation_from_singular_value_decomposition: V:" << std::endl << svd.matrixV() << std::endl;
     //~ auto rhs = Eigen::MatrixXd::Zero(svd.singularValues().rows(), 1);
     //~ auto solution = svd.solve(rhs);
     //~ std::cout << "solution:\n";
@@ -4173,12 +4130,12 @@ inline SILENCE_PUBLIC HyperplaneEquation  hyperplane_equation_by_singular_value_
     HyperplaneEquation hyperplane_equation_;
     hyperplane_equation_.unit_normal_vector = svd.matrixV().rightCols(1);
     auto norm = hyperplane_equation_.unit_normal_vector.norm();
-    std::cout << "hyperplane_equation_by_singular_value_decomposition: norm:" << std::endl << norm << std::endl;
+    std::cout << "hyperplane_equation_from_singular_value_decomposition: norm:" << std::endl << norm << std::endl;
     hyperplane_equation_.unit_normal_vector = hyperplane_equation_.unit_normal_vector / norm;
     auto constant_term = hyperplane_equation_.unit_normal_vector.adjoint() * subtrahend;
     hyperplane_equation_.constant_term = constant_term(0, 0);
-    std::cout << "hyperplane_equation_by_singular_value_decomposition: unit normal vector: " << std::endl << hyperplane_equation_.unit_normal_vector << std::endl;
-    std::cout << "hyperplane_equation_by_singular_value_decomposition: constant term: " << std::endl << hyperplane_equation_.constant_term << std::endl;
+    std::cout << "hyperplane_equation_from_singular_value_decomposition: unit normal vector: " << std::endl << hyperplane_equation_.unit_normal_vector << std::endl;
+    std::cout << "hyperplane_equation_from_singular_value_decomposition: constant term: " << std::endl << hyperplane_equation_.constant_term << std::endl;
     return hyperplane_equation_;
 }
 
@@ -4251,9 +4208,9 @@ SILENCE_PUBLIC const std::vector<std::vector<std::vector<Chord>>> &cyclical_regi
                     cyclical_region_sector_transpositional_equivalence[dimension] = center_transpositional_equivalence;
                     cyclical_region_sectors_[dimensions].push_back(cyclical_region_sector);
                     cyclical_region_sectors_transpositional_equivalence[dimensions].push_back(cyclical_region_sector_transpositional_equivalence);
-                    System::message("cyclical_region_sectors: dimensions: %2d dimension: %2d\n", dimensions, dimension);
+                    System::debug("cyclical_region_sectors: dimensions: %2d dimension: %2d\n", dimensions, dimension);
                     for (auto vertex : cyclical_region_sectors_transpositional_equivalence[dimensions][dimension]) {
-                        System::message("  vertex: %s\n", vertex.toString().c_str());
+                        System::debug("  vertex: %s\n", vertex.toString().c_str());
                     }
                 }
             }
@@ -4297,11 +4254,16 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality
     auto cyclical_region_sectors_ = cyclical_region_sectors(transpositional_equivalence)[chord.voices()];
     auto sector = cyclical_region_sectors_[sector_];
     auto old_level = System::setMessageLevel(15);
-    // Slot 0 is always the center.
-    lower_point = sector[1];
-    System::debug("hyperplane_equation_from_dimensionality: lower point: %s\n", lower_point.toString().c_str());
-    upper_point = sector[2];
+    // Slot 0 is always the center in each sector.
+    if (dimensions == 4) {
+        lower_point = sector[1];
+        upper_point = sector[3];
+    } else {
+        lower_point = sector[1];
+        upper_point = sector[2];
+    }
     System::debug("hyperplane_equation_from_dimensionality: upper_point: %s\n", upper_point.toString().c_str());
+    System::debug("hyperplane_equation_from_dimensionality: lower point: %s\n", lower_point.toString().c_str());
     auto normal_vector = upper_point.col(0) - lower_point.col(0);
     auto norm = normal_vector.norm();
     HyperplaneEquation hyperplane_equation_;
@@ -4328,13 +4290,13 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality
 }
 
 inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_random_inversion_flat(int dimensions, bool transpositional_equivalence, int sector_) {
-    std::uniform_real_distribution<> uniform(-6., 6.);
+    std::uniform_real_distribution<> uniform(-1., 1.);
     std::vector<Chord> inversion_flat;
     Chord center = Chord(dimensions).center();
     for (int i = 0; i < 100; ++i) {
         Chord chord(dimensions);
         if (i == 0) {
-            //inversion_flat.push_back(center);
+            inversion_flat.push_back(center);
         } else {
             int side = std::floor(dimensions / 2.);
             int lower_voice = 0;
@@ -4344,11 +4306,15 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_random_inversi
                 chord.setPitch(lower_voice, -random_pitch);
                 chord.setPitch(upper_voice,  random_pitch);
             }
-            chord = chord.eP();
+            if (transpositional_equivalence == true) {
+                chord = chord.eT().eP();
+            } else {
+                chord = chord.eP();
+            }
             inversion_flat.push_back(chord);
         }
     }
-    HyperplaneEquation hyperplane_equation_ = hyperplane_equation_by_singular_value_decomposition(inversion_flat, false);
+    HyperplaneEquation hyperplane_equation_ = hyperplane_equation_from_singular_value_decomposition(inversion_flat, true);
     System::debug("hyperplane_equation_from_random_inversion_flat: sector: %d\n", sector_);
     System::debug("hyperplane_equation_from_random_inversion_flat: center:\n");
     for(int i = 0; i < dimensions; i++) {

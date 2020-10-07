@@ -1,4 +1,4 @@
-#include "ChordSpace.hpp"
+ #include "ChordSpace.hpp"
 #include <System.hpp>
 #include <algorithm>
 #include <iostream>
@@ -111,7 +111,7 @@ static void Hyperplane_Equation_for_Test_Points() {
     expected.unit_normal_vector.resize(4, 1);
     expected.unit_normal_vector << 0.20864865369890548, 0.12839917150701868, 0.32099792876754685, 0.9148440969875088;
     expected.constant_term = 0.5135966860280752;
-    csound::HyperplaneEquation actual = hyperplane_equation_by_singular_value_decomposition(points, false);
+    csound::HyperplaneEquation actual = hyperplane_equation_from_singular_value_decomposition(points, false);
     bool passes = equals(expected, actual);
     test(passes, __func__);    
 }
@@ -519,8 +519,8 @@ int main(int argc, char **argv) {
         auto hpd = csound::hyperplane_equation_from_dimensionality(i, true, 0);
         //~ std::cerr << "\nCENTROIDS\n" << std::endl;
         //~ auto hpc = csound::hyperplane_equation_from_centroids(i);
-        //~ std::cerr << "\nRANDOM INVERSION FLAT\n" << std::endl;
-        //~ auto hpr = csound::hyperplane_equation_from_random_inversion_flat(i);
+        std::cerr << "\nRANDOM INVERSION FLAT\n" << std::endl;
+        auto hpr = csound::hyperplane_equation_from_random_inversion_flat(i);
     }
     ///csound::System::setMessageLevel(old_level);
 
@@ -587,6 +587,11 @@ int main(int argc, char **argv) {
     //~ test_chord(csound::Chord({-1.,0.,1.}).eOPT());
     //~ test_chord(csound::Chord({-2.,-1.,1.,2.}).eOPT());
     std::cerr << csound::Chord({0., 4, 7}).information(true) << std::endl;
+    
+//~ for (int dimensions = 3; dimensions < 12; ++dimensions) {
+    //~ csound::hyperplane_equation_from_random_inversion_flat(dimensions, true, 1);
+//~ }
+
     summary();
     return 0;
 }

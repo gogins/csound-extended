@@ -847,4 +847,7 @@ print()
 print(reflect_by_householder(eT([0, 3, 7]), [-1/3,2/3,-1/3], 0))
 print()
 
+for i in range(3, 13):
+    print("dimensions: %2d  %f %f" % (i, math.sin(math.pi/i), math.cos(math.pi/i)))
+
  
