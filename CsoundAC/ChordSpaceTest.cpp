@@ -1,4 +1,4 @@
- #include "ChordSpace.hpp"
+  #include "ChordSpace.hpp"
 #include <System.hpp>
 #include <algorithm>
 #include <iostream>
@@ -46,9 +46,9 @@ static void summary() {
 
 static bool test(bool passes, std::string message) {
     if (passes) {
-        pass(message + "\n");
+        pass(message);
     } else {
-        fail(message + "\n");
+        fail(message);
     }
     return passes;
 }
@@ -264,14 +264,20 @@ static bool testEquivalenceRelation(std::string equivalenceRelation, int voiceCo
         if (voiceCount == 3) {
             if (equivalentsForEquivalenceRelation.size() != 19) {
                 csound::System::message("%-8s 'found_equivalents' size should be 19 but is %ld.\n", equivalenceRelation.c_str(), equivalentsForEquivalenceRelation.size());
+                passes = false;
+                test(passes, "Size of found equivalents not correct for 3 voices.");
+            } else {
+                test(true, "Size of found equivalents is correct for 3 voices.");
             }
-            passes = false;
-        }
+         }
         if (voiceCount == 4) {
             if (equivalentsForEquivalenceRelation.size() != 83) {
                 csound::System::message("%-8s 'found_equivalents' size should be 83 but is %ld.\n", equivalenceRelation.c_str(), equivalentsForEquivalenceRelation.size());
-             }
-            passes = false;    
+                passes = false;    
+                test(passes, "Size of found equivalents not correct for 4 voices.");
+            } else {
+                test(true, "Size of found equivalents is correct for 4 voices.");
+            }
         }
     }
     return passes;
@@ -519,8 +525,8 @@ int main(int argc, char **argv) {
         auto hpd = csound::hyperplane_equation_from_dimensionality(i, true, 0);
         //~ std::cerr << "\nCENTROIDS\n" << std::endl;
         //~ auto hpc = csound::hyperplane_equation_from_centroids(i);
-        std::cerr << "\nRANDOM INVERSION FLAT\n" << std::endl;
-        auto hpr = csound::hyperplane_equation_from_random_inversion_flat(i);
+        //~ std::cerr << "\nRANDOM INVERSION FLAT\n" << std::endl;
+        //~ auto hpr = csound::hyperplane_equation_from_random_inversion_flat(i);
     }
     ///csound::System::setMessageLevel(old_level);
 
@@ -583,14 +589,110 @@ int main(int argc, char **argv) {
         testEquivalenceRelations(voiceCount, csound::OCTAVE(), 1.0);
     }
     
-    //~ // Find the sector of the "normal" inversion flat.
-    //~ test_chord(csound::Chord({-1.,0.,1.}).eOPT());
-    //~ test_chord(csound::Chord({-2.,-1.,1.,2.}).eOPT());
-    std::cerr << csound::Chord({0., 4, 7}).information(true) << std::endl;
+    auto opttis = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(4, csound::OCTAVE(), 1.);
+    for (auto optti : opttis) {
+        csound::System::message("chord %s  type %s v %d\n", optti.toString().c_str(), optti.et().eP().toString().c_str(), optti.iseV());
+    }
     
-//~ for (int dimensions = 3; dimensions < 12; ++dimensions) {
-    //~ csound::hyperplane_equation_from_random_inversion_flat(dimensions, true, 1);
-//~ }
+    std::cerr << csound::Chord({0., 4., 7., 11.}).information(true) << std::endl;
+    std::cerr << csound::Chord({0., 3., 7., 10.}).information(true) << std::endl;
+    std::cerr << csound::Chord({0., 0., 0.,  1.}).information(true) << std::endl;
+    std::cerr << csound::Chord({-5., -5., 6.,  7.}).information(true) << std::endl;
+    std::cerr << csound::Chord({0., 4, 7}).information(true) << std::endl;
+    std::cerr << csound::Chord({0., 4, 7}).T(4).information(true) << std::endl;
+    std::cerr << csound::Chord({0., 4, 7}).T(6).information(true) << std::endl;
+    
+
+    std::vector<csound::Chord> science_chord_types_4;
+    science_chord_types_4.push_back(csound::Chord({0., 0., 0., 0.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 0., 1.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 0., 2.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 0., 3.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 0., 4.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 0., 5.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 0., 6.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 0., 7.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 0., 8.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 0., 9.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 0., 10.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 0., 11.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 0., 12.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 1., 1.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 1., 2.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 1., 3.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 1., 4.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 1., 5.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 1., 6.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 1., 7.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 1., 8.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 1., 9.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 1., 10.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 1., 11.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 2., 2.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 2., 3.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 2., 4.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 2., 5.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 2., 6.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 2., 7.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 2., 8.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 2., 9.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 2., 10.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 3., 3.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 3., 4.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 3., 5.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 3., 6.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 3., 7.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 3., 8.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 3., 9.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 4., 4.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 4., 5.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 4., 6.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 4., 7.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 4., 8.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 5., 5.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 5., 6.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 5., 7.}));
+    science_chord_types_4.push_back(csound::Chord({0., 0., 6., 6.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 2., 3.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 2., 4.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 2., 5.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 2., 6.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 2., 7.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 2., 8.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 2., 9.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 2., 10.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 2., 11.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 3., 4.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 3., 5.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 3., 6.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 3., 7.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 3., 8.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 3., 9.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 3., 10.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 4., 5.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 4., 6.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 4., 7.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 4., 8.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 4., 9.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 5., 6.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 5., 7.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 5., 8.}));
+    science_chord_types_4.push_back(csound::Chord({0., 1., 6., 7.}));
+    science_chord_types_4.push_back(csound::Chord({0., 2., 4., 6.}));
+    science_chord_types_4.push_back(csound::Chord({0., 2., 4., 7.}));
+    science_chord_types_4.push_back(csound::Chord({0., 2., 4., 8.}));
+    science_chord_types_4.push_back(csound::Chord({0., 2., 4., 9.}));
+    science_chord_types_4.push_back(csound::Chord({0., 2., 4., 10.}));
+    science_chord_types_4.push_back(csound::Chord({0., 2., 5., 7.}));
+    science_chord_types_4.push_back(csound::Chord({0., 2., 5., 8.}));
+    science_chord_types_4.push_back(csound::Chord({0., 2., 5., 9.}));
+    science_chord_types_4.push_back(csound::Chord({0., 2., 6., 8.}));
+    science_chord_types_4.push_back(csound::Chord({0., 3., 6., 9.}));
+    for (int i = 0, n = science_chord_types_4.size(); i < n; ++i) {
+        auto c = science_chord_types_4[i];
+        std:fprintf(stderr, "optti[%2d]: chord: %s optti: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTTI().toString().c_str(), c.chord_type().toString().c_str());
+    }
+    std::cerr << science_chord_types_4.front().information(true) << std::endl;
 
     summary();
     return 0;

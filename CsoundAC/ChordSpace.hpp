@@ -475,7 +475,7 @@ public:
      * doubled pitches may have more than one equivalent within the same 
      * fundamental domain.
      */
-    virtual std::vector<Chord> eRPTs(double range) const;
+    virtual std::vector<Chord> eRPTs(double range = OCTAVE()) const;
     virtual std::vector<Chord> eRPTTs(double range, double g = 1.0) const;
     /**
      * Returns the equivalent of the chord within the representative fundamental
@@ -1590,33 +1590,40 @@ inline Chord Chord::eT() const {
     return csound::normalize<EQUIVALENCE_RELATION_T>(*this, OCTAVE(), 1.0);
 }
 
-//	EQUIVALENCE_F
-
-template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_Tg>(const Chord &chord, double range, double g) {
-    auto t_ = normalize<EQUIVALENCE_RELATION_T>(chord, range, g);
-    auto t_ceiling = t_.ceiling();
-    while (lt_epsilon(t_ceiling.layer(), 0.) == true) {
-        t_ceiling = t_ceiling.T(g);
-    }
-    return t_ceiling;
-}
-
-inline Chord Chord::eTT(double g) const {
-    return csound::normalize<EQUIVALENCE_RELATION_Tg>(*this, OCTAVE(), g);
-}
+//	EQUIVALENCE_RELATION_Tg
 
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_Tg>(const Chord &chord, double range, double g) {
     auto sum = chord.layer();
-    if (eq_epsilon(sum, 0.) == true) {
-        return true;
+    auto t = chord.eT();
+    auto t_ceiling = t.ceiling();
+    while (lt_epsilon(t_ceiling.layer(), 0.) == true) {
+        t_ceiling = t_ceiling.T(g);
     }
-    auto tt = normalize<EQUIVALENCE_RELATION_Tg>(chord, range, g);
-    auto tt_sum = tt.sum();
+    auto tt_sum = t_ceiling.sum();
     if (eq_epsilon(sum, tt_sum) == true) {
         return true;
     } else {
         return false;
     }
+}
+
+
+template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_Tg>(const Chord &chord, double range, double g) {
+    Chord self = chord;
+    if (csound::isNormal<EQUIVALENCE_RELATION_Tg>(chord, range, g) == true) {
+        return self;
+    } else {
+        auto self_t = self.eT();
+        auto self_t_ceiling = self_t.ceiling();
+        while (lt_epsilon(self_t_ceiling.layer(), 0.) == true) {
+            self_t_ceiling = self_t_ceiling.T(g);
+        }
+        return self_t_ceiling;
+    }
+}
+
+inline Chord Chord::eTT(double g) const {
+    return csound::normalize<EQUIVALENCE_RELATION_Tg>(*this, OCTAVE(), g);
 }
 
 inline bool Chord::iseTT(double g) const {
@@ -1679,7 +1686,7 @@ inline Chord Chord::eI() const {
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_V>(const Chord &chord, double range, double g) {
     auto sectors = cyclical_region_sector(chord);
     for (auto sector : sectors) {
-        if (sector == 0) {
+        if (sector == 2) {
             return true;
         }
     }
@@ -1957,20 +1964,19 @@ inline bool Chord::iseRPTTI(double range) const {
 }
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPTgI>(const Chord &chord, double range, double g) {
-    auto rptt = normalize<EQUIVALENCE_RELATION_RPTg>(chord, range, g);
-    if (isNormal<EQUIVALENCE_RELATION_I>(rptt, range, g) == true) {
-        return rptt;
+    Chord self = chord;
+    if (isNormal<EQUIVALENCE_RELATION_RPTgI>(self, range, g) == true) {
+        return self;
     } else {
-        auto rptt_i = normalize<EQUIVALENCE_RELATION_I>(rptt, range, g);
-        return rptt_i.eRPTT(range, g);
-        //~ auto rptt_i_ts = rptt_i.eRPTTs(12.);
-        //~ for (auto rptt_i_t : rptt_i_ts) {
-            //~ if (rptt_i_t.iseI() == true &&
-                //~ rptt_i_t.iseV() == true) {
-                    //~ return rptt_i;
-                //~ }
-        //~ }
-     }
+        auto rptt = normalize<EQUIVALENCE_RELATION_RPTg>(self, range, g);
+        if (isNormal<EQUIVALENCE_RELATION_I>(rptt, range, g) == true) {
+            return rptt;
+        } else {
+            auto rptt_i = normalize<EQUIVALENCE_RELATION_I>(rptt, range, g);
+            auto rptt_i_rptt = normalize<EQUIVALENCE_RELATION_RPTg>(rptt_i, range, g);
+            return rptt_i_rptt;
+        }
+    }
 }
 
 inline Chord Chord::eRPTTI(double range) const {
@@ -2308,7 +2314,7 @@ inline SILENCE_PUBLIC const Scale &scaleForName(std::string name) {
 }
 
 inline std::string Chord::information(bool print_extra) const {
-    char buffer[0x1000];
+    char buffer[0x4000];
     if (voices() < 1) {
         return "Empty chord.";
     }
@@ -2392,9 +2398,9 @@ inline std::string Chord::information(bool print_extra) const {
             std::strcat(buffer, "\n");
         }
         std::strcat(buffer, "\n");
-        auto tvs = eT().voicings();
+        auto tvs = eRPTs();
         for (auto i = 0; i < tvs.size(); ++i) {
-            auto v = tvs[i].eT();
+            auto v = tvs[i];
             auto sectors = csound::cyclical_region_sector(v, true);
             auto isev = " ";
             if (v.iseV()) {
@@ -2941,10 +2947,17 @@ inline bool Chord::contains(double pitch_) const {
 }
 
 inline Chord Chord::chord_type() const {
-    Chord ev = eOPTT();
-    Chord ev_0 = ev.v(-2);
-    Chord ev_0_et = ev.et();
-    return ev_0_et;  
+    auto rpts = eRPTs();
+    for (auto rpt : rpts) {
+        auto sectors = cyclical_region_sector(rpt, true);
+        for (auto sector : sectors) {
+            if (sector == 0) {
+                return rpt.et();
+            }
+        }
+    }
+    System::error("Error: Chord::chord_type: failed to find sector 1.\n");
+    return rpts.front();  
 }
 
 inline std::vector<double> Chord::min() const {
@@ -4146,7 +4159,7 @@ SILENCE_PUBLIC std::vector<int> cyclical_region_sector(const Chord &chord, bool 
     for (int sector = 0, n = sectors.size(); sector < n; ++sector) {
         auto distance = distance_to_cyclical_sector_vertices(chord, sectors[sector]);
         System::debug("cyclical_region_sector: chord: %s distance: %9.4f sector: %2d\n", chord.toString().c_str(), distance, sector);
-        if (distance < minimum_distance) {
+        if (lt_epsilon(distance, minimum_distance) == true) {
             minimum_distance = distance;
         }
         sectors_for_distances.insert({distance, sector});
@@ -4189,6 +4202,14 @@ inline SILENCE_PUBLIC std::vector<Chord> cyclical_region_vertices(int dimensions
     return vertices;
 }
 
+/* For n voices there are n vertices in the OPT cyclical region C. These are 
+ * the n octavewise revoicings of the origin. To obtain a fundamental region 
+ * for OPT, replace C[n-1] with the center of C to produce OPT_{n-1}. To 
+ * obtain a fundamental region for OPTI, replace OPT_{n-1}[n-2] with the 
+ * midpoint of OPT_{n-1}[0] => OPT_{n-1}[n-2] to produce OPTI_{n-1}. A vector 
+ * that is normal to the inversion flat in OPT_{n-1} is then OPT_{n-1}[0] => 
+ * OPT_{n-1}[n-2].
+ */
 SILENCE_PUBLIC const std::vector<std::vector<std::vector<Chord>>> &cyclical_region_sectors(bool transpositional_equivalence) {
     static bool initialized = false;
     // Layout: cyclical_region_sectors[dimensions][sector][chord].
@@ -4204,13 +4225,13 @@ SILENCE_PUBLIC const std::vector<std::vector<std::vector<Chord>>> &cyclical_regi
                     auto cyclical_region_sector_transpositional_equivalence = cyclical_region_vertices(dimensions, true);
                     auto center_ = cyclical_region_sector.front().center();
                     auto center_transpositional_equivalence = center_.eT();
-                    cyclical_region_sector[dimension] = center_;
-                    cyclical_region_sector_transpositional_equivalence[dimension] = center_transpositional_equivalence;
+                    cyclical_region_sector[dimensions + dimension - 1] = center_;
+                    cyclical_region_sector_transpositional_equivalence[dimensions + dimension - 1] = center_transpositional_equivalence;
                     cyclical_region_sectors_[dimensions].push_back(cyclical_region_sector);
                     cyclical_region_sectors_transpositional_equivalence[dimensions].push_back(cyclical_region_sector_transpositional_equivalence);
-                    System::debug("cyclical_region_sectors: dimensions: %2d dimension: %2d\n", dimensions, dimension);
+                    System::message("cyclical_region_sectors: dimensions: %2d dimension: %2d\n", dimensions, dimension);
                     for (auto vertex : cyclical_region_sectors_transpositional_equivalence[dimensions][dimension]) {
-                        System::debug("  vertex: %s\n", vertex.toString().c_str());
+                        System::message("  vertex: %s\n", vertex.toString().c_str());
                     }
                 }
             }
@@ -4258,8 +4279,12 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality
     if (dimensions == 4) {
         lower_point = sector[1];
         upper_point = sector[3];
+        //~ lower_point = sector[2];
+        //~ upper_point = sector[4];
     } else {
-        lower_point = sector[1];
+        //~ lower_point = sector[1];
+        //~ upper_point = sector[2];
+        lower_point = sector[0];
         upper_point = sector[2];
     }
     System::debug("hyperplane_equation_from_dimensionality: upper_point: %s\n", upper_point.toString().c_str());
