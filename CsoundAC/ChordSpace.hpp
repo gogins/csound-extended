@@ -327,6 +327,11 @@ SILENCE_PUBLIC double C4();
  */
 SILENCE_PUBLIC Chord chord(const Chord &scale, int scale_degree, int chord_voices, int interval = 3);
 
+struct SILENCE_PUBLIC HyperplaneEquation {
+    Eigen::MatrixXd unit_normal_vector;
+    double constant_term;
+};
+
 /**
  * Chords consist of simultaneously sounding pitches. The pitches are
  * represented as semitones with 0 at the origin and middle C as 60.
@@ -809,6 +814,26 @@ public:
      * or octavewise revoicings of the chord.
      */
     virtual std::vector<Chord> voicings() const;
+    virtual std::vector<int> &cyclical_region_sector() const {
+        std::vector<int> sectors;
+        return sectors;
+    }
+    virtual std::vector<Chord> &cyclical_region_vertices(int sector) const {
+        std::vector<Chord> vertices;
+        return vertices;
+    }
+    virtual std::vector<Chord> &opt_sector(int sector) const {
+        std::vector<Chord> opt_sector_;
+        return opt_sector_;
+    }
+    virtual std::vector<Chord> &opti_sector(int sector) const {
+        std::vector<Chord> opti_sector_;
+        return opti_sector_;
+    }
+    virtual HyperplaneEquation &hyperplane_equation(int sector) const {
+        HyperplaneEquation hyperplane_equation_;
+        return hyperplane_equation_;
+    }
 };
 
 SILENCE_PUBLIC const Chord &chordForName(std::string name);
@@ -845,6 +870,7 @@ public:
                   double targetMinimum,
                   double targetRange);
 };
+
 
 /**
  * Orthogonal additive groups for unordered chords of given arity under range
@@ -1052,11 +1078,6 @@ template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> fundamentalDom
 SILENCE_PUBLIC Chord gather(Score &score, double startTime, double endTime);
 
 SILENCE_PUBLIC bool ge_epsilon(double a, double b);
-
-struct HyperplaneEquation {
-    Eigen::MatrixXd unit_normal_vector;
-    double constant_term;
-};
 
 /**
  * Returns the hyperplane equation derived from the inversion flat of chord 
@@ -1682,11 +1703,11 @@ inline Chord Chord::eI() const {
 //~ }
 
 // Returns whether the chord is within the representative fundamental 
-// domain of voicing equivalence, sector 0 of the cyclical region.
+// domain of voicing equivalence.
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_V>(const Chord &chord, double range, double g) {
     auto sectors = cyclical_region_sector(chord);
     for (auto sector : sectors) {
-        if (sector == 2) {
+        if (sector == 0) {
             return true;
         }
     }
@@ -2956,7 +2977,7 @@ inline Chord Chord::chord_type() const {
             }
         }
     }
-    System::error("Error: Chord::chord_type: failed to find sector 1.\n");
+    System::error("Error: Chord::chord_type: failed to find sector 0.\n");
     return rpts.front();  
 }
 
@@ -4174,10 +4195,6 @@ SILENCE_PUBLIC std::vector<int> cyclical_region_sector(const Chord &chord, bool 
 
 /* The cyclical region for n-note chords is the (n-1)-simplicial region of 
  * R^n / T with n vertices at A_i = [0^(n - i), 12^n)]_T, for 0 <= i < n. 
- * Replacing A_(n-1) with a vertex at the maximally-even set yields a 
- * fundamental domain of OPT in R^n. Starting with this fundamental domain, 
- * replacing A_(n-2) with a vertex at (0,0,6,...,6)_T yields a fundamental 
- * domain of OPTI in R^n. This construction is due to Noam Elkies.
  */
 inline SILENCE_PUBLIC std::vector<Chord> cyclical_region_vertices(int dimensions, bool transpositional_equivalence) {
     std::vector<Chord> vertices;
@@ -4202,13 +4219,27 @@ inline SILENCE_PUBLIC std::vector<Chord> cyclical_region_vertices(int dimensions
     return vertices;
 }
 
-/* For n voices there are n vertices in the OPT cyclical region C. These are 
- * the n octavewise revoicings of the origin. To obtain a fundamental region 
- * for OPT, replace C[n-1] with the center of C to produce OPT_{n-1}. To 
- * obtain a fundamental region for OPTI, replace OPT_{n-1}[n-2] with the 
- * midpoint of OPT_{n-1}[0] => OPT_{n-1}[n-2] to produce OPTI_{n-1}. A vector 
- * that is normal to the inversion flat in OPT_{n-1} is then OPT_{n-1}[0] => 
- * OPT_{n-1}[n-2].
+/* 
+ * This is what works on paper with the _Science_ material:
+ * 
+ * The cyclical region C of OPT for n voices is the (n-1)-simplicial region of 
+ * R^n / T with n vertices at A_i = [0^(n - i), 12^n)]_T, for 0 <= i < n. 
+ * These are the n octavewise revoicings of the origin. NOTE: In this code, 
+ * the sector vertices are NOT permuted.
+ *
+ * (1) To obtain the fundamental regions of OPT in C, for dimensions 
+ *     0 <= d < n, replace C[(d+n-1)%n] with the center of C c to give OPT_d.
+ * (2) To obtain the fundamental regions for OPTI in C for dimensions 
+ *     0 <= d < n, replace OPT_d[(d+n-2)%n] with the midpoint of 
+ *     OPT_d[(d+n)%n] => OPT_d[(d+n-2)%n] to give OPTI_d.
+ * (3) A vector that is normal to the inversion flat in OPT_d is then 
+ *     OPT_d[(d+n)%n] => OPT_d[d+n-2)%n]. Normalizing this vector gives the 
+ *     unit normal vector u for the inversion flat. Then the hyperplane 
+ *     equation for the inversion flat is u and its constant term is u dot c.
+ * 
+ * The reason for starting with C[n-1] is to include the origin in the 0th 
+ * fundamental domain. We regard OPT_0 as the _representative_ fundamental 
+ * domain of OPT.
  */
 SILENCE_PUBLIC const std::vector<std::vector<std::vector<Chord>>> &cyclical_region_sectors(bool transpositional_equivalence) {
     static bool initialized = false;
@@ -4220,13 +4251,16 @@ SILENCE_PUBLIC const std::vector<std::vector<std::vector<Chord>>> &cyclical_regi
             cyclical_region_sectors_.push_back(std::vector<std::vector<Chord>>());
             cyclical_region_sectors_transpositional_equivalence.push_back(std::vector<std::vector<Chord>>());
             if (dimensions >= 3) {
-                for (auto dimension = 0; dimension < dimensions; ++dimension) {
+                for (int dimension = 0, center_vertex = dimensions - 1; dimension < dimensions; ++dimension, ++center_vertex) {
+                    if (center_vertex >= dimensions) {
+                        center_vertex = 0;
+                    }
                     auto cyclical_region_sector = cyclical_region_vertices(dimensions, false);
                     auto cyclical_region_sector_transpositional_equivalence = cyclical_region_vertices(dimensions, true);
                     auto center_ = cyclical_region_sector.front().center();
                     auto center_transpositional_equivalence = center_.eT();
-                    cyclical_region_sector[dimensions + dimension - 1] = center_;
-                    cyclical_region_sector_transpositional_equivalence[dimensions + dimension - 1] = center_transpositional_equivalence;
+                    cyclical_region_sector[center_vertex] = center_;
+                    cyclical_region_sector_transpositional_equivalence[center_vertex] = center_transpositional_equivalence;
                     cyclical_region_sectors_[dimensions].push_back(cyclical_region_sector);
                     cyclical_region_sectors_transpositional_equivalence[dimensions].push_back(cyclical_region_sector_transpositional_equivalence);
                     System::message("cyclical_region_sectors: dimensions: %2d dimension: %2d\n", dimensions, dimension);
@@ -4275,18 +4309,8 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality
     auto cyclical_region_sectors_ = cyclical_region_sectors(transpositional_equivalence)[chord.voices()];
     auto sector = cyclical_region_sectors_[sector_];
     auto old_level = System::setMessageLevel(15);
-    // Slot 0 is always the center in each sector.
-    if (dimensions == 4) {
-        lower_point = sector[1];
-        upper_point = sector[3];
-        //~ lower_point = sector[2];
-        //~ upper_point = sector[4];
-    } else {
-        //~ lower_point = sector[1];
-        //~ upper_point = sector[2];
-        lower_point = sector[0];
-        upper_point = sector[2];
-    }
+    lower_point = sector[(sector_ + dimensions) % dimensions];
+    upper_point = sector[(sector_ + dimensions - 2) % dimensions];
     System::debug("hyperplane_equation_from_dimensionality: upper_point: %s\n", upper_point.toString().c_str());
     System::debug("hyperplane_equation_from_dimensionality: lower point: %s\n", lower_point.toString().c_str());
     auto normal_vector = upper_point.col(0) - lower_point.col(0);
