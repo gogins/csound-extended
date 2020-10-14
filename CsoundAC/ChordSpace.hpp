@@ -810,27 +810,146 @@ public:
     virtual Chord voiceleading(const Chord &destination) const;
     virtual size_t voices() const;
     /**
-     * Returns all the 'inversions' (in the musician's sense)
-     * or octavewise revoicings of the chord.
+     * Returns all the 'inversions' (in the musician's sense) or octavewise 
+     * revoicings of the chord. The first voice is transposed up by one octave, 
+     * and all voices are then rotated "left" so the transposed voice becomes 
+     * the last voice.
      */
     virtual std::vector<Chord> voicings() const;
-    virtual std::vector<int> &cyclical_region_sector() const {
+    /**
+     * For each chord space of dimensions 3 <= n <= 12, there is one cyclical 
+     * region of n fundamental domains of OPT equivalence. The vertices of the
+     * cyclical region consist of the n octavewise revoicings of the origin. 
+     * This function returns a global collection of these cyclical regions.
+     */
+    static std::map<int, std::vector<Chord>> &cyclical_regions_for_dimensionalities() {
+        static std::map<int, std::vector<Chord>> cyclical_regions_for_dimensionalities_;
+        return cyclical_regions_for_dimensionalities_;
+    }
+    /**
+     * For each chord space of dimensions 3 <= n <= 12, there are n 
+     * fundamental domains (sectors) of OPT equivalence. This function returns a global 
+     * collection of these sectors. 
+     */
+    static std::map<int, std::vector<std::vector<Chord>>> &opt_sectors_for_dimensionalities() {
+        static std::map<int, std::vector<std::vector<Chord>>> opt_sectors_for_dimensionalities_;
+        return opt_sectors_for_dimensionalities_;
+    }
+    /**
+     * For each chord space of dimensions 3 <= n <= 12, there are n 
+     * fundamental domains (sectors) of OPTI equivalence. This function returns a global 
+     * collection of these sectors. 
+     */
+    static std::map<int, std::vector<std::vector<Chord>>> &opti_sectors_for_dimensionalities() {
+        static std::map<int, std::vector<std::vector<Chord>>> opti_sectors_for_dimensionalities_;
+        return opti_sectors_for_dimensionalities_;
+    }
+    /**
+     * For each chord space of dimensions 3 <= n <= 12, there are n 
+     * fundamental domains (sectors) of OPT equivalence. For each OPT fundamental domain,
+     * there is a inversion flat that evenly divides the OPT fundamental domain into 2 OPTI 
+     * fundamental domains. This function returns a global collection of the hyperplane 
+     * equations that define these inversion flats.
+     */
+    static std::map<int, std::vector<HyperplaneEquation>> &hyperplane_equations_for_opt_sectors() {
+        static std::map<int, std::vector<HyperplaneEquation>> hyperplane_equations_for_opt_sectors_;
+        return hyperplane_equations_for_opt_sectors_;
+    }
+    /**
+     * Initializes the fundamental domains (sectors) of the cyclical regions 
+     * of OPT equivalence and OPTI equivalence, as well as the hyperplane 
+     * equations that define the inversion flat in each OPT sector.
+     * 
+     * The cyclical region C of OPT for n voices is the (n-1)-simplicial 
+     * region of R^n / T with n vertices at A_i = [0^(n - i), 12^n)]_T, for 
+     * 0 <= i < n. These are the n octavewise revoicings of the origin. NOTE: 
+     * In this code, the sector vertices are NOT permuted.
+     *
+     * (1) To obtain the fundamental regions of OPT in C, for dimensions 
+     *     0 <= d < n, replace C[(d+n-1)%n] with the center of C c to give 
+     *     OPT_d.
+     * (2) To obtain the fundamental regions for OPTI in C for dimensions 
+     *     0 <= d < n, replace OPT_d[(d+n-2)%n] with the midpoint of 
+     *     OPT_d[(d+n)%n] => OPT_d[(d+n-2)%n] to give OPTI_d_0, and replace 
+     *     OPT_d[(d+n)%n] with the midpoint of OPT_d[(d+n)%n] => 
+     *     OPT_d[(d+n-2)%n] to give OPTI_d_1.
+     * (3) A vector that is normal to the inversion flat in OPT_d is then 
+     *     OPT_d[(d+n)%n] => OPT_d[d+n-2)%n]. Normalizing this vector gives 
+     *     the unit normal vector u for the inversion flat. Then the 
+     *     hyperplane equation for the inversion flat is u and its constant 
+     *     term is u dot c.
+     * 
+     * The reason for starting with C[n-1] is to include the origin in the 0th 
+     * fundamental domain. We regard OPT_0 as the _representative_ fundamental 
+     * domain of OPT.
+     */
+    virtual void initialize_sectors() {
+        bool initialized = false;
+        if (initialized == false) {
+            initialized = true;
+            auto cyclical_regions = cyclical_regions_for_dimensionalities();
+            auto opt_domains_for_dimensions = opt_sectors_for_dimensionalities();
+            auto opti_domains_for_dimensions = opti_sectors_for_dimensionalities();
+            auto hyperplane_equations_for_dimensions = hyperplane_equations_for_opt_sectors();
+            // For chord spaces of each dimensionality n...
+            for (int dimensions = 3; dimensions <= 12; ++dimensions) {
+                auto cyclical_region = cyclical_regions[dimensions];
+                for (int dimension = 0; dimension < dimensions; ++dimension) {
+                    Chord vertex(dimensions);
+                    for (int voice = 0; voice < dimensions; ++voice) {
+                        if (voice <= dimension) {
+                            vertex.setPitch(voice,  0.);
+                        } else {
+                            vertex.setPitch(voice, 12.);
+                        }
+                    }
+                    vertex = vertex.eT();
+                    cyclical_region.insert(cyclical_region.begin(), vertex);
+                }
+                System::message("Chord::initialize_sectors: cyclical region:\n");
+                for (int i = 0; i < cyclical_region.size(); ++i) {
+                    System::message("  %s\n", cyclical_region[i].toString().c_str());
+                }
+                auto opt_domains = opt_domains_for_dimensions[dimensions];
+                auto opti_domains = opti_domains_for_dimensions[dimensions];
+                auto hyperplane_equations = hyperplane_equations_for_dimensions[dimensions];
+                // Create and store the vertices of the cyclical region.
+                // For each dimension in the space of dimensionality n...
+                for (int dimension = 0; dimension < dimensions; ++dimension) {
+                    // Create and store the vertices of the OPT sector.
+                    // Create and store the vertices of the OPTI sector.
+                    // Create and store the hyperplane equation of the 
+                    // inversion flat for the OPT sector.
+                }
+            }
+        }
+    }
+    /**
+     * Returns the zero-based index(s) of that sector of the cyclical region 
+     * to which the chord belongs. A chord on a vertex, edge, or facet shared 
+     * by more than one sector will belong to each of those sectors; the 
+     * center of the cyclical region belongs to all of the sectors. Sectors 
+     * are generated by rotation of a fundamental domain (equivalently, by the 
+     * octavewise revoicing of chords) and correspond to "chord inversion" in 
+     * the musician's sense.
+     */
+    virtual std::vector<int> &cyclical_region_sector(bool transpositional_equivalence=true) const {
         std::vector<int> sectors;
         return sectors;
     }
-    virtual std::vector<Chord> &cyclical_region_vertices(int sector) const {
+    virtual std::vector<Chord> &cyclical_region_vertices(int sector, bool transpositional_equivalence=true) const {
         std::vector<Chord> vertices;
         return vertices;
     }
-    virtual std::vector<Chord> &opt_sector(int sector) const {
+    virtual std::vector<Chord> &opt_sector(int sector, bool transpositional_equivalence=true) const {
         std::vector<Chord> opt_sector_;
         return opt_sector_;
     }
-    virtual std::vector<Chord> &opti_sector(int sector) const {
+    virtual std::vector<Chord> &opti_sector(int sector, bool transpositional_equivalence=true) const {
         std::vector<Chord> opti_sector_;
         return opti_sector_;
     }
-    virtual HyperplaneEquation &hyperplane_equation(int sector) const {
+    virtual HyperplaneEquation &hyperplane_equation(int sector, bool transpositional_equivalence=true) const {
         HyperplaneEquation hyperplane_equation_;
         return hyperplane_equation_;
     }
@@ -2970,7 +3089,7 @@ inline bool Chord::contains(double pitch_) const {
 inline Chord Chord::chord_type() const {
     auto rpts = eRPTs();
     for (auto rpt : rpts) {
-        auto sectors = cyclical_region_sector(rpt, true);
+        auto sectors = cyclical_region_sector(true);
         for (auto sector : sectors) {
             if (sector == 0) {
                 return rpt.et();

@@ -366,6 +366,7 @@ int main(int argc, char **argv) {
     fundamentalDomainByIsNormalsForEquivalenceRelations["RPTgI"] =       csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>;
 
     csound::Chord original;
+    original.initialize_sectors();
     original.resize(3);
     original.setPitch(0, -8.0);
     original.setPitch(1,  4.0);
@@ -693,6 +694,7 @@ int main(int argc, char **argv) {
         std:fprintf(stderr, "optti[%2d]: chord: %s optti: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTTI().toString().c_str(), c.chord_type().toString().c_str());
     }
     std::cerr << science_chord_types_4.front().information(true) << std::endl;
+    
 
     summary();
     return 0;
