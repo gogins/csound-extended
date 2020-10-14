@@ -274,6 +274,14 @@ class SILENCE_PUBLIC ChordScore;
 
 class SILENCE_PUBLIC ChordSpaceGroup;
 
+SILENCE_PUBLIC double distance_to_points(const Chord &chord, const std::vector<Chord> &points);
+
+SILENCE_PUBLIC bool le_epsilon(double a, double b);
+
+SILENCE_PUBLIC bool lt_epsilon(double a, double b);
+
+SILENCE_PUBLIC Chord midpoint(const Chord &a, const Chord &b);
+
 class SILENCE_PUBLIC Scale;
 
 /**
@@ -862,8 +870,7 @@ public:
      * 
      * The cyclical region C of OPT for n voices is the (n-1)-simplicial 
      * region of R^n / T with n vertices at A_i = [0^(n - i), 12^n)]_T, for 
-     * 0 <= i < n. These are the n octavewise revoicings of the origin. NOTE: 
-     * In this code, the sector vertices are NOT permuted.
+     * 0 <= i < n. These are the n octavewise revoicings of the origin. 
      *
      * (1) To obtain the fundamental regions of OPT in C, for dimensions 
      *     0 <= d < n, replace C[(d+n-1)%n] with the center of C c to give 
@@ -879,14 +886,22 @@ public:
      *     hyperplane equation for the inversion flat is u and its constant 
      *     term is u dot c.
      * 
+     * NOTE: 
+     *
+     * In this code, sector vertices are NOT permuted.
+     *
      * The reason for starting with C[n-1] is to include the origin in the 0th 
      * fundamental domain. We regard OPT_0 as the _representative_ fundamental 
      * domain of OPT.
+     *
+     * This code is based on the construction of Noam Elkies described in the 
+     * _Generalized Chord Spaces_ draft.
      */
-    virtual void initialize_sectors() {
+    virtual void initialize() {
         bool initialized = false;
         if (initialized == false) {
             initialized = true;
+            auto old_level = System::setMessageLevel(15);
             auto cyclical_regions = cyclical_regions_for_dimensionalities();
             auto opt_domains_for_dimensions = opt_sectors_for_dimensionalities();
             auto opti_domains_for_dimensions = opti_sectors_for_dimensionalities();
@@ -906,50 +921,152 @@ public:
                     vertex = vertex.eT();
                     cyclical_region.insert(cyclical_region.begin(), vertex);
                 }
-                System::message("Chord::initialize_sectors: cyclical region:\n");
+                System::debug("Chord::initialize: cyclical region for %d dimensions:\n", dimensions);
                 for (int i = 0; i < cyclical_region.size(); ++i) {
-                    System::message("  %s\n", cyclical_region[i].toString().c_str());
+                    System::debug("      [%2d] %s\n", i, cyclical_region[i].toString().c_str());
                 }
+                cyclical_regions[dimensions] = cyclical_region;
                 auto opt_domains = opt_domains_for_dimensions[dimensions];
                 auto opti_domains = opti_domains_for_dimensions[dimensions];
                 auto hyperplane_equations = hyperplane_equations_for_dimensions[dimensions];
-                // Create and store the vertices of the cyclical region.
-                // For each dimension in the space of dimensionality n...
-                for (int dimension = 0; dimension < dimensions; ++dimension) {
-                    // Create and store the vertices of the OPT sector.
-                    // Create and store the vertices of the OPTI sector.
-                    // Create and store the hyperplane equation of the 
-                    // inversion flat for the OPT sector.
+                for (int dimension = 0, n_less_1 = dimensions - 1, n_less_2 = dimensions - 2; 
+                     dimension < dimensions; 
+                     ++dimension, ++n_less_1, ++n_less_2) {
+                    if (n_less_1 >= dimensions) {
+                        n_less_1 = 0;
+                    }
+                    if (n_less_2 >= dimensions) {
+                        n_less_2 = 0;
+                    }
+                    auto opt_domain = cyclical_regions[dimensions];
+                    auto center_ = opt_domain.front().center().eT();
+                    opt_domain[n_less_1] = center_;
+                    opt_domains.push_back(opt_domain);
+                    int index;
+                    System::debug("  OPT domain: sector: %2d\n", dimension);
+                    index = 0;
+                    for (auto vertex : opt_domains[dimension]) {
+                        System::debug("      [%2d] %s\n", index++, vertex.toString().c_str());
+                    }
+                    System::setMessageLevel(old_level);
+                    auto opti_midpoint = midpoint(opt_domain[dimension], opt_domain[n_less_2]);
+                    System::setMessageLevel(15);
+                    System::debug("    midpnt:%s\n", opti_midpoint.toString().c_str());
+                    auto opti_domain_0 = opt_domain;
+                    opti_domain_0[n_less_2] = opti_midpoint;
+                    opti_domains.push_back(opti_domain_0);
+                    System::debug("    OPTI domain: sector: %2d\n", dimension);
+                    index = 0;
+                    for (auto vertex : opti_domain_0) {
+                        System::debug("      [%2d] %s\n", index++, vertex.toString().c_str());
+                    }
+                    auto opti_domain_1 = opt_domain;
+                    opti_domain_1[dimension] = opti_midpoint;
+                    opti_domains.push_back(opti_domain_1);
+                    System::debug("    OPTI domain: sector: %2d\n", dimension);
+                    index = 0;
+                    for (auto vertex : opti_domain_1) {
+                        System::debug("      [%2d] %s\n", index++, vertex.toString().c_str());
+                    }
+                    auto lower_point = opt_domain[(dimensions + dimension) % dimensions];
+                    auto upper_point = opt_domain[(dimensions + dimension - 2) % dimensions];
+                    System::debug("hyperplane_equation_from_dimensionality: upper_point: %s\n", upper_point.toString().c_str());
+                    System::debug("hyperplane_equation_from_dimensionality: lower point: %s\n", lower_point.toString().c_str());
+                    auto normal_vector = upper_point.col(0) - lower_point.col(0);
+                    auto norm = normal_vector.norm();
+                    HyperplaneEquation hyperplane_equation_;
+                    hyperplane_equation_.unit_normal_vector = normal_vector / norm;
+                    auto temp = center_.col(0).adjoint() * hyperplane_equation_.unit_normal_vector;    
+                    hyperplane_equation_.constant_term = temp(0, 0);
+                    System::debug("hyperplane_equation_from_dimensionality: sector: %d\n", dimension);
+                    System::debug("hyperplane_equation_from_dimensionality: center:\n");
+                    for(int i = 0; i < dimensions; i++) {
+                        System::debug("  %9.4f\n", center_.getPitch(i));
+                    }
+                    System::debug("hyperplane_equation_from_dimensionality: normal_vector:\n");
+                    for(int i = 0; i < dimensions; i++) {
+                        System::debug("  %9.4f\n", normal_vector(i, 0));
+                    }
+                    System::debug("hyperplane_equation_from_dimensionality: norm: %9.4f\n", norm);
+                    System::debug("hyperplane_equation_from_dimensionality: unit_normal_vector:\n");
+                    for(int i = 0; i < dimensions; i++) {
+                        System::debug("  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
+                    }
+                    System::debug("hyperplane_equation_from_dimensionality: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
+                    hyperplane_equations.push_back(hyperplane_equation_);
                 }
+                opt_domains_for_dimensions[dimensions] = opt_domains;
+                opti_domains_for_dimensions[dimensions] = opti_domains;
+                hyperplane_equations_for_dimensions[dimensions] = hyperplane_equations;
             }
+            System::setMessageLevel(old_level);
         }
     }
     /**
-     * Returns the zero-based index(s) of that sector of the cyclical region 
-     * to which the chord belongs. A chord on a vertex, edge, or facet shared 
-     * by more than one sector will belong to each of those sectors; the 
-     * center of the cyclical region belongs to all of the sectors. Sectors 
-     * are generated by rotation of a fundamental domain (equivalently, by the 
-     * octavewise revoicing of chords) and correspond to "chord inversion" in 
-     * the musician's sense.
+     * Returns the zero-based index(s) of the sector(s) within the cyclical 
+     * region of OPT fundamental domains to which the chord belongs. A chord 
+     * on a vertex, edge, or facet shared by more than one sector belongs to 
+     * each them; the center of the cyclical region belongs to all of the 
+     * sectors. Sectors are generated by rotation of a fundamental domain 
+     * (equivalently, by the octavewise revoicing of chords) and correspond to 
+     * "chord inversion" in the musician's ordinary sense.
      */
-    virtual std::vector<int> &cyclical_region_sector(bool transpositional_equivalence=true) const {
+    virtual std::vector<int> &opt_domain_sector() const {
+        std::vector<int> sectors;
+        auto opt_sectors_for_dimensions = opt_sectors_for_dimensionalities();
+        auto opt_sectors = opt_sectors_for_dimensions[voices()];
+        std::multimap<double, int> sectors_for_distances;
+        double minimum_distance = std::numeric_limits<double>::max();
+        for (int sector = 0, n = opt_sectors.size(); sector < n; ++sector) {
+            auto distance = distance_to_points(*this, opt_sectors[sector]);
+            System::debug("opt_domain_sector: chord: %s distance: %9.4f sector: %2d\n", toString().c_str(), distance, sector);
+            if (lt_epsilon(distance, minimum_distance) == true) {
+                minimum_distance = distance;
+            }
+            sectors_for_distances.insert({distance, sector});
+        }
+        std::vector<int> result;
+        auto range = sectors_for_distances.equal_range(minimum_distance);
+        for (auto it = range.first; it != range.second; ++it) {
+            result.push_back(it->second);
+        }
+        return result;
+    }
+    /**
+     * Returns the zero-based index(s) of the sector(s) within the cyclical 
+     * region of OPTI fundamental domains to which the chord belongs. A chord 
+     * on a vertex, edge, or facet shared by more than one sector belongs to 
+     * each them; the center of the cyclical region belongs to all of the 
+     * sectors. Sectors are generated by rotation of a fundamental domain 
+     * (equivalently, by the octavewise revoicing of chords) and correspond to 
+     * "chord inversion" in the musician's ordinary sense.
+     */
+    virtual std::vector<int> &opti_domain_sector() const {
         std::vector<int> sectors;
         return sectors;
     }
-    virtual std::vector<Chord> &cyclical_region_vertices(int sector, bool transpositional_equivalence=true) const {
-        std::vector<Chord> vertices;
-        return vertices;
-    }
-    virtual std::vector<Chord> &opt_sector(int sector, bool transpositional_equivalence=true) const {
+    /**
+     * Returns the vertices of the OPT fundamental domain for the indicated
+     * sector of the cyclical region.
+     */
+    virtual std::vector<Chord> &opt_domain(int sector) const {
         std::vector<Chord> opt_sector_;
         return opt_sector_;
     }
-    virtual std::vector<Chord> &opti_sector(int sector, bool transpositional_equivalence=true) const {
+    /**
+     * Returns the vertices of the OPTI fundamental domain for the indicated
+     * sector of the cyclical region.
+     */
+    virtual std::vector<Chord> &opti_domain(int sector) const {
         std::vector<Chord> opti_sector_;
         return opti_sector_;
     }
-    virtual HyperplaneEquation &hyperplane_equation(int sector, bool transpositional_equivalence=true) const {
+    /**
+     * Returns the hyperplane equation for the inversion flat that evenly 
+     * divides the OPT fundamental domain in the indicated sector of the 
+     * cyclical region.
+     */
+    virtual HyperplaneEquation &hyperplane_equation(int sector) const {
         HyperplaneEquation hyperplane_equation_;
         return hyperplane_equation_;
     }
@@ -1127,7 +1244,7 @@ SILENCE_PUBLIC const std::vector<std::vector<std::vector<Chord> > > &cyclical_re
  * Returns the sum of the distances of the chord to each of the vertices 
  * of the indicated sector of the cyclical region.
  */
-SILENCE_PUBLIC double distance_to_cyclical_sector_vertices(const Chord &chord, const std::vector<Chord> &sector_vertices);
+SILENCE_PUBLIC double distance_to_points(const Chord &chord, const std::vector<Chord> &sector_vertices);
 
 /**
  * Returns the equivalent of the pitch under pitch-class equivalence, i.e.
@@ -1832,7 +1949,6 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_V>(const Cho
     }
     return false;
 }
-
 
 inline bool Chord::iseV() const {
     return isNormal<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0);
@@ -4297,7 +4413,7 @@ SILENCE_PUBLIC std::vector<int> cyclical_region_sector(const Chord &chord, bool 
     std::multimap<double, int> sectors_for_distances;
     double minimum_distance = std::numeric_limits<double>::max();
     for (int sector = 0, n = sectors.size(); sector < n; ++sector) {
-        auto distance = distance_to_cyclical_sector_vertices(chord, sectors[sector]);
+        auto distance = distance_to_points(chord, sectors[sector]);
         System::debug("cyclical_region_sector: chord: %s distance: %9.4f sector: %2d\n", chord.toString().c_str(), distance, sector);
         if (lt_epsilon(distance, minimum_distance) == true) {
             minimum_distance = distance;
@@ -4338,28 +4454,6 @@ inline SILENCE_PUBLIC std::vector<Chord> cyclical_region_vertices(int dimensions
     return vertices;
 }
 
-/* 
- * This is what works on paper with the _Science_ material:
- * 
- * The cyclical region C of OPT for n voices is the (n-1)-simplicial region of 
- * R^n / T with n vertices at A_i = [0^(n - i), 12^n)]_T, for 0 <= i < n. 
- * These are the n octavewise revoicings of the origin. NOTE: In this code, 
- * the sector vertices are NOT permuted.
- *
- * (1) To obtain the fundamental regions of OPT in C, for dimensions 
- *     0 <= d < n, replace C[(d+n-1)%n] with the center of C c to give OPT_d.
- * (2) To obtain the fundamental regions for OPTI in C for dimensions 
- *     0 <= d < n, replace OPT_d[(d+n-2)%n] with the midpoint of 
- *     OPT_d[(d+n)%n] => OPT_d[(d+n-2)%n] to give OPTI_d.
- * (3) A vector that is normal to the inversion flat in OPT_d is then 
- *     OPT_d[(d+n)%n] => OPT_d[d+n-2)%n]. Normalizing this vector gives the 
- *     unit normal vector u for the inversion flat. Then the hyperplane 
- *     equation for the inversion flat is u and its constant term is u dot c.
- * 
- * The reason for starting with C[n-1] is to include the origin in the 0th 
- * fundamental domain. We regard OPT_0 as the _representative_ fundamental 
- * domain of OPT.
- */
 SILENCE_PUBLIC const std::vector<std::vector<std::vector<Chord>>> &cyclical_region_sectors(bool transpositional_equivalence) {
     static bool initialized = false;
     // Layout: cyclical_region_sectors[dimensions][sector][chord].
@@ -4370,21 +4464,21 @@ SILENCE_PUBLIC const std::vector<std::vector<std::vector<Chord>>> &cyclical_regi
             cyclical_region_sectors_.push_back(std::vector<std::vector<Chord>>());
             cyclical_region_sectors_transpositional_equivalence.push_back(std::vector<std::vector<Chord>>());
             if (dimensions >= 3) {
-                for (int dimension = 0, center_vertex = dimensions - 1; dimension < dimensions; ++dimension, ++center_vertex) {
-                    if (center_vertex >= dimensions) {
-                        center_vertex = 0;
+                for (int dimension = 0, n_less_1 = dimensions - 1; dimension < dimensions; ++dimension, ++n_less_1) {
+                    if (n_less_1 >= dimensions) {
+                        n_less_1 = 0;
                     }
                     auto cyclical_region_sector = cyclical_region_vertices(dimensions, false);
                     auto cyclical_region_sector_transpositional_equivalence = cyclical_region_vertices(dimensions, true);
                     auto center_ = cyclical_region_sector.front().center();
                     auto center_transpositional_equivalence = center_.eT();
-                    cyclical_region_sector[center_vertex] = center_;
-                    cyclical_region_sector_transpositional_equivalence[center_vertex] = center_transpositional_equivalence;
+                    cyclical_region_sector[n_less_1] = center_;
+                    cyclical_region_sector_transpositional_equivalence[n_less_1] = center_transpositional_equivalence;
                     cyclical_region_sectors_[dimensions].push_back(cyclical_region_sector);
                     cyclical_region_sectors_transpositional_equivalence[dimensions].push_back(cyclical_region_sector_transpositional_equivalence);
-                    System::message("cyclical_region_sectors: dimensions: %2d dimension: %2d\n", dimensions, dimension);
+                    System::debug("cyclical_region_sectors: dimensions: %2d dimension: %2d\n", dimensions, dimension);
                     for (auto vertex : cyclical_region_sectors_transpositional_equivalence[dimensions][dimension]) {
-                        System::message("  vertex: %s\n", vertex.toString().c_str());
+                        System::debug("  vertex: %s\n", vertex.toString().c_str());
                     }
                 }
             }
@@ -4399,10 +4493,9 @@ SILENCE_PUBLIC const std::vector<std::vector<std::vector<Chord>>> &cyclical_regi
 }
 
 /**
- * Returns the sum of the distances of the chord to each of the vertices 
- * of the indicated sector of the cyclical region.
+ * Returns the sum of the distances of the chord to each of one or more chords.
  */
-SILENCE_PUBLIC double distance_to_cyclical_sector_vertices(const Chord &chord, const std::vector<Chord> &sector_vertices) {
+SILENCE_PUBLIC double distance_to_points(const Chord &chord, const std::vector<Chord> &sector_vertices) {
     double sum = 0;
     for (auto vertex : sector_vertices) {
         auto distance = euclidean(chord, vertex);
