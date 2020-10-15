@@ -875,11 +875,13 @@ public:
      * (1) To obtain the fundamental regions of OPT in C, for dimensions 
      *     0 <= d < n, replace C[(d+n-1)%n] with the center of C c to give 
      *     OPT_d.
+     * 
      * (2) To obtain the fundamental regions for OPTI in C for dimensions 
      *     0 <= d < n, replace OPT_d[(d+n-2)%n] with the midpoint of 
      *     OPT_d[(d+n)%n] => OPT_d[(d+n-2)%n] to give OPTI_d_0, and replace 
      *     OPT_d[(d+n)%n] with the midpoint of OPT_d[(d+n)%n] => 
      *     OPT_d[(d+n-2)%n] to give OPTI_d_1.
+     *
      * (3) A vector that is normal to the inversion flat in OPT_d is then 
      *     OPT_d[(d+n)%n] => OPT_d[d+n-2)%n]. Normalizing this vector gives 
      *     the unit normal vector u for the inversion flat. Then the 
@@ -895,19 +897,18 @@ public:
      * domain of OPT.
      *
      * This code is based on the construction of Noam Elkies described in the 
-     * _Generalized Chord Spaces_ draft.
+     * _Generalized Chord Spaces_ draft by Callender, Quinn, and Tymoczko.
      */
     virtual void initialize() {
-        bool initialized = false;
+        static bool initialized = false;
         if (initialized == false) {
             initialized = true;
             auto old_level = System::setMessageLevel(15);
             auto cyclical_regions = cyclical_regions_for_dimensionalities();
-            auto opt_domains_for_dimensions = opt_sectors_for_dimensionalities();
-            auto opti_domains_for_dimensions = opti_sectors_for_dimensionalities();
-            auto hyperplane_equations_for_dimensions = hyperplane_equations_for_opt_sectors();
-            // For chord spaces of each dimensionality n...
-            for (int dimensions = 3; dimensions <= 12; ++dimensions) {
+            auto &opt_domains_for_dimensions = opt_sectors_for_dimensionalities();
+            auto &opti_domains_for_dimensions = opti_sectors_for_dimensionalities();
+            auto &hyperplane_equations_for_dimensions = hyperplane_equations_for_opt_sectors();
+            for (int dimensions = 3; dimensions < 12; ++dimensions) {
                 auto cyclical_region = cyclical_regions[dimensions];
                 for (int dimension = 0; dimension < dimensions; ++dimension) {
                     Chord vertex(dimensions);
@@ -1011,15 +1012,15 @@ public:
      * (equivalently, by the octavewise revoicing of chords) and correspond to 
      * "chord inversion" in the musician's ordinary sense.
      */
-    virtual std::vector<int> &opt_domain_sector() const {
+    virtual std::vector<int> opt_domain_sector() const {
         std::vector<int> sectors;
         auto opt_sectors_for_dimensions = opt_sectors_for_dimensionalities();
         auto opt_sectors = opt_sectors_for_dimensions[voices()];
         std::multimap<double, int> sectors_for_distances;
         double minimum_distance = std::numeric_limits<double>::max();
         for (int sector = 0, n = opt_sectors.size(); sector < n; ++sector) {
-            auto distance = distance_to_points(*this, opt_sectors[sector]);
-            System::debug("opt_domain_sector: chord: %s distance: %9.4f sector: %2d\n", toString().c_str(), distance, sector);
+            auto distance = distance_to_points(eOP().eT(), opt_sectors[sector]);
+            System::message("opt_domain_sector:  chord: %s distance: %9.4f sector: %2d\n", toString().c_str(), distance, sector);
             if (lt_epsilon(distance, minimum_distance) == true) {
                 minimum_distance = distance;
             }
@@ -1041,34 +1042,54 @@ public:
      * (equivalently, by the octavewise revoicing of chords) and correspond to 
      * "chord inversion" in the musician's ordinary sense.
      */
-    virtual std::vector<int> &opti_domain_sector() const {
+    virtual std::vector<int> opti_domain_sector() const {
         std::vector<int> sectors;
-        return sectors;
+        auto opti_sectors_for_dimensions = opti_sectors_for_dimensionalities();
+        auto opti_sectors = opti_sectors_for_dimensions[voices()];
+        std::multimap<double, int> sectors_for_distances;
+        double minimum_distance = std::numeric_limits<double>::max();
+        for (int sector = 0, n = opti_sectors.size(); sector < n; ++sector) {
+            auto distance = distance_to_points(eOP().eT(), opti_sectors[sector]);
+            System::message("opti_domain_sector: chord: %s distance: %9.4f sector: %2d\n", toString().c_str(), distance, sector);
+            if (lt_epsilon(distance, minimum_distance) == true) {
+                minimum_distance = distance;
+            }
+            sectors_for_distances.insert({distance, sector});
+        }
+        std::vector<int> result;
+        auto range = sectors_for_distances.equal_range(minimum_distance);
+        for (auto it = range.first; it != range.second; ++it) {
+            result.push_back(it->second);
+        }
+        return result;
     }
     /**
      * Returns the vertices of the OPT fundamental domain for the indicated
      * sector of the cyclical region.
      */
-    virtual std::vector<Chord> &opt_domain(int sector) const {
-        std::vector<Chord> opt_sector_;
-        return opt_sector_;
+    virtual std::vector<Chord> opt_domain(int sector) const {
+        auto opt_sectors_for_dimensions = opt_sectors_for_dimensionalities();
+        auto opt_sectors = opt_sectors_for_dimensions[voices()];
+        return opt_sectors[sector];
     }
     /**
      * Returns the vertices of the OPTI fundamental domain for the indicated
      * sector of the cyclical region.
      */
-    virtual std::vector<Chord> &opti_domain(int sector) const {
-        std::vector<Chord> opti_sector_;
-        return opti_sector_;
+    virtual std::vector<Chord> opti_domain(int sector) const {
+        auto opti_sectors_for_dimensions = opti_sectors_for_dimensionalities();
+        auto opti_sectors = opti_sectors_for_dimensions[voices()];
+        return opti_sectors[sector];
     }
     /**
      * Returns the hyperplane equation for the inversion flat that evenly 
      * divides the OPT fundamental domain in the indicated sector of the 
      * cyclical region.
      */
-    virtual HyperplaneEquation &hyperplane_equation(int sector) const {
-        HyperplaneEquation hyperplane_equation_;
-        return hyperplane_equation_;
+    virtual HyperplaneEquation hyperplane_equation(int sector) const {
+        auto hyperplane_equations_for_dimensions = hyperplane_equations_for_opt_sectors();
+        auto hyperplane_equations = hyperplane_equations_for_dimensions[voices()];
+        return hyperplane_equations[sector];
     }
 };
 
@@ -1889,6 +1910,21 @@ inline bool Chord::iseTT(double g) const {
 
 //	EQUIVALENCE_RELATION_I
 
+//~ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_I>(const Chord &chord, double range, double g) {
+    //~ int lowerVoice = 0;
+    //~ int upperVoice = chord.voices() - 2;
+    //~ while (lowerVoice < upperVoice) {
+        //~ int lowerInterval = chord.getPitch(lowerVoice + 1) - chord.getPitch(lowerVoice);
+        //~ int upperInterval = chord.getPitch(upperVoice + 1) - chord.getPitch(upperVoice);
+        //~ if (le_epsilon(lowerInterval, upperInterval) == false) {
+            //~ return false;
+        //~ }
+        //~ lowerVoice = lowerVoice + 1;
+        //~ upperVoice = upperVoice - 1;
+    //~ }
+    //~ return true;
+//~ }
+
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_I>(const Chord &chord, double range, double g) {
     int lowerVoice = 0;
     int upperVoice = chord.voices() - 2;
@@ -2695,6 +2731,17 @@ inline std::string Chord::information(bool print_extra) const {
             }
             std::strcat(buffer, "\n");
         }
+        std::strcat(buffer, "\n");
+        auto opt_sectors = opt_domain_sector();
+        for (auto opt_sector : opt_sectors) {
+            std::sprintf(extra_buffer, "OPT sector:  %d\n", opt_sector);
+            std::strcat(buffer, extra_buffer);
+        }
+        auto opti_sectors = opti_domain_sector();
+        for (auto opti_sector : opti_sectors) {
+            std::sprintf(extra_buffer, "OPTI sector: %d\n", opti_sector);
+            std::strcat(buffer, extra_buffer);
+        }
     }
     return buffer;
 }
@@ -2891,11 +2938,12 @@ inline SILENCE_PUBLIC Chord chord(const Chord &scale, int scale_degree, int chor
 }
 
 inline Chord::Chord() {
+    initialize();
     resize(0);
 }
 
 inline Chord::Chord(int voices_) {
-    resize(voices_);
+    resize(voices_);    
 }
 
 inline Chord::Chord(const Chord &other) {

@@ -366,11 +366,11 @@ int main(int argc, char **argv) {
     fundamentalDomainByIsNormalsForEquivalenceRelations["RPTgI"] =       csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>;
 
     csound::Chord original;
-    original.initialize();
     original.resize(3);
     original.setPitch(0, -8.0);
     original.setPitch(1,  4.0);
     original.setPitch(2,  4.0);
+    std::cerr << original.information(true) << std::endl;
 
     auto index = csound::indexForOctavewiseRevoicing(original, 48.0, true);
     index = csound::indexForOctavewiseRevoicing(original.eOP(), 48.0, true);
