@@ -371,6 +371,10 @@ int main(int argc, char **argv) {
     original.setPitch(1,  4.0);
     original.setPitch(2,  4.0);
     std::cerr << original.information(true) << std::endl;
+    
+    csound::Chord centre({-4., 0., 4.});
+    std::cerr << centre.information(true) << std::endl;
+   
 
     auto index = csound::indexForOctavewiseRevoicing(original, 48.0, true);
     index = csound::indexForOctavewiseRevoicing(original.eOP(), 48.0, true);
@@ -695,6 +699,11 @@ int main(int argc, char **argv) {
     }
     std::cerr << science_chord_types_4.front().information(true) << std::endl;
     
+    csound::Chord origin3({0., 0., 0.});
+    std::cerr << origin3.information(true) << std::endl;
+
+    csound::Chord origin4({0., 0., 0., 0.});
+    std::cerr << origin4.information(true) << std::endl;
 
     summary();
     return 0;

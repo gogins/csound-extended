@@ -908,12 +908,12 @@ public:
             auto &opt_domains_for_dimensions = opt_sectors_for_dimensionalities();
             auto &opti_domains_for_dimensions = opti_sectors_for_dimensionalities();
             auto &hyperplane_equations_for_dimensions = hyperplane_equations_for_opt_sectors();
-            for (int dimensions = 3; dimensions < 12; ++dimensions) {
-                auto cyclical_region = cyclical_regions[dimensions];
-                for (int dimension = 0; dimension < dimensions; ++dimension) {
-                    Chord vertex(dimensions);
-                    for (int voice = 0; voice < dimensions; ++voice) {
-                        if (voice <= dimension) {
+            for (int n = 3; n < 12; ++n) {
+                auto cyclical_region = cyclical_regions[n];
+                for (int d = 0; d < n; ++d) {
+                    Chord vertex(n);
+                    for (int voice = 0; voice < n; ++voice) {
+                        if (voice <= d) {
                             vertex.setPitch(voice,  0.);
                         } else {
                             vertex.setPitch(voice, 12.);
@@ -922,83 +922,72 @@ public:
                     vertex = vertex.eT();
                     cyclical_region.insert(cyclical_region.begin(), vertex);
                 }
-                System::debug("Chord::initialize: cyclical region for %d dimensions:\n", dimensions);
+System::debug("Chord::initialize: %d dimensions:\n", n);
                 for (int i = 0; i < cyclical_region.size(); ++i) {
-                    System::debug("      [%2d] %s\n", i, cyclical_region[i].toString().c_str());
+System::debug("  cyclical[%2d] %s\n", i, cyclical_region[i].toString().c_str());
                 }
-                cyclical_regions[dimensions] = cyclical_region;
-                auto opt_domains = opt_domains_for_dimensions[dimensions];
-                auto opti_domains = opti_domains_for_dimensions[dimensions];
-                auto hyperplane_equations = hyperplane_equations_for_dimensions[dimensions];
-                for (int dimension = 0, n_less_1 = dimensions - 1, n_less_2 = dimensions - 2; 
-                     dimension < dimensions; 
-                     ++dimension, ++n_less_1, ++n_less_2) {
-                    if (n_less_1 >= dimensions) {
-                        n_less_1 = 0;
-                    }
-                    if (n_less_2 >= dimensions) {
-                        n_less_2 = 0;
-                    }
-                    auto opt_domain = cyclical_regions[dimensions];
+                cyclical_regions[n] = cyclical_region;
+                auto opt_domains = opt_domains_for_dimensions[n];
+                auto opti_domains = opti_domains_for_dimensions[n];
+                auto hyperplane_equations = hyperplane_equations_for_dimensions[n];
+                for (int d = 0; d < n; ++d) {
+                    auto opt_domain = cyclical_regions[n];
                     auto center_ = opt_domain.front().center().eT();
-                    opt_domain[n_less_1] = center_;
+                    opt_domain[(d+n-1)%n] = center_;
                     opt_domains.push_back(opt_domain);
                     int index;
-                    System::debug("  OPT domain: sector: %2d\n", dimension);
                     index = 0;
-                    for (auto vertex : opt_domains[dimension]) {
-                        System::debug("      [%2d] %s\n", index++, vertex.toString().c_str());
+                    for (auto vertex : opt_domains[d]) {
+System::debug("  OPT [%2d][%2d] %s\n", opt_domains.size() - 1, index++, vertex.toString().c_str());
                     }
                     System::setMessageLevel(old_level);
-                    auto opti_midpoint = midpoint(opt_domain[dimension], opt_domain[n_less_2]);
+                    auto opti_midpoint = midpoint(opt_domain[(d+n)%n], opt_domain[(d+n-2)%n]);
                     System::setMessageLevel(15);
-                    System::debug("    midpnt:%s\n", opti_midpoint.toString().c_str());
+System::debug("  midpoint     %s\n", opti_midpoint.toString().c_str());
                     auto opti_domain_0 = opt_domain;
-                    opti_domain_0[n_less_2] = opti_midpoint;
+                    opti_domain_0[(d+n-2)%n] = opti_midpoint;
                     opti_domains.push_back(opti_domain_0);
-                    System::debug("    OPTI domain: sector: %2d\n", dimension);
                     index = 0;
                     for (auto vertex : opti_domain_0) {
-                        System::debug("      [%2d] %s\n", index++, vertex.toString().c_str());
+System::debug("  OPTI[%2d][%2d] %s\n", opti_domains.size() - 1, index++, vertex.toString().c_str());
                     }
                     auto opti_domain_1 = opt_domain;
-                    opti_domain_1[dimension] = opti_midpoint;
+                    opti_domain_1[(d+n)%n] = opti_midpoint;
                     opti_domains.push_back(opti_domain_1);
-                    System::debug("    OPTI domain: sector: %2d\n", dimension);
                     index = 0;
                     for (auto vertex : opti_domain_1) {
-                        System::debug("      [%2d] %s\n", index++, vertex.toString().c_str());
+System::debug("  OPTI[%2d][%2d] %s\n", opti_domains.size() - 1, index++, vertex.toString().c_str());
                     }
-                    auto lower_point = opt_domain[(dimensions + dimension) % dimensions];
-                    auto upper_point = opt_domain[(dimensions + dimension - 2) % dimensions];
-                    System::debug("hyperplane_equation_from_dimensionality: upper_point: %s\n", upper_point.toString().c_str());
-                    System::debug("hyperplane_equation_from_dimensionality: lower point: %s\n", lower_point.toString().c_str());
+                    auto lower_point = opt_domain[(n+d)%n];
+                    auto upper_point = opt_domain[(n+d-2)%n];
+System::debug("  hyperplane_equation: upper_point: %s\n", upper_point.toString().c_str());
+System::debug("  hyperplane_equation: lower point: %s\n", lower_point.toString().c_str());
                     auto normal_vector = upper_point.col(0) - lower_point.col(0);
                     auto norm = normal_vector.norm();
                     HyperplaneEquation hyperplane_equation_;
                     hyperplane_equation_.unit_normal_vector = normal_vector / norm;
                     auto temp = center_.col(0).adjoint() * hyperplane_equation_.unit_normal_vector;    
                     hyperplane_equation_.constant_term = temp(0, 0);
-                    System::debug("hyperplane_equation_from_dimensionality: sector: %d\n", dimension);
-                    System::debug("hyperplane_equation_from_dimensionality: center:\n");
-                    for(int i = 0; i < dimensions; i++) {
-                        System::debug("  %9.4f\n", center_.getPitch(i));
+System::debug("  hyperplane_equation: sector: %d\n", d);
+System::debug("  hyperplane_equation: center:\n");
+                    for(int i = 0; i < n; i++) {
+System::debug("    %9.4f\n", center_.getPitch(i));
                     }
-                    System::debug("hyperplane_equation_from_dimensionality: normal_vector:\n");
-                    for(int i = 0; i < dimensions; i++) {
-                        System::debug("  %9.4f\n", normal_vector(i, 0));
+System::debug("  hyperplane_equation: normal_vector:\n");
+                    for(int i = 0; i < n; i++) {
+System::debug("    %9.4f\n", normal_vector(i, 0));
                     }
-                    System::debug("hyperplane_equation_from_dimensionality: norm: %9.4f\n", norm);
-                    System::debug("hyperplane_equation_from_dimensionality: unit_normal_vector:\n");
-                    for(int i = 0; i < dimensions; i++) {
-                        System::debug("  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
+System::debug("  hyperplane_equation: norm: %9.4f\n", norm);
+System::debug("  hyperplane_equation: unit_normal_vector:\n");
+                    for(int i = 0; i < n; i++) {
+System::debug("    %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
                     }
-                    System::debug("hyperplane_equation_from_dimensionality: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
+System::debug("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
                     hyperplane_equations.push_back(hyperplane_equation_);
                 }
-                opt_domains_for_dimensions[dimensions] = opt_domains;
-                opti_domains_for_dimensions[dimensions] = opti_domains;
-                hyperplane_equations_for_dimensions[dimensions] = hyperplane_equations;
+                opt_domains_for_dimensions[n] = opt_domains;
+                opti_domains_for_dimensions[n] = opti_domains;
+                hyperplane_equations_for_dimensions[n] = hyperplane_equations;
             }
             System::setMessageLevel(old_level);
         }
@@ -1020,7 +1009,7 @@ public:
         double minimum_distance = std::numeric_limits<double>::max();
         for (int sector = 0, n = opt_sectors.size(); sector < n; ++sector) {
             auto distance = distance_to_points(eOP().eT(), opt_sectors[sector]);
-            System::message("opt_domain_sector:  chord: %s distance: %9.4f sector: %2d\n", toString().c_str(), distance, sector);
+            System::debug("opt_domain_sector:  chord: %s distance: %9.4f sector: %2d\n", toString().c_str(), distance, sector);
             if (lt_epsilon(distance, minimum_distance) == true) {
                 minimum_distance = distance;
             }
@@ -1050,7 +1039,7 @@ public:
         double minimum_distance = std::numeric_limits<double>::max();
         for (int sector = 0, n = opti_sectors.size(); sector < n; ++sector) {
             auto distance = distance_to_points(eOP().eT(), opti_sectors[sector]);
-            System::message("opti_domain_sector: chord: %s distance: %9.4f sector: %2d\n", toString().c_str(), distance, sector);
+            System::debug("opti_domain_sector: chord: %s distance: %9.4f sector: %2d\n", toString().c_str(), distance, sector);
             if (lt_epsilon(distance, minimum_distance) == true) {
                 minimum_distance = distance;
             }
@@ -1926,18 +1915,15 @@ inline bool Chord::iseTT(double g) const {
 //~ }
 
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_I>(const Chord &chord, double range, double g) {
-    int lowerVoice = 0;
-    int upperVoice = chord.voices() - 2;
-    while (lowerVoice < upperVoice) {
-        int lowerInterval = chord.getPitch(lowerVoice + 1) - chord.getPitch(lowerVoice);
-        int upperInterval = chord.getPitch(upperVoice + 1) - chord.getPitch(upperVoice);
-        if (le_epsilon(lowerInterval, upperInterval) == false) {
-            return false;
+    auto opti_sectors = chord.opti_domain_sector();
+    for (auto opti_sector : opti_sectors) {
+        // In each OPT sector there are two OPTI sectors.
+        // The first one is the "normal" one.
+        if (opti_sector % 2 == 0) {
+            return true;
         }
-        lowerVoice = lowerVoice + 1;
-        upperVoice = upperVoice - 1;
     }
-    return true;
+    return false;
 }
 
 inline bool Chord::iseI_chord(Chord *inverse) const {
@@ -2667,8 +2653,27 @@ inline std::string Chord::information(bool print_extra) const {
                  isNormal<EQUIVALENCE_RELATION_RPTI>(*this, OCTAVE(), 1.0), normalOPTI.toString().c_str(),  
                  isNormal<EQUIVALENCE_RELATION_RPTgI>(*this, OCTAVE(), 1.0), normalOPTgI.toString().c_str(), 
                  layer());
+    char extra_buffer[0x200];
+    auto opt_sectors = opt_domain_sector();
+    std::sprintf(extra_buffer, "OPT sector:   ");
+    std::strcat(buffer, extra_buffer);
+    for (auto opt_sector : opt_sectors) {
+        std::sprintf(extra_buffer, "%2d       ", opt_sector);
+        std::strcat(buffer, extra_buffer);
+    }
+    std::strcat(buffer, "\n");
+    std::sprintf(extra_buffer, "OPTI sector:  ");
+    std::strcat(buffer, extra_buffer);
+    auto opti_sectors = opti_domain_sector();
+    for (auto opti_sector : opti_sectors) {
+        // There are 2 OPTI fundamental domains evenly dividing each OPT 
+        // fundamental domain; dividing by 2 tells us which OPT and also 
+        // which half.
+        std::sprintf(extra_buffer, "%2d (%4.1f)", opti_sector, opti_sector / 2.);
+        std::strcat(buffer, extra_buffer);
+    }
+    std::strcat(buffer, "\n");
     if (print_extra == true) {
-        char extra_buffer[0x200];
         auto vs = voicings();
         for (auto i = 0; i < vs.size(); ++i) {
             auto v = vs[i];
@@ -2732,16 +2737,6 @@ inline std::string Chord::information(bool print_extra) const {
             std::strcat(buffer, "\n");
         }
         std::strcat(buffer, "\n");
-        auto opt_sectors = opt_domain_sector();
-        for (auto opt_sector : opt_sectors) {
-            std::sprintf(extra_buffer, "OPT sector:  %d\n", opt_sector);
-            std::strcat(buffer, extra_buffer);
-        }
-        auto opti_sectors = opti_domain_sector();
-        for (auto opti_sector : opti_sectors) {
-            std::sprintf(extra_buffer, "OPTI sector: %d\n", opti_sector);
-            std::strcat(buffer, extra_buffer);
-        }
     }
     return buffer;
 }
