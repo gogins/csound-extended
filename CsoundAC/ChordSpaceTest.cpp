@@ -523,18 +523,6 @@ int main(int argc, char **argv) {
     csound::Chord chordForName_ = csound::chordForName("CM9");
     csound::System::message("chordForName(%s): %s\n", "CM9", chordForName_.information().c_str());
     
-    ///auto old_level = csound::System::setMessageLevel(15);
-    std::cout << "HYPERPLANE EQUATIONS FOR DIMENSIONS\n" << std::endl;
-    for (int i = 3; i < 6 ; ++i) {
-        std::cerr << "\nDIMENSIONALITY\n" << std::endl;
-        auto hpd = csound::hyperplane_equation_from_dimensionality(i, true, 0);
-        //~ std::cerr << "\nCENTROIDS\n" << std::endl;
-        //~ auto hpc = csound::hyperplane_equation_from_centroids(i);
-        //~ std::cerr << "\nRANDOM INVERSION FLAT\n" << std::endl;
-        //~ auto hpr = csound::hyperplane_equation_from_random_inversion_flat(i);
-    }
-    ///csound::System::setMessageLevel(old_level);
-
 #if 0
     csound::ChordSpaceGroup chordSpaceGroup;
     chordSpaceGroup.createChordSpaceGroup(4, csound::OCTAVE() * 5.0, 1.0);
@@ -701,7 +689,7 @@ int main(int argc, char **argv) {
     
     csound::Chord origin3({0., 0., 0.});
     std::cerr << origin3.information(true) << std::endl;
-
+    csound::System::setMessageLevel(15);
     csound::Chord origin4({0., 0., 0., 0.});
     std::cerr << origin4.information(true) << std::endl;
 
