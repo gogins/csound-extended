@@ -260,7 +260,9 @@ Q(c, n, m)      Contexual transposition;
                 
 */
 
-static int DEBUGGING = true;
+SILENCE_PUBLIC int CHORD_SPACE_DEBUGGING = false;
+
+#define SYSTEM_DEBUG if (CHORD_SPACE_DEBUGGING == true) System::message
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // ALL DECLARATIONS BELOW HERE MORE OR LESS IN ALPHABETICAL ORDER -- NO DEFINITIONS HERE.
@@ -516,19 +518,6 @@ public:
      */
     virtual Chord et() const;
     /**
-     * Returns an equivalent of the chord within the representative 
-     * fundamental domain of voicing equivalence. That is a chord that 
-     * has the smallest "wraparound" intervals.
-     */
-    virtual Chord eV() const;
-    /**
-     * Returns one or more equivalent(s) of the chord within the 
-     * representative fundamental domain of voicing equivalence. If a chord 
-     * has doubled pitches, there may be more than one equivalent within 
-     * the same fundamental domain.
-     */
-    virtual std::vector<Chord> eVs() const;
-    /**
      * Returns a new chord whose pitches are the floors of this chord's pitches.
      */
     virtual Chord floor() const;
@@ -558,7 +547,7 @@ public:
      * important equivalence classes, or what its equivalent would be. 
      * Optionally, print information about consistency and voicings.
      */
-    virtual std::string information(bool print_extra=false) const;
+    virtual std::string information() const;
     /**
      * Returns whether the chord is within the representative fundamental domain
      * of inversional equivalence.
@@ -644,10 +633,10 @@ public:
      */
     virtual bool iset() const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of voicing equivalence.
+     * Returns whether or not this chord lies within the 0th sector of the 
+     * cyclical region of OPT fundamental domains.
      */
-    virtual bool iseV() const;
+    virtual bool is_opt_sector_zero() const;
     /**
      * Returns the chord inverted by the sum of its first two voices.
      * NOTE: Does NOT return an equivalent under any requivalence relation.
@@ -903,7 +892,7 @@ public:
         static bool initialized = false;
         if (initialized == false) {
             initialized = true;
-            auto old_level = System::setMessageLevel(15);
+            CHORD_SPACE_DEBUGGING = true;
             auto cyclical_regions = cyclical_regions_for_dimensionalities();
             auto &opt_domains_for_dimensions = opt_sectors_for_dimensionalities();
             auto &opti_domains_for_dimensions = opti_sectors_for_dimensionalities();
@@ -922,9 +911,9 @@ public:
                     vertex = vertex.eT();
                     cyclical_region.insert(cyclical_region.begin(), vertex);
                 }
-System::debug("Chord::initialize: %d dimensions:\n", n);
+SYSTEM_DEBUG("Chord::initialize: %d dimensions:\n", n);
                 for (int i = 0; i < cyclical_region.size(); ++i) {
-System::debug("  cyclical[%2d] %s\n", i, cyclical_region[i].toString().c_str());
+SYSTEM_DEBUG("  cyclical[%2d] %s\n", i, cyclical_region[i].toString().c_str());
                 }
                 cyclical_regions[n] = cyclical_region;
                 auto opt_domains = opt_domains_for_dimensions[n];
@@ -938,58 +927,56 @@ System::debug("  cyclical[%2d] %s\n", i, cyclical_region[i].toString().c_str());
                     int index;
                     index = 0;
                     for (auto vertex : opt_domains[d]) {
-System::debug("  OPT [%2d][%2d] %s\n", opt_domains.size() - 1, index++, vertex.toString().c_str());
+SYSTEM_DEBUG("  OPT [%2d][%2d] %s\n", opt_domains.size() - 1, index++, vertex.toString().c_str());
                     }
-                    System::setMessageLevel(old_level);
                     auto opti_midpoint = midpoint(opt_domain[(d+n)%n], opt_domain[(d+n-2)%n]);
-                    System::setMessageLevel(15);
-System::debug("  midpoint     %s\n", opti_midpoint.toString().c_str());
+SYSTEM_DEBUG("  midpoint     %s\n", opti_midpoint.toString().c_str());
                     auto opti_domain_0 = opt_domain;
                     opti_domain_0[(d+n-2)%n] = opti_midpoint;
                     opti_domains.push_back(opti_domain_0);
                     index = 0;
                     for (auto vertex : opti_domain_0) {
-System::debug("  OPTI[%2d][%2d] %s\n", opti_domains.size() - 1, index++, vertex.toString().c_str());
+SYSTEM_DEBUG("  OPTI[%2d][%2d] %s\n", opti_domains.size() - 1, index++, vertex.toString().c_str());
                     }
                     auto opti_domain_1 = opt_domain;
                     opti_domain_1[(d+n)%n] = opti_midpoint;
                     opti_domains.push_back(opti_domain_1);
                     index = 0;
                     for (auto vertex : opti_domain_1) {
-System::debug("  OPTI[%2d][%2d] %s\n", opti_domains.size() - 1, index++, vertex.toString().c_str());
+SYSTEM_DEBUG("  OPTI[%2d][%2d] %s\n", opti_domains.size() - 1, index++, vertex.toString().c_str());
                     }
                     auto lower_point = opt_domain[(n+d)%n];
                     auto upper_point = opt_domain[(n+d-2)%n];
-System::debug("  hyperplane_equation: upper_point: %s\n", upper_point.toString().c_str());
-System::debug("  hyperplane_equation: lower point: %s\n", lower_point.toString().c_str());
+SYSTEM_DEBUG("  hyperplane_equation: upper_point: %s\n", upper_point.toString().c_str());
+SYSTEM_DEBUG("  hyperplane_equation: lower point: %s\n", lower_point.toString().c_str());
                     auto normal_vector = upper_point.col(0) - lower_point.col(0);
                     auto norm = normal_vector.norm();
                     HyperplaneEquation hyperplane_equation_;
                     hyperplane_equation_.unit_normal_vector = normal_vector / norm;
                     auto temp = center_.col(0).adjoint() * hyperplane_equation_.unit_normal_vector;    
                     hyperplane_equation_.constant_term = temp(0, 0);
-System::debug("  hyperplane_equation: sector: %d\n", d);
-System::debug("  hyperplane_equation: center:\n");
+SYSTEM_DEBUG("  hyperplane_equation: sector: %d\n", d);
+SYSTEM_DEBUG("  hyperplane_equation: center:\n");
                     for(int i = 0; i < n; i++) {
-System::debug("    %9.4f\n", center_.getPitch(i));
+SYSTEM_DEBUG("    %9.4f\n", center_.getPitch(i));
                     }
-System::debug("  hyperplane_equation: normal_vector:\n");
+SYSTEM_DEBUG("  hyperplane_equation: normal_vector:\n");
                     for(int i = 0; i < n; i++) {
-System::debug("    %9.4f\n", normal_vector(i, 0));
+SYSTEM_DEBUG("    %9.4f\n", normal_vector(i, 0));
                     }
-System::debug("  hyperplane_equation: norm: %9.4f\n", norm);
-System::debug("  hyperplane_equation: unit_normal_vector:\n");
+SYSTEM_DEBUG("  hyperplane_equation: norm: %9.4f\n", norm);
+SYSTEM_DEBUG("  hyperplane_equation: unit_normal_vector:\n");
                     for(int i = 0; i < n; i++) {
-System::debug("    %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
+SYSTEM_DEBUG("    %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
                     }
-System::debug("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
+SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
                     hyperplane_equations.push_back(hyperplane_equation_);
                 }
                 opt_domains_for_dimensions[n] = opt_domains;
                 opti_domains_for_dimensions[n] = opti_domains;
                 hyperplane_equations_for_dimensions[n] = hyperplane_equations;
             }
-            System::setMessageLevel(old_level);
+            CHORD_SPACE_DEBUGGING = false;
         }
     }
     /**
@@ -1008,8 +995,10 @@ System::debug("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equati
         std::multimap<double, int> sectors_for_distances;
         double minimum_distance = std::numeric_limits<double>::max();
         for (int sector = 0, n = opt_sectors.size(); sector < n; ++sector) {
-            auto distance = distance_to_points(eOP().eT(), opt_sectors[sector]);
-            System::debug("opt_domain_sector:  chord: %s distance: %9.4f sector: %2d\n", toString().c_str(), distance, sector);
+            //~ auto distance = distance_to_points(eOP().eT(), opt_sectors[sector]);
+            auto et = eT();
+            auto distance = distance_to_points(et, opt_sectors[sector]);
+            SYSTEM_DEBUG("opt_domain_sector:  chord: %s distance: %9.4f sector: %2d\n", et.toString().c_str(), distance, sector);
             if (lt_epsilon(distance, minimum_distance) == true) {
                 minimum_distance = distance;
             }
@@ -1039,7 +1028,7 @@ System::debug("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equati
         double minimum_distance = std::numeric_limits<double>::max();
         for (int sector = 0, n = opti_sectors.size(); sector < n; ++sector) {
             auto distance = distance_to_points(eOP().eT(), opti_sectors[sector]);
-            System::debug("opti_domain_sector: chord: %s distance: %9.4f sector: %2d\n", toString().c_str(), distance, sector);
+            SYSTEM_DEBUG("opti_domain_sector: chord: %s distance: %9.4f sector: %2d\n", toString().c_str(), distance, sector);
             if (lt_epsilon(distance, minimum_distance) == true) {
                 minimum_distance = distance;
             }
@@ -1299,7 +1288,6 @@ typedef enum {
     EQUIVALENCE_RELATION_T,
     EQUIVALENCE_RELATION_Tg,
     EQUIVALENCE_RELATION_I,
-    EQUIVALENCE_RELATION_V,
     EQUIVALENCE_RELATION_RP,
     //~ EQUIVALENCE_RELATION_RT,
     //~ EQUIVALENCE_RELATION_RTg,
@@ -1436,7 +1424,6 @@ static const char* namesForEquivalenceRelations[] = {
     "T",
     "Tg",
     "I",
-    "V",
     "RP",
     //~ "RT",
     //~ "RTg",
@@ -1760,6 +1747,17 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_R>(const Cho
     return true;
 }
 
+bool Chord::is_opt_sector_zero() const {
+    auto sectors = opt_domain_sector();
+    for (auto sector : sectors) {
+        if (sector == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
 inline bool Chord::iseR(double range_) const {
     return isNormal<EQUIVALENCE_RELATION_R>(*this, range_, 1.0);
 }
@@ -1908,21 +1906,6 @@ inline bool Chord::iseTT(double g) const {
 
 //	EQUIVALENCE_RELATION_I
 
-//~ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_I>(const Chord &chord, double range, double g) {
-    //~ int lowerVoice = 0;
-    //~ int upperVoice = chord.voices() - 2;
-    //~ while (lowerVoice < upperVoice) {
-        //~ int lowerInterval = chord.getPitch(lowerVoice + 1) - chord.getPitch(lowerVoice);
-        //~ int upperInterval = chord.getPitch(upperVoice + 1) - chord.getPitch(upperVoice);
-        //~ if (le_epsilon(lowerInterval, upperInterval) == false) {
-            //~ return false;
-        //~ }
-        //~ lowerVoice = lowerVoice + 1;
-        //~ upperVoice = upperVoice - 1;
-    //~ }
-    //~ return true;
-//~ }
-
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_I>(const Chord &chord, double range, double g) {
     auto opti_sectors = chord.opti_domain_sector();
     for (auto opti_sector : opti_sectors) {
@@ -1951,70 +1934,6 @@ inline Chord Chord::eI() const {
     return csound::normalize<EQUIVALENCE_RELATION_I>(*this, OCTAVE(), 1.0);
 }
 
-//	EQUIVALENCE_RELATION_V
-
-//~ // Returns whether the chord is within the representative fundamental 
-//~ // domain of voicing equivalence. In Tymoczko's 1-based notation:
-//~ // x[1] + 12 - x[N] <= x[i + 1] - x[i], 1 <= i < N - 1
-//~ // In 0-based notation:
-//~ // x[0] + 12 - x[N-1] <= x[i + 1] - x[i], 0 <= i < N - 2
-//~ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_V>(const Chord &chord, double range, double g) {
-    //~ double outer_interval = chord.getPitch(0) + range - chord.getPitch(chord.voices() - 1);
-    //~ for (size_t voice = 0, n = chord.voices() - 2; voice < n; ++voice) {
-        //~ double inner_interval = chord.getPitch(voice + 1) - chord.getPitch(voice);
-        //~ if (le_epsilon(outer_interval, inner_interval) == false) {
-            //~ return false;
-        //~ }
-    //~ }
-    //~ return true;
-//~ }
-
-// Returns whether the chord is within the representative fundamental 
-// domain of voicing equivalence.
-template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_V>(const Chord &chord, double range, double g) {
-    auto sectors = chord.opt_domain_sector();
-    for (auto sector : sectors) {
-        if (sector == 0) {
-            return true;
-        }
-    }
-    return false;
-}
-
-inline bool Chord::iseV() const {
-    return isNormal<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0);
-}
-
-// Tymoczko: Consider the dominant seventh chord -- take C7, which is {0, 4, 
-// 7, 10}. Now put the thing in ascending order (0, 4, 7, 10).  Now rotate 
-// until the smallest interval is between the first and second notes (10, 0, 
-// 4, 7). [This implies octavewise revoicing so the chord is always ordered.]
-template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_V>(const Chord &chord, double range, double g) {
-    const std::vector<Chord> voicings = chord.voicings();
-    for (size_t i = 0; i < voicings.size(); i++) {
-        const Chord &voicing = voicings[i];
-        //~ if (isNormal<EQUIVALENCE_RELATION_V>(voicing, range, g)) {
-        if (isNormal<EQUIVALENCE_RELATION_V>(voicing.eRP(range), range, g)) {
-            return voicing;
-        }
-    }
-    System::error("Error in normalize<EQUIVALENCE_RELATION_V>: no voicing equivalent found for: %s\n", chord.toString().c_str());
-    return voicings.front();
-}
-
-inline Chord Chord::eV() const {
-    return csound::normalize<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0);
-}
-
-inline std::vector<Chord> Chord::eVs() const {
-    std::vector<Chord> evs;
-    for (auto voicing : voicings()) {
-        if (voicing.iseV() == true) {
-            evs.push_back(voicing);
-        }
-    }
-    return evs;
-}
 
 //  EQUIVALENCE_RELATION_RP
 
@@ -2066,7 +1985,7 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RPT>(const C
     if (isNormal<EQUIVALENCE_RELATION_T>(chord, range, g) == false) {
         return false;
     }
-    if (isNormal<EQUIVALENCE_RELATION_V>(chord, range, g) == false) {
+    if (chord.is_opt_sector_zero() == false) {
         return false;
     }
     return true;
@@ -2077,18 +1996,14 @@ inline bool Chord::iseRPT(double range) const {
 }
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPT>(const Chord &chord, double range, double g) {
-    auto rp = normalize<EQUIVALENCE_RELATION_RP>(chord, range, g);
-    auto rp_t = normalize<EQUIVALENCE_RELATION_T>(rp, range, g);
-    auto voicings_ = rp_t.voicings();
-    for (auto voicing : voicings_) {
-        auto voicing_t = normalize<EQUIVALENCE_RELATION_T>(voicing, range, g);  
-        if (isNormal<EQUIVALENCE_RELATION_V>(voicing, range, g) == true) {
-            //~ auto voicing_t = normalize<EQUIVALENCE_RELATION_T>(voicing, range, g);  
-            return voicing_t;
+    auto rpts = chord.eRPTs();
+    for (auto rpt : rpts) {
+        if (rpt.is_opt_sector_zero() == true) {
+            return rpt;
         }
     }
-    System::error("ERROR: normalize<EQUIVALENCE_RELATION_RPT> has no matching voicing.\n");
-    return normalize<EQUIVALENCE_RELATION_T>(rp_t, range, g);    
+    System::error("Error: Chord normalize<EQUIVALENCE_RELATION_RPT>: no RPT in sector 0.\n");
+    return rpts.front();
 }
 
 inline Chord Chord::eRPT(double range) const {
@@ -2118,8 +2033,7 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RPTg>(const 
     if (isNormal<EQUIVALENCE_RELATION_Tg>(chord, range, g) == false) {
         return false;
     }
-    if (isNormal<EQUIVALENCE_RELATION_V>(chord, range, g) == false) {
-    //~ if (isNormal<EQUIVALENCE_RELATION_V>(chord.eRPT(range), range, g) == false) {
+    if (chord.is_opt_sector_zero() == false) {
         return false;
     }
     return true;
@@ -2195,7 +2109,7 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RPTI>(const 
     if (!isNormal<EQUIVALENCE_RELATION_P>(chord, range, g)) {
         return false;
     }
-    if (!isNormal<EQUIVALENCE_RELATION_V>(chord, range, g)) {
+    if (!chord.is_opt_sector_zero()) {
         return false;
     }
     if (!isNormal<EQUIVALENCE_RELATION_T>(chord, range, g)) {
@@ -2235,7 +2149,7 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RPTgI>(const
     if (isNormal<EQUIVALENCE_RELATION_P>(chord, range, g) == false) {
         return false;
     }
-    if (isNormal<EQUIVALENCE_RELATION_V>(chord, range, g) == false) {
+    if (chord.is_opt_sector_zero() == false) {
         return false;
     }
     if (isNormal<EQUIVALENCE_RELATION_Tg>(chord, range, g) == false) {
@@ -2382,17 +2296,17 @@ inline void fill(std::string rootName, double rootPitch, std::string typeName, s
     Chord chord;
     std::string chordName = rootName + typeName;
     std::vector<std::string> splitPitches = split(typePitches);
-    System::debug("chordName: %s = rootName: %s  rootPitch: %f  typeName: %s  typePitches: %s\n", chordName.c_str(), rootName.c_str(), rootPitch, typeName.c_str(), typePitches.c_str());
+    SYSTEM_DEBUG("chordName: %s = rootName: %s  rootPitch: %f  typeName: %s  typePitches: %s\n", chordName.c_str(), rootName.c_str(), rootPitch, typeName.c_str(), typePitches.c_str());
     chord.resize(splitPitches.size());
     for (int voice = 0, voiceN = splitPitches.size(); voice < voiceN; ++voice) {
         double pitch = pitchClassForName(splitPitches[voice]);
-        System::debug("voice: %3d  pc: %-4s  pitch: %9.4f\n", voice, splitPitches[voice].c_str(), pitch);
+        SYSTEM_DEBUG("voice: %3d  pc: %-4s  pitch: %9.4f\n", voice, splitPitches[voice].c_str(), pitch);
         chord.setPitch(voice, pitch);
     }
-    System::debug("chord type: %s\n", chord.toString().c_str());
+    SYSTEM_DEBUG("chord type: %s\n", chord.toString().c_str());
     chord = chord.T(rootPitch);
     Chord eOP_ = chord.eOP();
-    System::debug("eOP_:   %s  chordName: %s\n", eOP_.toString().c_str(), chordName.c_str());
+    SYSTEM_DEBUG("eOP_:   %s  chordName: %s\n", eOP_.toString().c_str(), chordName.c_str());
     ///chordsForNames()[chordName] = eOP_;
     ///namesForChords()[eOP_] = chordName;
     add_chord(chordName, eOP_);
@@ -2408,14 +2322,14 @@ inline void initializeNames() {
     static bool initializeNamesInitialized = false;
     if (!initializeNamesInitialized) {
         initializeNamesInitialized = true;
-        System::debug("Initializing chord names...\n");
+        SYSTEM_DEBUG("Initializing chord names...\n");
         const std::map<std::string, double> &pitchClassesForNames_ = pitchClassesForNames();
         for (std::map<std::string, double>::const_iterator it = pitchClassesForNames_.begin();
                 it != pitchClassesForNames_.end();
                 ++it) {
             const std::string &rootName = it->first;
             const double &rootPitch = it->second;
-            System::debug("rootName: %-3s  rootPitch: %9.5f\n", rootName.c_str(), rootPitch);
+            SYSTEM_DEBUG("rootName: %-3s  rootPitch: %9.5f\n", rootName.c_str(), rootPitch);
             fill(rootName, rootPitch, " minor second",     "C  C#                             ");
             fill(rootName, rootPitch, " major second",     "C     D                           ");
             fill(rootName, rootPitch, " minor third",      "C        Eb                       ");
@@ -2601,133 +2515,109 @@ inline SILENCE_PUBLIC const Scale &scaleForName(std::string name) {
     }
 }
 
-inline std::string Chord::information(bool print_extra) const {
+inline std::string Chord::information() const {
+    std::string result;
     char buffer[0x4000];
     if (voices() < 1) {
         return "Empty chord.";
     }
-    Chord normalOP =    csound::normalize<EQUIVALENCE_RELATION_RP>(*this);
-    std::string chordName = name(); ///nameForChord(normalOP);
-    Chord normalO =     csound::normalize<EQUIVALENCE_RELATION_R>(*this, OCTAVE(), 1.0);
-    Chord normalP =     csound::normalize<EQUIVALENCE_RELATION_P>(*this, OCTAVE(), 1.0);
-    Chord normalT =     csound::normalize<EQUIVALENCE_RELATION_T>(*this, OCTAVE(), 1.0);
-    Chord normalTT =    csound::normalize<EQUIVALENCE_RELATION_Tg>(*this, OCTAVE(), 1.0);
-    Chord normalt =     normalT.et();
-    Chord normalI =     csound::normalize<EQUIVALENCE_RELATION_I>(*this, OCTAVE(), 1.0);
-    Chord normalV =     csound::normalize<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0);
-    //~ Chord normalvt =    normalV.et();
-    Chord normalpcs =   epcs().eP();
-    Chord normalOPT =   csound::normalize<EQUIVALENCE_RELATION_RPT>(*this, OCTAVE(), 1.0);
-    Chord normalOPTg =  csound::normalize<EQUIVALENCE_RELATION_RPTg>(*this, OCTAVE(), 1.0);
-    Chord chord_type_ = chord_type();
-    Chord normalOPI =   csound::normalize<EQUIVALENCE_RELATION_RPI>(*this, OCTAVE(), 1.0);
-    Chord normalOPTI =  csound::normalize<EQUIVALENCE_RELATION_RPTI>(*this, OCTAVE(), 1.0);
-    Chord normalopti =  normalOPTI.et();
-    Chord normalOPTgI = csound::normalize<EQUIVALENCE_RELATION_RPTgI>(*this, OCTAVE(), 1.0);
     // First whether this chord belongs to the equivalence class, and then the 
     // equivalent of this chord within the equivalence class; if it does 
     // belong, this should be equal to the equivalent.
-    std::sprintf(buffer,""
-                "CHORD:            %s  %s\n"
-                "pitch-class set:  %s\n"
-                "chord type:       %s\n"
-                "O:           %d => %s\n"
-                "P:           %d => %s\n"
-                "T:           %d => %s\n"
-                "TT:          %d => %s\n"
-                "I:           %d => %s\n"
-                "V:           %d => %s\n"
-                //~ "vt:               %s\n"
-                "OP:          %d => %s\n"
-                "OPT:         %d => %s\n"
-                "OPTT:        %d => %s\n"
-                "OPI:         %d => %s\n"
-                "OPTI:        %d => %s\n"
-                "OPTTI:       %d => %s\n"
-                "sum:              %12.7f\n",
-                 toString().c_str(),             
-                 chordName.c_str(),
-                 normalpcs.toString().c_str(),
-                 chord_type_.toString().c_str(),
-                 isNormal<EQUIVALENCE_RELATION_R>(*this, OCTAVE(), 1.0), normalO.toString().c_str(),     
-                 isNormal<EQUIVALENCE_RELATION_P>(*this, OCTAVE(), 1.0), normalP.toString().c_str(),     
-                 isNormal<EQUIVALENCE_RELATION_T>(*this, OCTAVE(), 1.0), normalT.toString().c_str(),     
-                 isNormal<EQUIVALENCE_RELATION_Tg>(*this, OCTAVE(), 1.0), normalTT.toString().c_str(),     
-                 isNormal<EQUIVALENCE_RELATION_I>(*this, OCTAVE(), 1.0), normalI.toString().c_str(),     
-                 isNormal<EQUIVALENCE_RELATION_V>(*this, OCTAVE(), 1.0), normalV.toString().c_str(),     
-                 //~ normalvt.toString().c_str(),
-                 isNormal<EQUIVALENCE_RELATION_RP>(*this, OCTAVE(), 1.0), normalOP.toString().c_str(),    
-                 isNormal<EQUIVALENCE_RELATION_RPT>(*this, OCTAVE(), 1.0), normalOPT.toString().c_str(),   
-                 isNormal<EQUIVALENCE_RELATION_RPTg>(*this, OCTAVE(), 1.0), normalOPTg.toString().c_str(),  
-                 isNormal<EQUIVALENCE_RELATION_RPI>(*this, OCTAVE(), 1.0), normalOPI.toString().c_str(),   
-                 isNormal<EQUIVALENCE_RELATION_RPTI>(*this, OCTAVE(), 1.0), normalOPTI.toString().c_str(),  
-                 isNormal<EQUIVALENCE_RELATION_RPTgI>(*this, OCTAVE(), 1.0), normalOPTgI.toString().c_str(), 
-                 layer());
-    char extra_buffer[0x200];
+    std::sprintf(buffer, "CHORD:            %s  %s\n", toString().c_str(), name().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "sum:              %12.7f\n", layer());
+    result.append(buffer);
+    std::sprintf(buffer, "pitch-class set:  %s\n", epcs().toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "chord type:       %s\n", chord_type().toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "O:           %d => %s\n", iseO(), eO().toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "P:           %d => %s\n", iseP(), eP().toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "T:           %d => %s\n", iseT(), eT().toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "TT:          %d => %s\n", iseTT(), eTT().toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "I:           %d => %s\n", iseI(), eI().toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "OP:          %d => %s\n", iseOP(), eOP().toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "OPT:         %d => %s\n", iseOPT(), eOPT().toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "             sector:");
+    result.append(buffer);
     auto opt_sectors = opt_domain_sector();
-    std::sprintf(extra_buffer, "OPT sector:   ");
-    std::strcat(buffer, extra_buffer);
     for (auto opt_sector : opt_sectors) {
-        std::sprintf(extra_buffer, "%2d       ", opt_sector);
-        std::strcat(buffer, extra_buffer);
+        std::sprintf(buffer, "%2d                ", opt_sector);
+        result.append(buffer);
     }
-    std::strcat(buffer, "\n");
-    std::sprintf(extra_buffer, "OPTI sector:  ");
-    std::strcat(buffer, extra_buffer);
+    result.append("\n");
+    std::strcat(buffer, "\n");    
+    auto tvs = eRPTs(); 
+    auto &hyperplane_equations = hyperplane_equations_for_opt_sectors()[voices()];
+    for (auto i = 0; i < tvs.size(); ++i) {
+        auto v = tvs[i];
+        auto sectors = v.opt_domain_sector();
+        auto isev = " ";
+        if (v.is_opt_sector_zero()) {
+            isev = "V";
+        }
+        auto isei = " ";
+        if (v.iseI()) {
+            isei = "I";
+        }
+        std::sprintf(buffer, "                  %s %s %s\n", v.toString().c_str(), isev, isei);
+        result.append(buffer);
+        for (auto sector : sectors) {
+            auto &hyperplane_equation = hyperplane_equations[sector];
+            std::sprintf(buffer, "             u = [");
+            result.append(buffer);
+            for (int i = 0, n = hyperplane_equation.unit_normal_vector.rows(); i < n; ++i) {
+                std::sprintf(buffer, "%12.7f ", hyperplane_equation.unit_normal_vector(i, 0));
+                result.append(buffer);
+            }
+            std::sprintf(buffer, "] c = %12.7f s = %2d\n", hyperplane_equation.constant_term, sector);
+            result.append(buffer);
+        }
+    }
+    std::sprintf(buffer, "OPTT:        %d => %s\n", iseOPTT(), eOPTT().toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "OPI:         %d => %s\n", iseOPI(), eOPI().toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "OPTI:        %d => %s\n", iseOPTI(), eOPTI().toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "OPTTI:       %d => %s\n", iseOPTTI(), eOPTTI().toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "             sector:");
+    result.append(buffer);
     auto opti_sectors = opti_domain_sector();
     for (auto opti_sector : opti_sectors) {
         // There are 2 OPTI fundamental domains evenly dividing each OPT 
         // fundamental domain; dividing by 2 tells us which OPT and also 
         // which half.
-        std::sprintf(extra_buffer, "%2d (%4.1f)", opti_sector, opti_sector / 2.);
-        std::strcat(buffer, extra_buffer);
+        std::sprintf(buffer, "%2d (%4.1f)", opti_sector, opti_sector / 2.);
+        result.append(buffer);
     }
-    std::strcat(buffer, "\n");
-    if (print_extra == true) {
-        auto tvs = eRPTs();
-        for (auto i = 0; i < tvs.size(); ++i) {
-            auto v = tvs[i];
-            auto sectors = v.opt_domain_sector();
-            auto isev = " ";
-            if (v.iseV()) {
-                isev = "V";
-            }
-            auto isei = " ";
-            if (v.iseI()) {
-                isei = "I";
-            }
-            std::sprintf(extra_buffer, "          tvs[%2d] %s %s %s", i, v.toString().c_str(), isev, isei);
-            std::strcat(buffer, extra_buffer);
-            for (auto sector : sectors) {
-                std::sprintf(extra_buffer, " %d", sector);
-                std::strcat(buffer, extra_buffer);
-            }
-            std::strcat(buffer, "\n");
+    result.append("\n");
+    auto ttvs = eRPTTs(12.);
+    for (auto i = 0; i < ttvs.size(); ++i) {
+        auto v = ttvs[i];
+        auto sectors = v.opt_domain_sector();
+        auto isev = " ";
+        if (v.is_opt_sector_zero()) {
+            isev = "V";
         }
-        std::strcat(buffer, "\n");
-        auto ttvs = eRPTTs(12.);
-        for (auto i = 0; i < ttvs.size(); ++i) {
-            auto v = ttvs[i];
-            auto sectors = v.opt_domain_sector();
-            auto isev = " ";
-            if (v.iseV()) {
-                isev = "V";
-            }
-            auto isei = " ";
-            if (v.iseI()) {
-                isei = "I";
-            }
-            std::sprintf(extra_buffer, "         ttvs[%2d] %s %s %s", i, v.toString().c_str(), isev, isei);
-            std::strcat(buffer, extra_buffer);
-            for (auto sector : sectors) {
-                std::sprintf(extra_buffer, " %d", sector);
-                std::strcat(buffer, extra_buffer);
-            }
-            std::strcat(buffer, "\n");
+        auto isei = " ";
+        if (v.iseI()) {
+            isei = "I";
         }
-        std::strcat(buffer, "\n");
+        std::sprintf(buffer, "                  %s %s %s\n", v.toString().c_str(), isev, isei);
+        result.append(buffer);
     }
-    return buffer;
+    result.append("\n");
+    return result;
 }
 
 
@@ -2742,7 +2632,7 @@ inline SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &chord, double
     Chord revoicing = origin;
     int revoicingI = 0;
     while (true) {
-        System::debug("indexForOctavewiseRevoicing of %s in range %7.3f: %5d of %5d: %s\n",
+        SYSTEM_DEBUG("indexForOctavewiseRevoicing of %s in range %7.3f: %5d of %5d: %s\n",
               chord.toString().c_str(),
               range,
               revoicingI,
@@ -2991,7 +2881,7 @@ inline bool Chord::test(const char *label) const {
     if (iseOPT() == true) {
         if (iseO() == false ||
             iseP() == false || 
-            iseV() == false || 
+            is_opt_sector_zero() == false || 
             iseT() == false) {
             passed = false;
             std::fprintf(stderr, "ERROR Chord::iseOPT is not consistent.\n");
@@ -3004,7 +2894,7 @@ inline bool Chord::test(const char *label) const {
     if (iseOPTT() == true) {
         if (iseO() == false ||
             iseP() == false || 
-            iseV() == false || 
+            is_opt_sector_zero() == false || 
             iseTT() == false) {
             passed = false;
             std::fprintf(stderr, "ERROR Chord::iseOPTT is not consistent.\n");
@@ -3015,7 +2905,7 @@ inline bool Chord::test(const char *label) const {
     if (iseOPTI() == true) {
         if (iseO() == false ||
             iseP() == false || 
-            iseV() == false || 
+            is_opt_sector_zero() == false || 
             iseT() == false || 
             iseI() == false) {
             passed = false;
@@ -3027,7 +2917,7 @@ inline bool Chord::test(const char *label) const {
     if (iseOPTTI() == true) {
         if (iseO() == false ||
             iseP() == false || 
-            iseV() == false || 
+            is_opt_sector_zero() == false || 
             iseTT() == false || 
             iseI() == false) {
             passed = false;
@@ -3054,12 +2944,6 @@ inline bool Chord::test(const char *label) const {
         std::fprintf(stderr, "ERROR Chord::eT is not consistent with Chord::iseT.\n");
     } else {
         std::fprintf(stderr, "      Chord::eT is consistent with Chord::iseT.\n");
-    }
-    if (eV().iseV() == false) {
-        passed = false;
-        std::fprintf(stderr, "ERROR Chord::eV is not consistent with Chord::iseV.\n");
-    } else {
-        std::fprintf(stderr, "      Chord::eV is consistent with Chord::iseV.\n");
     }
     if (eTT().iseTT() == false) {
         passed = false;
@@ -3107,11 +2991,7 @@ inline bool Chord::test(const char *label) const {
         std::fprintf(stderr, "      Chord::eOPTTI is consistent with Chord::iseOPTTI.\n");
     }
     std::fprintf(stderr, "\n");
-    if (passed == true) {
-        std::fprintf(stderr, information().c_str());
-    } else {
-        std::fprintf(stderr, information(true).c_str());
-    }
+    std::fprintf(stderr, information().c_str());
     return passed;
 }
 
@@ -3237,7 +3117,7 @@ inline bool Chord::contains(double pitch_) const {
 inline Chord Chord::chord_type() const {
     auto rpts = eRPTs();
     for (auto rpt : rpts) {
-        auto sectors = opt_domain_sector();
+        auto sectors = rpt.opt_domain_sector();
         for (auto sector : sectors) {
             if (sector == 0) {
                 return rpt.et();
@@ -3547,9 +3427,9 @@ inline Chord Chord::move(int voice, double interval) const {
 }
 
 inline Chord Chord::nrL() const {
-    // TODO: Is this right for anything but triads and sevenths?
-    Chord cv = eV();
-    Chord cvt = eV().et();
+    // TODO: Wrong, fix.
+    Chord cvt = chord_type();
+    Chord cv = cvt;
     if (cvt.getPitch(1) == 4.0) {
         cv.setPitch(0, cv.getPitch(0) - 1.0);
     } else {
@@ -3561,9 +3441,9 @@ inline Chord Chord::nrL() const {
 }
 
 inline Chord Chord::nrP() const {
-    // TODO: Is this right for anything but triads and sevenths?
-    Chord cv = eV();
-    Chord cvt = eV().et();
+    // TODO: Wrong, fix.
+    Chord cvt = chord_type();
+    Chord cv = cvt;
     if (cvt.getPitch(1) == 4.0) {
         cv.setPitch(1, cv.getPitch(1) - 1.0);
     } else {
@@ -3575,9 +3455,9 @@ inline Chord Chord::nrP() const {
 }
 
 inline Chord Chord::nrR() const {
-    // TODO: Is this right for anything but triads and sevenths?
-    Chord cv = eV();
-    Chord cvt = eV().et();
+    // TODO: Wrong, fix.
+    Chord cvt = chord_type();
+    Chord cv = cvt;
     if (cvt.getPitch(1) == 4.0) {
         cv.setPitch(2, cv.getPitch(2) + 2.0);
     } else {
@@ -4085,8 +3965,8 @@ inline SILENCE_PUBLIC void ChordSpaceGroup::load(std::fstream &stream) {
 Eigen::VectorXi ChordSpaceGroup::fromChord(const Chord &chord, bool printme) const {
     bool isNormalOP = csound::isNormal<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), g);
     if (printme) {
-        System::debug("fromChord...\n");
-        System::debug("chord:          %s  %d\n", chord.toString().c_str(), isNormalOP);
+        SYSTEM_DEBUG("fromChord...\n");
+        SYSTEM_DEBUG("chord:          %s  %d\n", chord.toString().c_str(), isNormalOP);
     }
     Chord normalOP;
     if (isNormalOP) {
@@ -4095,22 +3975,22 @@ Eigen::VectorXi ChordSpaceGroup::fromChord(const Chord &chord, bool printme) con
         normalOP = csound::normalize<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), g);
     }
     if (printme) {
-        System::debug("normalOP:       %s  %d\n", normalOP.toString().c_str(), csound::isNormal<EQUIVALENCE_RELATION_RP>(normalOP, OCTAVE(), g));
+        SYSTEM_DEBUG("normalOP:       %s  %d\n", normalOP.toString().c_str(), csound::isNormal<EQUIVALENCE_RELATION_RP>(normalOP, OCTAVE(), g));
     }
     Chord normalOPTg = csound::normalize<EQUIVALENCE_RELATION_RPTg>(chord, OCTAVE(), g);
     if (printme) {
-        System::debug("normalOPTg:     %s\n", normalOPTg.toString().c_str());
+        SYSTEM_DEBUG("normalOPTg:     %s\n", normalOPTg.toString().c_str());
     }
     int T_ = 0;
     for (double t = 0.0; t < OCTAVE(); t += g) {
         Chord normalOPTg_t = normalOPTg.T(t);
         normalOPTg_t = csound::normalize<EQUIVALENCE_RELATION_RP>(normalOPTg_t, OCTAVE(), g);
         if (printme) {
-            System::debug("normalOPTg_t:   %s    %f\n", normalOPTg_t.toString().c_str(), t);
+            SYSTEM_DEBUG("normalOPTg_t:   %s    %f\n", normalOPTg_t.toString().c_str(), t);
         }
         if (normalOPTg_t == normalOP) {
             if (printme) {
-                System::debug("equals\n");
+                SYSTEM_DEBUG("equals\n");
             }
             T_ = t;
             break;
@@ -4128,7 +4008,7 @@ Eigen::VectorXi ChordSpaceGroup::fromChord(const Chord &chord, bool printme) con
     }
     int P_ = it->second;
     if (printme) {
-        System::debug("normalOPTgI:    %s    %d\n", normalOPTgI.toString().c_str(), P_);
+        SYSTEM_DEBUG("normalOPTgI:    %s    %d\n", normalOPTgI.toString().c_str(), P_);
     }
     int I_;
     if (normalOPTg == normalOPTgI) {
@@ -4146,8 +4026,8 @@ Eigen::VectorXi ChordSpaceGroup::fromChord(const Chord &chord, bool printme) con
     pitv(2) = T_;
     pitv(3) = V_;
     if (printme) {
-        System::debug("PITV:       %8d     %8d     %8d     %8d\n", pitv(0), pitv(1), pitv(2), pitv(3));
-        System::debug("fromChord.\n");
+        SYSTEM_DEBUG("PITV:       %8d     %8d     %8d     %8d\n", pitv(0), pitv(1), pitv(2), pitv(3));
+        SYSTEM_DEBUG("fromChord.\n");
     }
     return pitv;
 }
@@ -4168,12 +4048,12 @@ std::vector<Chord> ChordSpaceGroup::toChord(int P, int I, int T, int V, bool pri
     T = T % countT;
     V = V % countV;
     if (printme) {
-        System::debug("toChord...\n");
-        System::debug("PITV:       %8d     %8d     %8d     %8d\n", P, I, T, V);
+        SYSTEM_DEBUG("toChord...\n");
+        SYSTEM_DEBUG("PITV:       %8d     %8d     %8d     %8d\n", P, I, T, V);
     }
     Chord normalOPTgI = opttisForIndexes[P];
     if (printme) {
-        System::debug("normalOPTgI:    %s\n", normalOPTgI.toString().c_str());
+        SYSTEM_DEBUG("normalOPTgI:    %s\n", normalOPTgI.toString().c_str());
     }
     Chord normalOPTg;
     if (I == 0) {
@@ -4183,15 +4063,15 @@ std::vector<Chord> ChordSpaceGroup::toChord(int P, int I, int T, int V, bool pri
         normalOPTg = csound::normalize<EQUIVALENCE_RELATION_RPTg>(inverse, OCTAVE(), g);
     }
     if (printme) {
-        System::debug("normalOPTg:     %s\n", normalOPTg.toString().c_str());
+        SYSTEM_DEBUG("normalOPTg:     %s\n", normalOPTg.toString().c_str());
     }
     Chord normalOPTg_t = normalOPTg.T(T);
     if (printme) {
-        System::debug("normalOPTg_t:   %s\n", normalOPTg_t.toString().c_str());
+        SYSTEM_DEBUG("normalOPTg_t:   %s\n", normalOPTg_t.toString().c_str());
     }
     Chord normalOP = csound::normalize<EQUIVALENCE_RELATION_RP>(normalOPTg_t, OCTAVE(), g);
     if (printme) {
-        System::debug("normalOP:       %s\n", normalOP.toString().c_str());
+        SYSTEM_DEBUG("normalOP:       %s\n", normalOP.toString().c_str());
     }
     Chord revoicing = octavewiseRevoicing(normalOP, V, range, printme);
     std::vector<Chord> result(3);
@@ -4199,8 +4079,8 @@ std::vector<Chord> ChordSpaceGroup::toChord(int P, int I, int T, int V, bool pri
     result[1] = normalOPTgI;
     result[2] = normalOP;
     if (printme) {
-        System::debug("revoicing:      %s\n", result[0].toString().c_str());
-        System::debug("toChord.\n");
+        SYSTEM_DEBUG("revoicing:      %s\n", result[0].toString().c_str());
+        SYSTEM_DEBUG("toChord.\n");
     }
     return result;
 }
@@ -4295,10 +4175,10 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
         bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
         if (iterator_is_normal == true) {
             auto result = fundamentalDomain.insert(iterator_);
-            if (DEBUGGING && result.second == true) {
+            if (CHORD_SPACE_DEBUGGING && result.second == true) {
                 Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
                 bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
-                System::debug("%s By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
+                SYSTEM_DEBUG("%s By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
                     (normalized_is_normal ? "      " : "WRONG "),
                     namesForEquivalenceRelations[EQUIVALENCE_RELATION],
                     chords,
@@ -4329,8 +4209,8 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
         Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
         bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
         auto result = fundamentalDomain.insert(normalized);
-        if (DEBUGGING && result.second == true) {
-            System::debug("%s By normalize %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
+        if (CHORD_SPACE_DEBUGGING && result.second == true) {
+            SYSTEM_DEBUG("%s By normalize %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
                 (normalized_is_normal ? "      " : "WRONG "),
                 namesForEquivalenceRelations[EQUIVALENCE_RELATION],
                 chords,
@@ -4445,7 +4325,7 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_singular_value
     //~ double minimum_distance = std::numeric_limits<double>::max();
     //~ for (int sector = 0, n = sectors.size(); sector < n; ++sector) {
         //~ auto distance = distance_to_points(chord, sectors[sector]);
-        //~ System::debug("cyclical_region_sector: chord: %s distance: %9.4f sector: %2d\n", chord.toString().c_str(), distance, sector);
+        //~ SYSTEM_DEBUG("cyclical_region_sector: chord: %s distance: %9.4f sector: %2d\n", chord.toString().c_str(), distance, sector);
         //~ if (lt_epsilon(distance, minimum_distance) == true) {
             //~ minimum_distance = distance;
         //~ }
@@ -4478,9 +4358,9 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_singular_value
         //~ }
         //~ vertices.insert(vertices.begin(), vertex);
     //~ }
-    //~ System::debug("cyclical_region_vertices:\n");
+    //~ SYSTEM_DEBUG("cyclical_region_vertices:\n");
     //~ for (int i = 0; i < vertices.size(); ++i) {
-        //~ System::debug("  %s\n", vertices[i].toString().c_str());
+        //~ SYSTEM_DEBUG("  %s\n", vertices[i].toString().c_str());
     //~ }
     //~ return vertices;
 //~ }
@@ -4507,9 +4387,9 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_singular_value
                     //~ cyclical_region_sector_transpositional_equivalence[n_less_1] = center_transpositional_equivalence;
                     //~ cyclical_region_sectors_[dimensions].push_back(cyclical_region_sector);
                     //~ cyclical_region_sectors_transpositional_equivalence[dimensions].push_back(cyclical_region_sector_transpositional_equivalence);
-                    //~ System::debug("cyclical_region_sectors: dimensions: %2d dimension: %2d\n", dimensions, dimension);
+                    //~ SYSTEM_DEBUG("cyclical_region_sectors: dimensions: %2d dimension: %2d\n", dimensions, dimension);
                     //~ for (auto vertex : cyclical_region_sectors_transpositional_equivalence[dimensions][dimension]) {
-                        //~ System::debug("  vertex: %s\n", vertex.toString().c_str());
+                        //~ SYSTEM_DEBUG("  vertex: %s\n", vertex.toString().c_str());
                     //~ }
                 //~ }
             //~ }
@@ -4554,29 +4434,29 @@ SILENCE_PUBLIC double distance_to_points(const Chord &chord, const std::vector<C
     //~ auto old_level = System::setMessageLevel(15);
     //~ lower_point = sector[(sector_ + dimensions) % dimensions];
     //~ upper_point = sector[(sector_ + dimensions - 2) % dimensions];
-    //~ System::debug("hyperplane_equation_from_dimensionality: upper_point: %s\n", upper_point.toString().c_str());
-    //~ System::debug("hyperplane_equation_from_dimensionality: lower point: %s\n", lower_point.toString().c_str());
+    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: upper_point: %s\n", upper_point.toString().c_str());
+    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: lower point: %s\n", lower_point.toString().c_str());
     //~ auto normal_vector = upper_point.col(0) - lower_point.col(0);
     //~ auto norm = normal_vector.norm();
     //~ HyperplaneEquation hyperplane_equation_;
     //~ hyperplane_equation_.unit_normal_vector = normal_vector / norm;
     //~ auto temp = center.col(0).adjoint() * hyperplane_equation_.unit_normal_vector;    
     //~ hyperplane_equation_.constant_term = temp(0, 0);
-    //~ System::debug("hyperplane_equation_from_dimensionality: sector: %d\n", sector_);
-    //~ System::debug("hyperplane_equation_from_dimensionality: center:\n");
+    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: sector: %d\n", sector_);
+    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: center:\n");
     //~ for(int i = 0; i < dimensions; i++) {
-        //~ System::debug("  %9.4f\n", center.getPitch(i));
+        //~ SYSTEM_DEBUG("  %9.4f\n", center.getPitch(i));
     //~ }
-    //~ System::debug("hyperplane_equation_from_dimensionality: normal_vector:\n");
+    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: normal_vector:\n");
     //~ for(int i = 0; i < dimensions; i++) {
-        //~ System::debug("  %9.4f\n", normal_vector(i, 0));
+        //~ SYSTEM_DEBUG("  %9.4f\n", normal_vector(i, 0));
     //~ }
-    //~ System::debug("hyperplane_equation_from_dimensionality: norm: %9.4f\n", norm);
-    //~ System::debug("hyperplane_equation_from_dimensionality: unit_normal_vector:\n");
+    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: norm: %9.4f\n", norm);
+    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: unit_normal_vector:\n");
     //~ for(int i = 0; i < dimensions; i++) {
-        //~ System::debug("  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
+        //~ SYSTEM_DEBUG("  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
     //~ }
-    //~ System::debug("hyperplane_equation_from_dimensionality: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
+    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
     //~ System::setMessageLevel(old_level);
     //~ return hyperplane_equation_;
 //~ }
@@ -4607,16 +4487,16 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_random_inversi
         }
     }
     HyperplaneEquation hyperplane_equation_ = hyperplane_equation_from_singular_value_decomposition(inversion_flat, true);
-    System::debug("hyperplane_equation_from_random_inversion_flat: sector: %d\n", sector_);
-    System::debug("hyperplane_equation_from_random_inversion_flat: center:\n");
+    SYSTEM_DEBUG("hyperplane_equation_from_random_inversion_flat: sector: %d\n", sector_);
+    SYSTEM_DEBUG("hyperplane_equation_from_random_inversion_flat: center:\n");
     for(int i = 0; i < dimensions; i++) {
-        System::debug("  %9.4f\n", center.getPitch(i));
+        SYSTEM_DEBUG("  %9.4f\n", center.getPitch(i));
     }
-    System::debug("hyperplane_equation_from_random_inversion_flat: unit_normal_vector:\n");
+    SYSTEM_DEBUG("hyperplane_equation_from_random_inversion_flat: unit_normal_vector:\n");
     for(int i = 0; i < dimensions; i++) {
-        System::debug("  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
+        SYSTEM_DEBUG("  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
     }
-    System::debug("hyperplane_equation_from_random_inversion_flat: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
+    SYSTEM_DEBUG("hyperplane_equation_from_random_inversion_flat: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
     return hyperplane_equation_;
 }
 
@@ -4699,7 +4579,7 @@ inline SILENCE_PUBLIC Chord midpoint(const Chord &a, const Chord &b) {
         double voiceMidpoint = voiceSum / 2.0;
         midpoint_.setPitch(voice, voiceMidpoint);
     }
-    System::debug("a: %s  b: %s  mid: %s\n", a.toString().c_str(), b.toString().c_str(), midpoint_.toString().c_str());
+    //~ SYSTEM_DEBUG("a: %s  b: %s  mid: %s\n", a.toString().c_str(), b.toString().c_str(), midpoint_.toString().c_str());
     return midpoint_;
 }
 
@@ -4759,7 +4639,7 @@ inline SILENCE_PUBLIC Chord octavewiseRevoicing(const Chord &chord, int revoicin
     Chord revoicing = origin;
     int revoicingI = 0;
     while (true) {
-        System::debug("octavewiseRevoicing %d (%d) of %s in range %7.3f: %5d: %s\n",
+        SYSTEM_DEBUG("octavewiseRevoicing %d (%d) of %s in range %7.3f: %5d: %s\n",
               revoicingNumber,
               revoicingNumber_,
               chord.toString().c_str(),
@@ -4784,10 +4664,10 @@ inline SILENCE_PUBLIC int octavewiseRevoicings(const Chord &chord,
     while (next(odometer, origin, range, OCTAVE())) {
         voicings = voicings + 1;
     }
-    System::debug("octavewiseRevoicings: chord:    %s\n", chord.toString().c_str());
-    System::debug("octavewiseRevoicings: eop:      %s\n", chord.eOP().toString().c_str());
-    System::debug("octavewiseRevoicings: odometer: %s\n", odometer.toString().c_str());
-    System::debug("octavewiseRevoicings: voicings: %5d\n", voicings);
+    SYSTEM_DEBUG("octavewiseRevoicings: chord:    %s\n", chord.toString().c_str());
+    SYSTEM_DEBUG("octavewiseRevoicings: eop:      %s\n", chord.eOP().toString().c_str());
+    SYSTEM_DEBUG("octavewiseRevoicings: odometer: %s\n", odometer.toString().c_str());
+    SYSTEM_DEBUG("octavewiseRevoicings: voicings: %5d\n", voicings);
     return voicings;
 }
 
@@ -4817,29 +4697,29 @@ inline SILENCE_PUBLIC Eigen::VectorXd reflect(const Eigen::VectorXd &v, const Ei
  */
 inline SILENCE_PUBLIC Chord reflect_by_householder(const Chord &chord) {
     auto hyperplane_equation = chord.hyperplane_equation();
-    System::debug("reflect_by_householder: chord:              %s\n", chord.toString().c_str());
-    System::debug("reflect_by_householder: unit normal vector: \n%s\n", toString(hyperplane_equation.unit_normal_vector).c_str());
+    SYSTEM_DEBUG("reflect_by_householder: chord:              %s\n", chord.toString().c_str());
+    SYSTEM_DEBUG("reflect_by_householder: unit normal vector: \n%s\n", toString(hyperplane_equation.unit_normal_vector).c_str());
     auto center_ = chord.center().eT();
-    System::debug("reflect_by_householder: center:             %s\n", center_.toString().c_str());
+    SYSTEM_DEBUG("reflect_by_householder: center:             %s\n", center_.toString().c_str());
     auto tensor = hyperplane_equation.unit_normal_vector.col(0) * hyperplane_equation.unit_normal_vector.col(0).transpose();
-    System::debug("reflect_by_householder: tensor: \n%s\n", toString(tensor).c_str());
+    SYSTEM_DEBUG("reflect_by_householder: tensor: \n%s\n", toString(tensor).c_str());
     auto product = 2. * tensor;
-    System::debug("reflect_by_householder: product:  \n%s\n", toString(product).c_str());
+    SYSTEM_DEBUG("reflect_by_householder: product:  \n%s\n", toString(product).c_str());
     auto identity = Eigen::MatrixXd::Identity(center_.voices(), center_.voices());
-    System::debug("reflect_by_householder: identity:  \n%s\n", toString(identity).c_str());
+    SYSTEM_DEBUG("reflect_by_householder: identity:  \n%s\n", toString(identity).c_str());
     auto householder = identity - product;
-    System::debug("reflect_by_householder: householder:  \n%s\n", toString(householder).c_str());
+    SYSTEM_DEBUG("reflect_by_householder: householder:  \n%s\n", toString(householder).c_str());
     auto moved_to_origin = chord.col(0) - center_.col(0);
-    System::debug("reflect_by_householder: moved_to_origin:  \n%s\n", toString(moved_to_origin).c_str());
+    SYSTEM_DEBUG("reflect_by_householder: moved_to_origin:  \n%s\n", toString(moved_to_origin).c_str());
     auto reflected = householder * moved_to_origin;
-    System::debug("reflect_by_householder: reflected:  \n%s\n", toString(reflected).c_str());
+    SYSTEM_DEBUG("reflect_by_householder: reflected:  \n%s\n", toString(reflected).c_str());
     auto moved_from_origin = reflected + center_.col(0);
-    System::debug("reflect_by_householder: moved_from_origin:  \n%s\n", toString(moved_from_origin).c_str());
+    SYSTEM_DEBUG("reflect_by_householder: moved_from_origin:  \n%s\n", toString(moved_from_origin).c_str());
     Chord reflection_ = chord;
     for (int voice = 0, n = chord.voices(); voice < n; ++voice) {
         reflection_.setPitch(voice, moved_from_origin(voice, 0));
     }
-    System::debug("reflect_by_householder: reflection_:        %s\n\n", reflection_.toString().c_str());
+    SYSTEM_DEBUG("reflect_by_householder: reflection_:        %s\n\n", reflection_.toString().c_str());
     return reflection_;
 }
 
@@ -4895,18 +4775,18 @@ inline SILENCE_PUBLIC Chord reflect_in_inversion_flat(const Chord &chord) {
 }
 
 inline SILENCE_PUBLIC Chord scale(std::string name) {
-    System::debug("scale: for name: %s\n", name.c_str());
+    SYSTEM_DEBUG("scale: for name: %s\n", name.c_str());
     auto scale = chordForName(name);
     if (scale.size() == 0) {
         return scale;
     }
     auto parts = split(name);
     auto tonic = pitchClassForName(parts.front());
-    System::debug("scale: tonic: %9.4f\n", tonic);
-    System::debug("scale: initially: %s\n", scale.toString().c_str());
+    SYSTEM_DEBUG("scale: tonic: %9.4f\n", tonic);
+    SYSTEM_DEBUG("scale: initially: %s\n", scale.toString().c_str());
     while (eq_epsilon(scale.getPitch(0), tonic) == false) {
         scale = scale.v();
-        System::debug("scale: revoicing: %s\n", scale.toString().c_str());
+        SYSTEM_DEBUG("scale: revoicing: %s\n", scale.toString().c_str());
     }
     return scale;
 }
@@ -4977,7 +4857,7 @@ inline SILENCE_PUBLIC double Scale::semitones_for_degree(int scale_degree) const
 }
 
 inline SILENCE_PUBLIC Scale Scale::transpose_to_degree(int degrees) const {
-    System::debug("Scale::transpose_to_degree(%9.4f)...\n", degrees);
+    SYSTEM_DEBUG("Scale::transpose_to_degree(%9.4f)...\n", degrees);
     double semitones = semitones_for_degree(degrees);
     return transpose(semitones);
 }
@@ -4991,9 +4871,9 @@ inline SILENCE_PUBLIC Scale Scale::transpose(double semitones) const {
     while (ge_epsilon(transposed_pitches.getPitch(0), OCTAVE()) == true) {
         transposed_pitches = transposed_pitches.T( - OCTAVE());
     }
-    System::debug("Scale::transpose: transposed_pitches(%f): %s\n", semitones, transposed_pitches.toString().c_str());
+    SYSTEM_DEBUG("Scale::transpose: transposed_pitches(%f): %s\n", semitones, transposed_pitches.toString().c_str());
     // Create the copy with the name of the new tonic.
-    System::debug("Scale::transpose: original name: %s\n", name().c_str());
+    SYSTEM_DEBUG("Scale::transpose: original name: %s\n", name().c_str());
     auto tonic_name = nameForPitchClass(transposed_pitches.getPitch(0));
     Scale transposed_scale;
     transposed_scale.type_name = getTypeName();
@@ -5001,8 +4881,8 @@ inline SILENCE_PUBLIC Scale Scale::transpose(double semitones) const {
     for (int voice = 0; voice < voices(); ++voice) {
         transposed_scale.setPitch(voice, transposed_pitches.getPitch(voice));
     }
-    System::debug("Scale::transpose: new name: %s\n", transposed_scale.name().c_str());
-    System::debug("Scale::transpose: result: %s\n", transposed_scale.information().c_str());
+    SYSTEM_DEBUG("Scale::transpose: new name: %s\n", transposed_scale.name().c_str());
+    SYSTEM_DEBUG("Scale::transpose: result: %s\n", transposed_scale.information().c_str());
     return transposed_scale;
 }
 
@@ -5064,7 +4944,7 @@ inline SILENCE_PUBLIC std::vector<Scale> Scale::modulations(const Chord &chord, 
 inline SILENCE_PUBLIC void Scale::relative_tonicizations_for_scale_types(std::vector<Scale> &result, const Chord &current_chord, int secondary_function, int voices, const std::vector<std::string> &type_names) const {
     result.clear();
     int current_degree = degree(current_chord);
-    System::debug("Scale::relative_tonicizations: chord: %.20s (%s) degree: %3d\n", current_chord.name().c_str(), current_chord.toString().c_str(), current_degree);
+    SYSTEM_DEBUG("Scale::relative_tonicizations: chord: %.20s (%s) degree: %3d\n", current_chord.name().c_str(), current_chord.toString().c_str(), current_degree);
     if (current_degree == -1) {
         return;
     }
@@ -5072,13 +4952,13 @@ inline SILENCE_PUBLIC void Scale::relative_tonicizations_for_scale_types(std::ve
         voices = current_chord.voices();
     }
     Chord chord_ = chord(current_degree, voices);
-    System::debug("Scale::relative_tonicizations: resized: %.20s (%s) degree: %3d\n", chord_.name().c_str(), chord_.toString().c_str(), current_degree);
+    SYSTEM_DEBUG("Scale::relative_tonicizations: resized: %.20s (%s) degree: %3d\n", chord_.name().c_str(), chord_.toString().c_str(), current_degree);
     std::vector<Scale> modulations_ = modulations(chord_);
     for (auto modulation : modulations_) {
         int degree_in_modulation = modulation.degree(chord_);
         if (degree_in_modulation == secondary_function) {
             if (std::find(result.begin(), result.end(), modulation) == result.end()) {
-                System::debug("Scale::relative_tonicizations: modulation: %.20s (%s) degree of chord in modulation: %3d\n", modulation.name().c_str(), modulation.toString().c_str(), degree_in_modulation);
+                SYSTEM_DEBUG("Scale::relative_tonicizations: modulation: %.20s (%s) degree of chord in modulation: %3d\n", modulation.name().c_str(), modulation.toString().c_str(), degree_in_modulation);
                 result.push_back(modulation);
             }
         }
@@ -5110,7 +4990,7 @@ inline SILENCE_PUBLIC std::vector<Chord> Scale::secondary(const Chord &current_c
 inline SILENCE_PUBLIC std::vector<Scale> Scale::tonicizations(const Chord &current_chord, int voices) const {
     std::vector<Scale> result;
     int current_degree = degree(current_chord);
-    System::debug("Scale::tonicizations: chord: %.20s (%s) degree: %3d\n", current_chord.name().c_str(), current_chord.toString().c_str(), current_degree);
+    SYSTEM_DEBUG("Scale::tonicizations: chord: %.20s (%s) degree: %3d\n", current_chord.name().c_str(), current_chord.toString().c_str(), current_degree);
     if (current_degree == -1) {
         return result;
     }
@@ -5118,13 +4998,13 @@ inline SILENCE_PUBLIC std::vector<Scale> Scale::tonicizations(const Chord &curre
         voices = current_chord.voices();
     }
     Chord chord_ = chord(current_degree, voices);
-    System::debug("Scale::tonicizations: resized: %.20s (%s) degree: %3d\n", chord_.name().c_str(), chord_.toString().c_str(), current_degree);
+    SYSTEM_DEBUG("Scale::tonicizations: resized: %.20s (%s) degree: %3d\n", chord_.name().c_str(), chord_.toString().c_str(), current_degree);
     std::vector<Scale> modulations_ = modulations(chord_);
     for (auto modulation : modulations_) {
         int degree_in_modulation = modulation.degree(chord_);
         if (degree_in_modulation == 1) {
             if (std::find(result.begin(), result.end(), modulation) == result.end()) {
-                System::debug("Scale::tonicizations: modulation: %.20s (%s) degree of chord in modulation: %3d\n", modulation.name().c_str(), modulation.toString().c_str(), degree_in_modulation);
+                SYSTEM_DEBUG("Scale::tonicizations: modulation: %.20s (%s) degree of chord in modulation: %3d\n", modulation.name().c_str(), modulation.toString().c_str(), degree_in_modulation);
                 result.push_back(modulation);
             }
         }
@@ -5155,21 +5035,21 @@ inline SILENCE_PUBLIC Chord transpose_degrees(const Chord &scale, const Chord &o
     int chord_voices = original_chord.voices();
     Chord original_eop = original_chord.eOP();
     for (int original_chord_index = 0; original_chord_index < scale_degrees; ++original_chord_index) {
-        System::debug("transpose_degrees: original_chord_index: %d scale_degrees: %d\n", original_chord_index, scale_degrees);
+        SYSTEM_DEBUG("transpose_degrees: original_chord_index: %d scale_degrees: %d\n", original_chord_index, scale_degrees);
         Chord transposed = csound::chord(scale, original_chord_index + 1, chord_voices, interval);
         Chord transposed_eop = transposed.eOP();
-        System::debug("original_eop: %s\ntransposed_eop: %s\n", original_eop.information().c_str(), transposed_eop.information().c_str());
+        SYSTEM_DEBUG("original_eop: %s\ntransposed_eop: %s\n", original_eop.information().c_str(), transposed_eop.information().c_str());
         if (original_eop == transposed_eop) {
             // Found the scale index of the original chord, now get the transposed chord.
             int target_index = original_chord_index + transposition_degrees;
-            System::debug("found chord, target_index: %d original_chord_index: %d transposition_degrees: %d\n", target_index, original_chord_index, transposition_degrees);
+            SYSTEM_DEBUG("found chord, target_index: %d original_chord_index: %d transposition_degrees: %d\n", target_index, original_chord_index, transposition_degrees);
             // Transposition has sign. If negative, wrap.
             while (target_index < 0) {
                 target_index = target_index + scale_degrees;
             }
-            System::debug("wrapped target_index: %d original_chord_index: %d transposition_degrees: %d\n", target_index, original_chord_index, transposition_degrees);
+            SYSTEM_DEBUG("wrapped target_index: %d original_chord_index: %d transposition_degrees: %d\n", target_index, original_chord_index, transposition_degrees);
             Chord transposed_chord = csound::chord(scale, target_index + 1, chord_voices, interval);
-            System::debug("transposed_chord: %s\n", transposed_chord.toString().c_str());
+            SYSTEM_DEBUG("transposed_chord: %s\n", transposed_chord.toString().c_str());
             return transposed_chord;
         }
     }

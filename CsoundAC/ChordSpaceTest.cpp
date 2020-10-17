@@ -1,4 +1,4 @@
-  #include "ChordSpace.hpp"
+#include "ChordSpace.hpp"
 #include <System.hpp>
 #include <algorithm>
 #include <iostream>
@@ -370,10 +370,10 @@ int main(int argc, char **argv) {
     original.setPitch(0, -8.0);
     original.setPitch(1,  4.0);
     original.setPitch(2,  4.0);
-    std::cerr << original.information(true) << std::endl;
+    std::cerr << original.information() << std::endl;
     
     csound::Chord centre({-4., 0., 4.});
-    std::cerr << centre.information(true) << std::endl;
+    std::cerr << centre.information() << std::endl;
    
 
     auto index = csound::indexForOctavewiseRevoicing(original, 48.0, true);
@@ -481,19 +481,6 @@ int main(int argc, char **argv) {
     std::cerr << "eI: " << eI.toString() << std::endl;
     std::cerr << "eI.cycle(-1): " << eI.cycle(-1).toString() << std::endl;
     std::vector<csound::Chord> permutations = chord.permutations();
-    std::cerr << "Permutations, iseV, eV:" << std::endl;
-    for (size_t i = 0; i < permutations.size(); i++) {
-        const csound::Chord permutation = permutations[i];
-        const csound::Chord &eV = permutation.eV();
-        std::cerr << i << " of " << permutations.size() << ": " << permutation.toString() << "  iseV: " << permutation.iseV() << "  eV: " << eV.toString() << "  iseP: " <<  permutation.iseP() << std::endl;
-    }
-    std::vector<csound::Chord> voicings = chord.voicings();
-    std::cerr << "voicing, iseV, eV:" << std::endl;
-    for (size_t i = 0; i < voicings.size(); i++) {
-        const csound::Chord voicing = voicings[i];
-        const csound::Chord &eV = voicing.eV();
-        std::cerr << i << " of " << voicings.size() << ": " << voicing.toString() << "  iseV: " << voicing.iseV() << "  eV: " << eV.toString() << std::endl;
-    }
     std::string tosplit = "C     D     E        G           B";
     //auto prior_level = csound::System::setMessageLevel(15);
     // Must be 'false' because this is a chord not a scale, and if it were a 
@@ -564,36 +551,36 @@ int main(int argc, char **argv) {
     std::cout << spun_back.information() << std::endl;    
 #endif     
 
-    std::cerr << csound::Chord({0., 4, 7}).information(true) << std::endl;
-    std::cerr << csound::Chord({0., 4, 7}).eI().information(true) << std::endl;
-    std::cerr << csound::Chord({0., 4, 7, 11}).information(true) << std::endl;
-    std::cerr << csound::Chord({0., 4, 7, 11}).eI().information(true) << std::endl;
-    std::cerr << csound::Chord({0., 4, 7, 11, 14}).information(true) << std::endl;
-    std::cerr << csound::Chord({0., 4, 7, 11, 14}).eI().information(true) << std::endl;
-    std::cerr << csound::Chord({0., 4, 7, 11, 14, 17}).information(true) << std::endl;
-    std::cerr << csound::Chord({0., 4, 7, 11, 14, 17}).eI().information(true) << std::endl;
-    std::cerr << csound::Chord({0., 4, 7, 11, 14, 17, 21}).information(true) << std::endl;
-    std::cerr << csound::Chord({0., 4, 7, 11, 14, 17, 21}).eI().information(true) << std::endl;
-    std::cerr << csound::Chord({0.,4.,8.}).eT().information(true) << std::endl;
-    std::cerr << csound::Chord({-6.,0.,6.}).eT().information(true) << std::endl;
+    std::cerr << csound::Chord({0., 4, 7}).information() << std::endl;
+    std::cerr << csound::Chord({0., 4, 7}).eI().information() << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11}).information() << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11}).eI().information() << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11, 14}).information() << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11, 14}).eI().information() << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11, 14, 17}).information() << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11, 14, 17}).eI().information() << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11, 14, 17, 21}).information() << std::endl;
+    std::cerr << csound::Chord({0., 4, 7, 11, 14, 17, 21}).eI().information() << std::endl;
+    std::cerr << csound::Chord({0.,4.,8.}).eT().information() << std::endl;
+    std::cerr << csound::Chord({-6.,0.,6.}).eT().information() << std::endl;
 
     csound::System::message("\nTesting equivalence relations...\n\n");
-    for (int voiceCount = 3; voiceCount <= maximumVoiceCountToTest; ++voiceCount) {
+    for (int voiceCount = 3; voiceCount <= 3; ++voiceCount) {
         testEquivalenceRelations(voiceCount, csound::OCTAVE(), 1.0);
     }
     
     auto opttis = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(4, csound::OCTAVE(), 1.);
     for (auto optti : opttis) {
-        csound::System::message("chord %s  type %s v %d\n", optti.toString().c_str(), optti.et().eP().toString().c_str(), optti.iseV());
+        csound::System::message("chord %s  type %s v %d\n", optti.toString().c_str(), optti.et().eP().toString().c_str(), optti.is_opt_sector_zero());
     }
     
-    std::cerr << csound::Chord({0., 4., 7., 11.}).information(true) << std::endl;
-    std::cerr << csound::Chord({0., 3., 7., 10.}).information(true) << std::endl;
-    std::cerr << csound::Chord({0., 0., 0.,  1.}).information(true) << std::endl;
-    std::cerr << csound::Chord({-5., -5., 6.,  7.}).information(true) << std::endl;
-    std::cerr << csound::Chord({0., 4, 7}).information(true) << std::endl;
-    std::cerr << csound::Chord({0., 4, 7}).T(4).information(true) << std::endl;
-    std::cerr << csound::Chord({0., 4, 7}).T(6).information(true) << std::endl;
+    std::cerr << csound::Chord({0., 4., 7., 11.}).information() << std::endl;
+    std::cerr << csound::Chord({0., 3., 7., 10.}).information() << std::endl;
+    std::cerr << csound::Chord({0., 0., 0.,  1.}).information() << std::endl;
+    std::cerr << csound::Chord({-5., -5., 6.,  7.}).information() << std::endl;
+    std::cerr << csound::Chord({0., 4, 7}).information() << std::endl;
+    std::cerr << csound::Chord({0., 4, 7}).T(4).information() << std::endl;
+    std::cerr << csound::Chord({0., 4, 7}).T(6).information() << std::endl;
     
 
     std::vector<csound::Chord> science_chord_types_4;
@@ -685,13 +672,53 @@ int main(int argc, char **argv) {
         auto c = science_chord_types_4[i];
         std:fprintf(stderr, "optti[%2d]: chord: %s optti: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTTI().toString().c_str(), c.chord_type().toString().c_str());
     }
-    std::cerr << science_chord_types_4.front().information(true) << std::endl;
+    std::cerr << science_chord_types_4.front().information() << std::endl;
     
-    csound::Chord origin3({0., 0., 0.});
-    std::cerr << origin3.information(true) << std::endl;
-    csound::System::setMessageLevel(15);
-    csound::Chord origin4({0., 0., 0., 0.});
-    std::cerr << origin4.information(true) << std::endl;
+    std::vector<csound::Chord> science_chord_types_3;
+    science_chord_types_3.push_back(csound::Chord({0., 0., 0.}));
+    science_chord_types_3.push_back(csound::Chord({0., 0., 1.}));
+    science_chord_types_3.push_back(csound::Chord({0., 0., 2.}));
+    science_chord_types_3.push_back(csound::Chord({0., 0., 3.}));
+    science_chord_types_3.push_back(csound::Chord({0., 0., 4.}));
+    science_chord_types_3.push_back(csound::Chord({0., 0., 5.}));
+    science_chord_types_3.push_back(csound::Chord({0., 0., 6.}));
+    science_chord_types_3.push_back(csound::Chord({0., 5., 5.}));
+    science_chord_types_3.push_back(csound::Chord({0., 4., 4.}));
+    science_chord_types_3.push_back(csound::Chord({0., 3., 3.}));
+    science_chord_types_3.push_back(csound::Chord({0., 2., 2.}));
+    science_chord_types_3.push_back(csound::Chord({0., 1., 1.}));
+    science_chord_types_3.push_back(csound::Chord({0., 1., 2.}));
+    science_chord_types_3.push_back(csound::Chord({0., 1., 3.}));
+    science_chord_types_3.push_back(csound::Chord({0., 1., 4.}));
+    science_chord_types_3.push_back(csound::Chord({0., 1., 5.}));
+    science_chord_types_3.push_back(csound::Chord({0., 1., 6.}));
+    science_chord_types_3.push_back(csound::Chord({0., 5., 6.}));
+    science_chord_types_3.push_back(csound::Chord({0., 4., 5.}));
+    science_chord_types_3.push_back(csound::Chord({0., 3., 4.}));
+    science_chord_types_3.push_back(csound::Chord({0., 2., 3.}));
+    science_chord_types_3.push_back(csound::Chord({0., 2., 4.}));
+    science_chord_types_3.push_back(csound::Chord({0., 2., 5.}));
+    science_chord_types_3.push_back(csound::Chord({0., 2., 6.}));
+    science_chord_types_3.push_back(csound::Chord({0., 2., 7.}));
+    science_chord_types_3.push_back(csound::Chord({0., 4., 6.}));
+    science_chord_types_3.push_back(csound::Chord({0., 3., 5.}));
+    science_chord_types_3.push_back(csound::Chord({0., 3., 6.}));
+    science_chord_types_3.push_back(csound::Chord({0., 3., 7.}));
+    science_chord_types_3.push_back(csound::Chord({0., 4., 8.}));
+    for (int i = 0, n = science_chord_types_3.size(); i < n; ++i) {
+        auto c = science_chord_types_3[i];
+        //std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str(), c.chord_type().toString().c_str());
+        std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str());
+    }
+    std::cerr << science_chord_types_3.front().information() << std::endl;
+    
+    int i = 0;
+    auto myoptts = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTg>(3, 12., 1.);
+    for (auto c : myoptts) {
+        //std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str(), c.chord_type().toString().c_str());
+        std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str());
+        i++;
+    }
 
     summary();
     return 0;
