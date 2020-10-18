@@ -382,9 +382,7 @@ public:
      */
     virtual Chord ceiling() const;
     /**
-     * Returns the standard "chord type" of this chord, pitch-classes in the 
-     * "root position" sector of the cyclical region transposed so the 
-     * "root pitch" is 0.
+     * Returns the pitch-classes of this chord in my own unique form.
      */
     virtual Chord chord_type() const;
     /**
@@ -995,8 +993,8 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
         std::multimap<double, int> sectors_for_distances;
         double minimum_distance = std::numeric_limits<double>::max();
         for (int sector = 0, n = opt_sectors.size(); sector < n; ++sector) {
-            //~ auto distance = distance_to_points(eOP().eT(), opt_sectors[sector]);
-            auto et = eT();
+            auto et = eO().eT();
+            //~ auto et = eT();
             auto distance = distance_to_points(et, opt_sectors[sector]);
             SYSTEM_DEBUG("opt_domain_sector:  chord: %s distance: %9.4f sector: %2d\n", et.toString().c_str(), distance, sector);
             if (lt_epsilon(distance, minimum_distance) == true) {
@@ -1077,7 +1075,65 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
         auto opt_domains = opt_domain_sector();
         return hyperplane_equation(opt_domains.front());
     }
-
+    /**
+     * Returns this chord in standard "normal order." The pitch-classes of the 
+     * chord are sorted. The chord is cyclically permuted until its first 
+     * and last voices are as close in pitch as possible. If more than one 
+     * permutation has the minimum distance, then minimize the interval 
+     * between the first and next-to-last voice, and so on recursively.
+     */
+    virtual Chord normal_order() const {
+        auto pcs = epcs().eP();
+        auto permutations_ = pcs.permutations();
+        std::multimap<double, Chord> chords_for_intervals;
+        for (int first_voice = 0, last_voice = voices() - 1; last_voice > 0; --last_voice) {
+            double least_interval = std::numeric_limits<double>::max();
+            for (auto &permutation : permutations_) {
+                double first_pitch = permutation.getPitch(first_voice);
+                double last_pitch = permutation.getPitch(last_voice);
+                double interval = last_pitch - first_pitch;
+                if (le_epsilon(interval, least_interval) == true) {
+                    least_interval = interval;
+                }
+                chords_for_intervals.insert({interval, permutation});
+            }
+            if (chords_for_intervals.count(least_interval) == 1) {
+                return chords_for_intervals.begin()->second;
+            }
+            permutations_.clear();
+            auto range = chords_for_intervals.equal_range(least_interval);
+            for (auto it = range.first; it != range.second; ++it) {
+                permutations_.push_back(it->second);
+            }
+            chords_for_intervals.clear();
+        }
+        return permutations_.front();
+    }
+    /**
+     * Returns this chord in standard "normal form." The normal order is  
+     * transposed so that the first voice has pitch-class 0.
+     */
+    virtual Chord normal_form() const {
+        auto normal_order_ = normal_order();
+        auto normal_form_ = normal_order_.et();
+        return normal_form_;
+    }
+    /**
+     * Returns this chord as its standard "set class." The normal form is 
+     * inverted in the origin. The lesser of the normal form of the chord, and 
+     * the normal form of the chord's inversion, is returned as 
+     * the set class.
+     */
+    virtual Chord set_class() const {
+        auto normal_form_ = normal_form();
+        auto normal_form_i = normal_form_.I();
+        auto normal_form_i_normal_form = normal_form_i.normal_form();
+        if (normal_form_ <= normal_form_i_normal_form) {
+            return normal_form_;
+        } else {
+            return normal_form_i_normal_form;
+        }
+    }
 };
 
 SILENCE_PUBLIC const Chord &chordForName(std::string name);
@@ -1792,7 +1848,8 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_R>(const C
         return copy;
     }
     Chord er = normalize<EQUIVALENCE_RELATION_r>(chord, range, g);
-    while (le_epsilon(er.layer(), range) == false) {
+    //~ while (le_epsilon(er.layer(), range) == false) {
+    while (lt_epsilon(er.layer(), range) == false) {
         std::vector<double> maximum = er.max();
         er.setPitch(maximum[1], maximum[0] - range);
     }
@@ -2526,11 +2583,13 @@ inline std::string Chord::information() const {
     // belong, this should be equal to the equivalent.
     std::sprintf(buffer, "CHORD:            %s  %s\n", toString().c_str(), name().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "sum:              %12.7f\n", layer());
-    result.append(buffer);
     std::sprintf(buffer, "pitch-class set:  %s\n", epcs().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "chord type:       %s\n", chord_type().toString().c_str());
+    std::sprintf(buffer, "normal order:     %s\n", normal_order().toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "normal form:      %s\n", normal_form().toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "set class:        %s\n", set_class().toString().c_str());
     result.append(buffer);
     std::sprintf(buffer, "O:           %d => %s\n", iseO(), eO().toString().c_str());
     result.append(buffer);
@@ -2617,6 +2676,8 @@ inline std::string Chord::information() const {
         result.append(buffer);
     }
     result.append("\n");
+    std::sprintf(buffer, "sum:              %12.7f\n", layer());
+    result.append(buffer);
     return result;
 }
 
@@ -3115,17 +3176,7 @@ inline bool Chord::contains(double pitch_) const {
 }
 
 inline Chord Chord::chord_type() const {
-    auto rpts = eRPTs();
-    for (auto rpt : rpts) {
-        auto sectors = rpt.opt_domain_sector();
-        for (auto sector : sectors) {
-            if (sector == 0) {
-                return rpt.et();
-            }
-        }
-    }
-    System::error("Error: Chord::chord_type: failed to find sector 0.\n");
-    return rpts.front();  
+    return eOPTT().et().epcs().eP();
 }
 
 inline std::vector<double> Chord::min() const {
@@ -4319,90 +4370,6 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_singular_value
     return hyperplane_equation_;
 }
 
-//~ SILENCE_PUBLIC std::vector<int> cyclical_region_sector(const Chord &chord, bool transpositional_equivalence) {
-    //~ std::vector<std::vector<Chord>> sectors = cyclical_region_sectors(transpositional_equivalence)[chord.voices()];
-    //~ std::multimap<double, int> sectors_for_distances;
-    //~ double minimum_distance = std::numeric_limits<double>::max();
-    //~ for (int sector = 0, n = sectors.size(); sector < n; ++sector) {
-        //~ auto distance = distance_to_points(chord, sectors[sector]);
-        //~ SYSTEM_DEBUG("cyclical_region_sector: chord: %s distance: %9.4f sector: %2d\n", chord.toString().c_str(), distance, sector);
-        //~ if (lt_epsilon(distance, minimum_distance) == true) {
-            //~ minimum_distance = distance;
-        //~ }
-        //~ sectors_for_distances.insert({distance, sector});
-    //~ }
-    //~ std::vector<int> result;
-    //~ auto range = sectors_for_distances.equal_range(minimum_distance);
-    //~ for (auto it = range.first; it != range.second; ++it) {
-        //~ result.push_back(it->second);
-    //~ }
-    //~ return result;
-//~ }
-
-//~ /* The cyclical region for n-note chords is the (n-1)-simplicial region of 
- //~ * R^n / T with n vertices at A_i = [0^(n - i), 12^n)]_T, for 0 <= i < n. 
- //~ */
-//~ inline SILENCE_PUBLIC std::vector<Chord> cyclical_region_vertices(int dimensions, bool transpositional_equivalence) {
-    //~ std::vector<Chord> vertices;
-    //~ for (int dimension = 0; dimension < dimensions; ++dimension) {
-        //~ Chord vertex(dimensions);
-        //~ for (int voice = 0; voice < dimensions; ++voice) {
-            //~ if (voice <= dimension) {
-                //~ vertex.setPitch(voice,  0.);
-            //~ } else {
-                //~ vertex.setPitch(voice, 12.);
-            //~ }
-        //~ }
-        //~ if (transpositional_equivalence == true) {
-            //~ vertex = vertex.eT();
-        //~ }
-        //~ vertices.insert(vertices.begin(), vertex);
-    //~ }
-    //~ SYSTEM_DEBUG("cyclical_region_vertices:\n");
-    //~ for (int i = 0; i < vertices.size(); ++i) {
-        //~ SYSTEM_DEBUG("  %s\n", vertices[i].toString().c_str());
-    //~ }
-    //~ return vertices;
-//~ }
-
-//~ SILENCE_PUBLIC const std::vector<std::vector<std::vector<Chord>>> &cyclical_region_sectors(bool transpositional_equivalence) {
-    //~ static bool initialized = false;
-    //~ // Layout: cyclical_region_sectors[dimensions][sector][chord].
-    //~ static std::vector<std::vector<std::vector<Chord>>> cyclical_region_sectors_;
-    //~ static std::vector<std::vector<std::vector<Chord>>> cyclical_region_sectors_transpositional_equivalence;
-    //~ if (initialized == false) {
-        //~ for (auto dimensions = 0; dimensions <= 12; ++dimensions) {
-            //~ cyclical_region_sectors_.push_back(std::vector<std::vector<Chord>>());
-            //~ cyclical_region_sectors_transpositional_equivalence.push_back(std::vector<std::vector<Chord>>());
-            //~ if (dimensions >= 3) {
-                //~ for (int dimension = 0, n_less_1 = dimensions - 1; dimension < dimensions; ++dimension, ++n_less_1) {
-                    //~ if (n_less_1 >= dimensions) {
-                        //~ n_less_1 = 0;
-                    //~ }
-                    //~ auto cyclical_region_sector = cyclical_region_vertices(dimensions, false);
-                    //~ auto cyclical_region_sector_transpositional_equivalence = cyclical_region_vertices(dimensions, true);
-                    //~ auto center_ = cyclical_region_sector.front().center();
-                    //~ auto center_transpositional_equivalence = center_.eT();
-                    //~ cyclical_region_sector[n_less_1] = center_;
-                    //~ cyclical_region_sector_transpositional_equivalence[n_less_1] = center_transpositional_equivalence;
-                    //~ cyclical_region_sectors_[dimensions].push_back(cyclical_region_sector);
-                    //~ cyclical_region_sectors_transpositional_equivalence[dimensions].push_back(cyclical_region_sector_transpositional_equivalence);
-                    //~ SYSTEM_DEBUG("cyclical_region_sectors: dimensions: %2d dimension: %2d\n", dimensions, dimension);
-                    //~ for (auto vertex : cyclical_region_sectors_transpositional_equivalence[dimensions][dimension]) {
-                        //~ SYSTEM_DEBUG("  vertex: %s\n", vertex.toString().c_str());
-                    //~ }
-                //~ }
-            //~ }
-        //~ }
-        //~ initialized = true;
-    //~ }
-    //~ if (transpositional_equivalence == true) {
-        //~ return cyclical_region_sectors_transpositional_equivalence;
-    //~ } else {
-        //~ return cyclical_region_sectors_;
-    //~ }
-//~ }
-
 /**
  * Returns the sum of the distances of the chord to each of one or more chords.
  */
@@ -4414,52 +4381,6 @@ SILENCE_PUBLIC double distance_to_points(const Chord &chord, const std::vector<C
     }
     return sum;
 }
-
-//~ /**
- //~ * Returns the scalar hyperplane equation, in the form of a unit normal vector 
- //~ * and constant term, for a fundamental domain of OPT equivalence for n 
- //~ * dimensions. The constant term is the dot product of the unit normal vector 
- //~ * and the center.
- //~ */
-//~ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_dimensionality(int dimensions, bool transpositional_equivalence, int sector_) {
-    //~ Chord chord(dimensions);
-    //~ Chord center = chord.center();
-    //~ Chord upper_point;
-    //~ Chord lower_point;
-    //~ if (transpositional_equivalence == true) {
-        //~ center = center.eOPT();
-    //~ }
-    //~ auto cyclical_region_sectors_ = cyclical_region_sectors(transpositional_equivalence)[chord.voices()];
-    //~ auto sector = cyclical_region_sectors_[sector_];
-    //~ auto old_level = System::setMessageLevel(15);
-    //~ lower_point = sector[(sector_ + dimensions) % dimensions];
-    //~ upper_point = sector[(sector_ + dimensions - 2) % dimensions];
-    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: upper_point: %s\n", upper_point.toString().c_str());
-    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: lower point: %s\n", lower_point.toString().c_str());
-    //~ auto normal_vector = upper_point.col(0) - lower_point.col(0);
-    //~ auto norm = normal_vector.norm();
-    //~ HyperplaneEquation hyperplane_equation_;
-    //~ hyperplane_equation_.unit_normal_vector = normal_vector / norm;
-    //~ auto temp = center.col(0).adjoint() * hyperplane_equation_.unit_normal_vector;    
-    //~ hyperplane_equation_.constant_term = temp(0, 0);
-    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: sector: %d\n", sector_);
-    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: center:\n");
-    //~ for(int i = 0; i < dimensions; i++) {
-        //~ SYSTEM_DEBUG("  %9.4f\n", center.getPitch(i));
-    //~ }
-    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: normal_vector:\n");
-    //~ for(int i = 0; i < dimensions; i++) {
-        //~ SYSTEM_DEBUG("  %9.4f\n", normal_vector(i, 0));
-    //~ }
-    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: norm: %9.4f\n", norm);
-    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: unit_normal_vector:\n");
-    //~ for(int i = 0; i < dimensions; i++) {
-        //~ SYSTEM_DEBUG("  %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
-    //~ }
-    //~ SYSTEM_DEBUG("hyperplane_equation_from_dimensionality: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
-    //~ System::setMessageLevel(old_level);
-    //~ return hyperplane_equation_;
-//~ }
 
 inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_random_inversion_flat(int dimensions, bool transpositional_equivalence, int sector_) {
     std::uniform_real_distribution<> uniform(-1., 1.);
@@ -4589,10 +4510,10 @@ inline SILENCE_PUBLIC double MIDDLE_C() {
 
 inline SILENCE_PUBLIC double modulo(double dividend, double divisor) {
     double quotient = 0.0;
-    if (divisor < 0.0) {
+    if (lt_epsilon(divisor, 0.0) == true) {
         quotient = std::ceil(dividend / divisor);
     }
-    if (divisor > 0.0) {
+    if (gt_epsilon(divisor, 0.0) == true) {
         quotient = std::floor(dividend / divisor);
     }
     double remainder = dividend - (quotient * divisor);

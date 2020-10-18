@@ -53,27 +53,6 @@ static bool test(bool passes, std::string message) {
     return passes;
 }
 
-static bool test_chord_type(int dimensions) {
-    bool passes = true;
-    auto ops = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RP>(dimensions, csound::OCTAVE(), 1.);
-    for (auto op : ops) {
-        auto opt = op.eOPTT();
-        auto chord_type_ = opt.chord_type();
-        auto tt_of_chord_type = chord_type_.eTT();
-        if (false) {
-            csound::System::message("test_chord_types:\n  OP:               %s %s\n  OPT:              %s\n  chord_type:       %s\n  TT of chord_type: %s\n", 
-                op.toString().c_str(), op.name().c_str(),
-                opt.toString().c_str(),
-                chord_type_.toString().c_str(),
-                tt_of_chord_type.toString().c_str());
-        }
-        if (opt.equals(tt_of_chord_type) == false) {
-            csound::System::message(">> Oops! OPT of %s != TT of chord type %s\n", opt.toString().c_str(), tt_of_chord_type.toString().c_str());
-            passes = false;
-        }
-    }
-    return passes;
-}
 
 static void printSet(std::string name, const std::set<csound::Chord> &chords) {
     int i = 1;
@@ -114,12 +93,6 @@ static void Hyperplane_Equation_for_Test_Points() {
     csound::HyperplaneEquation actual = hyperplane_equation_from_singular_value_decomposition(points, false);
     bool passes = equals(expected, actual);
     test(passes, __func__);    
-}
-
-static void test_chord_types() {
-    for (int dimensions = 3; dimensions < 5; ++dimensions) {
-        test(test_chord_type(dimensions), "chord_type: OPTs of chords should equal OPTs of chord.chord_types.");
-    }
 }
 
 static void test_chord_space_group(const csound::ChordSpaceGroup &chordSpaceGroup, std::string chordName) {
@@ -522,9 +495,7 @@ int main(int argc, char **argv) {
     std::cout << c1.information() << std::endl;
     csound::Chord c2({-5, -2, 7});
     std::cout << c2.information() << std::endl;
-    
-    test_chord_types();
-    
+     
     auto prior_level = csound::System::setMessageLevel(15);
     
     original = csound::Chord({0, 3, 7}).eOPT();
@@ -670,7 +641,7 @@ int main(int argc, char **argv) {
     science_chord_types_4.push_back(csound::Chord({0., 3., 6., 9.}));
     for (int i = 0, n = science_chord_types_4.size(); i < n; ++i) {
         auto c = science_chord_types_4[i];
-        std:fprintf(stderr, "optti[%2d]: chord: %s optti: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTTI().toString().c_str(), c.chord_type().toString().c_str());
+        std:fprintf(stderr, "optti[%2d]: chord: %s optti: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTTI().toString().c_str(), c.normal_form().toString().c_str());
     }
     std::cerr << science_chord_types_4.front().information() << std::endl;
     
@@ -707,18 +678,27 @@ int main(int argc, char **argv) {
     science_chord_types_3.push_back(csound::Chord({0., 4., 8.}));
     for (int i = 0, n = science_chord_types_3.size(); i < n; ++i) {
         auto c = science_chord_types_3[i];
-        //std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str(), c.chord_type().toString().c_str());
-        std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str());
+        std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str(), c.normal_form().toString().c_str());
+        //~ std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str());
     }
     std::cerr << science_chord_types_3.front().information() << std::endl;
     
-    int i = 0;
+    int i;
+    i = 0;
     auto myoptts = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTg>(3, 12., 1.);
     for (auto c : myoptts) {
-        //std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str(), c.chord_type().toString().c_str());
-        std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str());
+        std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str(), c.normal_form().toString().c_str());
+        //~ std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str());
         i++;
     }
+    i = 0;
+    auto myopttis = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(3, 12., 1.);
+    for (auto c : myopttis) {
+        std::fprintf(stderr, "optti[%2d]: chord: %s optti: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTTI().toString().c_str(), c.normal_form().toString().c_str());
+        //std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str());
+        i++;
+    }
+    std::cerr << csound::Chord({-3.,-1.,4.}).information() << std::endl;
 
     summary();
     return 0;
