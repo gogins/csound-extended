@@ -53,6 +53,27 @@ static bool test(bool passes, std::string message) {
     return passes;
 }
 
+static bool test_chord_type(int dimensions) {
+    bool passes = true;
+    auto ops = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RP>(dimensions, csound::OCTAVE(), 1.);
+    for (auto op : ops) {
+        auto opt = op.eOPTT();
+        auto chord_type_ = opt.normal_form();
+        auto tt_of_chord_type = chord_type_.eTT();
+        if (false) {
+            csound::System::message("test_chord_types:\n  OP:               %s %s\n  OPT:              %s\n  normal_form:       %s\n  TT of normal_form: %s\n", 
+                op.toString().c_str(), op.name().c_str(),
+                opt.toString().c_str(),
+                chord_type_.toString().c_str(),
+                tt_of_chord_type.toString().c_str());
+        }
+        if (opt.equals(tt_of_chord_type) == false) {
+            csound::System::message(">> Oops! OPT of %s != TT of chord type %s\n", opt.toString().c_str(), tt_of_chord_type.toString().c_str());
+            passes = false;
+        }
+    }
+    return passes;
+}
 
 static void printSet(std::string name, const std::set<csound::Chord> &chords) {
     int i = 1;
@@ -93,6 +114,12 @@ static void Hyperplane_Equation_for_Test_Points() {
     csound::HyperplaneEquation actual = hyperplane_equation_from_singular_value_decomposition(points, false);
     bool passes = equals(expected, actual);
     test(passes, __func__);    
+}
+
+static void test_chord_types() {
+    for (int dimensions = 3; dimensions < 5; ++dimensions) {
+        test(test_chord_type(dimensions), "normal_form: OPTs of chords should equal OPTs of chord.chord_types.");
+    }
 }
 
 static void test_chord_space_group(const csound::ChordSpaceGroup &chordSpaceGroup, std::string chordName) {
@@ -495,7 +522,9 @@ int main(int argc, char **argv) {
     std::cout << c1.information() << std::endl;
     csound::Chord c2({-5, -2, 7});
     std::cout << c2.information() << std::endl;
-     
+    
+    test_chord_types();
+    
     auto prior_level = csound::System::setMessageLevel(15);
     
     original = csound::Chord({0, 3, 7}).eOPT();

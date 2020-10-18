@@ -382,10 +382,6 @@ public:
      */
     virtual Chord ceiling() const;
     /**
-     * Returns the pitch-classes of this chord in my own unique form.
-     */
-    virtual Chord chord_type() const;
-    /**
      * Returns whether or not the chord contains the pitch.
      */
     virtual bool contains(double pitch_) const;
@@ -1076,62 +1072,68 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
         return hyperplane_equation(opt_domains.front());
     }
     /**
-     * Returns this chord in standard "normal order." The pitch-classes of the 
-     * chord are sorted. The chord is cyclically permuted until its first 
-     * and last voices are as close in pitch as possible. If more than one 
-     * permutation has the minimum distance, then minimize the interval 
-     * between the first and next-to-last voice, and so on recursively.
+     * Returns this chord in standard "normal order." For a very clear 
+     * explanation, see: 
+     * https://www.mta.ca/pc-set/pc-set_new/pages/page04/page04.html.
      */
     virtual Chord normal_order() const {
-        auto pcs = epcs().eP();
-        auto permutations_ = pcs.permutations();
-        std::multimap<double, Chord> chords_for_intervals;
-        for (int first_voice = 0, last_voice = voices() - 1; last_voice > 0; --last_voice) {
-            double least_interval = std::numeric_limits<double>::max();
-            for (auto &permutation : permutations_) {
-                double first_pitch = permutation.getPitch(first_voice);
-                double last_pitch = permutation.getPitch(last_voice);
-                double interval = last_pitch - first_pitch;
-                if (le_epsilon(interval, least_interval) == true) {
+        auto pcs = epcs();
+        // This chord as a pitch-class set in ascending order.
+        auto pcs_p = pcs.eP();
+        // All cyclic permutations.
+        auto permutations_ = pcs_p.permutations();
+        // We need to keep track of intervals.
+        double least_interval = std::numeric_limits<double>::max();
+        std::multimap<double, Chord> permutations_for_intervals;
+        for (auto upper_voice = voices() - 1; upper_voice > 0; --upper_voice) {
+            for (auto permutation : permutations_) {
+                auto lower_pc = permutation.getPitch(0);
+                auto upper_pc = permutation.getPitch(upper_voice);
+                auto interval = upper_pc - lower_pc;
+                // Tricky! This is arithmetic modulo the octave.
+                if (lt_epsilon(interval, 0.) == true) {
+                    interval = interval + OCTAVE();
+                }
+                if (lt_epsilon(interval, least_interval) == true) {
                     least_interval = interval;
                 }
-                chords_for_intervals.insert({interval, permutation});
+                permutations_for_intervals.insert({interval, permutation});
             }
-            if (chords_for_intervals.count(least_interval) == 1) {
-                return chords_for_intervals.begin()->second;
+            if (permutations_for_intervals.count(least_interval) == 1) {
+                return permutations_for_intervals.begin()->second;
+            } else {
+                permutations_.clear();
+                auto range = permutations_for_intervals.equal_range(least_interval);
+                for (auto it = range.first; it != range.second; ++it) {
+                    permutations_.push_back(it->second);
+                }
+                permutations_for_intervals.clear();
             }
-            permutations_.clear();
-            auto range = chords_for_intervals.equal_range(least_interval);
-            for (auto it = range.first; it != range.second; ++it) {
-                permutations_.push_back(it->second);
-            }
-            chords_for_intervals.clear();
         }
+        std::sort(permutations_.begin(), permutations_.end());
         return permutations_.front();
     }
     /**
-     * Returns this chord in standard "normal form." The normal order is  
-     * transposed so that the first voice has pitch-class 0.
+     * Returns this chord as its standard "normal form."
      */
     virtual Chord normal_form() const {
         auto normal_order_ = normal_order();
-        auto normal_form_ = normal_order_.et();
+        auto normal_form_ = normal_order_.T(-normal_order_.getPitch(0)).normal_order();
         return normal_form_;
     }
     /**
-     * Returns this chord as its standard "set class." The normal form is 
-     * inverted in the origin. The lesser of the normal form of the chord, and 
-     * the normal form of the chord's inversion, is returned as 
-     * the set class.
+     * Returns this chord as its standard "prime form." 
      */
-    virtual Chord set_class() const {
-        auto normal_form_ = normal_form();
-        auto normal_form_i = normal_form_.I();
-        auto normal_form_i_normal_form = normal_form_i.normal_form();
-        if (normal_form_ <= normal_form_i_normal_form) {
-            return normal_form_;
+    virtual Chord prime_form() const {
+        auto normal_order_ = normal_order();
+        auto normal_order_i = normal_order_.I();
+        auto normal_order_i_normal_order = normal_order_i.normal_order();
+        auto normal_order_t0 = normal_order_.T(-normal_order_.getPitch(0));
+        auto normal_order_i_normal_order_t0 = normal_order_i_normal_order.T(-normal_order_t0.getPitch(0));
+        if (normal_order_t0 <= normal_order_i_normal_order_t0) {
+            return normal_order_t0.normal_order();
         } else {
-            return normal_form_i_normal_form;
+            return normal_order_i_normal_order_t0.normal_order();
         }
     }
 };
@@ -2589,7 +2591,7 @@ inline std::string Chord::information() const {
     result.append(buffer);
     std::sprintf(buffer, "normal form:      %s\n", normal_form().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "set class:        %s\n", set_class().toString().c_str());
+    std::sprintf(buffer, "prime form:       %s\n", prime_form().toString().c_str());
     result.append(buffer);
     std::sprintf(buffer, "O:           %d => %s\n", iseO(), eO().toString().c_str());
     result.append(buffer);
@@ -2675,7 +2677,6 @@ inline std::string Chord::information() const {
         std::sprintf(buffer, "                  %s %s %s\n", v.toString().c_str(), isev, isei);
         result.append(buffer);
     }
-    result.append("\n");
     std::sprintf(buffer, "sum:              %12.7f\n", layer());
     result.append(buffer);
     return result;
@@ -3175,10 +3176,6 @@ inline bool Chord::contains(double pitch_) const {
     return false;
 }
 
-inline Chord Chord::chord_type() const {
-    return eOPTT().et().epcs().eP();
-}
-
 inline std::vector<double> Chord::min() const {
     std::vector<double> result;
     result.resize(2);
@@ -3479,7 +3476,7 @@ inline Chord Chord::move(int voice, double interval) const {
 
 inline Chord Chord::nrL() const {
     // TODO: Wrong, fix.
-    Chord cvt = chord_type();
+    Chord cvt = normal_form();
     Chord cv = cvt;
     if (cvt.getPitch(1) == 4.0) {
         cv.setPitch(0, cv.getPitch(0) - 1.0);
@@ -3493,7 +3490,7 @@ inline Chord Chord::nrL() const {
 
 inline Chord Chord::nrP() const {
     // TODO: Wrong, fix.
-    Chord cvt = chord_type();
+    Chord cvt = normal_form();
     Chord cv = cvt;
     if (cvt.getPitch(1) == 4.0) {
         cv.setPitch(1, cv.getPitch(1) - 1.0);
@@ -3507,7 +3504,7 @@ inline Chord Chord::nrP() const {
 
 inline Chord Chord::nrR() const {
     // TODO: Wrong, fix.
-    Chord cvt = chord_type();
+    Chord cvt = normal_form();
     Chord cv = cvt;
     if (cvt.getPitch(1) == 4.0) {
         cv.setPitch(2, cv.getPitch(2) + 2.0);
