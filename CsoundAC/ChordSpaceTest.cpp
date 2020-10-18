@@ -704,11 +704,11 @@ int main(int argc, char **argv) {
     science_chord_types_3.push_back(csound::Chord({0., 3., 5.}));
     science_chord_types_3.push_back(csound::Chord({0., 3., 6.}));
     science_chord_types_3.push_back(csound::Chord({0., 3., 7.}));
+    science_chord_types_3.push_back(csound::Chord({0., 4., 7.}));
     science_chord_types_3.push_back(csound::Chord({0., 4., 8.}));
     for (int i = 0, n = science_chord_types_3.size(); i < n; ++i) {
         auto c = science_chord_types_3[i];
-        std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str(), c.normal_form().toString().c_str());
-        //~ std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str());
+        std::fprintf(stderr, "type: %s chord[%04d]: %s optt: %s\n", c.normal_form().toString().c_str(), i + 1, c.toString().c_str(), c.eOPTT().toString().c_str());
     }
     std::cerr << science_chord_types_3.front().information() << std::endl;
     
@@ -716,18 +716,17 @@ int main(int argc, char **argv) {
     i = 0;
     auto myoptts = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTg>(3, 12., 1.);
     for (auto c : myoptts) {
-        std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str(), c.normal_form().toString().c_str());
-        //~ std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str());
+        std::fprintf(stderr, "type: %s chord[%04d]: %s optt: %s\n", c.normal_form().toString().c_str(), i + 1, c.toString().c_str(), c.eOPTT().toString().c_str());
         i++;
     }
-    i = 0;
-    auto myopttis = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(3, 12., 1.);
-    for (auto c : myopttis) {
-        std::fprintf(stderr, "optti[%2d]: chord: %s optti: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTTI().toString().c_str(), c.normal_form().toString().c_str());
-        //std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str());
-        i++;
-    }
-    std::cerr << csound::Chord({-3.,-1.,4.}).information() << std::endl;
+    //~ i = 0;
+    //~ auto myopttis = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(3, 12., 1.);
+    //~ for (auto c : myopttis) {
+        //~ std::fprintf(stderr, "optti[%2d]: chord: %s optti: %s type: %s\n", i + 1, c.toString().c_str(), c.eOPTTI().toString().c_str(), c.normal_form().toString().c_str());
+        //~ //std::fprintf(stderr, "optt[%2d]: chord: %s optt: %s\n", i + 1, c.toString().c_str(), c.eOPTT().toString().c_str());
+        //~ i++;
+    //~ }
+    //~ std::cerr << csound::Chord({-3.,-1.,4.}).information() << std::endl;
 
     summary();
     return 0;
