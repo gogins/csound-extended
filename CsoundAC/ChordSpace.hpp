@@ -306,7 +306,7 @@ SILENCE_PUBLIC void add_chord(std::string, const Chord &chord);
 
 SILENCE_PUBLIC void add_scale(std::string, const Scale &scale);
 
-SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voiceN, std::string equivalence, double g = 1.0);
+//~ SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voiceN, std::string equivalence, double g = 1.0);
 
 /**
  * TODO: Change this to use strictly the representative fundamental domains.
@@ -631,6 +631,11 @@ public:
      * cyclical region of OPT fundamental domains.
      */
     virtual bool is_opt_sector_zero() const;
+    /**
+     * Returns whether or not this chord lies within the 0th sector of the 
+     * cyclical region of OPT fundamental domains.
+     */
+    virtual bool is_opti_sector_zero() const;
     /**
      * Returns the chord inverted by the sum of its first two voices.
      * NOTE: Does NOT return an equivalent under any requivalence relation.
@@ -1021,7 +1026,8 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
         std::multimap<double, int> sectors_for_distances;
         double minimum_distance = std::numeric_limits<double>::max();
         for (int sector = 0, n = opti_sectors.size(); sector < n; ++sector) {
-            auto distance = distance_to_points(eOP().eT(), opti_sectors[sector]);
+            //~ auto distance = distance_to_points(eOP().eT(), opti_sectors[sector]);
+            auto distance = distance_to_points(eT(), opti_sectors[sector]);
             SYSTEM_DEBUG("opti_domain_sector: chord: %s distance: %9.4f sector: %2d\n", toString().c_str(), distance, sector);
             if (lt_epsilon(distance, minimum_distance) == true) {
                 minimum_distance = distance;
@@ -1075,6 +1081,7 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
      * Returns this chord in standard "normal order." For a very clear 
      * explanation, see: 
      * https://www.mta.ca/pc-set/pc-set_new/pages/page04/page04.html.
+     * NOTE: the code here does NOT remove duplicate pitch-classes.
      */
     virtual Chord normal_order() const {
         auto pcs = epcs();
@@ -1367,9 +1374,20 @@ SILENCE_PUBLIC double factorial(double n);
 
 void fill(std::string rootName, double rootPitch, std::string typeName, std::string typePitches, bool is_scale = false);
  
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> fundamentalDomainByIsNormal(int voiceN, double range, double g);
+/**
+ * Returns a set of chords in sector 0 of the cyclical region, sorted by 
+ * normal order, for the indicated equivalence relation. If there are 
+ * duplicate chords for the same equivalence, only the one closest to the 
+ * origin is returned.
+ */
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamentalDomainByIsNormal(int voiceN, double range, double g);
 
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> fundamentalDomainByNormalize(int voiceN, double range, double g);
+/**
+ * Returns a set of chords in sector 0 of the cyclical region, sorted by 
+ * normal order, for the indicated equivalence relation. All duplicate chords 
+ * for the same equivalence are returned, ordered by distance from the origin.
+ */
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamentalDomainByNormalize(int voiceN, double range, double g);
 
 /**
  * Returns a chord containing all the pitches of the score
@@ -1815,6 +1833,16 @@ bool Chord::is_opt_sector_zero() const {
     return false;
 }
 
+bool Chord::is_opti_sector_zero() const {
+    auto sectors = opti_domain_sector();
+    for (auto sector : sectors) {
+        if (sector == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 
 inline bool Chord::iseR(double range_) const {
     return isNormal<EQUIVALENCE_RELATION_R>(*this, range_, 1.0);
@@ -2208,15 +2236,15 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RPTgI>(const
     if (isNormal<EQUIVALENCE_RELATION_P>(chord, range, g) == false) {
         return false;
     }
-    if (chord.is_opt_sector_zero() == false) {
+    if (chord.is_opti_sector_zero() == false) {
         return false;
     }
     if (isNormal<EQUIVALENCE_RELATION_Tg>(chord, range, g) == false) {
         return false;
     }
-    if (isNormal<EQUIVALENCE_RELATION_I>(chord, range, g) == false) {
-        return false;
-    }
+    //~ if (isNormal<EQUIVALENCE_RELATION_I>(chord, range, g) == false) {
+        //~ return false;
+    //~ }
     return true;
 }
 
@@ -2772,76 +2800,76 @@ inline SILENCE_PUBLIC bool operator >= (const Chord &a, const Chord &b) {
     return (a > b);
 }
 
-inline SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voiceN, std::string equivalence, double g) {
-    std::set<Chord> equivalentChords;
-    int chordCount = 0;
-    int equivalentChordCount = 0;
-    Chord origin = iterator(voiceN, -13.0);
-    Chord iterator_ = origin;
-    if (equivalence == "OP") {
-        while (next(iterator_, origin, 13.0, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseOP() == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    if (equivalence == "OPT") {
-        while (next(iterator_, origin, 13.0, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseOPT() == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    if (equivalence == "OPTT") {
-        while (next(iterator_, origin, 13.0, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseOPTT() == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    if (equivalence == "OPI") {
-        while (next(iterator_, origin, 13.0, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseOPI() == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    if (equivalence == "OPTI") {
-        while (next(iterator_, origin, 13.0, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseOPTI() == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    if (equivalence == "OPTTI") {
-        while (next(iterator_, origin, 13.0, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseOPTTI() == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    std::vector<Chord> result;
-    std::copy(equivalentChords.begin(), equivalentChords.end(), std::back_inserter(result));
-    return result;
-}
+//~ inline SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voiceN, std::string equivalence, double g) {
+    //~ std::set<Chord> equivalentChords;
+    //~ int chordCount = 0;
+    //~ int equivalentChordCount = 0;
+    //~ Chord origin = iterator(voiceN, -13.0);
+    //~ Chord iterator_ = origin;
+    //~ if (equivalence == "OP") {
+        //~ while (next(iterator_, origin, 13.0, g) == true) {
+            //~ chordCount++;
+            //~ Chord chord = iterator_.eP();
+            //~ if (chord.iseOP() == true) {
+                //~ equivalentChordCount++;
+                //~ equivalentChords.insert(chord);
+            //~ }
+        //~ }
+    //~ }
+    //~ if (equivalence == "OPT") {
+        //~ while (next(iterator_, origin, 13.0, g) == true) {
+            //~ chordCount++;
+            //~ Chord chord = iterator_.eP();
+            //~ if (chord.iseOPT() == true) {
+                //~ equivalentChordCount++;
+                //~ equivalentChords.insert(chord);
+            //~ }
+        //~ }
+    //~ }
+    //~ if (equivalence == "OPTT") {
+        //~ while (next(iterator_, origin, 13.0, g) == true) {
+            //~ chordCount++;
+            //~ Chord chord = iterator_.eP();
+            //~ if (chord.iseOPTT() == true) {
+                //~ equivalentChordCount++;
+                //~ equivalentChords.insert(chord);
+            //~ }
+        //~ }
+    //~ }
+    //~ if (equivalence == "OPI") {
+        //~ while (next(iterator_, origin, 13.0, g) == true) {
+            //~ chordCount++;
+            //~ Chord chord = iterator_.eP();
+            //~ if (chord.iseOPI() == true) {
+                //~ equivalentChordCount++;
+                //~ equivalentChords.insert(chord);
+            //~ }
+        //~ }
+    //~ }
+    //~ if (equivalence == "OPTI") {
+        //~ while (next(iterator_, origin, 13.0, g) == true) {
+            //~ chordCount++;
+            //~ Chord chord = iterator_.eP();
+            //~ if (chord.iseOPTI() == true) {
+                //~ equivalentChordCount++;
+                //~ equivalentChords.insert(chord);
+            //~ }
+        //~ }
+    //~ }
+    //~ if (equivalence == "OPTTI") {
+        //~ while (next(iterator_, origin, 13.0, g) == true) {
+            //~ chordCount++;
+            //~ Chord chord = iterator_.eP();
+            //~ if (chord.iseOPTTI() == true) {
+                //~ equivalentChordCount++;
+                //~ equivalentChords.insert(chord);
+            //~ }
+        //~ }
+    //~ }
+    //~ std::vector<Chord> result;
+    //~ std::copy(equivalentChords.begin(), equivalentChords.end(), std::back_inserter(result));
+    //~ return result;
+//~ }
 
 inline SILENCE_PUBLIC void apply(Score &score, const Chord &chord, double startTime, double endTime, bool octaveEquivalence) {
     std::vector<Event *> slice_ = slice(score, startTime, endTime);
@@ -2935,9 +2963,9 @@ inline bool Chord::test(const char *label) const {
         if (iseO() == false ||
             iseP() == false) {
             passed = false;
-            std::fprintf(stderr, "ERROR Chord::iseOP is not consistent.\n");
+            std::fprintf(stderr, "Failed: Chord::iseOP is not consistent.\n");
         } else {
-            std::fprintf(stderr, "      Chord::iseOP is consistent.\n");
+            std::fprintf(stderr, "        Chord::iseOP is consistent.\n");
         }
     }
     if (iseOPT() == true) {
@@ -2946,9 +2974,9 @@ inline bool Chord::test(const char *label) const {
             is_opt_sector_zero() == false || 
             iseT() == false) {
             passed = false;
-            std::fprintf(stderr, "ERROR Chord::iseOPT is not consistent.\n");
+            std::fprintf(stderr, "Failed: Chord::iseOPT is not consistent.\n");
         } else {
-            std::fprintf(stderr, "      Chord::iseOPT is consistent.\n");
+            std::fprintf(stderr, "        Chord::iseOPT is consistent.\n");
         }
     }
     // If it is transformed to T, is it OPT? 
@@ -2959,9 +2987,9 @@ inline bool Chord::test(const char *label) const {
             is_opt_sector_zero() == false || 
             iseTT() == false) {
             passed = false;
-            std::fprintf(stderr, "ERROR Chord::iseOPTT is not consistent.\n");
+            std::fprintf(stderr, "Failed: Chord::iseOPTT is not consistent.\n");
         } else {
-            std::fprintf(stderr, "      Chord::iseOPTT is consistent.\n");
+            std::fprintf(stderr, "        Chord::iseOPTT is consistent.\n");
         }
     }
     if (iseOPTI() == true) {
@@ -2971,9 +2999,9 @@ inline bool Chord::test(const char *label) const {
             iseT() == false || 
             iseI() == false) {
             passed = false;
-            std::fprintf(stderr, "ERROR Chord::iseOPTI is not consistent.\n");
+            std::fprintf(stderr, "Failed: Chord::iseOPTI is not consistent.\n");
         } else {
-            std::fprintf(stderr, "      Chord::iseOPTI is consistent.\n");
+            std::fprintf(stderr, "        Chord::iseOPTI is consistent.\n");
         }
     }
     if (iseOPTTI() == true) {
@@ -2983,77 +3011,77 @@ inline bool Chord::test(const char *label) const {
             iseTT() == false || 
             iseI() == false) {
             passed = false;
-            std::fprintf(stderr, "ERROR Chord::iseOPTTI is not consistent.\n");
+            std::fprintf(stderr, "Failed: Chord::iseOPTTI is not consistent.\n");
         } else {
-            std::fprintf(stderr, "      Chord::iseOPTTI is consistent.\n");
+            std::fprintf(stderr, "        Chord::iseOPTTI is consistent.\n");
         }
     }
     // Test the consistency of the transformations.
     if (eO().iseO() == false) {
         passed = false;
-        std::fprintf(stderr, "ERROR Chord::eO is not consistent with Chord::iseO.\n");
+        std::fprintf(stderr, "Failed: Chord::eO is not consistent with Chord::iseO.\n");
     } else {
-        std::fprintf(stderr, "      Chord::eO is consistent with Chord::iseO.\n");
+        std::fprintf(stderr, "        Chord::eO is consistent with Chord::iseO.\n");
     }
     if (eP().iseP() == false) {
         passed = false;
-        std::fprintf(stderr, "ERROR Chord::eP is not consistent with Chord::iseP.\n");
+        std::fprintf(stderr, "Failed: Chord::eP is not consistent with Chord::iseP.\n");
     } else {
-        std::fprintf(stderr, "      Chord::eP is consistent with Chord::iseP.\n");
+        std::fprintf(stderr, "        Chord::eP is consistent with Chord::iseP.\n");
     }
     if (eT().iseT() == false) {
         passed = false;
-        std::fprintf(stderr, "ERROR Chord::eT is not consistent with Chord::iseT.\n");
+        std::fprintf(stderr, "Failed: Chord::eT is not consistent with Chord::iseT.\n");
     } else {
-        std::fprintf(stderr, "      Chord::eT is consistent with Chord::iseT.\n");
+        std::fprintf(stderr, "        Chord::eT is consistent with Chord::iseT.\n");
     }
     if (eTT().iseTT() == false) {
         passed = false;
-        std::fprintf(stderr, "ERROR Chord::eTT is not consistent with Chord::iseTT.\n");
+        std::fprintf(stderr, "Failed: Chord::eTT is not consistent with Chord::iseTT.\n");
     } else {
-        std::fprintf(stderr, "      Chord::eTT is consistent with Chord::iseTT.\n");
+        std::fprintf(stderr, "        Chord::eTT is consistent with Chord::iseTT.\n");
     }
     if (eI().iseI() == false) {
         passed = false;
-        std::fprintf(stderr, "ERROR Chord::eI is not consistent with Chord::iseI.\n");
+        std::fprintf(stderr, "Failed: Chord::eI is not consistent with Chord::iseI.\n");
     } else {
-        std::fprintf(stderr, "      Chord::eI is consistent with Chord::iseI.\n");
+        std::fprintf(stderr, "        Chord::eI is consistent with Chord::iseI.\n");
     }
     if (eOP().iseOP() == false) {
         passed = false;
-        std::fprintf(stderr, "ERROR Chord::eOP is not consistent with Chord::iseOP.\n");
+        std::fprintf(stderr, "Failed: Chord::eOP is not consistent with Chord::iseOP.\n");
     } else {
-        std::fprintf(stderr, "      Chord::eOP is consistent with Chord::iseOP.\n");
+        std::fprintf(stderr, "        Chord::eOP is consistent with Chord::iseOP.\n");
     }
     if (eOPT().iseOPT() == false) {
         passed = false;
         auto opt_chord = eOPT();
-        std::fprintf(stderr, "ERROR Chord::eOPT is not consistent with Chord::iseOPT (%s => %s).\n", toString().c_str(), opt_chord.toString().c_str());
+        std::fprintf(stderr, "Failed: Chord::eOPT is not consistent with Chord::iseOPT (%s => %s).\n", toString().c_str(), opt_chord.toString().c_str());
     } else {
-        std::fprintf(stderr, "      Chord::eOPT is consistent with Chord::iseOPT.\n");
+        std::fprintf(stderr, "        Chord::eOPT is consistent with Chord::iseOPT.\n");
     }
     if (eOPTT().iseOPTT() == false) {
         passed = false;
         auto optt_chord = eOPTT();
-        std::fprintf(stderr, "ERROR Chord::eOPTT is not consistent with Chord::iseOPT (%s => %s).\n", toString().c_str(), optt_chord.toString().c_str());
+        std::fprintf(stderr, "Failed: Chord::eOPTT is not consistent with Chord::iseOPT (%s => %s).\n", toString().c_str(), optt_chord.toString().c_str());
     } else {
-        std::fprintf(stderr, "      Chord::eOPTT is consistent with Chord::iseOPTT.\n");
+        std::fprintf(stderr, "        Chord::eOPTT is consistent with Chord::iseOPTT.\n");
     }
     auto opti_chord = eOPTI();
     if (opti_chord.iseOPTI() == false) {
-        std::fprintf(stderr, "ERROR Chord::eOPTI is not consistent with Chord::iseOPTI (%s => %s).\n", toString().c_str(), opti_chord.toString().c_str());
+        std::fprintf(stderr, "Failed: Chord::eOPTI is not consistent with Chord::iseOPTI (%s => %s).\n", toString().c_str(), opti_chord.toString().c_str());
         passed = false;
     } else {
-        std::fprintf(stderr, "      Chord::eOPTI is consistent with Chord::iseOPTI.\n");
+        std::fprintf(stderr, "        Chord::eOPTI is consistent with Chord::iseOPTI.\n");
     }
     auto optti_chord = eOPTTI();
     if (optti_chord.iseOPTTI() == false) {
-        std::fprintf(stderr, "ERROR Chord::eOPTTI is not consistent with Chord::iseOPTTI  (%s => %s).\n", toString().c_str(), optti_chord.toString().c_str());
+        std::fprintf(stderr, "Failed: Chord::eOPTTI is not consistent with Chord::iseOPTTI  (%s => %s).\n", toString().c_str(), optti_chord.toString().c_str());
     } else {
-        std::fprintf(stderr, "      Chord::eOPTTI is consistent with Chord::iseOPTTI.\n");
+        std::fprintf(stderr, "        Chord::eOPTTI is consistent with Chord::iseOPTTI.\n");
     }
     std::fprintf(stderr, "\n");
-    std::fprintf(stderr, information().c_str());
+    std::fprintf(stderr, "%s", information().c_str());
     return passed;
 }
 
@@ -3908,9 +3936,9 @@ inline SILENCE_PUBLIC void ChordSpaceGroup::preinitialize(int N_, double range_,
 inline SILENCE_PUBLIC void ChordSpaceGroup::initialize(int N_, double range_, double g_) {
     System::inform("ChordSpaceGroup.initialize...\n");
     preinitialize(N_, range_, g_);
-    std::set<Chord> representative_opttis = fundamentalDomainByNormalize<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g);
+    auto representative_opttis = fundamentalDomainByNormalize<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g);
     System::inform("ChordSpaceGroup.initialize: representative_opttis: %6d\n", representative_opttis.size());
-    std::set<Chord> equivalent_opttis = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g);
+    auto equivalent_opttis = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g);
     System::inform("ChordSpaceGroup.initialize: equivalent_opttis:     %6d\n", equivalent_opttis.size());
     for (auto it = representative_opttis.begin(); it != representative_opttis.end(); ++it) {
         opttisForIndexes.push_back(*it);
@@ -4210,42 +4238,123 @@ inline SILENCE_PUBLIC double factorial(double n) {
     return result;
 }
 
-template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundamentalDomainByIsNormal(int voiceN, double range, double g)
-{
-    std::set<Chord> fundamentalDomain;
-    int upperI = 2 * (range + 1);
-    int lowerI = - (range + 1);
-    Chord iterator_ = iterator(voiceN, lowerI);
-    Chord origin = iterator_;
-    int chords = 0;
-    while (next(iterator_, origin, upperI, g) == true) {
-        chords++;
-        bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
-        if (iterator_is_normal == true) {
-            auto result = fundamentalDomain.insert(iterator_);
-            if (CHORD_SPACE_DEBUGGING && result.second == true) {
-                Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
-                bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
-                SYSTEM_DEBUG("%s By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
-                    (normalized_is_normal ? "      " : "WRONG "),
-                    namesForEquivalenceRelations[EQUIVALENCE_RELATION],
-                    chords,
-                    fundamentalDomain.size(),
-                    range,
-                    g,
-                    iterator_.toString().c_str(),
-                    iterator_is_normal,
-                    normalized.toString().c_str(),
-                    normalized_is_normal);
+struct SILENCE_PUBLIC compare_by_normal_order {
+    bool operator ()(const Chord &a, const Chord &b) const {
+        if (a.normal_order() < b.normal_order()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+};
+
+struct SILENCE_PUBLIC compare_by_normal_order_and_distance_from_origin {
+    bool operator ()(const Chord &a, const Chord &b) const {
+        if (a.normal_order() < b.normal_order()) {
+            return true;
+        } else {
+            if (lt_epsilon(a.distanceToOrigin(), b.distanceToOrigin()) == true) {
+                return true;
+            } else {
+                return false;
             }
         }
     }
-    return fundamentalDomain;
+};
+
+struct SILENCE_PUBLIC compare_by_normal_form {
+    bool operator ()(const Chord &a, const Chord &b) const {
+        if (a.normal_form() < b.normal_form()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+};
+
+struct SILENCE_PUBLIC compare_by_normal_form_and_distance_from_origin {
+    bool operator ()(const Chord &a, const Chord &b) const {
+        if (a.normal_form() < b.normal_form()) {
+            return true;
+        } else {
+            if (lt_epsilon(a.distanceToOrigin(), b.distanceToOrigin()) == true) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+};
+
+template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Chord> fundamentalDomainByIsNormal(int voiceN, double range, double g)
+{
+    if (EQUIVALENCE_RELATION == EQUIVALENCE_RELATION_RPTg ||
+        EQUIVALENCE_RELATION == EQUIVALENCE_RELATION_RPTgI) {
+        std::set<Chord, compare_by_normal_form> fundamentalDomain;
+        int upperI = 2 * (range + 1);
+        int lowerI = - (range + 1);
+        Chord iterator_ = iterator(voiceN, lowerI);
+        Chord origin = iterator_;
+        int chords = 0;
+        while (next(iterator_, origin, upperI, g) == true) {
+            chords++;
+            bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
+            if (iterator_is_normal == true) {
+                auto result = fundamentalDomain.insert(iterator_);
+                if (CHORD_SPACE_DEBUGGING && result.second == true) {
+                    Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
+                    bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
+                    SYSTEM_DEBUG("%s By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
+                        (normalized_is_normal ? "      " : "WRONG "),
+                        namesForEquivalenceRelations[EQUIVALENCE_RELATION],
+                        chords,
+                        fundamentalDomain.size(),
+                        range,
+                        g,
+                        iterator_.toString().c_str(),
+                        iterator_is_normal,
+                        normalized.toString().c_str(),
+                        normalized_is_normal);
+                }
+            }
+        }
+        return std::vector<Chord>(fundamentalDomain.begin(), fundamentalDomain.end());
+    } else {
+        std::set<Chord, compare_by_normal_order> fundamentalDomain;
+        int upperI = 2 * (range + 1);
+        int lowerI = - (range + 1);
+        Chord iterator_ = iterator(voiceN, lowerI);
+        Chord origin = iterator_;
+        int chords = 0;
+        while (next(iterator_, origin, upperI, g) == true) {
+            chords++;
+            bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
+            if (iterator_is_normal == true) {
+                auto result = fundamentalDomain.insert(iterator_);
+                if (CHORD_SPACE_DEBUGGING && result.second == true) {
+                    Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
+                    bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
+                    SYSTEM_DEBUG("%s By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
+                        (normalized_is_normal ? "      " : "WRONG "),
+                        namesForEquivalenceRelations[EQUIVALENCE_RELATION],
+                        chords,
+                        fundamentalDomain.size(),
+                        range,
+                        g,
+                        iterator_.toString().c_str(),
+                        iterator_is_normal,
+                        normalized.toString().c_str(),
+                        normalized_is_normal);
+                }
+            }
+        }
+        return std::vector<Chord>(fundamentalDomain.begin(), fundamentalDomain.end());
+    }
 }
 
-template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundamentalDomainByNormalize(int voiceN, double range, double g)
+template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Chord> fundamentalDomainByNormalize(int voiceN, double range, double g)
 {
-    std::set<Chord> fundamentalDomain;
+    std::set<Chord, compare_by_normal_order_and_distance_from_origin> fundamentalDomain;
     int upperI = 2 * (range + 1);
     int lowerI = - (range + 1);
     Chord iterator_ = iterator(voiceN, lowerI);
@@ -4271,7 +4380,8 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::set<Chord> fundame
                 normalized_is_normal);
         }
     }
-    return fundamentalDomain;
+    std::vector<Chord> result(fundamentalDomain.begin(), fundamentalDomain.end());
+    return result;
 }
 
 inline SILENCE_PUBLIC Chord gather(Score &score, double startTime, double endTime) {
