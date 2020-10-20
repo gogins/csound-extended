@@ -62,8 +62,8 @@ static void printSet(std::string name, const std::vector<csound::Chord> &chords)
     int i = 1;
     for (auto &value : sorted) {
         auto &c = value.second;
-        csound::System::message("%s  chord[%04d]: %s  OPTT: %s  OPTTI: %s  isI: %d  opti_sector: ", c.normal_form().toString().c_str(), i, c.toString().c_str(), c.eOPTT().toString().c_str(), c.eOPTTI().toString().c_str(), c.iseI());
-        auto opti_sectors = c.opti_domain_sector();
+        csound::System::message("%s  chord[%04d]: %s  OPTT: %s  OPTTI: %s opti_sector: ", c.normal_form().toString().c_str(), i, c.toString().c_str(), c.eOPTT().toString().c_str(), c.eOPTTI().toString().c_str());
+        auto opti_sectors = c. opti_domain_sector();
         for (auto opti_sector : opti_sectors) {
             csound::System::message("%2d (%4.1f)", opti_sector, opti_sector / 2.);
         }
@@ -216,7 +216,7 @@ static bool testNormalsAndEquivalents(std::string equivalence,
     auto is_equivalent = isNormalsForEquivalenceRelations[equivalence];
     csound::System::message("\nequivalence: %s  normalized: %ld  is_normal: %ld  range: %f  g: %f\n", equivalence.c_str(), made_equivalents.size(), found_equivalents.size(), range, g);
     auto make_equivalent = normalizesForEquivalenceRelations[equivalence];
-    auto isEquivalent = isEquivalentsForEquivalenceRelations[equivalence];
+    //~ auto isEquivalent = isEquivalentsForEquivalenceRelations[equivalence];
     bool passes1 = true;
     int count = 1;
     for (auto made_equivalent = made_equivalents.begin(); made_equivalent != made_equivalents.end(); ++made_equivalent) {
@@ -310,17 +310,6 @@ int main(int argc, char **argv) {
     isNormalsForEquivalenceRelations["RPI"] =       csound::isNormal<csound::EQUIVALENCE_RELATION_RPI>;
     isNormalsForEquivalenceRelations["RPTI"] =      csound::isNormal<csound::EQUIVALENCE_RELATION_RPTI>;
     isNormalsForEquivalenceRelations["RPTgI"] =     csound::isNormal<csound::EQUIVALENCE_RELATION_RPTgI>;
-    isEquivalentsForEquivalenceRelations["R"] =     csound::isEquivalent<csound::EQUIVALENCE_RELATION_R>;
-    isEquivalentsForEquivalenceRelations["P"] =     csound::isEquivalent<csound::EQUIVALENCE_RELATION_P>;
-    isEquivalentsForEquivalenceRelations["T"] =     csound::isEquivalent<csound::EQUIVALENCE_RELATION_T>;
-    isEquivalentsForEquivalenceRelations["Tg"] =    csound::isEquivalent<csound::EQUIVALENCE_RELATION_Tg>;
-    isEquivalentsForEquivalenceRelations["I"] =     csound::isEquivalent<csound::EQUIVALENCE_RELATION_I>;
-    isEquivalentsForEquivalenceRelations["RP"] =    csound::isEquivalent<csound::EQUIVALENCE_RELATION_RP>;
-    isEquivalentsForEquivalenceRelations["RPT"] =   csound::isEquivalent<csound::EQUIVALENCE_RELATION_RPT>;
-    isEquivalentsForEquivalenceRelations["RPTg"] =  csound::isEquivalent<csound::EQUIVALENCE_RELATION_RPTg>;
-    isEquivalentsForEquivalenceRelations["RPI"] =   csound::isEquivalent<csound::EQUIVALENCE_RELATION_RPI>;
-    isEquivalentsForEquivalenceRelations["RPTI"] =  csound::isEquivalent<csound::EQUIVALENCE_RELATION_RPTI>;
-    isEquivalentsForEquivalenceRelations["RPTgI"] = csound::isEquivalent<csound::EQUIVALENCE_RELATION_RPTgI>;
     equivalenceRelationsForCompoundEquivalenceRelations["RP"] =      {"R", "P"};
     equivalenceRelationsForCompoundEquivalenceRelations["RPT"] =     {"R", "P", "T"}; // V?
     equivalenceRelationsForCompoundEquivalenceRelations["RPTg"] =    {"R", "P", "Tg"}; // V?
