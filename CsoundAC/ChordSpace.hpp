@@ -306,7 +306,7 @@ SILENCE_PUBLIC void add_chord(std::string, const Chord &chord);
 
 SILENCE_PUBLIC void add_scale(std::string, const Scale &scale);
 
-//~ SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voiceN, std::string equivalence, double g = 1.0);
+//~ SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voiceN, std::string equivalence, double g = 1.);
 
 /**
  * TODO: Change this to use strictly the representative fundamental domains.
@@ -378,9 +378,12 @@ public:
      */
     virtual Chord a(int arpeggiation, double &resultPitch, int &resultVoice) const;
     /**
-     * Returns a new chord whose pitches are the ceilings of this chord's pitches.
+     * Returns a new chord whose pitches are the ceilings of this chord's 
+     * pitches, with respect to the generator of transposition g, which 
+     * defaults to 1 
+     semitone.
      */
-    virtual Chord ceiling() const;
+    virtual Chord ceiling(double g = 1.) const;
     /**
      * Returns whether or not the chord contains the pitch.
      */
@@ -432,14 +435,32 @@ public:
      * domain of octave, permutational, and transpositional equivalence.
      */
     virtual Chord eOPT(int opt_sector = 0) const;
-    virtual Chord eOPTT(double g = 1.0, int opt_sector = 0) const;
+    virtual Chord eOPTT(double g = 1., int opt_sector = 0) const;
     /**
      * Returns the equivalent of the chord within the representative fundamental
      * domain of range, permutational, transpositional, and inversional
      * equivalence.
      */
     virtual Chord eOPTI(int opt_sector = 0) const;
-    virtual Chord eOPTTI(double g = 1.0, int opt_sector = 0) const;
+    virtual Chord eOPTTI(double g = 1., int opt_sector = 0) const;
+    /**
+     * Returns the equivalent of the chord within the fundamental domain of 
+     * octave and transpositional equivalence.
+     */
+    virtual Chord eOT() const {
+        auto o = eO();
+        auto o_t = o.eT();
+        return o_t;
+    }
+    /**
+     * Returns the equivalent of the chord within the fundamental domain of 
+     * octave and transpositional equivalence.
+     */
+    virtual Chord eOTT(double g = 1.) const {
+        auto o = eO();
+        auto o_tt = o.eTT(g);
+        return o_tt;
+    }
     /**
      * Returns the equivalent of the chord within the representative
      * fundamental domain of permutational equivalence.	The implementation
@@ -476,7 +497,7 @@ public:
      * as set-class type, or chord type.
      */
     virtual Chord eRPT(double range, int opt_sector = 0) const;
-    virtual Chord eRPTT(double range, double g = 1.0, int opt_sector = 0) const;
+    virtual Chord eRPTT(double range, double g = 1., int opt_sector = 0) const;
     /**
      * Returns one or more equivalents of the chord within the representative 
      * fundamental domain of range, permutational, and transpositional 
@@ -485,7 +506,7 @@ public:
      * fundamental domain.
      */
     virtual std::vector<Chord> eRPTs(double range = OCTAVE()) const;
-    virtual std::vector<Chord> eRPTTs(double range, double g = 1.0) const;
+    virtual std::vector<Chord> eRPTTs(double range, double g = 1.) const;
     /**
      * Returns the equivalent of the chord within the representative fundamental
      * domain of range, permutational, transpositional, and inversional
@@ -505,7 +526,7 @@ public:
      * transposition, the positive layer closest to 0. NOTE: Does NOT return the
      * result under any other equivalence class.
      */
-    virtual Chord eTT(double g = 1.0) const;
+    virtual Chord eTT(double g = 1.) const;
     /**
      * Returns the equivalent of the chord within the fundamental domain of
      * transposition to 0.
@@ -535,7 +556,7 @@ public:
      * Returns whether the chord is an inversional form of Y with interval size g.
      * Only works in equal temperament.
      */
-    virtual bool Iform(const Chord &Y, double g = 1.0) const;
+    virtual bool Iform(const Chord &Y, double g = 1.) const;
     /**
      * Print much information about the chord including whether it is in 
      * important equivalence classes, or what its equivalent would be. 
@@ -546,8 +567,8 @@ public:
      * Returns whether the chord is within the representative fundamental domain
      * of inversional equivalence.
      */
-    virtual bool iseI_chord(Chord *inverse) const;
-    virtual bool iseI() const;
+    virtual bool iseI_chord(Chord *inverse, int opt_sector = 0) const;
+    virtual bool iseI(int opt_sector = 0) const;
     /**
      * Returns whether the chord is within the representative fundamental domain
      * of octave equivalence.
@@ -568,13 +589,39 @@ public:
      * of octave, permutational, and transpositional equivalence.
      */
     virtual bool iseOPT(int opt_sector = 0) const;
-    virtual bool iseOPTT(double g = 1.0, int opt_sector = 0) const;
+    virtual bool iseOPTT(double g = 1., int opt_sector = 0) const;
     /**
      * Returns whether the chord is within the representative fundamental domain
      * of octave, permutational, transpositional, and inversional equivalence.
      */
     virtual bool iseOPTI(int opt_sector = 0) const;
     virtual bool iseOPTTI(double g  = 1., int opt_sector = 0) const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of octave and transpositional equivalence.
+     */
+    virtual bool iseOT() const {
+        if (iseO() == false) {
+            return false;
+        }
+        if (iseT() == false) {
+            return false;
+        }
+        return true;
+    }
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of octave and translational equivalence and the equal temperament generated by g.
+     */
+    virtual bool iseOTT(double g = 1.) const {
+        if (iseO() == false) {
+            return false;
+        }
+        if (iseTT(g) == false) {
+            return false;
+        }
+        return true;
+    }
     /**
      * Returns whether the chord is within the representative fundamental domain
      * of permutational equivalence.
@@ -605,12 +652,38 @@ public:
      * of range, permutational, and transpositional equivalence.
      */
     virtual bool iseRPT(double range, int opt_sector = 0) const;
-    virtual bool iseRPTT(double range, double g = 1.0, int opt_sector = 0) const;
+    virtual bool iseRPTT(double range, double g = 1., int opt_sector = 0) const;
     /** Returns whether the chord is within the representative fundamental domain
      * of range, permutational, transpositional, and inversional equivalence.
      */
     virtual bool iseRPTI(double range, int opt_sector = 0) const;
-    virtual bool iseRPTTI(double range, double g, int opt_sector = 0) const;
+    virtual bool iseRPTTI(double range, double g = 1., int opt_sector = 0) const;
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of range and transpositional equivalence.
+     */
+    virtual bool iseRT(double range) const {
+        if (iseR(range) == false) {
+            return false;
+        }
+        if (iseT() == false) {
+            return false;
+        }
+        return true;
+    }
+    /**
+     * Returns whether the chord is within the representative fundamental domain
+     * of range and translational equivalence and the equal temperament generated by g.
+     */
+    virtual bool iseRTT(double range, double g = 1.) const {
+        if (iseR(range) == false) {
+            return false;
+        }
+        if (iseTT(g) == false) {
+            return false;
+        }
+        return true;
+    }
     /**
      * Returns whether the chord is within the representative fundamental domain
      * of transpositional equivalence.
@@ -620,7 +693,8 @@ public:
      * Returns whether the chord is within the representative fundamental domain
      * of translational equivalence and the equal temperament generated by g.
      */
-    virtual bool iseTT(double g = 1.0) const;
+    virtual bool iseTT(double g = 1.) const;
+
     /**
      * Returns whether the chord is within the fundamental domain of
      * transposition to 0.
@@ -746,7 +820,7 @@ public:
      * with minimum interval size g.
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
-    virtual Chord Q(double x, const Chord &m, double g = 1.0) const;
+    virtual Chord Q(double x, const Chord &m, double g = 1.) const;
     virtual void resize(size_t voiceN);
     virtual void setDuration(double value, int voice = -1);
     virtual void setInstrument(double value, int voice = -1);
@@ -767,7 +841,7 @@ public:
      * Returns whether the chord is a transpositional form of Y with interval size g.
      * Only works in equal temperament.
      */
-    virtual bool Tform(const Chord &Y, double g = 1.0) const;
+    virtual bool Tform(const Chord &Y, double g = 1.) const;
     /**
      * Returns an individual note for each voice of the chord.
      * If the optional
@@ -887,7 +961,7 @@ public:
      * This code is based on the construction of Noam Elkies described in the 
      * _Generalized Chord Spaces_ draft by Callender, Quinn, and Tymoczko.
      */
-    virtual void initialize() {
+    virtual void initialize_sectors() {
         static bool initialized = false;
         if (initialized == false) {
             initialized = true;
@@ -896,31 +970,38 @@ public:
             auto &opt_domains_for_dimensions = opt_sectors_for_dimensionalities();
             auto &opti_domains_for_dimensions = opti_sectors_for_dimensionalities();
             auto &hyperplane_equations_for_dimensions = hyperplane_equations_for_opt_sectors();
-            for (int n = 3; n < 12; ++n) {
-                auto cyclical_region = cyclical_regions[n];
-                for (int d = 0; d < n; ++d) {
-                    Chord vertex(n);
-                    for (int voice = 0; voice < n; ++voice) {
-                        if (voice <= d) {
-                            vertex.setPitch(voice,  0.);
-                        } else {
+            for (int dimensions = 3; dimensions < 12; ++dimensions) {
+SYSTEM_DEBUG("cyclical region for %d dimensions:\n", dimensions);
+                auto cyclical_region = cyclical_regions[dimensions];
+                std::vector<Chord> original;
+                std::vector<Chord> transposed;
+                auto center_ = Chord(dimensions).center();
+                for (int dimension = 0; dimension < dimensions; ++dimension) {
+                    Chord vertex(dimensions);
+                    for (int voice = 0, start = dimensions - dimension; voice < dimensions; ++voice) {
+                        if (voice >= start) {
                             vertex.setPitch(voice, 12.);
                         }
                     }
-                    vertex = vertex.eT();
-                    cyclical_region.insert(cyclical_region.begin(), vertex);
+                    original.push_back(vertex);
+                    auto vertex_t = vertex.eT();
+                    transposed.push_back(vertex_t);
+                    cyclical_region.push_back(vertex_t);
                 }
-SYSTEM_DEBUG("Chord::initialize: %d dimensions:\n", n);
-                for (int i = 0; i < cyclical_region.size(); ++i) {
-SYSTEM_DEBUG("  cyclical[%2d] %s\n", i, cyclical_region[i].toString().c_str());
+                // Print in order to check.
+                for (int dimension = 0; dimension < dimensions; ++dimension) {
+                    SYSTEM_DEBUG("  original  [%2d][%2d] %s\n", dimensions, dimension, original[dimension].toString().c_str());
                 }
-                cyclical_regions[n] = cyclical_region;
-                auto opt_domains = opt_domains_for_dimensions[n];
-                auto opti_domains = opti_domains_for_dimensions[n];
-                auto hyperplane_equations = hyperplane_equations_for_dimensions[n];
-                for (int d = 0; d < n; ++d) {
+                for (int dimension = 0; dimension < dimensions; ++dimension) {
+                    SYSTEM_DEBUG("  transposed[%2d][%2d] %s\n", dimensions, dimension, transposed[dimension].toString().c_str());
+                }
+                cyclical_regions[dimensions] = cyclical_region;
+                auto opt_domains = opt_domains_for_dimensions[dimensions];
+                auto opti_domains = opti_domains_for_dimensions[dimensions];
+                auto hyperplane_equations = hyperplane_equations_for_dimensions[dimensions];
+                for (int d = 0, n = dimensions; d < n; ++d) {
                     auto opt_domain = cyclical_regions[n];
-                    auto center_ = opt_domain.front().center().eT();
+                    //~ auto center_ = opt_domain.front().center().eT();
                     opt_domain[(d+n-1)%n] = center_;
                     opt_domains.push_back(opt_domain);
                     int index;
@@ -938,7 +1019,7 @@ SYSTEM_DEBUG("  midpoint     %s\n", opti_midpoint.toString().c_str());
 SYSTEM_DEBUG("  OPTI[%2d][%2d] %s\n", opti_domains.size() - 1, index++, vertex.toString().c_str());
                     }
                     auto opti_domain_1 = opt_domain;
-                    opti_domain_1[(d+n)%n] = opti_midpoint;
+                    opti_domain_1[(d+n-3)%n] = opti_midpoint;
                     opti_domains.push_back(opti_domain_1);
                     index = 0;
                     for (auto vertex : opti_domain_1) {
@@ -971,9 +1052,9 @@ SYSTEM_DEBUG("    %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
 SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
                     hyperplane_equations.push_back(hyperplane_equation_);
                 }
-                opt_domains_for_dimensions[n] = opt_domains;
-                opti_domains_for_dimensions[n] = opti_domains;
-                hyperplane_equations_for_dimensions[n] = hyperplane_equations;
+                opt_domains_for_dimensions[dimensions] = opt_domains;
+                opti_domains_for_dimensions[dimensions] = opti_domains;
+                hyperplane_equations_for_dimensions[dimensions] = hyperplane_equations;
             }
             CHORD_SPACE_DEBUGGING = false;
         }
@@ -994,8 +1075,7 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
         std::multimap<double, int> sectors_for_distances;
         double minimum_distance = std::numeric_limits<double>::max();
         for (int sector = 0, n = opt_sectors.size(); sector < n; ++sector) {
-            auto et = eO().eT();
-            //~ auto et = eT();
+            auto et = eOT();
             auto distance = distance_to_points(et, opt_sectors[sector]);
             SYSTEM_DEBUG("opt_domain_sector:  chord: %s distance: %9.4f sector: %2d\n", et.toString().c_str(), distance, sector);
             if (lt_epsilon(distance, minimum_distance) == true) {
@@ -1008,6 +1088,7 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
         for (auto it = range.first; it != range.second; ++it) {
             result.push_back(it->second);
         }
+        std::sort(result.begin(), result.end());
         return result;
     }
     /**
@@ -1026,7 +1107,7 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
         std::multimap<double, int> sectors_for_distances;
         double minimum_distance = std::numeric_limits<double>::max();
         for (int sector = 0, n = opti_sectors.size(); sector < n; ++sector) {
-            auto distance = distance_to_points(eOP().eT(), opti_sectors[sector]);
+            auto distance = distance_to_points(eOT(), opti_sectors[sector]);
             SYSTEM_DEBUG("opti_domain_sector: chord: %s distance: %9.4f sector: %2d\n", toString().c_str(), distance, sector);
             if (lt_epsilon(distance, minimum_distance) == true) {
                 minimum_distance = distance;
@@ -1038,6 +1119,72 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
         for (auto it = range.first; it != range.second; ++it) {
             result.push_back(it->second);
         }
+        std::sort(result.begin(), result.end());
+        return result;
+    }
+    /**
+     * Returns 0 if not in the simplex, 1 if on the surface of the simplex, 2 
+     * if inside the simplex.
+     */
+    static int is_in_simplex(const Chord &chord, const std::vector<Chord> &simplex_vertices) {
+        int result = 0;
+        auto n = chord.voices();
+        return result;
+    }
+    /**
+     * Returns the zero-based index(s) of the sector(s) within the cyclical 
+     * region of OPT fundamental domains to which the chord belongs. A chord 
+     * on a vertex, edge, or facet shared by more than one sector belongs to 
+     * each them; the center of the cyclical region belongs to all of the 
+     * sectors. Sectors are generated by rotation of a fundamental domain 
+     * (equivalently, by the octavewise revoicing of chords) and correspond to 
+     * "chord inversion" in the musician's ordinary sense. Sectors are 
+     * identified by solving constraints on barycentric coordinates.
+     */
+    virtual std::vector<int> opt_domain_sectors() const {
+        std::vector<int> result;
+        auto opt_sectors_for_dimensions = opt_sectors_for_dimensionalities();
+        auto opt_sectors = opt_sectors_for_dimensions[voices()];
+        for (int opt_sector = 0, n = opt_sectors.size(); opt_sector < n; ++opt_sector) {
+            auto predicate = is_in_simplex(*this, opt_sectors[opt_sector]);
+            if (predicate > 0) {
+                result.push_back(opt_sector);
+                // If the predicate is 1, there is no need to look at the other 
+                // sectors.
+                if (predicate == 1) {
+                    break;
+                }
+            }
+        }
+        std::sort(result.begin(), result.end());
+        return result;
+    }
+    /**
+     * Returns the zero-based index(s) of the sector(s) within the cyclical 
+     * region of OPTI fundamental domains to which the chord belongs. A chord 
+     * on a vertex, edge, or facet shared by more than one sector belongs to 
+     * each them; the center of the cyclical region belongs to all of the 
+     * sectors. Sectors are generated by rotation of a fundamental domain 
+     * (equivalently, by the octavewise revoicing of chords) and correspond to 
+     * "chord inversion" in the musician's ordinary sense. Sectors are 
+     * identified by solving constraints on barycentric coordinates.
+     */
+    virtual std::vector<int> opti_domain_sectors() const {
+        std::vector<int> result;
+        auto opti_sectors_for_dimensions = opti_sectors_for_dimensionalities();
+        auto opti_sectors = opti_sectors_for_dimensions[voices()];
+        for (int opti_sector = 0, n = opti_sectors.size(); opti_sector < n; ++opti_sector) {
+            auto predicate = is_in_simplex(*this, opti_sectors[opti_sector]);
+            if (predicate > 0) {
+                result.push_back(opti_sector);
+                // If the predicate is 1, there is no need to look at the other 
+                // sectors.
+                if (predicate == 1) {
+                    break;
+                }
+            }
+        }
+        std::sort(result.begin(), result.end());
         return result;
     }
     /**
@@ -1063,19 +1210,19 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
      * divides the OPT fundamental domain in the indicated sector of the 
      * cyclical region.
      */
-    virtual HyperplaneEquation hyperplane_equation(int sector) const {
+    virtual HyperplaneEquation hyperplane_equation(int opt_sector) const {
         auto hyperplane_equations_for_dimensions = hyperplane_equations_for_opt_sectors();
         auto hyperplane_equations = hyperplane_equations_for_dimensions[voices()];
-        return hyperplane_equations[sector];
+        return hyperplane_equations[opt_sector];
     }
-    /**
-     * Returns the hyperplane equation for the inversion flat that evenly 
-     * divides the OPT fundamental domain of this chord.
-     */
-    virtual HyperplaneEquation hyperplane_equation() const {
-        auto opt_domains = opt_domain_sector();
-        return hyperplane_equation(opt_domains.front());
-    }
+    //~ /**
+     //~ * Returns the hyperplane equation for the inversion flat that evenly 
+     //~ * divides the OPT fundamental domain of this chord.
+     //~ */
+    //~ virtual HyperplaneEquation hyperplane_equation() const {
+        //~ auto opt_domains = opt_domain_sector();
+        //~ return hyperplane_equation(opt_domains.front());
+    //~ }
     /**
      * Returns this chord in standard "normal order." For a very clear 
      * explanation, see: 
@@ -1146,6 +1293,7 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
     }
 };
 
+
 SILENCE_PUBLIC const Chord &chordForName(std::string name);
 
 /**
@@ -1205,8 +1353,8 @@ public:
     /**
      * Loads the group if found, creates and saves it otherwise.
      */
-    virtual void createChordSpaceGroup(int voices, double range, double g = 1.0);
-    virtual std::string createFilename(int voices, double range, double g = 1.0) const;
+    virtual void createChordSpaceGroup(int voices, double range, double g = 1.);
+    virtual std::string createFilename(int voices, double range, double g = 1.) const;
     /**
      * Returns the indices of prime form, inversion, transposition,
      * and voicing for a chord, as the first 4 elements, respectively,
@@ -1355,7 +1503,7 @@ typedef enum {
     EQUIVALENCE_RELATION_Tg,
     EQUIVALENCE_RELATION_I,
     EQUIVALENCE_RELATION_RP,
-    //~ EQUIVALENCE_RELATION_RT,
+    EQUIVALENCE_RELATION_RT,
     //~ EQUIVALENCE_RELATION_RTg,
     //~ EQUIVALENCE_RELATION_RI,
     //~ EQUIVALENCE_RELATION_PT,
@@ -1381,14 +1529,14 @@ void fill(std::string rootName, double rootPitch, std::string typeName, std::str
  * duplicate chords for the same equivalence, only the one closest to the 
  * origin is returned.
  */
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamentalDomainByIsNormal(int voiceN, double range, double g);
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamentalDomainByIsNormal(int voiceN, double range, double g = 1.);
 
 /**
  * Returns a set of chords in sector 0 of the cyclical region, sorted by 
  * normal order, for the indicated equivalence relation. All duplicate chords 
  * for the same equivalence are returned, ordered by distance from the origin.
  */
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamentalDomainByNormalize(int voiceN, double range, double g);
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamentalDomainByNormalize(int voiceN, double range, double g = 1.);
 
 /**
  * Returns a chord containing all the pitches of the score
@@ -1516,7 +1664,7 @@ SILENCE_PUBLIC std::multimap<Scale, std::string> &namesForScales();
  * on the unison diagonal. g is the generator of transposition.
  * It may be necessary to set the chord to the low point to start.
  */
-SILENCE_PUBLIC bool next(Chord &odometer, const Chord &low, double high, double g = 1.0);
+SILENCE_PUBLIC bool next(Chord &iterator_, const Chord &minimum, double range, double g = 1.);
 
 template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC Chord normalize(const Chord &chord,
         double range, double g, int opt_sector);
@@ -1528,8 +1676,6 @@ template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC Chord normalize(const Chord &c
         //~ double range);
 
 //~ template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC Chord normalize(const Chord &chord);
-
-SILENCE_PUBLIC bool next(Chord &iterator_, const Chord &origin, double range, double g);
 
 SILENCE_PUBLIC Chord octavewiseRevoicing(const Chord &chord, int revoicingNumber_, double range, bool debug);
 
@@ -1548,7 +1694,7 @@ SILENCE_PUBLIC Chord reflect_in_central_diagonal(const Chord &chord);
 
 SILENCE_PUBLIC Chord reflect_in_central_point(const Chord &chord);
 
-SILENCE_PUBLIC Chord reflect_in_inversion_flat(const Chord &chord);
+SILENCE_PUBLIC Chord reflect_in_inversion_flat(const Chord &chord, int opt_sector);
 
 SILENCE_PUBLIC Chord reflect_in_unison_diagonal(const Chord &chord);
 
@@ -1810,7 +1956,6 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_R>(const Cho
     if (le_epsilon(0.0, layer) == false) {
         return false;
     }
-    //~ if (lt_epsilon(layer, range) == false) {
     if (le_epsilon(layer, range) == false) {
         return false;
     }
@@ -1872,8 +2017,7 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_R>(const C
         return copy;
     }
     Chord er = normalize<EQUIVALENCE_RELATION_r>(chord, range, g, opt_sector);
-    //~ while (le_epsilon(er.layer(), range) == false) {
-    while (lt_epsilon(er.layer(), range) == false) {
+    while (le_epsilon(er.layer(), range) == false) {
         std::vector<double> maximum = er.max();
         er.setPitch(maximum[1], maximum[0] - range);
     }
@@ -1922,7 +2066,7 @@ inline Chord Chord::eP() const {
 
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_T>(const Chord &chord, double range, double g, int opt_sector) {
     double layer_ = chord.layer();
-    if (eq_epsilon(layer_, 0.0) == false) {
+    if (eq_epsilon(layer_, 0.) == false) {
         return false;
     } else {
         return true;
@@ -1930,7 +2074,7 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_T>(const Cho
 }
 
 inline bool Chord::iseT() const {
-    return isNormal<EQUIVALENCE_RELATION_T>(*this, OCTAVE(), 1.0, 0);
+    return isNormal<EQUIVALENCE_RELATION_T>(*this, OCTAVE(), 1., 0);
 }
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_T>(const Chord &chord, double range, double g, int opt_sector) {
@@ -1964,17 +2108,12 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_Tg>(const Ch
 
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_Tg>(const Chord &chord, double range, double g, int opt_sector) {
-    Chord self = chord;
-    if (csound::isNormal<EQUIVALENCE_RELATION_Tg>(chord, range, g, opt_sector) == true) {
-        return self;
-    } else {
-        auto self_t = self.eT();
-        auto self_t_ceiling = self_t.ceiling();
-        while (lt_epsilon(self_t_ceiling.layer(), 0.) == true) {
-            self_t_ceiling = self_t_ceiling.T(g);
-        }
-        return self_t_ceiling;
+    auto self_t = chord.eT();
+    auto self_t_ceiling = self_t.ceiling();
+    while (lt_epsilon(self_t_ceiling.layer(), 0.) == true) {
+        self_t_ceiling = self_t_ceiling.T(g);
     }
+    return self_t_ceiling;
 }
 
 inline Chord Chord::eTT(double g) const {
@@ -1994,15 +2133,15 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_I>(const Cho
     return false;
 }
 
-inline bool Chord::iseI_chord(Chord *inverse) const {
-    return isNormal<EQUIVALENCE_RELATION_I>(*this, OCTAVE(), 1.0, 0);
+inline bool Chord::iseI_chord(Chord *inverse, int opt_sector) const {
+    return isNormal<EQUIVALENCE_RELATION_I>(*this, OCTAVE(), 1.0, opt_sector);
 }
 
 template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_I>(const Chord &chord, double range, double g, int opt_sector) {
-    if (isNormal<EQUIVALENCE_RELATION_I>(chord, range, g, opt_sector)) {
+    if (isNormal<EQUIVALENCE_RELATION_I>(chord, range, g, opt_sector) == true) {
         return chord;
     } else {
-        return reflect_in_inversion_flat(chord);
+        return reflect_in_inversion_flat(chord, opt_sector);
     }
 }
 
@@ -2058,10 +2197,10 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RPT>(const C
     if (isNormal<EQUIVALENCE_RELATION_P>(chord, range, g, opt_sector) == false) {
         return false;
     }
-    if (isNormal<EQUIVALENCE_RELATION_T>(chord, range, g, opt_sector) == false) {
+    if (chord.is_opt_sector(opt_sector) == false) {
         return false;
     }
-    if (isNormal<EQUIVALENCE_RELATION_I>(chord, range, g, opt_sector) == false) {
+    if (isNormal<EQUIVALENCE_RELATION_T>(chord, range, g, opt_sector) == false) {
         return false;
     }
     return true;
@@ -2106,10 +2245,10 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_RPTg>(const 
     if (isNormal<EQUIVALENCE_RELATION_P>(chord, range, g, opt_sector) == false) {
         return false;
     }
-    if (isNormal<EQUIVALENCE_RELATION_Tg>(chord, range, g, opt_sector) == false) {
+    if (chord.is_opt_sector(opt_sector) == false) {
         return false;
     }
-    if (chord.is_opt_sector(opt_sector) == false) {
+    if (isNormal<EQUIVALENCE_RELATION_Tg>(chord, range, g, opt_sector) == false) {
         return false;
     }
     return true;
@@ -2165,7 +2304,7 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPI>(const
     if (isNormal<EQUIVALENCE_RELATION_RPI>(chord, range, g, opt_sector) == true) {
         return chord;
     }
-    return chord.eI().eRP(range);
+    return chord.eI(opt_sector).eRP(range);
 }
 
 inline Chord Chord::eRPI(double range, int opt_sector) const {
@@ -2591,16 +2730,42 @@ inline SILENCE_PUBLIC const Scale &scaleForName(std::string name) {
     }
 }
 
+static std::string print_opt_sectors(const Chord &chord) {
+    std::string result;
+    char buffer[0x200];
+    auto sectors = chord.opt_domain_sector();
+    for (auto sector_ : sectors) {
+        std::sprintf(buffer, "%3d        ", sector_);
+        result.append(buffer);
+    }
+    return result;    
+}
+
+static std::string print_opti_sectors(const Chord &chord) {
+    std::string result;
+    char buffer[0x200];
+    auto sectors = chord.opti_domain_sector();
+    for (auto sector_ : sectors) {
+        std::sprintf(buffer, "%3d (%5.1f)", sector_, sector_ / 2.);
+        result.append(buffer);
+    }
+    return result;    
+}
+
 inline std::string Chord::information() const {
     std::string result;
     char buffer[0x4000];
     if (voices() < 1) {
         return "Empty chord.";
     }
+    std::sprintf(buffer, "CHORD:\n");
+    result.append(buffer);
     // First whether this chord belongs to the equivalence class, and then the 
     // equivalent of this chord within the equivalence class; if it does 
     // belong, this should be equal to the equivalent.
-    std::sprintf(buffer, "CHORD:            %s  %s\n", toString().c_str(), name().c_str());
+    auto sector_text = print_opti_sectors(*this);
+    auto opt_sector = opt_domain_sector().front();
+    std::sprintf(buffer, "%17s %s %s\n", name().c_str(), toString().c_str(), sector_text.c_str());
     result.append(buffer);
     std::sprintf(buffer, "pitch-class set:  %s\n", epcs().toString().c_str());
     result.append(buffer);
@@ -2610,6 +2775,8 @@ inline std::string Chord::information() const {
     result.append(buffer);
     std::sprintf(buffer, "prime form:       %s\n", prime_form().toString().c_str());
     result.append(buffer);
+    std::sprintf(buffer, "sum:              %12.7f\n", layer());
+    result.append(buffer);
     std::sprintf(buffer, "O:           %d => %s\n", iseO(), eO().toString().c_str());
     result.append(buffer);
     std::sprintf(buffer, "P:           %d => %s\n", iseP(), eP().toString().c_str());
@@ -2618,84 +2785,62 @@ inline std::string Chord::information() const {
     result.append(buffer);
     std::sprintf(buffer, "TT:          %d => %s\n", iseTT(), eTT().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "I:           %d => %s\n", iseI(), eI().toString().c_str());
+    auto ei = eI(opt_sector);
+    sector_text = print_opti_sectors(ei);
+    std::sprintf(buffer, "I:           %d => %s %s\n", iseI(opt_sector), ei.toString().c_str(), sector_text.c_str());
     result.append(buffer);
     std::sprintf(buffer, "OP:          %d => %s\n", iseOP(), eOP().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "OPT:         %d => %s\n", iseOPT(), eOPT().toString().c_str());
+    std::sprintf(buffer, "OT:          %d => %s\n", iseOT(), eOT().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "             sector:");
+    std::sprintf(buffer, "OTT:         %d => %s\n", iseOTT(), eOTT().toString().c_str());
     result.append(buffer);
-    auto opt_sectors = opt_domain_sector();
-    for (auto opt_sector : opt_sectors) {
-        std::sprintf(buffer, "%2d                ", opt_sector);
-        result.append(buffer);
-    }
-    result.append("\n");
-    std::strcat(buffer, "\n");    
+    std::sprintf(buffer, "OPT:         %d => %s\n", iseOPT(opt_sector), eOPT(opt_sector).toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "OPTT:        %d => %s\n", iseOPTT(opt_sector), eOPTT(opt_sector).toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "OPI:         %d => %s\n", iseOPI(opt_sector), eOPI(opt_sector).toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "OPTI:        %d => %s\n", iseOPTI(opt_sector), eOPTI(opt_sector).toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "OPTTI:       %d => %s\n", iseOPTTI(opt_sector), eOPTTI(opt_sector).toString().c_str());
+    result.append(buffer);
+    std::sprintf(buffer, "             opt sector:\n");
+    result.append(buffer);
     auto tvs = eRPTs(); 
     auto &hyperplane_equations = hyperplane_equations_for_opt_sectors()[voices()];
     for (auto i = 0; i < tvs.size(); ++i) {
         auto v = tvs[i];
         auto sectors = v.opt_domain_sector();
-        auto isev = " ";
-        if (v.is_opt_sector(0)) {
-            isev = "V";
-        }
-        auto isei = " ";
-        if (v.iseI()) {
-            isei = "I";
-        }
-        std::sprintf(buffer, "                  %s %s %s\n", v.toString().c_str(), isev, isei);
-        result.append(buffer);
-        for (auto sector : sectors) {
-            auto &hyperplane_equation = hyperplane_equations[sector];
-            std::sprintf(buffer, "             u = [");
-            result.append(buffer);
-            for (int i = 0, n = hyperplane_equation.unit_normal_vector.rows(); i < n; ++i) {
-                std::sprintf(buffer, "%12.7f ", hyperplane_equation.unit_normal_vector(i, 0));
-                result.append(buffer);
-            }
-            std::sprintf(buffer, "] c = %12.7f s = %2d\n", hyperplane_equation.constant_term, sector);
-            result.append(buffer);
-        }
-    }
-    std::sprintf(buffer, "OPTT:        %d => %s\n", iseOPTT(), eOPTT().toString().c_str());
-    result.append(buffer);
-    std::sprintf(buffer, "OPI:         %d => %s\n", iseOPI(), eOPI().toString().c_str());
-    result.append(buffer);
-    std::sprintf(buffer, "OPTI:        %d => %s\n", iseOPTI(), eOPTI().toString().c_str());
-    result.append(buffer);
-    std::sprintf(buffer, "OPTTI:       %d => %s\n", iseOPTTI(), eOPTTI().toString().c_str());
-    result.append(buffer);
-    std::sprintf(buffer, "             sector:");
-    result.append(buffer);
-    auto opti_sectors = opti_domain_sector();
-    for (auto opti_sector : opti_sectors) {
-        // There are 2 OPTI fundamental domains evenly dividing each OPT 
-        // fundamental domain; dividing by 2 tells us which OPT and also 
-        // which half.
-        std::sprintf(buffer, "%2d (%4.1f)", opti_sector, opti_sector / 2.);
+        auto sector_text = print_opt_sectors(v);
+        std::sprintf(buffer, "                  %s %s\n", v.toString().c_str(), sector_text.c_str());
         result.append(buffer);
     }
-    result.append("\n");
+    std::sprintf(buffer, "             inversion flats:\n");
+    result.append(buffer);
+    auto sectors = opt_domain_sector();
+    for (auto sector : sectors) {
+        auto &hyperplane_equation = hyperplane_equations[sector];
+        std::sprintf(buffer, "        s:%2d u: [", sector);
+        result.append(buffer);
+        for (int i = 0, n = hyperplane_equation.unit_normal_vector.rows(); i < n; ++i) {
+            std::sprintf(buffer, " %12.7f", hyperplane_equation.unit_normal_vector(i, 0));
+            result.append(buffer);
+        }
+        auto reflected = reflect_in_inversion_flat(*this, sector);
+        std::sprintf(buffer, " ] c: %11.7f %s\n", hyperplane_equation.constant_term, reflected.toString().c_str());
+        result.append(buffer);
+    }    
+    std::sprintf(buffer, "             opti sector (opti sector / 2):\n");
+    result.append(buffer);
     auto ttvs = eRPTTs(12.);
     for (auto i = 0; i < ttvs.size(); ++i) {
         auto v = ttvs[i];
         auto sectors = v.opt_domain_sector();
-        auto isev = " ";
-        if (v.is_opt_sector(0)) {
-            isev = "V";
-        }
-        auto isei = " ";
-        if (v.iseI()) {
-            isei = "I";
-        }
-        std::sprintf(buffer, "                  %s %s %s\n", v.toString().c_str(), isev, isei);
+        auto sector_text = print_opti_sectors(v);
+        std::sprintf(buffer, "                  %s %s\n", v.toString().c_str(), sector_text.c_str());
         result.append(buffer);
     }
-    std::sprintf(buffer, "sum:              %12.7f\n", layer());
-    result.append(buffer);
     return result;
 }
 
@@ -2891,7 +3036,7 @@ inline SILENCE_PUBLIC Chord chord(const Chord &scale, int scale_degree, int chor
 }
 
 inline Chord::Chord() {
-    initialize();
+    initialize_sectors();
     resize(0);
 }
 
@@ -2947,6 +3092,9 @@ inline bool Chord::test(const char *label) const {
     std::fprintf(stderr, "TESTING %s %s\n\n", toString().c_str(), label);
     char buffer[0x1000];
     bool passed = true;
+    // For some of these we need to know the OPT sector, and if the chord 
+    // belongs to more than one sector, we choose the first.
+    auto opt_sector = opt_domain_sector().front();
     // Test the consistency of the predicates.
     if (iseOP() == true) {
         if (iseO() == false ||
@@ -2957,10 +3105,9 @@ inline bool Chord::test(const char *label) const {
             std::fprintf(stderr, "        Chord::iseOP is consistent.\n");
         }
     }
-    if (iseOPT() == true) {
+    if (iseOPT(opt_sector) == true) {
         if (iseO() == false ||
             iseP() == false || 
-            is_opt_sector(0) == false || 
             iseT() == false) {
             passed = false;
             std::fprintf(stderr, "Failed: Chord::iseOPT is not consistent.\n");
@@ -2970,10 +3117,9 @@ inline bool Chord::test(const char *label) const {
     }
     // If it is transformed to T, is it OPT? 
     // After that, is it Tg?
-    if (iseOPTT() == true) {
+    if (iseOPTT(opt_sector) == true) {
         if (iseO() == false ||
             iseP() == false || 
-            is_opt_sector(0) == false || 
             iseTT() == false) {
             passed = false;
             std::fprintf(stderr, "Failed: Chord::iseOPTT is not consistent.\n");
@@ -2981,24 +3127,22 @@ inline bool Chord::test(const char *label) const {
             std::fprintf(stderr, "        Chord::iseOPTT is consistent.\n");
         }
     }
-    if (iseOPTI() == true) {
+    if (iseOPTI(opt_sector) == true) {
         if (iseO() == false ||
             iseP() == false || 
-            is_opt_sector(0) == false || 
             iseT() == false || 
-            iseI() == false) {
+            iseI(opt_sector) == false) {
             passed = false;
             std::fprintf(stderr, "Failed: Chord::iseOPTI is not consistent.\n");
         } else {
             std::fprintf(stderr, "        Chord::iseOPTI is consistent.\n");
         }
     }
-    if (iseOPTTI() == true) {
+    if (iseOPTTI(opt_sector) == true) {
         if (iseO() == false ||
             iseP() == false || 
-            is_opt_sector(0) == false || 
             iseTT() == false || 
-            iseI() == false) {
+            iseI(opt_sector) == false) {
             passed = false;
             std::fprintf(stderr, "Failed: Chord::iseOPTTI is not consistent.\n");
         } else {
@@ -3030,7 +3174,7 @@ inline bool Chord::test(const char *label) const {
     } else {
         std::fprintf(stderr, "        Chord::eTT is consistent with Chord::iseTT.\n");
     }
-    if (eI().iseI() == false) {
+    if (eI(opt_sector).iseI(opt_sector) == false) {
         passed = false;
         std::fprintf(stderr, "Failed: Chord::eI is not consistent with Chord::iseI.\n");
     } else {
@@ -3042,29 +3186,30 @@ inline bool Chord::test(const char *label) const {
     } else {
         std::fprintf(stderr, "        Chord::eOP is consistent with Chord::iseOP.\n");
     }
-    if (eOPT().iseOPT() == false) {
+    if (eOPT(opt_sector).iseOPT(opt_sector) == false) {
         passed = false;
-        auto opt_chord = eOPT();
+        auto opt_chord = eOPT(opt_sector);
         std::fprintf(stderr, "Failed: Chord::eOPT is not consistent with Chord::iseOPT (%s => %s).\n", toString().c_str(), opt_chord.toString().c_str());
     } else {
         std::fprintf(stderr, "        Chord::eOPT is consistent with Chord::iseOPT.\n");
     }
-    if (eOPTT().iseOPTT() == false) {
+    if (eOPTT(opt_sector).iseOPTT(opt_sector) == false) {
         passed = false;
-        auto optt_chord = eOPTT();
+        auto optt_chord = eOPTT(opt_sector);
         std::fprintf(stderr, "Failed: Chord::eOPTT is not consistent with Chord::iseOPT (%s => %s).\n", toString().c_str(), optt_chord.toString().c_str());
     } else {
         std::fprintf(stderr, "        Chord::eOPTT is consistent with Chord::iseOPTT.\n");
     }
-    auto opti_chord = eOPTI();
-    if (opti_chord.iseOPTI() == false) {
-        std::fprintf(stderr, "Failed: Chord::eOPTI is not consistent with Chord::iseOPTI (%s => %s).\n", toString().c_str(), opti_chord.toString().c_str());
+    auto opti_chord = eOPTI(opt_sector);
+    if (opti_chord.iseOPTI(opt_sector) == false) {
         passed = false;
+        std::fprintf(stderr, "Failed: Chord::eOPTI is not consistent with Chord::iseOPTI (%s => %s).\n", toString().c_str(), opti_chord.toString().c_str());
     } else {
         std::fprintf(stderr, "        Chord::eOPTI is consistent with Chord::iseOPTI.\n");
     }
-    auto optti_chord = eOPTTI();
-    if (optti_chord.iseOPTTI() == false) {
+    auto optti_chord = eOPTTI(opt_sector);
+    if (optti_chord.iseOPTTI(opt_sector) == false) {
+        passed = false;
         std::fprintf(stderr, "Failed: Chord::eOPTTI is not consistent with Chord::iseOPTTI  (%s => %s).\n", toString().c_str(), optti_chord.toString().c_str());
     } else {
         std::fprintf(stderr, "        Chord::eOPTTI is consistent with Chord::iseOPTTI.\n");
@@ -3260,12 +3405,12 @@ inline Chord Chord::floor() const {
     return clone;
 }
 
-inline Chord Chord::ceiling() const {
-    Chord ceiling_ = *this;
+inline Chord Chord::ceiling(double g) const {
+    Chord clone = *this;
     for (size_t voice = 0; voice  < voices(); voice++) {
-        ceiling_.setPitch(voice, std::ceil(getPitch(voice)));
+        clone.setPitch(voice, std::ceil(getPitch(voice)));
     }
-    return ceiling_;
+    return clone;
 }
 
 inline Chord Chord::origin() const {
@@ -3429,8 +3574,8 @@ inline Chord Chord::eO() const {
     return eR(OCTAVE());
 }
 
-inline bool Chord::iseI() const {
-    return iseI_chord(nullptr);
+inline bool Chord::iseI(int opt_sector) const {
+    return iseI_chord(nullptr, opt_sector);
 }
 
 inline bool Chord::iseOP() const {
@@ -4288,12 +4433,12 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Cho
         int chords = 0;
         while (next(iterator_, origin, upperI, g) == true) {
             chords++;
-            bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
+            bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g, 0);
             if (iterator_is_normal == true) {
                 auto result = fundamentalDomain.insert(iterator_);
                 if (CHORD_SPACE_DEBUGGING && result.second == true) {
-                    Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
-                    bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
+                    Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g, 0);
+                    bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g, 0);
                     SYSTEM_DEBUG("%s By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
                         (normalized_is_normal ? "      " : "WRONG "),
                         namesForEquivalenceRelations[EQUIVALENCE_RELATION],
@@ -4318,12 +4463,12 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Cho
         int chords = 0;
         while (next(iterator_, origin, upperI, g) == true) {
             chords++;
-            bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
+            bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g, 0);
             if (iterator_is_normal == true) {
                 auto result = fundamentalDomain.insert(iterator_);
                 if (CHORD_SPACE_DEBUGGING && result.second == true) {
-                    Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
-                    bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
+                    Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g, 0);
+                    bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g, 0);
                     SYSTEM_DEBUG("%s By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
                         (normalized_is_normal ? "      " : "WRONG "),
                         namesForEquivalenceRelations[EQUIVALENCE_RELATION],
@@ -4352,9 +4497,13 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Cho
     int chords = 0;
     while (next(iterator_, origin, upperI, g) == true) {
         chords++;
-        bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g);
-        Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g);
-        bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g);
+        SYSTEM_DEBUG("fundamentalDomainByNormalize: %6d %s\n", chords, iterator_.toString().c_str());
+        bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g, 0);
+        SYSTEM_DEBUG("fundamentalDomainByNormalize: %6d is_normal: %d\n", chords, iterator_is_normal);
+        Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g, 0);
+        SYSTEM_DEBUG("fundamentalDomainByNormalize: %6d normalized: %s\n", chords, normalized.toString().c_str());
+        bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g, 0);
+        SYSTEM_DEBUG("fundamentalDomainByNormalize: %6d normalized_is_normal: %d\n", chords, normalized_is_normal);
         auto result = fundamentalDomain.insert(normalized);
         if (CHORD_SPACE_DEBUGGING && result.second == true) {
             SYSTEM_DEBUG("%s By normalize %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
@@ -4719,7 +4868,8 @@ inline SILENCE_PUBLIC Eigen::VectorXd reflect(const Eigen::VectorXd &v, const Ei
  * The corresponding matrix is: I - 2 * u * u^T.
  */
 inline SILENCE_PUBLIC Chord reflect_by_householder(const Chord &chord) {
-    auto hyperplane_equation = chord.hyperplane_equation();
+    auto opt_domain_sector_ = chord.opt_domain_sector().front();
+    auto hyperplane_equation = chord.hyperplane_equation(opt_domain_sector_);
     SYSTEM_DEBUG("reflect_by_householder: chord:              %s\n", chord.toString().c_str());
     SYSTEM_DEBUG("reflect_by_householder: unit normal vector: \n%s\n", toString(hyperplane_equation.unit_normal_vector).c_str());
     auto center_ = chord.center().eT();
@@ -4786,10 +4936,11 @@ inline SILENCE_PUBLIC Chord reflect_in_unison_diagonal(const Chord &chord) {
     return reflection;
 }
 
-inline SILENCE_PUBLIC Chord reflect_in_inversion_flat(const Chord &chord) {
+
+inline SILENCE_PUBLIC Chord reflect_in_inversion_flat(const Chord &chord, int opt_sector) {
     Chord result = chord;
     int dimensions = chord.voices();
-    HyperplaneEquation hyperplane = chord.hyperplane_equation();
+    HyperplaneEquation hyperplane = chord.hyperplane_equation(opt_sector);
     auto reflected = reflect(chord.col(0), hyperplane.unit_normal_vector, hyperplane.constant_term);
     for (int voice = 0; voice < dimensions; ++voice) {
         result.setPitch(voice, reflected(voice, 0));

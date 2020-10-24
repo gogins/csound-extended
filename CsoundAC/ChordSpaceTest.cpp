@@ -1,4 +1,4 @@
- #include "ChordSpace.hpp"
+#include "ChordSpace.hpp"
 #include <System.hpp>
 #include <algorithm>
 #include <iostream>
@@ -14,7 +14,6 @@ static int passCount = 0;
 static int failureCount = 0;
 static int testCount = 0;
 static int exitAfterFailureCount = 1;
-static int maximumVoiceCountToTest = 4;
 
 static bool pass(std::string message) {
     passCount = passCount + 1;
@@ -29,7 +28,7 @@ static bool fail(std::string message) {
     failureCount = failureCount + 1;
     testCount = passCount + failureCount;
     csound::System::message("================================================================================================================\n");
-    csound::System::message("FAILED (passed: %-9d failed: %-9d of %d): %s\n", passCount, failureCount, testCount, message.c_str());
+    csound::System::message("FAILED (passed: %-9d failed: %-9d of %d): %s", passCount, failureCount, testCount, message.c_str());
     csound::System::message("================================================================================================================\n");
     if (failureExits && (failureCount >= exitAfterFailureCount)) {
         std::exit(-1);
@@ -39,8 +38,10 @@ static bool fail(std::string message) {
 
 static void summary() {
     testCount = passCount + failureCount;
+    std::time_t time_ = std::time(nullptr);
+    auto datetime = std::asctime(std::localtime(&time_));
     csound::System::message("\n================================================================================================================\n");
-    csound::System::message("SUMMARY  Passed: %-9d  Failed: %-9d  Total: %d\n", passCount, failureCount, testCount);
+    csound::System::message("SUMMARY  Passed: %-9d  Failed: %-9d  Total: %d  Completed: %s", passCount, failureCount, testCount, datetime); 
     csound::System::message("================================================================================================================\n");
 }
 
@@ -195,14 +196,14 @@ static void test_chord_space_group(int initialVoiceCount, int finalVoiceCount) {
 }
 
 std::vector<std::string> equivalenceRelationsToTest = {"RP", "RPT", "RPTg", "RPTI", "RPTgI"};
-typedef csound::Chord(*normalize_t)(const csound::Chord &, double, double);
-typedef bool (*isNormal_t)(const csound::Chord &, double, double);
-typedef bool (*isEquivalent_t)(const csound::Chord &, const csound::Chord &, double, double);
+typedef csound::Chord(*normalize_t)(const csound::Chord &, double, double, int);
+typedef bool (*isNormal_t)(const csound::Chord &, double, double, int);
+//~ typedef bool (*isEquivalent_t)(const csound::Chord &, const csound::Chord &, double, double);
 typedef std::vector<csound::Chord> (*fundamentalDomainByNormalize_t)(int, double, double);
 typedef std::vector<csound::Chord> (*fundamentalDomainByIsNormal_t)(int, double, double);
 std::map<std::string, normalize_t> normalizesForEquivalenceRelations;
 std::map<std::string, isNormal_t> isNormalsForEquivalenceRelations;
-std::map<std::string, isEquivalent_t> isEquivalentsForEquivalenceRelations;
+//~ std::map<std::string, isEquivalent_t> isEquivalentsForEquivalenceRelations;
 std::map<std::string, std::set<std::string> > equivalenceRelationsForCompoundEquivalenceRelations;
 std::map<std::string, fundamentalDomainByNormalize_t> fundamentalDomainByNormalizesForEquivalenceRelations;
 std::map<std::string, fundamentalDomainByIsNormal_t> fundamentalDomainByIsNormalsForEquivalenceRelations;
@@ -489,7 +490,7 @@ int main(int argc, char **argv) {
     reflected = csound::reflect_by_householder(original);
     std::cout << "reflect_by_householder:" << std::endl;
     std::cout << reflected.information() << std::endl;
-    reflected = reflect_in_inversion_flat(original);
+    reflected =  (original);
     std::cout << "reflect_in_inversion_flat:" << std::endl;
     std::cout << reflected.information() << std::endl;
     spun_back = reflected.eOPT();

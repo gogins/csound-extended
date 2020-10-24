@@ -340,6 +340,17 @@ def distance_to_origin(v, u, c):
     return distance
     
 # Ref(v,c) = v - 2 {[(v . u) - c] / (u . u)} u.
+'''
+inline SILENCE_PUBLIC Eigen::VectorXd reflect(const Eigen::VectorXd &v, const Eigen::VectorXd &u, double c) {
+    auto v_dot_u = v.dot(u);
+    auto v_dot_u_minus_c = v_dot_u - c;
+    auto u_dot_u = u.dot(u);
+    auto quotient = v_dot_u_minus_c / u_dot_u;
+    auto subtrahend = u * (2. * quotient);
+    auto reflection = v - subtrahend;
+    return reflection;
+}
+'''
 def reflect(v, u, c):
     print("Reflect by vector math:")
     print("v:", v)
@@ -353,7 +364,7 @@ def reflect(v, u, c):
     print("u_dot_u:", u_dot_u)
     quotient = scipy.divide(v_dot_u_minus_c, u_dot_u)
     print("quotient:", quotient)
-    subtrahend = scipy.multiply((2 * quotient), u)
+    subtrahend = scipy.multiply(u, (2 * quotient))
     print("subtrahend:", subtrahend)
     reflection = scipy.subtract(v, subtrahend)
     print("reflection:", reflection)
@@ -850,4 +861,6 @@ print()
 for i in range(3, 13):
     print("dimensions: %2d  %f %f" % (i, math.sin(math.pi/i), math.cos(math.pi/i)))
 
+print(reflect([-4.0000000,8.0000000,8.0000000], [-0.4082483,0.8164966,-0.4082483], 0))
+print(reflect([-4.0000000,8.0000000,8.0000000], [0.8164966,-0.4082483,-0.4082483], -4.8989795))
  
