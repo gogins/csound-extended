@@ -5,8 +5,14 @@
 #include <cstdlib>
 #include <cstdio>
 #include <string>
+#include <boost/multiprecision/cpp_bin_float.hpp>
+#include <boost/multiprecision/eigen.hpp>
 
 #pragma GCC diagnostic ignored "-Wformat"
+
+typedef bmp::cpp_bin_float_double mp_double;
+typedef Eigen::Matrix<mp_double, Eigen::Dynamic, Eigen::Dynamic> mp_Matrix;
+typedef Eigen::Matrix<mp_double, Eigen::Dynamic, 1> mp_Vector;
 
 static bool printPass = true;
 static bool failureExits = false;
@@ -93,10 +99,10 @@ static bool equals(const csound::HyperplaneEquation &a, const csound::Hyperplane
 
 static void Hyperplane_Equation_for_Test_Points() {
     std::vector<csound::Chord> points;
-    points.push_back(csound::Chord(std::vector<double>({ 4,  0, -1,  0})));
-    points.push_back(csound::Chord(std::vector<double>({ 1,  2,  3, -1})));
-    points.push_back(csound::Chord(std::vector<double>({ 0, -1,  2,  0})));
-    points.push_back(csound::Chord(std::vector<double>({-1,  1, -1,  1})));
+    points.push_back(csound::Chord(std::vector<mp_double>({ 4,  0, -1,  0})));
+    points.push_back(csound::Chord(std::vector<mp_double>({ 1,  2,  3, -1})));
+    points.push_back(csound::Chord(std::vector<mp_double>({ 0, -1,  2,  0})));
+    points.push_back(csound::Chord(std::vector<mp_double>({-1,  1, -1,  1})));
     // From inversion_flats.py for these points by SVD from vectors:
     csound::HyperplaneEquation expected;
     expected.unit_normal_vector.resize(4, 1);
@@ -196,11 +202,11 @@ static void test_chord_space_group(int initialVoiceCount, int finalVoiceCount) {
 }
 
 std::vector<std::string> equivalenceRelationsToTest = {"RP", "RPT", "RPTg", "RPTI", "RPTgI"};
-typedef csound::Chord(*normalize_t)(const csound::Chord &, double, double, int);
-typedef bool (*isNormal_t)(const csound::Chord &, double, double, int);
+typedef csound::Chord(*normalize_t)(const csound::Chord &, mp_double, mp_double, int);
+typedef bool (*isNormal_t)(const csound::Chord &, mp_double, mp_double, int);
 //~ typedef bool (*isEquivalent_t)(const csound::Chord &, const csound::Chord &, double, double);
-typedef std::vector<csound::Chord> (*fundamentalDomainByNormalize_t)(int, double, double);
-typedef std::vector<csound::Chord> (*fundamentalDomainByIsNormal_t)(int, double, double);
+typedef std::vector<csound::Chord> (*fundamentalDomainByNormalize_t)(int, mp_double, mp_double);
+typedef std::vector<csound::Chord> (*fundamentalDomainByIsNormal_t)(int, mp_double, mp_double);
 std::map<std::string, normalize_t> normalizesForEquivalenceRelations;
 std::map<std::string, isNormal_t> isNormalsForEquivalenceRelations;
 //~ std::map<std::string, isEquivalent_t> isEquivalentsForEquivalenceRelations;
@@ -211,8 +217,8 @@ std::map<std::string, fundamentalDomainByIsNormal_t> fundamentalDomainByIsNormal
 static bool testNormalsAndEquivalents(std::string equivalence,
                                       std::vector<csound::Chord> &made_equivalents,
                                       std::vector<csound::Chord> &found_equivalents,
-                                      double range,
-                                      double g) {
+                                      mp_double range,
+                                      mp_double g) {
     char buffer[0x200];
     auto is_equivalent = isNormalsForEquivalenceRelations[equivalence];
     csound::System::message("\nequivalence: %s  normalized: %ld  is_normal: %ld  range: %f  g: %f\n", equivalence.c_str(), made_equivalents.size(), found_equivalents.size(), range, g);
@@ -233,7 +239,7 @@ static bool testNormalsAndEquivalents(std::string equivalence,
      }
  }
 
-static bool testEquivalenceRelation(std::string equivalenceRelation, int voiceCount, double range, double g) {
+static bool testEquivalenceRelation(std::string equivalenceRelation, int voiceCount, mp_double range, mp_double g) {
     bool passes = true;
     char buffer[0x200];
     auto normalsForEquivalenceRelation = fundamentalDomainByNormalizesForEquivalenceRelations[equivalenceRelation](voiceCount, range, g);
@@ -268,7 +274,7 @@ static bool testEquivalenceRelation(std::string equivalenceRelation, int voiceCo
     return passes;
 }
 
-static bool testEquivalenceRelations(int voiceCount, double range, double g) {
+static bool testEquivalenceRelations(int voiceCount, mp_double range, mp_double g) {
     bool passes = true;
     csound::System::message("\nTesting equivalence relations for %d voices over range %f with g %f...\n\n", voiceCount, range, g);
     for (auto equivalenceRelationI = equivalenceRelationsToTest.begin();
@@ -340,17 +346,17 @@ int main(int argc, char **argv) {
     fundamentalDomainByIsNormalsForEquivalenceRelations["RPTgI"] =       csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>;
 
     csound::System::message("\nBehavior of std::fmod and std::remainder:\n\n");
-    for (double pitch = -24.0; pitch < 24.0; pitch += 1.0) {
-        double modulusFmod = std::fmod(pitch, csound::OCTAVE());
-        double modulusRemainder = std::remainder(pitch, csound::OCTAVE());
-        double pc = csound::epc(pitch);
-        double modulus = csound::modulo(pitch, csound::OCTAVE());
+    for (mp_double pitch = -24.0; pitch < 24.0; pitch += 1.0) {
+        mp_double modulusFmod = bmp::fmod(pitch, csound::OCTAVE());
+        mp_double modulusRemainder = bmp::remainder(pitch, csound::OCTAVE());
+        mp_double pc = csound::epc(pitch);
+        mp_double modulus = csound::modulo(pitch, csound::OCTAVE());
         csound::System::message("Pitch: %9.4f  modulo: %9.4f  std::fmod: %9.4f  std::remainder: %9.4f  epc: %9.4f\n", pitch, modulus, modulusFmod, modulusRemainder, pc);
     }
     csound::Chord pcs = csound::chordForName("C major").epcs();
     csound::System::message("Should be C major scale:\n%s\n", pcs.information().c_str());
-    for (double pitch = 36.0; pitch < 96.0; pitch += 1.0) {
-        double conformed = csound::conformToPitchClassSet(pitch, pcs);
+    for (mp_double pitch = 36.0; pitch < 96.0; pitch += 1.0) {
+        mp_double conformed = csound::conformToPitchClassSet(pitch, pcs);
         csound::System::message("pitch: %9.4f  conformed: %9.4f\n", pitch, conformed);
     }
     std::cerr << "EPSILON: " << csound::EPSILON() << std::endl;
@@ -372,7 +378,7 @@ int main(int argc, char **argv) {
     std::cerr << "(chord == other): " << (chord == other) << std::endl;
     std::cerr << "other.contains(2.0): " << other.contains(2.0) << std::endl;
     std::cerr << "other.contains(2.00000001): " << other.contains(2.00000001) << std::endl;
-    std::vector<double> result = other.min();
+    std::vector<mp_double> result = other.min();
     std::cerr << "other.min(): " << result[0] << ", " << result[1] << ", " << result.size() << std::endl;
     std::cerr << "other.minimumInterval(): " << other.minimumInterval() << std::endl;
     std::cerr << "other.maximumInterval(): " << other.maximumInterval() << std::endl;
