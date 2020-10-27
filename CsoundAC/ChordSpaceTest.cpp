@@ -64,8 +64,8 @@ static void printSet(std::string name, const std::vector<csound::Chord> &chords)
     for (auto &value : sorted) {
         auto &c = value.second;
         csound::System::message("%s  chord[%04d]: %s  OPTT: %s  OPTTI: %s opti_sector: ", c.normal_form().toString().c_str(), i, c.toString().c_str(), c.eOPTT().toString().c_str(), c.eOPTTI().toString().c_str());
-        auto opti_sectors = c. opti_domain_sector();
-        for (auto opti_sector : opti_sectors) {
+        auto opti_sectors_ = c.opti_domain_sectors();
+        for (auto opti_sector : opti_sectors_) {
             csound::System::message("%2d (%4.1f)", opti_sector, opti_sector / 2.);
         }
         csound::System::message("\n");
@@ -637,7 +637,7 @@ int main(int argc, char **argv) {
     science_chord_types_3.push_back(csound::Chord({0., 3., 6.}));
     science_chord_types_3.push_back(csound::Chord({0., 3., 7.}));
     science_chord_types_3.push_back(csound::Chord({0., 4., 7.}));
-    science_chord_types_3.push_back (csound::Chord({0., 4., 8.}));
+    science_chord_types_3.push_back(csound::Chord({0., 4., 8.}));
     printSet("Science chord types", science_chord_types_3);
     
     auto myoptts_3 = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTg>(3, 12., 1.);
