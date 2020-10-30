@@ -85,12 +85,12 @@ static bool equals(const csound::HyperplaneEquation &a, const csound::Hyperplane
         return false;
     }
     for (int row = 0; row < a.unit_normal_vector.rows(); ++row) {
-        if (csound::eq_epsilon(a.unit_normal_vector(row, 0), b.unit_normal_vector(row, 0)) == false) {
+        if (csound::eq_tolerance(a.unit_normal_vector(row, 0), b.unit_normal_vector(row, 0)) == false) {
             csound::System::error("equals: unit normal vector element mismatch: %.17g %.17g\n", a.unit_normal_vector(row, 0), b.unit_normal_vector(row, 0));
             return false;
         }
     }
-    if (csound::eq_epsilon(a.constant_term, b.constant_term) == false) {
+    if (csound::eq_tolerance(a.constant_term, b.constant_term) == false) {
         csound::System::error("equals: constant term mismatch: %.17g %,17g\n", a.constant_term, b.constant_term);
         return false;
     }
@@ -99,10 +99,10 @@ static bool equals(const csound::HyperplaneEquation &a, const csound::Hyperplane
 
 static void Hyperplane_Equation_for_Test_Points() {
     std::vector<csound::Chord> points;
-    points.push_back(csound::Chord(std::vector<mp_double>({ 4,  0, -1,  0})));
-    points.push_back(csound::Chord(std::vector<mp_double>({ 1,  2,  3, -1})));
-    points.push_back(csound::Chord(std::vector<mp_double>({ 0, -1,  2,  0})));
-    points.push_back(csound::Chord(std::vector<mp_double>({-1,  1, -1,  1})));
+    points.push_back(csound::Chord(std::vector<mp_double>({ 4.,  0., -1.,  0.})));
+    points.push_back(csound::Chord(std::vector<mp_double>({ 1.,  2.,  3., -1.})));
+    points.push_back(csound::Chord(std::vector<mp_double>({ 0., -1.,  2.,  0.})));
+    points.push_back(csound::Chord(std::vector<mp_double>({-1.,  1., -1.,  1.})));
     // From inversion_flats.py for these points by SVD from vectors:
     csound::HyperplaneEquation expected;
     expected.unit_normal_vector.resize(4, 1);
@@ -289,6 +289,14 @@ static bool testEquivalenceRelations(int voiceCount, mp_double range, mp_double 
 
 int main(int argc, char **argv) {
     csound::System::message("C H O R D S P A C E   U N I T   T E S T S\n\n");
+    mp_double mp_double_small = .00000000000000000001;
+    mp_double mp_double_large = 1e40;
+    std::cerr << "ulp(mp_double_small): " << boost::math::ulp(mp_double_small) << std::endl;
+    std::cerr << "ulp(mp_double_large): " << boost::math::ulp(mp_double_large) << std::endl;
+    std::cerr << "csound::eq_tolerance(0.15, 0.15): " << csound::eq_tolerance(0.15, 0.15) << std::endl;
+    std::cerr << "csound::eq_tolerance(0.1500001, 0.15): " << csound::eq_tolerance(0.1500001, 0.15) << std::endl;
+    std::cerr << "csound::gt_tolerance(14.0, 12.0): " << csound::gt_tolerance(14.0, 12.0) << std::endl;
+    std::cerr << "csound::ge_tolerance(14.0, 12.0): " << csound::ge_tolerance(14.0, 12.0) << std::endl;
     Hyperplane_Equation_for_Test_Points();
 #if defined(USE_OLD_EQUIVALENCES)
     csound::System::message("Using OLD implementation of equivalence relations.\n\n");
@@ -351,21 +359,14 @@ int main(int argc, char **argv) {
         mp_double modulusRemainder = bmp::remainder(pitch, csound::OCTAVE());
         mp_double pc = csound::epc(pitch);
         mp_double modulus = csound::modulo(pitch, csound::OCTAVE());
-        csound::System::message("Pitch: %9.4f  modulo: %9.4f  std::fmod: %9.4f  std::remainder: %9.4f  epc: %9.4f\n", pitch, modulus, modulusFmod, modulusRemainder, pc);
+        csound::System::message("Pitch: %9.4f  modulo: %9.4f  std::fmod: %9.4f  std::remainder: %9.4f  epc: %9.4f\n", pitch.convert_to<double>(), modulus.convert_to<double>(), modulusFmod.convert_to<double>(), modulusRemainder.convert_to<double>(), pc.convert_to<double>());
     }
     csound::Chord pcs = csound::chordForName("C major").epcs();
     csound::System::message("Should be C major scale:\n%s\n", pcs.information().c_str());
     for (mp_double pitch = 36.0; pitch < 96.0; pitch += 1.0) {
         mp_double conformed = csound::conformToPitchClassSet(pitch, pcs);
-        csound::System::message("pitch: %9.4f  conformed: %9.4f\n", pitch, conformed);
+        csound::System::message("pitch: %9.4f  conformed: %9.4f\n", pitch.convert_to<double>(), conformed.convert_to<double>());
     }
-    std::cerr << "EPSILON: " << csound::EPSILON() << std::endl;
-    std::cerr << "epsilonFactor: " << csound::epsilonFactor() << std::endl;
-    std::cerr << "EPSILON * epsilonFactor: " << csound::EPSILON() * csound::epsilonFactor() << std::endl;
-    std::cerr << "csound::eq_epsilon(0.15, 0.15): " << csound::eq_epsilon(0.15, 0.15) << std::endl;
-    std::cerr << "csound::eq_epsilon(0.1500001, 0.15): " << csound::eq_epsilon(0.1500001, 0.15) << std::endl;
-    std::cerr << "csound::gt_epsilon(14.0, 12.0): " << csound::gt_epsilon(14.0, 12.0) << std::endl;
-    std::cerr << "csound::ge_epsilon(14.0, 12.0): " << csound::ge_epsilon(14.0, 12.0) << std::endl;
     csound::Chord chord;
     chord.resize(3);
     std::cerr << "Default chord: " << chord.toString() << std::endl;
