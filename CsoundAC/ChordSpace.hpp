@@ -47,7 +47,6 @@
 #include <algorithm>
 // Header file only library.
 #include <boost/math/special_functions/ulp.hpp>
-#include <boost/test/tools/floating_point_comparison.hpp>
 #include <cfloat>
 #include <climits>
 #include <cmath>
@@ -264,6 +263,17 @@ Q(c, n, m)      Contexual transposition;
 
 SILENCE_PUBLIC int CHORD_SPACE_DEBUGGING = false;
 
+struct SILENCE_PUBLIC SCOPED_DEBUGGING {
+    int prior_state;
+    SCOPED_DEBUGGING() {
+        prior_state = CHORD_SPACE_DEBUGGING;
+        CHORD_SPACE_DEBUGGING = true;
+    }
+    ~SCOPED_DEBUGGING() {
+        CHORD_SPACE_DEBUGGING = prior_state;
+    }
+};
+
 #define SYSTEM_DEBUG if (CHORD_SPACE_DEBUGGING == true) System::message
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -272,8 +282,8 @@ SILENCE_PUBLIC int CHORD_SPACE_DEBUGGING = false;
 
 // But a few forward declarations come first.
 
-typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> mp_Matrix;
-typedef Eigen::Matrix<double, Eigen::Dynamic, 1> mp_Vector;
+typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> Matrix;
+typedef Eigen::Matrix<double, Eigen::Dynamic, 1> Vector;
 
 class SILENCE_PUBLIC Chord;
 
@@ -282,6 +292,8 @@ class SILENCE_PUBLIC ChordScore;
 class SILENCE_PUBLIC ChordSpaceGroup;
 
 SILENCE_PUBLIC double distance_to_points(const Chord &chord, const std::vector<Chord> &points);
+
+SILENCE_PUBLIC bool in_simplex(const std::vector<Chord> &simplex, const Chord &point, int epsilons=20, int ulps=200);
 
 SILENCE_PUBLIC bool le_tolerance(double a, double b, int epsilons=20, int ulps=200);
 
@@ -327,6 +339,12 @@ template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> allNormalizedF
  */
 SILENCE_PUBLIC void apply(Score &score, const Chord &chord, double startTime, double endTime, bool octaveEquivalence = true);
 
+/**
+ * Computes the barycentric coordinates of the point with respect to the 
+ * simplex.
+ */
+SILENCE_PUBLIC Vector barycentric_coordinates(const Matrix &simplex, const Vector &point) ;
+
 SILENCE_PUBLIC double C4();
 
 /**
@@ -341,7 +359,7 @@ SILENCE_PUBLIC double C4();
 SILENCE_PUBLIC Chord chord(const Chord &scale, int scale_degree, int chord_voices, int interval = 3);
 
 struct SILENCE_PUBLIC HyperplaneEquation {
-    mp_Matrix unit_normal_vector;
+    Matrix unit_normal_vector;
     double constant_term;
 };
 
@@ -352,7 +370,7 @@ struct SILENCE_PUBLIC HyperplaneEquation {
  * Eigen matrices are accessed (row, column) and stored as column
  * vectors, so a Chord is accessed (voice (same as row), attribute).
  */
-class SILENCE_PUBLIC Chord : public mp_Matrix  {
+class SILENCE_PUBLIC Chord : public Matrix  {
 public:
     enum {
         PITCH = 0,
@@ -968,7 +986,7 @@ public:
         static bool initialized = false;
         if (initialized == false) {
             initialized = true;
-            CHORD_SPACE_DEBUGGING = true;
+            SCOPED_DEBUGGING scoped_debugging;
             auto cyclical_regions = cyclical_regions_for_dimensionalities();
             auto &opt_domains_for_dimensions = opt_sectors_for_dimensionalities();
             auto &opti_domains_for_dimensions = opti_sectors_for_dimensionalities();
@@ -1058,7 +1076,6 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
                 opti_domains_for_dimensions[dimensions] = opti_domains;
                 hyperplane_equations_for_dimensions[dimensions] = hyperplane_equations;
             }
-            CHORD_SPACE_DEBUGGING = false;
         }
     }
     /**
@@ -1079,8 +1096,12 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
         for (int sector = 0, n = opt_sectors.size(); sector < n; ++sector) {
             auto et = eOT();
             auto distance = distance_to_points(et, opt_sectors[sector]);
-            SYSTEM_DEBUG("opt_domain_sector:  chord: %s distance: %9.4f sector: %2d\n", et.toString().c_str(), distance, sector);
-            if (lt_tolerance(distance, minimum_distance) == true) {
+            bool in_sector_ = in_simplex(opt_sectors[sector], *this);
+            {
+                SCOPED_DEBUGGING debugging;
+                SYSTEM_DEBUG("opt_domain_sector:  chord: %s distance: %9.4f sector: %2d in: %d\n", et.toString().c_str(), distance, sector, in_sector_);
+            }
+            if (lt_tolerance(distance, minimum_distance, 8, 50) == true) {
                 minimum_distance = distance;
             }
             sectors_for_distances.insert({distance, sector});
@@ -1109,9 +1130,14 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
         std::multimap<double, int> sectors_for_distances;
         double minimum_distance = std::numeric_limits<double>::max();
         for (int sector = 0, n = opti_sectors.size(); sector < n; ++sector) {
-            auto distance = distance_to_points(eOT(), opti_sectors[sector]);
-            SYSTEM_DEBUG("opti_domain_sector: chord: %s distance: %9.4f sector: %2d\n", toString().c_str(), distance, sector);
-            if (lt_tolerance(distance, minimum_distance) == true) {
+            auto et = eOT();
+            auto distance = distance_to_points(et, opti_sectors[sector]);
+            bool in_sector_ = in_simplex(opti_sectors[sector], *this);
+            {
+                SCOPED_DEBUGGING debugging;
+                SYSTEM_DEBUG("opti_domain_sector: chord: %s distance: %9.4f sector: %2d in: %d\n", et.toString().c_str(), distance, sector, in_sector_);
+            }
+            if (lt_tolerance(distance, minimum_distance, 8, 50) == true) {
                 minimum_distance = distance;
             }
             sectors_for_distances.insert({distance, sector});
@@ -1124,10 +1150,10 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
         std::sort(result.begin(), result.end());
         return result;
     }
-    /**
-     * Returns 0 if not in the simplex, 1 if on the surface of the simplex, 2 
-     * if inside the simplex.
-     */
+    //~ /**
+     //~ * Returns 0 if not in the simplex, 1 if on the surface of the simplex, 2 
+     //~ * if inside the simplex.
+     //~ */
     static int is_in_simplex(const Chord &chord, const std::vector<Chord> &simplex_vertices) {
         int result = 0;
         auto n = chord.voices();
@@ -1539,6 +1565,16 @@ SILENCE_PUBLIC bool gt_tolerance(double a, double b, int epsilons=20, int ulps=2
 SILENCE_PUBLIC double I(double pitch, double center = 0.0);
 
 /**
+ * Returns whether or not the point is on the surface of or within the 
+ * simplex, which could be e.g. a given sector of the cyclical region of 
+ * the OPT or OPTI fundamental domains. The implementation uses the 
+ * barycentric coordinates of the point with respect to the simplex.
+ * Floating-point comparisons are computed using the indicated tolerances for 
+ * epsilons (near 0) or units of least precision (ulps) (larger values).
+ */
+SILENCE_PUBLIC bool in_simplex(const std::vector<Chord> &simplex, const Chord &point, int epsilons, int ulps);
+
+/**
  * Returns the index of the octavewise revoicing that this chord is,
  * relative to its OP equivalent, within the indicated range. Returns
  * -1 if there is no such chord within the range.
@@ -1635,7 +1671,7 @@ SILENCE_PUBLIC int octavewiseRevoicings(const Chord &chord, double range = OCTAV
  */
 SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b);
 
-SILENCE_PUBLIC mp_Vector reflect(const mp_Vector &point, const mp_Vector &unit_normal_vector, double constant_term);
+SILENCE_PUBLIC Vector reflect(const Vector &point, const Vector &unit_normal_vector, double constant_term);
 
 SILENCE_PUBLIC Chord reflect_by_householder(const Chord &chord);
 
@@ -1879,7 +1915,7 @@ SILENCE_PUBLIC Chord voiceleadingSimpler(const Chord &source, const Chord &d1, c
 
 static std::mt19937 mersenne_twister;
 
-inline SILENCE_PUBLIC std::string toString(const mp_Matrix& mat){
+inline SILENCE_PUBLIC std::string toString(const Matrix& mat){
     std::stringstream ss;
     ss << mat;
     return ss.str();
@@ -2101,6 +2137,7 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_I>(const C
         return chord;
     } else {
         return reflect_in_inversion_flat(chord, opt_sector);
+        //~ return reflect_in_central_diagonal(chord).eRP(range);
     }
 }
 
@@ -3026,7 +3063,7 @@ inline Chord::Chord(const std::vector<double> &other) {
 }
 
 inline Chord &Chord::operator = (const Chord &other) {
-    mp_Matrix::operator=(other);
+    Matrix::operator=(other);
     return *this;
 }
 
@@ -3058,7 +3095,7 @@ inline size_t Chord::voices() const {
 }
 
 inline void Chord::resize(size_t voiceN) {
-    mp_Matrix::resize(voiceN, COUNT);
+    Matrix::resize(voiceN, COUNT);
 }
 
 inline bool Chord::test(const char *label) const {
@@ -3135,14 +3172,12 @@ inline bool Chord::test(const char *label) const {
     } else {
         std::fprintf(stderr, "        Chord::eP is consistent with Chord::iseP.\n");
     }
-    CHORD_SPACE_DEBUGGING = true;
     if (eT().iseT() == false) {
         passed = false;
         std::fprintf(stderr, "Failed: Chord::eT is not consistent with Chord::iseT.\n");
     } else {
         std::fprintf(stderr, "        Chord::eT is consistent with Chord::iseT.\n");
     }
-    CHORD_SPACE_DEBUGGING = false;
     if (eTT().iseTT() == false) {
         passed = false;
         std::fprintf(stderr, "Failed: Chord::eTT is not consistent with Chord::iseTT.\n");
@@ -4599,19 +4634,19 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_singular_value
         std::cout << opt <<  point.col(0).transpose() << std::endl;
     }
     auto subtrahend = points.back().col(0);
-    mp_Matrix matrix(subtrahend.rows(), points.size() - 1);
+    Matrix matrix(subtrahend.rows(), points.size() - 1);
     for (int i = 0, n = points.size() - 1; i < n; ++i) {
-        mp_Vector difference = points[i].col(0) - subtrahend;
+        Vector difference = points[i].col(0) - subtrahend;
         matrix.col(i) = difference;
     }
     std::cout << "hyperplane_equation_from_singular_value_decomposition: vectors:" << std::endl << matrix << std::endl;
     matrix.transposeInPlace();
     std::cout << "hyperplane_equation_from_singular_value_decomposition: vectors transposed:" << std::endl << matrix << std::endl;
-    Eigen::JacobiSVD<mp_Matrix, Eigen::FullPivHouseholderQRPreconditioner> svd(matrix, Eigen::ComputeFullU | Eigen::ComputeFullV);
+    Eigen::JacobiSVD<Matrix, Eigen::FullPivHouseholderQRPreconditioner> svd(matrix, Eigen::ComputeFullU | Eigen::ComputeFullV);
     std::cout << "hyperplane_equation_from_singular_value_decomposition: U:" << std::endl << svd.matrixU() << std::endl;
     std::cout << "hyperplane_equation_from_singular_value_decomposition: singular values:" << std::endl << svd.singularValues() << std::endl;
     std::cout << "hyperplane_equation_from_singular_value_decomposition: V:" << std::endl << svd.matrixV() << std::endl;
-    //~ auto rhs = mp_Matrix::Zero(svd.singularValues().rows(), 1);
+    //~ auto rhs = Matrix::Zero(svd.singularValues().rows(), 1);
     //~ auto solution = svd.solve(rhs);
     //~ std::cout << "solution:\n";
     //~ std::cout << solution << std::endl;
@@ -4855,7 +4890,7 @@ inline SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b) {
     }
 }
 
-inline SILENCE_PUBLIC mp_Vector reflect(const mp_Vector &v, const mp_Vector &u, double c) {
+inline SILENCE_PUBLIC Vector reflect(const Vector &v, const Vector &u, double c) {
     auto v_dot_u = v.dot(u);
     auto v_dot_u_minus_c = v_dot_u - c;
     auto u_dot_u = u.dot(u);
@@ -4881,7 +4916,7 @@ inline SILENCE_PUBLIC Chord reflect_by_householder(const Chord &chord) {
     SYSTEM_DEBUG("reflect_by_householder: tensor: \n%s\n", toString(tensor).c_str());
     auto product = 2. * tensor;
     SYSTEM_DEBUG("reflect_by_householder: product:  \n%s\n", toString(product).c_str());
-    auto identity = mp_Matrix::Identity(center_.voices(), center_.voices());
+    auto identity = Matrix::Identity(center_.voices(), center_.voices());
     SYSTEM_DEBUG("reflect_by_householder: identity:  \n%s\n", toString(identity).c_str());
     auto householder = identity - product;
     SYSTEM_DEBUG("reflect_by_householder: householder:  \n%s\n", toString(householder).c_str());
@@ -4974,7 +5009,7 @@ inline SILENCE_PUBLIC Scale::Scale() {
 
 inline SILENCE_PUBLIC Scale::Scale(std::string name) {
     const Chord temporary = csound::scale(name);
-    mp_Matrix::operator=(temporary);
+    Matrix::operator=(temporary);
     if (temporary.voices() > 0) {
         auto space_at = name.find(' ');
         type_name = name.substr(space_at + 1);
@@ -5006,7 +5041,7 @@ inline SILENCE_PUBLIC Scale::Scale(std::string name, const std::vector<double> &
 inline SILENCE_PUBLIC Scale::~Scale() {};
 
 inline SILENCE_PUBLIC Scale &Scale::operator = (const Scale &other) {
-   mp_Matrix::operator=(dynamic_cast<const Chord &>(other));
+   Matrix::operator=(dynamic_cast<const Chord &>(other));
     type_name = other.getTypeName();
     return *this;
 }
@@ -5325,6 +5360,52 @@ inline SILENCE_PUBLIC double voiceleadingSmoothness(const Chord &a, const Chord 
     return L1;
 }
 
+// Implements:
+// https://math.stackexchange.com/questions/1226707/how-to-check-if-point-x-in-mathbbrn-is-in-a-n-simplex.
+// The simplex must be of codimension 1 with the point.
+
+Vector barycentric_coordinates(const Matrix &simplex, const Vector &point) {
+    auto dimensions = point.rows();
+    Matrix T(dimensions, dimensions);
+    Vector final_vertex = simplex.col(dimensions);
+    Vector point_less_final_vertex = point - final_vertex;
+    for (int column_i = 0; column_i < dimensions; ++column_i) {
+        T.col(column_i) = simplex.col(column_i) - final_vertex;
+    }     
+    // As against the example no need to transpose, already in column major order.
+    auto solution = T.inverse() * point_less_final_vertex;
+    Vector coordinates(dimensions + 1);
+    for (int row_i = 0; row_i < dimensions; ++row_i) {
+        coordinates.coeffRef(row_i) = solution(row_i);
+    }
+    coordinates.coeffRef(dimensions) = 1. - solution.sum();
+    return coordinates;
+}
+
+// A simplex of codimension one that nevertheless locates points in OPT or OPTI
+// is created by inserting an additional vertex above the OPT plane.
+// Comparisons must be done by tolerance.
+
+bool in_simplex(const std::vector<Chord> &domain, const Chord& chord, int epsilons, int ulps) {
+    Matrix simplex(chord.voices(), domain.size());
+    for (int column_i = 0, column_n = domain.size(); column_i < column_n; ++column_i) {
+        simplex.col(column_i) = domain[column_i].col(0);
+    }
+    Vector point = chord.col(0);
+    Vector coordinates = barycentric_coordinates(simplex, point);
+    double sum_ = 0;
+    for (int row_i = 0; row_i < coordinates.rows(); ++row_i) {
+        auto element = coordinates(row_i, 0);
+        sum_ += element;
+        if (ge_tolerance(element, 0., epsilons, ulps) == false) {
+            return false;
+        }
+    }
+    if (le_tolerance(sum_, 1., epsilons, ulps) == false) {
+        return false;
+    }
+    return true;
+}
 
 } // End of namespace csound.
 

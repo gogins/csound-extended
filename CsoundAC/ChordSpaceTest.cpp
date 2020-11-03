@@ -1,17 +1,16 @@
-# include "ChordSpace.hpp"
+#include "ChordSpace.hpp"
 #include <System.hpp>
 #include <algorithm>
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
 #include <string>
-#include <boost/multiprecision/cpp_bin_float.hpp>
-#include <boost/multiprecision/eigen.hpp>
+
 
 #pragma GCC diagnostic ignored "-Wformat"
 
-typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> mp_Matrix;
-typedef Eigen::Matrix<double, Eigen::Dynamic, 1> mp_Vector;
+typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> Matrix;
+typedef Eigen::Matrix<double, Eigen::Dynamic, 1> Vector;
 
 static bool printPass = true;
 static bool failureExits = false;
@@ -366,6 +365,11 @@ int main(int argc, char **argv) {
     for (double pitch = 36.0; pitch < 96.0; pitch += 1.0) {
         double conformed = csound::conformToPitchClassSet(pitch, pcs);
         csound::System::message("pitch: %9.4f  conformed: %9.4f\n", pitch, conformed);
+    }
+    {
+        ///csound::SCOPED_DEBUGGING scoped_debugging;
+        csound::Chord chord({-4.,8.,8.});
+        std::cerr << chord.information() << std::endl;
     }
     csound::Chord chord;
     chord.resize(3);
