@@ -293,7 +293,7 @@ class SILENCE_PUBLIC ChordSpaceGroup;
 
 SILENCE_PUBLIC double distance_to_points(const Chord &chord, const std::vector<Chord> &points);
 
-SILENCE_PUBLIC bool in_simplex(const std::vector<Chord> &simplex, const Chord &point, int epsilons=20, int ulps=200);
+SILENCE_PUBLIC bool in_simplex(const std::vector<Chord> &simplex, const Chord &point, int epsilons=2000, int ulps=2000000);
 
 SILENCE_PUBLIC bool le_tolerance(double a, double b, int epsilons=20, int ulps=200);
 
@@ -362,6 +362,8 @@ struct SILENCE_PUBLIC HyperplaneEquation {
     Matrix unit_normal_vector;
     double constant_term;
 };
+
+SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_singular_value_decomposition(const std::vector<Chord> &points_, bool make_eT);
 
 /**
  * Chords consist of simultaneously sounding pitches. The pitches are
@@ -936,6 +938,22 @@ public:
         return opti_sectors_for_dimensionalities_;
     }
     /**
+     * Returns a collection of vertices for the OPT fundamental domains that have an added 
+     * vertex to make a simplex for chord location. 
+     */
+    static std::map<int, std::vector<std::vector<Chord>>> &opt_simplexes_for_dimensionalities() {
+        static std::map<int, std::vector<std::vector<Chord>>> opt_simplexes_for_dimensionalities_;
+        return opt_simplexes_for_dimensionalities_;
+    }
+     /**
+     * Returns a collection of vertices for the OPTI fundamental domains that have an added 
+     * vertex to make a simplex for chord location. 
+     */
+    static std::map<int, std::vector<std::vector<Chord>>> &opti_simplexes_for_dimensionalities() {
+        static std::map<int, std::vector<std::vector<Chord>>> opti_simplexes_for_dimensionalities_;
+        return opti_simplexes_for_dimensionalities_;
+    }
+    /**
      * For each chord space of dimensions 3 <= n <= 12, there are n 
      * fundamental domains (sectors) of OPT equivalence. For each OPT fundamental domain,
      * there is a inversion flat that evenly divides the OPT fundamental domain into 2 OPTI 
@@ -965,7 +983,12 @@ public:
      *     OPT_d[(d+n)%n] with the midpoint of OPT_d[(d+n)%n] => 
      *     OPT_d[(d+n-2)%n] to give OPTI_d_1.
      *
-     * (3) A vector that is normal to the inversion flat in OPT_d is then 
+     * (3) An extra vertex is added to each of the OPT and OPTI fundamental 
+     *     domains to form a simplex that can be used to create barycentric 
+     *     coordinates for any OPT or OPTI chord, enabling a predicate that 
+     *     identifies whether that chord belongs to that domain.
+     *
+     * (4) A vector that is normal to the inversion flat in OPT_d is then 
      *     OPT_d[(d+n)%n] => OPT_d[d+n-2)%n]. Normalizing this vector gives 
      *     the unit normal vector u for the inversion flat. Then the 
      *     hyperplane equation for the inversion flat is u and its constant 
@@ -990,9 +1013,11 @@ public:
             auto cyclical_regions = cyclical_regions_for_dimensionalities();
             auto &opt_domains_for_dimensions = opt_sectors_for_dimensionalities();
             auto &opti_domains_for_dimensions = opti_sectors_for_dimensionalities();
+            auto &opt_simplexes_for_dimensions = opt_simplexes_for_dimensionalities();
+            auto &opti_simplexes_for_dimensions = opti_simplexes_for_dimensionalities();
             auto &hyperplane_equations_for_dimensions = hyperplane_equations_for_opt_sectors();
             for (int dimensions = 3; dimensions < 12; ++dimensions) {
-SYSTEM_DEBUG("cyclical region for %d dimensions:\n", dimensions);
+                SYSTEM_DEBUG("cyclical region for %d dimensions:\n", dimensions);
                 auto cyclical_region = cyclical_regions[dimensions];
                 std::vector<Chord> original;
                 std::vector<Chord> transposed;
@@ -1019,6 +1044,8 @@ SYSTEM_DEBUG("cyclical region for %d dimensions:\n", dimensions);
                 cyclical_regions[dimensions] = cyclical_region;
                 auto opt_domains = opt_domains_for_dimensions[dimensions];
                 auto opti_domains = opti_domains_for_dimensions[dimensions];
+                auto opt_simplexes = opt_simplexes_for_dimensions[dimensions];
+                auto opti_simplexes = opti_simplexes_for_dimensions[dimensions];
                 auto hyperplane_equations = hyperplane_equations_for_dimensions[dimensions];
                 for (int d = 0, n = dimensions; d < n; ++d) {
                     auto opt_domain = cyclical_regions[n];
@@ -1027,53 +1054,69 @@ SYSTEM_DEBUG("cyclical region for %d dimensions:\n", dimensions);
                     int index;
                     index = 0;
                     for (auto vertex : opt_domains[d]) {
-SYSTEM_DEBUG("  OPT [%2d][%2d] %s\n", opt_domains.size() - 1, index++, vertex.toString().c_str());
+                        SYSTEM_DEBUG("  OPT [%2d][%2d] %s\n", opt_domains.size() - 1, index++, vertex.toString().c_str());
                     }
+                    Chord extra_vertex(dimensions);
+                    extra_vertex = center_.T(1.);
+                    SYSTEM_DEBUG("  extra vertex:%s\n", extra_vertex.toString().c_str());
+                    std::vector<Chord> opt_simplex = opt_domain;
+                    opt_simplex.push_back(extra_vertex);
+                    opt_simplexes.push_back(opt_simplex);
                     auto opti_midpoint = midpoint(opt_domain[(d+n)%n], opt_domain[(d+n-2)%n]);
-SYSTEM_DEBUG("  midpoint     %s\n", opti_midpoint.toString().c_str());
+                    SYSTEM_DEBUG("  midpoint     %s\n", opti_midpoint.toString().c_str());
                     auto opti_domain_0 = opt_domain;
                     opti_domain_0[(d+n-2)%n] = opti_midpoint;
                     opti_domains.push_back(opti_domain_0);
                     index = 0;
                     for (auto vertex : opti_domain_0) {
-SYSTEM_DEBUG("  OPTI[%2d][%2d] %s\n", opti_domains.size() - 1, index++, vertex.toString().c_str());
+                        SYSTEM_DEBUG("  OPTI[%2d][%2d] %s\n", opti_domains.size() - 1, index++, vertex.toString().c_str());
                     }
+                    SYSTEM_DEBUG("  extra vertex:%s\n", extra_vertex.toString().c_str());
+                    std::vector<Chord> opti_simplex_0 = opti_domain_0;
+                    opti_simplex_0.push_back(extra_vertex);
+                    opti_simplexes.push_back(opti_simplex_0);
                     auto opti_domain_1 = opt_domain;
                     opti_domain_1[(d+n-3)%n] = opti_midpoint;
                     opti_domains.push_back(opti_domain_1);
+                    std::vector<Chord> opti_simplex_1 = opti_domain_1;
+                    opti_simplex_1.push_back(extra_vertex);
+                    opti_simplexes.push_back(opti_simplex_1);
                     index = 0;
                     for (auto vertex : opti_domain_1) {
-SYSTEM_DEBUG("  OPTI[%2d][%2d] %s\n", opti_domains.size() - 1, index++, vertex.toString().c_str());
+                        SYSTEM_DEBUG("  OPTI[%2d][%2d] %s\n", opti_domains.size() - 1, index++, vertex.toString().c_str());
                     }
+                    SYSTEM_DEBUG("  extra vertex:%s\n", extra_vertex.toString().c_str());
                     auto lower_point = opt_domain[(n+d)%n];
                     auto upper_point = opt_domain[(n+d-2)%n];
-SYSTEM_DEBUG("  hyperplane_equation: upper_point: %s\n", upper_point.toString().c_str());
-SYSTEM_DEBUG("  hyperplane_equation: lower point: %s\n", lower_point.toString().c_str());
+                    SYSTEM_DEBUG("  hyperplane_equation: upper_point: %s\n", upper_point.toString().c_str());
+                    SYSTEM_DEBUG("  hyperplane_equation: lower point: %s\n", lower_point.toString().c_str());
                     auto normal_vector = upper_point.col(0) - lower_point.col(0);
                     auto norm = normal_vector.norm();
                     HyperplaneEquation hyperplane_equation_;
                     hyperplane_equation_.unit_normal_vector = normal_vector / norm;
                     auto temp = center_.col(0).adjoint() * hyperplane_equation_.unit_normal_vector;    
                     hyperplane_equation_.constant_term = temp(0, 0);
-SYSTEM_DEBUG("  hyperplane_equation: sector: %d\n", d);
-SYSTEM_DEBUG("  hyperplane_equation: center:\n");
+                    SYSTEM_DEBUG("  hyperplane_equation: sector: %d\n", d);
+                    SYSTEM_DEBUG("  hyperplane_equation: center:\n");
                     for(int i = 0; i < n; i++) {
-SYSTEM_DEBUG("    %9.4f\n", center_.getPitch(i));
+                        SYSTEM_DEBUG("    %9.4f\n", center_.getPitch(i));
                     }
-SYSTEM_DEBUG("  hyperplane_equation: normal_vector:\n");
+                    SYSTEM_DEBUG("  hyperplane_equation: normal_vector:\n");
                     for(int i = 0; i < n; i++) {
-SYSTEM_DEBUG("    %9.4f\n", normal_vector(i, 0));
+                        SYSTEM_DEBUG("    %9.4f\n", normal_vector(i, 0));
                     }
-SYSTEM_DEBUG("  hyperplane_equation: norm: %9.4f\n", norm);
-SYSTEM_DEBUG("  hyperplane_equation: unit_normal_vector:\n");
+                    SYSTEM_DEBUG("  hyperplane_equation: norm: %9.4f\n", norm);
+                    SYSTEM_DEBUG("  hyperplane_equation: unit_normal_vector:\n");
                     for(int i = 0; i < n; i++) {
-SYSTEM_DEBUG("    %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
+                        SYSTEM_DEBUG("    %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
                     }
-SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
+                    SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
                     hyperplane_equations.push_back(hyperplane_equation_);
                 }
                 opt_domains_for_dimensions[dimensions] = opt_domains;
                 opti_domains_for_dimensions[dimensions] = opti_domains;
+                opt_simplexes_for_dimensions[dimensions] = opt_simplexes;
+                opti_simplexes_for_dimensions[dimensions] = opti_simplexes;
                 hyperplane_equations_for_dimensions[dimensions] = hyperplane_equations;
             }
         }
@@ -1082,25 +1125,22 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
      * Returns the zero-based index(s) of the sector(s) within the cyclical 
      * region of OPT fundamental domains to which the chord belongs. A chord 
      * on a vertex, edge, or facet shared by more than one sector belongs to 
-     * each them; the center of the cyclical region belongs to all of the 
+     * each of them; the center of the cyclical region belongs to all of the 
      * sectors. Sectors are generated by rotation of a fundamental domain 
-     * (equivalently, by the octavewise revoicing of chords) and correspond to 
-     * "chord inversion" in the musician's ordinary sense.
+     * around the central axis (equivalently, by the octavewise revoicing of 
+     * chords) and correspond to "chord inversion" in the musician's sense.
      */
     virtual std::vector<int> opt_domain_sector() const {
         std::vector<int> sectors;
         auto opt_sectors_for_dimensions = opt_sectors_for_dimensionalities();
         auto opt_sectors = opt_sectors_for_dimensions[voices()];
+        auto opt_simplexes_for_dimensions = opt_simplexes_for_dimensionalities();
+        auto opt_simplexes = opt_simplexes_for_dimensions[voices()];
         std::multimap<double, int> sectors_for_distances;
         double minimum_distance = std::numeric_limits<double>::max();
+        auto ot = eOT();
         for (int sector = 0, n = opt_sectors.size(); sector < n; ++sector) {
-            auto et = eOT();
-            auto distance = distance_to_points(et, opt_sectors[sector]);
-            bool in_sector_ = in_simplex(opt_sectors[sector], *this);
-            {
-                SCOPED_DEBUGGING debugging;
-                SYSTEM_DEBUG("opt_domain_sector:  chord: %s distance: %9.4f sector: %2d in: %d\n", et.toString().c_str(), distance, sector, in_sector_);
-            }
+            auto distance = distance_to_points(ot, opt_sectors[sector]);
             if (lt_tolerance(distance, minimum_distance, 8, 50) == true) {
                 minimum_distance = distance;
             }
@@ -1109,6 +1149,12 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
         std::vector<int> result;
         auto range = sectors_for_distances.equal_range(minimum_distance);
         for (auto it = range.first; it != range.second; ++it) {
+            auto opt_simplex = opt_simplexes[it->second];
+            {
+                SCOPED_DEBUGGING debugging;
+                int in_sector_ = in_simplex(opt_simplex, ot);
+                SYSTEM_DEBUG("opt_domain_sector:  chord: %s distance: %9.4f sector: %2d in_simplex: %d\n", ot.toString().c_str(), it->first, it->second, in_sector_);
+            }
             result.push_back(it->second);
         }
         std::sort(result.begin(), result.end());
@@ -1127,16 +1173,13 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
         std::vector<int> sectors;
         auto opti_sectors_for_dimensions = opti_sectors_for_dimensionalities();
         auto opti_sectors = opti_sectors_for_dimensions[voices()];
+        auto opti_simplexes_for_dimensions = opti_simplexes_for_dimensionalities();
+        auto opti_simplexes = opti_simplexes_for_dimensions[voices()];
         std::multimap<double, int> sectors_for_distances;
         double minimum_distance = std::numeric_limits<double>::max();
+        auto ot = eOT();
         for (int sector = 0, n = opti_sectors.size(); sector < n; ++sector) {
-            auto et = eOT();
-            auto distance = distance_to_points(et, opti_sectors[sector]);
-            bool in_sector_ = in_simplex(opti_sectors[sector], *this);
-            {
-                SCOPED_DEBUGGING debugging;
-                SYSTEM_DEBUG("opti_domain_sector: chord: %s distance: %9.4f sector: %2d in: %d\n", et.toString().c_str(), distance, sector, in_sector_);
-            }
+            auto distance = distance_to_points(ot, opti_sectors[sector]);
             if (lt_tolerance(distance, minimum_distance, 8, 50) == true) {
                 minimum_distance = distance;
             }
@@ -1145,6 +1188,12 @@ SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equatio
         std::vector<int> result;
         auto range = sectors_for_distances.equal_range(minimum_distance);
         for (auto it = range.first; it != range.second; ++it) {
+            auto opti_simplex = opti_simplexes[it->second];
+            {
+                SCOPED_DEBUGGING debugging;
+                int in_sector_ = in_simplex(opti_simplex, ot);
+                SYSTEM_DEBUG("opt_domain_sector:  chord: %s distance: %9.4f sector: %2d in: %d\n", ot.toString().c_str(), it->first, it->second, in_sector_);
+            }
             result.push_back(it->second);
         }
         std::sort(result.begin(), result.end());
@@ -5362,49 +5411,68 @@ inline SILENCE_PUBLIC double voiceleadingSmoothness(const Chord &a, const Chord 
 
 // Implements:
 // https://math.stackexchange.com/questions/1226707/how-to-check-if-point-x-in-mathbbrn-is-in-a-n-simplex.
-// The simplex must be of codimension 1 with the point.
+// The simplex must have the same dimensionality as the chord space, e.g. for 
+// trichords the simplex must be 3-dimensional, having 4 vertices.
 
 Vector barycentric_coordinates(const Matrix &simplex, const Vector &point) {
-    auto dimensions = point.rows();
-    Matrix T(dimensions, dimensions);
-    Vector final_vertex = simplex.col(dimensions);
+    ///SCOPED_DEBUGGING debugging;
+    SYSTEM_DEBUG("barycentric_coordinates: simplex: \n%s\n", toString(simplex).c_str());
+    SYSTEM_DEBUG("barycentric_coordinates: point: \n%s\n", toString(point).c_str());
+    auto cartesian_dimensions = point.rows();
+    auto simplex_column_n = simplex.cols();
+    auto matrix_column_n = simplex_column_n - 1;
+    Matrix T(matrix_column_n, matrix_column_n);
+    Vector final_vertex = simplex.col(matrix_column_n);
+    SYSTEM_DEBUG("barycentric_coordinates: final_vertex: \n%s\n", toString(final_vertex).c_str());
     Vector point_less_final_vertex = point - final_vertex;
-    for (int column_i = 0; column_i < dimensions; ++column_i) {
+    for (int column_i = 0; column_i < matrix_column_n; ++column_i) {
         T.col(column_i) = simplex.col(column_i) - final_vertex;
     }     
+    SYSTEM_DEBUG("barycentric_coordinates: T:\n%s\n", toString(T).c_str());
     // As against the example no need to transpose, already in column major order.
-    auto solution = T.inverse() * point_less_final_vertex;
-    Vector coordinates(dimensions + 1);
-    for (int row_i = 0; row_i < dimensions; ++row_i) {
+    Matrix t_inverse = T.inverse();
+    SYSTEM_DEBUG("barycentric_coordinates: inverse of T:\n%s\n", toString(t_inverse).c_str());
+    auto solution = t_inverse * point_less_final_vertex;
+    SYSTEM_DEBUG("barycentric_coordinates: solution:\n%s\n", toString(solution).c_str());
+    Vector coordinates(simplex_column_n);
+    for (int row_i = 0; row_i < cartesian_dimensions; ++row_i) {
         coordinates.coeffRef(row_i) = solution(row_i);
     }
-    coordinates.coeffRef(dimensions) = 1. - solution.sum();
+    coordinates.coeffRef(cartesian_dimensions) = 1. - solution.sum();
+    SYSTEM_DEBUG("barycentric_coordinates: coordinates:\n%s\n\n", toString(coordinates).c_str());
     return coordinates;
 }
 
-// A simplex of codimension one that nevertheless locates points in OPT or OPTI
-// is created by inserting an additional vertex above the OPT plane.
-// Comparisons must be done by tolerance.
-
-bool in_simplex(const std::vector<Chord> &domain, const Chord& chord, int epsilons, int ulps) {
-    Matrix simplex(chord.voices(), domain.size());
-    for (int column_i = 0, column_n = domain.size(); column_i < column_n; ++column_i) {
-        simplex.col(column_i) = domain[column_i].col(0);
+bool in_simplex(const std::vector<Chord> &simplex, const Chord& chord, int epsilons, int ulps) {
+    ///SCOPED_DEBUGGING debugging;
+    Chord ot = chord.eOT();
+    auto row_n = ot.voices();
+    auto column_n = simplex.size();
+    Matrix matrix(row_n, column_n);
+    for (int column_i = 0; column_i < column_n; ++column_i) {
+        matrix.col(column_i) = simplex[column_i].col(0);
     }
-    Vector point = chord.col(0);
-    Vector coordinates = barycentric_coordinates(simplex, point);
-    double sum_ = 0;
+    Vector point = ot.col(0);
+    Vector coordinates = barycentric_coordinates(matrix, point);
+    double sum_ = 0.;
+    bool is_inside = true;
     for (int row_i = 0; row_i < coordinates.rows(); ++row_i) {
         auto element = coordinates(row_i, 0);
         sum_ += element;
         if (ge_tolerance(element, 0., epsilons, ulps) == false) {
-            return false;
+            is_inside = false;
+            break;
         }
     }
     if (le_tolerance(sum_, 1., epsilons, ulps) == false) {
-        return false;
+        is_inside = false;
     }
-    return true;
+    SYSTEM_DEBUG("in_simplex: chord:       %s epsilons: %8d ulps %8d\n",chord.toString().c_str(), epsilons, ulps);
+    for (int i = 0, n = simplex.size(); i < n; ++i) {
+        SYSTEM_DEBUG("in_simplex: simplex[%3d] %s\n", i, simplex[i].toString().c_str());
+    }
+    SYSTEM_DEBUG("in_simplex: is_inside:     %2d\n\n", is_inside);
+    return is_inside;
 }
 
 } // End of namespace csound.
@@ -5412,3 +5480,4 @@ bool in_simplex(const std::vector<Chord> &domain, const Chord& chord, int epsilo
 #pragma GCC diagnostic push
 
 #endif
+ 

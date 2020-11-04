@@ -360,6 +360,8 @@ int main(int argc, char **argv) {
         double modulus = csound::modulo(pitch, csound::OCTAVE());
         csound::System::message("Pitch: %9.4f  modulo: %9.4f  std::fmod: %9.4f  std::remainder: %9.4f  epc: %9.4f\n", pitch, modulus, modulusFmod, modulusRemainder, pc);
     }
+    csound::Chord cmt = csound::chordForName("CM").epcs();
+    csound::System::message("Should be C major triad:\n%s\n", cmt.information().c_str());
     csound::Chord pcs = csound::chordForName("C major").epcs();
     csound::System::message("Should be C major scale:\n%s\n", pcs.information().c_str());
     for (double pitch = 36.0; pitch < 96.0; pitch += 1.0) {
@@ -660,3 +662,4 @@ int main(int argc, char **argv) {
     summary();
     return 0;
 }
+ 
