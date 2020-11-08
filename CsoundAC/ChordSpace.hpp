@@ -732,7 +732,13 @@ public:
      * Returns whether or not this chord lies within the indicated sector of 
      * the cyclical region of OPTI fundamental domains.
      */
-    virtual bool is_opti_sector(int opt_sector = 0) const;
+    virtual bool is_opti_sector(int opti_sector = 0) const;
+    /**
+     * Returns whether or not this chord is invariant under reflection in the 
+     * inversion flat. Such are the shared vertices, edges, and facets of 
+     * those fundamental domains that involve inversional equivalence.
+     */
+    virtual bool self_inverse(int opt_sector = 0) const;
     /**
      * Returns the chord inverted by the sum of its first two voices.
      * NOTE: Does NOT return an equivalent under any requivalence relation.
@@ -1139,10 +1145,11 @@ public:
         std::multimap<double, int> sectors_for_distances;
         double minimum_distance = std::numeric_limits<double>::max();
         auto ot = eOT();
+        double difference;
         for (int sector = 0, n = opt_sectors.size(); sector < n; ++sector) {
             auto distance = distance_to_points(ot, opt_sectors[sector]);
-            if (lt_tolerance(distance, minimum_distance, 8, 50) == true) {
-                minimum_distance = distance;
+            if (lt_tolerance(distance, minimum_distance, 20, 200) == true) {
+                 minimum_distance = distance;
             }
             sectors_for_distances.insert({distance, sector});
         }
@@ -1150,12 +1157,17 @@ public:
         auto range = sectors_for_distances.equal_range(minimum_distance);
         for (auto it = range.first; it != range.second; ++it) {
             auto opt_simplex = opt_simplexes[it->second];
+            int in_sector_ = in_simplex(opt_simplex, ot);
             {
-                SCOPED_DEBUGGING debugging;
-                int in_sector_ = in_simplex(opt_simplex, ot);
-                SYSTEM_DEBUG("opt_domain_sector:  chord: %s distance: %9.4f sector: %2d in_simplex: %d\n", ot.toString().c_str(), it->first, it->second, in_sector_);
+                ///SCOPED_DEBUGGING debugging;
+                auto ulp = boost::math::ulp(it->first);
+                SYSTEM_DEBUG("opt_domain_sector:  ot: %s distance: %.20g ulp %.20g in_simplex: %d sector: %2d \n", ot.toString().c_str(), it->first, ulp, in_sector_, it->second);
             }
             result.push_back(it->second);
+        }
+        {
+            ///SCOPED_DEBUGGING debugging;
+            SYSTEM_DEBUG("\n");
         }
         std::sort(result.begin(), result.end());
         return result;
@@ -1171,10 +1183,10 @@ public:
      */
     virtual std::vector<int> opti_domain_sector() const {
         std::vector<int> sectors;
-        auto opti_sectors_for_dimensions = opti_sectors_for_dimensionalities();
-        auto opti_sectors = opti_sectors_for_dimensions[voices()];
-        auto opti_simplexes_for_dimensions = opti_simplexes_for_dimensionalities();
-        auto opti_simplexes = opti_simplexes_for_dimensions[voices()];
+        auto &opti_sectors_for_dimensions = opti_sectors_for_dimensionalities();
+        auto &opti_sectors = opti_sectors_for_dimensions[voices()];
+        auto &opti_simplexes_for_dimensions = opti_simplexes_for_dimensionalities();
+        auto &opti_simplexes = opti_simplexes_for_dimensions[voices()];
         std::multimap<double, int> sectors_for_distances;
         double minimum_distance = std::numeric_limits<double>::max();
         auto ot = eOT();
@@ -1189,77 +1201,17 @@ public:
         auto range = sectors_for_distances.equal_range(minimum_distance);
         for (auto it = range.first; it != range.second; ++it) {
             auto opti_simplex = opti_simplexes[it->second];
+            int in_sector_ = in_simplex(opti_simplex, ot);
             {
-                SCOPED_DEBUGGING debugging;
-                int in_sector_ = in_simplex(opti_simplex, ot);
-                SYSTEM_DEBUG("opt_domain_sector:  chord: %s distance: %9.4f sector: %2d in: %d\n", ot.toString().c_str(), it->first, it->second, in_sector_);
+                ///SCOPED_DEBUGGING debugging;
+                auto ulp = boost::math::ulp(it->first);
+                SYSTEM_DEBUG("opti_domain_sector: ot: %s distance: %.20g ulp %.20g in_simplex: %d sector: %2d\n", ot.toString().c_str(), it->first, ulp, in_sector_, it->second);
             }
             result.push_back(it->second);
         }
-        std::sort(result.begin(), result.end());
-        return result;
-    }
-    //~ /**
-     //~ * Returns 0 if not in the simplex, 1 if on the surface of the simplex, 2 
-     //~ * if inside the simplex.
-     //~ */
-    static int is_in_simplex(const Chord &chord, const std::vector<Chord> &simplex_vertices) {
-        int result = 0;
-        auto n = chord.voices();
-        return result;
-    }
-    /**
-     * Returns the zero-based index(s) of the sector(s) within the cyclical 
-     * region of OPT fundamental domains to which the chord belongs. A chord 
-     * on a vertex, edge, or facet shared by more than one sector belongs to 
-     * each them; the center of the cyclical region belongs to all of the 
-     * sectors. Sectors are generated by rotation of a fundamental domain 
-     * (equivalently, by the octavewise revoicing of chords) and correspond to 
-     * "chord inversion" in the musician's ordinary sense. Sectors are 
-     * identified by solving constraints on barycentric coordinates.
-     */
-    virtual std::vector<int> opt_domain_sectors() const {
-        std::vector<int> result;
-        auto opt_sectors_for_dimensions = opt_sectors_for_dimensionalities();
-        auto opt_sectors = opt_sectors_for_dimensions[voices()];
-        for (int opt_sector = 0, n = opt_sectors.size(); opt_sector < n; ++opt_sector) {
-            auto predicate = is_in_simplex(*this, opt_sectors[opt_sector]);
-            if (predicate > 0) {
-                result.push_back(opt_sector);
-                // If the predicate is 1, there is no need to look at the other 
-                // sectors.
-                if (predicate == 1) {
-                    break;
-                }
-            }
-        }
-        std::sort(result.begin(), result.end());
-        return result;
-    }
-    /**
-     * Returns the zero-based index(s) of the sector(s) within the cyclical 
-     * region of OPTI fundamental domains to which the chord belongs. A chord 
-     * on a vertex, edge, or facet shared by more than one sector belongs to 
-     * each them; the center of the cyclical region belongs to all of the 
-     * sectors. Sectors are generated by rotation of a fundamental domain 
-     * (equivalently, by the octavewise revoicing of chords) and correspond to 
-     * "chord inversion" in the musician's ordinary sense. Sectors are 
-     * identified by solving constraints on barycentric coordinates.
-     */
-    virtual std::vector<int> opti_domain_sectors() const {
-        std::vector<int> result;
-        auto opti_sectors_for_dimensions = opti_sectors_for_dimensionalities();
-        auto opti_sectors = opti_sectors_for_dimensions[voices()];
-        for (int opti_sector = 0, n = opti_sectors.size(); opti_sector < n; ++opti_sector) {
-            auto predicate = is_in_simplex(*this, opti_sectors[opti_sector]);
-            if (predicate > 0) {
-                result.push_back(opti_sector);
-                // If the predicate is 1, there is no need to look at the other 
-                // sectors.
-                if (predicate == 1) {
-                    break;
-                }
-            }
+        {
+            ///SCOPED_DEBUGGING debugging;
+            SYSTEM_DEBUG("\n");
         }
         std::sort(result.begin(), result.end());
         return result;
@@ -1997,6 +1949,15 @@ template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_R>(const Cho
     return true;
 }
 
+bool Chord::self_inverse(int opt_sector) const {
+    auto inverse = reflect_in_inversion_flat(*this, opt_sector);
+    if (*this == inverse) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 bool Chord::is_opt_sector(int index) const {
     auto sectors = opt_domain_sector();
     for (auto sector : sectors) {
@@ -2171,6 +2132,9 @@ inline bool Chord::iseTT(double g) const {
 //	EQUIVALENCE_RELATION_I
 
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_I>(const Chord &chord, double range, double g, int opt_sector) {
+    if (chord.self_inverse(opt_sector) == true) {
+        return true;
+    }
     if (chord.is_opti_sector(opt_sector * 2) == true) {
         return true;
     }
@@ -2808,6 +2772,29 @@ static std::string print_sectors(const Chord &chord) {
     return result;    
 }
 
+static std::string print_simplexes(const Chord &chord) {
+    std::string result;
+    char buffer[0x1000];
+    auto &opt_simplexes_for_dimensions = chord.opt_simplexes_for_dimensionalities();
+    auto &opt_simplexes = opt_simplexes_for_dimensions[chord.voices()];
+    auto &opti_simplexes_for_dimensions = chord.opti_simplexes_for_dimensionalities();
+    auto &opti_simplexes = opti_simplexes_for_dimensions[chord.voices()];
+    for (int opt_i = 0, opt_n = chord.voices(); opt_i < opt_n; ++opt_i) {
+        auto opti_i_0 = opt_i * 2;
+        auto opti_i_1 = opti_i_0 + 1;
+        const auto &opt_simplex = opt_simplexes[opt_i];
+        const auto &opti_simplex_0 = opti_simplexes[opti_i_0];
+        const auto &opti_simplex_1 = opti_simplexes[opti_i_1];
+        auto ot = chord.eOT();
+        auto in_opt_simplex     = in_simplex(opt_simplex,    ot) ? "in" : " ";
+        auto in_opti_simplex_0  = in_simplex(opti_simplex_0, ot) ? "in" : " ";
+        auto in_opti_simplex_1  = in_simplex(opti_simplex_1, ot) ? "in" : " ";
+        std::sprintf(buffer, "                    OPT[%2d] %2s  OPTI[%2d] %2s  OPTI[%2d] %2s\n", opt_i, in_opt_simplex, opti_i_0, in_opti_simplex_0, opti_i_1, in_opti_simplex_1);
+        result.append(buffer);
+    }
+    return result;    
+}
+
 inline std::string Chord::information() const {
     std::string result;
     char buffer[0x4000];
@@ -2822,6 +2809,9 @@ inline std::string Chord::information() const {
     auto sector_text = print_sectors(*this);
     auto opt_sector = opt_domain_sector().front();
     std::sprintf(buffer, "%17s %s %s\n", name().c_str(), toString().c_str(), sector_text.c_str());
+    result.append(buffer);
+    auto simplex_text = print_simplexes(*this);
+    std::sprintf(buffer, "sectors of cyclical region:\n%s", simplex_text.c_str());
     result.append(buffer);
     std::sprintf(buffer, "pitch-class set:  %s\n", epcs().toString().c_str());
     result.append(buffer);
@@ -4400,54 +4390,78 @@ inline SILENCE_PUBLIC double &epsilonFactor() {
     return epsilonFactor;
 }
 
-// For compare_with_epsilons, compare_with_ulps, and 
-// eq_tolerance, see: 
-// https://www.boost.org/doc/libs/1_72_0/libs/test/doc/html/boost_test/testing_tools/extended_comparison/floating_point/floating_points_comparison_theory.html
+// See: 
+// https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
 // https://bitbashing.io/comparing-floats.html
+// https://www.boost.org/doc/libs/1_72_0/libs/test/doc/html/boost_test/testing_tools/extended_comparison/floating_point/floating_points_comparison_theory.html
+//
+// A floating point number can be in the following states:
+//
+// (1) Normal - OK to compare.
+// (2) Denormal - OK to compare,
+// (3) Max - Automatically unequal.
+// (4) Inf - Automatically unequal.
+// (5) NaN - Automatically unequal.
+//
+// If a and b differ in sign, they are not equal, unless one is zero and the other is negative zero.
+// If a or b are max, inf, or nan, they are not equal.
+// If difference = fabs(a - b) is max, inf, or nan, the numbers are not equal.
+// If a or b is zero, the tolerance is multiples of machine epsilon, and the result is difference <= tolerance.
+// If a and b are not zero, the tolerance is multiples of ulps, and the result is difference <= tolerance.
 
-static inline bool compare_with_epsilons(const double &a, const double &b, int epsilons) {
-    const static double epsilon = std::numeric_limits<double>::epsilon();
-    auto tolerance = epsilon * epsilons;
-    auto difference = std::fabs(a - b);
-    if (difference <= tolerance) {
-        SYSTEM_DEBUG("compare_with_epsilons: a: %18.7g b: %18.7g difference: %18.7g tolerance: %18.7g epsilon:        %18.7g epsilons: %6d => true\n", a, b, difference, tolerance, epsilon, epsilons);
-        return true;
-    } else {
-        SYSTEM_DEBUG("compare_with_epsilons: a: %18.7g b: %18.7g difference: %18.7g tolerance: %18.7g epsilon:        %18.7g epsilons: %6d => false\n", a, b, difference, tolerance, epsilon, epsilons);
-        return false;
-    }
-}
-
-static inline bool compare_with_ulps(const double &a, const double &b, int ulps) {
-    auto difference = std::fabs(a - b);
-    if (difference == std::numeric_limits<double>::max()) {
-        return false;
-    }
-    double difference_ulp = boost::math::ulp(difference);
-    double tolerance = difference_ulp * double(ulps);
-    if (difference <= tolerance) {
-        SYSTEM_DEBUG("compare_with_ulps:     a: %18.7g b: %18.7g difference: %18.7g tolerance: %18.7g difference_ulp: %18.7g ulps:     %6d => true\n", a, b, difference, tolerance, difference_ulp, ulps);
-        return true;
-    } else {
-        SYSTEM_DEBUG("compare_with_ulps:     a: %18.7g b: %18.7g difference: %18.7g tolerance: %18.7g difference_ulp: %18.7g ulps:     %6d => false\n", a, b, difference, tolerance, difference_ulp, ulps);
-        return false;
-    }
-}
 
 inline SILENCE_PUBLIC bool eq_tolerance(double a, double b, int epsilons, int ulps) {
-    SYSTEM_DEBUG("eq_tolerance:          a: %18.7g b: %18.7g epsilons: %5d ulps: %5d\n", a, b, epsilons, ulps);
+    ///SCOPED_DEBUGGING debugging;
+    static const double machine_epsilon = std::numeric_limits<double>::epsilon();
+    static const double double_max_ = std::numeric_limits<double>::max();
     if (a == b) {
-        SYSTEM_DEBUG("eq_tolerance: strictly equal.\n");
+        SYSTEM_DEBUG("eq_tolerance:          => true  a: %18.7g b: %18.7g epsilons: %5d ulps: %5d: a and b are strictly equal.\n", a, b, epsilons, ulps);
         return true;
     }
-    //~ if (std::signbit(a) != std::signbit(b)) {
-        //~ SYSTEM_DEBUG("eq_tolerance: signbits unequal.\n");
-        //~ return false;
-    //~ }
-    if (compare_with_epsilons(a, b, epsilons) == true) {
-        return true;
+    if ((a == double_max_ || b == double_max_) == true) {
+        SYSTEM_DEBUG("eq_tolerance:          => false a: %18.7g b: %18.7g epsilons: %5d ulps: %5d: a or b is max.\n", a, b, epsilons, ulps);
+        return false;
+    }
+    if ((std::isinf(a) || std::isinf(b)) == true) {
+        SYSTEM_DEBUG("eq_tolerance:          => false a: %18.7g b: %18.7g epsilons: %5d ulps: %5d: a or b is inf.\n", a, b, epsilons, ulps);
+        return false;
+    }
+    if ((std::isnan(a) || std::isnan(b)) == true) {
+        SYSTEM_DEBUG("eq_tolerance:          => false a: %18.7g b: %18.7g epsilons: %5d ulps: %5d: a or b is nan.\n", a, b, epsilons, ulps);
+        return false;
+    }
+    auto difference = std::fabs(a - b);
+    if ((difference == double_max_) == true) {
+        SYSTEM_DEBUG("eq_tolerance:          => false a: %18.7g b: %18.7g epsilons: %5d ulps: %5d: difference is max.\n", a, b, epsilons, ulps);
+        return false;
+    }
+    if (std::isinf(difference) == true) {
+        SYSTEM_DEBUG("eq_tolerance:          => false a: %18.7g b: %18.7g epsilons: %5d ulps: %5d: difference is inf.\n", a, b, epsilons, ulps);
+        return false;
+    }
+    if (std::isnan(difference) == true) {
+        SYSTEM_DEBUG("eq_tolerance:          => false a: %18.7g b: %18.7g epsilons: %5d ulps: %5d: difference is nan.\n", a, b, epsilons, ulps);
+        return false;
+    }
+    if ((a == 0. || b == 0.) == true) {
+        auto tolerance = epsilons * machine_epsilon;
+        if (difference <= tolerance) {
+            SYSTEM_DEBUG("eq_tolerance:          => true  a: %18.7g b: %18.7g epsilons: %5d ulps: %5d: difference <= epsilons * machine_epsilon.\n", a, b, epsilons, ulps);
+            return true;
+        } else {
+            SYSTEM_DEBUG("eq_tolerance:          => false a: %18.7g b: %18.7g epsilons: %5d ulps: %5d: difference <= epsilons * machine_epsilon.\n", a, b, epsilons, ulps);
+            return false;
+        }
     } else {
-        return compare_with_ulps(a, b, ulps);
+        auto difference_ulp = boost::math::ulp(difference);
+        auto tolerance = difference_ulp * ulps;
+        if (difference <= tolerance) {
+            SYSTEM_DEBUG("eq_tolerance:          => true  a: %18.7g b: %18.7g epsilons: %5d ulps: %5d: difference <= difference_ulp * ulps.\n", a, b, epsilons, ulps);
+            return true;
+        } else {
+            SYSTEM_DEBUG("eq_tolerance:          => false a: %18.7g b: %18.7g epsilons: %5d ulps: %5d: difference <= difference_ulp * ulps.\n", a, b, epsilons, ulps);
+            return false;
+        }
     }
 }
 
@@ -4644,7 +4658,6 @@ inline SILENCE_PUBLIC bool ge_tolerance(double a, double b, int epsilons, int ul
            return false;
        }
     }
-    // ~return a >= b;
 }
 
 inline SILENCE_PUBLIC bool gt_tolerance(double a, double b, int epsilons, int ulps) {
@@ -4657,7 +4670,6 @@ inline SILENCE_PUBLIC bool gt_tolerance(double a, double b, int epsilons, int ul
            return false;
        }
     }
-    //~ return a > b;
 }
 
 inline SILENCE_PUBLIC double I(double pitch, double center) {
@@ -4815,7 +4827,6 @@ inline SILENCE_PUBLIC bool le_tolerance(double a, double b, int epsilons, int ul
             return false;
         }
     }
-    //~ return a <= b;
 }
 
 inline SILENCE_PUBLIC bool lt_tolerance(double a, double b, int epsilons, int ulps) {
@@ -4828,7 +4839,6 @@ inline SILENCE_PUBLIC bool lt_tolerance(double a, double b, int epsilons, int ul
             return false;
         }
     }
-    //~ return a < b;
 }
 
 inline SILENCE_PUBLIC Chord midpoint(const Chord &a, const Chord &b) {
@@ -4838,7 +4848,7 @@ inline SILENCE_PUBLIC Chord midpoint(const Chord &a, const Chord &b) {
         double voiceMidpoint = voiceSum / 2.0;
         midpoint_.setPitch(voice, voiceMidpoint);
     }
-    //~ SYSTEM_DEBUG("a: %s  b: %s  mid: %s\n", a.toString().c_str(), b.toString().c_str(), midpoint_.toString().c_str());
+    /// SYSTEM_DEBUG("a: %s  b: %s  mid: %s\n", a.toString().c_str(), b.toString().c_str(), midpoint_.toString().c_str());
     return midpoint_;
 }
 
@@ -5444,34 +5454,58 @@ Vector barycentric_coordinates(const Matrix &simplex, const Vector &point) {
 }
 
 bool in_simplex(const std::vector<Chord> &simplex, const Chord& chord, int epsilons, int ulps) {
-    ///SCOPED_DEBUGGING debugging;
-    Chord ot = chord.eOT();
-    auto row_n = ot.voices();
-    auto column_n = simplex.size();
-    Matrix matrix(row_n, column_n);
-    for (int column_i = 0; column_i < column_n; ++column_i) {
-        matrix.col(column_i) = simplex[column_i].col(0);
-    }
-    Vector point = ot.col(0);
-    Vector coordinates = barycentric_coordinates(matrix, point);
-    double sum_ = 0.;
     bool is_inside = true;
-    for (int row_i = 0; row_i < coordinates.rows(); ++row_i) {
-        auto element = coordinates(row_i, 0);
-        sum_ += element;
-        if (ge_tolerance(element, 0., epsilons, ulps) == false) {
-            is_inside = false;
-            break;
+    try {
+        ///SCOPED_DEBUGGING debugging;
+        Chord ot = chord.eOT();
+        auto row_n = ot.voices();
+        auto column_n = simplex.size();
+        Matrix matrix(row_n, column_n);
+        for (int column_i = 0; column_i < column_n; ++column_i) {
+            matrix.col(column_i) = simplex[column_i].col(0);
         }
-    }
-    if (le_tolerance(sum_, 1., epsilons, ulps) == false) {
-        is_inside = false;
-    }
-    SYSTEM_DEBUG("in_simplex: chord:       %s epsilons: %8d ulps %8d\n",chord.toString().c_str(), epsilons, ulps);
-    for (int i = 0, n = simplex.size(); i < n; ++i) {
-        SYSTEM_DEBUG("in_simplex: simplex[%3d] %s\n", i, simplex[i].toString().c_str());
-    }
-    SYSTEM_DEBUG("in_simplex: is_inside:     %2d\n\n", is_inside);
+        Vector point = ot.col(0);
+        Vector coordinates = barycentric_coordinates(matrix, point);
+        double sum_ = 0.;
+        for (int row_i = 0; row_i < coordinates.rows(); ++row_i) {
+            auto element = coordinates(row_i, 0);
+            sum_ += element;
+            if (ge_tolerance(element, 0., epsilons, ulps) == false) {
+                is_inside = false;
+                break;
+            }
+        }
+        if (le_tolerance(sum_, 1., epsilons, ulps) == false) {
+            is_inside = false;
+        }
+        SYSTEM_DEBUG("in_simplex: chord:       %s epsilons: %8d ulps %8d\n",chord.toString().c_str(), epsilons, ulps);
+        for (int i = 0, n = simplex.size(); i < n; ++i) {
+            SYSTEM_DEBUG("in_simplex: simplex[%3d] %s\n", i, simplex[i].toString().c_str());
+        }
+        SYSTEM_DEBUG("in_simplex: is_inside:     %2d\n\n", is_inside);
+    } catch (const boost::wrapexcept<std::domain_error> &ex) {
+        System::error("*** in_simplex: error: caught std::domain_error: %s.\n", ex.what());
+        System::error("*** in_simplex: chord: %s\n", chord.toString().c_str());
+        for (int i = 0, n = simplex.size(); i < n; ++i) {
+            System::error("*** in_simplex: simplex[%3d] %s\n", i, simplex[i].toString().c_str());
+        }
+        Chord ot = chord.eOT();
+        {
+            SCOPED_DEBUGGING debugging;
+            auto row_n = ot.voices();
+            auto column_n = simplex.size();
+            Matrix matrix(row_n, column_n);
+            for (int column_i = 0; column_i < column_n; ++column_i) {
+                matrix.col(column_i) = simplex[column_i].col(0);
+            }
+            Vector point = ot.col(0);
+            Vector coordinates = barycentric_coordinates(matrix, point);        
+        }
+    } catch (const std::exception &ex) {
+        System::error("*** in_simplex: error: caught std::exception: %s.\n", ex.what());
+    } catch (...) {
+        System::error("*** in_simplex: error: caught unknown exception in in_simplex.\n");
+    } 
     return is_inside;
 }
 

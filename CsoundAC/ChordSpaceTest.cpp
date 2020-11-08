@@ -68,7 +68,7 @@ static void printSet(std::string name, const std::vector<csound::Chord> &chords)
     for (auto &value : sorted) {
         auto &c = value.second;
         csound::System::message("%s  chord[%04d]: %s  OPTT: %s  OPTTI: %s opti_sector: ", c.normal_form().toString().c_str(), i, c.toString().c_str(), c.eOPTT().toString().c_str(), c.eOPTTI().toString().c_str());
-        auto opti_sectors_ = c.opti_domain_sectors();
+        auto opti_sectors_ = c.opti_domain_sector();
         for (auto opti_sector : opti_sectors_) {
             csound::System::message("%2d (%4.1f)", opti_sector, opti_sector / 2.);
         }
@@ -202,12 +202,10 @@ static void test_chord_space_group(int initialVoiceCount, int finalVoiceCount) {
 std::vector<std::string> equivalenceRelationsToTest = {"RP", "RPT", "RPTg", "RPTI", "RPTgI"};
 typedef csound::Chord(*normalize_t)(const csound::Chord &, double, double, int);
 typedef bool (*isNormal_t)(const csound::Chord &, double, double, int);
-//~ typedef bool (*isEquivalent_t)(const csound::Chord &, const csound::Chord &, double, double);
 typedef std::vector<csound::Chord> (*fundamentalDomainByNormalize_t)(int, double, double);
 typedef std::vector<csound::Chord> (*fundamentalDomainByIsNormal_t)(int, double, double);
 std::map<std::string, normalize_t> normalizesForEquivalenceRelations;
 std::map<std::string, isNormal_t> isNormalsForEquivalenceRelations;
-//~ std::map<std::string, isEquivalent_t> isEquivalentsForEquivalenceRelations;
 std::map<std::string, std::set<std::string> > equivalenceRelationsForCompoundEquivalenceRelations;
 std::map<std::string, fundamentalDomainByNormalize_t> fundamentalDomainByNormalizesForEquivalenceRelations;
 std::map<std::string, fundamentalDomainByIsNormal_t> fundamentalDomainByIsNormalsForEquivalenceRelations;
@@ -221,7 +219,6 @@ static bool testNormalsAndEquivalents(std::string equivalence,
     auto is_equivalent = isNormalsForEquivalenceRelations[equivalence];
     csound::System::message("\nequivalence: %s  normalized: %ld  is_normal: %ld  range: %f  g: %f\n", equivalence.c_str(), made_equivalents.size(), found_equivalents.size(), range, g);
     auto make_equivalent = normalizesForEquivalenceRelations[equivalence];
-    //~ auto isEquivalent = isEquivalentsForEquivalenceRelations[equivalence];
     bool passes1 = true;
     int count = 1;
     for (auto made_equivalent = made_equivalents.begin(); made_equivalent != made_equivalents.end(); ++made_equivalent) {
