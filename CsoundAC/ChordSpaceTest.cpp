@@ -6,7 +6,6 @@
 #include <cstdio>
 #include <string>
 
-
 #pragma GCC diagnostic ignored "-Wformat"
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> Matrix;

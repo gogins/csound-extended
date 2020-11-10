@@ -50,6 +50,7 @@
 #include <cfloat>
 #include <climits>
 #include <cmath>
+#include <csignal>
 #include <cstdarg>
 #include <eigen3/Eigen/Dense>
 #include "Event.hpp"
@@ -1022,17 +1023,18 @@ public:
             auto &opt_simplexes_for_dimensions = opt_simplexes_for_dimensionalities();
             auto &opti_simplexes_for_dimensions = opti_simplexes_for_dimensionalities();
             auto &hyperplane_equations_for_dimensions = hyperplane_equations_for_opt_sectors();
-            for (int dimensions = 3; dimensions < 12; ++dimensions) {
-                SYSTEM_DEBUG("cyclical region for %d dimensions:\n", dimensions);
-                auto cyclical_region = cyclical_regions[dimensions];
+            for (int dimensions_i = 3; dimensions_i < 12; ++dimensions_i) {
+                SYSTEM_DEBUG("cyclical region for %d dimensions:\n", dimensions_i);
+                auto cyclical_region = cyclical_regions[dimensions_i];
                 std::vector<Chord> original;
                 std::vector<Chord> transposed;
-                auto center_ = Chord(dimensions).center();
-                for (int dimension = 0; dimension < dimensions; ++dimension) {
-                    Chord vertex(dimensions);
-                    for (int voice = 0, start = dimensions - dimension; voice < dimensions; ++voice) {
-                        if (voice >= start) {
-                            vertex.setPitch(voice, 12.);
+                auto center_ = Chord(dimensions_i).center();
+                auto center_t = center_.eT();
+                for (int dimension_i = 0; dimension_i < dimensions_i; ++dimension_i) {
+                    Chord vertex(dimensions_i);
+                    for (int voice_i = 0, start = dimensions_i - dimension_i; voice_i < dimensions_i; ++voice_i) {
+                        if (voice_i >= start) {
+                            vertex.setPitch(voice_i, 12.);
                         }
                     }
                     original.push_back(vertex);
@@ -1041,59 +1043,58 @@ public:
                     cyclical_region.push_back(vertex_t);
                 }
                 // Print in order to check.
-                for (int dimension = 0; dimension < dimensions; ++dimension) {
-                    SYSTEM_DEBUG("  original  [%2d][%2d] %s\n", dimensions, dimension, original[dimension].toString().c_str());
+                for (int dimension_i = 0; dimension_i < dimensions_i; ++dimension_i) {
+                    SYSTEM_DEBUG("  original[%2d][%2d] %s\n", dimensions_i, dimension_i, original[dimension_i].toString().c_str());
                 }
-                for (int dimension = 0; dimension < dimensions; ++dimension) {
-                    SYSTEM_DEBUG("  transposed[%2d][%2d] %s\n", dimensions, dimension, transposed[dimension].toString().c_str());
+                for (int dimension_i = 0; dimension_i < dimensions_i; ++dimension_i) {
+                    SYSTEM_DEBUG("  cyclical[%2d][%2d] %s\n", dimensions_i, dimension_i, cyclical_region[dimension_i].toString().c_str());
                 }
-                cyclical_regions[dimensions] = cyclical_region;
-                auto opt_domains = opt_domains_for_dimensions[dimensions];
-                auto opti_domains = opti_domains_for_dimensions[dimensions];
-                auto opt_simplexes = opt_simplexes_for_dimensions[dimensions];
-                auto opti_simplexes = opti_simplexes_for_dimensions[dimensions];
-                auto hyperplane_equations = hyperplane_equations_for_dimensions[dimensions];
-                for (int d = 0, n = dimensions; d < n; ++d) {
-                    auto opt_domain = cyclical_regions[n];
-                    opt_domain[(d+n-1)%n] = center_;
+                cyclical_regions[dimensions_i] = cyclical_region;
+                auto opt_domains = opt_domains_for_dimensions[dimensions_i];
+                auto opti_domains = opti_domains_for_dimensions[dimensions_i];
+                auto opt_simplexes = opt_simplexes_for_dimensions[dimensions_i];
+                auto opti_simplexes = opti_simplexes_for_dimensions[dimensions_i];
+                auto hyperplane_equations = hyperplane_equations_for_dimensions[dimensions_i];
+                for (int dimension_i = 0; dimension_i < dimensions_i; ++dimension_i) {
+                    auto opt_domain = cyclical_regions[dimensions_i];
+                    opt_domain[(dimension_i + dimensions_i - 1) % dimensions_i] = center_t;
                     opt_domains.push_back(opt_domain);
-                    int index;
-                    index = 0;
-                    for (auto vertex : opt_domains[d]) {
-                        SYSTEM_DEBUG("  OPT [%2d][%2d] %s\n", opt_domains.size() - 1, index++, vertex.toString().c_str());
-                    }
-                    Chord extra_vertex(dimensions);
-                    extra_vertex = center_.T(1.);
-                    SYSTEM_DEBUG("  extra vertex:%s\n", extra_vertex.toString().c_str());
+                    SYSTEM_DEBUG("  center:          %s\n", center_t.toString().c_str());
+                    Chord extra_vertex = center_t.T(1.);
                     std::vector<Chord> opt_simplex = opt_domain;
                     opt_simplex.push_back(extra_vertex);
                     opt_simplexes.push_back(opt_simplex);
-                    auto opti_midpoint = midpoint(opt_domain[(d+n)%n], opt_domain[(d+n-2)%n]);
-                    SYSTEM_DEBUG("  midpoint     %s\n", opti_midpoint.toString().c_str());
-                    auto opti_domain_0 = opt_domain;
-                    opti_domain_0[(d+n-2)%n] = opti_midpoint;
-                    opti_domains.push_back(opti_domain_0);
-                    index = 0;
-                    for (auto vertex : opti_domain_0) {
-                        SYSTEM_DEBUG("  OPTI[%2d][%2d] %s\n", opti_domains.size() - 1, index++, vertex.toString().c_str());
+                    auto opti_midpoint = midpoint(opt_domain[(dimension_i + dimensions_i - 3) % dimensions_i], opt_domain[(dimension_i + dimensions_i - 2) % dimensions_i]);
+                    SYSTEM_DEBUG("  midpoint:        %s\n", opti_midpoint.toString().c_str());
+                    int vertex_i = 0;
+                    for (auto vertex : opt_domains[dimension_i]) {
+                        SYSTEM_DEBUG("  OPT [%2d][%2d]     %s\n", opt_domains.size() - 1, vertex_i++, vertex.toString().c_str());
                     }
-                    SYSTEM_DEBUG("  extra vertex:%s\n", extra_vertex.toString().c_str());
+                    SYSTEM_DEBUG("  extra vertex:    %s\n", extra_vertex.toString().c_str());
+                    auto opti_domain_0 = opt_domain;
+                    opti_domain_0[(dimension_i + dimensions_i - 2) % dimensions_i] = opti_midpoint;
+                    opti_domains.push_back(opti_domain_0);
+                    vertex_i = 0;
+                    for (auto vertex : opti_domain_0) {
+                        SYSTEM_DEBUG("  OPTI[%2d][%2d]     %s\n", opti_domains.size() - 1, vertex_i++, vertex.toString().c_str());
+                    }
+                    SYSTEM_DEBUG("  extra vertex:    %s\n", extra_vertex.toString().c_str());
                     std::vector<Chord> opti_simplex_0 = opti_domain_0;
                     opti_simplex_0.push_back(extra_vertex);
                     opti_simplexes.push_back(opti_simplex_0);
                     auto opti_domain_1 = opt_domain;
-                    opti_domain_1[(d+n-3)%n] = opti_midpoint;
+                    opti_domain_1[(dimension_i + dimensions_i - 3) % dimensions_i] = opti_midpoint;
                     opti_domains.push_back(opti_domain_1);
                     std::vector<Chord> opti_simplex_1 = opti_domain_1;
                     opti_simplex_1.push_back(extra_vertex);
                     opti_simplexes.push_back(opti_simplex_1);
-                    index = 0;
+                    vertex_i = 0;
                     for (auto vertex : opti_domain_1) {
-                        SYSTEM_DEBUG("  OPTI[%2d][%2d] %s\n", opti_domains.size() - 1, index++, vertex.toString().c_str());
+                        SYSTEM_DEBUG("  OPTI[%2d][%2d]     %s\n", opti_domains.size() - 1, vertex_i++, vertex.toString().c_str());
                     }
-                    SYSTEM_DEBUG("  extra vertex:%s\n", extra_vertex.toString().c_str());
-                    auto lower_point = opt_domain[(n+d)%n];
-                    auto upper_point = opt_domain[(n+d-2)%n];
+                    SYSTEM_DEBUG("  extra vertex:    %s\n", extra_vertex.toString().c_str());
+                    auto lower_point = opt_domain[(dimensions_i + dimension_i) % dimensions_i];
+                    auto upper_point = opt_domain[(dimensions_i + dimension_i - 2) % dimensions_i];
                     SYSTEM_DEBUG("  hyperplane_equation: upper_point: %s\n", upper_point.toString().c_str());
                     SYSTEM_DEBUG("  hyperplane_equation: lower point: %s\n", lower_point.toString().c_str());
                     auto normal_vector = upper_point.col(0) - lower_point.col(0);
@@ -1102,31 +1103,38 @@ public:
                     hyperplane_equation_.unit_normal_vector = normal_vector / norm;
                     auto temp = center_.col(0).adjoint() * hyperplane_equation_.unit_normal_vector;    
                     hyperplane_equation_.constant_term = temp(0, 0);
-                    SYSTEM_DEBUG("  hyperplane_equation: sector: %d\n", d);
+                    SYSTEM_DEBUG("  hyperplane_equation: sector: %d\n", dimension_i);
                     SYSTEM_DEBUG("  hyperplane_equation: center:\n");
-                    for(int i = 0; i < n; i++) {
-                        SYSTEM_DEBUG("    %9.4f\n", center_.getPitch(i));
+                    for (int dimension_j = 0; dimension_j < dimensions_i; dimension_j++) {
+                        SYSTEM_DEBUG("    %9.4f\n", center_.getPitch(dimension_j));
                     }
                     SYSTEM_DEBUG("  hyperplane_equation: normal_vector:\n");
-                    for(int i = 0; i < n; i++) {
-                        SYSTEM_DEBUG("    %9.4f\n", normal_vector(i, 0));
+                    for (int dimension_j = 0; dimension_j < dimensions_i; dimension_j++) {
+                        SYSTEM_DEBUG("    %9.4f\n", normal_vector(dimension_j, 0));
                     }
                     SYSTEM_DEBUG("  hyperplane_equation: norm: %9.4f\n", norm);
                     SYSTEM_DEBUG("  hyperplane_equation: unit_normal_vector:\n");
-                    for(int i = 0; i < n; i++) {
-                        SYSTEM_DEBUG("    %9.4f\n", hyperplane_equation_.unit_normal_vector(i, 0));
+                    for (int dimension_j = 0; dimension_j < dimensions_i; dimension_j++) {
+                        SYSTEM_DEBUG("    %9.4f\n", hyperplane_equation_.unit_normal_vector(dimension_j, 0));
                     }
                     SYSTEM_DEBUG("  hyperplane_equation: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
                     hyperplane_equations.push_back(hyperplane_equation_);
                 }
-                opt_domains_for_dimensions[dimensions] = opt_domains;
-                opti_domains_for_dimensions[dimensions] = opti_domains;
-                opt_simplexes_for_dimensions[dimensions] = opt_simplexes;
-                opti_simplexes_for_dimensions[dimensions] = opti_simplexes;
-                hyperplane_equations_for_dimensions[dimensions] = hyperplane_equations;
+                opt_domains_for_dimensions[dimensions_i] = opt_domains;
+                opti_domains_for_dimensions[dimensions_i] = opti_domains;
+                opt_simplexes_for_dimensions[dimensions_i] = opt_simplexes;
+                opti_simplexes_for_dimensions[dimensions_i] = opti_simplexes;
+                hyperplane_equations_for_dimensions[dimensions_i] = hyperplane_equations;
             }
         }
     }
+    static double rownd(
+        double x,
+        int digits=12)  
+    {
+        double power_of_10 = std::pow(10, digits);
+        return std::round(x * power_of_10)  / power_of_10;
+    }    
     /**
      * Returns the zero-based index(s) of the sector(s) within the cyclical 
      * region of OPT fundamental domains to which the chord belongs. A chord 
@@ -1138,36 +1146,40 @@ public:
      */
     virtual std::vector<int> opt_domain_sector() const {
         std::vector<int> sectors;
-        auto opt_sectors_for_dimensions = opt_sectors_for_dimensionalities();
-        auto opt_sectors = opt_sectors_for_dimensions[voices()];
-        auto opt_simplexes_for_dimensions = opt_simplexes_for_dimensionalities();
-        auto opt_simplexes = opt_simplexes_for_dimensions[voices()];
+        auto &opt_sectors_for_dimensions = opt_sectors_for_dimensionalities();
+        auto &opt_sectors = opt_sectors_for_dimensions[voices()];
+        auto &opt_simplexes_for_dimensions = opt_simplexes_for_dimensionalities();
+        auto &opt_simplexes = opt_simplexes_for_dimensions[voices()];
+        std::vector<int> result;
         std::multimap<double, int> sectors_for_distances;
         double minimum_distance = std::numeric_limits<double>::max();
         auto ot = eOT();
+        //~ auto ot = eT();
         double difference;
         for (int sector = 0, n = opt_sectors.size(); sector < n; ++sector) {
-            auto distance = distance_to_points(ot, opt_sectors[sector]);
-            if (lt_tolerance(distance, minimum_distance, 20, 200) == true) {
+            auto distance = rownd(distance_to_points(ot, opt_sectors[sector]));
+            if (lt_tolerance(distance, minimum_distance, 500, 5000) == true) {
                  minimum_distance = distance;
             }
             sectors_for_distances.insert({distance, sector});
-        }
-        std::vector<int> result;
-        auto range = sectors_for_distances.equal_range(minimum_distance);
-        for (auto it = range.first; it != range.second; ++it) {
-            auto opt_simplex = opt_simplexes[it->second];
+            auto opt_simplex = opt_simplexes[sector];
             int in_sector_ = in_simplex(opt_simplex, ot);
             {
                 ///SCOPED_DEBUGGING debugging;
-                auto ulp = boost::math::ulp(it->first);
-                SYSTEM_DEBUG("opt_domain_sector:  ot: %s distance: %.20g ulp %.20g in_simplex: %d sector: %2d \n", ot.toString().c_str(), it->first, ulp, in_sector_, it->second);
+                auto ulp = boost::math::ulp(distance);
+                SYSTEM_DEBUG("opt_domain_sector:  ot: %s distance: %.20g ulp %.20g in_simplex: %d sector: %2d \n", ot.toString().c_str(), distance, ulp, in_sector_, sector);
             }
-            result.push_back(it->second);
+            //~ if (in_sector_ == true) {
+                //~ result.push_back(sector);
+            //~ }
         }
         {
             ///SCOPED_DEBUGGING debugging;
             SYSTEM_DEBUG("\n");
+        }
+        auto range = sectors_for_distances.equal_range(minimum_distance);
+        for (auto it = range.first; it != range.second; ++it) {
+            result.push_back(it->second);
         }
         std::sort(result.begin(), result.end());
         return result;
@@ -1190,28 +1202,32 @@ public:
         std::multimap<double, int> sectors_for_distances;
         double minimum_distance = std::numeric_limits<double>::max();
         auto ot = eOT();
+        //~ auto ot = eT();
         for (int sector = 0, n = opti_sectors.size(); sector < n; ++sector) {
             auto distance = distance_to_points(ot, opti_sectors[sector]);
-            if (lt_tolerance(distance, minimum_distance, 8, 50) == true) {
+            if (lt_tolerance(distance, minimum_distance, 500, 50000) == true) {
                 minimum_distance = distance;
             }
             sectors_for_distances.insert({distance, sector});
-        }
-        std::vector<int> result;
-        auto range = sectors_for_distances.equal_range(minimum_distance);
-        for (auto it = range.first; it != range.second; ++it) {
-            auto opti_simplex = opti_simplexes[it->second];
+            auto opti_simplex = opti_simplexes[sector];
             int in_sector_ = in_simplex(opti_simplex, ot);
             {
                 ///SCOPED_DEBUGGING debugging;
-                auto ulp = boost::math::ulp(it->first);
-                SYSTEM_DEBUG("opti_domain_sector: ot: %s distance: %.20g ulp %.20g in_simplex: %d sector: %2d\n", ot.toString().c_str(), it->first, ulp, in_sector_, it->second);
+                auto ulp = boost::math::ulp(distance);
+                SYSTEM_DEBUG("opti_domain_sector:  ot: %s distance: %.20g ulp %.20g in_simplex: %d sector: %2d \n", ot.toString().c_str(), distance, ulp, in_sector_, sector);
             }
-            result.push_back(it->second);
+            //~ if (in_sector_ == true) {
+                //~ result.push_back(sector);
+            //~ }
         }
         {
             ///SCOPED_DEBUGGING debugging;
             SYSTEM_DEBUG("\n");
+        }
+        std::vector<int> result;
+        auto range = sectors_for_distances.equal_range(minimum_distance);
+        for (auto it = range.first; it != range.second; ++it) {
+            result.push_back(it->second);
         }
         std::sort(result.begin(), result.end());
         return result;
@@ -2132,13 +2148,18 @@ inline bool Chord::iseTT(double g) const {
 //	EQUIVALENCE_RELATION_I
 
 template<> inline SILENCE_PUBLIC bool isNormal<EQUIVALENCE_RELATION_I>(const Chord &chord, double range, double g, int opt_sector) {
+    // Chords that are inversionally equivalent automatically are normal.
     if (chord.self_inverse(opt_sector) == true) {
         return true;
     }
-    if (chord.is_opti_sector(opt_sector * 2) == true) {
+    // Otherwise, if the chord is in a "minor" OPTI sector in the current OPT sector,
+    // the chord is normal.
+    int minor_opti_sector = opt_sector * 2;
+    if (chord.is_opti_sector(minor_opti_sector) == true) {
         return true;
+    } else {
+        return false;
     }
-    return false;
 }
 
 inline bool Chord::iseI_chord(Chord *inverse, int opt_sector) const {
@@ -2227,6 +2248,14 @@ template<> inline SILENCE_PUBLIC Chord normalize<EQUIVALENCE_RELATION_RPT>(const
         }
     }
     System::error("Error: Chord normalize<EQUIVALENCE_RELATION_RPT>: no RPT in sector 0.\n");
+    CHORD_SPACE_DEBUGGING = true;
+    std::raise(SIGINT);
+    for (auto rpt : rpts) {
+        System::message("normalize<EQUIVALENCE_RELATION_RPT>: chord %s rpt: %s opt_sector: %d\n", chord.toString().c_str(), rpt.toString().c_str(), opt_sector);
+        if (rpt.is_opt_sector(opt_sector) == true) {
+            return rpt;
+        }
+    }
     return rpts.front();
 }
 
@@ -2739,34 +2768,12 @@ inline SILENCE_PUBLIC const Scale &scaleForName(std::string name) {
     }
 }
 
-static std::string print_opt_sectors(const Chord &chord) {
-    std::string result;
-    char buffer[0x200];
-    auto sectors = chord.opt_domain_sector();
-    for (auto sector_ : sectors) {
-        std::sprintf(buffer, "%3d        ", sector_);
-        result.append(buffer);
-    }
-    return result;    
-}
-
-static std::string print_opti_sectors(const Chord &chord) {
-    std::string result;
-    char buffer[0x200];
-    auto sectors = chord.opti_domain_sector();
-    for (auto sector_ : sectors) {
-        std::sprintf(buffer, "%3d (%5.1f)", sector_, sector_ / 2.);
-        result.append(buffer);
-    }
-    return result;    
-}
-
 static std::string print_sectors(const Chord &chord) {
     std::string result;
     char buffer[0x1000];
     auto sectors = chord.opti_domain_sector();
     for (auto sector_ : sectors) {
-        std::sprintf(buffer, "[opt:%5.1f  opti:%3d]", sector_ / 2., sector_);
+        std::sprintf(buffer, "[opt:%2d  opti:%2d]", sector_ / 2, sector_);
         result.append(buffer);
     }
     return result;    
@@ -2832,6 +2839,10 @@ inline std::string Chord::information() const {
     std::sprintf(buffer, "TT:          %d => %s\n", iseTT(), eTT().toString().c_str());
     result.append(buffer);
     auto ei = eI(opt_sector);
+    if (ei.toString().find("-3.0000000   -1.0000000    7.0000000") != std::string::npos) {
+        CHORD_SPACE_DEBUGGING = true;
+        std::raise(SIGINT);
+    }
     sector_text = print_sectors(ei);
     std::sprintf(buffer, "I:           %d => %s %s\n", iseI(opt_sector), ei.toString().c_str(), sector_text.c_str());
     result.append(buffer);
@@ -2853,23 +2864,21 @@ inline std::string Chord::information() const {
     result.append(buffer);
     std::sprintf(buffer, "             opt voicings:\n");
     result.append(buffer);
-    auto tvs = eRPTs(); 
+    auto rpts = eRPTs(); 
     auto &hyperplane_equations = hyperplane_equations_for_opt_sectors()[voices()];
-    for (auto i = 0; i < tvs.size(); ++i) {
-        auto v = tvs[i];
-        auto sectors = v.opt_domain_sector();
-        auto sector_text = print_sectors(v);
-        std::sprintf(buffer, "                  %s %s\n", v.toString().c_str(), sector_text.c_str());
+    for (auto i = 0; i < rpts.size(); ++i) {
+        auto rpt = rpts[i];
+        auto sector_text = print_sectors(rpt);
+        std::sprintf(buffer, "                  %s %s\n", rpt.toString().c_str(), sector_text.c_str());
         result.append(buffer);
     }
     std::sprintf(buffer, "             optt voicings:\n");
     result.append(buffer);
-    auto ttvs = eRPTTs(12.);
-    for (auto i = 0; i < ttvs.size(); ++i) {
-        auto v = ttvs[i];
-        auto sectors = v.opt_domain_sector();
-        auto sector_text = print_sectors(v);
-        std::sprintf(buffer, "                  %s %s\n", v.toString().c_str(), sector_text.c_str());
+    auto rptts = eRPTTs(12.);
+    for (auto i = 0; i < rptts.size(); ++i) {
+        auto rptt = rptts[i];
+        auto sector_text = print_sectors(rptt);
+        std::sprintf(buffer, "                  %s %s\n", rptt.toString().c_str(), sector_text.c_str());
         result.append(buffer);
     }
     std::sprintf(buffer, "             inversion flats and inversions:\n");
@@ -3223,11 +3232,12 @@ inline bool Chord::test(const char *label) const {
     } else {
         std::fprintf(stderr, "        Chord::eTT is consistent with Chord::iseTT.\n");
     }
-    if (eI(opt_sector).iseI(opt_sector) == false) {
+    auto ei = eI(opt_sector);
+    if (ei.iseI(opt_sector) == false) {
         passed = false;
-        std::fprintf(stderr, "Failed: Chord::eI is not consistent with Chord::iseI.\n");
+        std::fprintf(stderr, "Failed: Chord::eI is not consistent with eI::iseI.\n");
     } else {
-        std::fprintf(stderr, "        Chord::eI is consistent with Chord::iseI.\n");
+        std::fprintf(stderr, "        Chord::eI is consistent with eI::iseI.\n");
     }
     if (eOP().iseOP() == false) {
         passed = false;
