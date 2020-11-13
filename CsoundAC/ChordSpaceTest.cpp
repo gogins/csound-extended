@@ -67,7 +67,7 @@ static void printSet(std::string name, const std::vector<csound::Chord> &chords)
     for (auto &value : sorted) {
         auto &c = value.second;
         csound::System::message("%s  chord[%04d]: %s  OPTT: %s  OPTTI: %s opti_sector: ", c.normal_form().toString().c_str(), i, c.toString().c_str(), c.eOPTT().toString().c_str(), c.eOPTTI().toString().c_str());
-        auto opti_sectors_ = c.opti_domain_sector();
+        auto opti_sectors_ = c.opti_domain_sectors();
         for (auto opti_sector : opti_sectors_) {
             csound::System::message("%2d (%4.1f)", opti_sector, opti_sector / 2.);
         }
@@ -281,6 +281,41 @@ static bool testEquivalenceRelations(int voiceCount, double range, double g) {
     return passes;
 }
 
+/**
+ * Puts the set difference of A \ B, if any, into difference.
+ */
+static void setDifference(std::vector<csound::Chord> &A, std::vector<csound::Chord> &B, std::vector<std::string> &difference) {
+    auto comparator = [](auto &a, auto &b) {
+        auto an = a.normal_form();
+        an.clamp();
+        auto bn = b.normal_form();
+        bn.clamp();
+        if ((an < bn) == true) {
+            ///std::cerr << "less" << std::endl;
+            return true;
+        } else {
+            ///std::cerr << "not less" << std::endl;
+            return false;
+        }
+    };
+    std::sort(A.begin(), A.end(), comparator);
+    std::sort(B.begin(), B.end(), comparator);
+    std::set<std::string> a_normal_forms;
+    for (csound::Chord &chord : A) {
+        std::string normal_form = chord.normal_form().toString();
+        a_normal_forms.insert(normal_form);
+    }
+    std::set<std::string> b_normal_forms;
+    for (csound::Chord &chord : B) {
+        std::string normal_form = chord.normal_form().toString();
+        b_normal_forms.insert(normal_form);
+    }
+    difference.clear();
+    std::set_difference(a_normal_forms.begin(), a_normal_forms.end(),
+                        b_normal_forms.begin(), b_normal_forms.end(),
+                        std::back_inserter(difference));
+}
+
 int main(int argc, char **argv) {
     csound::System::message("C H O R D S P A C E   U N I T   T E S T S\n\n");
     double mp_double_small = .00000000000000000001;
@@ -476,7 +511,8 @@ int main(int argc, char **argv) {
     std::cerr << "Should be Dm9:" << std::endl << Dm9.information().c_str() << std::endl;
     csound::Chord chordForName_ = csound::chordForName("CM9");
     csound::System::message("chordForName(%s): %s\n", "CM9", chordForName_.information().c_str());
-            
+    csound::Chord test_chord({0., 1., 3., 6.});
+    std::cerr << test_chord.information() << std::endl;
 #if 0
     csound::ChordSpaceGroup chordSpaceGroup;
     chordSpaceGroup.createChordSpaceGroup(4, csound::OCTAVE() * 5.0, 1.0);
@@ -615,46 +651,72 @@ int main(int argc, char **argv) {
     auto my_opttis_4 = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(4, csound::OCTAVE(), 1.);
     printSet("My OPTTIs", my_opttis_4);
 
-    std::vector<csound::Chord> science_chord_types_3;
-    science_chord_types_3.push_back(csound::Chord({0., 0., 0.}));
-    science_chord_types_3.push_back(csound::Chord({0., 0., 1.}));
-    science_chord_types_3.push_back(csound::Chord({0., 0., 2.}));
-    science_chord_types_3.push_back(csound::Chord({0., 0., 3.}));
-    science_chord_types_3.push_back(csound::Chord({0., 0., 4.}));
-    science_chord_types_3.push_back(csound::Chord({0., 0., 5.}));
-    science_chord_types_3.push_back(csound::Chord({0., 0., 6.}));
-    science_chord_types_3.push_back(csound::Chord({0., 5., 5.}));
-    science_chord_types_3.push_back(csound::Chord({0., 4., 4.}));
-    science_chord_types_3.push_back(csound::Chord({0., 3., 3.}));
-    science_chord_types_3.push_back(csound::Chord({0., 2., 2.}));
-    science_chord_types_3.push_back(csound::Chord({0., 1., 1.}));
-    science_chord_types_3.push_back(csound::Chord({0., 1., 2.}));
-    science_chord_types_3.push_back(csound::Chord({0., 1., 3.}));
-    science_chord_types_3.push_back(csound::Chord({0., 1., 4.}));
-    science_chord_types_3.push_back(csound::Chord({0., 1., 5.}));
-    science_chord_types_3.push_back(csound::Chord({0., 1., 6.}));
-    science_chord_types_3.push_back(csound::Chord({0., 5., 6.}));
-    science_chord_types_3.push_back(csound::Chord({0., 4., 5.}));
-    science_chord_types_3.push_back(csound::Chord({0., 3., 4.}));
-    science_chord_types_3.push_back(csound::Chord({0., 2., 3.}));
-    science_chord_types_3.push_back(csound::Chord({0., 2., 4.}));
-    science_chord_types_3.push_back(csound::Chord({0., 2., 5.}));
-    science_chord_types_3.push_back(csound::Chord({0., 2., 6.}));
-    science_chord_types_3.push_back(csound::Chord({0., 2., 7.}));
-    science_chord_types_3.push_back(csound::Chord({0., 4., 6.}));
-    science_chord_types_3.push_back(csound::Chord({0., 3., 5.}));
-    science_chord_types_3.push_back(csound::Chord({0., 3., 6.}));
-    science_chord_types_3.push_back(csound::Chord({0., 3., 7.}));
-    science_chord_types_3.push_back(csound::Chord({0., 4., 7.}));
-    science_chord_types_3.push_back(csound::Chord({0., 4., 8.}));
-    printSet("Science chord types", science_chord_types_3);
+    std::vector<csound::Chord> science_optts_3;
+    science_optts_3.push_back(csound::Chord({0., 0., 0.}));
+    science_optts_3.push_back(csound::Chord({0., 0., 1.}));
+    science_optts_3.push_back(csound::Chord({0., 0., 2.}));
+    science_optts_3.push_back(csound::Chord({0., 0., 3.}));
+    science_optts_3.push_back(csound::Chord({0., 0., 4.}));
+    science_optts_3.push_back(csound::Chord({0., 0., 5.}));
+    science_optts_3.push_back(csound::Chord({0., 0., 6.}));
+    science_optts_3.push_back(csound::Chord({0., 5., 5.}));
+    science_optts_3.push_back(csound::Chord({0., 4., 4.}));
+    science_optts_3.push_back(csound::Chord({0., 3., 3.}));
+    science_optts_3.push_back(csound::Chord({0., 2., 2.}));
+    science_optts_3.push_back(csound::Chord({0., 1., 1.}));
+    science_optts_3.push_back(csound::Chord({0., 1., 2.}));
+    science_optts_3.push_back(csound::Chord({0., 1., 3.}));
+    science_optts_3.push_back(csound::Chord({0., 1., 4.}));
+    science_optts_3.push_back(csound::Chord({0., 1., 5.}));
+    science_optts_3.push_back(csound::Chord({0., 1., 6.}));
+    science_optts_3.push_back(csound::Chord({0., 5., 6.}));
+    science_optts_3.push_back(csound::Chord({0., 4., 5.}));
+    science_optts_3.push_back(csound::Chord({0., 3., 4.}));
+    science_optts_3.push_back(csound::Chord({0., 2., 3.}));
+    science_optts_3.push_back(csound::Chord({0., 2., 4.}));
+    science_optts_3.push_back(csound::Chord({0., 2., 5.}));
+    science_optts_3.push_back(csound::Chord({0., 2., 6.}));
+    science_optts_3.push_back(csound::Chord({0., 2., 7.}));
+    science_optts_3.push_back(csound::Chord({0., 4., 6.}));
+    science_optts_3.push_back(csound::Chord({0., 3., 5.}));
+    science_optts_3.push_back(csound::Chord({0., 3., 6.}));
+    science_optts_3.push_back(csound::Chord({0., 3., 7.}));
+    science_optts_3.push_back(csound::Chord({0., 4., 7.}));
+    science_optts_3.push_back(csound::Chord({0., 4., 8.}));
+    printSet("Science OPTTIs", science_optts_3);
     
-    auto myoptts_3 = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTg>(3, 12., 1.);
-    printSet("My OPTTs", myoptts_3);
+    auto my_optts_3 = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTg>(3, 12., 1.);
+    printSet("My OPTTs", my_optts_3);
  
-    auto myopttis_3 = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(3, 12., 1.);
-    printSet("My OPTTIs", myopttis_3);
+    auto my_opttis_3 = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(3, 12., 1.);
+    printSet("My OPTTIs", my_opttis_3);
     
+    std::vector<std::string> difference;
+    setDifference(science_optts_3, my_optts_3, difference);
+    int i = 1;
+    for (auto &a : difference) {
+        std::fprintf(stderr, "OPTT in Science but not in ChordSpace: normal_form[%3d]: %s\n", i, a.c_str());
+        ++i;
+    }
+    setDifference(my_optts_3, science_optts_3, difference);
+    i = 1;
+    for (auto &a : difference) {
+        std::fprintf(stderr, "OPTT in ChordSpace but not in Science: normal_form[%3d]: %s\n", i, a.c_str());
+        ++i;
+    }
+
+    setDifference(science_opttis_4, my_opttis_4, difference);
+    i = 1;
+    for (auto &a : difference) {
+        std::fprintf(stderr, "OPTTI in Science but not in ChordSpace: normal_form[%3d]: %s\n", i, a.c_str());
+        ++i;
+    }
+    setDifference(my_opttis_4, science_opttis_4, difference);
+    i = 1;
+    for (auto &a : difference) {
+        std::fprintf(stderr, "OPTTI ChordSpace but not in Science: normal_form[%3d]: %s\n", i, a.c_str());
+        ++i;
+    }
     summary();
     return 0;
 }
