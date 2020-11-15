@@ -17,6 +17,7 @@ static int passCount = 0;
 static int failureCount = 0;
 static int testCount = 0;
 static int exitAfterFailureCount = 1;
+static int testSector = 0;
 
 static bool pass(std::string message) {
     passCount = passCount + 1;
@@ -171,7 +172,7 @@ static void test_chord_space_group(int initialVoiceCount, int finalVoiceCount) {
         }
         csound::System::message("Testing chords to ChordSpaceGroup and back...\n\n");
         bool passes2 = true;
-        auto eops = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RP>(voiceCount, csound::OCTAVE(), 1.0);
+        auto eops = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RP>(voiceCount, csound::OCTAVE(), 1., testSector);
         for(auto it = eops.begin(); it != eops.end(); ++it) {
             auto chord = *it;
             auto origin = chord;
@@ -201,8 +202,8 @@ static void test_chord_space_group(int initialVoiceCount, int finalVoiceCount) {
 std::vector<std::string> equivalenceRelationsToTest = {"RP", "RPT", "RPTg", "RPTI", "RPTgI"};
 typedef csound::Chord(*normalize_t)(const csound::Chord &, double, double, int);
 typedef bool (*isNormal_t)(const csound::Chord &, double, double, int);
-typedef std::vector<csound::Chord> (*fundamentalDomainByNormalize_t)(int, double, double);
-typedef std::vector<csound::Chord> (*fundamentalDomainByIsNormal_t)(int, double, double);
+typedef std::vector<csound::Chord> (*fundamentalDomainByNormalize_t)(int, double, double, int);
+typedef std::vector<csound::Chord> (*fundamentalDomainByIsNormal_t)(int, double, double, int);
 std::map<std::string, normalize_t> normalizesForEquivalenceRelations;
 std::map<std::string, isNormal_t> isNormalsForEquivalenceRelations;
 std::map<std::string, std::set<std::string> > equivalenceRelationsForCompoundEquivalenceRelations;
@@ -236,8 +237,8 @@ static bool testNormalsAndEquivalents(std::string equivalence,
 static bool testEquivalenceRelation(std::string equivalenceRelation, int voiceCount, double range, double g) {
     bool passes = true;
     char buffer[0x200];
-    auto normalsForEquivalenceRelation = fundamentalDomainByNormalizesForEquivalenceRelations[equivalenceRelation](voiceCount, range, g);
-    auto equivalentsForEquivalenceRelation = fundamentalDomainByIsNormalsForEquivalenceRelations[equivalenceRelation](voiceCount, range, g);
+    auto normalsForEquivalenceRelation = fundamentalDomainByNormalizesForEquivalenceRelations[equivalenceRelation](voiceCount, range, g, testSector);
+    auto equivalentsForEquivalenceRelation = fundamentalDomainByIsNormalsForEquivalenceRelations[equivalenceRelation](voiceCount, range, g, testSector);
     if (!testNormalsAndEquivalents(equivalenceRelation,
                                    normalsForEquivalenceRelation,
                                    equivalentsForEquivalenceRelation,
@@ -283,12 +284,13 @@ static bool testEquivalenceRelations(int voiceCount, double range, double g) {
 
 /**
  * Puts the set difference of A \ B, if any, into difference.
+ * The equivalence class OP, in string (rounded) form, is used as the key.
  */
-static void setDifference(std::vector<csound::Chord> &A, std::vector<csound::Chord> &B, std::vector<std::string> &difference) {
+static void setDifference(const std::string &a_name, std::vector<csound::Chord> &A, const std::string &b_name,std::vector<csound::Chord> &B, std::vector<csound::Chord> &difference) {
     auto comparator = [](auto &a, auto &b) {
-        auto an = a.normal_form();
+        auto an = a.eOPTT(0);
         an.clamp();
-        auto bn = b.normal_form();
+        auto bn = b.eOPTT(0);
         bn.clamp();
         if ((an < bn) == true) {
             ///std::cerr << "less" << std::endl;
@@ -300,21 +302,33 @@ static void setDifference(std::vector<csound::Chord> &A, std::vector<csound::Cho
     };
     std::sort(A.begin(), A.end(), comparator);
     std::sort(B.begin(), B.end(), comparator);
-    std::set<std::string> a_normal_forms;
+    std::map<std::string, csound::Chord> map_a;
     for (csound::Chord &chord : A) {
-        std::string normal_form = chord.normal_form().toString();
-        a_normal_forms.insert(normal_form);
+        std::string key = chord.eOPTT().toString();
+        map_a.insert({key, chord});
     }
-    std::set<std::string> b_normal_forms;
-    for (csound::Chord &chord : B) {
-        std::string normal_form = chord.normal_form().toString();
-        b_normal_forms.insert(normal_form);
+    std::map<std::string, csound::Chord> map_b;
+    for (csound::Chord chord : B) {
+        std::string key = chord.eOPTT().toString();
+        map_b.insert({key, chord});
     }
     difference.clear();
-    std::set_difference(a_normal_forms.begin(), a_normal_forms.end(),
-                        b_normal_forms.begin(), b_normal_forms.end(),
-                        std::back_inserter(difference));
-}
+    int a_i = 0;
+    int b_i = 0;
+    for (auto a_it = map_a.begin(); a_it != map_a.end(); ++a_it) {
+        auto b_it = map_b.find(a_it->first);
+        if (b_it == map_b.end()) {
+            a_i++;
+            std::fprintf(stderr, "%s[%4d]: %s\n",  a_name.c_str(), a_i, a_it->first.c_str());
+            difference.push_back(a_it->second);
+        } else {
+            a_i++;
+            b_i++;
+            std::fprintf(stderr, "%s[%4d]: %s  %s[%4d]: %s\n", a_name.c_str(), a_i, a_it->first.c_str(), b_name.c_str(), b_i, b_it->first.c_str());
+        }
+    }
+    std::sort(difference.begin(), difference.end(), comparator);
+ }
 
 int main(int argc, char **argv) {
     csound::System::message("C H O R D S P A C E   U N I T   T E S T S\n\n");
@@ -511,8 +525,10 @@ int main(int argc, char **argv) {
     std::cerr << "Should be Dm9:" << std::endl << Dm9.information().c_str() << std::endl;
     csound::Chord chordForName_ = csound::chordForName("CM9");
     csound::System::message("chordForName(%s): %s\n", "CM9", chordForName_.information().c_str());
-    csound::Chord test_chord({0., 1., 3., 6.});
-    std::cerr << test_chord.information() << std::endl;
+    csound::Chord test_chord1({0., 1., 8., 0.});
+    std::cerr << test_chord1.information() << std::endl;
+    csound::Chord test_chord2({0., 2., 3., 6.});
+    std::cerr << test_chord2.information() << std::endl;
 #if 0
     csound::ChordSpaceGroup chordSpaceGroup;
     chordSpaceGroup.createChordSpaceGroup(4, csound::OCTAVE() * 5.0, 1.0);
@@ -558,6 +574,40 @@ int main(int argc, char **argv) {
         testEquivalenceRelations(voiceCount, csound::OCTAVE(), 1.0);
     }
 
+    std::vector<csound::Chord> science_optts_3;
+    science_optts_3.push_back(csound::Chord({0., 0., 0.}));
+    science_optts_3.push_back(csound::Chord({0., 0., 1.}));
+    science_optts_3.push_back(csound::Chord({0., 0., 2.}));
+    science_optts_3.push_back(csound::Chord({0., 0., 3.}));
+    science_optts_3.push_back(csound::Chord({0., 0., 4.}));
+    science_optts_3.push_back(csound::Chord({0., 0., 5.}));
+    science_optts_3.push_back(csound::Chord({0., 0., 6.}));
+    science_optts_3.push_back(csound::Chord({0., 5., 5.}));
+    science_optts_3.push_back(csound::Chord({0., 4., 4.}));
+    science_optts_3.push_back(csound::Chord({0., 3., 3.}));
+    science_optts_3.push_back(csound::Chord({0., 2., 2.}));
+    science_optts_3.push_back(csound::Chord({0., 1., 1.}));
+    science_optts_3.push_back(csound::Chord({0., 1., 2.}));
+    science_optts_3.push_back(csound::Chord({0., 1., 3.}));
+    science_optts_3.push_back(csound::Chord({0., 1., 4.}));
+    science_optts_3.push_back(csound::Chord({0., 1., 5.}));
+    science_optts_3.push_back(csound::Chord({0., 1., 6.}));
+    science_optts_3.push_back(csound::Chord({0., 5., 6.}));
+    science_optts_3.push_back(csound::Chord({0., 4., 5.}));
+    science_optts_3.push_back(csound::Chord({0., 3., 4.}));
+    science_optts_3.push_back(csound::Chord({0., 2., 3.}));
+    science_optts_3.push_back(csound::Chord({0., 2., 4.}));
+    science_optts_3.push_back(csound::Chord({0., 2., 5.}));
+    science_optts_3.push_back(csound::Chord({0., 2., 6.}));
+    science_optts_3.push_back(csound::Chord({0., 2., 7.}));
+    science_optts_3.push_back(csound::Chord({0., 4., 6.}));
+    science_optts_3.push_back(csound::Chord({0., 3., 5.}));
+    science_optts_3.push_back(csound::Chord({0., 3., 6.}));
+    science_optts_3.push_back(csound::Chord({0., 3., 7.}));
+    science_optts_3.push_back(csound::Chord({0., 4., 7.}));
+    science_optts_3.push_back(csound::Chord({0., 4., 8.}));
+    printSet("Science OPTTIs", science_optts_3);
+    
     std::vector<csound::Chord> science_opttis_4;
     science_opttis_4.push_back(csound::Chord({0., 0., 0., 0.}));
     science_opttis_4.push_back(csound::Chord({0., 0., 0., 1.}));
@@ -645,77 +695,38 @@ int main(int argc, char **argv) {
     science_opttis_4.push_back(csound::Chord({0., 3., 6., 9.}));
     printSet("Science OPTTIs", science_opttis_4);
     
-    auto my_optts_4 = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTg>(4, csound::OCTAVE(), 1.);
-    printSet("My OPTTs", my_optts_4);
+    auto chordspace_optts_4 = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTg>(4, csound::OCTAVE(), 1., testSector);
+    printSet("My OPTTs", chordspace_optts_4);
 
-    auto my_opttis_4 = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(4, csound::OCTAVE(), 1.);
-    printSet("My OPTTIs", my_opttis_4);
+    auto chordspace_opttis_4 = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(4, csound::OCTAVE(), 1., testSector);
+    printSet("My OPTTIs", chordspace_opttis_4);
 
-    std::vector<csound::Chord> science_optts_3;
-    science_optts_3.push_back(csound::Chord({0., 0., 0.}));
-    science_optts_3.push_back(csound::Chord({0., 0., 1.}));
-    science_optts_3.push_back(csound::Chord({0., 0., 2.}));
-    science_optts_3.push_back(csound::Chord({0., 0., 3.}));
-    science_optts_3.push_back(csound::Chord({0., 0., 4.}));
-    science_optts_3.push_back(csound::Chord({0., 0., 5.}));
-    science_optts_3.push_back(csound::Chord({0., 0., 6.}));
-    science_optts_3.push_back(csound::Chord({0., 5., 5.}));
-    science_optts_3.push_back(csound::Chord({0., 4., 4.}));
-    science_optts_3.push_back(csound::Chord({0., 3., 3.}));
-    science_optts_3.push_back(csound::Chord({0., 2., 2.}));
-    science_optts_3.push_back(csound::Chord({0., 1., 1.}));
-    science_optts_3.push_back(csound::Chord({0., 1., 2.}));
-    science_optts_3.push_back(csound::Chord({0., 1., 3.}));
-    science_optts_3.push_back(csound::Chord({0., 1., 4.}));
-    science_optts_3.push_back(csound::Chord({0., 1., 5.}));
-    science_optts_3.push_back(csound::Chord({0., 1., 6.}));
-    science_optts_3.push_back(csound::Chord({0., 5., 6.}));
-    science_optts_3.push_back(csound::Chord({0., 4., 5.}));
-    science_optts_3.push_back(csound::Chord({0., 3., 4.}));
-    science_optts_3.push_back(csound::Chord({0., 2., 3.}));
-    science_optts_3.push_back(csound::Chord({0., 2., 4.}));
-    science_optts_3.push_back(csound::Chord({0., 2., 5.}));
-    science_optts_3.push_back(csound::Chord({0., 2., 6.}));
-    science_optts_3.push_back(csound::Chord({0., 2., 7.}));
-    science_optts_3.push_back(csound::Chord({0., 4., 6.}));
-    science_optts_3.push_back(csound::Chord({0., 3., 5.}));
-    science_optts_3.push_back(csound::Chord({0., 3., 6.}));
-    science_optts_3.push_back(csound::Chord({0., 3., 7.}));
-    science_optts_3.push_back(csound::Chord({0., 4., 7.}));
-    science_optts_3.push_back(csound::Chord({0., 4., 8.}));
-    printSet("Science OPTTIs", science_optts_3);
-    
-    auto my_optts_3 = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTg>(3, 12., 1.);
-    printSet("My OPTTs", my_optts_3);
+    auto chordspace_optts_3 = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTg>(3, 12., 1., testSector);
+    printSet("My OPTTs", chordspace_optts_3);
  
-    auto my_opttis_3 = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(3, 12., 1.);
-    printSet("My OPTTIs", my_opttis_3);
+    auto chordspace_opttis_3 = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RPTgI>(3, 12., 1., testSector);
+    printSet("My OPTTIs", chordspace_opttis_3);
     
-    std::vector<std::string> difference;
-    setDifference(science_optts_3, my_optts_3, difference);
-    int i = 1;
-    for (auto &a : difference) {
-        std::fprintf(stderr, "OPTT in Science but not in ChordSpace: normal_form[%3d]: %s\n", i, a.c_str());
-        ++i;
+    std::vector<csound::Chord> difference;
+    setDifference("ScienceOPTTS", science_optts_3, "ChordSpaceOPTTs", chordspace_optts_3, difference);
+    for (const auto &chord : difference) {
+        std::cerr << "Chords in Science not in ChordSpace:" << std::endl << std::endl;
+        std::cerr << chord.information() << std::endl << std::endl;
     }
-    setDifference(my_optts_3, science_optts_3, difference);
-    i = 1;
-    for (auto &a : difference) {
-        std::fprintf(stderr, "OPTT in ChordSpace but not in Science: normal_form[%3d]: %s\n", i, a.c_str());
-        ++i;
+    setDifference("ChordSpaceOPTTS", chordspace_optts_3, "ScienceOPTTs", science_optts_3, difference);
+    for (const auto &chord : difference) {
+        std::cerr << "Chords in ChordSpace not in Science:" << std::endl << std::endl;
+        std::cerr << chord.information() << std::endl << std::endl;
     }
-
-    setDifference(science_opttis_4, my_opttis_4, difference);
-    i = 1;
-    for (auto &a : difference) {
-        std::fprintf(stderr, "OPTTI in Science but not in ChordSpace: normal_form[%3d]: %s\n", i, a.c_str());
-        ++i;
+    setDifference("ScienceOPTTIs", science_opttis_4, "ChordSpaceOPTTIs", chordspace_opttis_4, difference);
+    for (const auto &chord : difference) {
+        std::cerr << "Chords in Science not in ChordSpace:" << std::endl << std::endl;
+        std::cerr << chord.information() << std::endl << std::endl;
     }
-    setDifference(my_opttis_4, science_opttis_4, difference);
-    i = 1;
-    for (auto &a : difference) {
-        std::fprintf(stderr, "OPTTI ChordSpace but not in Science: normal_form[%3d]: %s\n", i, a.c_str());
-        ++i;
+    setDifference("ChordSpaceOPTTIs", chordspace_opttis_4, "ScienceOPTTIs", science_opttis_4, difference);
+    for (const auto &chord : difference) {
+        std::cerr << "Chords in ChordSpace not in Science:" << std::endl << std::endl;
+        std::cerr << chord.information() << std::endl << std::endl;
     }
     summary();
     return 0;

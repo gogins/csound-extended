@@ -294,6 +294,8 @@ class SILENCE_PUBLIC ChordSpaceGroup;
 
 SILENCE_PUBLIC double distance_to_points(const Chord &chord, const std::vector<Chord> &points);
 
+SILENCE_PUBLIC double epc(double pitch);
+
 SILENCE_PUBLIC bool gt_tolerance(double a, double b, int epsilons=20, int ulps=200);
 
 SILENCE_PUBLIC bool in_simplex(const std::vector<Chord> &simplex, const Chord &point, int epsilons=2000, int ulps=2000000);
@@ -498,6 +500,11 @@ public:
      * i.e. the pitch-class set of the chord.
      */
     virtual Chord epcs() const;
+    /**
+     * Returns the equivalent of the chord under pitch-class equivalence,
+     * i.e. the pitch-class set of the chord, sorted by pitch-class set.
+     */
+    virtual Chord eppcs() const;
     /**
      * Returns whether the voices of this chord equal the voices of the other.
      */
@@ -1378,8 +1385,11 @@ public:
      * Returns this chord in standard "normal order." For a very clear 
      * explanation, see: 
      * https://www.mta.ca/pc-set/pc-set_new/pages/page04/page04.html.
+     * http://openmusictheory.com/normalOrder.html
      * NOTE: The code here does NOT remove duplicate pitch-classes.
-     */
+     * "Normal order" is the most compact ordering of pitch-classes 
+     * in a chord, measured by pitch-class interval.
+      */
     virtual Chord normal_order() const {
         auto pcs = epcs();
         // This chord as a pitch-class set in ascending order.
@@ -1415,8 +1425,7 @@ public:
             }
         }
         std::sort(permutations_.begin(), permutations_.end());
-        return permutations_.front();
-    }
+        return permutations_.front();    }
     /**
      * Returns this chord as its standard "normal form."
      * NOTE: The code here does NOT remove duplicate pitch-classes.
@@ -1536,7 +1545,7 @@ public:
     virtual int getRange() const;
     std::map<Chord, int> indexesForOpttis;
     std::map<Chord, int> indexesForVoicings;
-    virtual void initialize(int N_, double range_, double g_ = 1.0);
+    virtual void initialize(int N_, double range_, double g_ = 1., int sector=0);
     virtual void list(bool listheader = true, bool listopttis = false, bool listvoicings = false) const;
     virtual void load(std::fstream &stream);
     int N;
@@ -1603,10 +1612,6 @@ SILENCE_PUBLIC double distance_to_points(const Chord &chord, const std::vector<C
  */
 SILENCE_PUBLIC double epc(double pitch);
 
-SILENCE_PUBLIC double EPSILON();
-
-SILENCE_PUBLIC double &epsilonFactor();
-
 /**
  * This is the basis of all other numeric comparisons that take floating-point 
  * limits into account. It is a "close enough" comparison. If a or b equals 0,
@@ -1665,14 +1670,14 @@ void fill(std::string rootName, double rootPitch, std::string typeName, std::str
  * duplicate chords for the same equivalence, only the one closest to the 
  * origin is returned.
  */
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamentalDomainByIsNormal(int voiceN, double range, double g = 1.);
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamentalDomainByIsNormal(int voiceN, double range, double g = 1., int secctor=0);
 
 /**
  * Returns a set of chords in sector 0 of the cyclical region, sorted by 
  * normal order, for the indicated equivalence relation. All duplicate chords 
  * for the same equivalence are returned, ordered by distance from the origin.
  */
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamentalDomainByNormalize(int voiceN, double range, double g = 1.);
+template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamentalDomainByNormalize(int voiceN, double range, double g = 1., int sector=0);
 
 /**
  * Returns a chord containing all the pitches of the score
@@ -2937,13 +2942,23 @@ static std::string print_opti_sectors3(const Chord &chord) {
     return result;    
 }
 
+static inline const char *print_chord(const Chord &chord) {
+    static char buffer[0x1000];
+    std::sprintf(buffer, "%s   ", chord.toString().c_str());
+    auto opti_sectors = chord.opti_domain_sectors();
+    for (auto opti_sector : opti_sectors) {
+        std::sprintf(buffer + std::strlen(buffer), "OPT[%2d] OPTI[%2d]  ", opti_sector / 2, opti_sector);
+    }
+    return buffer;
+}
+
 inline std::string Chord::information() const {
     std::string result;
     char buffer[0x4000];
     if (voices() < 1) {
         return "Empty chord.";
     }
-    std::sprintf(buffer, "CHORD: %s\n", name().c_str());
+    std::sprintf(buffer, "CHORD:\n");
     result.append(buffer);
     auto opt_sector = opt_domain_sectors().front();
     // First whether this chord belongs to the equivalence class, and then the 
@@ -2953,8 +2968,7 @@ inline std::string Chord::information() const {
         //~ CHORD_SPACE_DEBUGGING = true;
         //~ std::raise(SIGINT);
     //~ }
-    auto sector_text = print_opti_sectors(*this);
-    std::sprintf(buffer, "OPT/OPTI sectors: %s %s\n", toString().c_str(), sector_text.c_str());
+    std::sprintf(buffer, "%-17s %s\n", name().c_str(), print_chord(*this));
     result.append(buffer);
     //~ auto opt_sector_text = print_opt_sectors(*this);
     //~ std::sprintf(buffer, "opt by distance:  %s %s\n", toString().c_str(), opt_sector_text.c_str());
@@ -2965,80 +2979,79 @@ inline std::string Chord::information() const {
     //~ auto sector_text3 = print_opti_sectors3(*this);
     //~ std::sprintf(buffer, "opt/opti by bary: %s %s\n", toString().c_str(), sector_text3.c_str());
     //~ result.append(buffer);
-    std::sprintf(buffer, "pitch-class set:  %s\n", epcs().toString().c_str());
+    std::sprintf(buffer, "Pitch-class set:  %s\n", epcs().eP().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "normal order:     %s\n", normal_order().toString().c_str());
+    std::sprintf(buffer, "Normal order:     %s\n", normal_order().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "normal form:      %s\n", normal_form().toString().c_str());
+    std::sprintf(buffer, "Normal form:      %s\n", normal_form().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "prime form:       %s\n", prime_form().toString().c_str());
+    std::sprintf(buffer, "Prime form:       %s\n", prime_form().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "sum:              %12.7f\n", layer());
+    std::sprintf(buffer, "Sum:              %12.7f\n", layer());
     result.append(buffer);
-    std::sprintf(buffer, "O:           %d => %s\n", iseO(), eO().toString().c_str());
+    std::sprintf(buffer, "O:           %d => %s\n", iseO(), print_chord(eO()));
     result.append(buffer);
-    std::sprintf(buffer, "P:           %d => %s\n", iseP(), eP().toString().c_str());
+    std::sprintf(buffer, "P:           %d => %s\n", iseP(), print_chord(eP()));
     result.append(buffer);
-    std::sprintf(buffer, "T:           %d => %s\n", iseT(), eT().toString().c_str());
+    std::sprintf(buffer, "T:           %d => %s\n", iseT(), print_chord(eT()));
     result.append(buffer);
-    std::sprintf(buffer, "TT:          %d => %s\n", iseTT(), eTT().toString().c_str());
+    std::sprintf(buffer, "TT:          %d => %s\n", iseTT(), print_chord(eTT()));
     result.append(buffer);
     auto isei = iseI(opt_sector);
     auto ei = eI(opt_sector);
-    sector_text = print_opti_sectors(ei);
-    std::sprintf(buffer, "I:           %d => %s %s\n", isei, ei.toString().c_str(), sector_text.c_str());
+    std::sprintf(buffer, "I:           %d => %s\n", isei, print_chord(ei));
     result.append(buffer);
-    std::sprintf(buffer, "OP:          %d => %s\n", iseOP(), eOP().toString().c_str());
+    std::sprintf(buffer, "OP:          %d => %s\n", iseOP(), print_chord(eOP()));
     result.append(buffer);
-    std::sprintf(buffer, "OT:          %d => %s\n", iseOT(), eOT().toString().c_str());
+    std::sprintf(buffer, "OT:          %d => %s\n", iseOT(), print_chord(eOT()));
     result.append(buffer);
-    std::sprintf(buffer, "OTT:         %d => %s\n", iseOTT(), eOTT().toString().c_str());
+    std::sprintf(buffer, "OTT:         %d => %s\n", iseOTT(), print_chord(eOTT()));
     result.append(buffer);
-    std::sprintf(buffer, "OPT:         %d => %s\n", iseOPT(opt_sector), eOPT(opt_sector).toString().c_str());
+    std::sprintf(buffer, "OPT:         %d => %s\n", iseOPT(opt_sector), print_chord(eOPT(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPTT:        %d => %s\n", iseOPTT(opt_sector), eOPTT(opt_sector).toString().c_str());
+    std::sprintf(buffer, "OPTT:        %d => %s\n", iseOPTT(opt_sector), print_chord(eOPTT(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPI:         %d => %s\n", iseOPI(opt_sector), eOPI(opt_sector).toString().c_str());
+    std::sprintf(buffer, "OPI:         %d => %s\n", iseOPI(opt_sector), print_chord(eOPI(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPTI:        %d => %s\n", iseOPTI(opt_sector), eOPTI(opt_sector).toString().c_str());
+    std::sprintf(buffer, "OPTI:        %d => %s\n", iseOPTI(opt_sector), print_chord(eOPTI(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPTTI:       %d => %s\n", iseOPTTI(opt_sector), eOPTTI(opt_sector).toString().c_str());
+    std::sprintf(buffer, "OPTTI:       %d => %s\n", iseOPTTI(opt_sector), print_chord(eOPTTI(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "             opt sectors:\n");
+    std::sprintf(buffer, "             OPT sectors:\n");
     result.append(buffer);
     auto rpts = eRPTs(); 
     auto &hyperplane_equations = hyperplane_equations_for_opt_sectors()[voices()];
     for (auto i = 0; i < rpts.size(); ++i) {
         auto rpt = rpts[i];
         auto sector_text = print_opti_sectors(rpt);
-        std::sprintf(buffer, "                  %s %s\n", rpt.toString().c_str(), sector_text.c_str());
+        std::sprintf(buffer, "                  %s\n", print_chord(rpt));
         result.append(buffer);
     }
-    std::sprintf(buffer, "             optt sectors:\n");
+    std::sprintf(buffer, "             OPTT sectors:\n");
     result.append(buffer);
     auto rptts = eRPTTs(12.);
     for (auto i = 0; i < rptts.size(); ++i) {
         auto rptt = rptts[i];
         auto sector_text = print_opti_sectors(rptt);
-        std::sprintf(buffer, "                  %s %s\n", rptt.toString().c_str(), sector_text.c_str());
+        std::sprintf(buffer, "                  %s\n", print_chord(rptt));
         result.append(buffer);
     }
-    std::sprintf(buffer, "             inversion flats and inversions:\n");
+    std::sprintf(buffer, "             Inversion flats and inversions:\n");
     result.append(buffer);
     auto sectors = opt_domain_sectors();
     for (int i = 0, n = voices(); i < n; ++i) {
         auto &hyperplane_equation = hyperplane_equations[i];
-        std::sprintf(buffer, "      opt:%2d u: [", i);
+        std::sprintf(buffer, "OPT[%2d] Normal: [", i);
         result.append(buffer);
         for (int j = 0, m = hyperplane_equation.unit_normal_vector.rows(); j < m; ++j) {
             std::sprintf(buffer, " %12.7f", hyperplane_equation.unit_normal_vector(j, 0));
             result.append(buffer);
         }
         auto reflected = reflect_in_inversion_flat(*this, i);
-        std::sprintf(buffer, " ] c: %11.7f\n", hyperplane_equation.constant_term);
+        std::sprintf(buffer, " ] Constant: %11.7f\n", hyperplane_equation.constant_term);
         result.append(buffer);
         auto sector_text = print_opti_sectors(reflected);
-        std::sprintf(buffer, "               => %s %s\n", reflected.toString().c_str(), sector_text.c_str());
+        std::sprintf(buffer, "        Inversion:%s\n", print_chord(reflected));
         result.append(buffer);   
     }    
     return result;
@@ -3748,6 +3761,14 @@ inline Chord Chord::epcs() const {
     return chord;
 }
 
+inline Chord Chord::eppcs() const {
+    Chord chord = *this;
+    for (size_t voice = 0; voice < voices(); voice++) {
+        chord.setPitch(voice, epc(getPitch(voice)));
+    }
+    return chord.eP();
+}
+
 inline bool Chord::iset() const {
     Chord et_ = et();
     if (!(*this == et_)) {
@@ -4263,12 +4284,12 @@ inline SILENCE_PUBLIC void ChordSpaceGroup::preinitialize(int N_, double range_,
     countV = octavewiseRevoicings(chord, range);
 }
 
-inline SILENCE_PUBLIC void ChordSpaceGroup::initialize(int N_, double range_, double g_) {
+inline SILENCE_PUBLIC void ChordSpaceGroup::initialize(int N_, double range_, double g_, int sector) {
     System::inform("ChordSpaceGroup.initialize...\n");
     preinitialize(N_, range_, g_);
-    auto representative_opttis = fundamentalDomainByNormalize<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g);
+    auto representative_opttis = fundamentalDomainByNormalize<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g, sector);
     System::inform("ChordSpaceGroup.initialize: representative_opttis: %6d\n", representative_opttis.size());
-    auto equivalent_opttis = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g);
+    auto equivalent_opttis = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g, sector);
     System::inform("ChordSpaceGroup.initialize: equivalent_opttis:     %6d\n", equivalent_opttis.size());
     for (auto it = representative_opttis.begin(); it != representative_opttis.end(); ++it) {
         opttisForIndexes.push_back(*it);
@@ -4628,6 +4649,16 @@ struct SILENCE_PUBLIC compare_by_normal_order {
     }
 };
 
+struct SILENCE_PUBLIC compare_by_op {
+    bool operator ()(const Chord &a, const Chord &b) const {
+        if (a.eOP() < b.eOP()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+};
+
 struct SILENCE_PUBLIC compare_by_normal_order_and_distance_from_origin {
     bool operator ()(const Chord &a, const Chord &b) const {
         if (a.normal_order() < b.normal_order()) {
@@ -4666,75 +4697,42 @@ struct SILENCE_PUBLIC compare_by_normal_form_and_distance_from_origin {
     }
 };
 
-template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Chord> fundamentalDomainByIsNormal(int voiceN, double range, double g)
+template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Chord> fundamentalDomainByIsNormal(int voiceN, double range, double g, int sector)
 {
-    if (EQUIVALENCE_RELATION == EQUIVALENCE_RELATION_RPTg ||
-        EQUIVALENCE_RELATION == EQUIVALENCE_RELATION_RPTgI) {
-        std::set<Chord, compare_by_normal_form> fundamentalDomain;
-        int upperI = 2 * (range + 1);
-        int lowerI = - (range + 1);
-        Chord iterator_ = iterator(voiceN, lowerI);
-        Chord origin = iterator_;
-        int chords = 0;
-        while (next(iterator_, origin, upperI, g) == true) {
-            chords++;
-            bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g, 0);
-            if (iterator_is_normal == true) {
-                auto result = fundamentalDomain.insert(iterator_);
-                if (CHORD_SPACE_DEBUGGING && result.second == true) {
-                    Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g, 0);
-                    bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g, 0);
-                    SYSTEM_DEBUG("%s By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
-                        (normalized_is_normal ? "      " : "WRONG "),
-                        namesForEquivalenceRelations[EQUIVALENCE_RELATION],
-                        chords,
-                        fundamentalDomain.size(),
-                        range,
-                        g,
-                        iterator_.toString().c_str(),
-                        iterator_is_normal,
-                        normalized.toString().c_str(),
-                        normalized_is_normal);
-                }
+    std::set<Chord, compare_by_op> fundamentalDomain;
+    int upperI = 2 * (range + 1);
+    int lowerI = - (range + 1);
+    Chord iterator_ = iterator(voiceN, lowerI);
+    Chord origin = iterator_;
+    int chords = 0;
+    while (next(iterator_, origin, upperI, g) == true) {
+        chords++;
+        bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g, sector);
+        if (iterator_is_normal == true) {
+            auto result = fundamentalDomain.insert(iterator_);
+            if (CHORD_SPACE_DEBUGGING && result.second == true) {
+                Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g, sector);
+                bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g, 0);
+                SYSTEM_DEBUG("%s By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
+                    (normalized_is_normal ? "      " : "WRONG "),
+                    namesForEquivalenceRelations[EQUIVALENCE_RELATION],
+                    chords,
+                    fundamentalDomain.size(),
+                    range,
+                    g,
+                    iterator_.toString().c_str(),
+                    iterator_is_normal,
+                    normalized.toString().c_str(),
+                    normalized_is_normal);
             }
         }
-        return std::vector<Chord>(fundamentalDomain.begin(), fundamentalDomain.end());
-    } else {
-        std::set<Chord, compare_by_normal_order> fundamentalDomain;
-        int upperI = 2 * (range + 1);
-        int lowerI = - (range + 1);
-        Chord iterator_ = iterator(voiceN, lowerI);
-        Chord origin = iterator_;
-        int chords = 0;
-        while (next(iterator_, origin, upperI, g) == true) {
-            chords++;
-            bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g, 0);
-            if (iterator_is_normal == true) {
-                auto result = fundamentalDomain.insert(iterator_);
-                if (CHORD_SPACE_DEBUGGING && result.second == true) {
-                    Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g, 0);
-                    bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g, 0);
-                    SYSTEM_DEBUG("%s By isNormal  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  isNormal: %d  normalized: %s  isNormal: %d\n",
-                        (normalized_is_normal ? "      " : "WRONG "),
-                        namesForEquivalenceRelations[EQUIVALENCE_RELATION],
-                        chords,
-                        fundamentalDomain.size(),
-                        range,
-                        g,
-                        iterator_.toString().c_str(),
-                        iterator_is_normal,
-                        normalized.toString().c_str(),
-                        normalized_is_normal);
-                }
-            }
-        }
-        return std::vector<Chord>(fundamentalDomain.begin(), fundamentalDomain.end());
     }
-}
+    return std::vector<Chord>(fundamentalDomain.begin(), fundamentalDomain.end());
+ }
 
-template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Chord> fundamentalDomainByNormalize(int voiceN, double range, double g)
+template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Chord> fundamentalDomainByNormalize(int voiceN, double range, double g, int sector)
 {
-    std::set<Chord, compare_by_normal_order_and_distance_from_origin> fundamentalDomain;
+    std::set<Chord, compare_by_op> fundamentalDomain;
     int upperI = 2 * (range + 1);
     int lowerI = - (range + 1);
     Chord iterator_ = iterator(voiceN, lowerI);
@@ -4743,11 +4741,11 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Cho
     while (next(iterator_, origin, upperI, g) == true) {
         chords++;
         SYSTEM_DEBUG("fundamentalDomainByNormalize: %6d %s\n", chords, iterator_.toString().c_str());
-        bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g, 0);
+        bool iterator_is_normal = isNormal<EQUIVALENCE_RELATION>(iterator_, range, g, sector);
         SYSTEM_DEBUG("fundamentalDomainByNormalize: %6d is_normal: %d\n", chords, iterator_is_normal);
-        Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g, 0);
+        Chord normalized = normalize<EQUIVALENCE_RELATION>(iterator_, range, g, sector);
         SYSTEM_DEBUG("fundamentalDomainByNormalize: %6d normalized: %s\n", chords, normalized.toString().c_str());
-        bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g, 0);
+        bool normalized_is_normal = isNormal<EQUIVALENCE_RELATION>(normalized, range, g, sector);
         SYSTEM_DEBUG("fundamentalDomainByNormalize: %6d normalized_is_normal: %d\n", chords, normalized_is_normal);
         auto result = fundamentalDomain.insert(normalized);
         if (CHORD_SPACE_DEBUGGING && result.second == true) {
