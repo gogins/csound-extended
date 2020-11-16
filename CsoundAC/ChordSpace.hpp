@@ -70,35 +70,35 @@
 #pragma GCC diagnostic ignored "-Wformat"
 
 namespace csound {
-/**
+/** \file ChordSpace.hpp
 This library, part of CsoundAC, implements a geometric approach to some common
 operations on chords in neo-Riemannian music theory for use in score
 generating procedures:
 
---  Identifying whether a chord belongs to some equivalence class of music
+ -  Identifying whether a chord belongs to some equivalence class of music
     theory, or sending a chord to its equivalent within a representative
     ("normal") fundamental domain of some equivalence relation. The
     equivalence relations are octave (O), permutational (P), transpositional,
     (T), inversional (I), and their compounds OP, OPT (set-class or chord
     type), and OPTI (similar to prime form), among others.
 
---  Causing chord progressions to move strictly within an orbifold that
+ -  Causing chord progressions to move strictly within an orbifold that
     generates some equivalence class.
 
---  Implementing chord progressions based on the L, P, R, D, K, and Q
+ -  Implementing chord progressions based on the L, P, R, D, K, and Q
     operations of neo-Riemannian theory (thus implementing some aspects of
     "harmony").
 
---  Implementing chord progressions performed within a more abstract
+ -  Implementing chord progressions performed within a more abstract
     equivalence class by means of the closest voice-leading within a less
     abstract equivalence class (thus implementing some fundamentals of
     "counterpoint").
     
---  Implementing "functional" or "Roman numeral" operations performed 
+ -  Implementing "functional" or "Roman numeral" operations performed 
     using scales and scale degrees (thus implementing many fundamentals of 
     "pragmatic music theory").
     
-DEFINITIONS
+# Definitions
 
 Pitch is the perception of a distinct sound frequency. It is a logarithmic
 perception; octaves, which sound 'equivalent' in some sense, represent
@@ -121,7 +121,7 @@ all other voices being pitches, not pitch-classes, sorted in ascending order.
 For the purposes of algorithmic composition, a score can be considered to be a 
 sequence of more or less fleeting chords.
 
-EQUIVALENCE RELATIONS AND CLASSES
+# Equivalence Relations and Classes
 
 An equivalence relation identifies elements of a set as belonging to
 classes. For example the octave is an equivalence relation that identifies
@@ -129,7 +129,7 @@ C1, C2, and C3 as belonging to the equivalence class C. Operations that send
 elements to their equivalents induce quotient spaces or orbifolds, where
 the equivalence operation identifies points on one face of the orbifold with
 points on an opposing face. The fundamental domain of the equivalence relation
-is the space "within" the orbifold.
+is the space consisting of the orbifold and its surface.
 
 Plain chord space has no equivalence relation. Ordered chords are represented
 as vectors in parentheses (p1, ..., pN). Unordered chords are represented as
@@ -153,32 +153,35 @@ such that the representative fundamental domain of OP / the representative
 fundamental domain of PI equals the representative fundamental domain of OPI.
 And this in turn may require accounting for duplicate elements of the
 representative fundamental domain caused by reflections or singularities in
-the orbifold, or by doubled pitches in a chord.
+the orbifold (e.g. on vertices, edges, or faces shared by fundamental domains 
+with a cyclical structure), or by doubled pitches in a chord.
 
-C       Cardinality equivalence, e.g. {1, 1, 2} == {1, 2}. _Not_ assuming
+<dl>
+<dt>C   <dd>Cardinality equivalence, e.g. {1, 1, 2} == {1, 2}. _Not_ assuming
         cardinality equivalence ensures that there is a proto-metric in plain
         chord space that is inherited by all child chord spaces. Cardinality
         equivalence is never assumed here, because we are working in chord
         spaces of fixed dimensionality; e.g. we represent the note middle C
         not only as {60}, but also as {60, 60, ..., 60}.
-
-O       Octave equivalence. The fundamental domain is defined by the pitches
+        
+<dt>O   <dd>Octave equivalence. The fundamental domain is defined by the pitches
         in a chord spanning the range of an octave or less, and summing to
         an octave or less.
 
-P       Permutational equivalence. The fundamental domain is defined by a
+<dt>P   <dd>Permutational equivalence. The fundamental domain is defined by a
         "wedge" of plain chord space in which the voices of a chord are always
         sorted by pitch.
 
-T       Transpositional equivalence, e.g. {1, 2} == {7, 8}. The fundamental
+<dt>T   <dd>Transpositional equivalence, e.g. {1, 2} == {7, 8}. The fundamental
         domain is defined as a hyperplane in chord space at right angles to the
         diagonal of unison chords. Represented by the chord always having a
         sum of pitches equal to 0.
 
-Tg      Transpositional equivalence "rounded off" to the nearest generator
-        of transposition (in 12 tone equal temperament, this is one semitone).
+<dt>Tg  <dd>Transpositional equivalence; the pitches of the chord are sent to 
+        the ceilings of the pitches in the first chord whose sum is equal 
+        to or greater than 0. I.e., rounded up to equal temperament.
 
-I       Inversional equivalence. Care is needed to distinguish the
+<dt>I   <dd>Inversional equivalence. Care is needed to distinguish the
         mathematician's sense of 'invert', which means 'pitch-space inversion'
         or 'reflect in a point', from the musician's sense of 'invert', which
         varies according to context but in practice often means 'registral
@@ -187,11 +190,9 @@ I       Inversional equivalence. Care is needed to distinguish the
         sense, and we use the terms 'revoice' and 'voicing' for the musician's
         'invert' and 'inversion'. Here, the inversion of a chord is its 
         reflection in a hyperplane (the inversion flat) that divides a 
-        fundamental domain of pitch. Represented as the chord having the first 
-        interval between voices be smaller than or equal to the final interval 
-        (recursing for chords of more than 3 voices).
+        fundamental domain of pitch.
 
-PI      Inversional equivalence with permutational equivalence. The
+<dt>PI  <dd>Inversional equivalence with permutational equivalence. The
         'inversion flat' of unordered chord space is a hyperplane consisting
         of all those unordered chords that are invariant under inversion. A
         fundamental domain is defined by any half space bounded by a
@@ -199,7 +200,7 @@ PI      Inversional equivalence with permutational equivalence. The
         half of the space on or lower than the hyperplane defined by the
         inversion flat and the unison diagonal.
 
-OP      Octave equivalence with permutational equivalence. Tymoczko's orbifold
+<dt>OP  <dd>Octave equivalence with permutational equivalence. Tymoczko's orbifold
         for chords; i.e. chords with a fixed number of voices in a harmonic
         context. The fundamental domain is defined as a hyperprism one octave
         long with as many sides as voices and the ends identified by octave
@@ -210,55 +211,64 @@ OP      Octave equivalence with permutational equivalence. Tymoczko's orbifold
         form the 3 sides, and the one-pitch chords form the 3 edges that join
         the sides.
         
-OPT     The layer of the OP prism as close as possible to the origin, modulo
+<dt>OPT  <dd>The layer of the OP prism as close as possible to the origin, modulo
         the number of voices. Chord type. Note that CM and Cm are different
         OPT. Because the OP prism is canted down from the origin, at least one
-        pitch in each OPT chord (excepting the origin itself) is negative.
+        pitch in each OPT chord (excepting the origin itself) is negative. 
+        For n dimensions there are n OPT fundamental domains centering on the 
+        maximally even chord and generated by rotation about the maximally 
+        even chord, equivalently octavewise revoicing, more or less the same 
+        as the musician's sense of "chord inversion."
 
-OPI     The OP prism modulo inversion, i.e. 1/2 of the OP prism. The
+<dt>OPI  <dd>The OP prism modulo inversion, i.e. 1/2 of the OP prism. The
         representative fundamental consits of those chords having inversional 
         equivalence.
 
-OPTI    The OPT layer modulo inversion, i.e. 1/2 of the OPT layer.
+<dt>OPTI  <dd>The OPT layer modulo inversion, i.e. 1/2 of the OPT layer.
         Set-class. Note that minor and major triads are are the same OPTI.
+</dl>
 
-OPERATIONS
+# Operations
 
 Each of the above equivalence relations is, of course, an operation that sends
 chords outside a fundamental domain to chords inside the fundamental domain.
 
 We define the following additional operations:
 
-T(p, x)         Translate p by x.
+<dl>
+<dt>T(p, x)     <dd>Translate p by x.
 
-I(p [, x])      Reflect p in x, by default the origin.
+<dt>I(p [, x])  <dd>Reflect p in x, by default the origin.
 
-P               Send a major triad to the minor triad with the same root,
+<dt>P           <dd>Send a major triad to the minor triad with the same root,
                 or vice versa (Riemann's parallel transformation).
 
-L               Send a major triad to the minor triad one major third higher,
+<dt>L           <dd>Send a major triad to the minor triad one major third higher,
                 or vice versa (Riemann's Leittonwechsel or leading-tone
                 exchange transformation).
 
-R               Send a major triad to the minor triad one minor third lower,
+<dt>R           <dd>Send a major triad to the minor triad one minor third lower,
                 or vice versa (Riemann's relative transformation).
 
-D               Send a triad to the next triad a perfect fifth lower
+<dt>D            <dd>Send a triad to the next triad a perfect fifth lower
                 (dominant transformation).
+</dl>
 
 P, L, and R have been extended as follows, see Fiore and Satyendra,
 "Generalized Contextual Groups", _Music Theory Online_ 11, August 2008:
 
-K(c)            Interchange by inversion;
-                K(c) := I(c, c[1] + c[2]).
+<dl>
+<dt>K(c)        <dd>Interchange by inversion;
+                `K(c) := I(c, c[1] + c[2])`.
                 This is a generalized form of P; for major and minor triads,
                 it is exactly the same as P, but it also works with other
                 chord types.
 
-Q(c, n, m)      Contexual transposition;
-                Q(c, n, m) := T(c, n) if c is a T-form of m,
-                or T(c, -n) if c is an I-form of M. Not a generalized form
+<dt>Q(c, n, m)  <dd>Contexual transposition;
+                `Q(c, n, m) := T(c, n)` if c is a T-form of m,
+                or `T(c, -n)` if c is an I-form of M. Not a generalized form
                 of L or R; but, like them, K and Q generate the T-I group.
+</dl>
                 
 */
 
@@ -284,6 +294,7 @@ struct SILENCE_PUBLIC SCOPED_DEBUGGING {
 // But a few forward declarations come first.
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> Matrix;
+
 typedef Eigen::Matrix<double, Eigen::Dynamic, 1> Vector;
 
 class SILENCE_PUBLIC Chord;
@@ -335,11 +346,6 @@ SILENCE_PUBLIC void add_chord(std::string, const Chord &chord);
 
 SILENCE_PUBLIC void add_scale(std::string, const Scale &scale);
 
-/**
- * TODO: Change this to use strictly the representative fundamental domains.
- * Each iteration must be sent to the representative fundamental domain, then
- * added to the set.
- */
 template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> allNormalizedFundamentalDomain(int voices, double range, double g);
 
 /**
@@ -353,7 +359,7 @@ SILENCE_PUBLIC void apply(Score &score, const Chord &chord, double startTime, do
 
 /**
  * Computes the barycentric coordinates of the point with respect to the 
- * simplex.
+ * simplex. 
  */
 SILENCE_PUBLIC Vector barycentric_coordinates(const Matrix &simplex, const Vector &point) ;
 
@@ -452,12 +458,12 @@ public:
      */
     virtual double distanceToUnisonDiagonal() const;
     /**
-     * Returns the equivalent of the chord within the representative fundamental
+     * Returns the equivalent of the chord within a fundamental
      * domain of inversional equivalence.
      */
     virtual Chord eI(int opt_sector = 0) const;
     /**
-     * Returns the equivalent of the chord within the representative fundamental
+     * Returns the equivalent of the chord within a fundamental
      * domain of octave equivalence.
      */
     virtual Chord eO() const;
@@ -472,24 +478,24 @@ public:
      */
     virtual Chord eOPI(int opt_sector = 0) const;
     /**
-     * Returns the equivalent of the chord within the representative fundamental
+     * Returns the equivalent of the chord within a fundamental
      * domain of octave, permutational, and transpositional equivalence.
      */
     virtual Chord eOPT(int opt_sector = 0) const;
     /**
-     * Returns the equivalent of the chord within the representative fundamental
+     * Returns the equivalent of the chord within a fundamental
      * domain of octave, permutational, and transpositional equivalence but 
      * within the equal temperament generated by g.
      */
     virtual Chord eOPTT(double g = 1., int opt_sector = 0) const;
     /**
-     * Returns the equivalent of the chord within the representative fundamental
+     * Returns the equivalent of the chord within a fundamental
      * domain of range, permutational, transpositional, and inversional
      * equivalence.
      */
     virtual Chord eOPTI(int opt_sector = 0) const;
     /**
-     * Returns the equivalent of the chord within the representative fundamental
+     * Returns the equivalent of the chord within a fundamental
      * domain of range, permutational, transpositional, and inversional
      * equivalence but within the equal temperament generated by g.
      */
@@ -498,21 +504,13 @@ public:
      * Returns the equivalent of the chord within the fundamental domain of 
      * octave and transpositional equivalence.
      */
-    virtual Chord eOT() const {
-        auto o = eO();
-        auto o_t = o.eT();
-        return o_t;
-    }
+    virtual Chord eOT() const;
     /**
      * Returns the equivalent of the chord within the fundamental domain of 
      * octave and transpositional equivalence but within the equal temperament 
-     * generared by g.
+     * generated by g.
      */
-    virtual Chord eOTT(double g = 1.) const {
-        auto o = eO();
-        auto o_tt = o.eTT(g);
-        return o_tt;
-    }
+    virtual Chord eOTT(double g = 1.) const;
     /**
      * Returns the equivalent of the chord within the representative
      * fundamental domain of permutational equivalence.	The implementation
@@ -549,13 +547,13 @@ public:
      */
     virtual Chord eRPI(double range, int opt_sector = 0) const;
     /**
-     * Returns the equivalent of the chord within the representative fundamental
+     * Returns the equivalent of the chord within a fundamental
      * domain of range, permutational, and transpositional equivalence; the same
      * as set-class type, or chord type.
      */
     virtual Chord eRPT(double range, int opt_sector = 0) const;
     /**
-     * Returns the equivalent of the chord within the representative fundamental
+     * Returns the equivalent of the chord within a fundamental
      * domain of range, permutational, and transpositional equivalence; the same
      * as set-class type, or chord type but within the equal temperament 
      * generated by g.
@@ -584,13 +582,13 @@ public:
      */
     virtual Chord eRPTI(double range, int opt_sector = 0) const;
     /**
-     * Returns the equivalent of the chord within the representative fundamental
+     * Returns the equivalent of the chord within a fundamental
      * domain of range, permutational, transpositional, and inversional
      * equivalence, but within the equal temperament generated by g.
      */
     virtual Chord eRPTTI(double range, double g = 1., int opt_sector = 0) const;
     /**
-     * Returns the equivalent of the chord within the representative fundamental
+     * Returns the equivalent of the chord within a fundamental
      * domain of transpositonal equivalence.
      */
     virtual Chord eT() const;
@@ -719,13 +717,13 @@ public:
      */
     virtual bool is_opti_sector(int opti_sector = 0) const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
+     * Returns whether the chord is within a fundamental domain
      * of inversional equivalence.
      */
     virtual bool iseI_chord(Chord *inverse, int opt_sector = 0) const;
     virtual bool iseI(int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
+     * Returns whether the chord is within a fundamental domain
      * of octave equivalence.
      */
     virtual bool iseO() const;
@@ -740,29 +738,29 @@ public:
      */
     virtual bool iseOPI(int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
+     * Returns whether the chord is within a fundamental domain
      * of octave, permutational, and transpositional equivalence.
      */
     virtual bool iseOPT(int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
+     * Returns whether the chord is within a fundamental domain
      * of octave, permutational, and transpositional equivalence within the 
      * equal temperament generated by g.
      */
     virtual bool iseOPTT(double g = 1., int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
+     * Returns whether the chord is within a fundamental domain
      * of octave, permutational, transpositional, and inversional equivalence.
      */
     virtual bool iseOPTI(int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
+     * Returns whether the chord is within a fundamental domain
      * of octave, permutational, transpositional, and inversional equivalence 
      * within the equal temperament generated by g.
      */
     virtual bool iseOPTTI(double g  = 1., int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
+     * Returns whether the chord is within a fundamental domain
      * of octave and transpositional equivalence.
      */
     virtual bool iseOT() const {
@@ -814,24 +812,24 @@ public:
      */
     virtual bool iseRPI(double range, int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
+     * Returns whether the chord is within a fundamental domain
      * of range, permutational, and transpositional equivalence.
      */
     virtual bool iseRPT(double range, int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
+     * Returns whether the chord is within a fundamental domain
      * of range, permutational, and transpositional equivalence in the equal 
      * temperaement generated by g.
      */
     virtual bool iseRPTT(double range, double g = 1., int opt_sector = 0) const;
     /** 
-     * Returns whether the chord is within the representative fundamental domain
+     * Returns whether the chord is within a fundamental domain
      * of range, permutational, transpositional, and inversional equivalence.
      */
     virtual bool iseRPTI(double range, int opt_sector = 0) const;
     virtual bool iseRPTTI(double range, double g = 1., int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
+     * Returns whether the chord is within a fundamental domain
      * of range and transpositional equivalence.
      */
     virtual bool iseRT(double range) const {
@@ -5694,6 +5692,18 @@ inline std::vector<Chord> Chord::opti_domain(int sector) const {
     auto opti_sectors = opti_sectors_for_dimensions[voices()];
     return opti_sectors[sector];
 }    
+
+inline Chord Chord::eOT() const {
+    auto o = eO();
+    auto o_t = o.eT();
+    return o_t;
+}
+
+inline Chord Chord::eOTT(double g) const {
+    auto o = eO();
+    auto o_tt = o.eTT(g);
+    return o_tt;
+}
 
 
 } // End of namespace csound.
