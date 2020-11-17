@@ -144,47 +144,47 @@ static void test_chord_space_group(int initialVoiceCount, int finalVoiceCount) {
         bool passes = true;
         csound::ChordSpaceGroup chordSpaceGroup;
         csound::System::message("Testing all of ChordSpaceGroup: voices: %d  range: %f\n", voiceCount, range);
-        csound::System::message("Testing ChordSpaceGroup to chords and back...\n");
+        csound::System::message("Testing PITV to chord and back...\n");
         chordSpaceGroup.initialize(voiceCount, range);
         chordSpaceGroup.list(true, true, true);
         for (int P = 0; P < chordSpaceGroup.countP; ++P) {
             for (int I = 0; I < chordSpaceGroup.countI; ++I) {
                 for (int T = 0; T < chordSpaceGroup.countT; ++T) {
                     for (int V = 0; V < chordSpaceGroup.countV; ++V) {
-                        csound::Chord fromPITV = chordSpaceGroup.toChord(P, I, T, V)[0];
-                        if (printPass) csound::System::message("%8d     %8d     %8d     %8d => %s\n", P, I, T, V, fromPITV.toString().c_str());
-                        Eigen::VectorXi pitv = chordSpaceGroup.fromChord(fromPITV);
-                        csound::Chord frompitv = chordSpaceGroup.toChord(pitv(0), pitv(1), pitv(2), pitv(3))[0];
-                        if (printPass) csound::System::message("%8d     %8d     %8d     %8d <= %s\n",pitv(0), pitv(1), pitv(2), pitv(3), frompitv.toString().c_str());
-                        bool equals = (fromPITV == frompitv);
+                        csound::Chord chord_from_pitv = chordSpaceGroup.toChord(P, I, T, V)[0];
+                        if (printPass) csound::System::message("chord_from_pitv:            %8d     %8d     %8d     %8d => %s\n", P, I, T, V, chord_from_pitv.toString().c_str());
+                        Eigen::VectorXi pitv_from_chord = chordSpaceGroup.fromChord(chord_from_pitv);
+                        csound::Chord chord_from_pitv_from_chord = chordSpaceGroup.toChord(pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3))[0];
+                        if (printPass) csound::System::message("chord_from_pitv_from_chord: %8d     %8d     %8d     %8d <= %s\n", pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3), chord_from_pitv_from_chord.toString().c_str());
+                        bool equals = (chord_from_pitv == chord_from_pitv_from_chord);
                         if (!equals) {
                             chordSpaceGroup.toChord(P, I, T, V, true);
-                            csound::System::message("fromPITV (toChord):\n%s\n", fromPITV.information().c_str());
-                            chordSpaceGroup.fromChord(fromPITV, true);
-                            csound::System::message("frompitv (fromChord):\n%s\n", frompitv.information().c_str());
+                            csound::System::message("chord_from_pitv (toChord):\n%s\n", chord_from_pitv.information().c_str());
+                            chordSpaceGroup.fromChord(chord_from_pitv, true);
+                            csound::System::message("chord_from_pitv_from_chord (fromChord):\n%s\n", chord_from_pitv_from_chord.information().c_str());
                             passes = false;
                         }
-                        test(equals, "fromPITV must match frompitv.\n");
+                        test(equals, "chord_from_pitv must match chord_from_pitv_from_chord.\n");
                         if (printPass) csound::System::message("\n");
                     }
                 }
             }
         }
-        csound::System::message("Testing chords to ChordSpaceGroup and back...\n\n");
+        csound::System::message("Testing chord to PITV and back...\n\n");
         bool passes2 = true;
         auto eops = csound::fundamentalDomainByIsNormal<csound::EQUIVALENCE_RELATION_RP>(voiceCount, csound::OCTAVE(), 1., testSector);
         for(auto it = eops.begin(); it != eops.end(); ++it) {
             auto chord = *it;
             auto origin = chord;
             for(;;) {
-                Eigen::VectorXi pitv = chordSpaceGroup.fromChord(chord);
-                if (printPass) csound::System::message("%8d     %8d     %8d     %8d <= %s\n", pitv(0), pitv(1), pitv(2), pitv(3), chord.toString().c_str());
-                csound::Chord fromPITV = chordSpaceGroup.toChord(pitv(0), pitv(1), pitv(2), pitv(3))[0];
-                if (printPass) csound::System::message("%8d     %8d     %8d     %8d => %s\n", pitv(0), pitv(1), pitv(2), pitv(3), fromPITV.toString().c_str());
-                bool equals = (fromPITV == chord);
+                Eigen::VectorXi pitv_from_chord = chordSpaceGroup.fromChord(chord);
+                if (printPass) csound::System::message("pitv_from_chord:            %8d     %8d     %8d     %8d <= %s\n", pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3), chord.toString().c_str());
+                csound::Chord chord_from_pitv_from_chord = chordSpaceGroup.toChord(pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3))[0];
+                if (printPass) csound::System::message("chord_from_pitv_from_chord: %8d     %8d     %8d     %8d => %s\n", pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3), chord_from_pitv_from_chord.toString().c_str());
+                bool equals = (chord_from_pitv_from_chord == chord);
                 if (!equals) {
                     csound::System::message("Original chord (fromChord):\n%s\n", chord.information().c_str());
-                    csound::System::message("New chord (toChord):\n%s\n", fromPITV.information().c_str());
+                    csound::System::message("New chord (toChord):\n%s\n", chord_from_pitv_from_chord.information().c_str());
                     passes2 = false;
                 }
                 test(equals, "Original chord must match chord from original chord's PITV.\n");
@@ -304,12 +304,12 @@ static void setDifference(const std::string &a_name, std::vector<csound::Chord> 
     std::sort(B.begin(), B.end(), comparator);
     std::map<std::string, csound::Chord> map_a;
     for (csound::Chord &chord : A) {
-        std::string key = chord.eOPTT().toString();
+        std::string key = chord.eOPTT().normal_form().toString();
         map_a.insert({key, chord});
     }
     std::map<std::string, csound::Chord> map_b;
     for (csound::Chord chord : B) {
-        std::string key = chord.eOPTT().toString();
+        std::string key = chord.eOPTT().normal_form().toString();
         map_b.insert({key, chord});
     }
     difference.clear();
@@ -529,13 +529,13 @@ int main(int argc, char **argv) {
     std::cerr << test_chord1.information() << std::endl;
     csound::Chord test_chord2({0., 2., 3., 6.});
     std::cerr << test_chord2.information() << std::endl;
-#if 0
+#if 1
     csound::ChordSpaceGroup chordSpaceGroup;
-    chordSpaceGroup.createChordSpaceGroup(4, csound::OCTAVE() * 5.0, 1.0);
+    chordSpaceGroup.initialize(4, csound::OCTAVE() * 5.0, 1.0);
     chordSpaceGroup.list(true, true, true);
-    testChordSpaceGroup(chordSpaceGroup, "Gb7");
+    test_chord_space_group(chordSpaceGroup, "Gb7");
     csound::System::message("\nTesting all of chord space groups...\n\n");
-    testAllOfChordSpaceGroup(3, maximumVoiceCountToTest);
+    test_chord_space_group(3, 5);
 
     csound::Chord c1({-7, 2, 5});
     std::cout << c1.information() << std::endl;
@@ -545,23 +545,23 @@ int main(int argc, char **argv) {
     
     auto prior_level = csound::System::setMessageLevel(15);
     
-    original = csound::Chord({0, 3, 7}).eOPT();
+    auto original = csound::Chord({0, 3, 7}).eOPT();
     std::cout << "original:" << std::endl;
     std::cout << original.information() << std::endl;
-    reflected = csound::reflect_by_householder(original);
+    auto reflected = csound::reflect_by_householder(original);
     std::cout << "reflect_by_householder:" << std::endl;
     std::cout << reflected.information() << std::endl;
     reflected =  (original);
     std::cout << "reflect_in_inversion_flat:" << std::endl;
     std::cout << reflected.information() << std::endl;
-    spun_back = reflected.eOPT();
+    auto spun_back = reflected.eOPT();
     std::cout << "spun_back:" << std::endl;
     std::cout << spun_back.information() << std::endl;
 
     original = csound::chordForName("C7");
     std::cout << "original:" << std::endl;
     std::cout << original.information() << std::endl;
-    reflected = reflect_in_inversion_flat(original);
+    reflected = reflect_in_inversion_flat(original, testSector);
     std::cout << "reflected:" << std::endl;
     std::cout << reflected.information() << std::endl;
     spun_back = reflected.eOPTT();

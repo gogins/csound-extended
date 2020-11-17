@@ -71,7 +71,7 @@
 
 namespace csound {
 /** \file ChordSpace.hpp
-This library, part of CsoundAC, implements a geometric approach to some common
+This library implements a geometric approach to some common
 operations on chords in neo-Riemannian music theory for use in score
 generating procedures:
 
@@ -83,7 +83,7 @@ generating procedures:
     type), and OPTI (similar to prime form), among others.
 
  -  Causing chord progressions to move strictly within an orbifold that
-    generates some equivalence class.
+    reoresents some equivalence class.
 
  -  Implementing chord progressions based on the L, P, R, D, K, and Q
     operations of neo-Riemannian theory (thus implementing some aspects of
@@ -116,20 +116,20 @@ as a point in a chord space having one dimension of pitch for each voice
 in the chord.
 
 A scale is a chord with a tonic pitch-class as its first and lowest voice, 
-all other voices being pitches, not pitch-classes, sorted in ascending order.
+all other voices being pitch-classes sorted in ascending order.
 
 For the purposes of algorithmic composition, a score can be considered to be a 
 sequence of more or less fleeting chords.
 
 # Equivalence Relations and Classes
 
-An equivalence relation identifies elements of a set as belonging to
-classes. For example the octave is an equivalence relation that identifies
-C1, C2, and C3 as belonging to the equivalence class C. Operations that send
-elements to their equivalents induce quotient spaces or orbifolds, where
-the equivalence operation identifies points on one face of the orbifold with
-points on an opposing face. The fundamental domain of the equivalence relation
-is the space consisting of the orbifold and its surface.
+An equivalence relation identifies different elements of a set as belonging to
+the same class. For example the octave is an equivalence relation that 
+identifies C1, C2, and C3 as belonging to the equivalence class C. Operations 
+that send elements to their equivalents induce quotient spaces or orbifolds, 
+where the equivalence operation identifies points on one facet of the orbifold 
+with points on an opposing facet. The fundamental domain of the equivalence 
+relation is the space consisting of the orbifold and its surface.
 
 Plain chord space has no equivalence relation. Ordered chords are represented
 as vectors in parentheses (p1, ..., pN). Unordered chords are represented as
@@ -153,7 +153,7 @@ such that the representative fundamental domain of OP / the representative
 fundamental domain of PI equals the representative fundamental domain of OPI.
 And this in turn may require accounting for duplicate elements of the
 representative fundamental domain caused by reflections or singularities in
-the orbifold (e.g. on vertices, edges, or faces shared by fundamental domains 
+the orbifold (e.g. on vertices, edges, or facets shared by fundamental domains 
 with a cyclical structure), or by doubled pitches in a chord.
 
 <dl>
@@ -179,7 +179,7 @@ with a cyclical structure), or by doubled pitches in a chord.
 
 <dt>Tg  <dd>Transpositional equivalence; the pitches of the chord are sent to 
         the ceilings of the pitches in the first chord whose sum is equal 
-        to or greater than 0. I.e., rounded up to equal temperament.
+        to or greater than 0, i.e., rounded up to equal temperament.
 
 <dt>I   <dd>Inversional equivalence. Care is needed to distinguish the
         mathematician's sense of 'invert', which means 'pitch-space inversion'
@@ -196,17 +196,15 @@ with a cyclical structure), or by doubled pitches in a chord.
         'inversion flat' of unordered chord space is a hyperplane consisting
         of all those unordered chords that are invariant under inversion. A
         fundamental domain is defined by any half space bounded by a
-        hyperplane containing the inversion flat. It is represented as that
-        half of the space on or lower than the hyperplane defined by the
-        inversion flat and the unison diagonal.
+        hyperplane containing the inversion flat.
 
-<dt>OP  <dd>Octave equivalence with permutational equivalence. Tymoczko's orbifold
-        for chords; i.e. chords with a fixed number of voices in a harmonic
-        context. The fundamental domain is defined as a hyperprism one octave
-        long with as many sides as voices and the ends identified by octave
-        equivalence and one cyclical permutation of voices, modulo the
-        unordering. In OP for trichords in 12TET, the augmented triads run up
-        the middle of the prism, the major and minor triads are in 6
+<dt>OP  <dd>Octave equivalence with permutational equivalence. Tymoczko's 
+        orbifold for chords; i.e. chords with a fixed number of voices in a 
+        harmonic context. The fundamental domain is defined as a hyperprism 
+        one octave long with as many sides as voices and the ends identified 
+        by octave equivalence and one cyclical permutation of voices, modulo 
+        the unordering. In OP for trichords in 12TET, the augmented triads run 
+        up the middle of the prism, the major and minor triads are in 6
         alternating columns around the augmented triads, the two-pitch chords
         form the 3 sides, and the one-pitch chords form the 3 edges that join
         the sides.
@@ -220,20 +218,25 @@ with a cyclical structure), or by doubled pitches in a chord.
         even chord, equivalently octavewise revoicing, more or less the same 
         as the musician's sense of "chord inversion."
 
+<dt>OPTT  <dd>The same as OPT, but with chords rounded up within equal 
+        temperament; equivalent to "chord type."
+
 <dt>OPI  <dd>The OP prism modulo inversion, i.e. 1/2 of the OP prism. The
         representative fundamental consits of those chords having inversional 
         equivalence.
 
 <dt>OPTI  <dd>The OPT layer modulo inversion, i.e. 1/2 of the OPT layer.
         Set-class. Note that minor and major triads are are the same OPTI.
+
+<dt>OPTTI  <dd>The same as OPTI, but with chords rounded up within equal 
+        temperament; equivalent to "set class."
 </dl>
 
 # Operations
 
 Each of the above equivalence relations is, of course, an operation that sends
-chords outside a fundamental domain to chords inside the fundamental domain.
-
-We define the following additional operations:
+chords outside some fundamental domain to chords inside that fundamental 
+domain. We define the following additional operations:
 
 <dl>
 <dt>T(p, x)     <dd>Translate p by x.
@@ -349,11 +352,9 @@ SILENCE_PUBLIC void add_scale(std::string, const Scale &scale);
 template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> allNormalizedFundamentalDomain(int voices, double range, double g);
 
 /**
- * For all the notes in the Score
- * beginning at or later than the start time,
- * and up to but not including the end time,
- * moves the pitch of the note to belong to the chord, using the
- * conformToChord function.
+ * For all the notes in the score beginning at or later than the start time,
+ * and up to but not including the end time, moves the pitch of the note to 
+ * belong to the chord, using the conformToChord function.
  */
 SILENCE_PUBLIC void apply(Score &score, const Chord &chord, double startTime, double endTime, bool octaveEquivalence = true);
 
@@ -369,8 +370,9 @@ SILENCE_PUBLIC double C4();
  * Returns the chord, in scale order, for the specified degree of the scale.
  * The chord can be composed of seconds, thirds, or larger intervals, and 
  * can have two or more voices. The scale can have any number of pitch-classes  
- * and any interval content; it simply has to consists of pitches (not 
- * pitch-classes) sorted from the tonic pitch-class on up.
+ * and any interval content; it simply has to consists of pitch-classes sorted 
+ * from the tonic pitch-class on up.
+ * 
  * PLEASE NOTE: Scale degree is 1-based. A "third" is denoted "3" but is two 
  * scale degrees, and so on.
  */
@@ -414,8 +416,7 @@ public:
     /**
      * Returns a new chord whose pitches are the ceilings of this chord's 
      * pitches, with respect to the generator of transposition g, which 
-     * defaults to 1 
-     semitone.
+     * defaults to 1 semitone.
      */
     virtual Chord ceiling(double g = 1.) const;
     /**
@@ -428,6 +429,10 @@ public:
      * Returns whether or not the chord contains the pitch.
      */
     virtual bool contains(double pitch_) const;
+    /**
+     * Returns the number of voices in this chord, the same as the number of 
+     * dimensions in this chord space.
+     */
     virtual size_t count(double pitch) const;
     /**
      * Returns a copy of the chord cyclically permuted by a stride, by default 1.
@@ -463,18 +468,18 @@ public:
      */
     virtual Chord eI(int opt_sector = 0) const;
     /**
-     * Returns the equivalent of the chord within a fundamental
-     * domain of octave equivalence.
+     * Returns the equivalent of the chord within the representative 
+     * fundamental domain of octave equivalence.
      */
     virtual Chord eO() const;
     /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of octave and permutational equivalence.
+     * Returns the equivalent of the chord within the representative 
+     * fundamental domain of octave and permutational equivalence.
      */
     virtual Chord eOP() const;
     /**
-     * Returns the equivalent of the chord within the representative fundamental
-     * domain of octave, permutational, and inversional equivalence.
+     * Returns the equivalent of the chord within a fundamental domain of 
+     * octave, permutational, and inversional equivalence.
      */
     virtual Chord eOPI(int opt_sector = 0) const;
     /**
@@ -485,7 +490,7 @@ public:
     /**
      * Returns the equivalent of the chord within a fundamental
      * domain of octave, permutational, and transpositional equivalence but 
-     * within the equal temperament generated by g.
+     * in the equal temperament generated by g.
      */
     virtual Chord eOPTT(double g = 1., int opt_sector = 0) const;
     /**
@@ -497,24 +502,23 @@ public:
     /**
      * Returns the equivalent of the chord within a fundamental
      * domain of range, permutational, transpositional, and inversional
-     * equivalence but within the equal temperament generated by g.
+     * equivalence but in the equal temperament generated by g.
      */
     virtual Chord eOPTTI(double g = 1., int opt_sector = 0) const;
     /**
-     * Returns the equivalent of the chord within the fundamental domain of 
-     * octave and transpositional equivalence.
+     * Returns the equivalent of the chord within the representative 
+     * fundamental domain of octave and transpositional equivalence.
      */
     virtual Chord eOT() const;
     /**
-     * Returns the equivalent of the chord within the fundamental domain of 
-     * octave and transpositional equivalence but within the equal temperament 
+     * Returns the equivalent of the chord within a fundamental domain of 
+     * octave and transpositional equivalence but in the equal temperament 
      * generated by g.
      */
     virtual Chord eOTT(double g = 1.) const;
     /**
      * Returns the equivalent of the chord within the representative
-     * fundamental domain of permutational equivalence.	The implementation
-     * uses a bubble sort to swap out of order voices in the Eigen matrix.
+     * fundamental domain of permutational equivalence.
      */
     virtual Chord eP() const;
     /**
@@ -523,8 +527,8 @@ public:
      */
     virtual Chord epcs() const;
     /**
-     * Returns the equivalent of the chord under pitch-class equivalence,
-     * i.e. the pitch-class set of the chord, sorted by pitch-class set.
+     * Returns the equivalent of the chord under pitch-class equivalence, i.e. 
+     * the pitch-class set of the chord, sorted by pitch-class.
      */
     virtual Chord eppcs() const;
     /**
@@ -542,37 +546,31 @@ public:
      */
     virtual Chord eRP(double range) const;
     /**
-     * Returns the equivalent of the chord within the representative fundamental
+     * Returns the equivalent of the chord within a fundamental
      * domain of range, permutational, and inversional equivalence.
      */
     virtual Chord eRPI(double range, int opt_sector = 0) const;
     /**
      * Returns the equivalent of the chord within a fundamental
-     * domain of range, permutational, and transpositional equivalence; the same
-     * as set-class type, or chord type.
+     * domain of range, permutational, and transpositional equivalence.
      */
     virtual Chord eRPT(double range, int opt_sector = 0) const;
     /**
      * Returns the equivalent of the chord within a fundamental
-     * domain of range, permutational, and transpositional equivalence; the same
-     * as set-class type, or chord type but within the equal temperament 
-     * generated by g.
+     * domain of range, permutational, and transpositional equivalence, in the 
+     * equal temperament generated by g; the same as chord type.
      */
     virtual Chord eRPTT(double range, double g = 1., int opt_sector = 0) const;
     /**
-     * Returns one or more equivalents of the chord within the representative 
-     * fundamental domain of range, permutational, and transpositional 
-     * equivalence; the same as set-class type, or chord type. Chords with 
-     * doubled pitches may have more than one equivalent within the same 
-     * fundamental domain.
+     * Returns all equivalents of the chord within all fundamental 
+     * domains of range, permutational, and transpositional equivalence.
      */
     virtual std::vector<Chord> eRPTs(double range = OCTAVE()) const;
-    /**
-     * Returns one or more equivalents of the chord within the representative 
-     * fundamental domain of range, permutational, and transpositional 
-     * equivalence, but within the equal temperament generated by g; the same 
-     * as set-class type, or chord type. Chords with doubled pitches may have 
-     * more than one equivalent within the same fundamental domain.
+     /**
+     * Returns all equivalents of the chord within all fundamental 
+     * domains of range, permutational, and transpositional equivalence in 
+     * the equal temperament generated by g; equivalent to all inversions of 
+     * the chord in the musician's sense.
      */
     virtual std::vector<Chord> eRPTTs(double range, double g = 1.) const;
     /**
@@ -584,18 +582,20 @@ public:
     /**
      * Returns the equivalent of the chord within a fundamental
      * domain of range, permutational, transpositional, and inversional
-     * equivalence, but within the equal temperament generated by g.
+     * equivalence.
      */
     virtual Chord eRPTTI(double range, double g = 1., int opt_sector = 0) const;
     /**
      * Returns the equivalent of the chord within a fundamental
-     * domain of transpositonal equivalence.
+     * domain of range, permutational, transpositional, and inversional
+     * equivalence in the equal temperament generated by g; the same as set 
+     * class.
      */
     virtual Chord eT() const;
     /**
      * Returns the equivalent of the chord within the representative fundamental
      * domain of transpositonal equivalence and the equal temperament generated
-     * by g. I.e., returns the chord transposed such that its layer is 0 or, under
+     * by g, i.e., returns the chord transposed such that its layer is 0 or, under
      * transposition, the positive layer closest to 0. NOTE: Does NOT return the
      * result under any other equivalence class.
      */
@@ -621,7 +621,7 @@ public:
     virtual void fromString(std::string text);
     /**
      * Returns the hyperplane equation for the inversion flat that evenly 
-     * divides the OPT fundamental domain in the indicated sector of the 
+     * divides the fundamental domain in the indicated sector of the OPT 
      * cyclical region.
      */
     virtual HyperplaneEquation hyperplane_equation(int opt_sector) const;
@@ -636,6 +636,7 @@ public:
     /**
      * Inverts the chord by another chord that is on the unison diagonal, by
      * default the origin.
+     * 
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord I(double center = 0.0) const;
@@ -645,9 +646,8 @@ public:
      */
     virtual bool Iform(const Chord &Y, double g = 1.) const;
     /**
-     * Print much information about the chord including whether it is in 
-     * important equivalence classes, or what its equivalent would be. 
-     * Optionally, print information about consistency and voicings.
+     * Print much information about the chord including whether it is within 
+     * important equivalence classes, or what its equivalents would be.
      */
     virtual std::string information() const;
     /**
@@ -669,24 +669,25 @@ public:
      *     OPT_d[(d+n)%n] with the midpoint of OPT_d[(d+n)%n] => 
      *     OPT_d[(d+n-2)%n] to give OPTI_d_1.
      *
-     * (3) An extra vertex is added to each of the OPT and OPTI fundamental 
-     *     domains to form a simplex that can be used to create barycentric 
-     *     coordinates for any OPT or OPTI chord, enabling a predicate that 
-     *     identifies whether that chord belongs to that domain.
-     *
-     * (4) A vector that is normal to the inversion flat in OPT_d is then 
+     * (3) A vector that is normal to the inversion flat in OPT_d is then 
      *     OPT_d[(d+n)%n] => OPT_d[d+n-2)%n]. Normalizing this vector gives 
      *     the unit normal vector u for the inversion flat. Then the 
      *     hyperplane equation for the inversion flat is u and its constant 
      *     term is u dot c.
+     *
+     * (3) TODO: Not working yet. An extra vertex is added to each of the OPT 
+     *     and OPTI fundamental domains to form a simplex that can be used to 
+     *     create barycentric coordinates for any OPT or OPTI chord, enabling 
+     *     a predicate that identifies whether that chord belongs to that 
+     *     domain. 
      * 
      * NOTE: 
      *
      * In this code, sector vertices are NOT permuted.
      *
      * The reason for starting with C[n-1] is to include the origin in the 0th 
-     * fundamental domain. We regard OPT_0 as the _representative_ fundamental 
-     * domain of OPT.
+     * fundamental domain, because we regard OPT sector 0 as the 
+     * _representative_ fundamental  domain of OPT.
      *
      * This code is based on the construction of Noam Elkies described in the 
      * _Generalized Chord Spaces_ draft by Callender, Quinn, and Tymoczko.
@@ -694,16 +695,16 @@ public:
     virtual void initialize_sectors();
     /**
      * Returns whether this chord has a compact voicing. This identifies 
-     * which sector of the cycical region of OPT fundamental domains the chord 
-     * is in. In Tymoczko's 1-based notation:
+     * whether the chord belongs to the representative fundamental domain of 
+     * the OPT equivalence class. In Tymoczko's 1-based notation:
      * x[1] + 12 - x[N] <= x[i + 1] - x[i], 1 <= i < N - 1
      * In 0-based notation:
      * x[0] + 12 - x[N-1] <= x[i + 1] - x[i], 0 <= i < N - 2
      */
     virtual bool is_compact(double range=12.) const;
     /**
-     * Returns whether this chord is "minor" in the sense of being in the half 
-     * of its OPT fundamental domain that is more compact.
+     * Returns whether this chord is "minor" in the sense of having the 
+     * smallest "wrapround interval" of all its voicings.
      */
     virtual bool is_minor() const;
     /**
@@ -717,51 +718,51 @@ public:
      */
     virtual bool is_opti_sector(int opti_sector = 0) const;
     /**
-     * Returns whether the chord is within a fundamental domain
-     * of inversional equivalence.
+     * Returns whether the chord is within a fundamental domain of inversional 
+     * equivalence.
      */
     virtual bool iseI_chord(Chord *inverse, int opt_sector = 0) const;
     virtual bool iseI(int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within a fundamental domain
-     * of octave equivalence.
+     * Returns whether the chord is within the representative fundamental 
+     * domain of octave equivalence.
      */
     virtual bool iseO() const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of octave and permutational equivalence.
+     * Returns whether the chord is within the representative fundamental 
+     * domain of octave and permutational equivalence.
      */
     virtual bool iseOP() const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of octave, permutational, and inversional equivalence.
+     * Returns whether the chord is within a fundamental domain of octave, 
+     * permutational, and inversional equivalence.
      */
     virtual bool iseOPI(int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within a fundamental domain
-     * of octave, permutational, and transpositional equivalence.
+     * Returns whether the chord is within a fundamental domainof octave, 
+     * permutational, and transpositional equivalence.
      */
     virtual bool iseOPT(int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within a fundamental domain
-     * of octave, permutational, and transpositional equivalence within the 
-     * equal temperament generated by g.
+     * Returns whether the chord is within a fundamental domain of octave, 
+     * permutational, and transpositional equivalence in the equal temperament 
+     * generated by g.
      */
     virtual bool iseOPTT(double g = 1., int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within a fundamental domain
-     * of octave, permutational, transpositional, and inversional equivalence.
+     * Returns whether the chord is within a fundamental domain of octave, 
+     * permutational, transpositional, and inversional equivalence.
      */
     virtual bool iseOPTI(int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within a fundamental domain
-     * of octave, permutational, transpositional, and inversional equivalence 
-     * within the equal temperament generated by g.
+     * Returns whether the chord is within a fundamental domain of octave, 
+     * permutational, transpositional, and inversional equivalence in the 
+     * equal temperament generated by g.
      */
     virtual bool iseOPTTI(double g  = 1., int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within a fundamental domain
-     * of octave and transpositional equivalence.
+     * Returns whether the chord is within the representative fundamental 
+     * domain of octave and transpositional equivalence.
      */
     virtual bool iseOT() const {
         if (iseO() == false) {
@@ -773,8 +774,8 @@ public:
         return true;
     }
     /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of octave and translational equivalence within the equal temperament 
+     * Returns whether the chord is within the representative fundamental 
+     * domain of octave and translational equivalence in the equal temperament 
      * generated by g.
      */
     virtual bool iseOTT(double g = 1.) const {
@@ -787,8 +788,8 @@ public:
         return true;
     }
     /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of permutational equivalence.
+     * Returns whether the chord is within the representative fundamental 
+     * domain of permutational equivalence.
      */
     virtual bool iseP() const;
     /**
@@ -797,40 +798,45 @@ public:
      */
     virtual bool isepcs() const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of the indicated range equivalence.
+     * Returns whether the chord is within the representative fundamental 
+     * domain of the indicated range equivalence.
      */
     virtual bool iseR(double range_) const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of range and permutational equivalence.
+     * Returns whether the chord is within the representative fundamental 
+     * domain of range and permutational equivalence.
      */
     virtual bool iseRP(double range) const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of range, permutational, and inversional equivalence.
+     * Returns whether the chord is within a fundamental domain of range, 
+     * permutational, and inversional equivalence.
      */
     virtual bool iseRPI(double range, int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within a fundamental domain
-     * of range, permutational, and transpositional equivalence.
+     * Returns whether the chord is within a fundamental domain of range, 
+     * permutational, and transpositional equivalence.
      */
     virtual bool iseRPT(double range, int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within a fundamental domain
-     * of range, permutational, and transpositional equivalence in the equal 
-     * temperaement generated by g.
+     * Returns whether the chord is within a fundamental domain of range, 
+     * permutational, and transpositional equivalence in the equal temperament 
+     * generated by g.
      */
     virtual bool iseRPTT(double range, double g = 1., int opt_sector = 0) const;
     /** 
-     * Returns whether the chord is within a fundamental domain
-     * of range, permutational, transpositional, and inversional equivalence.
+     * Returns whether the chord is within a fundamental domain of range, 
+     * permutational, transpositional, and inversional equivalence.
      */
     virtual bool iseRPTI(double range, int opt_sector = 0) const;
-    virtual bool iseRPTTI(double range, double g = 1., int opt_sector = 0) const;
+     /** 
+     * Returns whether the chord is within a fundamental domain of range, 
+     * permutational, transpositional, and inversional equivalence in the '
+     * equal temperament generated by g.
+     */
+   virtual bool iseRPTTI(double range, double g = 1., int opt_sector = 0) const;
     /**
-     * Returns whether the chord is within a fundamental domain
-     * of range and transpositional equivalence.
+     * Returns whether the chord is within the representative fundamental 
+     * domain of range and transpositional equivalence.
      */
     virtual bool iseRT(double range) const {
         if (iseR(range) == false) {
@@ -842,9 +848,8 @@ public:
         return true;
     }
     /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of range and translational equivalence in the equal temperament 
-     * generated by g.
+     * Returns whether the chord is within a fundamental domain of range and 
+     * transpositional equivalence in the equal temperament generated by g.
      */
     virtual bool iseRTT(double range, double g = 1.) const {
         if (iseR(range) == false) {
@@ -856,13 +861,14 @@ public:
         return true;
     }
     /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of transpositional equivalence.
+     * Returns whether the chord is within the representative fundamental 
+     * domain of transpositional equivalence.
      */
     virtual bool iseT() const;
     /**
-     * Returns whether the chord is within the representative fundamental domain
-     * of translational equivalence in the equal temperament generated by g.
+     * Returns whether the chord is within the representative fundamental 
+     * domain of transpositional equivalence in the equal temperament 
+     * generated by g.
      */
     virtual bool iseTT(double g = 1.) const;
 
@@ -873,12 +879,14 @@ public:
     virtual bool iset() const;
     /**
      * Returns whether or not this chord is invariant under reflection in the 
-     * inversion flat. Such are the shared vertices, edges, and facets of 
-     * those fundamental domains that involve inversional equivalence.
+     * inversion flat of the indicated OPT sector. Such are the shared 
+     * vertices, edges, and facets of those fundamental domains that involve 
+     * inversional equivalence.
      */
     virtual bool self_inverse(int opt_sector = 0) const;
     /**
      * Returns the chord inverted by the sum of its first two voices.
+     * 
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord K(double range = OCTAVE()) const;
@@ -887,8 +895,8 @@ public:
      */
     virtual double layer() const;
     /**
-    * Returns the highest pitch in the chord,
-    * and also its voice index.
+    * Returns the highest pitch in the chord, and also the voice index of that
+    * pitch.
     */
     virtual std::vector<double> max() const;
     /**
@@ -896,15 +904,22 @@ public:
      * e.g. the augmented triad for 3 dimensions.
      */
     virtual Chord center() const;
+    /**
+     * Returns the maximum interval within the chord.
+     */
     virtual double maximumInterval() const;
     /**
-    * Returns the lowest pitch in the chord,
-    * and also its voice index.
+    * Returns the lowest pitch in the chord, and also the voice index of that 
+    * pitch.
     */
     virtual std::vector<double> min() const;
+    /**
+     * Returns the minimum interval within the chord.
+     */
     virtual double minimumInterval() const;
     /**
      * Move 1 voice of the chord.
+     * 
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord move(int voice, double interval) const;
@@ -915,25 +930,25 @@ public:
     virtual std::string name() const;
     /**
      * Returns this chord as its standard "normal form."
+     *
      * NOTE: The code here does NOT remove duplicate pitch-classes.
      */
     virtual Chord normal_form() const;
     /**
      * Returns this chord in standard "normal order." For a very clear 
      * explanation, see: 
-     * https://www.mta.ca/pc-set/pc-set_new/pages/page04/page04.html.
-     * http://openmusictheory.com/normalOrder.html
+     * https://www.mta.ca/pc-set/pc-set_new/pages/page04/page04.html and 
+     * http://openmusictheory.com/normalOrder.html/
+     * 
      * NOTE: The code here does NOT remove duplicate pitch-classes.
      * "Normal order" is the most compact ordering of pitch-classes 
      * in a chord, measured by pitch-class interval.
       */
     virtual Chord normal_order() const;
     /**
-     * Creates a complete "note on" Event for the
-     * indicated voice of the chord. If the optional
-     * duration, channel, velocity, and pan parameters
-     * are not passed, then the Chord's own values for
-     * these are used.
+     * Creates a complete "note on" Event for the indicated voice of the 
+     * chord. If the optional duration, channel, velocity, and pan parameters
+     * are not passed, then the Chord's own values for these are used.
      */
     virtual Event note(int voice,
                        double time_,
@@ -942,11 +957,9 @@ public:
                        double velocity_ = DBL_MAX,
                        double pan_ = DBL_MAX) const;
     /**
-     * Returns an individual note for each voice of the chord.
-     * If the optional
-     * duration, channel, velocity, and pan parameters
-     * are not passed, then the Chord's own values for
-     * these are used.
+     * Returns an individual note for each voice of the chord. If the optional
+     * duration, channel, velocity, and pan parameters are not passed, then 
+     * the Chord's own values for these are used.
      */
     virtual Score notes(double time_,
                         double duration_ = DBL_MAX,
@@ -955,36 +968,43 @@ public:
                         double pan_ = DBL_MAX) const;
     /**
      * Performs the neo-Riemannian dominant transformation.
+     *
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord nrD() const;
     /**
      * Performs the neo-Riemannian hexatonic pole transformation.
+     * 
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord nrH() const;
     /**
      * Performs the neo-Riemannian Lettonwechsel transformation.
+     * 
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord nrL() const;
     /**
      * Performs the neo-Riemannian Nebenverwandt transformation.
+     *
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord nrN() const;
     /**
      * Performs the neo-Riemannian parallel transformation.
+     * 
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord nrP() const;
     /**
      * Performs the neo-Riemannian relative transformation.
+     *
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord nrR() const;
     /**
      * Performs the neo-Riemannian Slide transformation.
+     *
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord nrS() const;
@@ -1028,8 +1048,8 @@ public:
      */
     static std::map<int, std::vector<std::vector<Chord>>> &opt_sectors_for_dimensionalities();
     /**
-     * Returns a collection of vertices for the OPT fundamental domains that have an added 
-     * vertex to make a simplex for chord location. 
+     * Returns a collection of vertices for the OPT fundamental domains; each 
+     * has an added vertex to make a simplex for chord location. 
      */
     static std::map<int, std::vector<std::vector<Chord>>> &opt_simplexes_for_dimensionalities();
     /**
@@ -1039,8 +1059,8 @@ public:
      */
     static std::map<int, std::vector<std::vector<Chord>>> &opti_sectors_for_dimensionalities();
      /**
-     * Returns a collection of vertices for the OPTI fundamental domains that have an added 
-     * vertex to make a simplex for chord location. 
+     * Returns a collection of vertices for the OPTI fundamental domains that 
+     * have an added  vertex to make a simplex for chord location. 
      */
     static std::map<int, std::vector<std::vector<Chord>>> &opti_simplexes_for_dimensionalities();
     /**
@@ -1048,18 +1068,20 @@ public:
      */
     virtual Chord origin() const;
     /**
-     * Returns the permutations of the pitches in a chord. The permutations
-     * starting from any particular permutation are always returned in the same order.
+     * Returns the permutations of the pitches in a chord. The permutations 
+     * are always returned in the same order.
      */
     virtual std::vector<Chord> permutations() const;
     /**
      * Returns this chord as its standard "prime form." 
+     *
      * NOTE: The code here does NOT remove duplicate pitch-classes.    
      */
     virtual Chord prime_form() const;
     /**
      * Returns the contextual transposition of the chord by x with respect to m
      * with minimum interval size g.
+     *
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord Q(double x, const Chord &m, double g = 1.) const;
@@ -1075,6 +1097,7 @@ public:
     virtual void setPitch(int voice, double value);
     /**
      * Transposes the chord by the indicated interval (may be a fraction).
+     *
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord T(double interval) const;
@@ -1089,17 +1112,16 @@ public:
      */
     virtual bool Tform(const Chord &Y, double g = 1.) const;
     /**
-     * Returns an individual note for each voice of the chord.
-     * If the optional
-     * duration, channel, velocity, and pan parameters
-     * are not passed, then the Chord's own values for
-     * these are used.
+     * Returns an individual note for each voice of the chord. If the optional
+     * duration, channel, velocity, and pan parameters are not passed, then 
+     * the Chord's own values for these are used.
      */
     virtual void toScore(Score &score,
                          double time_, bool voiceIsInstrument=true) const;
     /**
      * Transposes the chord by the indicated voiceleading (passed as a Chord 
      * of directed intervals). 
+     *
      * NOTE: Does NOT return an equivalent under any equivalence relation.
      */
     virtual Chord T_voiceleading(const Chord &voiceleading);
@@ -1109,17 +1131,17 @@ public:
      */
     virtual std::string toString() const;
     /**
-     * Returns a copy of the chord 'inverted' in the musician's sense,
-     * i.e. revoiced by cyclically permuting the chord and
-     * adding (or subtracting) an octave to the highest (or lowest) voice.
-     * The revoicing will move the chord up or down in pitch.
-     * A positive direction is the same as a musician's first inversion,
-     * second inversion, etc.
+     * Returns a copy of the chord 'inverted' in the musician's sense, i.e. 
+     * revoiced by cyclically permuting the chord and adding (or subtracting) 
+     * an octave to the highest (or lowest) voice. The revoicing will move the 
+     * chord up or down in pitch. A positive direction is the same as a 
+     * musician's first inversion, second inversion, etc.
      */
     virtual Chord v(int direction = 1) const;
     /**
      * Returns the transpositions (as a Chord of directed intervals) that 
      * takes this chord to the destination chord.
+     *
      * NOTE: Makes no assumption that both chords are in the same equivalence 
      * class.
      */
@@ -1175,12 +1197,13 @@ public:
  * voicing or V. P x I x T = OP, P x I x T x V = RP. Therefore, an
  * operation on P, I, T, or V may be used to independently transform the
  * respective symmetry of any chord. Some of these operations will reflect
- * in RP. Please note: some equivalence classes define quotient spaces
- * with singularities, meaning that more than one chord where the space is 
- * glued may have the same equivalent. Hence, for each P there must be one and 
- * only one chord in the representative fundamental domain of the group, yet 
- * each of several chords at any singular point of the fundamental domain must
- * have the same P.
+ * in RP. 
+ *
+ * NOTE: Some equivalence classes define quotient spaces with singularities, 
+ * meaning that more than one chord where the space is glued may have the same 
+ * equivalent. Hence, for each P there must be one and only one chord in the 
+ * representative fundamental domain of the group, yet each of several chords 
+ * at any singular point of the fundamental domain must have the same P.
  */
 class SILENCE_PUBLIC ChordSpaceGroup {
 public:
@@ -1190,20 +1213,14 @@ public:
     int countT;
     int countV;
     /**
-     * Loads the group if found, creates and saves it otherwise.
-     */
-    virtual void createChordSpaceGroup(int voices, double range, double g = 1.);
-    virtual std::string createFilename(int voices, double range, double g = 1.) const;
-    /**
      * Returns the indices of prime form, inversion, transposition,
      * and voicing for a chord, as the first 4 elements, respectively,
      * of a homogeneous vector.
      *
-     * Please note: where are there singularities
-     * in the quotient spaces for chords, there may be several chords that
-     * belong to the same equivalence class. In such cases, any of several 
-     * chords at a singular point of the fundamental domain will return the 
-     * same P.
+     * NOTE: Where there are singularities in the quotient spaces for chords, 
+     * there may be several chords that belong to the same equivalence class. 
+     * In such cases, any of several chords at a singular point of the 
+     * fundamental domain will return the same P.
      */
     Eigen::VectorXi fromChord(const Chord &chord, bool printme = false) const;
     /**
@@ -1221,7 +1238,6 @@ public:
     std::map<Chord, int> indexesForVoicings;
     virtual void initialize(int N_, double range_, double g_ = 1., int sector=0);
     virtual void list(bool listheader = true, bool listopttis = false, bool listvoicings = false) const;
-    virtual void load(std::fstream &stream);
     int N;
     /**
      * Ordered table of all OPTTI chords for g.
@@ -1229,19 +1245,18 @@ public:
     std::vector<Chord> opttisForIndexes;
     virtual void preinitialize(int N_, double range_, double g_ = 1.0);
     /**
-     * The zero-based range of the chord space.
+     * The 0-based range of the chord space.
      */
     double range;
-    virtual void save(std::fstream &stream) const;
     /**
-     * Returns the chord for the indices of prime form, inversion,
+     * Returns the chord for the indices of prime form, inversion, 
      * transposition, and voicing. The chord is not in RP; rather, each voice of
      * the chord's OP may have zero or more octaves added to it.
      *
-     * Please note: where are there singularities
-     * in the quotient spaces for chords, there may be several chords that
-     * belong to the same equivalence class. In such cases, each P will return 
-     * just one chord from the representative fundamental domain.
+     * NOTE: Where there are singularities in the quotient spaces for chords, 
+     * there may be several chords that belong to the same equivalence class. 
+     * In such cases, any of several chords at a singular point of the 
+     * fundamental domain will return the same P.
      */
     std::vector<Chord> toChord(int P, int I, int T, int V, bool printme = false) const;
     std::vector<Chord> toChord_vector(const Eigen::VectorXi &pitv, bool printme = false) const;
@@ -1253,18 +1268,16 @@ public:
 };
 
 /**
- * Returns the pitch from the chord that is closest to the pitch.
+ * Returns the pitch in the chord that is closest to the indicated pitch.
  */
 SILENCE_PUBLIC double closestPitch(double pitch, const Chord &chord);
 
 /**
- * If the Event is a note, moves its pitch
- * to the closest pitch of the chord.
- * If octaveEquivalence is true (the default),
- * the pitch-class of the note is moved to the closest pitch-class
- * of the chord, i.e. keeping the note more or less in its original register;
- * otherwise, the pitch of the note is moved to the closest
- * absolute pitch of the chord.
+ * If the Event is a note, moves its pitch to the closest pitch of the chord.
+ * If octaveEquivalence is true (the default), the pitch-class of the note is 
+ * moved to the closest pitch-class of the chord, i.e. keeping the note more 
+ * or less in its original register; otherwise, the pitch of the note is moved 
+ * to the closest absolute pitch of the chord.
  */
 SILENCE_PUBLIC void conformToChord(Event &event, const Chord &chord, bool octaveEquivalence = true);
 
@@ -1275,7 +1288,7 @@ SILENCE_PUBLIC double conformToPitchClassSet(double pitch, const Chord &pitch_cl
 
 /**
  * Returns the sum of the distances of the chord to each of the vertices 
- * of the indicated sector of the cyclical region.
+ * of the indicated sector of a cyclical region.
  */
 SILENCE_PUBLIC double distance_to_points(const Chord &chord, const std::vector<Chord> &sector_vertices);
 
@@ -1296,17 +1309,16 @@ SILENCE_PUBLIC double epc(double pitch);
  */
 SILENCE_PUBLIC bool eq_tolerance(double a, double b, int epsilons=20, int ulps=200);
 
+/**
+ * Returns the Euclidean distance between the two chords.
+ */
 SILENCE_PUBLIC double euclidean(const csound::Chord &a, const csound::Chord &b);
 
 /**
- * Enums for all defined equivalence relations,
- * used to specialize template functions.
- * If relation R takes no range argument,
- * it defaults to a range of one octave.
- * T is transposition to layer 0,
- * Tg is transposition to the layer close as one
- * can get to layer 0 but all chord pitches are
- * generated by g (default = 1 semitone).
+ * Enums for all defined equivalence relations, used to specialize template 
+ * functions. If relation R takes no range argument, it defaults to a range of 
+ * one octave. T is transposition to layer 0, Tg is transposition to the next 
+ * chord higher than layer 0 in the equal temperament generated by g.
  *
  * NOTE: Not all of these are currently implemented.
  */
@@ -1354,9 +1366,8 @@ template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamental
 template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamentalDomainByNormalize(int voiceN, double range, double g = 1., int sector=0);
 
 /**
- * Returns a chord containing all the pitches of the score
- * beginning at or later than the start time,
- * and up to but not including the end time.
+ * Returns a chord containing all the pitches of the score beginning at or 
+ * later than the start time, and up to but not including the end time.
  */
 SILENCE_PUBLIC Chord gather(Score &score, double startTime, double endTime);
 
@@ -1377,6 +1388,7 @@ SILENCE_PUBLIC bool gt_tolerance(double a, double b, int epsilons, int ulps);
 
 /**
  * Returns the pitch reflected in the center, which may be any pitch.
+ * 
  * NOTE: Does NOT return an equivalent under any requivalence relation.
  */
 SILENCE_PUBLIC double I(double pitch, double center = 0.0);
@@ -1406,7 +1418,13 @@ void initializeNames();
 SILENCE_PUBLIC void insert(Score &score,
                                   const Chord &chord,
                                   double time_);
-
+                                  
+/**
+ * Template function returning whether or not the chord is within the 
+ * specialized fundamental domain, which may in some cases be defined by the 
+ * indicated range, generator of transposition g, and sector of the cyclical 
+ * region of OPT fundamental domains.
+ */
 template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC bool isNormal(const Chord &chord,
         double range, double g, int opt_sector);
 
@@ -1469,22 +1487,35 @@ static const char* namesForEquivalenceRelations[] = {
 SILENCE_PUBLIC std::multimap<Scale, std::string> &namesForScales();
 
 /**
- * Increment a chord voicewise through chord space,
- * from a low point on the unison diagonal through a high point
- * on the unison diagonal. g is the generator of transposition.
- * It may be necessary to set the chord to the low point to start.
+ * Increment a chord voicewise through chord space, from a low point on the 
+ * unison diagonal through a high point on the unison diagonal. g is the 
+ * generator of transposition. Before iterating the iterator must be set to 
+ * the low point of iteration.
  */
 SILENCE_PUBLIC bool next(Chord &iterator_, const Chord &minimum, double range, double g = 1.);
 
+/**
+ * Template function that returns the chord sent to a fundamental domain of 
+ * specialized equivalence relation, which in some cases may be defined by the 
+ * indicated range, generator of transposition g, and sector of the cyclical 
+ * region of OPT fundamental domains.
+ */
 template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC Chord normalize(const Chord &chord,
         double range, double g, int opt_sector);
 
+/**
+ * Returns the nth octavewise revoicing of the chord that is generated by iterating 
+ * revoicings within the indicated range.
+ */
 SILENCE_PUBLIC Chord octavewiseRevoicing(const Chord &chord, int revoicingNumber_, double range, bool debug);
+
+/**
+ * Returns the full set of octavewise revoicings of the chord within the indicated range.
+ */
 
 SILENCE_PUBLIC int octavewiseRevoicings(const Chord &chord, double range = OCTAVE());
 /**
- * Returns whether the voiceleading
- * between chords a and b contains a parallel fifth.
+ * Returns whether the voiceleading between chords a and b contains a parallel fifth.
  */
 SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b);
 
@@ -1492,6 +1523,10 @@ SILENCE_PUBLIC double pitchClassForName(std::string name);
 
 SILENCE_PUBLIC const std::map<std::string, double> &pitchClassesForNames();
 
+/**
+ * Returns the point reflected in the hyperplane defined by the unit normal 
+ * vector and constant term.
+ */
 SILENCE_PUBLIC Vector reflect(const Vector &point, const Vector &unit_normal_vector, double constant_term);
 
 SILENCE_PUBLIC Chord reflect_by_householder(const Chord &chord);
@@ -1598,6 +1633,7 @@ class SILENCE_PUBLIC Scale : public Chord {
          * Returns all major or minor Scales for which the current Chord is 
          * the tonic (scale degree 1). The number of voices defaults to that 
          * of the current Chord, but may be larger or smaller.
+         *
          * NOTE: Here, tonicizations are modulations in which the Chord has 
          * degree 1, i.e. is the tonic chord.
          */
@@ -1638,8 +1674,8 @@ class SILENCE_PUBLIC Scale : public Chord {
          */
         virtual Scale transpose(double semitones) const;
         /**
-         * Returns a Chord transposed by the indicated number of scale 
-         * degrees; the chord as passed must belong to this Scale, and the
+         * Returns a Chord transposed by the indicated number of _scale 
+         * degrees_; the chord as passed must belong to this Scale, and the
          * interval must be the same as that used to generate the Chord; 
          * (defaults to thirds, or 3; the actual number of scale steps between 
          * chord pitches is interval - 1).
@@ -1669,6 +1705,7 @@ SILENCE_PUBLIC std::vector<std::string> split(std::string);
 
 /**
  * Returns the pitch transposed by semitones, which may be any scalar.
+ *
  * NOTE: Does NOT return an equivalent under any requivalence relation.
  */
 SILENCE_PUBLIC double T(double pitch, double semitones);
@@ -1709,20 +1746,20 @@ SILENCE_PUBLIC Chord voiceleadingCloser(const Chord &source, const Chord &d1, co
 SILENCE_PUBLIC Chord voiceleadingClosestRange(const Chord &source, const Chord &destination, double range, bool avoidParallels);
 
 /**
- * Returns the smoothness of the voiceleading between
- * chords a and b by L1 norm.
+ * Returns the smoothness of the voiceleading between chords a and b by L1 
+ * norm.
  */
 SILENCE_PUBLIC double voiceleadingSmoothness(const Chord &a, const Chord &b);
 
 /**
- * Returns which of the voiceleadings (source to d1, source to d2)
- * is the smoother (shortest moves), optionally avoiding parallel fifths.
+ * Returns which of the voiceleadings (source to d1, source to d2) is the 
+ * smoother (shortest moves), optionally avoiding parallel fifths.
  */
 SILENCE_PUBLIC Chord voiceleadingSmoother(const Chord &source, const Chord &d1, const Chord &d2, bool avoidParallels = false, double range = OCTAVE());
 
 /**
- * Returns which of the voiceleadings (source to d1, source to d2)
- * is the simpler (fewest moves), optionally avoiding parallel fifths.
+ * Returns which of the voiceleadings (source to d1, source to d2) is the 
+ * simpler (fewest moves), optionally avoiding parallel fifths.
  */
 SILENCE_PUBLIC Chord voiceleadingSimpler(const Chord &source, const Chord &d1, const Chord &d2, bool avoidParallels = false);
 
@@ -3961,16 +3998,16 @@ inline SILENCE_PUBLIC void ChordSpaceGroup::preinitialize(int N_, double range_,
 inline SILENCE_PUBLIC void ChordSpaceGroup::initialize(int N_, double range_, double g_, int sector) {
     System::inform("ChordSpaceGroup.initialize...\n");
     preinitialize(N_, range_, g_);
-    auto representative_opttis = fundamentalDomainByNormalize<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g, sector);
-    System::inform("ChordSpaceGroup.initialize: representative_opttis: %6d\n", representative_opttis.size());
-    auto equivalent_opttis = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g, sector);
-    System::inform("ChordSpaceGroup.initialize: equivalent_opttis:     %6d\n", equivalent_opttis.size());
-    for (auto it = representative_opttis.begin(); it != representative_opttis.end(); ++it) {
+    auto normalized_opttis = fundamentalDomainByNormalize<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g, sector);
+    System::message("ChordSpaceGroup.initialize: normalized_opttis: %6d\n", normalized_opttis.size());
+    auto normal_opttis = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g, sector);
+    System::message("ChordSpaceGroup.initialize: normal_opttis:     %6d\n", normal_opttis.size());
+    for (auto it = normalized_opttis.begin(); it != normalized_opttis.end(); ++it) {
         opttisForIndexes.push_back(*it);
     }
     countP = opttisForIndexes.size();
-    for (auto equivalent_it = equivalent_opttis.begin(); equivalent_it != equivalent_opttis.end(); ++equivalent_it) {
-        const Chord &representative = equivalent_it->eOPTTI();
+    for (auto equivalent_it = normal_opttis.begin(); equivalent_it != normal_opttis.end(); ++equivalent_it) {
+        const Chord &representative = equivalent_it->eOPTTI(sector);
         auto representative_it = std::find(opttisForIndexes.begin(), opttisForIndexes.end(), representative);
         if (representative_it == opttisForIndexes.end()) {
             System::error("ChordSpaceGroup::initialize: error: representative OPTTI missing: %s\n", representative.information().c_str());
@@ -3979,23 +4016,23 @@ inline SILENCE_PUBLIC void ChordSpaceGroup::initialize(int N_, double range_, do
             indexesForOpttis[*equivalent_it] = index;
         }
     }
-    System::inform("ChordSpaceGroup.initialize: indexesForOpttis:      %6d\n", indexesForOpttis.size());
+    System::message("ChordSpaceGroup.initialize: indexesForOpttis:      %6d\n", indexesForOpttis.size());
     System::inform("ChordSpaceGroup.initialize.\n");
 }
 
 inline SILENCE_PUBLIC void ChordSpaceGroup::list(bool listheader, bool listopttis, bool listvoicings) const {
     if (listheader) {
-        System::inform("ChordSpaceGroup.voices: %8d\n", N);
-        System::inform("ChordSpaceGroup.range : %13.4f\n", range);
-        System::inform("ChordSpaceGroup.g     : %13.4f\n", g);
-        System::inform("ChordSpaceGroup.countP: %8d\n", countP);
-        System::inform("ChordSpaceGroup.countI: %8d\n", countI);
-        System::inform("ChordSpaceGroup.countT: %8d\n", countT);
-        System::inform("ChordSpaceGroup.countV: %8d\n", countV);
+        System::message("ChordSpaceGroup.voices: %8d\n", N);
+        System::message("ChordSpaceGroup.range : %13.4f\n", range);
+        System::message("ChordSpaceGroup.g     : %13.4f\n", g);
+        System::message("ChordSpaceGroup.countP: %8d\n", countP);
+        System::message("ChordSpaceGroup.countI: %8d\n", countI);
+        System::message("ChordSpaceGroup.countT: %8d\n", countT);
+        System::message("ChordSpaceGroup.countV: %8d\n", countV);
     }
     if (listopttis) {
         for (auto &entry : indexesForOpttis) {
-            System::inform("index: %5d  optti: %s\n", entry.second, entry.first.toString().c_str());
+            System::message("index: %5d  optti: %s\n", entry.second, entry.first.toString().c_str());
         }
     }
     // Doesn't currently do anything as these collections are not currently initialized.
@@ -4003,67 +4040,13 @@ inline SILENCE_PUBLIC void ChordSpaceGroup::list(bool listheader, bool listoptti
         for (int i = 0, n = voicingsForIndexes.size(); i < n; ++i) {
             const Chord &voicing = voicingsForIndexes[i];
             int index = indexesForVoicings.at(voicing);
-            System::inform("voicing index: %5d  voicing: %s  index from voicing: %5d\n", i,  voicing.toString().c_str(), index);
+            System::message("voicing index: %5d  voicing: %s  index from voicing: %5d\n", i,  voicing.toString().c_str(), index);
         }
     }
-}
-
-inline SILENCE_PUBLIC std::string ChordSpaceGroup::createFilename(int voices, double range, double g) const {
-    std::string extension = ".txt";
-    char buffer[0x200];
-    std::sprintf(buffer, "ChordSpaceGroup_V%d_R%d_g%d.txt", voices, int(range), int(1000 * g));
-    return buffer;
-}
-
-inline SILENCE_PUBLIC void ChordSpaceGroup::createChordSpaceGroup(int voices, double range, double g) {
-    std::string filename = createFilename(voices, range, g);
-    std::fstream stream;
-    stream.open(filename.c_str());
-    if (!stream.is_open()) {
-        System::inform("No data in ChordSpaceGroup file \"%s\", initializing and saving...\n", filename.c_str());
-        stream.close();
-        stream.open(filename.c_str(), std::fstream::out);
-        initialize(voices, range, g);
-        save(stream);
-    } else {
-        System::inform("Loading ChordSpaceGroup data from file \"%s\"...\n", filename.c_str());
-        load(stream);
-    }
-    stream.close();
-}
-
-inline SILENCE_PUBLIC void ChordSpaceGroup::save(std::fstream &stream) const {
-    stream << "N " << N << std::endl;
-    stream << "range " << range << std::endl;
-    stream << "g " << g << std::endl;
-    for (int i = 0, n = opttisForIndexes.size(); i < n; ++i) {
-        stream << opttisForIndexes[i].toString().c_str() << std::endl;
-    }
-}
-
-inline SILENCE_PUBLIC void ChordSpaceGroup::load(std::fstream &stream) {
-    std::string junk;
-    stream >> junk >> N;
-    stream >> junk >> range;
-    stream >> junk >> g;
-    preinitialize(N, range, g);
-    char buffer[0x500];
-    for (;;) {
-        stream.getline(buffer, 0x500);
-        if (stream.eof()) {
-            break;
-        }
-        Chord chord;
-        chord.fromString(buffer);
-        if (chord.voices() > 1) {
-            opttisForIndexes.push_back(chord);
-            indexesForOpttis[chord] = opttisForIndexes.size() - 1;
-        }
-    }
-    countP = opttisForIndexes.size();
 }
 
 Eigen::VectorXi ChordSpaceGroup::fromChord(const Chord &chord, bool printme) const {
+    //SCOPED_DEBUGGING debugging;
     bool isNormalOP = csound::isNormal<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), g, 0);
     if (printme) {
         SYSTEM_DEBUG("fromChord...\n");
@@ -5500,14 +5483,15 @@ inline void Chord::clamp(double g) {
 }
 
 inline Chord Chord::normal_order() const {
-    auto pcs = epcs();
     // This chord as a pitch-class set in ascending order.
-    auto pcs_p = pcs.eP();
+    auto ppcs = eppcs();
     // All cyclic permutations.
-    auto permutations_ = pcs_p.permutations();
+    auto permutations_ = ppcs.permutations();
     // We need to keep track of intervals.
     double least_interval = std::numeric_limits<double>::max();
     std::multimap<double, Chord> permutations_for_intervals;
+    // Store the permutations keyed by pitch-class interval from the bottom 
+    // voice to the top voice.
     for (auto upper_voice = voices() - 1; upper_voice > 0; --upper_voice) {
         for (auto permutation : permutations_) {
             auto lower_pc = permutation.getPitch(0);
@@ -5517,13 +5501,19 @@ inline Chord Chord::normal_order() const {
             if (lt_tolerance(interval, 0.) == true) {
                 interval = interval + OCTAVE();
             }
+            interval = rownd(interval, 9);
             if (lt_tolerance(interval, least_interval) == true) {
                 least_interval = interval;
             }
             permutations_for_intervals.insert({interval, permutation});
         }
+        // If only one permutation has the least interval, that permutation is 
+        // the normal order.
         if (permutations_for_intervals.count(least_interval) == 1) {
             return permutations_for_intervals.begin()->second;
+        // Otherwise, replace the list of permutations with only the 
+        // permutations having the least interval, and decrement the 
+        // upper voice.
         } else {
             permutations_.clear();
             auto range = permutations_for_intervals.equal_range(least_interval);
