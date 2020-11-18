@@ -1085,6 +1085,10 @@ public:
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord Q(double x, const Chord &m, double g = 1.) const;
+    /**
+     * Reflects the chord in the inversion flat of the indicated OPT domain sector.
+     */
+    virtual Chord reflect(int opt_sector) const;
     virtual void resize(size_t voiceN);
     /**
      * Rounds the value of x to the specified number of decimal places.
@@ -1234,15 +1238,16 @@ public:
     virtual int getG() const;
     virtual int getN() const;
     virtual int getRange() const;
-    std::map<Chord, int> indexesForOpttis;
+    std::map<Chord, int> indexesForOPTTIs;
     std::map<Chord, int> indexesForVoicings;
     virtual void initialize(int N_, double range_, double g_ = 1., int sector=0);
     virtual void list(bool listheader = true, bool listopttis = false, bool listvoicings = false) const;
     int N;
+    int opt_sector;
     /**
      * Ordered table of all OPTTI chords for g.
      */
-    std::vector<Chord> opttisForIndexes;
+    std::vector<Chord> OPTTIsForIndexes;
     virtual void preinitialize(int N_, double range_, double g_ = 1.0);
     /**
      * The 0-based range of the chord space.
@@ -3980,8 +3985,8 @@ inline SILENCE_PUBLIC int ChordSpaceGroup::getCountV() const {
 
 inline SILENCE_PUBLIC void ChordSpaceGroup::preinitialize(int N_, double range_, double g_) {
     System::inform("ChordSpaceGroup.preinitialize...\n");
-    opttisForIndexes.clear();
-    indexesForOpttis.clear();
+    OPTTIsForIndexes.clear();
+    indexesForOPTTIs.clear();
     voicingsForIndexes.clear();
     indexesForVoicings.clear();
     N = N_;
@@ -3995,28 +4000,29 @@ inline SILENCE_PUBLIC void ChordSpaceGroup::preinitialize(int N_, double range_,
     countV = octavewiseRevoicings(chord, range);
 }
 
-inline SILENCE_PUBLIC void ChordSpaceGroup::initialize(int N_, double range_, double g_, int sector) {
+inline SILENCE_PUBLIC void ChordSpaceGroup::initialize(int N_, double range_, double g_, int opt_sector_) {
     System::inform("ChordSpaceGroup.initialize...\n");
     preinitialize(N_, range_, g_);
-    auto normalized_opttis = fundamentalDomainByNormalize<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g, sector);
+    opt_sector = opt_sector_;
+    auto normalized_opttis = fundamentalDomainByNormalize<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g, opt_sector);
     System::message("ChordSpaceGroup.initialize: normalized_opttis: %6d\n", normalized_opttis.size());
-    auto normal_opttis = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g, sector);
+    auto normal_opttis = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g, opt_sector);
     System::message("ChordSpaceGroup.initialize: normal_opttis:     %6d\n", normal_opttis.size());
     for (auto it = normalized_opttis.begin(); it != normalized_opttis.end(); ++it) {
-        opttisForIndexes.push_back(*it);
+        OPTTIsForIndexes.push_back(*it);
     }
-    countP = opttisForIndexes.size();
+    countP = OPTTIsForIndexes.size();
     for (auto equivalent_it = normal_opttis.begin(); equivalent_it != normal_opttis.end(); ++equivalent_it) {
-        const Chord &representative = equivalent_it->eOPTTI(sector);
-        auto representative_it = std::find(opttisForIndexes.begin(), opttisForIndexes.end(), representative);
-        if (representative_it == opttisForIndexes.end()) {
+        const Chord &representative = equivalent_it->eOPTTI(opt_sector);
+        auto representative_it = std::find(OPTTIsForIndexes.begin(), OPTTIsForIndexes.end(), representative);
+        if (representative_it == OPTTIsForIndexes.end()) {
             System::error("ChordSpaceGroup::initialize: error: representative OPTTI missing: %s\n", representative.information().c_str());
         } else {
-            auto index = std::distance(opttisForIndexes.begin(), representative_it);
-            indexesForOpttis[*equivalent_it] = index;
+            auto index = std::distance(OPTTIsForIndexes.begin(), representative_it);
+            indexesForOPTTIs[*equivalent_it] = index;
         }
     }
-    System::message("ChordSpaceGroup.initialize: indexesForOpttis:      %6d\n", indexesForOpttis.size());
+    System::message("ChordSpaceGroup.initialize: indexesForOPTTIs:  %6d\n", indexesForOPTTIs.size());
     System::inform("ChordSpaceGroup.initialize.\n");
 }
 
@@ -4031,8 +4037,11 @@ inline SILENCE_PUBLIC void ChordSpaceGroup::list(bool listheader, bool listoptti
         System::message("ChordSpaceGroup.countV: %8d\n", countV);
     }
     if (listopttis) {
-        for (auto &entry : indexesForOpttis) {
-            System::message("index: %5d  optti: %s\n", entry.second, entry.first.toString().c_str());
+        for (const auto &entry : indexesForOPTTIs) {
+            System::message("indexesForOPTTIs[%s ]: %5d\n", entry.first.toString().c_str(), entry.second);
+        }
+        for (int p_i = 0; p_i < OPTTIsForIndexes.size(); ++p_i) {
+            System::message("OPTTIsForIndexes[%5d ]: %s\n", p_i, OPTTIsForIndexes[p_i].toString().c_str());
         }
     }
     // Doesn't currently do anything as these collections are not currently initialized.
@@ -4046,72 +4055,52 @@ inline SILENCE_PUBLIC void ChordSpaceGroup::list(bool listheader, bool listoptti
 }
 
 Eigen::VectorXi ChordSpaceGroup::fromChord(const Chord &chord, bool printme) const {
-    //SCOPED_DEBUGGING debugging;
-    bool isNormalOP = csound::isNormal<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), g, 0);
-    if (printme) {
-        SYSTEM_DEBUG("fromChord...\n");
-        SYSTEM_DEBUG("chord:          %s  %d\n", chord.toString().c_str(), isNormalOP);
-    }
-    Chord normalOP;
-    if (isNormalOP) {
-        normalOP = chord;
+    // (1) Find P from OPTTI.
+    // (2) Find I from OPTT.
+    // (3) Find T by counting steps from OPTT to obtain OP.
+    // (4) Find V from OP by counting revoicings of OP to obtain chord.
+    Eigen::VectorXi pitv(4);
+    auto optti = chord.eOPTT(opt_sector);
+    auto p_it = indexesForOPTTIs.find(optti);
+    if (p_it != indexesForOPTTIs.end()) {
+        pitv(0) = p_it->second;
     } else {
-        normalOP = csound::normalize<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), g, 0);
+        System::error("Error: No P index found for this chord: \n%s\n", chord.information().c_str());
     }
-    if (printme) {
-        SYSTEM_DEBUG("normalOP:       %s  %d\n", normalOP.toString().c_str(), csound::isNormal<EQUIVALENCE_RELATION_RP>(normalOP, OCTAVE(), g, 0 ));
+    auto optt = chord.eOPTT(opt_sector);
+    if (optt.iseI(opt_sector) == true) {
+        pitv(1) = 0;
+    } else {
+        pitv(1) = 1;
     }
-    Chord normalOPTg = csound::normalize<EQUIVALENCE_RELATION_RPTg>(chord, OCTAVE(), g, 0);
-    if (printme) {
-        SYSTEM_DEBUG("normalOPTg:     %s\n", normalOPTg.toString().c_str());
-    }
-    int T_ = 0;
-    for (double t = 0.0; t < OCTAVE(); t += g) {
-        Chord normalOPTg_t = normalOPTg.T(t);
-        normalOPTg_t = csound::normalize<EQUIVALENCE_RELATION_RP>(normalOPTg_t, OCTAVE(), g, 0);
-        if (printme) {
-            SYSTEM_DEBUG("normalOPTg_t:   %s    %f\n", normalOPTg_t.toString().c_str(), t);
-        }
-        if (normalOPTg_t == normalOP) {
-            if (printme) {
-                SYSTEM_DEBUG("equals\n");
-            }
-            T_ = t;
+    auto op = chord.eOP();
+    auto optt_t = op;
+    double t;
+    for (t = 0.; t < countT; t += g) {
+        if (optt_t == op) {
+            pitv(2) = t;
             break;
         }
+        optt_t = optt_t.T(g).eOP();
     }
-    // Breaks here, this form may not be indexed.
-    // Try iterating over opttis and comparing eO, eP, eT, eI separately.
-    // Alternatively, put in same index for equivalent opttis.
-    Chord normalOPTgI = csound::normalize<EQUIVALENCE_RELATION_RPTgI>(chord, OCTAVE(), g, 0);
-    std::map<Chord, int>::const_iterator it = indexesForOpttis.find(normalOPTgI);
-    if (it == indexesForOpttis.end()) {
-        // Falling through here means there is a bug that I want to know about.
-        System::error("Error: normalOPTgI %s not found! Please report an issue, this should not appear.\n");
-        exit(1);
+    if (ge_tolerance(t, double(countT)) == true) {
+        System::error("Error: OP cannot be generated by transposing OPTT: \n%s\n", chord.information().c_str());
     }
-    int P_ = it->second;
+    auto optt_t_v = optt_t;
+    int v_i;
+    for (v_i = 0; v_i < countV; ++v_i) {
+        if (optt_t_v == chord) {
+            pitv[3] = v_i;
+            break;
+        }
+        optt_t_v = optt_t_v.v(1);
+    }
+    if (ge_tolerance(v_i, countV) == true) {
+        System::error("Error: Chord cannot be generated by revoicing OP: \n%s\n", chord.information().c_str());
+    }
     if (printme) {
-        SYSTEM_DEBUG("normalOPTgI:    %s    %d\n", normalOPTgI.toString().c_str(), P_);
-    }
-    int I_;
-    if (normalOPTg == normalOPTgI) {
-        I_ = 0;
-    } else {
-        I_ = 1;
-    }
-    int V_ = indexForOctavewiseRevoicing(chord, range, printme);
-    if (V_ == -1) {
-        V_ = 0;
-    }
-    Eigen::VectorXi pitv(4);
-    pitv(0) = P_;
-    pitv(1) = I_;
-    pitv(2) = T_;
-    pitv(3) = V_;
-    if (printme) {
-        SYSTEM_DEBUG("PITV:       %8d     %8d     %8d     %8d\n", pitv(0), pitv(1), pitv(2), pitv(3));
-        SYSTEM_DEBUG("fromChord.\n");
+        System::message("PITV:  %8d     %8d     %8d     %8d\n", pitv(0), pitv(1), pitv(2), pitv(3));
+        System::message("fromChord.\n");
     }
     return pitv;
 }
@@ -4121,50 +4110,41 @@ Eigen::VectorXi ChordSpaceGroup::fromChord(const Chord &chord, bool printme) con
  * transposition, and voicing. The chord is not in RP; rather, each voice of
  * the chord's OP may have zero or more octaves added to it.
  *
- * Please note: where are there singularities
+ * PLEASE NOTE: where are there singularities
  * in the quotient spaces for chords, there may be several chords that
  * belong to the same equivalence class. In such cases, each P will return 
  * just one chord from the representative fundamental domain.
  */
 std::vector<Chord> ChordSpaceGroup::toChord(int P, int I, int T, int V, bool printme) const {
+    // (1) Find OPTTI from P.
+    // (2) Find OPTT from OPTTI and I.
+    // (3) Find OP from OPTT and T.
+    // (4) Find the actual voicing, i.e. the target chord, from OP and V.
+    // The fromChord function, of course, works in the exact reverse of this.
     P = P % countP;
     I = I % countI;
     T = T % countT;
     V = V % countV;
-    if (printme) {
-        SYSTEM_DEBUG("toChord...\n");
-        SYSTEM_DEBUG("PITV:       %8d     %8d     %8d     %8d\n", P, I, T, V);
-    }
-    Chord normalOPTgI = opttisForIndexes[P];
-    if (printme) {
-        SYSTEM_DEBUG("normalOPTgI:    %s\n", normalOPTgI.toString().c_str());
-    }
-    Chord normalOPTg;
-    if (I == 0) {
-        normalOPTg = normalOPTgI;
-    } else {
-        Chord inverse = normalOPTgI.I();
-        normalOPTg = csound::normalize<EQUIVALENCE_RELATION_RPTg>(inverse, OCTAVE(), g, 0);
-    }
-    if (printme) {
-        SYSTEM_DEBUG("normalOPTg:     %s\n", normalOPTg.toString().c_str());
-    }
-    Chord normalOPTg_t = normalOPTg.T(T);
-    if (printme) {
-        SYSTEM_DEBUG("normalOPTg_t:   %s\n", normalOPTg_t.toString().c_str());
-    }
-    Chord normalOP = csound::normalize<EQUIVALENCE_RELATION_RP>(normalOPTg_t, OCTAVE(), g, 0);
-    if (printme) {
-        SYSTEM_DEBUG("normalOP:       %s\n", normalOP.toString().c_str());
-    }
-    Chord revoicing = octavewiseRevoicing(normalOP, V, range, printme);
     std::vector<Chord> result(3);
-    result[0] = revoicing;
-    result[1] = normalOPTgI;
-    result[2] = normalOP;
+    auto optti = OPTTIsForIndexes[P];
+    auto optt = optti;
+    if (I == 0) {
+        if (optt.iseI(opt_sector) == false) {
+            optt = optti.reflect(opt_sector);
+        }
+    } else {
+        if (optt.iseI(opt_sector) == true) {
+            optt = optti.reflect(opt_sector);
+        }
+    }
+    auto op = optt.T(T).eOP();
+    auto op_v = op.v(V);
+    result[0] = op_v;
+    result[1] = optt;
+    result[2] = op;
     if (printme) {
-        SYSTEM_DEBUG("revoicing:      %s\n", result[0].toString().c_str());
-        SYSTEM_DEBUG("toChord.\n");
+        System::message("revoicing: %s\n", result[0].toString().c_str());
+        System::message("toChord.\n");
     }
     return result;
 }
@@ -5695,6 +5675,10 @@ inline Chord Chord::eOTT(double g) const {
     return o_tt;
 }
 
+inline Chord Chord::reflect(int opt_sector) const {
+    auto reflection = reflect_in_inversion_flat(*this, opt_sector);
+    return reflection;
+}
 
 } // End of namespace csound.
 

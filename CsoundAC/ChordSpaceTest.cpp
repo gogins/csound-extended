@@ -12,9 +12,9 @@ typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> Matrix;
 typedef Eigen::Matrix<double, Eigen::Dynamic, 1> Vector;
 
 static bool printPass = true;
-static bool failureExits = false;
+static bool failureExits = true;
 static int passCount = 0;
-static int failureCount = 0;
+static int failureCount = 4;
 static int testCount = 0;
 static int exitAfterFailureCount = 1;
 static int testSector = 0;
