@@ -1238,16 +1238,16 @@ public:
     virtual int getG() const;
     virtual int getN() const;
     virtual int getRange() const;
-    std::map<Chord, int> indexesForOPTTIs;
+    std::map<Chord, int> indexesForOPTIs;
     std::map<Chord, int> indexesForVoicings;
     virtual void initialize(int N_, double range_, double g_ = 1., int sector=0);
     virtual void list(bool listheader = true, bool listopttis = false, bool listvoicings = false) const;
     int N;
     int opt_sector;
     /**
-     * Ordered table of all OPTTI chords for g.
+     * Ordered table of all OPTI chords for OPs in the range.
      */
-    std::vector<Chord> OPTTIsForIndexes;
+    std::vector<Chord> OPTIsForIndexes;
     virtual void preinitialize(int N_, double range_, double g_ = 1.0);
     /**
      * The 0-based range of the chord space.
@@ -2696,24 +2696,8 @@ inline std::string Chord::information() const {
     std::sprintf(buffer, "CHORD:\n");
     result.append(buffer);
     auto opt_sector = opt_domain_sectors().front();
-    // First whether this chord belongs to the equivalence class, and then the 
-    // equivalent of this chord within the equivalence class; if it does 
-    // belong, this should be equal to the equivalent.
-    //~ if (toString().find("0.0000000    1.0000000    3.0000000    6.0000000") != std::string::npos) {
-        //~ CHORD_SPACE_DEBUGGING = true;
-        //~ std::raise(SIGINT);
-    //~ }
     std::sprintf(buffer, "%-17s %s\n", name().c_str(), print_chord(*this));
     result.append(buffer);
-    //~ auto opt_sector_text = print_opt_sectors(*this);
-    //~ std::sprintf(buffer, "opt by distance:  %s %s\n", toString().c_str(), opt_sector_text.c_str());
-    //~ result.append(buffer);
-    //~ auto sector_text2 = print_opti_sectors2(*this);
-    //~ std::sprintf(buffer, "%-17s %s %s\n", "by compactness:", toString().c_str(), sector_text2.c_str());
-    //~ result.append(buffer);
-    //~ auto sector_text3 = print_opti_sectors3(*this);
-    //~ std::sprintf(buffer, "opt/opti by bary: %s %s\n", toString().c_str(), sector_text3.c_str());
-    //~ result.append(buffer);
     std::sprintf(buffer, "Pitch-class set:  %s\n", epcs().eP().toString().c_str());
     result.append(buffer);
     std::sprintf(buffer, "Normal order:     %s\n", normal_order().toString().c_str());
@@ -4004,8 +3988,8 @@ inline SILENCE_PUBLIC int ChordSpaceGroup::getCountV() const {
 
 inline SILENCE_PUBLIC void ChordSpaceGroup::preinitialize(int N_, double range_, double g_) {
     System::inform("ChordSpaceGroup.preinitialize...\n");
-    OPTTIsForIndexes.clear();
-    indexesForOPTTIs.clear();
+    OPTIsForIndexes.clear();
+    indexesForOPTIs.clear();
     voicingsForIndexes.clear();
     indexesForVoicings.clear();
     N = N_;
@@ -4023,18 +4007,18 @@ inline SILENCE_PUBLIC void ChordSpaceGroup::initialize(int N_, double range_, do
     System::inform("ChordSpaceGroup::initialize...\n");
     preinitialize(N_, range_, g_);
     opt_sector = opt_sector_;
-    auto normalized_opttis = fundamentalDomainByNormalize<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g, opt_sector);
-    System::message("ChordSpaceGroup::initialize: normalized_opttis: %6d\n", normalized_opttis.size());
-    auto normal_opttis = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g, opt_sector);
-    System::message("ChordSpaceGroup::initialize: normal_opttis:     %6d\n", normal_opttis.size());
-    for (auto it = normalized_opttis.begin(); it != normalized_opttis.end(); ++it) {
-        OPTTIsForIndexes.push_back(*it);
+    auto normalized_optis = fundamentalDomainByNormalize<EQUIVALENCE_RELATION_RPTI>(N, OCTAVE(), g, opt_sector);
+    System::message("ChordSpaceGroup::initialize: normalized_optis: %6d\n", normalized_optis.size());
+    auto normal_optis = fundamentalDomainByIsNormal<EQUIVALENCE_RELATION_RPTI>(N, OCTAVE(), g, opt_sector);
+    System::message("ChordSpaceGroup::initialize: normal_optis:     %6d\n", normal_optis.size());
+    for (auto it = normalized_optis.begin(); it != normalized_optis.end(); ++it) {
+        OPTIsForIndexes.push_back(*it);
     }
-    countP = OPTTIsForIndexes.size();
-    for (int p_i = 0, p_n = OPTTIsForIndexes.size(); p_i < p_n; ++p_i) {
-        indexesForOPTTIs.insert({OPTTIsForIndexes[p_i], p_i});
+    countP = OPTIsForIndexes.size();
+    for (int p_i = 0, p_n = OPTIsForIndexes.size(); p_i < p_n; ++p_i) {
+        indexesForOPTIs.insert({OPTIsForIndexes[p_i], p_i});
     }
-    System::message("ChordSpaceGroup::initialize: indexesForOPTTIs:  %6d\n", indexesForOPTTIs.size());
+    System::message("ChordSpaceGroup::initialize: indexesForOPTIs:  %6d\n", indexesForOPTIs.size());
 }
 
 inline SILENCE_PUBLIC void ChordSpaceGroup::list(bool listheader, bool listopttis, bool listvoicings) const {
@@ -4048,11 +4032,11 @@ inline SILENCE_PUBLIC void ChordSpaceGroup::list(bool listheader, bool listoptti
         System::message("ChordSpaceGroup.countV: %8d\n", countV);
     }
     if (listopttis) {
-        for (int p_i = 0; p_i < OPTTIsForIndexes.size(); ++p_i) {
-            System::message("OPTTIsForIndexes[%5d ]: %s\n", p_i, OPTTIsForIndexes[p_i].toString().c_str());
+        for (int p_i = 0; p_i < OPTIsForIndexes.size(); ++p_i) {
+            System::message("OPTIsForIndexes[%5d ]: %s\n", p_i, OPTIsForIndexes[p_i].toString().c_str());
         }
-        for (const auto &entry : indexesForOPTTIs) {
-            System::message("indexesForOPTTIs[%s ]: %5d\n", entry.first.toString().c_str(), entry.second);
+        for (const auto &entry : indexesForOPTIs) {
+            System::message("indexesForOPTIs[%s ]: %5d\n", entry.first.toString().c_str(), entry.second);
         }
     }
     // Doesn't currently do anything as these collections are not currently initialized.
@@ -4066,54 +4050,75 @@ inline SILENCE_PUBLIC void ChordSpaceGroup::list(bool listheader, bool listoptti
 }
 
 Eigen::VectorXi ChordSpaceGroup::fromChord(const Chord &chord, bool printme) const {
-    // (1) Find P from OPTTI.
-    // (2) Find I from OPTT.
-    // (3) Find T by counting steps from OPTT to obtain OP.
-    // (4) Find V from OP by counting revoicings of OP to obtain chord.
+    // (1) Find P from OPTI.
+    // (2) Find I from OPT.
+    // (3) Find T by counting steps from up OPT in the OP fundamental domain  
+    //     to obtain the OP equivalent of the chord.
+    // (4) Find V from OP by counting revoicings of OP to obtain the actual 
+    //     chord.
+    if (printme) {
+        System::message("ChordSpaceGroup::fromChord: original:  %s\n", chord.toString().c_str());
+    }
     Eigen::VectorXi pitv(4);
-    auto optti = chord.eOPTTI(opt_sector);
-    auto p_it = indexesForOPTTIs.find(optti);
-    if (p_it != indexesForOPTTIs.end()) {
+    auto opt_sector = 0; /// chord.opt_domain_sectors().front();
+    auto opti = chord.eOPTI(opt_sector);
+    if (printme) {
+        System::message("ChordSpaceGroup::fromChord: opti:      %s\n", opti.toString().c_str());
+    }
+    auto p_it = indexesForOPTIs.find(opti);
+    if (p_it != indexesForOPTIs.end()) {
         pitv(0) = p_it->second;
     } else {
         System::error("ChordSpaceGroup::fromChord: Error: No P index found for this chord: \n%s\n", chord.information().c_str());
     }
-    auto optt = chord.eOPTT(opt_sector);
-    if (optt.iseI(opt_sector) == true) {
+    auto opt = chord.eOPT(opt_sector);
+    if (printme) {
+        System::message("ChordSpaceGroup::fromChord: opt:       %s\n", opt.toString().c_str());
+    }
+    if (opt.iseI(opt_sector) == true) {
         pitv(1) = 0;
     } else {
         pitv(1) = 1;
     }
     auto op = chord.eOP();
     if (printme) {
-        System::message("ChordSpaceGroup::fromChord:   => op:   %s\n", op.toString().c_str());
+        System::message("ChordSpaceGroup::fromChord: op:        %s\n", op.toString().c_str());
     }
-    auto optt_t = op;
+    auto opt_t = opt;
+    auto opt_t_tt = opt;
     double t;
     for (t = 0.; t < countT; t += g) {
-        if (optt_t == op) {
+        opt_t = opt_t.T(g).eOP();
+        if (printme) {
+            System::message("ChordSpaceGroup::fromChord: opt_t:     %s t: %4.1f\n", opt_t.toString().c_str(), t);
+        }
+        // The actual match is in equal temperament.
+        opt_t_tt = opt_t.ceiling();
+        if (opt_t_tt == op) {
             pitv(2) = t;
             break;
         }
-        optt_t = optt_t.T(g).eOP();
+    }
+    if (printme) {
+        System::message("ChordSpaceGroup::fromChord: opt_t_tt:  %s\n", opt_t_tt.toString().c_str());
     }
     if (ge_tolerance(t, double(countT)) == true) {
-        System::error("ChordSpaceGroup::fromChord: Error: OP cannot be generated by transposing OPTT: \n%s\n", chord.information().c_str());
+        System::message("ChordSpaceGroup::fromChord: Error: OP cannot be generated by transposing OPT.\n");
     }
-    auto optt_t_v = optt_t;
+    auto opt_t_tt_v = opt_t_tt;
     int v_i;
     for (v_i = 0; v_i < countV; ++v_i) {
-        if (optt_t_v == chord) {
+        if (opt_t_tt_v == chord) {
             pitv[3] = v_i;
             break;
         }
-        optt_t_v = optt_t_v.v(1);
+        opt_t_tt_v = opt_t_tt_v.v(1);
     }
     if (ge_tolerance(v_i, countV) == true) {
-        System::error("ChordSpaceGroup::fromChord: Error: Chord cannot be generated by revoicing OP: \n%s\n", chord.information().c_str());
+        System::error("ChordSpaceGroup::fromChord: Error: Chord cannot be generated by revoicing OP.\n");
     }
     if (printme) {
-        System::message("ChordSpaceGroup::fromChord: PITV:  %8d     %8d     %8d     %8d\n", pitv(0), pitv(1), pitv(2), pitv(3));
+        System::message("ChordSpaceGroup::fromChord: PITV:  %8d     %8d     %8d     %8d\n\n", pitv(0), pitv(1), pitv(2), pitv(3));
     }
     return pitv;
 }
@@ -4144,38 +4149,38 @@ std::vector<Chord> ChordSpaceGroup::toChord(int P, int I, int T, int V, bool pri
         System::message("ChordSpaceGroup::toChord:   PITV \%:%8d     %8d     %8d     %8d\n", P, I, T, V);
     }
     std::vector<Chord> result(3);
-    auto optti = OPTTIsForIndexes[P];
-    auto optti_r = optti;
+    auto opti = OPTIsForIndexes[P];
+    auto opt = opti;
     if (printme) {
-        System::message("ChordSpaceGroup::toChord:   => optti:  %s\n", optti.toString().c_str());
+        System::message("ChordSpaceGroup::toChord:   opti:      %s\n", opti.toString().c_str());
     }
     if (I == 1) {
-        optti_r = optti.reflect(opt_sector);
+        opt = opti.reflect(opt_sector);
     }
     if (printme) {
-        System::message("ChordSpaceGroup::toChord:   => optti_r:%s\n", optti_r.toString().c_str());
+        System::message("ChordSpaceGroup::toChord:   opt:       %s\n", opt.toString().c_str());
     }
-    auto optti_r_tt = optti_r.eTT(g);
-    if (printme) {
-        System::message("ChordSpaceGrou::toChord: => optti_r_tt:%s\n", optti_r_tt.toString().c_str());
+    double t;
+    auto opt_t = opt;
+    for (t = 0.; le_tolerance(t, T); t += g) {
+        opt_t = opt_t.T(g).eOP();
+        if (printme) {
+            System::message("ChordSpaceGroup::fromChord: opt_t:     %s t: %4.1f\n", opt_t.toString().c_str(), t);
+        }
     }
-    auto optti_r_tt_t = optti_r_tt.T(T);
+    auto op = opt_t.ceiling();
     if (printme) {
-        System::message("ChordSpaceGr::toChord: => optti_r_tt_t:%s\n", optti_r_tt_t.toString().c_str());
-    }
-    auto op = optti_r_tt_t.eOP();
-    if (printme) {
-        System::message("ChordSpaceGroup::toChord:   => op:     %s\n", op.toString().c_str());
+        System::message("ChordSpaceGroup::toChord:   op:        %s\n", op.toString().c_str());
     }
     auto op_v = op.v(V);
     if (printme) {
-        System::message("ChordSpaceGroup::toChord:   => op_v:   %s\n", op.toString().c_str());
+        System::message("ChordSpaceGroup::toChord:   op_v:      %s\n", op_v.toString().c_str());
     }
-   result[0] = op_v;
-    result[1] = optti_r_tt;
-    result[2] = op;
+    result[0] = op_v;
+    result[1] = op;
+    result[2] = opt_t;
     if (printme) {
-        System::message("ChordSpaceGroup::toChord:   result:    %s\n", result[0].toString().c_str());
+        System::message("ChordSpaceGroup::toChord:   result:    %s\n\n", result[0].toString().c_str());
     }
     return result;
 }
