@@ -739,6 +739,12 @@ public:
      */
     virtual void initialize_sectors();
     /**
+     * Returns this chord as the inverse standard "prime form."
+     *
+     * NOTE: The code here does NOT remove duplicate pitch-classes.    
+     */
+    virtual Chord inverse_prime_form() const;
+    /**
      * Returns whether this chord has a compact voicing. This identifies 
      * whether the chord belongs to the representative fundamental domain of 
      * the OPT equivalence class. In Tymoczko's 1-based notation:
@@ -2154,7 +2160,7 @@ template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_RPT>(const Ch
     }
     error("Error: Chord equate<EQUIVALENCE_RELATION_RPT>: no RPT in sector %d.\n", opt_sector);
     CHORD_SPACE_DEBUGGING = true;
-    std::raise(SIGINT);
+    ///std::raise(SIGINT);
     for (auto rpt : rpts) {
         message("equate<EQUIVALENCE_RELATION_RPT>: chord %s rpt: %s opt_sector: %d\n", chord.toString().c_str(), rpt.toString().c_str(), opt_sector);
         if (rpt.is_opt_sector(opt_sector) == true) {
@@ -2211,7 +2217,7 @@ template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_RPTg>(const C
     }
     error("Error: Chord equate<EQUIVALENCE_RELATION_RPTg>: no RPTg in sector %d.\n", opt_sector);
     CHORD_SPACE_DEBUGGING = true;
-    std::raise(SIGINT);
+    ///std::raise(SIGINT);
     for (auto rptt : rptts) {
         message("equate<EQUIVALENCE_RELATION_RPTg: chord %s rptt: %s opt_sector: %d\n", chord.toString().c_str(), rptt.toString().c_str(), opt_sector);
         if (rptt.is_opt_sector(opt_sector) == true) {
@@ -2753,71 +2759,73 @@ inline std::string Chord::information(int opt_sector_) const {
     if (opt_sector_ == -1) {
         opt_sector = opt_domain_sectors().front();
     }
-    std::sprintf(buffer, "%-17s %s\n", name().c_str(), print_chord(*this));
+    std::sprintf(buffer, "%-18s %s\n", name().c_str(), print_chord(*this));
     result.append(buffer);
-    std::sprintf(buffer, "Pitch-class set:  %s\n", epcs().eP().toString().c_str());
+    std::sprintf(buffer, "Pitch-class set:   %s\n", epcs().eP().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "Normal order:     %s\n", normal_order().toString().c_str());
+    std::sprintf(buffer, "Normal order:      %s\n", normal_order().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "Normal form:      %s\n", normal_form().toString().c_str());
+    std::sprintf(buffer, "Normal form:       %s\n", normal_form().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "Prime form:       %s\n", prime_form().toString().c_str());
+    std::sprintf(buffer, "Prime form:        %s\n", prime_form().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "Sum:              %12.7f\n", layer());
+    std::sprintf(buffer, "Inverse prime form:%s\n", inverse_prime_form().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "O:           %d => %s\n", iseO(), print_chord(eO()));
+    std::sprintf(buffer, "Sum:               %12.7f\n", layer());
     result.append(buffer);
-    std::sprintf(buffer, "P:           %d => %s\n", iseP(), print_chord(eP()));
+    std::sprintf(buffer, "O:            %d => %s\n", iseO(), print_chord(eO()));
     result.append(buffer);
-    std::sprintf(buffer, "T:           %d => %s\n", iseT(), print_chord(eT()));
+    std::sprintf(buffer, "P:            %d => %s\n", iseP(), print_chord(eP()));
     result.append(buffer);
-    std::sprintf(buffer, "TT:          %d => %s\n", iseTT(), print_chord(eTT()));
+    std::sprintf(buffer, "T:            %d => %s\n", iseT(), print_chord(eT()));
+    result.append(buffer);
+    std::sprintf(buffer, "TT:           %d => %s\n", iseTT(), print_chord(eTT()));
     result.append(buffer);
     auto isei = iseI(opt_sector);
     auto ei = eI(opt_sector);
-    std::sprintf(buffer, "I:           %d => %s\n", isei, print_chord(ei));
+    std::sprintf(buffer, "I:            %d => %s\n", isei, print_chord(ei));
     result.append(buffer);
-    std::sprintf(buffer, "OP:          %d => %s\n", iseOP(), print_chord(eOP()));
+    std::sprintf(buffer, "OP:           %d => %s\n", iseOP(), print_chord(eOP()));
     result.append(buffer);
-    std::sprintf(buffer, "OT:          %d => %s\n", iseOT(), print_chord(eOT()));
+    std::sprintf(buffer, "OT:           %d => %s\n", iseOT(), print_chord(eOT()));
     result.append(buffer);
-    std::sprintf(buffer, "OTT:         %d => %s\n", iseOTT(), print_chord(eOTT()));
+    std::sprintf(buffer, "OTT:          %d => %s\n", iseOTT(), print_chord(eOTT()));
     result.append(buffer);
-    std::sprintf(buffer, "OPT:         %d => %s\n", iseOPT(opt_sector), print_chord(eOPT(opt_sector)));
+    std::sprintf(buffer, "OPT:          %d => %s\n", iseOPT(opt_sector), print_chord(eOPT(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPTT:        %d => %s\n", iseOPTT(opt_sector), print_chord(eOPTT(opt_sector)));
+    std::sprintf(buffer, "OPTT:         %d => %s\n", iseOPTT(opt_sector), print_chord(eOPTT(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPI:         %d => %s\n", iseOPI(opt_sector), print_chord(eOPI(opt_sector)));
+    std::sprintf(buffer, "OPI:          %d => %s\n", iseOPI(opt_sector), print_chord(eOPI(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPTI:        %d => %s\n", iseOPTI(opt_sector), print_chord(eOPTI(opt_sector)));
+    std::sprintf(buffer, "OPTI:         %d => %s\n", iseOPTI(opt_sector), print_chord(eOPTI(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPTTI:       %d => %s\n", iseOPTTI(opt_sector), print_chord(eOPTTI(opt_sector)));
+    std::sprintf(buffer, "OPTTI:        %d => %s\n", iseOPTTI(opt_sector), print_chord(eOPTTI(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "             OPT sectors:\n");
+    std::sprintf(buffer, "              OPT sectors:\n");
     result.append(buffer);
     auto rpts = eRPTs(); 
     auto &hyperplane_equations = hyperplane_equations_for_opt_sectors()[voices()];
     for (auto i = 0; i < rpts.size(); ++i) {
         auto rpt = rpts[i];
         auto sector_text = print_opti_sectors(rpt);
-        std::sprintf(buffer, "                  %s\n", print_chord(rpt));
+        std::sprintf(buffer, "                   %s\n", print_chord(rpt));
         result.append(buffer);
     }
-    std::sprintf(buffer, "             OPTT sectors:\n");
+    std::sprintf(buffer, "              OPTT sectors:\n");
     result.append(buffer);
     auto rptts = eRPTTs(12.);
     for (auto i = 0; i < rptts.size(); ++i) {
         auto rptt = rptts[i];
         auto sector_text = print_opti_sectors(rptt);
-        std::sprintf(buffer, "                  %s\n", print_chord(rptt));
+        std::sprintf(buffer, "                   %s\n", print_chord(rptt));
         result.append(buffer);
     }
-    std::sprintf(buffer, "             Inversion flats (as vector equations) and reflections:\n");
+    std::sprintf(buffer, "              Inversion flats (as vector equations) and reflections:\n");
     result.append(buffer);
     auto sectors = opt_domain_sectors();
     for (int i = 0, n = voices(); i < n; ++i) {
         auto &hyperplane_equation = hyperplane_equations[i];
-        std::sprintf(buffer, "OPT[%2d] Normal: [", i);
+        std::sprintf(buffer, "OPT[%2d]  Normal: [", i);
         result.append(buffer);
         for (int j = 0, m = hyperplane_equation.unit_normal_vector.rows(); j < m; ++j) {
             std::sprintf(buffer, " %12.7f", hyperplane_equation.unit_normal_vector(j, 0));
@@ -2827,7 +2835,7 @@ inline std::string Chord::information(int opt_sector_) const {
         std::sprintf(buffer, " ] Constant: %11.7f\n", hyperplane_equation.constant_term);
         result.append(buffer);
         auto sector_text = print_opti_sectors(reflected);
-        std::sprintf(buffer, "        Reflected:%s\n", print_chord(reflected));
+        std::sprintf(buffer, "         Reflected:%s\n", print_chord(reflected));
         result.append(buffer);   
     }    
     return result;
@@ -4008,7 +4016,7 @@ inline SILENCE_PUBLIC void ChordSpaceGroup::initialize(int N_, double range_, do
             if (target.toString() == it->toString()) {
                 target_found = true;
                 message("ChordSpaceGroup::initialize: it: %s\n", print_chord(*it));
-                std::raise(SIGINT);
+                ///std::raise(SIGINT);
             }
         }
         OPTTIsForIndexes.push_back(*it);
@@ -4033,14 +4041,16 @@ inline SILENCE_PUBLIC void ChordSpaceGroup::list(bool listheader, bool listoptti
     }
     if (listopttis) {
         for (int p_i = 0; p_i < OPTTIsForIndexes.size(); ++p_i) {
-            message("OPTTIsForIndexes: %6d %s\n", p_i, print_chord(OPTTIsForIndexes[p_i]));
-            message("OPTTIsForIndexes: normal:%s\n", OPTTIsForIndexes[p_i].normal_form().toString().c_str());
-            message("OPTTIsForIndexes: prime: %s\n", OPTTIsForIndexes[p_i].prime_form().toString().c_str());
+            message("OPTTIsForIndexes: %6d         %s\n", p_i, print_chord(OPTTIsForIndexes[p_i]));
+            message("OPTTIsForIndexes: normal:        %s\n", OPTTIsForIndexes[p_i].normal_form().toString().c_str());
+            message("OPTTIsForIndexes: prime:         %s\n", OPTTIsForIndexes[p_i].prime_form().toString().c_str());
+            message("OPTTIsForIndexes: inverse prime: %s\n", OPTTIsForIndexes[p_i].inverse_prime_form().toString().c_str());
         }
         for (const auto &entry : indexesForOPTTIs) {
-            message("indexesForOPTTIs: %6d %s\n", entry.second, print_chord(entry.first));
-            message("OPTTIsForIndexes: normal:%s\n", entry.first.normal_form().toString().c_str());
-            message("OPTTIsForIndexes: prime: %s\n", entry.first.prime_form().toString().c_str());
+            message("indexesForOPTTIs: %6d         %s\n", entry.second, print_chord(entry.first));
+            message("OPTTIsForIndexes: normal:        %s\n", entry.first.normal_form().toString().c_str());
+            message("OPTTIsForIndexes: prime:         %s\n", entry.first.prime_form().toString().c_str());
+            message("OPTTIsForIndexes: inverse prime: %s\n", entry.first.inverse_prime_form().toString().c_str());
         }
     }
 }
@@ -4106,7 +4116,7 @@ Eigen::VectorXi ChordSpaceGroup::fromChord(const Chord &chord, bool printme) con
         message("ChordSpaceGroup::fromChord: Error: op cannot be generated by transposing opt_t.\n");
         message("                            %s != %s.\n", op.toString().c_str(), opt_t_tt.toString().c_str());
     }
-    auto v = indexForOctavewiseRevoicing(chord, range, printme);
+    auto v = indexForOctavewiseRevoicing(chord, range, printme);        
     auto opt_t_tt_v = octavewiseRevoicing(opt_t_tt, v, range);
     pitv[3] = v;
     if (printme) {
@@ -4363,7 +4373,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Cho
             if (target.toString() == iterator_.toString()) {
                 target_found = true;
                 message("fundamentalDomainByPredicate<%s>: iterator_is_normal: %d\n    found:  %s\n    target: %s\n\n", name_, iterator_is_normal, print_chord(target), print_chord(iterator_));
-                std::raise(SIGINT);
+                ///std::raise(SIGINT);
             }
         }
         if (iterator_is_normal == true) {
@@ -5560,11 +5570,31 @@ inline Chord Chord::prime_form() const {
     // (4) Transpose it so that the first pitch class is 0.
     auto ipc0 = no_t0_i_no.getPitch(0);
     auto no_t0_i_no_t0 = no_t0_i_no.T(-ipc0).normal_order();
-    // (5) Compare the results of steps (2) and (4). Prime form is the most compact version.    
+    // (5) Compare the results of steps (2) and (4). Prime form is the _most_ compact version.    
     if (no_t0 <= no_t0_i_no_t0) {
         return no_t0;
     } else {
         return no_t0_i_no_t0;
+    }
+}
+
+inline Chord Chord::inverse_prime_form() const {
+    // (1) Put the pitch-class set in normal order.
+    auto no = normal_order();
+    // (2) Transpose it so that the first pitch class is 0.
+    auto pc0 = no.getPitch(0);
+    auto no_t0 = no.T(-pc0).normal_order();
+    // (3) Invert the results from step 2 (any inversion will work) and put the result in normal order.
+    auto no_t0_i = no_t0.I(0);
+    auto no_t0_i_no = no_t0_i.normal_order();
+    // (4) Transpose it so that the first pitch class is 0.
+    auto ipc0 = no_t0_i_no.getPitch(0);
+    auto no_t0_i_no_t0 = no_t0_i_no.T(-ipc0).normal_order();
+    // (5) Compare the results of steps (2) and (4). Inverse prime form is the _least_ compact version.    
+    if (no_t0 <= no_t0_i_no_t0) {
+        return no_t0_i_no_t0;
+    } else {
+        return no_t0;
     }
 }
 

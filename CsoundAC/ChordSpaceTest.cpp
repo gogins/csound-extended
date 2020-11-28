@@ -319,27 +319,33 @@ static void setDifference(const std::string &a_name, std::vector<csound::Chord> 
         auto const &a = a_it->second;
         if (b_it == map_b.end()) {
             std::fprintf(stderr, "%s[%d]:\n",  a_name.c_str(), a_i);
-            std::fprintf(stderr, "    normal_form: %s\n", a.normal_form().toString().c_str());
-            std::fprintf(stderr, "    eppcs:       %s\n", a.eppcs().toString().c_str());
-            std::fprintf(stderr, "    chord:       %s\n", print_chord(a));
-            std::fprintf(stderr, "    OPTT:        %s\n", print_chord(a.eOPTT()));
-            std::fprintf(stderr, "    OPTTI:       %s\n\n\n\n\n", print_chord(a.eOPTTI()));
+            std::fprintf(stderr, "    normal_form:        %s\n", a.normal_form().toString().c_str());
+            std::fprintf(stderr, "    prime_form:         %s\n", a.prime_form().toString().c_str());
+            std::fprintf(stderr, "    inverse_prime_form: %s\n", a.inverse_prime_form().toString().c_str());
+            std::fprintf(stderr, "    eppcs:              %s\n", a.eppcs().toString().c_str());
+            std::fprintf(stderr, "    chord:              %s\n", print_chord(a));
+            std::fprintf(stderr, "    OPTT:               %s\n", print_chord(a.eOPTT()));
+            std::fprintf(stderr, "    OPTTI:              %s\n\n\n\n\n\n\n", print_chord(a.eOPTTI()));
             difference.push_back(a_it->second);
             ++a_i;
         } else {
             auto const &b = b_it->second;
             std::fprintf(stderr, "%s[%d]:\n",  a_name.c_str(), a_i);
-            std::fprintf(stderr, "    normal_form: %s\n", a.normal_form().toString().c_str());
-            std::fprintf(stderr, "    eppcs:       %s\n", a.eppcs().toString().c_str());
-            std::fprintf(stderr, "    chord:       %s\n", print_chord(a));
-            std::fprintf(stderr, "    OPTT:        %s\n", print_chord(a.eOPTT()));
-            std::fprintf(stderr, "    OPTTI:       %s\n", print_chord(a.eOPTTI()));
+            std::fprintf(stderr, "    normal_form:        %s\n", a.normal_form().toString().c_str());
+            std::fprintf(stderr, "    prime_form:         %s\n", a.prime_form().toString().c_str());
+            std::fprintf(stderr, "    inverse_prime_form: %s\n", a.inverse_prime_form().toString().c_str());
+            std::fprintf(stderr, "    eppcs:              %s\n", a.eppcs().toString().c_str());
+            std::fprintf(stderr, "    chord:              %s\n", print_chord(a));
+            std::fprintf(stderr, "    OPTT:               %s\n", print_chord(a.eOPTT()));
+            std::fprintf(stderr, "    OPTTI:              %s\n", print_chord(a.eOPTTI()));
             std::fprintf(stderr, "  %s[%d]:\n",  b_name.c_str(), b_i);
-            std::fprintf(stderr, "    normal_form: %s\n", b.normal_form().toString().c_str());
-            std::fprintf(stderr, "    eppcs:       %s\n", a.eppcs().toString().c_str());
-            std::fprintf(stderr, "    chord:       %s\n", print_chord(b));
-            std::fprintf(stderr, "    OPTT:        %s\n", print_chord(b.eOPTT()));
-            std::fprintf(stderr, "    OPTTI:       %s\n\n", print_chord(b.eOPTTI()));
+            std::fprintf(stderr, "    normal_form:        %s\n", b.normal_form().toString().c_str());
+            std::fprintf(stderr, "    prime_form:         %s\n", b.prime_form().toString().c_str());
+            std::fprintf(stderr, "    inverse_prime_form: %s\n", b.inverse_prime_form().toString().c_str());
+            std::fprintf(stderr, "    eppcs:              %s\n", b.eppcs().toString().c_str());
+            std::fprintf(stderr, "    chord:              %s\n", print_chord(b));
+            std::fprintf(stderr, "    OPTT:               %s\n", print_chord(b.eOPTT()));
+            std::fprintf(stderr, "    OPTTI:              %s\n\n", print_chord(b.eOPTTI()));
             ++a_i;
             ++b_i;
         }
@@ -555,10 +561,10 @@ int main(int argc, char **argv) {
     csound::Chord chordForName_ = csound::chordForName("CM9");
     csound::System::message("chordForName(%s): %s\n", "CM9", chordForName_.information().c_str());
 
-    //~ csound::System::message("\nTesting equivalence relations...\n\n");
-    //~ for (int voiceCount = 3; voiceCount <= 4; ++voiceCount) {
-        //~ testEquivalenceRelations(voiceCount, csound::OCTAVE(), 1.0);
-    //~ }
+    csound::System::message("\nTesting equivalence relations...\n\n");
+    for (int voiceCount = 3; voiceCount <= 4; ++voiceCount) {
+        testEquivalenceRelations(voiceCount, csound::OCTAVE(), 1.0);
+    }
 
     std::vector<csound::Chord> science_optts_3;
     science_optts_3.push_back(csound::Chord({0., 0., 0.}));
