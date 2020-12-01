@@ -5643,8 +5643,8 @@ inline Chord Chord::prime_form() const {
     auto normal_form_ = normal_form();
     auto inverse = normal_form_.I(0.);
     auto inverse_normal_form = inverse.normal_form();
-    message("Chord::prime_form: normal_form:         %s\n", print_chord(normal_form_));
-    message("Chord::prime_form: inverse_normal_form: %s\n", print_chord(inverse_normal_form));
+    //~ message("Chord::prime_form: normal_form:         %s\n", print_chord(normal_form_));
+    //~ message("Chord::prime_form: inverse_normal_form: %s\n", print_chord(inverse_normal_form));
     // Which is more compact?
     for (auto outer_voice = voices() - 1; outer_voice <= 0; --outer_voice) {
         auto lower_pc_a = normal_form_.getPitch(0);
