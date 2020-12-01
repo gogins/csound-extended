@@ -138,6 +138,33 @@ static void test_chord_space_group(const csound::ChordSpaceGroup &chordSpaceGrou
     csound::System::message("\n");
 }
 
+static void test_pitv(const csound::PITV &chordSpaceGroup, std::string chordName) {
+    csound::System::message("BEGAN test PITV for %s...\n", chordName.c_str());
+    csound::Chord originalChord = csound::chordForName(chordName);
+    csound::Chord optti = originalChord.eOPTTI();
+    csound::System::message("Original chord:\n%s\n", originalChord.information().c_str());
+    Eigen::VectorXi pitv = chordSpaceGroup.fromChord(originalChord, true);
+    csound::Chord reconstitutedChord = chordSpaceGroup.toChord(pitv[0], pitv[1], pitv[2], pitv[3], true)[0];
+    csound::System::message("Reconstituted chord:\n%s\n", reconstitutedChord.information().c_str());
+    test(originalChord == reconstitutedChord, "Reconstituted chord must be the same as the original chord.");
+    csound::Chord revoicedOriginalChord = originalChord;
+    revoicedOriginalChord.setPitch(1,  revoicedOriginalChord.getPitch(1) + 12.);
+    revoicedOriginalChord.setPitch(2,  revoicedOriginalChord.getPitch(2) + 24.);
+    csound::System::message("Revoiced original chord:\n%s\n", revoicedOriginalChord.information().c_str());
+    pitv = chordSpaceGroup.fromChord(revoicedOriginalChord, true);
+    csound::Chord reconstitutedRevoicedChord = chordSpaceGroup.toChord_vector(pitv, true)[0];
+    csound::System::message("Reconstituted revoiced chord:\n%s\n", reconstitutedRevoicedChord.information().c_str());
+    test(revoicedOriginalChord == reconstitutedRevoicedChord, "Reconstituted revoiced chord must be the same as the original revoiced chord.");
+    csound::Chord invertedChord = originalChord.I().eOP();
+    csound::System::message("Inverted original chord:\n%s\n", invertedChord.information().c_str());
+    pitv = chordSpaceGroup.fromChord(invertedChord);
+    csound::Chord reconstitutedInvertedChord = chordSpaceGroup.toChord_vector(pitv, true)[0];
+    csound::System::message("Reconstituted inverted chord:\n%s\n", reconstitutedInvertedChord.information().c_str());
+    test(invertedChord == reconstitutedInvertedChord,"Reconstituted inverted chord must be the same as the original inverted chord.");
+    csound::System::message("ENDED test PITV for %s.\n", chordName.c_str());
+    csound::System::message("\n");
+}
+
 static void test_chord_space_group(int initialVoiceCount, int finalVoiceCount) {
     double range = 48.0;
     for (int voiceCount = initialVoiceCount; voiceCount <= finalVoiceCount; ++voiceCount) {
@@ -146,6 +173,67 @@ static void test_chord_space_group(int initialVoiceCount, int finalVoiceCount) {
         csound::System::message("Testing all of ChordSpaceGroup: voices: %d  range: %f\n", voiceCount, range);
         csound::System::message("Testing PITV to chord and back...\n");
         chordSpaceGroup.initialize(voiceCount, range, 1., 0, true);
+        chordSpaceGroup.list(true, true, true);
+        for (int P = 0; P < chordSpaceGroup.countP; ++P) {
+            for (int I = 0; I < chordSpaceGroup.countI; ++I) {
+                for (int T = 0; T < chordSpaceGroup.countT; ++T) {
+                    for (int V = 0; V < chordSpaceGroup.countV; ++V) {
+                        csound::Chord chord_from_pitv = chordSpaceGroup.toChord(P, I, T, V)[0];
+                        if (printPass) csound::System::message("chord_from_pitv:            %8d     %8d     %8d     %8d => %s\n", P, I, T, V, chord_from_pitv.toString().c_str());
+                        Eigen::VectorXi pitv_from_chord = chordSpaceGroup.fromChord(chord_from_pitv);
+                        csound::Chord chord_from_pitv_from_chord = chordSpaceGroup.toChord(pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3))[0];
+                        if (printPass) csound::System::message("chord_from_pitv_from_chord: %8d     %8d     %8d     %8d <= %s\n", pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3), chord_from_pitv_from_chord.toString().c_str());
+                        bool equals = (chord_from_pitv == chord_from_pitv_from_chord);
+                        if (!equals) {
+                            chordSpaceGroup.toChord(P, I, T, V, true);
+                            csound::System::message("chord_from_pitv (toChord):\n%s\n", chord_from_pitv.information().c_str());
+                            chordSpaceGroup.fromChord(chord_from_pitv, true);
+                            csound::System::message("chord_from_pitv_from_chord (fromChord):\n%s\n", chord_from_pitv_from_chord.information().c_str());
+                            passes = false;
+                        }
+                        test(equals, "chord_from_pitv must match chord_from_pitv_from_chord.");
+                        if (printPass) csound::System::message("\n");
+                    }
+                }
+            }
+        }
+        csound::System::message("Testing chord to PITV and back...\n\n");
+        bool passes2 = true;
+        auto eops = csound::fundamentalDomainByPredicate<csound::EQUIVALENCE_RELATION_RP>(voiceCount, csound::OCTAVE(), 1., testSector);
+        for(auto it = eops.begin(); it != eops.end(); ++it) {
+            auto chord = *it;
+            auto origin = chord;
+            for(;;) {
+                Eigen::VectorXi pitv_from_chord = chordSpaceGroup.fromChord(chord);
+                if (printPass) csound::System::message("pitv_from_chord:            %8d     %8d     %8d     %8d <= %s\n", pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3), chord.toString().c_str());
+                csound::Chord chord_from_pitv_from_chord = chordSpaceGroup.toChord(pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3))[0];
+                if (printPass) csound::System::message("chord_from_pitv_from_chord: %8d     %8d     %8d     %8d => %s\n", pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3), chord_from_pitv_from_chord.toString().c_str());
+                bool equals = (chord_from_pitv_from_chord == chord);
+                if (!equals) {
+                    csound::System::message("Original chord (fromChord):\n%s\n", chord.information().c_str());
+                    csound::System::message("New chord (toChord):\n%s\n", chord_from_pitv_from_chord.information().c_str());
+                    passes2 = false;
+                }
+                test(equals, "Original chord must match chord from original chord's PITV.");
+                if (printPass) csound::System::message("\n");
+                // This was going too far... cut off sooner and all seems well.
+                if (csound::next(chord, origin, range - 1.0, csound::OCTAVE()) == false)
+                {
+                    break;
+                }
+            }
+        }
+    }
+}
+
+static void test_pitv(int initialVoiceCount, int finalVoiceCount) {
+    double range = 48.0;
+    for (int voiceCount = initialVoiceCount; voiceCount <= finalVoiceCount; ++voiceCount) {
+        bool passes = true;
+        csound::PITV chordSpaceGroup;
+        csound::System::message("Testing all of PITV: voices: %d  range: %f\n", voiceCount, range);
+        csound::System::message("Testing PITV to chord and back...\n");
+        chordSpaceGroup.initialize(voiceCount, range, 1., true);
         chordSpaceGroup.list(true, true, true);
         for (int P = 0; P < chordSpaceGroup.countP; ++P) {
             for (int I = 0; I < chordSpaceGroup.countI; ++I) {
@@ -419,7 +507,7 @@ int main(int argc, char **argv) {
     fundamentalDomainByPredicateForEquivalenceRelations["RPI"] =         csound::fundamentalDomainByPredicate<csound::EQUIVALENCE_RELATION_RPI>;
     fundamentalDomainByPredicateForEquivalenceRelations["RPTI"] =        csound::fundamentalDomainByPredicate<csound::EQUIVALENCE_RELATION_RPTI>;
     fundamentalDomainByPredicateForEquivalenceRelations["RPTgI"] =       csound::fundamentalDomainByPredicate<csound::EQUIVALENCE_RELATION_RPTgI>;
-    
+        
     auto chordspace_optts_3 = csound::fundamentalDomainByPredicate<csound::EQUIVALENCE_RELATION_RPTg>(3, 12., 1., testSector);
     //~ printSet("My OPTTs", chordspace_optts_3);
  
@@ -565,6 +653,19 @@ int main(int argc, char **argv) {
     for (int voiceCount = 3; voiceCount <= 4; ++voiceCount) {
         testEquivalenceRelations(voiceCount, csound::OCTAVE(), 1.0);
     }
+    
+    csound::PITV pitv_3;
+    pitv_3.initialize(3, 60., 1., true);
+    pitv_3.list(true, true);
+    
+    csound::PITV pitv_4;
+    pitv_4.initialize(4, 60., 1., true);
+    pitv_4.list(true, true);
+    
+    test_pitv(pitv_4, "D#7b5");
+    test_pitv(3, 4);
+    exit(0);
+    
 
     std::vector<csound::Chord> science_optts_3;
     science_optts_3.push_back(csound::Chord({0., 0., 0.}));
