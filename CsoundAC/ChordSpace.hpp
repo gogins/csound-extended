@@ -1454,6 +1454,13 @@ SILENCE_PUBLIC bool in_simplex(const std::vector<Chord> &simplex, const Chord &p
 
 /**
  * Returns the index of the octavewise revoicing that this chord is,
+ * counting up from the origin, within the indicated range. Returns
+ * -1 if there is no such chord within the range.
+ */
+SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &origin, const Chord &chord, double range, bool debug=false);
+
+/**
+ * Returns the index of the octavewise revoicing that this chord is,
  * relative to its OP equivalent, within the indicated range. Returns
  * -1 if there is no such chord within the range.
  */
@@ -1509,30 +1516,6 @@ SILENCE_PUBLIC std::string nameForScale(const Scale &scale);
 
 SILENCE_PUBLIC std::multimap<Chord, std::string> &namesForChords();
 
-/*
-    EQUIVALENCE_RELATION_r = 0,
-    EQUIVALENCE_RELATION_R,
-    EQUIVALENCE_RELATION_P,
-    EQUIVALENCE_RELATION_T,
-    EQUIVALENCE_RELATION_Tg,
-    EQUIVALENCE_RELATION_I,
-    EQUIVALENCE_RELATION_RP,
-    EQUIVALENCE_RELATION_RT,
-    //~ EQUIVALENCE_RELATION_RTg,
-    //~ EQUIVALENCE_RELATION_RI,
-    //~ EQUIVALENCE_RELATION_PT,
-    //~ EQUIVALENCE_RELATION_PTg,
-    //~ EQUIVALENCE_RELATION_PI,
-    //~ EQUIVALENCE_RELATION_TI,
-    EQUIVALENCE_RELATION_RPT,
-    EQUIVALENCE_RELATION_RPTg,
-    EQUIVALENCE_RELATION_RPI,
-    EQUIVALENCE_RELATION_RTI,
-    EQUIVALENCE_RELATION_RTgI,
-    EQUIVALENCE_RELATION_RPTI,
-    EQUIVALENCE_RELATION_RPTgI,
-
-*/
 static const char* namesForEquivalenceRelations[] = {
     "r",
     "R",
@@ -2902,14 +2885,8 @@ inline std::string Chord::information(int opt_sector_) const {
     return result;
 }
 
-/**
- * Returns the index of the octavewise revoicing that this chord is,
- * relative to its OP equivalent, within the indicated range. Returns
- * -1 if there is no such chord within the range.
- */
-inline SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &chord, double range, bool debug) {
+inline SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &origin, const Chord &chord, double range, bool debug) {
     int revoicingN = octavewiseRevoicings(chord, range);
-    Chord origin = csound::equate<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), 1.0, 0);
     Chord revoicing = origin;
     int revoicingI = 0;
     while (true) {
@@ -2928,6 +2905,12 @@ inline SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &chord, double
             return -1;
         }
     }
+}
+
+inline SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &chord, double range, bool debug) {
+    const auto origin = csound::equate<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), 1.0, 0);
+    auto result = indexForOctavewiseRevoicing(origin, chord, range, debug);
+    return result;
 }
 
 inline SILENCE_PUBLIC bool operator == (const Chord &a, const Chord &b) {
@@ -5623,74 +5606,55 @@ inline Chord Chord::normal_form() const {
 }
 
 inline Chord Chord::prime_form() const {
-    //~ // (1) Put the pitch-class set in normal order.
-    //~ auto no = normal_order();
-    //~ // (2) Transpose it so that the first pitch class is 0.
-    //~ auto pc0 = no.getPitch(0);
-    //~ auto no_t0 = no.T(-pc0).normal_order();
-    //~ // (3) Invert the results from step 2 (any inversion will work) and put the result in normal order.
-    //~ auto no_t0_i = no_t0.I(0);
-    //~ auto no_t0_i_no = no_t0_i.normal_order();
-    //~ // (4) Transpose it so that the first pitch class is 0.
-    //~ auto ipc0 = no_t0_i_no.getPitch(0);
-    //~ auto no_t0_i_no_t0 = no_t0_i_no.T(-ipc0);
-    //~ // (5) Compare the results of steps (2) and (4). Prime form is the _most_ compact version.    
-    //~ if (no_t0 <= no_t0_i_no_t0) {
-        //~ return no_t0;
-    //~ } else {
-        //~ return no_t0_i_no_t0;
-    //~ }
     auto normal_form_ = normal_form();
-    auto inverse = normal_form_.I(0.);
+    auto inverse = normal_form_. I(0.);
     auto inverse_normal_form = inverse.normal_form();
-    //~ message("Chord::prime_form: normal_form:         %s\n", print_chord(normal_form_));
-    //~ message("Chord::prime_form: inverse_normal_form: %s\n", print_chord(inverse_normal_form));
-    // Which is more compact?
-    for (auto outer_voice = voices() - 1; outer_voice <= 0; --outer_voice) {
-        auto lower_pc_a = normal_form_.getPitch(0);
-        auto upper_pc_a = normal_form_.getPitch(outer_voice);
-        auto interval_a = upper_pc_a - lower_pc_a;
-        // Tricky! This is arithmetic modulo the octave.
-        if (lt_tolerance(interval_a, 0.) == true) {
-            interval_a = interval_a + OCTAVE();
-        }
-        interval_a = rownd(interval_a, 9);
-        auto lower_pc_b = inverse_normal_form.getPitch(0);
-        auto upper_pc_b = inverse_normal_form.getPitch(outer_voice);
-        auto interval_b = upper_pc_b - lower_pc_b;
-        // Tricky! This is arithmetic modulo the octave.
-        if (lt_tolerance(interval_b, 0.) == true) {
-            interval_b = interval_b + OCTAVE();
-        }
-        interval_b = rownd(interval_b, 9);
-        if (le_tolerance(interval_a, interval_b) == true) {
-            return normal_form_;
-        }
-        if (le_tolerance(interval_b, interval_a) == true) {
-            return inverse_normal_form;
-        }
+    if (normal_form_ < inverse_normal_form) {
+        return normal_form_;
+    } else if (inverse_normal_form < normal_form_) {
+        return inverse_normal_form;
     }
     return normal_form_;
+     //~ message("Chord::prime_form: normal_form:         %s\n", print_chord(normal_form_));
+    //~ message("Chord::prime_form: inverse_normal_form: %s\n", print_chord(inverse_normal_form));
+    // Which is more compact?
+    //~ for (auto outer_voice = voices() - 1; outer_voice <= 0; --outer_voice) {
+        //~ auto lower_pc_a = normal_form_.getPitch(0);
+        //~ auto upper_pc_a = normal_form_.getPitch(outer_voice);
+        //~ auto interval_a = upper_pc_a - lower_pc_a;
+        //~ // Tricky! This is arithmetic modulo the octave.
+        //~ if (lt_tolerance(interval_a, 0.) == true) {
+            //~ interval_a = interval_a + OCTAVE();
+        //~ }
+        //~ interval_a = rownd(interval_a, 9);
+        //~ auto lower_pc_b = inverse_normal_form.getPitch(0);
+        //~ auto upper_pc_b = inverse_normal_form.getPitch(outer_voice);
+        //~ auto interval_b = upper_pc_b - lower_pc_b;
+        //~ // Tricky! This is arithmetic modulo the octave.
+        //~ if (lt_tolerance(interval_b, 0.) == true) {
+            //~ interval_b = interval_b + OCTAVE();
+        //~ }
+        //~ interval_b = rownd(interval_b, 9);
+        //~ if (le_tolerance(interval_a, interval_b) == true) {
+            //~ return normal_form_;
+        //~ }
+        //~ if (le_tolerance(interval_b, interval_a) == true) {
+            //~ return inverse_normal_form;
+        //~ }
+    //~ }
+    //~ return normal_form_;
 }
 
 inline Chord Chord::inverse_prime_form() const {
-    // (1) Put the pitch-class set in normal order.
-    auto no = normal_order();
-    // (2) Transpose it so that the first pitch class is 0.
-    auto pc0 = no.getPitch(0);
-    auto no_t0 = no.T(-pc0).normal_order();
-    // (3) Invert the results from step 2 (any inversion will work) and put the result in normal order.
-    auto no_t0_i = no_t0.I(0);
-    auto no_t0_i_no = no_t0_i.normal_order();
-    // (4) Transpose it so that the first pitch class is 0.
-    auto ipc0 = no_t0_i_no.getPitch(0);
-    auto no_t0_i_no_t0 = no_t0_i_no.T(-ipc0);
-    // (5) Compare the results of steps (2) and (4). Inverse prime form is the _least_ compact version.    
-    if (no_t0 <= no_t0_i_no_t0) {
-        return no_t0_i_no_t0;
-    } else {
-        return no_t0;
+    auto normal_form_ = normal_form();
+    auto inverse = normal_form_. I(0.);
+    auto inverse_normal_form = inverse.normal_form();
+    if (normal_form_ > inverse_normal_form) {
+        return normal_form_;
+    } else if (inverse_normal_form > normal_form_) {
+        return inverse_normal_form;
     }
+    return normal_form_;
 }
 
 inline bool Chord::is_minor() const {
@@ -6070,10 +6034,7 @@ Eigen::VectorXi PITV::fromChord(const Chord &chord, bool printme) const {
     const auto prime_form_ = chord.prime_form();
     int P = indexesForPs.at(prime_form_);
     pitv.coeffRef(0) = P;
-    if (printme) {
-        message("PITV::fromChord: P: %5d prime_form:    %s\n", pitv(0), print_chord(prime_form_));
-    }
-    const auto normal_form_ = normalFormsForPrimeForms.at(prime_form_);
+    const auto normal_form_ = chord.normal_form();
     const auto inverse_prime = chord.inverse_prime_form();
     int I = 0;
     if (prime_form_ != normal_form_) {
@@ -6082,6 +6043,7 @@ Eigen::VectorXi PITV::fromChord(const Chord &chord, bool printme) const {
     pitv.coeffRef(1) = I;
     if (printme) {
         message("PITV::fromChord: I: %5d normal_form:   %s\n", pitv(1), print_chord(normal_form_));
+        message("PITV::fromChord: P: %5d prime_form:    %s\n", pitv(0), print_chord(prime_form_));
         message("PITV::fromChord:          inverse_prime: %s\n", print_chord(inverse_prime));
     }
     auto normal_form_t = normal_form_;
@@ -6098,23 +6060,19 @@ Eigen::VectorXi PITV::fromChord(const Chord &chord, bool printme) const {
     }
     auto op = normal_form_t.eOP();
     auto op_from_chord = chord.eOP();
-    if (op != op_from_chord) {
-        error("PITV::fromChord: Error: OP from PIT          (%s)\n", print_chord(op));
-        error("                 doesn't match OP from chord (%s)\n", print_chord(op_from_chord));
-    }
     if (printme) {
         message("PITV::fromChord:          op from PIT:   %s\n", print_chord(op));
         message("PITV::fromChord:          op from chord: %s\n", print_chord(op_from_chord));
     }
-    auto V = indexForOctavewiseRevoicing(chord, range, printme);        
+    auto V = indexForOctavewiseRevoicing(op, chord, range, printme);        
     pitv.coeffRef(3) = V;
-    auto op_v = octavewiseRevoicing(op, V, range);
+    auto op_v = octavewiseRevoicing(chord, V, range);
     if (op_v != chord) {
         error("PITV::fromChord: Error: revoiced OP  (%s)\n", print_chord(op_v));
         error("                 doesn't match chord (%s)\n", print_chord(chord));
     }
     if (printme) {
-        message("PITV::fromChord: V: %5d op_v:          %s\n", pitv(3), print_chord(op));
+        message("PITV::fromChord: V: %5d op_v:          %s\n", pitv(3), print_chord(op_v));
     }
     if (printme) {
         message("PITV::fromChord: PITV:               %8d     %8d     %8d     %8d\n\n", pitv(0), pitv(1), pitv(2), pitv(3));
@@ -6139,22 +6097,22 @@ std::vector<Chord> PITV::toChord(int P, int I, int T, int V, bool printme) const
         message("PITV::toChord:   PITV \%:             %8d     %8d     %8d     %8d\n", P, I, T, V);
     }
     auto prime_form_ = PsForIndexes.at(P);
-    if (printme) {
-        message("PITV::toChord:   P: %5d prime_form_:   %s\n", P, print_chord(prime_form_));
-    }
     auto normal_form_ = prime_form_;
+    auto inverse_prime_form_ = prime_form_.inverse_prime_form();
     if (I == 1) {
-        normal_form_ = normalFormsForPrimeForms.at(prime_form_);
+        normal_form_ = inverse_prime_form_;
     }
     if (printme) {
         message("PITV::toChord:   I: %5d normal_form:   %s\n", I, print_chord(normal_form_));
-    }
+        message("PITV::toChord:   P: %5d prime_form_:   %s\n", P, print_chord(prime_form_));
+        message("PITV::toChord:            inv prime form:%s\n",  print_chord(inverse_prime_form_));
+   }
     auto normal_form_t = normal_form_;
     for (int t = 0; t < T; ++t) {
         normal_form_t = normal_form_t.T(g);
     }
     if (printme) {
-        message("PITV::fromChord: T: %5d normal_form_t: %s\n", T, print_chord(normal_form_t));
+        message("PITV::toChord:   T: %5d normal_form_t: %s\n", T, print_chord(normal_form_t));
     }
     auto op = normal_form_t.eOP();
     if (printme) {

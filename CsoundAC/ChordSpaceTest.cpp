@@ -175,19 +175,17 @@ static void test_chord_space_group(int initialVoiceCount, int finalVoiceCount) {
         chordSpaceGroup.initialize(voiceCount, range, 1., 0, true);
         chordSpaceGroup.list(true, true, true);
         for (int P = 0; P < chordSpaceGroup.countP; ++P) {
-            for (int I = 0; I < chordSpaceGroup.countI; ++I) {
-                for (int T = 0; T < chordSpaceGroup.countT; ++T) {
-                    for (int V = 0; V < chordSpaceGroup.countV; ++V) {
-                        csound::Chord chord_from_pitv = chordSpaceGroup.toChord(P, I, T, V)[0];
+            for (int T = 0; T < chordSpaceGroup.countT; ++T) {
+                for (int V = 0; V < chordSpaceGroup.countV; ++V) {
+                    for (int I = 0; I < chordSpaceGroup.countI; ++I) {
+                        csound::Chord chord_from_pitv = chordSpaceGroup.toChord(P, I, T, V, printPass)[0];
                         if (printPass) csound::System::message("chord_from_pitv:            %8d     %8d     %8d     %8d => %s\n", P, I, T, V, chord_from_pitv.toString().c_str());
-                        Eigen::VectorXi pitv_from_chord = chordSpaceGroup.fromChord(chord_from_pitv);
-                        csound::Chord chord_from_pitv_from_chord = chordSpaceGroup.toChord(pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3))[0];
+                        Eigen::VectorXi pitv_from_chord = chordSpaceGroup.fromChord(chord_from_pitv, printPass);
+                        csound::Chord chord_from_pitv_from_chord = chordSpaceGroup.toChord(pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3), printPass)[0];
                         if (printPass) csound::System::message("chord_from_pitv_from_chord: %8d     %8d     %8d     %8d <= %s\n", pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3), chord_from_pitv_from_chord.toString().c_str());
                         bool equals = (chord_from_pitv == chord_from_pitv_from_chord);
                         if (!equals) {
-                            chordSpaceGroup.toChord(P, I, T, V, true);
                             csound::System::message("chord_from_pitv (toChord):\n%s\n", chord_from_pitv.information().c_str());
-                            chordSpaceGroup.fromChord(chord_from_pitv, true);
                             csound::System::message("chord_from_pitv_from_chord (fromChord):\n%s\n", chord_from_pitv_from_chord.information().c_str());
                             passes = false;
                         }
@@ -230,30 +228,29 @@ static void test_pitv(int initialVoiceCount, int finalVoiceCount) {
     double range = 48.0;
     for (int voiceCount = initialVoiceCount; voiceCount <= finalVoiceCount; ++voiceCount) {
         bool passes = true;
-        csound::PITV chordSpaceGroup;
+        csound::PITV pitv;
         csound::System::message("Testing all of PITV: voices: %d  range: %f\n", voiceCount, range);
         csound::System::message("Testing PITV to chord and back...\n");
-        chordSpaceGroup.initialize(voiceCount, range, 1., true);
-        chordSpaceGroup.list(true, true, true);
-        for (int P = 0; P < chordSpaceGroup.countP; ++P) {
-            for (int I = 0; I < chordSpaceGroup.countI; ++I) {
-                for (int T = 0; T < chordSpaceGroup.countT; ++T) {
-                    for (int V = 0; V < chordSpaceGroup.countV; ++V) {
-                        csound::Chord chord_from_pitv = chordSpaceGroup.toChord(P, I, T, V)[0];
-                        if (printPass) csound::System::message("chord_from_pitv:            %8d     %8d     %8d     %8d => %s\n", P, I, T, V, chord_from_pitv.toString().c_str());
-                        Eigen::VectorXi pitv_from_chord = chordSpaceGroup.fromChord(chord_from_pitv);
-                        csound::Chord chord_from_pitv_from_chord = chordSpaceGroup.toChord(pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3))[0];
-                        if (printPass) csound::System::message("chord_from_pitv_from_chord: %8d     %8d     %8d     %8d <= %s\n", pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3), chord_from_pitv_from_chord.toString().c_str());
+        pitv.initialize(voiceCount, range, 1., true);
+        pitv.list(true, true, true);
+        for (int P = 0; P < pitv.countP; ++P) {
+            for (int T = 0; T < pitv.countT; ++T) {
+                for (int V = 0; V < pitv.countV; ++V) {
+                    for (int I = 0; I < pitv.countI; ++I) {
+                        if (printPass) csound::System::message("PITV => chord from PITV\n");
+                        csound::Chord chord_from_pitv = pitv.toChord(P, I, T, V, printPass)[0];
+                        if (printPass) csound::System::message("chord from PITV => PITV from chord\n");
+                        Eigen::VectorXi pitv_from_chord = pitv.fromChord(chord_from_pitv, printPass);
+                        if (printPass) csound::System::message("PITV from chord => chord from PITV from chord\n");
+                        csound::Chord chord_from_pitv_from_chord = pitv.toChord(pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3), printPass)[0];
                         bool equals = (chord_from_pitv == chord_from_pitv_from_chord);
                         if (!equals) {
-                            chordSpaceGroup.toChord(P, I, T, V, true);
                             csound::System::message("chord_from_pitv (toChord):\n%s\n", chord_from_pitv.information().c_str());
-                            chordSpaceGroup.fromChord(chord_from_pitv, true);
                             csound::System::message("chord_from_pitv_from_chord (fromChord):\n%s\n", chord_from_pitv_from_chord.information().c_str());
                             passes = false;
                         }
                         test(equals, "chord_from_pitv must match chord_from_pitv_from_chord.");
-                        if (printPass) csound::System::message("\n");
+                        if (printPass) csound::System::message("\n\n");
                     }
                 }
             }
@@ -265,9 +262,9 @@ static void test_pitv(int initialVoiceCount, int finalVoiceCount) {
             auto chord = *it;
             auto origin = chord;
             for(;;) {
-                Eigen::VectorXi pitv_from_chord = chordSpaceGroup.fromChord(chord);
+                Eigen::VectorXi pitv_from_chord = pitv.fromChord(chord);
                 if (printPass) csound::System::message("pitv_from_chord:            %8d     %8d     %8d     %8d <= %s\n", pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3), chord.toString().c_str());
-                csound::Chord chord_from_pitv_from_chord = chordSpaceGroup.toChord(pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3))[0];
+                csound::Chord chord_from_pitv_from_chord = pitv.toChord(pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3))[0];
                 if (printPass) csound::System::message("chord_from_pitv_from_chord: %8d     %8d     %8d     %8d => %s\n", pitv_from_chord(0), pitv_from_chord(1), pitv_from_chord(2), pitv_from_chord(3), chord_from_pitv_from_chord.toString().c_str());
                 bool equals = (chord_from_pitv_from_chord == chord);
                 if (!equals) {
@@ -664,8 +661,6 @@ int main(int argc, char **argv) {
     
     test_pitv(pitv_4, "D#7b5");
     test_pitv(3, 4);
-    exit(0);
-    
 
     std::vector<csound::Chord> science_optts_3;
     science_optts_3.push_back(csound::Chord({0., 0., 0.}));
