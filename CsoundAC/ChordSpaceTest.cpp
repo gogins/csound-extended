@@ -199,7 +199,8 @@ static void test_chord_space_group(int initialVoiceCount, int finalVoiceCount) {
         bool passes2 = true;
         auto eops = csound::fundamentalDomainByPredicate<csound::EQUIVALENCE_RELATION_RP>(voiceCount, csound::OCTAVE(), 1., testSector);
         for(auto it = eops.begin(); it != eops.end(); ++it) {
-            auto chord = *it;
+            // Bring the fundamental domain into the working range of PITV.
+            auto chord = it->T(24.);
             auto origin = chord;
             for(;;) {
                 Eigen::VectorXi pitv_from_chord = chordSpaceGroup.fromChord(chord);
@@ -259,7 +260,7 @@ static void test_pitv(int initialVoiceCount, int finalVoiceCount) {
         bool passes2 = true;
         auto eops = csound::fundamentalDomainByPredicate<csound::EQUIVALENCE_RELATION_RP>(voiceCount, csound::OCTAVE(), 1., testSector);
         for(auto it = eops.begin(); it != eops.end(); ++it) {
-            auto chord = *it;
+            auto chord = it->T(12.);
             auto origin = chord;
             for(;;) {
                 Eigen::VectorXi pitv_from_chord = pitv.fromChord(chord);

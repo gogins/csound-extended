@@ -6064,9 +6064,18 @@ Eigen::VectorXi PITV::fromChord(const Chord &chord, bool printme) const {
         message("PITV::fromChord:          op from PIT:   %s\n", print_chord(op));
         message("PITV::fromChord:          op from chord: %s\n", print_chord(op_from_chord));
     }
-    auto V = indexForOctavewiseRevoicing(op, chord, range, printme);        
+    int V;
+    if (chord < op) {
+        V = -1;
+        error("PITV::fromChord: Error: Chord is below OP.\n");
+    } else {
+        V = indexForOctavewiseRevoicing(op, chord, range, printme); 
+    }        
     pitv.coeffRef(3) = V;
-    auto op_v = octavewiseRevoicing(chord, V, range);
+    auto op_v = op;
+    if (V < 0) {
+        op_v = octavewiseRevoicing(op, V, range);
+    }
     if (op_v != chord) {
         error("PITV::fromChord: Error: revoiced OP  (%s)\n", print_chord(op_v));
         error("                 doesn't match chord (%s)\n", print_chord(chord));
