@@ -302,8 +302,6 @@ class SILENCE_PUBLIC Chord;
 
 class SILENCE_PUBLIC ChordScore;
 
-class SILENCE_PUBLIC ChordSpaceGroup;
-
 struct SILENCE_PUBLIC HyperplaneEquation {
     Matrix unit_normal_vector;
     double constant_term;
@@ -373,6 +371,21 @@ static void message(const char *format, va_list valist);
 
 SILENCE_PUBLIC Chord midpoint(const Chord &a, const Chord &b);
 
+/**
+ * Cache prime forms for chords for speed.
+ */
+inline SILENCE_PUBLIC std::map<const Chord, const Chord> &normal_forms_for_chords();
+
+/**
+ * Cache normal forms for chords for speed.
+ */
+inline SILENCE_PUBLIC std::map<const Chord, const Chord> &prime_forms_for_chords();
+
+/**
+ * Cache inverse prime forms for chords for speed.
+ */
+inline SILENCE_PUBLIC std::map<const Chord, const Chord> &inverse_prime_forms_for_chords();
+
 // End of forward declarations needed by other forward declarations!
 
 /**
@@ -403,12 +416,6 @@ template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> allNormalizedF
  * belong to the chord, using the conformToChord function.
  */
 SILENCE_PUBLIC void apply(Score &score, const Chord &chord, double startTime, double endTime, bool octaveEquivalence = true);
-
-/**
- * Computes the barycentric coordinates of the point with respect to the 
- * simplex. 
- */
-SILENCE_PUBLIC Vector barycentric_coordinates(const Matrix &simplex, const Vector &point) ;
 
 SILENCE_PUBLIC double C4();
 
@@ -721,12 +728,6 @@ public:
      *     hyperplane equation for the inversion flat is u and its constant 
      *     term is u dot c.
      *
-     * (3) TODO: Not working yet. An extra vertex is added to each of the OPT 
-     *     and OPTI fundamental domains to form a simplex that can be used to 
-     *     create barycentric coordinates for any OPT or OPTI chord, enabling 
-     *     a predicate that identifies whether that chord belongs to that 
-     *     domain. 
-     * 
      * NOTE: 
      *
      * In this code, sector vertices are NOT permuted.
@@ -1075,7 +1076,6 @@ public:
      * chords) and correspond to "chord inversion" in the musician's sense.
      */
     virtual std::vector<int> opt_domain_sectors() const;
-    virtual std::vector<int> opt_domain_sectors_by_compactness(double range = 12.) const;
     /**
      * Returns the vertices of the OPTI fundamental domain for the indicated
      * sector of the cyclical region.
@@ -1091,8 +1091,6 @@ public:
      * "chord inversion" in the musician's ordinary sense.
      */
     virtual std::vector<int> opti_domain_sectors() const;
-    virtual std::vector<int> opti_domain_sectors_by_barycentric_coordinates(double range = 12.) const;
-    virtual std::vector<int> opti_domain_sectors_by_compactness(double range = 12.) const;
     /**
      * For each chord space of dimensions 3 <= n <= 12, there are n 
      * fundamental domains (sectors) of OPT equivalence. This function returns a global 
@@ -1248,74 +1246,6 @@ public:
 };
 
 /**
- * This class implements a cyclic additive group for all chords under 
- * cardinality, permutational, and range equivalence. It is formed by the 
- * direct product of OPTI equivalence or P, inversional equivalence or I, 
- * transpositional equivalence or T, and equivalence under octavewise 
- * revoicing within range R or V. The group is thus PITV = P x I x T x V. 
- * Therefore, operations on the P, I, T, or V subgroups may be used to 
- * independently and orthogonally transform the respective symmetry of any 
- * chord. Some of these operations will reflect in RP. 
- */
-class SILENCE_PUBLIC ChordSpaceGroup {
-public:
-    virtual ~ChordSpaceGroup();
-    int countI;
-    int countP;
-    int countT;
-    int countV;
-    /**
-     * Returns the indices of prime form, inversion, transposition,
-     * and voicing for a chord, as the first 4 elements, respectively,
-     * of a homogeneous vector.
-     *
-     * NOTE: Where there are singularities in the quotient spaces for chords, 
-     * there may be several chords that belong to the same equivalence class. 
-     * In such cases, any of several chords at a singular point of the 
-     * fundamental domain will return the same P.
-     */
-    Eigen::VectorXi fromChord(const Chord &chord, bool printme = false) const;
-    /**
-     * The generator of transposition.
-     */
-    double g;
-    virtual int getCountI() const;
-    virtual int getCountP() const;
-    virtual int getCountT() const;
-    virtual int getCountV() const;
-    virtual int getG() const;
-    virtual int getN() const;
-    virtual int getRange() const;
-    std::multimap<Chord, int> indexesForOPTTIs;
-    std::multimap<Chord, int> indexesForVoicings;
-    virtual void initialize(int N_, double range_, double g_ = 1., int sector=0, bool printme=false);
-    virtual void list(bool listheader = true, bool listopttis = false, bool listvoicings = false) const;
-    int N;
-    int opt_sector;
-    /**
-     * Ordered table of all OPTI chords for OPs in the range.
-     */
-    std::vector<Chord> OPTTIsForIndexes;
-    virtual void preinitialize(int N_, double range_, double g_ = 1.0);
-    /**
-     * The 0-based range of the chord space.
-     */
-    double range;
-    /**
-     * Returns the chord for the indices of prime form, inversion, 
-     * transposition, and voicing. The chord is not in RP; rather, each voice of
-     * the chord's OP may have zero or more octaves added to it.
-     *
-     * NOTE: Where there are singularities in the quotient spaces for chords, 
-     * there may be several chords that belong to the same equivalence class. 
-     * In such cases, any of several chords at a singular point of the 
-     * fundamental domain will return the same P.
-     */
-    std::vector<Chord> toChord(int P, int I, int T, int V, bool printme = false) const;
-    std::vector<Chord> toChord_vector(const Eigen::VectorXi &pitv, bool printme = false) const;
-};
-
-/**
  * Returns the pitch in the chord that is closest to the indicated pitch.
  */
 SILENCE_PUBLIC double closestPitch(double pitch, const Chord &chord);
@@ -1440,16 +1370,6 @@ SILENCE_PUBLIC bool gt_tolerance(double a, double b, int epsilons, int ulps);
  * NOTE: Does NOT return an equivalent under any requivalence relation.
  */
 SILENCE_PUBLIC double I(double pitch, double center = 0.0);
-
-/**
- * Returns whether or not the point is on the surface of or within the 
- * simplex, which could be e.g. a given sector of the cyclical region of 
- * the OPT or OPTI fundamental domains. The implementation uses the 
- * barycentric coordinates of the point with respect to the simplex.
- * Floating-point comparisons are computed using the indicated tolerances for 
- * epsilons (near 0) or units of least precision (ulps) (larger values).
- */
-SILENCE_PUBLIC bool in_simplex(const std::vector<Chord> &simplex, const Chord &point, int epsilons, int ulps);
 
 /**
  * Returns the index of the octavewise revoicing that this chord is,
@@ -1585,6 +1505,9 @@ SILENCE_PUBLIC double pitchClassForName(std::string name);
  * Therefore, operations on the P, I, T, or V subgroups may be used to 
  * independently and orthogonally transform the respective symmetry of any 
  * chord. Some of these operations will reflect in RP. 
+ *
+ * NOTE:  Prime form rather than OPTI is used because prime form abstracts 
+ * from voicings (i.e. the sectors of the OPTI cyclical region).
  */
 class SILENCE_PUBLIC PITV {
 public:
@@ -2758,28 +2681,6 @@ static std::string print_opti_sectors(const Chord &chord) {
     return result;    
 }
 
-static std::string print_opti_sectors2(const Chord &chord) {
-    std::string result;
-    char buffer[0x1000];
-    auto opti_sectors = chord.opti_domain_sectors_by_compactness();
-    for (auto opti_sector : opti_sectors) {
-        std::sprintf(buffer, "[opt:%2d  opti:%2d]", opti_sector / 2, opti_sector);
-        result.append(buffer);
-    }
-    return result;    
-}
-
-static std::string print_opti_sectors3(const Chord &chord) {
-    std::string result;
-    char buffer[0x1000];
-    auto sectors = chord.opti_domain_sectors_by_barycentric_coordinates();
-    for (auto sector_ : sectors) {
-        std::sprintf(buffer, "[opt:%2d  opti:%2d]", sector_ / 2, sector_);
-        result.append(buffer);
-    }
-    return result;    
-}
-
 static inline const char *print_chord(const Chord &chord) {
     static char buffer[0x1000];
     std::sprintf(buffer, "%s   ", chord.toString().c_str());
@@ -2802,73 +2703,73 @@ inline std::string Chord::information(int opt_sector_) const {
     if (opt_sector_ == -1) {
         opt_sector = opt_domain_sectors().front();
     }
-    std::sprintf(buffer, "%-18s %s\n", name().c_str(), print_chord(*this));
+    std::sprintf(buffer, "%-19s %s\n", name().c_str(), print_chord(*this));
     result.append(buffer);
-    std::sprintf(buffer, "Pitch-class set:   %s\n", epcs().eP().toString().c_str());
+    std::sprintf(buffer, "Pitch-class set:    %s\n", epcs().eP().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "Normal order:      %s\n", normal_order().toString().c_str());
+    std::sprintf(buffer, "Normal order:       %s\n", normal_order().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "Normal form:       %s\n", normal_form().toString().c_str());
+    std::sprintf(buffer, "Normal form:        %s\n", normal_form().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "Prime form:        %s\n", prime_form().toString().c_str());
+    std::sprintf(buffer, "Prime form:         %s\n", prime_form().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "Inverse prime form:%s\n", inverse_prime_form().toString().c_str());
+    std::sprintf(buffer, "Inverse prime form: %s\n", inverse_prime_form().toString().c_str());
     result.append(buffer);
-    std::sprintf(buffer, "Sum:               %12.7f\n", layer());
+    std::sprintf(buffer, "Sum:                %12.7f\n", layer());
     result.append(buffer);
-    std::sprintf(buffer, "O:          %3d => %s\n", iseO(), print_chord(eO()));
+    std::sprintf(buffer, "O:           %3d => %s\n", iseO(), print_chord(eO()));
     result.append(buffer);
-    std::sprintf(buffer, "P:          %3d => %s\n", iseP(), print_chord(eP()));
+    std::sprintf(buffer, "P:           %3d => %s\n", iseP(), print_chord(eP()));
     result.append(buffer);
-    std::sprintf(buffer, "T:          %3d => %s\n", iseT(), print_chord(eT()));
+    std::sprintf(buffer, "T:           %3d => %s\n", iseT(), print_chord(eT()));
     result.append(buffer);
-    std::sprintf(buffer, "TT:         %3d => %s\n", iseTT(), print_chord(eTT()));
+    std::sprintf(buffer, "TT:          %3d => %s\n", iseTT(), print_chord(eTT()));
     result.append(buffer);
     auto isei = iseI(opt_sector);
     auto ei = eI(opt_sector);
-    std::sprintf(buffer, "I:          %3d => %s\n", isei, print_chord(ei));
+    std::sprintf(buffer, "I:           %3d => %s\n", isei, print_chord(ei));
     result.append(buffer);
-    std::sprintf(buffer, "OP:         %3d => %s\n", iseOP(), print_chord(eOP()));
+    std::sprintf(buffer, "OP:          %3d => %s\n", iseOP(), print_chord(eOP()));
     result.append(buffer);
-    std::sprintf(buffer, "OT:         %3d => %s\n", iseOT(), print_chord(eOT()));
+    std::sprintf(buffer, "OT:          %3d => %s\n", iseOT(), print_chord(eOT()));
     result.append(buffer);
-    std::sprintf(buffer, "OTT:        %3d => %s\n", iseOTT(), print_chord(eOTT()));
+    std::sprintf(buffer, "OTT:         %3d => %s\n", iseOTT(), print_chord(eOTT()));
     result.append(buffer);
-    std::sprintf(buffer, "OPT:        %3d => %s\n", iseOPT(opt_sector), print_chord(eOPT(opt_sector)));
+    std::sprintf(buffer, "OPT:         %3d => %s\n", iseOPT(opt_sector), print_chord(eOPT(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPTT:       %3d => %s\n", iseOPTT(opt_sector), print_chord(eOPTT(opt_sector)));
+    std::sprintf(buffer, "OPTT:        %3d => %s\n", iseOPTT(opt_sector), print_chord(eOPTT(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPI:        %3d => %s\n", iseOPI(opt_sector), print_chord(eOPI(opt_sector)));
+    std::sprintf(buffer, "OPI:         %3d => %s\n", iseOPI(opt_sector), print_chord(eOPI(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPTI:       %3d => %s\n", iseOPTI(opt_sector), print_chord(eOPTI(opt_sector)));
+    std::sprintf(buffer, "OPTI:        %3d => %s\n", iseOPTI(opt_sector), print_chord(eOPTI(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPTTI:      %3d => %s\n", iseOPTTI(opt_sector), print_chord(eOPTTI(opt_sector)));
+    std::sprintf(buffer, "OPTTI:       %3d => %s\n", iseOPTTI(opt_sector), print_chord(eOPTTI(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "              OPT sectors:\n");
+    std::sprintf(buffer, "               OPT sectors:\n");
     result.append(buffer);
     auto rpts = eRPTs(); 
     auto &hyperplane_equations = hyperplane_equations_for_opt_sectors()[voices()];
     for (auto i = 0; i < rpts.size(); ++i) {
         auto rpt = rpts[i];
         auto sector_text = print_opti_sectors(rpt);
-        std::sprintf(buffer, "                   %s\n", print_chord(rpt));
+        std::sprintf(buffer, "                    %s\n", print_chord(rpt));
         result.append(buffer);
     }
-    std::sprintf(buffer, "              OPTT sectors:\n");
+    std::sprintf(buffer, "               OPTT sectors:\n");
     result.append(buffer);
     auto rptts = eRPTTs(12.);
     for (auto i = 0; i < rptts.size(); ++i) {
         auto rptt = rptts[i];
         auto sector_text = print_opti_sectors(rptt);
-        std::sprintf(buffer, "                   %s\n", print_chord(rptt));
+        std::sprintf(buffer, "                    %s\n", print_chord(rptt));
         result.append(buffer);
     }
-    std::sprintf(buffer, "              Inversion flats (as vector equations) and reflections:\n");
+    std::sprintf(buffer, "               Inversion flats (vector equations) and corresponding reflections of this:\n");
     result.append(buffer);
     auto sectors = opt_domain_sectors();
     for (int i = 0, n = voices(); i < n; ++i) {
         auto &hyperplane_equation = hyperplane_equations[i];
-        std::sprintf(buffer, "OPT[%2d]  Normal: [", i);
+        std::sprintf(buffer, "OPT[%2d]  Normal:  [", i);
         result.append(buffer);
         for (int j = 0, m = hyperplane_equation.unit_normal_vector.rows(); j < m; ++j) {
             std::sprintf(buffer, " %12.7f", hyperplane_equation.unit_normal_vector(j, 0));
@@ -2878,7 +2779,7 @@ inline std::string Chord::information(int opt_sector_) const {
         std::sprintf(buffer, " ] Constant: %11.7f\n", hyperplane_equation.constant_term);
         result.append(buffer);
         auto sector_text = print_opti_sectors(reflected);
-        std::sprintf(buffer, "         Reflected:%s\n", print_chord(reflected));
+        std::sprintf(buffer, "         Reflection:%s\n", print_chord(reflected));
         result.append(buffer);   
     }    
     return result;
@@ -3998,249 +3899,6 @@ inline SILENCE_PUBLIC void ChordScore::setDuration(double targetDuration)
     chords_for_times = temp;
 }
 
-inline SILENCE_PUBLIC ChordSpaceGroup::~ChordSpaceGroup() {};
-
-inline SILENCE_PUBLIC int ChordSpaceGroup::getN() const {
-    return N;
-}
-
-inline SILENCE_PUBLIC int ChordSpaceGroup::getG() const {
-    return g;
-}
-
-inline SILENCE_PUBLIC int ChordSpaceGroup::getRange() const {
-    return range;
-}
-
-inline SILENCE_PUBLIC int ChordSpaceGroup::getCountP() const {
-    return countP;
-}
-
-inline SILENCE_PUBLIC int ChordSpaceGroup::getCountI() const {
-    return countI;
-}
-
-inline SILENCE_PUBLIC int ChordSpaceGroup::getCountT() const {
-    return countT;
-}
-
-inline SILENCE_PUBLIC int ChordSpaceGroup::getCountV() const {
-    return countV;
-}
-
-inline SILENCE_PUBLIC void ChordSpaceGroup::preinitialize(int N_, double range_, double g_) {
-    inform("ChordSpaceGroup.preinitialize...\n");
-    OPTTIsForIndexes.clear();
-    indexesForOPTTIs.clear();
-    indexesForVoicings.clear();
-    N = N_;
-    range = range_;
-    g = g_;
-    countP = 0;
-    countI = 2;
-    countT = (OCTAVE() / g);
-    Chord chord;
-    chord.resize(N);
-    countV = octavewiseRevoicings(chord, range);
-}
-
-inline SILENCE_PUBLIC void ChordSpaceGroup::initialize(int N_, double range_, double g_, int opt_sector_, bool printme) {
-    message("ChordSpaceGroup::initialize: N_: %d range_: %f g_: %f: opt_sector_: %d\n", N_, range_, g_, opt_sector_);
-    preinitialize(N_, range_, g_);
-    opt_sector = opt_sector_;
-    auto normalized_optis = fundamentalDomainByTransformation<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g, opt_sector);
-    message("ChordSpaceGroup::initialize: normalized_opttis: %6d\n", normalized_optis.size());
-    auto normal_optis = fundamentalDomainByPredicate<EQUIVALENCE_RELATION_RPTgI>(N, OCTAVE(), g, opt_sector, printme);
-    message("ChordSpaceGroup::initialize: normal_opttis:     %6d\n", normal_optis.size());
-    static auto target = csound::Chord({-3.0000000,   -1.0000000,    2.0000000,    5.0000000});
-    static bool target_found = false;
-    for (auto it = normal_optis.begin(); it != normal_optis.end(); ++it) {
-        //~ if (target_found == false) {
-            //~ if (target.toString() == it->toString()) {
-                //~ target_found = true;
-                //~ message("ChordSpaceGroup::initialize: it: %s\n", print_chord(*it));
-                //~ ///std::raise(SIGINT);
-            //~ }
-        //~ }
-        OPTTIsForIndexes.push_back(*it);
-    }
-    countP = OPTTIsForIndexes.size();
-    for (int p_i = 0, p_n = OPTTIsForIndexes.size(); p_i < p_n; ++p_i) {
-        indexesForOPTTIs.insert({OPTTIsForIndexes[p_i], p_i});
-    }
-    message("ChordSpaceGroup::initialize: indexesForOPTTIs:  %6d\n", indexesForOPTTIs.size());
-}
-
-inline SILENCE_PUBLIC void ChordSpaceGroup::list(bool listheader, bool listopttis, bool listvoicings) const {
-    if (listheader) {
-        message("ChordSpaceGroup.voices:     %8d\n", N);
-        message("ChordSpaceGroup.range:      %13.4f\n", range);
-        message("ChordSpaceGroup.g:          %13.4f\n", g);
-        message("ChordSpaceGroup.opt_sector: %13.4f\n", opt_sector);
-        message("ChordSpaceGroup.countP:     %8d\n", countP);
-        message("ChordSpaceGroup.countI:     %8d\n", countI);
-        message("ChordSpaceGroup.countT:     %8d\n", countT);
-        message("ChordSpaceGroup.countV:     %8d\n", countV);
-    }
-    if (listopttis) {
-        for (int p_i = 0; p_i < OPTTIsForIndexes.size(); ++p_i) {
-            message("OPTTIsForIndexes: %6d         %s\n", p_i, print_chord(OPTTIsForIndexes[p_i]));
-            message("OPTTIsForIndexes: normal:        %s\n", OPTTIsForIndexes[p_i].normal_form().toString().c_str());
-            message("OPTTIsForIndexes: prime:         %s\n", OPTTIsForIndexes[p_i].prime_form().toString().c_str());
-            message("OPTTIsForIndexes: inverse prime: %s\n", OPTTIsForIndexes[p_i].inverse_prime_form().toString().c_str());
-        }
-        for (const auto &entry : indexesForOPTTIs) {
-            message("indexesForOPTTIs: %6d         %s\n", entry.second, print_chord(entry.first));
-            message("OPTTIsForIndexes: normal:        %s\n", entry.first.normal_form().toString().c_str());
-            message("OPTTIsForIndexes: prime:         %s\n", entry.first.prime_form().toString().c_str());
-            message("OPTTIsForIndexes: inverse prime: %s\n", entry.first.inverse_prime_form().toString().c_str());
-        }
-    }
-}
-
-Eigen::VectorXi ChordSpaceGroup::fromChord(const Chord &chord, bool printme) const {
-    // (1) Find P from OPTTI.
-    // (2) Find I from OPT.
-    // (3) Find T by counting steps from up OPT in the OP fundamental domain  
-    //     to obtain the OP equivalent of the chord.
-    // (4) Find V from OP by counting revoicings of OP to obtain the actual 
-    //     chord.
-    printme = true;
-    if (printme) {
-        message("ChordSpaceGroup::fromChord: opt_sector:   %d\n", opt_sector);
-        message("ChordSpaceGroup::fromChord: original:  %s\n", print_chord(chord));
-    }
-    Eigen::VectorXi pitv(4);
-    auto optti = chord.eOPTTI(opt_sector);
-    if (printme) {
-        message("ChordSpaceGroup::fromChord: optti:     %s\n", print_chord(optti));
-    }
-    auto p_it = indexesForOPTTIs.find(optti);
-    if (p_it != indexesForOPTTIs.end()) {
-        pitv(0) = p_it->second;
-    } else {
-        error("ChordSpaceGroup::fromChord: Error: No P index found for this optti: \n%s\n", optti.information().c_str());
-        for (const auto &x : indexesForOPTTIs) {
-            error("    indexesForOPTTIs[%4d]: %s\n", x.second, print_chord(x.first));
-        }
-    }
-    auto opt = chord.eOPT(opt_sector);
-    if (printme) {
-        message("ChordSpaceGroup::fromChord: opt:       %s\n", print_chord(opt));
-    }
-    if (opt.iseI(opt_sector) == true) {
-        pitv(1) = 0;
-    } else {
-        pitv(1) = 1;
-    }
-    auto op = chord.eOP();
-    if (printme) {
-        message("ChordSpaceGroup::fromChord: op:        %s\n", print_chord(op));
-    }
-    auto opt_t = opt;
-    auto opt_t_tt = opt.ceiling();
-    double t;
-    for (t = 0.; t < double(countT); t += g) {
-        if (opt_t_tt == op) {
-            pitv(2) = t;
-            break;
-        }
-        opt_t = opt_t.T(g).eOP();
-        if (printme) {
-            message("ChordSpaceGroup::fromChord: opt_t:     %s t: %7.1f\n", print_chord(opt_t), t);
-        }
-        // The actual comparison is done after rounding to equal temperament.
-        opt_t_tt = opt_t.ceiling();
-        if (printme) {
-            message("ChordSpaceGroup::fromChord: opt_t_tt:  %s\n", print_chord(opt_t_tt));
-        }
-    }
-    if (op != opt_t_tt) {
-        message("ChordSpaceGroup::fromChord: Error: op cannot be generated by transposing opt_t.\n");
-        message("                            %s != %s.\n", op.toString().c_str(), opt_t_tt.toString().c_str());
-    }
-    auto v = indexForOctavewiseRevoicing(chord, range, printme);        
-    auto opt_t_tt_v = octavewiseRevoicing(opt_t_tt, v, range);
-    pitv[3] = v;
-    if (printme) {
-        message("ChordSpaceGroup::fromChord: V:        %5d\n", pitv[3]);
-    }
-    if (printme) {
-        message("ChordSpaceGroup::fromChord: opt_t_tt_v:%s v: %5d\n", print_chord(opt_t_tt_v), v);
-    }
-    if (opt_t_tt_v != chord) {
-        message("ChordSpaceGroup::fromChord: Error: chord cannot be generated by revoicing OP.\n");
-        message("                            %s != %s.\n", chord.toString().c_str(), opt_t_tt_v.toString().c_str());
-    }
-    if (printme) {
-        message("ChordSpaceGroup::fromChord: PITV:  %8d     %8d     %8d     %8d\n\n", pitv(0), pitv(1), pitv(2), pitv(3));
-    }
-    return pitv;
-}
-
-/**
- * Returns the chord for the indices of prime form, inversion,
- * transposition, and voicing. The chord is not in RP; rather, each voice of
- * the chord's OP may have zero or more octaves added to it.
- *
- * PLEASE NOTE: where are there singularities
- * in the quotient spaces for chords, there may be several chords that
- * belong to the same equivalence class. In such cases, each P will return 
- * just one chord from the representative fundamental domain.
- */
-std::vector<Chord> ChordSpaceGroup::toChord(int P, int I, int T, int V, bool printme) const {
-    // (1) Find OPTTI from P.
-    // (2) Find OPTT from OPTTI and I.
-    // (3) Find OP from OPTT and T.
-    // (4) Find the actual voicing, i.e. the target chord, from OP and V.
-    if (printme) {
-        message("ChordSpaceGroup::toChord:   PITV:  %8d     %8d     %8d     %8d\n", P, I, T, V);
-    }
-    P = P % countP;
-    I = I % countI;
-    T = T % countT;
-    V = V % countV;
-    if (printme) {
-        message("ChordSpaceGroup::toChord:   PITV \%:%8d     %8d     %8d     %8d\n", P, I, T, V);
-    }
-    std::vector<Chord> result(3);
-    auto opti = OPTTIsForIndexes[P];
-    auto opt = opti;
-    if (printme) {
-        message("ChordSpaceGroup::toChord:   opti:      %s\n", opti.toString().c_str());
-    }
-    if (I == 1) {
-        opt = opti.reflect(opt_sector);
-    }
-    if (printme) {
-        message("ChordSpaceGroup::toChord:   opt:       %s\n", opt.toString().c_str());
-    }
-    double t;
-    auto opt_t = opt;
-    for (t = 0.; lt_tolerance(t, T); t += g) {
-        opt_t = opt_t.T(g).eOP();
-        if (printme) {
-            message("ChordSpaceGroup::toChord:   opt_t:     %s t: %4.1f\n", opt_t.toString().c_str(), t);
-        }
-    }
-    auto op = opt_t.ceiling();
-    if (printme) {
-        message("ChordSpaceGroup::toChord:   op:        %s\n", op.toString().c_str());
-    }
-    auto op_v = octavewiseRevoicing(op, V, range);
-    result[0] = op_v;
-    result[1] = op;
-    result[2] = opt_t;
-    if (printme) {
-        message("ChordSpaceGroup::toChord:   result:    %s\n\n", result[0].toString().c_str());
-    }
-    return result;
-}
-
-inline SILENCE_PUBLIC std::vector<Chord> ChordSpaceGroup::toChord_vector(const Eigen::VectorXi &pitv, bool printme) const {
-    return toChord(pitv(0), pitv(1), pitv(2), pitv(3), printme);
-}
-
 inline SILENCE_PUBLIC void conformToChord(Event &event, const Chord &chord, bool octaveEquivalence) {
     if (!event.isNoteOn()) {
         return;
@@ -5278,97 +4936,6 @@ inline SILENCE_PUBLIC double voiceleadingSmoothness(const Chord &a, const Chord 
     return L1;
 }
 
-// Implements:
-// https://math.stackexchange.com/questions/1226707/how-to-check-if-point-x-in-mathbbrn-is-in-a-n-simplex.
-// The simplex must have the same dimensionality as the chord space, e.g. for 
-// trichords the simplex must be 3-dimensional, having 4 vertices.
-// TODO: This is working only for some sectors.
-
-Vector barycentric_coordinates(const Matrix &simplex, const Vector &point) {
-    ///SCOPED_DEBUGGING debugging;
-    CHORD_SPACE_DEBUG("barycentric_coordinates: simplex: \n%s\n", toString(simplex).c_str());
-    CHORD_SPACE_DEBUG("barycentric_coordinates: point: \n%s\n", toString(point).c_str());
-    auto cartesian_dimensions = point.rows();
-    auto simplex_column_n = simplex.cols();
-    auto matrix_column_n = simplex_column_n - 1;
-    Matrix T(matrix_column_n, matrix_column_n);
-    Vector final_vertex = simplex.col(matrix_column_n);
-    CHORD_SPACE_DEBUG("barycentric_coordinates: final_vertex: \n%s\n", toString(final_vertex).c_str());
-    Vector point_less_final_vertex = point - final_vertex;
-    for (int column_i = 0; column_i < matrix_column_n; ++column_i) {
-        T.col(column_i) = simplex.col(column_i) - final_vertex;
-    }     
-    CHORD_SPACE_DEBUG("barycentric_coordinates: T:\n%s\n", toString(T).c_str());
-    // As against the example no need to transpose, already in column major order.
-    Matrix t_inverse = T.inverse();
-    CHORD_SPACE_DEBUG("barycentric_coordinates: inverse of T:\n%s\n", toString(t_inverse).c_str());
-    auto solution = t_inverse * point_less_final_vertex;
-    CHORD_SPACE_DEBUG("barycentric_coordinates: solution:\n%s\n", toString(solution).c_str());
-    Vector coordinates(simplex_column_n);
-    for (int row_i = 0; row_i < cartesian_dimensions; ++row_i) {
-        coordinates.coeffRef(row_i) = solution(row_i);
-    }
-    coordinates.coeffRef(cartesian_dimensions) = 1. - solution.sum();
-    CHORD_SPACE_DEBUG("barycentric_coordinates: coordinates:\n%s\n\n", toString(coordinates).c_str());
-    return coordinates;
-}
-
-bool in_simplex(const std::vector<Chord> &simplex, const Chord& chord, int epsilons, int ulps) {
-    bool is_inside = true;
-    try {
-        ///SCOPED_DEBUGGING debugging;
-        Chord ot = chord.eOT();
-        auto row_n = ot.voices();
-        auto column_n = simplex.size();
-        Matrix matrix(row_n, column_n);
-        for (int column_i = 0; column_i < column_n; ++column_i) {
-            matrix.col(column_i) = simplex[column_i].col(0);
-        }
-        Vector point = ot.col(0);
-        Vector coordinates = barycentric_coordinates(matrix, point);
-        double sum_ = 0.;
-        for (int row_i = 0; row_i < coordinates.rows(); ++row_i) {
-            auto element = coordinates(row_i, 0);
-            sum_ += element;
-            if (ge_tolerance(element, 0., epsilons, ulps) == false) {
-                is_inside = false;
-                break;
-            }
-        }
-        if (le_tolerance(sum_, 1., epsilons, ulps) == false) {
-            is_inside = false;
-        }
-        CHORD_SPACE_DEBUG("in_simplex: chord:       %s epsilons: %8d ulps %8d\n",chord.toString().c_str(), epsilons, ulps);
-        for (int i = 0, n = simplex.size(); i < n; ++i) {
-            CHORD_SPACE_DEBUG("in_simplex: simplex[%3d] %s\n", i, simplex[i].toString().c_str());
-        }
-        CHORD_SPACE_DEBUG("in_simplex: is_inside:     %2d\n\n", is_inside);
-    } catch (const boost::wrapexcept<std::domain_error> &ex) {
-        error("*** in_simplex: error: caught std::domain_error: %s.\n", ex.what());
-        error("*** in_simplex: chord: %s\n", chord.toString().c_str());
-        for (int i = 0, n = simplex.size(); i < n; ++i) {
-            error("*** in_simplex: simplex[%3d] %s\n", i, simplex[i].toString().c_str());
-        }
-        Chord ot = chord.eOT();
-        {
-            SCOPED_DEBUGGING debugging;
-            auto row_n = ot.voices();
-            auto column_n = simplex.size();
-            Matrix matrix(row_n, column_n);
-            for (int column_i = 0; column_i < column_n; ++column_i) {
-                matrix.col(column_i) = simplex[column_i].col(0);
-            }
-            Vector point = ot.col(0);
-            Vector coordinates = barycentric_coordinates(matrix, point);        
-        }
-    } catch (const std::exception &ex) {
-        error("*** in_simplex: error: caught std::exception: %s.\n", ex.what());
-    } catch (...) {
-        error("*** in_simplex: error: caught unknown exception in in_simplex.\n");
-    } 
-    return is_inside;
-}
-
 inline std::map<int, std::vector<Chord>> &Chord::cyclical_regions_for_dimensionalities() {
     static std::map<int, std::vector<Chord>> cyclical_regions_for_dimensionalities_;
     return cyclical_regions_for_dimensionalities_;
@@ -5552,7 +5119,7 @@ inline void Chord::clamp(double g) {
 
 inline Chord Chord::normal_order() const {
     // This chord as a pitch-class set in ascending order.
-    auto ppcs = eppcs();
+    const auto ppcs = eppcs();
     // All cyclic permutations.
     auto permutations_ = ppcs.permutations();
     // We need to keep track of intervals.
@@ -5561,7 +5128,7 @@ inline Chord Chord::normal_order() const {
     // Store the permutations keyed by ordered pitch-class interval from the 
     // bottom  voice to the top voice.
     for (auto upper_voice = voices() - 1; upper_voice > 0; --upper_voice) {
-        for (auto permutation : permutations_) {
+        for (auto &permutation : permutations_) {
             auto lower_pc = permutation.getPitch(0);
             auto upper_pc = permutation.getPitch(upper_voice);
             auto interval = upper_pc - lower_pc;
@@ -5587,7 +5154,7 @@ inline Chord Chord::normal_order() const {
         } else {
             permutations_.clear();
             auto range = permutations_for_intervals.equal_range(least_interval);
-            for (auto it = range.first; it != range.second; ++it) {
+            for (auto &it = range.first; it != range.second; ++it) {
                 permutations_.push_back(it->second);
             }
             permutations_for_intervals.clear();
@@ -5598,34 +5165,57 @@ inline Chord Chord::normal_order() const {
 }
 
 inline Chord Chord::normal_form() const {
-    auto normal_order_ = normal_order();
-    auto normal_order_t0 = normal_order_.T(-normal_order_.getPitch(0));
-    auto normal_form_ = normal_order_t0.normal_order();
-    return normal_form_;
+    auto &cache = normal_forms_for_chords();
+    auto it = cache.find(*this);
+    if (it == cache.end()) {
+        auto normal_order_ = normal_order();
+        auto normal_order_t0 = normal_order_.T(-normal_order_.getPitch(0));
+        auto normal_form_ = normal_order_t0.normal_order();
+        cache.insert({*this, normal_form_});
+        return normal_form_;
+    } else {
+        return it->second;
+    }
 }
 
 inline Chord Chord::prime_form() const {
-    auto normal_form_ = normal_form();
-    auto inverse = normal_form_. I(0.);
-    auto inverse_normal_form = inverse.normal_form();
-    if (normal_form_ < inverse_normal_form) {
+    auto &cache = prime_forms_for_chords();
+    auto it = cache.find(*this);
+    if (it == cache.end()) {
+        auto normal_form_ = normal_form();
+        auto inverse = normal_form_. I(0.);
+        auto inverse_normal_form_ = inverse.normal_form();
+        if (normal_form_ < inverse_normal_form_) {
+            cache.insert({*this, normal_form_});
+            return normal_form_;
+        } else if (inverse_normal_form_ < normal_form_) {
+            cache.insert({*this, inverse_normal_form_});
+            return inverse_normal_form_;
+        }
         return normal_form_;
-    } else if (inverse_normal_form < normal_form_) {
-        return inverse_normal_form;
+    } else {
+        return it->second;
     }
-    return normal_form_;
 }
 
 inline Chord Chord::inverse_prime_form() const {
-    auto normal_form_ = normal_form();
-    auto inverse = normal_form_. I(0.);
-    auto inverse_normal_form = inverse.normal_form();
-    if (normal_form_ > inverse_normal_form) {
+    auto &cache = inverse_prime_forms_for_chords();
+    auto it = cache.find(*this);
+    if (it == cache.end()) {
+        auto normal_form_ = normal_form();
+        auto inverse = normal_form_. I(0.);
+        auto inverse_normal_form_ = inverse.normal_form();
+        if (normal_form_ > inverse_normal_form_) {
+            cache.insert({*this, normal_form_});
+            return normal_form_;
+        } else if (inverse_normal_form_ > normal_form_) {
+            cache.insert({*this, inverse_normal_form_});
+            return inverse_normal_form_;
+        }
         return normal_form_;
-    } else if (inverse_normal_form > normal_form_) {
-        return inverse_normal_form;
+    } else {
+        return it->second;
     }
-    return normal_form_;
 }
 
 inline bool Chord::is_minor() const {
@@ -5647,48 +5237,6 @@ inline bool Chord::is_minor() const {
         upperVoice = upperVoice - 1;
     }
     return true;    
-}
-
-inline std::vector<int> Chord::opti_domain_sectors_by_barycentric_coordinates(double range) const {
-    std::vector<int> result;
-    auto &opti_simplexes_for_dimensions = opti_simplexes_for_dimensionalities();
-    auto &opti_simplexes = opti_simplexes_for_dimensions[voices()];
-    for (int opti_i = 0, opti_n = opti_simplexes.size(); opti_i < opti_n; ++opti_i) {
-        const auto &opti_simplex = opti_simplexes[opti_i];
-        auto ot = eOT();
-        if (in_simplex(opti_simplex, ot) == true) {
-            result.push_back(opti_i);
-        }
-    }
-    return result;    
-}
-
-inline std::vector<int> Chord::opt_domain_sectors_by_compactness(double range) const {
-    std::vector<int> result;
-    auto rpts = eRPTs(range);
-    for (int sector_i = 0, sector_n = rpts.size(); sector_i < sector_n; ++sector_i) {
-        auto rpt = rpts[sector_i];
-        if (rpt.is_compact() == true) {
-            result.push_back(sector_i);
-        }
-    }
-    return result;
-}
-
-inline std::vector<int> Chord::opti_domain_sectors_by_compactness(double range) const {
-    std::vector<int> result;
-    auto rpts = eRPTs(range);
-    for (int sector_i = 0, sector_n = rpts.size(); sector_i < sector_n; ++sector_i) {
-        auto rpt = rpts[sector_i];
-        if (rpt.is_compact() == true) {
-            if (rpt.is_minor() == true) {
-                result.push_back(sector_i * 2);
-            } else {
-                result.push_back(sector_i * 2 + 1);
-           }
-        }
-    }
-    return result;
 }
 
 inline std::vector<int> Chord::opt_domain_sectors() const {
@@ -6001,7 +5549,6 @@ inline SILENCE_PUBLIC void PITV::list(bool listheader, bool listps, bool listvoi
 }
 
 Eigen::VectorXi PITV::fromChord(const Chord &chord, bool printme) const {
-    printme = true;
     if (printme) {
         message("PITV::fromChord:          chord:         %s\n", print_chord(chord));
     }
@@ -6118,10 +5665,25 @@ inline SILENCE_PUBLIC std::vector<Chord> PITV::toChord_vector(const Eigen::Vecto
     return toChord(pitv(0), pitv(1), pitv(2), pitv(3), printme);
 }
 
+inline SILENCE_PUBLIC std::map<const Chord, const Chord> &normal_forms_for_chords() {
+    static std::map<const Chord, const Chord> cache;
+    return cache;
+}
+
+inline SILENCE_PUBLIC std::map<const Chord, const Chord> &prime_forms_for_chords() {
+    static std::map<const Chord, const Chord> cache;
+    return cache;
+}
+
+inline SILENCE_PUBLIC std::map<const Chord, const Chord> &inverse_prime_forms_for_chords() {
+    static std::map<const Chord, const Chord> cache;
+    return cache;
+}
+
 
 } // End of namespace csound.
 
 #pragma GCC diagnostic push
 
 #endif
- 
+  
