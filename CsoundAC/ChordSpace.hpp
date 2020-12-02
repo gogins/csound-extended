@@ -70,9 +70,8 @@
 
 namespace csound {
 /** \file ChordSpace.hpp
-This library implements a geometric approach to some common
-operations on chords in neo-Riemannian music theory for use in score
-generating procedures:
+This library implements a geometric approach to some common operations on 
+chords in neo-Riemannian music theory for use in score generating procedures:
 
  -  Identifying whether a chord belongs to some equivalence class of music
     theory, or sending a chord to its equivalent within a representative
@@ -1580,8 +1579,8 @@ SILENCE_PUBLIC double pitchClassForName(std::string name);
 /**
  * This class implements a cyclic additive group for all chords under 
  * cardinality, permutational, and range equivalence. It is formed by the 
- * direct product of OPTI equivalence or P, inversional equivalence or I, 
- * transpositional equivalence or T, and equivalence under octavewise 
+ * direct product of prime form equivalence or P, inversional equivalence or 
+ * I, transpositional equivalence or T, and equivalence under octavewise 
  * revoicing within range R or V. The group is thus PITV = P x I x T x V. 
  * Therefore, operations on the P, I, T, or V subgroups may be used to 
  * independently and orthogonally transform the respective symmetry of any 
@@ -1618,7 +1617,7 @@ public:
     virtual int getRange() const;
     std::map<Chord, int> indexesForPs;
     std::map<int, Chord> PsForIndexes;
-    std::map<Chord, Chord> normalFormsForPrimeForms;
+    std::set<Chord> normal_forms;
     virtual void initialize(int N_, double range_, double g_ = 1., bool printme=false);
     virtual void list(bool listheader = true, bool listps = false, bool listvoicings = false) const;
     int N;
@@ -2817,33 +2816,33 @@ inline std::string Chord::information(int opt_sector_) const {
     result.append(buffer);
     std::sprintf(buffer, "Sum:               %12.7f\n", layer());
     result.append(buffer);
-    std::sprintf(buffer, "O:            %d => %s\n", iseO(), print_chord(eO()));
+    std::sprintf(buffer, "O:          %3d => %s\n", iseO(), print_chord(eO()));
     result.append(buffer);
-    std::sprintf(buffer, "P:            %d => %s\n", iseP(), print_chord(eP()));
+    std::sprintf(buffer, "P:          %3d => %s\n", iseP(), print_chord(eP()));
     result.append(buffer);
-    std::sprintf(buffer, "T:            %d => %s\n", iseT(), print_chord(eT()));
+    std::sprintf(buffer, "T:          %3d => %s\n", iseT(), print_chord(eT()));
     result.append(buffer);
-    std::sprintf(buffer, "TT:           %d => %s\n", iseTT(), print_chord(eTT()));
+    std::sprintf(buffer, "TT:         %3d => %s\n", iseTT(), print_chord(eTT()));
     result.append(buffer);
     auto isei = iseI(opt_sector);
     auto ei = eI(opt_sector);
-    std::sprintf(buffer, "I:            %d => %s\n", isei, print_chord(ei));
+    std::sprintf(buffer, "I:          %3d => %s\n", isei, print_chord(ei));
     result.append(buffer);
-    std::sprintf(buffer, "OP:           %d => %s\n", iseOP(), print_chord(eOP()));
+    std::sprintf(buffer, "OP:         %3d => %s\n", iseOP(), print_chord(eOP()));
     result.append(buffer);
-    std::sprintf(buffer, "OT:           %d => %s\n", iseOT(), print_chord(eOT()));
+    std::sprintf(buffer, "OT:         %3d => %s\n", iseOT(), print_chord(eOT()));
     result.append(buffer);
-    std::sprintf(buffer, "OTT:          %d => %s\n", iseOTT(), print_chord(eOTT()));
+    std::sprintf(buffer, "OTT:        %3d => %s\n", iseOTT(), print_chord(eOTT()));
     result.append(buffer);
-    std::sprintf(buffer, "OPT:          %d => %s\n", iseOPT(opt_sector), print_chord(eOPT(opt_sector)));
+    std::sprintf(buffer, "OPT:        %3d => %s\n", iseOPT(opt_sector), print_chord(eOPT(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPTT:         %d => %s\n", iseOPTT(opt_sector), print_chord(eOPTT(opt_sector)));
+    std::sprintf(buffer, "OPTT:       %3d => %s\n", iseOPTT(opt_sector), print_chord(eOPTT(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPI:          %d => %s\n", iseOPI(opt_sector), print_chord(eOPI(opt_sector)));
+    std::sprintf(buffer, "OPI:        %3d => %s\n", iseOPI(opt_sector), print_chord(eOPI(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPTI:         %d => %s\n", iseOPTI(opt_sector), print_chord(eOPTI(opt_sector)));
+    std::sprintf(buffer, "OPTI:       %3d => %s\n", iseOPTI(opt_sector), print_chord(eOPTI(opt_sector)));
     result.append(buffer);
-    std::sprintf(buffer, "OPTTI:        %d => %s\n", iseOPTTI(opt_sector), print_chord(eOPTTI(opt_sector)));
+    std::sprintf(buffer, "OPTTI:      %3d => %s\n", iseOPTTI(opt_sector), print_chord(eOPTTI(opt_sector)));
     result.append(buffer);
     std::sprintf(buffer, "              OPT sectors:\n");
     result.append(buffer);
@@ -5615,34 +5614,6 @@ inline Chord Chord::prime_form() const {
         return inverse_normal_form;
     }
     return normal_form_;
-     //~ message("Chord::prime_form: normal_form:         %s\n", print_chord(normal_form_));
-    //~ message("Chord::prime_form: inverse_normal_form: %s\n", print_chord(inverse_normal_form));
-    // Which is more compact?
-    //~ for (auto outer_voice = voices() - 1; outer_voice <= 0; --outer_voice) {
-        //~ auto lower_pc_a = normal_form_.getPitch(0);
-        //~ auto upper_pc_a = normal_form_.getPitch(outer_voice);
-        //~ auto interval_a = upper_pc_a - lower_pc_a;
-        //~ // Tricky! This is arithmetic modulo the octave.
-        //~ if (lt_tolerance(interval_a, 0.) == true) {
-            //~ interval_a = interval_a + OCTAVE();
-        //~ }
-        //~ interval_a = rownd(interval_a, 9);
-        //~ auto lower_pc_b = inverse_normal_form.getPitch(0);
-        //~ auto upper_pc_b = inverse_normal_form.getPitch(outer_voice);
-        //~ auto interval_b = upper_pc_b - lower_pc_b;
-        //~ // Tricky! This is arithmetic modulo the octave.
-        //~ if (lt_tolerance(interval_b, 0.) == true) {
-            //~ interval_b = interval_b + OCTAVE();
-        //~ }
-        //~ interval_b = rownd(interval_b, 9);
-        //~ if (le_tolerance(interval_a, interval_b) == true) {
-            //~ return normal_form_;
-        //~ }
-        //~ if (le_tolerance(interval_b, interval_a) == true) {
-            //~ return inverse_normal_form;
-        //~ }
-    //~ }
-    //~ return normal_form_;
 }
 
 inline Chord Chord::inverse_prime_form() const {
@@ -5889,10 +5860,10 @@ inline SILENCE_PUBLIC int PITV::getCountV() const {
 }
 
 inline SILENCE_PUBLIC void PITV::preinitialize(int N_, double range_, double g_) {
-    inform("PITV.preinitialize...\n");
+    inform("PITV::preinitialize...\n");
     PsForIndexes.clear();
     indexesForPs.clear();
-    normalFormsForPrimeForms.clear();
+    normal_forms.clear();
     N = N_;
     range = range_;
     g = g_;
@@ -5914,20 +5885,27 @@ inline SILENCE_PUBLIC void PITV::initialize(int N_, double range_, double g_, bo
     Chord origin = iterator_;
     int chords = 0;
     int index = 0;
+    int normal_form_n = 0;
     while (next(iterator_, origin, upperI, g) == true) {
         chords++;
+        auto normal_form_ = iterator_.normal_form();
         auto prime_form_ = iterator_.prime_form();
-        auto inserted = indexesForPs.insert({prime_form_, index});
-        if (inserted.second == true) {
-            // Make a collection to map prime forms to their indices.
-            // Make the inverse collection to map indices to prime forms.
+        // Make a collection to map prime forms to their indices.
+        auto inserted_prime_form = indexesForPs.insert({prime_form_, index});
+        if (inserted_prime_form.second == true) {
+            // Make an inverse collection to map indices to prime forms.
             PsForIndexes.insert({index, prime_form_});
             ++index;
         }
-        // Make a collection to map prime forms to their normal forms.
         // If prime != normal then I == 1.
-        auto normal_form_ = iterator_.normal_form();
-        normalFormsForPrimeForms.insert({prime_form_, normal_form_});
+        auto inserted_normal_form = normal_forms.insert(normal_form_);
+        if (inserted_normal_form.second == true && printme == true) {
+            message("%3d chord:               %s\n", normal_form_n, print_chord(iterator_));
+            message("    normal form:         %s\n", print_chord(normal_form_));
+            message("    prime form:          %s\n", print_chord(iterator_.prime_form()));
+            message("    inverse prime form:  %s\n", print_chord(iterator_.inverse_prime_form()));
+            ++normal_form_n;
+        }
     }    
     countP = indexesForPs.size();
 }
@@ -5943,11 +5921,6 @@ inline SILENCE_PUBLIC void PITV::list(bool listheader, bool listps, bool listvoi
         message("PITV.countV:     %8d\n", countV);
     }
     if (listps) {
-        // The main things we need to know are:
-        // (1) Is there a one-to-one mapping between prime forms and OPTTI equivalents?
-        // (2) Are the OPTTI equivalents of prime forms all found in one OPTI sector?
-        // (3) Is there a one-to-one mapping between normal forms and OPTT equivalents?
-        // (4) Are the OPTT equivalents of prime forms all found in one OPT sector?
         std::map<std::string, std::string> opttis_for_prime_forms;
         std::map<std::string, std::string> optts_for_normal_forms;
         std::set<std::string> prime_forms_from_PsForIndexes;
@@ -5959,8 +5932,13 @@ inline SILENCE_PUBLIC void PITV::list(bool listheader, bool listps, bool listvoi
             prime_forms_from_PsForIndexes.insert(chord.toString());
             const auto &index = entry.first;
             const auto prime_form_ = chord.prime_form();
-            const auto normal_form_ = normalFormsForPrimeForms.at(prime_form_);
-            const auto inverse_prime_form_ = chord.inverse_prime_form();
+            const auto inverse_prime_form_ = prime_form_.inverse_prime_form();
+            Chord normal_form_;
+            if (prime_form_ <= inverse_prime_form_) {
+                normal_form_ = prime_form_;
+            } else {
+                normal_form_ = inverse_prime_form_;
+            }
             const auto optti = chord.eOPTTI(range, g);
             opttis_for_prime_forms.insert({prime_form_.toString(), optti.toString()});
             const auto optt = chord.eOPTT(range, g);
@@ -5974,35 +5952,33 @@ inline SILENCE_PUBLIC void PITV::list(bool listheader, bool listps, bool listvoi
             for(auto opti_sector : opti_sectors) {
                 opttis_for_sectors.insert({opti_sector, optti.toString()});
             }
-            message("PsForIndexes: %6d\n", index);
-            message("PsForIndexes: chord:         %s\n", print_chord(chord));
-            message("PsForIndexes: prime:         %s\n", print_chord(prime_form_));
-            message("PsForIndexes: normal:        %s\n", print_chord(normal_form_));
-            message("PsForIndexes: inverse prime: %s\n", print_chord(inverse_prime_form_));
-            message("PsForIndexes: OP:            %s\n", print_chord(op));
-            message("PsForIndexes: OPTT:          %s\n", print_chord(optt));
-            message("PsForIndexes: OPTTI:         %s\n\n", print_chord(optti));
+            message("PsForIndexes[%5d]: chord:         %s\n", index, print_chord(chord));
+            message("PsForIndexes[%5d]: prime:         %s\n", index, print_chord(prime_form_));
+            message("PsForIndexes[%5d]: normal:        %s\n", index, print_chord(normal_form_));
+            message("PsForIndexes[%5d]: inverse prime: %s\n", index, print_chord(inverse_prime_form_));
         }
         for (const auto &entry : indexesForPs) {
             const auto &chord = entry.first;
             prime_forms_from_indexesForPs.insert(chord.toString());
             const auto &index = entry.second;
             const auto prime_form_ = chord.prime_form();
-            const auto normal_form_ = normalFormsForPrimeForms.at(prime_form_);
-            const auto inverse_prime_form_ = chord.inverse_prime_form();
+            const auto inverse_prime_form_ = prime_form_.inverse_prime_form();
+            Chord normal_form_;
+            if (prime_form_ <= inverse_prime_form_) {
+                normal_form_ = prime_form_;
+            } else {
+                normal_form_ = inverse_prime_form_;
+            }
             const auto optti = chord.eOPTTI(range, g);
             const auto optt = chord.eOPTT(range, g);
             const auto op = chord.eOP();
             const auto opt_sectors = optt.opt_domain_sectors();
             const auto opti_sectors = optti.opti_domain_sectors();
-            message("indexesForPs: %6d\n", index);
-            message("indexesForPs: chord:         %s\n", print_chord(chord));
-            message("indexesForPs: prime:         %s\n", print_chord(prime_form_));
-            message("indexesForPs: normal:        %s\n", print_chord(normal_form_));
-            message("indexesForPs: inverse prime: %s\n", print_chord(inverse_prime_form_));
-            message("indexesForPs: OP:            %s\n", print_chord(op));
-            message("indexesForPs: OPTT:          %s\n", print_chord(optt));
-            message("indexesForPs: OPTTI:         %s\n\n", print_chord(optti));
+            auto key = chord.toString();
+            message("indexesForPs[%s]: index:   %5d %s\n", key.c_str(), index, print_chord(chord));
+            message("indexesForPs[%s]: prime:         %s\n", key.c_str(), print_chord(prime_form_));
+            message("indexesForPs[%s]: normal:        %s\n", key.c_str(), print_chord(normal_form_));
+            message("indexesForPs[%s]: inverse prime: %s\n", key.c_str(), print_chord(inverse_prime_form_));
         }
         message("PsForIndexes size:           %6d\n", PsForIndexes.size());
         message("indexesForPs size:           %6d\n", indexesForPs.size());
@@ -6013,12 +5989,12 @@ inline SILENCE_PUBLIC void PITV::list(bool listheader, bool listps, bool listvoi
         }
         for (const auto &key : prime_forms_from_PsForIndexes) {
             if (prime_forms_from_indexesForPs.find(key) == prime_forms_from_indexesForPs.end()) {
-                message("%s not found in indexesForPs.\n", key.c_str());
+                error("%s not found in indexesForPs.\n", key.c_str());
             }
         }
         for (const auto &key : prime_forms_from_indexesForPs) {
             if (prime_forms_from_PsForIndexes.find(key) == prime_forms_from_indexesForPs.end()) {
-                message("%s not found in PsForIndexes.\n", key.c_str());
+                error("%s not found in PsForIndexes.\n", key.c_str());
             }
         }
      }
@@ -6073,7 +6049,7 @@ Eigen::VectorXi PITV::fromChord(const Chord &chord, bool printme) const {
     }        
     pitv.coeffRef(3) = V;
     auto op_v = op;
-    if (V < 0) {
+    if (V >= 0) {
         op_v = octavewiseRevoicing(op, V, range);
     }
     if (op_v != chord) {

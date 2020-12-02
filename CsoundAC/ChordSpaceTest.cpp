@@ -226,7 +226,7 @@ static void test_chord_space_group(int initialVoiceCount, int finalVoiceCount) {
 }
 
 static void test_pitv(int initialVoiceCount, int finalVoiceCount) {
-    double range = 48.0;
+    double range = 60.0;
     for (int voiceCount = initialVoiceCount; voiceCount <= finalVoiceCount; ++voiceCount) {
         bool passes = true;
         csound::PITV pitv;
@@ -260,7 +260,7 @@ static void test_pitv(int initialVoiceCount, int finalVoiceCount) {
         bool passes2 = true;
         auto eops = csound::fundamentalDomainByPredicate<csound::EQUIVALENCE_RELATION_RP>(voiceCount, csound::OCTAVE(), 1., testSector);
         for(auto it = eops.begin(); it != eops.end(); ++it) {
-            auto chord = it->T(12.);
+            auto chord = it->T(24.);
             auto origin = chord;
             for(;;) {
                 Eigen::VectorXi pitv_from_chord = pitv.fromChord(chord);
@@ -276,8 +276,7 @@ static void test_pitv(int initialVoiceCount, int finalVoiceCount) {
                 test(equals, "Original chord must match chord from original chord's PITV.");
                 if (printPass) csound::System::message("\n");
                 // This was going too far... cut off sooner and all seems well.
-                if (csound::next(chord, origin, range - 1.0, csound::OCTAVE()) == false)
-                {
+                if (csound::next(chord, origin, range - 1.0, csound::OCTAVE()) == false) {
                     break;
                 }
             }
