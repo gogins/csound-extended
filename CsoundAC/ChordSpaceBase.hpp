@@ -20,6 +20,7 @@
 #ifndef CHORD_SPACE_BASE_H
 #define CHORD_SPACE_BASE_H
 #define EIGEN_INITIALIZE_MATRICES_BY_ZERO
+// Header file only library.
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
@@ -29,13 +30,12 @@
 #include <climits>
 #include <cmath>
 #include <cstdarg>
+// Header file only library.
 #include <eigen3/Eigen/Dense>
-//~ #include <Event.hpp>
 #include <functional>
 #include <iostream>
 #include <iterator>
 #include <map>
-//~ #include <Score.hpp>
 #include <set>
 #include <sstream>
 #include <vector>
@@ -46,20 +46,20 @@
 #include <algorithm>
 // Header file only library.
 #include <boost/algorithm/string.hpp>
+// Header file only library.
 #include <boost/math/special_functions/ulp.hpp>
 #include <cfloat>
 #include <climits>
 #include <cmath>
 #include <csignal>
 #include <cstdarg>
+// Header file only library.
 #include <eigen3/Eigen/Dense>
-//~ #include "Event.hpp"
 #include <functional>
 #include <iostream>
 #include <iterator>
 #include <map>
 #include <random>
-//~ #include "Score.hpp"
 #include <set>
 #include <sstream>
 #include <vector>
@@ -300,8 +300,6 @@ typedef Eigen::Matrix<double, Eigen::Dynamic, 1> Vector;
 
 class SILENCE_PUBLIC Chord;
 
-class SILENCE_PUBLIC ChordScore;
-
 struct SILENCE_PUBLIC HyperplaneEquation {
     Matrix unit_normal_vector;
     double constant_term;
@@ -409,13 +407,6 @@ SILENCE_PUBLIC void add_chord(std::string, const Chord &chord);
 SILENCE_PUBLIC void add_scale(std::string, const Scale &scale);
 
 template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> allNormalizedFundamentalDomain(int voices, double range, double g);
-
-//~ /**
- //~ * For all the notes in the score beginning at or later than the start time,
- //~ * and up to but not including the end time, moves the pitch of the note to 
- //~ * belong to the chord, using the conformToChord function.
- //~ */
-//~ SILENCE_PUBLIC void apply(Score &score, const Chord &chord, double startTime, double endTime, bool octaveEquivalence = true);
 
 SILENCE_PUBLIC double C4();
 
@@ -998,27 +989,6 @@ public:
      * in a chord, measured by pitch-class interval.
       */
     virtual Chord normal_order() const;
-    //~ /**
-     //~ * Creates a complete "note on" Event for the indicated voice of the 
-     //~ * chord. If the optional duration, channel, velocity, and pan parameters
-     //~ * are not passed, then the Chord's own values for these are used.
-     //~ */
-    //~ virtual Event note(int voice,
-                       //~ double time_,
-                       //~ double duration_ = DBL_MAX,
-                       //~ double channel_ = DBL_MAX,
-                       //~ double velocity_ = DBL_MAX,
-                       //~ double pan_ = DBL_MAX) const;
-    //~ /**
-     //~ * Returns an individual note for each voice of the chord. If the optional
-     //~ * duration, channel, velocity, and pan parameters are not passed, then 
-     //~ * the Chord's own values for these are used.
-     //~ */
-    //~ virtual Score notes(double time_,
-                        //~ double duration_ = DBL_MAX,
-                        //~ double channel_ = DBL_MAX,
-                        //~ double velocity_ = DBL_MAX,
-                        //~ double pan_ = DBL_MAX) const;
     /**
      * Performs the neo-Riemannian dominant transformation.
      *
@@ -1165,13 +1135,6 @@ public:
      * Only works in equal temperament.
      */
     virtual bool Tform(const Chord &Y, double g = 1.) const;
-    //~ /**
-     //~ * Returns an individual note for each voice of the chord. If the optional
-     //~ * duration, channel, velocity, and pan parameters are not passed, then 
-     //~ * the Chord's own values for these are used.
-     //~ */
-    //~ virtual void toScore(Score &score,
-                         //~ double time_, bool voiceIsInstrument=true) const;
     /**
      * Transposes the chord by the indicated voiceleading (passed as a Chord 
      * of directed intervals). 
@@ -1212,52 +1175,10 @@ public:
 
 SILENCE_PUBLIC const Chord &chordForName(std::string name);
 
-//~ /**
- //~ * Score equipped with chords. The notes in the score may be conformed to the
- //~ * chord that obtains at the time of the notes. The times and durations of
- //~ * notes and chords are rescaled together. This is done by finding minimum and
- //~ * maximum times by counting both note times and chord times.
- //~ */
-//~ class SILENCE_PUBLIC ChordScore : public Score {
-//~ public:
-    //~ std::map<double, Chord> chords_for_times;
-    //~ /**
-     //~ * Conforms the pitch-classes of the events in this to the closest
-     //~ * pitch-class of the chord, if any, that obtains at that time.
-     //~ */
-    //~ virtual void conformToChords(bool tie_overlaps = true, bool octave_equivalence = true);
-    //~ /**
-     //~ * Returns a pointer to the first chord that starts at or after the
-     //~ * specified time. If there is no such chord, a null pointer is returned.
-     //~ */
-    //~ virtual Chord *getChord(double time_);
-    //~ double getDuration();
-    //~ void getScale(std::vector<Event> &score, int dimension, size_t beginAt, size_t endAt, double &minimum, double &range);
-    //~ virtual void insertChord(double tyme, const Chord chord);
-    //~ void setDuration(double targetDuration);
-    //~ void setScale(std::vector<Event> &score,
-                  //~ int dimension,
-                  //~ bool rescaleMinimum,
-                  //~ bool rescaleRange,
-                  //~ size_t beginAt,
-                  //~ size_t endAt,
-                  //~ double targetMinimum,
-                  //~ double targetRange);
-//~ };
-
 /**
  * Returns the pitch in the chord that is closest to the indicated pitch.
  */
 SILENCE_PUBLIC double closestPitch(double pitch, const Chord &chord);
-
-//~ /**
- //~ * If the Event is a note, moves its pitch to the closest pitch of the chord.
- //~ * If octaveEquivalence is true (the default), the pitch-class of the note is 
- //~ * moved to the closest pitch-class of the chord, i.e. keeping the note more 
- //~ * or less in its original register; otherwise, the pitch of the note is moved 
- //~ * to the closest absolute pitch of the chord.
- //~ */
-//~ SILENCE_PUBLIC void conformToChord(Event &event, const Chord &chord, bool octaveEquivalence = true);
 
 /**
  * Conforms the pitch to the pitch-class set, but in its original register.
@@ -1343,12 +1264,6 @@ template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamental
  */
 template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamentalDomainByTransformation(int voiceN, double range, double g = 1., int sector=0);
 
-//~ /**
- //~ * Returns a chord containing all the pitches of the score beginning at or 
- //~ * later than the start time, and up to but not including the end time.
- //~ */
-//~ SILENCE_PUBLIC Chord gather(Score &score, double startTime, double endTime);
-
 SILENCE_PUBLIC bool ge_tolerance(double a, double b, int epsilons=20,int ulps=200);
 
 /**
@@ -1387,13 +1302,6 @@ SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &chord, double range,
 
 void initializeNames();
 
-//~ /**
- //~ * Inserts the notes of the chord into the score at the specified time.
- //~ */
-//~ SILENCE_PUBLIC void insert(Score &score,
-                                  //~ const Chord &chord,
-                                  //~ double time_);
-                                  
 /**
  * Template function returning whether or not the chord is within the 
  * specialized fundamental domain, which may in some cases be defined by the 
@@ -1556,7 +1464,6 @@ public:
     std::vector<Chord> toChord(int P, int I, int T, int V, bool printme = false) const;
     std::vector<Chord> toChord_vector(const Eigen::VectorXi &pitv, bool printme = false) const;
 };
-
 
 SILENCE_PUBLIC const std::map<std::string, double> &pitchClassesForNames();
 
@@ -1730,13 +1637,6 @@ class SILENCE_PUBLIC Scale : public Chord {
 SILENCE_PUBLIC const Scale &scaleForName(std::string name);
 
 SILENCE_PUBLIC std::map<std::string, Scale> &scalesForNames();
-
-//~ /**
- //~ * Returns a slice of the Score starting at the start time and extending up
- //~ * to but not including the end time. The slice contains pointers to the Events
- //~ * in the Score.
- //~ */
-//~ SILENCE_PUBLIC std::vector<Event *> slice(Score &score, double startTime, double endTime);
 
 SILENCE_PUBLIC std::vector<std::string> split(std::string);
 
@@ -2874,14 +2774,6 @@ inline SILENCE_PUBLIC bool operator >= (const Chord &a, const Chord &b) {
     return (a > b);
 }
 
-//~ inline SILENCE_PUBLIC void apply(Score &score, const Chord &chord, double startTime, double endTime, bool octaveEquivalence) {
-    //~ std::vector<Event *> slice_ = slice(score, startTime, endTime);
-    //~ for (int i = 0; i < slice_.size(); ++i) {
-        //~ Event &event = *slice_[i];
-        //~ conformToChord(event, chord, octaveEquivalence);
-    //~ }
-//~ }
-
 inline SILENCE_PUBLIC double C4() {
     return MIDDLE_C();
 }
@@ -3622,69 +3514,6 @@ inline Chord Chord::Q(double x, const Chord &m, double g) const {
     return *this;
 }
 
-//~ inline Event Chord::note(int voice,
-                   //~ double time_,
-                   //~ double duration_,
-                   //~ double channel_,
-                   //~ double velocity_,
-                   //~ double pan_) const {
-    //~ Event note;
-    //~ note.setTime(time_);
-    //~ note.setKey(getPitch(voice));
-    //~ if (duration_ != DBL_MAX) {
-        //~ note.setDuration(duration_);
-    //~ } else {
-        //~ note.setDuration(getDuration(voice));
-    //~ }
-    //~ if (channel_ != DBL_MAX) {
-        //~ note.setInstrument(channel_);
-    //~ } else {
-        //~ note.setInstrument(getInstrument(voice));
-    //~ }
-    //~ if (velocity_ != DBL_MAX) {
-        //~ note.setVelocity(velocity_);
-    //~ } else {
-        //~ note.setVelocity(getLoudness(voice));
-    //~ }
-    //~ if (pan_ != DBL_MAX) {
-        //~ note.setPan(pan_);
-    //~ } else {
-        //~ note.setPan(getPan(voice));
-    //~ }
-    //~ return note;
-//~ }
-
-//~ inline Score Chord::notes(double time_,
-                    //~ double duration_,
-                    //~ double channel_,
-                    //~ double velocity_,
-                    //~ double pan_) const {
-    //~ Score score;
-    //~ for (int voice = 0; voice < voices(); ++voice) {
-        //~ Event event = note(voice, time_, duration_, channel_, velocity_, pan_);
-        //~ score.append(event);
-    //~ }
-    //~ return score;
-//~ }
-
-//~ inline void Chord::toScore(Score &score,
-                     //~ double time_, bool voiceIsInstrument) const {
-    //~ for (int voice = 0; voice < voices(); ++voice) {
-        //~ double instrument = double(voice);
-        //~ if (!voiceIsInstrument) {
-            //~ instrument = getInstrument(voice);
-        //~ }
-        //~ score.append(time_,
-                     //~ getDuration(voice),
-                     //~ 144.0,
-                     //~ instrument,
-                     //~ getPitch(voice),
-                     //~ getLoudness(voice),
-                     //~ 0.0,
-                     //~ getPan(voice));
-    //~ }
-//~ }
-
 inline Chord Chord::a(int arpeggiation, double &resultPitch, int &resultVoice) const {
     Chord resultChord = v(arpeggiation);
     if (arpeggiation < 0) {
@@ -3710,208 +3539,6 @@ inline SILENCE_PUBLIC double closestPitch(double pitch, const Chord &chord) {
     return pitchesForDistances.begin()->second;
 }
 
-//~ inline SILENCE_PUBLIC void ChordScore::insertChord(double tyme, const Chord chord) {
-    //~ chords_for_times[tyme] = chord;
-//~ }
-//~ /**
- //~ * Returns a pointer to the first chord that starts at or after the
- //~ * specified time. If there is no such chord, a null pointer is returned.
- //~ */
-//~ inline SILENCE_PUBLIC Chord *ChordScore::getChord(double time_) {
-    //~ auto it = chords_for_times.lower_bound(time_);
-    //~ if (it != chords_for_times.end()) {
-        //~ return &it->second;
-    //~ } else {
-        //~ return nullptr;
-    //~ }
-//~ }
-
-//~ /**
- //~ * Conforms the pitch-classes of the events in this to the closest
- //~ * pitch-class of the chord, if any, that obtains at that time.
- //~ */
-//~ inline SILENCE_PUBLIC void ChordScore::conformToChords(bool tie_overlaps, bool octave_equivalence) {
-    //~ sort();
-    //~ if (chords_for_times.begin() != chords_for_times.end()) {
-        //~ for (auto event_iterator = begin(); event_iterator != end(); ++event_iterator) {
-            //~ auto chord_iterator = chords_for_times.lower_bound(event_iterator->getTime());
-            //~ if (chord_iterator != chords_for_times.end()) {
-                //~ conformToChord(*event_iterator, chord_iterator->second, octave_equivalence);
-            //~ }
-        //~ }
-    //~ }
-    //~ if (tie_overlaps == true) {
-        //~ tieOverlappingNotes(true);
-    //~ }
-//~ }
-
-//~ inline SILENCE_PUBLIC void ChordScore::getScale(std::vector<Event> &score, int dimension, size_t beginAt, size_t endAt, double &minimum, double &range)
-//~ {
-    //~ if(beginAt == endAt) {
-        //~ return;
-    //~ }
-    //~ const Event &beginEvent = score[beginAt];
-    //~ double maximum = beginEvent[dimension];
-    //~ const Event &endEvent = score[endAt - 1];
-    //~ minimum = endEvent[dimension];
-    //~ if(dimension == Event::TIME) {
-        //~ const Event &e = score[beginAt];
-        //~ maximum = std::max(e.getTime(), e.getTime() + e.getDuration());
-        //~ minimum = std::min(e.getTime(), e.getTime() + e.getDuration());
-        //~ double beginning;
-        //~ double ending;
-        //~ for( ; beginAt != endAt; ++beginAt) {
-            //~ const Event &event = score[beginAt];
-            //~ beginning = std::min(event.getTime(), event.getTime() + event.getDuration());
-            //~ ending = std::max(event.getTime(), event.getTime() + event.getDuration());
-            //~ if(ending > maximum) {
-                //~ maximum = ending;
-            //~ } else if(beginning < minimum) {
-                //~ minimum = beginning;
-            //~ }
-        //~ }
-        //~ // Also take into account chord times.
-        //~ auto chord_begin = chords_for_times.begin();
-        //~ auto chord_rbegin = chords_for_times.rbegin();
-        //~ if (chord_begin != chords_for_times.end() && chord_rbegin != chords_for_times.rend()) {
-            //~ minimum = std::min(minimum, chord_begin->first);
-            //~ maximum = std::max(maximum, chord_rbegin->first);
-        //~ }
-    //~ } else {
-        //~ for( ; beginAt != endAt; ++beginAt) {
-            //~ const Event &event = score[beginAt];
-            //~ if(event[dimension] > maximum) {
-                //~ maximum = event[dimension];
-            //~ }
-            //~ if(event[dimension] < minimum) {
-                //~ minimum = event[dimension];
-            //~ }
-        //~ }
-    //~ }
-    //~ range = maximum - minimum;
-//~ }
-
-//~ inline SILENCE_PUBLIC void ChordScore::setScale(std::vector<Event> &score,
-              //~ int dimension,
-              //~ bool rescaleMinimum,
-              //~ bool rescaleRange,
-              //~ size_t beginAt,
-              //~ size_t endAt,
-              //~ double targetMinimum,
-              //~ double targetRange)
-//~ {
-    //~ if(!(rescaleMinimum || rescaleRange)) {
-        //~ return;
-    //~ }
-    //~ if(beginAt == endAt) {
-        //~ return;
-    //~ }
-    //~ double actualMinimum;
-    //~ double actualRange;
-    //~ getScale(score, dimension, beginAt, endAt, actualMinimum, actualRange);
-    //~ double scale;
-    //~ if(actualRange == 0.0) {
-        //~ scale = 1.0;
-    //~ } else {
-        //~ scale = targetRange / actualRange;
-    //~ }
-    //~ for( ; beginAt != endAt; ++beginAt) {
-        //~ Event &event = score[beginAt];
-        //~ event[dimension] = event[dimension] - actualMinimum;
-        //~ if(rescaleRange) {
-            //~ event[dimension] = event[dimension] * scale;
-        //~ }
-        //~ if(rescaleMinimum) {
-            //~ event[dimension] = event[dimension] + targetMinimum;
-        //~ } else {
-            //~ event[dimension] = event[dimension] + actualMinimum;
-        //~ }
-    //~ }
-    //~ // Also rescale chord times.
-    //~ if (dimension == Event::TIME) {
-        //~ std::map<double, Chord> temp;
-        //~ for (auto it = chords_for_times.begin(); it != chords_for_times.end(); ++it) {
-            //~ double tyme = it->first;
-            //~ const Chord &chord = it->second;
-            //~ tyme = tyme - actualMinimum;
-            //~ if (rescaleRange) {
-                //~ tyme = tyme * scale;
-            //~ }
-            //~ if (rescaleMinimum) {
-                //~ tyme = tyme + targetMinimum;
-            //~ } else {
-                //~ tyme = tyme + actualMinimum;
-            //~ }
-            //~ temp[tyme] = chord;
-        //~ }
-        //~ chords_for_times = temp;
-    //~ }
-//~ }
-
-//~ inline SILENCE_PUBLIC double ChordScore::getDuration()
-//~ {
-    //~ double start = 0.0;
-    //~ double end = 0.0;
-    //~ for (int i = 0, n = size(); i < n; ++i) {
-        //~ const Event &event = at(i);
-        //~ if (i == 0) {
-            //~ start = event.getTime();
-            //~ end = event.getOffTime();
-        //~ } else {
-            //~ if (event.getTime() < start) {
-                //~ start = event.getTime();
-            //~ }
-            //~ if (event.getOffTime() > end) {
-                //~ end = event.getOffTime();
-            //~ }
-        //~ }
-    //~ }
-    //~ auto chord_begin = chords_for_times.begin();
-    //~ auto chord_rbegin = chords_for_times.rbegin();
-    //~ if (chord_begin != chords_for_times.end() && chord_rbegin != chords_for_times.rend()) {
-        //~ start = std::min(start, chord_begin->first);
-        //~ end = std::max(end, chord_rbegin->first);
-    //~ }
-    //~ return end - start;
-//~ }
-
-//~ inline SILENCE_PUBLIC void ChordScore::setDuration(double targetDuration)
-//~ {
-    //~ double currentDuration = getDuration();
-    //~ if (currentDuration == 0.0) {
-        //~ return;
-    //~ }
-    //~ double factor = targetDuration / currentDuration;
-    //~ for (size_t i = 0, n = size(); i < n; i++) {
-        //~ Event &event = (*this)[i];
-        //~ double time_ = event.getTime();
-        //~ double duration = event.getDuration();
-        //~ event.setTime(time_ * factor);
-        //~ event.setDuration(duration * factor);
-    //~ }
-    //~ std::map<double, Chord> temp;
-    //~ for (auto it = chords_for_times.begin(); it != chords_for_times.end(); ++it) {
-        //~ double tyme = it->first;
-        //~ const Chord &chord = it->second;
-        //~ tyme = tyme * factor;
-        //~ temp[tyme] = chord;
-    //~ }
-    //~ chords_for_times = temp;
-//~ }
-
-//~ inline SILENCE_PUBLIC void conformToChord(Event &event, const Chord &chord, bool octaveEquivalence) {
-    //~ if (!event.isNoteOn()) {
-        //~ return;
-    //~ }
-    //~ double pitch = event.getKey();
-    //~ if (octaveEquivalence) {
-        //~ Chord pcs = chord.epcs();
-        //~ pitch = conformToPitchClassSet(pitch, pcs);
-    //~ } else {
-        //~ pitch = closestPitch(pitch, chord);
-    //~ }
-    //~ event.setKey(pitch);
-//~ }
 
 inline SILENCE_PUBLIC double conformToPitchClassSet(double pitch, const Chord &pcs) {
     double pc_ = epc(pitch);
@@ -3934,7 +3561,7 @@ inline SILENCE_PUBLIC double epc(double pitch) {
 // A floating point number can be in the following states:
 //
 // (1) Normal - OK to compare.
-// (2) Denormal - OK to compare,
+// (2) Denormal - OK to compare.
 // (3) Max - Automatically unequal.
 // (4) Inf - Automatically unequal.
 // (5) NaN - Automatically unequal.
@@ -4149,22 +3776,6 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Cho
     return result;
 }
 
-//~ inline SILENCE_PUBLIC Chord gather(Score &score, double startTime, double endTime) {
-    //~ std::vector<Event *> slice_ = slice(score, startTime, endTime);
-    //~ std::set<double> pitches;
-    //~ for (int i = 0; i < slice_.size(); ++i) {
-        //~ pitches.insert(slice_[i]->getKey());
-    //~ }
-    //~ Chord chord;
-    //~ chord.resize(pitches.size());
-    //~ int voice = 0;
-    //~ for (std::set<double>::iterator it = pitches.begin(); it != pitches.end(); ++it) {
-        //~ chord.setPitch(voice, *it);
-        //~ voice++;
-    //~ }
-    //~ return chord;
-//~ }
-
 inline SILENCE_PUBLIC bool ge_tolerance(double a, double b, int epsilons, int ulps) {
     if (eq_tolerance(a, b)) {
         return true;
@@ -4290,12 +3901,6 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_random_inversi
     CHORD_SPACE_DEBUG("hyperplane_equation_from_random_inversion_flat: constant_term: %9.4f\n", hyperplane_equation_.constant_term);
     return hyperplane_equation_;
 }
-
-//~ inline SILENCE_PUBLIC void insert(Score &score,
-                                  //~ const Chord &chord,
-                                  //~ double time_) {
-    //~ chord.toScore(score, time_);
-//~ }
 
 template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC bool predicate(const Chord &chord, double range, int sector) {
     bool result = predicate<EQUIVALENCE_RELATION>(chord, range, 1.0);
@@ -4799,20 +4404,6 @@ inline SILENCE_PUBLIC std::vector<Scale> Scale::tonicizations(const Chord &curre
     }
     return result;
 }
-
-//~ inline SILENCE_PUBLIC std::vector<Event *> slice(Score &score, double startTime, double endTime) {
-    //~ std::vector<Event *> result;
-    //~ for (int i = 0, n = score.size(); i < n; ++i) {
-        //~ Event *event = &score[i];
-        //~ if (event->isNoteOn()) {
-            //~ double eventStart = event->getTime();
-            //~ if (eventStart >= startTime && eventStart < endTime) {
-                //~ result.push_back(event);
-            //~ }
-        //~ }
-    //~ }
-    //~ return result;
-//~ }
 
 inline SILENCE_PUBLIC double T(double pitch, double semitones) {
     return pitch + semitones;
