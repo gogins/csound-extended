@@ -17,8 +17,7 @@
 * License along with this software; if not, write to the Free Software
 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef SILENCE_PLATFORM_HPP
-#define SILENCE_PLATFORM_HPP
+#pragma once
 
 #if (defined(WIN32) || defined(_WIN32)) && !defined(SWIG) && !defined(_MSC_VER)
 #  define SILENCE_PUBLIC __declspec(dllexport)
@@ -28,4 +27,3 @@
 #  define SILENCE_PUBLIC
 #endif
 
-#endif

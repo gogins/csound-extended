@@ -17,8 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef CHORD_SPACE_BASE_H
-#define CHORD_SPACE_BASE_H
+#pragma once
 #define EIGEN_INITIALIZE_MATRICES_BY_ZERO
 // Header file only library.
 #include "Platform.hpp"
@@ -273,20 +272,27 @@ P, L, and R have been extended as follows, see Fiore and Satyendra,
                 
 */
 
-static SILENCE_PUBLIC int CHORD_SPACE_DEBUGGING = false;
+/**
+ * Returns the current state of the chord space debugging flag as a 
+ * reference, which can be an lvalue or an rvalue.
+ */
+inline SILENCE_PUBLIC bool &CHORD_SPACE_DEBUGGING() {
+    static bool CHORD_SPACE_DEBUGGING_ = false;
+    return CHORD_SPACE_DEBUGGING_;
+}
 
 struct SILENCE_PUBLIC SCOPED_DEBUGGING {
     int prior_state;
     SCOPED_DEBUGGING() {
-        prior_state = CHORD_SPACE_DEBUGGING;
-        CHORD_SPACE_DEBUGGING = true;
+        prior_state = CHORD_SPACE_DEBUGGING();
+        CHORD_SPACE_DEBUGGING() = true;
     }
     ~SCOPED_DEBUGGING() {
-        CHORD_SPACE_DEBUGGING = prior_state;
+        CHORD_SPACE_DEBUGGING() = prior_state;
     }
 };
 
-#define CHORD_SPACE_DEBUG if (CHORD_SPACE_DEBUGGING == true) csound::message
+#define CHORD_SPACE_DEBUG if (CHORD_SPACE_DEBUGGING() == true) csound::message
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // ALL DECLARATIONS BELOW HERE MORE OR LESS IN ALPHABETICAL ORDER -- NO DEFINITIONS HERE.
@@ -372,17 +378,17 @@ SILENCE_PUBLIC Chord midpoint(const Chord &a, const Chord &b);
 /**
  * Cache prime forms for chords for speed.
  */
-inline SILENCE_PUBLIC std::map<const Chord, const Chord> &normal_forms_for_chords();
+inline SILENCE_PUBLIC std::map<Chord, Chord> &normal_forms_for_chords();
 
 /**
  * Cache normal forms for chords for speed.
  */
-inline SILENCE_PUBLIC std::map<const Chord, const Chord> &prime_forms_for_chords();
+inline SILENCE_PUBLIC std::map<Chord, Chord> &prime_forms_for_chords();
 
 /**
  * Cache inverse prime forms for chords for speed.
  */
-inline SILENCE_PUBLIC std::map<const Chord, const Chord> &inverse_prime_forms_for_chords();
+inline SILENCE_PUBLIC std::map<Chord, Chord> &inverse_prime_forms_for_chords();
 
 // End of forward declarations needed by other forward declarations!
 
@@ -2025,7 +2031,7 @@ template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_RPT>(const Ch
         }
     }
     error("Error: Chord equate<EQUIVALENCE_RELATION_RPT>: no RPT in sector %d.\n", opt_sector);
-    CHORD_SPACE_DEBUGGING = true;
+    CHORD_SPACE_DEBUGGING() = true;
     ///std::raise(SIGINT);
     for (auto rpt : rpts) {
         message("equate<EQUIVALENCE_RELATION_RPT>: chord %s rpt: %s opt_sector: %d\n", chord.toString().c_str(), rpt.toString().c_str(), opt_sector);
@@ -2082,7 +2088,7 @@ template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_RPTg>(const C
         }
     }
     error("Error: Chord equate<EQUIVALENCE_RELATION_RPTg>: no RPTg in sector %d.\n", opt_sector);
-    CHORD_SPACE_DEBUGGING = true;
+    CHORD_SPACE_DEBUGGING() = true;
     ///std::raise(SIGINT);
     for (auto rptt : rptts) {
         message("equate<EQUIVALENCE_RELATION_RPTg: chord %s rptt: %s opt_sector: %d\n", chord.toString().c_str(), rptt.toString().c_str(), opt_sector);
@@ -3708,7 +3714,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Cho
             normals++;
             fundamentalDomainVector.push_back(iterator_);
             auto result = fundamentalDomainSet.insert(iterator_);
-            if (CHORD_SPACE_DEBUGGING && result.second == true) {
+            if (CHORD_SPACE_DEBUGGING() && result.second == true) {
                 Chord normalized = equate<EQUIVALENCE_RELATION>(iterator_, range, g, sector);
                 bool normalized_is_normal = predicate<EQUIVALENCE_RELATION>(normalized, range, g, 0);
                 CHORD_SPACE_DEBUG("%s By predicate  %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  predicate: %d  normalized: %s  predicate: %d\n",
@@ -3758,7 +3764,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Cho
         bool normalized_is_normal = predicate<EQUIVALENCE_RELATION>(normalized, range, g, sector);
         CHORD_SPACE_DEBUG("fundamentalDomainByTransformation: %6d normalized_is_normal: %d\n", chords, normalized_is_normal);
         auto result = fundamentalDomain.insert(normalized);
-        if (CHORD_SPACE_DEBUGGING && result.second == true) {
+        if (CHORD_SPACE_DEBUGGING() && result.second == true) {
             CHORD_SPACE_DEBUG("%s By equate %-8s: chord: %6d  domain: %6d  range: %7.2f  g: %7.2f  iterator: %s  predicate: %d  normalized: %s  predicate: %d\n",
                 (normalized_is_normal ? "      " : "WRONG "),
                 namesForEquivalenceRelations[EQUIVALENCE_RELATION],
@@ -5256,24 +5262,22 @@ inline SILENCE_PUBLIC std::vector<Chord> PITV::toChord_vector(const Eigen::Vecto
     return toChord(pitv(0), pitv(1), pitv(2), pitv(3), printme);
 }
 
-inline SILENCE_PUBLIC std::map<const Chord, const Chord> &normal_forms_for_chords() {
-    static std::map<const Chord, const Chord> cache;
+inline SILENCE_PUBLIC std::map<Chord, Chord> &normal_forms_for_chords() {
+    static std::map<Chord, Chord> cache;
     return cache;
 }
 
-inline SILENCE_PUBLIC std::map<const Chord, const Chord> &prime_forms_for_chords() {
-    static std::map<const Chord, const Chord> cache;
+inline SILENCE_PUBLIC std::map<Chord, Chord> &prime_forms_for_chords() {
+    static std::map<Chord, Chord> cache;
     return cache;
 }
 
-inline SILENCE_PUBLIC std::map<const Chord, const Chord> &inverse_prime_forms_for_chords() {
-    static std::map<const Chord, const Chord> cache;
+inline SILENCE_PUBLIC std::map<Chord, Chord> &inverse_prime_forms_for_chords() {
+    static std::map<Chord, Chord> cache;
     return cache;
 }
 
 } // End of namespace csound.
 
 #pragma GCC diagnostic push
-
-#endif
   

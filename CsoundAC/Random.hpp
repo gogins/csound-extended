@@ -17,8 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef RANDOM_H
-#define RANDOM_H
+#pragma once
 
 #include "Platform.hpp"
 #ifdef SWIG
@@ -87,5 +86,5 @@ public:
     virtual void transform(Score &score);
     static void seed(int s);
 };
+
 }
-#endif

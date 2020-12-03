@@ -1,5 +1,4 @@
-#ifndef CSOUND_PRODUCER_HPP
-#define CSOUND_PRODUCER_HPP
+#pragma oncr
 
 #include <Python.h>
 #include <csound/csound_threaded.hpp>
@@ -475,6 +474,3 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
     };
     
 };
-
-#endif
-

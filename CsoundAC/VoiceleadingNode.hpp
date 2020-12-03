@@ -17,8 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef VOICELEADNODE_H
-#define VOICELEADNODE_H
+#pragma once
 
 #include "Platform.hpp"
 #include "Voicelead.hpp"
@@ -351,5 +350,5 @@ public:
     virtual void setModality(const std::vector<double> &pcs);
     virtual std::vector<double> getModality() const;
 };
+
 }
-#endif

@@ -17,8 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef SILENCE_H
-#define SILENCE_H
+#pragma once
 
  /**
  * \page csoundac CsoundAC
@@ -316,8 +315,8 @@
 #include "Event.hpp"
 #include "Midifile.hpp"
 #include "Score.hpp"
-#include "ChordSpace.hpp"
 #include "ChordSpaceBase.hpp"
+#include "ChordSpace.hpp"
 #include "Composition.hpp"
 #include "Node.hpp"
 #include "Counterpoint.hpp"
@@ -343,5 +342,3 @@
 #include "VoiceleadingNode.hpp"
 #include "ChordLindenmayer.hpp"
 #include "HarmonyIFS.hpp"
-
-#endif

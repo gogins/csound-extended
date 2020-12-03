@@ -17,8 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef CONVERSIONS_H
-#define CONVERSIONS_H
+#pragma once
 
 #include "Platform.hpp"
 #ifdef SWIG
@@ -190,6 +189,5 @@ public:
     static bool ge_epsilon(double a, double b);
     static bool le_epsilon(double a, double b);
 };
-}
 
-#endif
+}

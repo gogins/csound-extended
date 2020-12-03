@@ -17,8 +17,8 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef CSOUND_MIDIFILE_H
-#define CSOUND_MIDIFILE_H
+#pragma once
+
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
@@ -275,5 +275,3 @@ struct SILENCE_PUBLIC MidiEventComparator
 };
 
 }
-
-#endif

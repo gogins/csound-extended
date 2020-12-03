@@ -17,8 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef CHORD_SPACE_H
-#define CHORD_SPACE_H
+#pragma once
 #define EIGEN_INITIALIZE_MATRICES_BY_ZERO
 // Header file only library.
 #include "Platform.hpp"
@@ -686,6 +685,3 @@ inline SILENCE_PUBLIC void insert(Score &score,
 } // End of namespace csound.
 
 #pragma GCC diagnostic push
-
-#endif
-  

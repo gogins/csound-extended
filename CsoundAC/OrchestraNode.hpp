@@ -1,5 +1,4 @@
-#ifndef SILENCE_ORCHESTRANODE_H
-#define SILENCE_ORCHESTRANODE_H
+#pragma once
 
 class Timebase;
 class Event;
@@ -22,4 +21,3 @@ public:
 
 };
 
-#endif

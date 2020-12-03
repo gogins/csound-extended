@@ -17,8 +17,8 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef SILENCEMCRM_H
-#define SILENCEMCRM_H
+#pragma once
+
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
@@ -104,5 +104,4 @@
         virtual void means_to_notes();
     };
 
-    }
-#endif
+}

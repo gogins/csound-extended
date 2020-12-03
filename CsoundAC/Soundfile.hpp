@@ -20,8 +20,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef CsoundAC_SOUNDFILE_H
-#define CsoundAC_SOUNDFILE_H
+#pragma once
 
 #include "Platform.hpp"
 #ifdef SWIG
@@ -234,5 +233,5 @@ public:
      */
     virtual void mixGrain();
 };
+
 }
-#endif

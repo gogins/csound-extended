@@ -17,8 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef COUNTERPOINTNODE_H
-#define COUNTERPOINTNODE_H
+#pragma oncde
 #if defined(_MSC_VER) && !defined(__GNUC__)
 #pragma warning (disable:4786)
 #endif
@@ -104,5 +103,5 @@ public:
     virtual ~CounterpointNode();
     virtual void transform(Score &score);
 };
+
 }
-#endif

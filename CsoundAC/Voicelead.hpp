@@ -17,8 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef CSOUND_VOICELEAD_HPP
-#define CSOUND_VOICELEAD_HPP
+#pragma once
 
 #include "Platform.hpp"
 #ifdef SWIG
@@ -456,5 +455,5 @@ public:
      */
     static const double semitonesPerOctave;
 };
+
 }
-#endif

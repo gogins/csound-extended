@@ -17,8 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef RESCALE_H
-#define RESCALE_H
+#pragma once
 
 #include "Platform.hpp"
 #ifdef SWIG
@@ -50,6 +49,5 @@ public:
     virtual void setRescale(int dimension, bool rescaleMinimum, bool rescaleRange, double targetMinimum, double targetRange);
     virtual void getRescale(int dimension, bool &rescaleMinimum, bool &rescaleRange, double &targetMinimum, double &targetRange);
 };
-}
-#endif
 
+}

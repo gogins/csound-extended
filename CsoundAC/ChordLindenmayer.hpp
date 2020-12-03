@@ -17,8 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef CHORDLINDENMAYER_TO_SOUND_H
-#define CHORDLINDENMAYER_TO_SOUND_H
+#pragma once
 
 #include "Platform.hpp"
 #ifdef SWIG
@@ -408,5 +407,5 @@ protected:
     virtual double arithmetic(const double &target, const std::string &operation, const std::string &targetString, const std::vector<std::string> &command);
     virtual double arithmetic(const double &target, const std::string &operation, const std::string &targetString, double p1, double p2, double p3, double p4, double p5);
 };
+
 }
-#endif
