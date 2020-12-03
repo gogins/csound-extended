@@ -317,6 +317,7 @@
 #include "Midifile.hpp"
 #include "Score.hpp"
 #include "ChordSpace.hpp"
+#include "ChordSpaceBase.hpp"
 #include "Composition.hpp"
 #include "Node.hpp"
 #include "Counterpoint.hpp"

@@ -69,7 +69,7 @@
 #pragma GCC diagnostic ignored "-Wformat"
 
 namespace csound {
-/** \file ChordSpace.hpp
+/** \file ChordSpaceBase.hpp
 This library implements a geometric approach to some common operations on 
 chords in neo-Riemannian music theory for use in score generating procedures:
 
@@ -273,7 +273,7 @@ P, L, and R have been extended as follows, see Fiore and Satyendra,
                 
 */
 
-SILENCE_PUBLIC int CHORD_SPACE_DEBUGGING = false;
+static SILENCE_PUBLIC int CHORD_SPACE_DEBUGGING = false;
 
 struct SILENCE_PUBLIC SCOPED_DEBUGGING {
     int prior_state;
@@ -1739,7 +1739,7 @@ template<> inline SILENCE_PUBLIC bool predicate<EQUIVALENCE_RELATION_R>(const Ch
     return true;
 }
 
-bool Chord::self_inverse(int opt_sector) const {
+inline bool Chord::self_inverse(int opt_sector) const {
     auto inverse = reflect_in_inversion_flat(*this, opt_sector);
     if (*this == inverse) {
         return true;
@@ -1748,7 +1748,7 @@ bool Chord::self_inverse(int opt_sector) const {
     }
 }
 
-bool Chord::is_opt_sector(int index) const {
+inline bool Chord::is_opt_sector(int index) const {
     auto sectors = opt_domain_sectors();
     for (auto sector : sectors) {
         if (sector == index) {
@@ -1758,7 +1758,7 @@ bool Chord::is_opt_sector(int index) const {
     return false;
 }
 
-bool Chord::is_opti_sector(int index) const {
+inline bool Chord::is_opti_sector(int index) const {
     auto sectors = opti_domain_sectors();
     for (auto sector : sectors) {
         if (sector == index) {
@@ -3854,7 +3854,7 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_singular_value
 /**
  * Returns the sum of the distances of the chord to each of one or more chords.
  */
-SILENCE_PUBLIC double distance_to_points(const Chord &chord, const std::vector<Chord> &sector_vertices) {
+inline SILENCE_PUBLIC double distance_to_points(const Chord &chord, const std::vector<Chord> &sector_vertices) {
     double sum = 0;
     for (auto vertex : sector_vertices) {
         auto distance = euclidean(chord, vertex);
@@ -5139,7 +5139,7 @@ inline SILENCE_PUBLIC void PITV::list(bool listheader, bool listps, bool listvoi
      }
 }
 
-Eigen::VectorXi PITV::fromChord(const Chord &chord, bool printme) const {
+inline Eigen::VectorXi PITV::fromChord(const Chord &chord, bool printme) const {
     if (printme) {
         message("PITV::fromChord:          chord:         %s\n", print_chord(chord));
     }
@@ -5208,7 +5208,7 @@ Eigen::VectorXi PITV::fromChord(const Chord &chord, bool printme) const {
  * transposition, and voicing. The chord is not in RP; rather, each voice of
  * the chord's OP may have zero or more octaves added to it.
  */
-std::vector<Chord> PITV::toChord(int P, int I, int T, int V, bool printme) const {
+inline std::vector<Chord> PITV::toChord(int P, int I, int T, int V, bool printme) const {
     if (printme) {
         message("PITV::toChord:   PITV:               %8d     %8d     %8d     %8d\n", P, I, T, V);
     }
@@ -5270,7 +5270,6 @@ inline SILENCE_PUBLIC std::map<const Chord, const Chord> &inverse_prime_forms_fo
     static std::map<const Chord, const Chord> cache;
     return cache;
 }
-
 
 } // End of namespace csound.
 
