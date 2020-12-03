@@ -104,7 +104,7 @@ void Counterpoint::toCsoundScore(std::string filename, double secondsPerPulse)
         }
     }
     sprintf(buffer, "; Total notes = %d\n", totalnotes);
-    ("%s", buffer);
+    //~ ("%s", buffer);
     stream << buffer;
 }
 

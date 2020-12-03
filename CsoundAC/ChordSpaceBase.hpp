@@ -343,6 +343,7 @@ SILENCE_PUBLIC bool lt_tolerance(double a, double b, int epsilons=20, int ulps=2
  */
 SILENCE_PUBLIC int message_level(int level=-1);
 
+#if !defined(SWIG) && !defined(EMSCRIPTEN)
 /**
  *  Prints a message to stderr if the ERROR_LEVEL bit is set.
  */
@@ -371,7 +372,10 @@ static void message(const char *format,...);
 /**
  *  Unconditionally prints a message to stderr.
  */
-static void message(const char *format, va_list valist);
+static void message_valist(const char *format, va_list valist);
+#else
+static void message(const char *message_text);
+#endif
 
 SILENCE_PUBLIC Chord midpoint(const Chord &a, const Chord &b);
 
@@ -2565,17 +2569,6 @@ inline SILENCE_PUBLIC const Scale &scaleForName(std::string name) {
     }
 }
 
-static std::string print_opt_sectors(const Chord &chord) {
-    std::string result;
-    char buffer[0x1000];
-    auto opt_sectors = chord.opt_domain_sectors();
-    for (auto opt_sector : opt_sectors) {
-        std::sprintf(buffer, "[opt:%2d         ]", opt_sector);
-        result.append(buffer);
-    }
-    return result;    
-}
-
 static std::string print_opti_sectors(const Chord &chord) {
     std::string result;
     char buffer[0x1000];
@@ -2857,7 +2850,6 @@ inline void Chord::resize(size_t voiceN) {
 
 inline bool Chord::test(const char *label) const {
     std::fprintf(stderr, "TESTING %s %s\n\n", toString().c_str(), label);
-    char buffer[0x1000];
     bool passed = true;
     // For some of these we need to know the OPT sector, and if the chord 
     // belongs to more than one sector, we choose the first.
@@ -4927,15 +4919,19 @@ inline int message_level(int verbosity) {
     return prior_verbosity_;
 }
 
-inline void message(const char *format, va_list valist) {
+#if !defined(SWIG)
+#if !defined(EMSCRIPTEN)
+inline void message_valist(const char *format, va_list valist) {
     std::vfprintf(stderr, format, valist);
 }
+#endif
+#endif
 
 inline void error(const char *format,...) {
     if((1 & message_level()) == 1) {
         va_list marker;
         va_start(marker, format);
-        message(format, marker);
+        message_valist(format, marker);
         va_end(marker);
     }
 }
@@ -4944,7 +4940,7 @@ inline void warn(const char *format,...) {
     if((2 & message_level()) == 2) {
         va_list marker;
         va_start(marker, format);
-        message(format, marker);
+        message_valist(format, marker);
         va_end(marker);
     }
 }
@@ -4953,7 +4949,7 @@ inline void inform(const char *format,...) {
     if((4 & message_level()) == 4) {
         va_list marker;
         va_start(marker, format);
-        message(format, marker);
+        message_valist(format, marker);
         va_end(marker);
     }
 }
@@ -4962,17 +4958,23 @@ inline void debug(const char *format,...) {
     if((8 & message_level()) == 8) {
         va_list marker;
         va_start(marker, format);
-        message(format, marker);
+        message_valist(format, marker);
         va_end(marker);
     }
 }
 
+#if !defined(SWIG) && !defined(EMSCRIPTEN)
 inline void message(const char *format,...) {
     va_list marker;
     va_start(marker, format);
-    message(format, marker);
+    message_valist(format, marker);
     va_end(marker);
 }
+#else
+inline void message(const char *message_text) {
+    std::fprintf(stderr, message_text);
+}
+#endif
 
 inline SILENCE_PUBLIC PITV::~PITV() {};
 
