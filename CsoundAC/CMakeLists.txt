@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.10)
 include(CheckIncludeFiles)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 # TODO: These will need something more sophisticated.
 # For now I am hard-coding them to the Csound Debian control values.
