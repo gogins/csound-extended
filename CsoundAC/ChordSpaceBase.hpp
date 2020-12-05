@@ -282,7 +282,7 @@ inline SILENCE_PUBLIC bool &CHORD_SPACE_DEBUGGING() {
 }
 
 struct SILENCE_PUBLIC SCOPED_DEBUGGING {
-    int prior_state;
+    int prior_state = false;
     SCOPED_DEBUGGING() {
         prior_state = CHORD_SPACE_DEBUGGING();
         CHORD_SPACE_DEBUGGING() = true;
@@ -382,17 +382,25 @@ SILENCE_PUBLIC Chord midpoint(const Chord &a, const Chord &b);
 /**
  * Cache prime forms for chords for speed.
  */
-inline SILENCE_PUBLIC std::map<Chord, Chord> &normal_forms_for_chords();
+SILENCE_PUBLIC std::map<Chord, Chord> &normal_forms_for_chords();
 
 /**
  * Cache normal forms for chords for speed.
  */
-inline SILENCE_PUBLIC std::map<Chord, Chord> &prime_forms_for_chords();
+SILENCE_PUBLIC std::map<Chord, Chord> &prime_forms_for_chords();
 
 /**
  * Cache inverse prime forms for chords for speed.
  */
-inline SILENCE_PUBLIC std::map<Chord, Chord> &inverse_prime_forms_for_chords();
+SILENCE_PUBLIC std::map<Chord, Chord> &inverse_prime_forms_for_chords();
+
+/**
+ * Returns a string representation of the pitches in the chord, along with the 
+ * sectors of the cyclical regions of the OPT and OPTI fundamental domains to 
+ * which the chord belongs.
+ */
+SILENCE_PUBLIC const char *print_chord(const Chord &chord);
+
 
 // End of forward declarations needed by other forward declarations!
 
@@ -2035,10 +2043,10 @@ template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_RPT>(const Ch
         }
     }
     error("Error: Chord equate<EQUIVALENCE_RELATION_RPT>: no RPT in sector %d.\n", opt_sector);
-    CHORD_SPACE_DEBUGGING() = true;
-    ///std::raise(SIGINT);
+    ///CHORD_SPACE_DEBUGGING() = true;
+    std::raise(SIGINT);
     for (auto rpt : rpts) {
-        message("equate<EQUIVALENCE_RELATION_RPT>: chord %s rpt: %s opt_sector: %d\n", chord.toString().c_str(), rpt.toString().c_str(), opt_sector);
+        message("equate<EQUIVALENCE_RELATION_RPT>: chord %s rpt: %s opt_sector: %d\n", print_chord(chord), print_chord(rpt), opt_sector);
         if (rpt.is_opt_sector(opt_sector) == true) {
             return rpt;
         }
@@ -2092,10 +2100,10 @@ template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_RPTg>(const C
         }
     }
     error("Error: Chord equate<EQUIVALENCE_RELATION_RPTg>: no RPTg in sector %d.\n", opt_sector);
-    CHORD_SPACE_DEBUGGING() = true;
-    ///std::raise(SIGINT);
+    ///CHORD_SPACE_DEBUGGING() = true;
+    std::raise(SIGINT);
     for (auto rptt : rptts) {
-        message("equate<EQUIVALENCE_RELATION_RPTg: chord %s rptt: %s opt_sector: %d\n", chord.toString().c_str(), rptt.toString().c_str(), opt_sector);
+        message("equate<EQUIVALENCE_RELATION_RPTg: chord %s rptt: %s opt_sector: %d\n", print_chord(chord), print_chord(rptt), opt_sector);
         if (rptt.is_opt_sector(opt_sector) == true) {
             return rptt;
         }
@@ -2580,7 +2588,7 @@ static std::string print_opti_sectors(const Chord &chord) {
     return result;    
 }
 
-static inline const char *print_chord(const Chord &chord) {
+inline const char *print_chord(const Chord &chord) {
     static char buffer[0x1000];
     std::sprintf(buffer, "%s   ", chord.toString().c_str());
     auto opti_sectors = chord.opti_domain_sectors();
@@ -4681,8 +4689,11 @@ inline void Chord::initialize_sectors() {
 
 inline double Chord::rownd(double x, int places)  
 {
-    double power_of_10 = std::pow(10, places);
-    return std::round(x * power_of_10)  / power_of_10;
+    double power_of_10 = std::pow(double(10), double(places));
+    double up = x * power_of_10;
+    double rounded = std::round(up);
+    double down = rounded / power_of_10;
+    return down;
 }    
 
 inline bool Chord::is_compact(double range) const {
@@ -5035,8 +5046,10 @@ inline SILENCE_PUBLIC void PITV::initialize(int N_, double range_, double g_, bo
     int normal_form_n = 0;
     while (next(iterator_, origin, upperI, g) == true) {
         chords++;
-        auto normal_form_ = iterator_.normal_form();
-        auto prime_form_ = iterator_.prime_form();
+        Chord clamped = iterator_;
+        clamped.clamp();
+        auto normal_form_ = clamped.normal_form();
+        auto prime_form_ = clamped.prime_form();
         // Make a collection to map prime forms to their indices.
         auto inserted_prime_form = indexesForPs.insert({prime_form_, index});
         if (inserted_prime_form.second == true) {
@@ -5059,6 +5072,7 @@ inline SILENCE_PUBLIC void PITV::initialize(int N_, double range_, double g_, bo
 
 inline SILENCE_PUBLIC void PITV::list(bool listheader, bool listps, bool listvoicings) const {
     if (listheader) {
+        message("PITV::list...\n");
         message("PITV.voices:     %8d\n", N);
         message("PITV.range:      %13.4f\n", range);
         message("PITV.g:          %13.4f\n", g);
@@ -5086,9 +5100,9 @@ inline SILENCE_PUBLIC void PITV::list(bool listheader, bool listps, bool listvoi
             } else {
                 normal_form_ = inverse_prime_form_;
             }
-            const auto optti = chord.eOPTTI(range, g);
+            const auto optti = chord.eOPTTI(g);
             opttis_for_prime_forms.insert({prime_form_.toString(), optti.toString()});
-            const auto optt = chord.eOPTT(range, g);
+            const auto optt = chord.eOPTT(g);
             optts_for_normal_forms.insert({normal_form_.toString(), optt.toString()});
             const auto op = chord.eOP();
             const auto opt_sectors = optt.opt_domain_sectors();
@@ -5116,8 +5130,8 @@ inline SILENCE_PUBLIC void PITV::list(bool listheader, bool listps, bool listvoi
             } else {
                 normal_form_ = inverse_prime_form_;
             }
-            const auto optti = chord.eOPTTI(range, g);
-            const auto optt = chord.eOPTT(range, g);
+            const auto optti = chord.eOPTTI(g);
+            const auto optt = chord.eOPTT(g);
             const auto op = chord.eOP();
             const auto opt_sectors = optt.opt_domain_sectors();
             const auto opti_sectors = optti.opti_domain_sectors();

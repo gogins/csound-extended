@@ -367,11 +367,12 @@ int main(int argc, char **argv) {
     std::cerr << "csound::gt_tolerance(14.0, 12.0): " << csound::gt_tolerance(14.0, 12.0) << std::endl;
     std::cerr << "csound::ge_tolerance(14.0, 12.0): " << csound::ge_tolerance(14.0, 12.0) << std::endl;
     Hyperplane_Equation_for_Test_Points();
-#if defined(USE_OLD_EQUIVALENCES)
-    csound::message("Using OLD implementation of equivalence relations.\n\n");
-#else
-    csound::message("Using NEW implementation of equivalence relations.\n\n");
-#endif
+
+    auto chordx = csound::chordForName("CM7");
+    auto dominantx = csound::chordForName("G7");
+    csound::message("CM7:\n%s\n", chordx.information().c_str());
+    csound::message("G7:\n%s\n", dominantx.information().c_str());
+
     equatesForEquivalenceRelations["R"] =        csound::equate<csound::EQUIVALENCE_RELATION_R>;
     equatesForEquivalenceRelations["P"] =        csound::equate<csound::EQUIVALENCE_RELATION_P>;
     equatesForEquivalenceRelations["T"] =        csound::equate<csound::EQUIVALENCE_RELATION_T>;
