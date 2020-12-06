@@ -66,7 +66,6 @@ typedef emscripten::val MessageCallbackType;
 class SILENCE_PUBLIC System
 {
     static void *userdata_;
-    static int messageLevel;
     static FILE *logfile;
     static MessageCallbackType messageCallback;
 public:

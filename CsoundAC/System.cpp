@@ -28,6 +28,7 @@
 #include <cstdio>
 #include <csound.h>
 #include "System.hpp"
+#include "ChordSpaceBase.hpp"
 #include "CsoundFile.hpp"
 #include "Conversions.hpp"
 #include <csound.h>
@@ -94,8 +95,6 @@ void ThreadLock::endWait()
 
 FILE *System::logfile = 0;
 
-int System::messageLevel = ERROR_LEVEL | WARNING_LEVEL;
-
 void * System::userdata_ = 0;
 
 #if defined(EMSCRIPTEN)
@@ -118,7 +117,7 @@ void *System::getUserdata()
 
 void System::error(CSOUND *csound, const char *format,...)
 {
-    if((ERROR_LEVEL & messageLevel) == ERROR_LEVEL)
+    if((ERROR_LEVEL & message_level(-1)) == ERROR_LEVEL)
     {
         va_list marker;
         va_start(marker, format);
@@ -129,7 +128,7 @@ void System::error(CSOUND *csound, const char *format,...)
 
 void System::warn(CSOUND *csound, const char *format,...)
 {
-    if((WARNING_LEVEL & messageLevel) == WARNING_LEVEL)
+    if((WARNING_LEVEL & message_level(-1)) == WARNING_LEVEL)
     {
         va_list marker;
         va_start(marker, format);
@@ -140,7 +139,7 @@ void System::warn(CSOUND *csound, const char *format,...)
 
 void System::inform(CSOUND *csound, const char *format,...)
 {
-    if((INFORMATION_LEVEL & messageLevel) == INFORMATION_LEVEL)
+    if((INFORMATION_LEVEL & message_level(-1)) == INFORMATION_LEVEL)
     {
         va_list marker;
         va_start(marker, format);
@@ -151,7 +150,7 @@ void System::inform(CSOUND *csound, const char *format,...)
 
 void System::debug(CSOUND *csound, const char *format,...)
 {
-    if((DEBUGGING_LEVEL & messageLevel) == DEBUGGING_LEVEL)
+    if((DEBUGGING_LEVEL & message_level(-1)) == DEBUGGING_LEVEL)
     {
         va_list marker;
         va_start(marker, format);
@@ -162,7 +161,7 @@ void System::debug(CSOUND *csound, const char *format,...)
 
 void System::message(CSOUND *csound, int level, const char *format,...)
 {
-    if((level & messageLevel) == level)
+    if((level & message_level(-1)) == level)
     {
         va_list marker;
         va_start(marker, format);
@@ -175,7 +174,7 @@ void System::message(CSOUND *csound, const char *format,...)
 {
     va_list marker;
     va_start(marker, format);
-    message(csound, messageLevel, format, marker);
+    message(csound, message_level(-1), format, marker);
     va_end(marker);
 }
 
@@ -202,7 +201,7 @@ void System::message(CSOUND *csound, int attribute, const char *format, va_list 
 
 void System::error(const char *format,...)
 {
-    if((ERROR_LEVEL & messageLevel) == ERROR_LEVEL)
+    if((ERROR_LEVEL & message_level(-1)) == ERROR_LEVEL)
     {
         va_list marker;
         va_start(marker, format);
@@ -213,7 +212,7 @@ void System::error(const char *format,...)
 
 void System::warn(const char *format,...)
 {
-    if((WARNING_LEVEL & messageLevel) == WARNING_LEVEL)
+    if((WARNING_LEVEL & message_level(-1)) == WARNING_LEVEL)
     {
         va_list marker;
         va_start(marker, format);
@@ -224,7 +223,7 @@ void System::warn(const char *format,...)
 
 void System::inform(const char *format,...)
 {
-    if((INFORMATION_LEVEL & messageLevel) == INFORMATION_LEVEL)
+    if((INFORMATION_LEVEL & message_level(-1)) == INFORMATION_LEVEL)
     {
         va_list marker;
         va_start(marker, format);
@@ -235,7 +234,7 @@ void System::inform(const char *format,...)
 
 void System::debug(const char *format,...)
 {
-    if((DEBUGGING_LEVEL & messageLevel) == DEBUGGING_LEVEL)
+    if((DEBUGGING_LEVEL & message_level(-1)) == DEBUGGING_LEVEL)
     {
         va_list marker;
         va_start(marker, format);
@@ -248,20 +247,20 @@ void System::message(const char *format,...)
 {
     va_list marker;
     va_start(marker, format);
-    message((CSOUND*) userdata_, messageLevel, format, marker);
+    message((CSOUND*) userdata_, message_level(-1), format, marker);
     va_end(marker);
 }
 
 void System::message(const char *format, va_list valist)
 {
-    message((CSOUND*) userdata_, messageLevel, format, valist);
+    message((CSOUND*) userdata_, message_level(-1), format, valist);
 }
 
 #else
 
 void System::error(const char *format,...)
 {
-    if((ERROR_LEVEL & messageLevel) == ERROR_LEVEL)
+    if((ERROR_LEVEL & message_level(-1)) == ERROR_LEVEL)
     {
         va_list marker;
         va_start(marker, format);
@@ -272,7 +271,7 @@ void System::error(const char *format,...)
 
 void System::warn(const char *format,...)
 {
-    if((WARNING_LEVEL & messageLevel) == WARNING_LEVEL)
+    if((WARNING_LEVEL & message_level(-1)) == WARNING_LEVEL)
     {
         va_list marker;
         va_start(marker, format);
@@ -283,7 +282,7 @@ void System::warn(const char *format,...)
 
 void System::inform(const char *format,...)
 {
-    if((INFORMATION_LEVEL & messageLevel) == INFORMATION_LEVEL)
+    if((INFORMATION_LEVEL & message_level(-1)) == INFORMATION_LEVEL)
     {
         va_list marker;
         va_start(marker, format);
@@ -294,7 +293,7 @@ void System::inform(const char *format,...)
 
 void System::debug(const char *format,...)
 {
-    if((DEBUGGING_LEVEL & messageLevel) == DEBUGGING_LEVEL)
+    if((DEBUGGING_LEVEL & message_level(-1)) == DEBUGGING_LEVEL)
     {
         va_list marker;
         va_start(marker, format);
@@ -313,7 +312,7 @@ void System::message(const char *format,...)
 
 void System::message(const char *format, va_list valist)
 {
-    message(messageLevel, format, valist);
+    message(message_level(-1), format, valist);
 }
 
 void System::message(int error_level, const char *format, va_list valist)
@@ -335,14 +334,12 @@ void System::message(std::string text) {
 
 int System::setMessageLevel(int messageLevel_)
 {
-    int returnValue = messageLevel;
-    messageLevel = messageLevel_;
-    return returnValue;
+     return message_level(messageLevel_);
 }
 
 int System::getMessageLevel()
 {
-    return messageLevel;
+    return message_level(-1);
 }
 
 void System::setMessageCallback(MessageCallbackType messageCallback_)
