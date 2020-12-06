@@ -343,7 +343,7 @@ SILENCE_PUBLIC bool lt_tolerance(double a, double b, int epsilons=20, int ulps=2
  */
 SILENCE_PUBLIC int message_level(int level=-1);
 
-#if !defined(SWIG) && !defined(EMSCRIPTEN)
+#if !defined(SWIG)
 /**
  *  Prints a message to stderr if the ERROR_LEVEL bit is set.
  */
@@ -2714,6 +2714,11 @@ inline SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &origin, const
     }
 }
 
+inline SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &origin, const Chord &chord, double range) {
+    return indexForOctavewiseRevoicing(origin, chord, range, false);
+}
+
+
 inline SILENCE_PUBLIC int indexForOctavewiseRevoicing(const Chord &chord, double range, bool debug) {
     const auto origin = csound::equate<EQUIVALENCE_RELATION_RP>(chord, OCTAVE(), 1.0, 0);
     auto result = indexForOctavewiseRevoicing(origin, chord, range, debug);
@@ -4974,7 +4979,7 @@ inline void debug(const char *format,...) {
     }
 }
 
-#if !defined(SWIG) && !defined(EMSCRIPTEN)
+#if !defined(SWIG)
 inline void message(const char *format,...) {
     va_list marker;
     va_start(marker, format);

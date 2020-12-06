@@ -181,13 +181,6 @@ public:
      * otherwise, 0 dB is full scale.
      */
     static double gainToDb(double inputDb, double gain, bool odbfs = false);
-    static double EPSILON();
-    static double &epsilonFactor();
-    static bool eq_epsilon(double a, double b);
-    static bool gt_epsilon(double a, double b);
-    static bool lt_epsilon(double a, double b);
-    static bool ge_epsilon(double a, double b);
-    static bool le_epsilon(double a, double b);
 };
 
 }

@@ -46,12 +46,10 @@
 #else
 #include <algorithm>
 // Header file only library.
-#include <boost/algorithm/string.hpp>
-// Header file only library.
 #include <boost/math/special_functions/ulp.hpp>
 #include <cfloat>
 // Header file only library.
-#include <ChordSpaceBase.hpp>
+#include "ChordSpaceBase.hpp"
 #include <climits>
 #include <cmath>
 #include <csignal>

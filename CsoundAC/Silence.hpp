@@ -309,7 +309,6 @@
 #include <map>
 #include <eigen3/Eigen/Dense>
 #endif
-
 #include "Conversions.hpp"
 #include "System.hpp"
 #include "Event.hpp"

@@ -5,7 +5,10 @@
     <script>
         console.log("When running in NW.js, convince the WASM 'Module' code that we are actually running in Node.js.");
         var module = {};
-        module["ENVIRONMENT"] = "NODE";
+
+        // cmask.js:68 Uncaught Error: Module.ENVIRONMENT has been deprecated. To force the environment, 
+        // use the ENVIRONMENT compile-time option (for example, -s ENVIRONMENT=web or -s ENVIRONMENT=node)
+        // module["ENVIRONMENT"] = "NODE";
         csound = null;
         cmask = null;
     </script>

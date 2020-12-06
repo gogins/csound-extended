@@ -19,6 +19,7 @@
  */
 #include <array>
 #include "Cell.hpp"
+#include "ChordSpaceBase.hpp"
 #include "System.hpp"
 
 namespace csound
@@ -130,7 +131,7 @@ void Intercut::traverse(const Eigen::MatrixXd &globalCoordinates,
             size_t nextNoteI = noteI + 1;
             if (nextNoteI >= intercutScore.size()) {
                 inChord = false;
-            } else if (Conversions::eq_epsilon(intercutScore[nextNoteI].getTime(), eventTime)) {
+            } else if (eq_tolerance(intercutScore[nextNoteI].getTime(), eventTime)) {
                 inChord = true;
             } else {
                 inChord = false;
