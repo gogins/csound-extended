@@ -831,7 +831,7 @@ if (typeof console === 'undefined') {
         }
         return sum_;
     };
-    f
+
     Chord.prototype.unisonAtSum = function() {
         let unison_ = this.origin();
         let pitch = this.sum() / this.size();

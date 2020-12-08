@@ -564,6 +564,7 @@ char *Conversions::dupstr(const char *string)
     copy[len] = '\0';
     return copy;
 }
+
 double Conversions::gainToDb(double inputDb, double gain, bool odbfs)
 {
     double factor = 1.0;

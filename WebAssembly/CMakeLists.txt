@@ -39,7 +39,6 @@ set(LIBSNDFILE_LIBRARY
     "${CMAKE_SOURCE_DIR}/deps/lib/libvorbisenc.a"
     )
 
-
 add_subdirectory(cmask)
 
 add_subdirectory(../dependencies/csound csound)

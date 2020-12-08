@@ -21,6 +21,7 @@
 #define EIGEN_INITIALIZE_MATRICES_BY_ZERO
 // Header file only library.
 #include "Platform.hpp"
+#include "System.hpp"
 #ifdef SWIG
 %module CsoundAC
 %{
@@ -42,6 +43,7 @@
 %include "std_string.i"
 %include "std_vector.i"
 #else
+#include "Platform.hpp"
 #include <algorithm>
 // Header file only library.
 #include <boost/algorithm/string.hpp>
@@ -292,7 +294,7 @@ struct SILENCE_PUBLIC SCOPED_DEBUGGING {
     }
 };
 
-#define CHORD_SPACE_DEBUG if (CHORD_SPACE_DEBUGGING() == true) csound::message
+#define CHORD_SPACE_DEBUG if (CHORD_SPACE_DEBUGGING() == true) csound::System::message
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // ALL DECLARATIONS BELOW HERE MORE OR LESS IN ALPHABETICAL ORDER -- NO DEFINITIONS HERE.
@@ -328,54 +330,6 @@ SILENCE_PUBLIC bool in_simplex(const std::vector<Chord> &simplex, const Chord &p
 SILENCE_PUBLIC bool le_tolerance(double a, double b, int epsilons=20, int ulps=200);
 
 SILENCE_PUBLIC bool lt_tolerance(double a, double b, int epsilons=20, int ulps=200);
-
-/**
- * Sets the level of disagnostic message verbosity, the bitwise OR or sum of:
- * <ul>
- * <li>1 ERROR_LEVEL (least verbose).
- * <li>2 WARNNING_LEVEL.
- * <li>4 INFORMATION_LEVEL.
- * <li>8 DEBUGGING_LEVEL (most verbose).
- * </ul>
- * If level is -1 (the default), the current level of verbosity is returned 
- * without changing it; otherwise, changes the level of verbosity to the 
- * indicated level and returns the previous level.
- */
-SILENCE_PUBLIC int message_level(int level=-1);
-
-#if !defined(SWIG)
-/**
- *  Prints a message to stderr if the ERROR_LEVEL bit is set.
- */
-static void error(const char *format,...);
-
-/**
- *  Prints a message to stderr if the WARNNING_LEVEL bit is set.
- */
-static void warn(const char *format,...);
-
-/**
- *  Prints a message to stderr if the INFORMATION_LEVEL bit is set.
- */
-static void inform(const char *format,...);
-
-/**
- *  Prints a message to stderr if the DEBUGGING_LEVEL bit is set.
- */
-static void debug(const char *format,...);
-
-/**
- *  Unconditionally prints a message to stderr.
- */
-static void message(const char *format,...);
-
-/**
- *  Unconditionally prints a message to stderr.
- */
-static void message_valist(const char *format, va_list valist);
-#else
-static void message(const char *message_text);
-#endif
 
 SILENCE_PUBLIC Chord midpoint(const Chord &a, const Chord &b);
 
@@ -711,7 +665,12 @@ public:
      * Print much information about the chord including whether it is within 
      * important equivalence classes, or what its equivalents would be.
      */
-    virtual std::string information(int opt_sector = -1) const;
+    virtual std::string information_sector(int opt_sector) const;
+    /**
+     * Print much information about the chord including whether it is within 
+     * important equivalence classes, or what its equivalents would be.
+     */
+    virtual std::string information() const;
     /**
      * Initializes the fundamental domains (sectors) of the cyclical regions 
      * of OPT equivalence and OPTI equivalence, as well as the hyperplane 
@@ -2042,11 +2001,11 @@ template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_RPT>(const Ch
             return rpt;
         }
     }
-    error("Error: Chord equate<EQUIVALENCE_RELATION_RPT>: no RPT in sector %d.\n", opt_sector);
+    System::error("Error: Chord equate<EQUIVALENCE_RELATION_RPT>: no RPT in sector %d.\n", opt_sector);
     ///CHORD_SPACE_DEBUGGING() = true;
     std::raise(SIGINT);
     for (auto rpt : rpts) {
-        message("equate<EQUIVALENCE_RELATION_RPT>: chord %s rpt: %s opt_sector: %d\n", print_chord(chord), print_chord(rpt), opt_sector);
+        System::message("equate<EQUIVALENCE_RELATION_RPT>: chord %s rpt: %s opt_sector: %d\n", print_chord(chord), print_chord(rpt), opt_sector);
         if (rpt.is_opt_sector(opt_sector) == true) {
             return rpt;
         }
@@ -2099,11 +2058,11 @@ template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_RPTg>(const C
             return rptt;
         }
     }
-    error("Error: Chord equate<EQUIVALENCE_RELATION_RPTg>: no RPTg in sector %d.\n", opt_sector);
+    System::error("Error: Chord equate<EQUIVALENCE_RELATION_RPTg>: no RPTg in sector %d.\n", opt_sector);
     ///CHORD_SPACE_DEBUGGING() = true;
     std::raise(SIGINT);
     for (auto rptt : rptts) {
-        message("equate<EQUIVALENCE_RELATION_RPTg: chord %s rptt: %s opt_sector: %d\n", print_chord(chord), print_chord(rptt), opt_sector);
+        System::message("equate<EQUIVALENCE_RELATION_RPTg: chord %s rptt: %s opt_sector: %d\n", print_chord(chord), print_chord(rptt), opt_sector);
         if (rptt.is_opt_sector(opt_sector) == true) {
             return rptt;
         }
@@ -2598,7 +2557,11 @@ inline const char *print_chord(const Chord &chord) {
     return buffer;
 }
 
-inline std::string Chord::information(int opt_sector_) const {
+inline std::string Chord::information() const {
+    return information_sector(-1);
+}
+
+inline std::string Chord::information_sector(int opt_sector_) const {
     std::string result;
     char buffer[0x4000];
     if (voices() < 1) {
@@ -3689,7 +3652,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Cho
 {
     ///SCOPED_DEBUGGING debugging;
     auto name_ = namesForEquivalenceRelations[EQUIVALENCE_RELATION];
-    message("fundamentalDomainByPredicate<%s>: voiceN: %d range: %f g: %f: sector: %d\n", name_, voiceN, range, g, sector);
+    System::message("fundamentalDomainByPredicate<%s>: voiceN: %d range: %f g: %f: sector: %d\n", name_, voiceN, range, g, sector);
     std::set<Chord, compare_by_normal_order> fundamentalDomainSet;
     std::vector<Chord> fundamentalDomainVector;
     int upperI = 3 * (range + 1);
@@ -3706,7 +3669,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Cho
         //~ if (target_found == false) {
             //~ if (target.toString() == iterator_.toString()) {
                 //~ target_found = true;
-                //~ message("fundamentalDomainByPredicate<%s>: iterator_is_normal: %d\n    found:  %s\n    target: %s\n\n", name_, iterator_is_normal, print_chord(target), print_chord(iterator_));
+                //~ System::message("fundamentalDomainByPredicate<%s>: iterator_is_normal: %d\n    found:  %s\n    target: %s\n\n", name_, iterator_is_normal, print_chord(target), print_chord(iterator_));
                 //~ ///std::raise(SIGINT);
             //~ }
         //~ }
@@ -3731,7 +3694,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Cho
             }
         }
         //~ if (printme == true) {
-            //~ message("fundamentalDomainByPredicate<%s>: %s normal: %6d set: %6d iterator: %12d %s\n", 
+            //~ System::message("fundamentalDomainByPredicate<%s>: %s normal: %6d set: %6d iterator: %12d %s\n", 
                 //~ name_,
                 //~ (iterator_is_normal ? "NORMAL " : "       "), 
                 //~ normals, 
@@ -3741,7 +3704,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Cho
         //~ }
     }
     std::sort(fundamentalDomainVector.begin(), fundamentalDomainVector.end());
-    message("fundamentalDomainByPredicate<%s>: count: %d unique: %d\n", namesForEquivalenceRelations[EQUIVALENCE_RELATION], fundamentalDomainVector.size(), fundamentalDomainSet.size());
+    System::message("fundamentalDomainByPredicate<%s>: count: %d unique: %d\n", namesForEquivalenceRelations[EQUIVALENCE_RELATION], fundamentalDomainVector.size(), fundamentalDomainSet.size());
     //~ return std::vector<Chord>(fundamentalDomainSet.begin(), fundamentalDomainSet.end());
     return fundamentalDomainVector;
  }
@@ -4921,72 +4884,6 @@ inline Chord Chord::reflect(int opt_sector) const {
     return reflection;
 }
 
-inline int message_level(int verbosity) {
-    static int verbosity_ = 1;
-    auto prior_verbosity_ = verbosity_;
-    if (verbosity != -1) {
-        verbosity_ = verbosity;
-    }
-    return prior_verbosity_;
-}
-
-#if !defined(SWIG)
-#if !defined(EMSCRIPTEN)
-inline void message_valist(const char *format, va_list valist) {
-    std::vfprintf(stderr, format, valist);
-}
-#endif
-#endif
-
-inline void error(const char *format,...) {
-    if((1 & message_level()) == 1) {
-        va_list marker;
-        va_start(marker, format);
-        message_valist(format, marker);
-        va_end(marker);
-    }
-}
-
-inline void warn(const char *format,...) {
-    if((2 & message_level()) == 2) {
-        va_list marker;
-        va_start(marker, format);
-        message_valist(format, marker);
-        va_end(marker);
-    }
-}
-
-inline void inform(const char *format,...) {
-    if((4 & message_level()) == 4) {
-        va_list marker;
-        va_start(marker, format);
-        message_valist(format, marker);
-        va_end(marker);
-    }
-}
-
-inline void debug(const char *format,...) {
-    if((8 & message_level()) == 8) {
-        va_list marker;
-        va_start(marker, format);
-        message_valist(format, marker);
-        va_end(marker);
-    }
-}
-
-#if !defined(SWIG)
-inline void message(const char *format,...) {
-    va_list marker;
-    va_start(marker, format);
-    message_valist(format, marker);
-    va_end(marker);
-}
-#else
-inline void message(const char *message_text) {
-    std::fprintf(stderr, message_text);
-}
-#endif
-
 inline SILENCE_PUBLIC PITV::~PITV() {};
 
 inline SILENCE_PUBLIC int PITV::getN() const {
@@ -5018,7 +4915,7 @@ inline SILENCE_PUBLIC int PITV::getCountV() const {
 }
 
 inline SILENCE_PUBLIC void PITV::preinitialize(int N_, double range_, double g_) {
-    inform("PITV::preinitialize...\n");
+    System::inform("PITV::preinitialize...\n");
     PsForIndexes.clear();
     indexesForPs.clear();
     normal_forms.clear();
@@ -5034,7 +4931,7 @@ inline SILENCE_PUBLIC void PITV::preinitialize(int N_, double range_, double g_)
 }
 
 inline SILENCE_PUBLIC void PITV::initialize(int N_, double range_, double g_, bool printme) {
-    message("PITV::initialize: N_: %d range_: %f g_: %f\n", N_, range_, g_);
+    System::message("PITV::initialize: N_: %d range_: %f g_: %f\n", N_, range_, g_);
     preinitialize(N_, range_, g_);
     // Collect all prime forms within the indicated range.
     int upperI = 3 * (12 + 1);
@@ -5060,10 +4957,10 @@ inline SILENCE_PUBLIC void PITV::initialize(int N_, double range_, double g_, bo
         // If prime != normal then I == 1.
         auto inserted_normal_form = normal_forms.insert(normal_form_);
         if (inserted_normal_form.second == true && printme == true) {
-            message("%3d chord:               %s\n", normal_form_n, print_chord(iterator_));
-            message("    normal form:         %s\n", print_chord(normal_form_));
-            message("    prime form:          %s\n", print_chord(iterator_.prime_form()));
-            message("    inverse prime form:  %s\n", print_chord(iterator_.inverse_prime_form()));
+            System::message("%3d chord:               %s\n", normal_form_n, print_chord(iterator_));
+            System::message("    normal form:         %s\n", print_chord(normal_form_));
+            System::message("    prime form:          %s\n", print_chord(iterator_.prime_form()));
+            System::message("    inverse prime form:  %s\n", print_chord(iterator_.inverse_prime_form()));
             ++normal_form_n;
         }
     }    
@@ -5072,14 +4969,14 @@ inline SILENCE_PUBLIC void PITV::initialize(int N_, double range_, double g_, bo
 
 inline SILENCE_PUBLIC void PITV::list(bool listheader, bool listps, bool listvoicings) const {
     if (listheader) {
-        message("PITV::list...\n");
-        message("PITV.voices:     %8d\n", N);
-        message("PITV.range:      %13.4f\n", range);
-        message("PITV.g:          %13.4f\n", g);
-        message("PITV.countP:     %8d\n", countP);
-        message("PITV.countI:     %8d\n", countI);
-        message("PITV.countT:     %8d\n", countT);
-        message("PITV.countV:     %8d\n", countV);
+        System::message("PITV::list...\n");
+        System::message("PITV.voices:     %8d\n", N);
+        System::message("PITV.range:      %13.4f\n", range);
+        System::message("PITV.g:          %13.4f\n", g);
+        System::message("PITV.countP:     %8d\n", countP);
+        System::message("PITV.countI:     %8d\n", countI);
+        System::message("PITV.countT:     %8d\n", countT);
+        System::message("PITV.countV:     %8d\n", countV);
     }
     if (listps) {
         std::map<std::string, std::string> opttis_for_prime_forms;
@@ -5113,10 +5010,10 @@ inline SILENCE_PUBLIC void PITV::list(bool listheader, bool listps, bool listvoi
             for(auto opti_sector : opti_sectors) {
                 opttis_for_sectors.insert({opti_sector, optti.toString()});
             }
-            message("PsForIndexes[%5d]: chord:         %s\n", index, print_chord(chord));
-            message("PsForIndexes[%5d]: prime:         %s\n", index, print_chord(prime_form_));
-            message("PsForIndexes[%5d]: normal:        %s\n", index, print_chord(normal_form_));
-            message("PsForIndexes[%5d]: inverse prime: %s\n", index, print_chord(inverse_prime_form_));
+            System::message("PsForIndexes[%5d]: chord:         %s\n", index, print_chord(chord));
+            System::message("PsForIndexes[%5d]: prime:         %s\n", index, print_chord(prime_form_));
+            System::message("PsForIndexes[%5d]: normal:        %s\n", index, print_chord(normal_form_));
+            System::message("PsForIndexes[%5d]: inverse prime: %s\n", index, print_chord(inverse_prime_form_));
         }
         for (const auto &entry : indexesForPs) {
             const auto &chord = entry.first;
@@ -5136,26 +5033,26 @@ inline SILENCE_PUBLIC void PITV::list(bool listheader, bool listps, bool listvoi
             const auto opt_sectors = optt.opt_domain_sectors();
             const auto opti_sectors = optti.opti_domain_sectors();
             auto key = chord.toString();
-            message("indexesForPs[%s]: index:   %5d %s\n", key.c_str(), index, print_chord(chord));
-            message("indexesForPs[%s]: prime:         %s\n", key.c_str(), print_chord(prime_form_));
-            message("indexesForPs[%s]: normal:        %s\n", key.c_str(), print_chord(normal_form_));
-            message("indexesForPs[%s]: inverse prime: %s\n", key.c_str(), print_chord(inverse_prime_form_));
+            System::message("indexesForPs[%s]: index:   %5d %s\n", key.c_str(), index, print_chord(chord));
+            System::message("indexesForPs[%s]: prime:         %s\n", key.c_str(), print_chord(prime_form_));
+            System::message("indexesForPs[%s]: normal:        %s\n", key.c_str(), print_chord(normal_form_));
+            System::message("indexesForPs[%s]: inverse prime: %s\n", key.c_str(), print_chord(inverse_prime_form_));
         }
-        message("PsForIndexes size:           %6d\n", PsForIndexes.size());
-        message("indexesForPs size:           %6d\n", indexesForPs.size());
-        message("opttis_for_prime_forms size: %6d\n", opttis_for_prime_forms.size());
-        message("optts_for_normal_forms size: %6d\n", optts_for_normal_forms.size());
+        System::message("PsForIndexes size:           %6d\n", PsForIndexes.size());
+        System::message("indexesForPs size:           %6d\n", indexesForPs.size());
+        System::message("opttis_for_prime_forms size: %6d\n", opttis_for_prime_forms.size());
+        System::message("optts_for_normal_forms size: %6d\n", optts_for_normal_forms.size());
         for (int i = 0; i < (N * 2); ++i) {
-            message("opti sector: %3d opttis: %6d\n", i, opttis_for_sectors.count(i));
+            System::message("opti sector: %3d opttis: %6d\n", i, opttis_for_sectors.count(i));
         }
         for (const auto &key : prime_forms_from_PsForIndexes) {
             if (prime_forms_from_indexesForPs.find(key) == prime_forms_from_indexesForPs.end()) {
-                error("%s not found in indexesForPs.\n", key.c_str());
+                System::error("%s not found in indexesForPs.\n", key.c_str());
             }
         }
         for (const auto &key : prime_forms_from_indexesForPs) {
             if (prime_forms_from_PsForIndexes.find(key) == prime_forms_from_indexesForPs.end()) {
-                error("%s not found in PsForIndexes.\n", key.c_str());
+                System::error("%s not found in PsForIndexes.\n", key.c_str());
             }
         }
      }
@@ -5163,7 +5060,7 @@ inline SILENCE_PUBLIC void PITV::list(bool listheader, bool listps, bool listvoi
 
 inline Eigen::VectorXi PITV::fromChord(const Chord &chord, bool printme) const {
     if (printme) {
-        message("PITV::fromChord:          chord:         %s\n", print_chord(chord));
+        System::message("PITV::fromChord:          chord:         %s\n", print_chord(chord));
     }
     Eigen::VectorXi pitv(4);
     const auto ppcs = chord.eppcs();
@@ -5178,9 +5075,9 @@ inline Eigen::VectorXi PITV::fromChord(const Chord &chord, bool printme) const {
     }
     pitv.coeffRef(1) = I;
     if (printme) {
-        message("PITV::fromChord: I: %5d normal_form:   %s\n", pitv(1), print_chord(normal_form_));
-        message("PITV::fromChord: P: %5d prime_form:    %s\n", pitv(0), print_chord(prime_form_));
-        message("PITV::fromChord:          inverse_prime: %s\n", print_chord(inverse_prime));
+        System::message("PITV::fromChord: I: %5d normal_form:   %s\n", pitv(1), print_chord(normal_form_));
+        System::message("PITV::fromChord: P: %5d prime_form:    %s\n", pitv(0), print_chord(prime_form_));
+        System::message("PITV::fromChord:          inverse_prime: %s\n", print_chord(inverse_prime));
     }
     auto normal_form_t = normal_form_;
     int T;
@@ -5192,18 +5089,18 @@ inline Eigen::VectorXi PITV::fromChord(const Chord &chord, bool printme) const {
     }
     pitv.coeffRef(2) = T;
     if (printme) {
-        message("PITV::fromChord: T: %5d normal_form_t: %s\n", pitv(2), print_chord(normal_form_t));
+        System::message("PITV::fromChord: T: %5d normal_form_t: %s\n", pitv(2), print_chord(normal_form_t));
     }
     auto op = normal_form_t.eOP();
     auto op_from_chord = chord.eOP();
     if (printme) {
-        message("PITV::fromChord:          op from PIT:   %s\n", print_chord(op));
-        message("PITV::fromChord:          op from chord: %s\n", print_chord(op_from_chord));
+        System::message("PITV::fromChord:          op from PIT:   %s\n", print_chord(op));
+        System::message("PITV::fromChord:          op from chord: %s\n", print_chord(op_from_chord));
     }
     int V;
     if (chord < op) {
         V = -1;
-        error("PITV::fromChord: Error: Chord is below OP.\n");
+        System::error("PITV::fromChord: Error: Chord is below OP.\n");
     } else {
         V = indexForOctavewiseRevoicing(op, chord, range); 
     }        
@@ -5213,14 +5110,14 @@ inline Eigen::VectorXi PITV::fromChord(const Chord &chord, bool printme) const {
         op_v = octavewiseRevoicing(op, V, range);
     }
     if (op_v != chord) {
-        error("PITV::fromChord: Error: revoiced OP  (%s)\n", print_chord(op_v));
-        error("                 doesn't match chord (%s)\n", print_chord(chord));
+        System::error("PITV::fromChord: Error: revoiced OP  (%s)\n", print_chord(op_v));
+        System::error("                 doesn't match chord (%s)\n", print_chord(chord));
     }
     if (printme) {
-        message("PITV::fromChord: V: %5d op_v:          %s\n", pitv(3), print_chord(op_v));
+        System::message("PITV::fromChord: V: %5d op_v:          %s\n", pitv(3), print_chord(op_v));
     }
     if (printme) {
-        message("PITV::fromChord: PITV:               %8d     %8d     %8d     %8d\n\n", pitv(0), pitv(1), pitv(2), pitv(3));
+        System::message("PITV::fromChord: PITV:               %8d     %8d     %8d     %8d\n\n", pitv(0), pitv(1), pitv(2), pitv(3));
     }
     return pitv;
 }
@@ -5232,14 +5129,14 @@ inline Eigen::VectorXi PITV::fromChord(const Chord &chord, bool printme) const {
  */
 inline std::vector<Chord> PITV::toChord(int P, int I, int T, int V, bool printme) const {
     if (printme) {
-        message("PITV::toChord:   PITV:               %8d     %8d     %8d     %8d\n", P, I, T, V);
+        System::message("PITV::toChord:   PITV:               %8d     %8d     %8d     %8d\n", P, I, T, V);
     }
     P = P % countP;
     I = I % countI;
     T = T % countT;
     V = V % countV;
     if (printme) {
-        message("PITV::toChord:   PITV \%:             %8d     %8d     %8d     %8d\n", P, I, T, V);
+        System::message("PITV::toChord:   PITV \%:             %8d     %8d     %8d     %8d\n", P, I, T, V);
     }
     auto prime_form_ = PsForIndexes.at(P);
     auto normal_form_ = prime_form_;
@@ -5248,20 +5145,20 @@ inline std::vector<Chord> PITV::toChord(int P, int I, int T, int V, bool printme
         normal_form_ = inverse_prime_form_;
     }
     if (printme) {
-        message("PITV::toChord:   I: %5d normal_form:   %s\n", I, print_chord(normal_form_));
-        message("PITV::toChord:   P: %5d prime_form_:   %s\n", P, print_chord(prime_form_));
-        message("PITV::toChord:            inv prime form:%s\n",  print_chord(inverse_prime_form_));
+        System::message("PITV::toChord:   I: %5d normal_form:   %s\n", I, print_chord(normal_form_));
+        System::message("PITV::toChord:   P: %5d prime_form_:   %s\n", P, print_chord(prime_form_));
+        System::message("PITV::toChord:            inv prime form:%s\n",  print_chord(inverse_prime_form_));
    }
     auto normal_form_t = normal_form_;
     for (int t = 0; t < T; ++t) {
         normal_form_t = normal_form_t.T(g);
     }
     if (printme) {
-        message("PITV::toChord:   T: %5d normal_form_t: %s\n", T, print_chord(normal_form_t));
+        System::message("PITV::toChord:   T: %5d normal_form_t: %s\n", T, print_chord(normal_form_t));
     }
     auto op = normal_form_t.eOP();
     if (printme) {
-        message("PITV::toChord:            op:            %s\n",  print_chord(op));
+        System::message("PITV::toChord:            op:            %s\n",  print_chord(op));
     }
     auto op_v = octavewiseRevoicing(op, V, range);
     std::vector<Chord> result(3);
@@ -5269,7 +5166,7 @@ inline std::vector<Chord> PITV::toChord(int P, int I, int T, int V, bool printme
     result[1] = op;
     result[2] = normal_form_;
     if (printme) {
-        message("PITV::toChord:            result:        %s\n\n", result[0].toString().c_str());
+        System::message("PITV::toChord:            result:        %s\n\n", result[0].toString().c_str());
     }
     return result;
 }

@@ -17,7 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
+#if 0
 #if defined(HAVE_UNISTD_H) || defined(MACOSX)
 #include <unistd.h>
 #endif
@@ -584,7 +584,7 @@ char *basename_(const char *path)
 #endif
 {
     static char bname[NAME_MAX + 1];
-    register const char *endp, *startp;
+    const char *endp, *startp;
 
     /* Empty or NULL string gets treated as "." */
     if (path == NULL || *path == '\0') {
@@ -619,7 +619,7 @@ char *basename_(const char *path)
 char *dirname(const char *path)
 {
     static char bname[NAME_MAX +1];
-    register const char *endp;
+    const char *endp;
 
     /* Empty or NULL string gets treated as "." */
     if (path == NULL || *path == '\0') {
@@ -783,3 +783,4 @@ void System::beep()
 #endif
 }
 
+#endif

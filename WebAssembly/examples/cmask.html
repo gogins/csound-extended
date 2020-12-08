@@ -4,12 +4,19 @@
 <title>CMask Demo</title>
 </head>
 <body style="background-color:LightGrey;">
-<!-- This script loads the entire Csound library compiled for WebAssembly 
+<script>
+try {
+    var fs = require("fs");
+    var __dirname = fs.realpathSync.native(".");
+} catch(e) {
+    console.log(e);
+}
+</script><!-- This script loads the entire Csound library compiled for WebAssembly 
      and based on AudioWorklet. -->
 <script src="CsoundAudioNode.js"></script>
-<!-- This script tests the environment and attempts to Csound, if available, 
+<!-- This script tests the environment and attempts to load Csound, if available, 
      from each environment, preferring native (injected) Csound as found in 
-     CsoundQt oe Android, then csound.node, then Csound for WebAssembly. -->
+     CsoundQt or Android, then csound.node, then Csound for WebAssembly. -->
 <script src="csound_loader.js"></script>
 <script src="cmask.js"></script>
 <script>
