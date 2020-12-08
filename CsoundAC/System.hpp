@@ -77,7 +77,11 @@ inline SILENCE_PUBLIC int message_level(int verbosity) {
 }
 
 inline MessageCallbackType &message_callback() {
-    static MessageCallbackType message_callback_;
+#if !defined(EMSCRIPTEN)
+    static MessageCallbackType message_callback_ = nullptr;
+#else
+    static emscripten::val message_callback_ = emscripten::val::undefined();
+#endif
     return message_callback_;
 }
 
