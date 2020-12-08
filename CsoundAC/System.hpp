@@ -37,6 +37,7 @@
 #if !defined(EMSCRIPTEN)
 #include "CppSound.hpp"
 #else
+#include <dlfcn.h>
 #include <emscripten/emscripten.h>
 #include <emscripten/val.h>
 #endif
@@ -570,10 +571,10 @@ inline SILENCE_PUBLIC void System::message(const char *format, va_list valist) {
 inline SILENCE_PUBLIC void System::message(int error_level, const char *format, va_list valist) {
     char buffer[0x2000];
     std::vsnprintf(buffer, 0x2000, format, valist);
-    if (messageCallback == emscripten::val::undefined() || messageCallback == emscripten::val::null()) {
+    if (message_callback() == emscripten::val::undefined() || message_callback() == emscripten::val::null()) {
         emscripten_log(EM_LOG_CONSOLE, buffer);
     } else {
-        messageCallback.call<void>(buffer);
+        message_callback().call<void>(buffer);
     }
 }
 
@@ -613,17 +614,30 @@ inline SILENCE_PUBLIC void System::yieldThread() {
 }
 
 inline SILENCE_PUBLIC int System::openLibrary(void **library, std::string filename) {
+#if !defined(EMSCRIPTEN)
     return csoundOpenLibrary(library, filename.c_str());
+#else
+    *library = dlopen(filename.c_str(), RTLD_NOW | RTLD_GLOBAL);
+    return (int) *library;
+#endif
 }
 
 inline SILENCE_PUBLIC void *System::getSymbol(void *library, std::string name) {
     void *procedureAddress = 0;
+#if !defined(EMSCRIPTEN)
     procedureAddress = csoundGetLibrarySymbol(library, name.c_str());
+#else
+    procedureAddress = dlsym(library, name.c_str());
+#endif
     return procedureAddress;
 }
 
 inline SILENCE_PUBLIC void System::closeLibrary(void *library) {
+#if !defined(EMSCRIPTEN)
     csoundCloseLibrary(library);
+#else
+    dlclose(library);
+#endif
 }
 
 inline SILENCE_PUBLIC void System::setLogfile(FILE *logfile_) {

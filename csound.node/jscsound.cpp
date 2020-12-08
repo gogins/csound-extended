@@ -41,7 +41,7 @@ static uv_async_t uv_csound_message_async;
  */
 static void csoundMessageCallback_(CSOUND *csound__, int attr, const char *format, va_list valist)
 {
-    char buffer[0x1000];
+    char buffer[0x2000];
     std::vsprintf(buffer, format, valist);
     csound_messages_queue.push(strdup(buffer));
     uv_async_send(&uv_csound_message_async);

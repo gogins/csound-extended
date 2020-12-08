@@ -432,7 +432,6 @@ void Composition::generateAllNames()
     if (artist.empty() == true) {
         artist = author;
     }
-    album  = album;
     System::inform("timestamp:                       %s\n", timestamp.c_str());
     System::inform("author:                          %s\n", author.c_str());
     System::inform("title:                           %s\n", getTitle().c_str());
