@@ -927,7 +927,7 @@ var generate = function() {
     lindenmayer.addRule('a', 'WN +T5 a +Nt1.5 +NRk1.5 WC *Okt.03 [ +NRk5 c ] +Q3 a +Nt1 -NRk1 +Nt1 WN [ +NRk12 c ] a');
     lindenmayer.addRule('b', 'AC K Q5 WN b +NNt17 *NRk1.1 WN [ +NRk5 c ] b +Nt1 -NRk1 +NNt1 WN WCV [ +NRk11 c ] b');
     lindenmayer.addRule('c', '*SNt.95 *SNd.95 *SRk1.02 +Nt0.5 WN K c +Nt1 +NRk1 WN [ +NRk5 c ] c +Nt1 -NRk1 +Nt1 WN c');
-    lindenmayer.setIterationCount(2);
+    lindenmayer.setIterationCount(4);
     csound.message("lindenmayer: " + lindenmayer);
     let rescale = new CsoundAC.Rescale();
     rescale.setRescale(0, true, false, 1., 0.);

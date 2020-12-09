@@ -18,8 +18,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 #pragma once
+
+// PLEASE NOTE:  
+//
+// This file does not depend upon any libraries other than system libraries or 
+// the standard C++ library. However, some of the header files below are 
+// header file-only libraries.
+
 #define EIGEN_INITIALIZE_MATRICES_BY_ZERO
-// Header file only library.
 #include "Platform.hpp"
 #include "System.hpp"
 #ifdef SWIG
@@ -30,7 +36,6 @@
 #include <climits>
 #include <cmath>
 #include <cstdarg>
-// Header file only library.
 #include <eigen3/Eigen/Dense>
 #include <functional>
 #include <iostream>
@@ -45,16 +50,13 @@
 #else
 #include "Platform.hpp"
 #include <algorithm>
-// Header file only library.
 #include <boost/algorithm/string.hpp>
-// Header file only library.
 #include <boost/math/special_functions/ulp.hpp>
 #include <cfloat>
 #include <climits>
 #include <cmath>
 #include <csignal>
 #include <cstdarg>
-// Header file only library.
 #include <eigen3/Eigen/Dense>
 #include <functional>
 #include <iostream>

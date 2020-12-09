@@ -605,20 +605,56 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         .constructor<>()
     ;
     // NEEDS WORK
-    //~ emscripten::class_<csound::HarmonyIFS, emscripten::base<csound::ScoreNode> >("HarmonyIFS")
-        //~ .constructor<>()
-        //~ .function("add_interpolation_point", &csound::HarmonyIFS::add_interpolation_point)
-        //~ .function("generate_score_attractor", &csound::HarmonyIFS::generate_score_attractor)
-        //~ .function("get_transformation_count", &csound::HarmonyIFS::get_transformation_count)
-        //~ .function("initialize", &csound::HarmonyIFS::initialize)
-        //~ .function("initialize_hutchinson_operator", &csound::HarmonyIFS::initialize_hutchinson_operator)
-        //~ .function("iterate", &csound::HarmonyIFS::iterate, emscripten::allow_raw_pointers())
-        //~ .function("point_to_note", &csound::HarmonyIFS::point_to_note, emscripten::allow_raw_pointers())
-        //~ .function("remove_duplicate_notes", &csound::HarmonyIFS::remove_duplicate_notes)
-        //~ .function("set_transformation", &csound::HarmonyIFS::set_transformation)
-        //~ .function("translate_score_attractor_to_score", &csound::HarmonyIFS::translate_score_attractor_to_score)
-        //~ .function("get_pitv", &csound::HarmonyIFS::get_pitv, emscripten::allow_raw_pointers())
-    //~ ;
+    /*
+            HarmonyPoint();
+            HarmonyPoint(const HarmonyPoint &other);
+            HarmonyPoint &operator = (const HarmonyPoint &other);
+            HarmonyPoint &operator = (const Eigen::VectorXd &other);
+            virtual ~HarmonyPoint();
+            virtual void initialize();
+            virtual double t() const;
+            virtual double P() const;
+            virtual double I() const;
+            virtual double T() const;
+            virtual double k() const;
+            virtual double v() const;
+            virtual double i() const;
+            virtual void t(double value);
+            virtual void P(double value);
+            virtual void I(double value);
+            virtual void T(double value);
+            virtual void k(double value);
+            virtual void v(double value);
+            virtual void i(double value);
+            virtual std::string toString() const;
+            */
+    emscripten::class_<csound::HarmonyPoint, emscripten::base<Eigen::VectorXd> >("HarmonyPoint")
+        .constructor<>()
+        .constructor<const csound::HarmonyPoint &>()
+        .function("operator=", emscripten::select_overload<csound::HarmonyPoint &(const csound::HarmonyPoint &)>(&csound::HarmonyPoint::operator=))
+        .function("initialize", &csound::HarmonyPoint::initialize)
+        .property("t", emscripten::select_overload<double (void) const>(&csound::HarmonyPoint::t), emscripten::select_overload<void (double)>(&csound::HarmonyPoint::t))
+    ;
+    emscripten::class_<csound::HarmonyInterpolationPoint, emscripten::base<Eigen::VectorXd> >("HarmonyInterpolationPoint")
+        .constructor<>()
+    ;
+    emscripten::class_<csound::HarmonyEvent>("HarmonyEvent")
+        .constructor<>()
+    ;
+    emscripten::class_<csound::HarmonyIFS, emscripten::base<csound::ScoreNode> >("HarmonyIFS")
+        .constructor<>()
+        .function("add_interpolation_point", &csound::HarmonyIFS::add_interpolation_point)
+        .function("generate_score_attractor", &csound::HarmonyIFS::generate_score_attractor)
+        .function("get_transformation_count", &csound::HarmonyIFS::get_transformation_count)
+        .function("initialize", &csound::HarmonyIFS::initialize)
+        .function("initialize_hutchinson_operator", &csound::HarmonyIFS::initialize_hutchinson_operator)
+        .function("iterate", &csound::HarmonyIFS::iterate, emscripten::allow_raw_pointers())
+        .function("point_to_note", &csound::HarmonyIFS::point_to_note, emscripten::allow_raw_pointers())
+        .function("remove_duplicate_notes", &csound::HarmonyIFS::remove_duplicate_notes)
+        .function("set_transformation", &csound::HarmonyIFS::set_transformation)
+        .function("translate_score_attractor_to_score", &csound::HarmonyIFS::translate_score_attractor_to_score)
+        .function("get_pitv", &csound::HarmonyIFS::get_pitv, emscripten::allow_raw_pointers())
+    ;
     // FINISHED
     emscripten::class_<csound::KMeansMCRM, emscripten::base<csound::MCRM> >("KMeansMCRM")
         .constructor<>()
