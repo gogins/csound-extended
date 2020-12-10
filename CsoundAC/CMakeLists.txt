@@ -37,7 +37,6 @@ if(BUILD_CSOUND_AC)
         CounterpointMain.cpp
         CounterpointNode.cpp
         Event.cpp
-        HarmonyIFS.cpp
         ImageToScore.cpp
         Lindenmayer.cpp
         MCRM.cpp
@@ -53,7 +52,6 @@ if(BUILD_CSOUND_AC)
         Shell.cpp
         Soundfile.cpp
         StrangeAttractor.cpp
-        System.cpp
         Voicelead.cpp
         VoiceleadingNode.cpp)
 
