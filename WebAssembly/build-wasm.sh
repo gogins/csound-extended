@@ -14,7 +14,7 @@ export CXX_FLAGS="-v -std=c++17 -Wno-implicit-int-float-conversion -DINIT_STATIC
 
 # Most emcc flags should be the same for both the 'compile' and the 'compile and link' passes.
 
-export EMCC_FLAGS='-s ALLOW_MEMORY_GROWTH=1 -s ASSERTIONS=1 -s DEMANGLE_SUPPORT=1 -s ENVIRONMENT="node,web,webview" -s FORCE_FILESYSTEM=1 -s INITIAL_MEMORY=268435456 -s LINKABLE=1 -s NO_EXIT_RUNTIME=0 -s SAFE_HEAP=0 -s WASM=1'
+export EMCC_FLAGS='-s ALLOW_MEMORY_GROWTH=1 -s ASSERTIONS=1 -s DEMANGLE_SUPPORT=1 -s ENVIRONMENT=node,web,webview,worker -s FORCE_FILESYSTEM=1 -s INITIAL_MEMORY=268435456 -s LINKABLE=1 -s NO_EXIT_RUNTIME=0 -s SAFE_HEAP=0 -s WASM=1'
 
 mkdir -p build-wasm
 cd build-wasm

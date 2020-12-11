@@ -1,13 +1,13 @@
 {
-  "main": "Parachronic_CsoundAC.html",
-  "name": "Parachronic_CsoundAC",
+  "main": "player.html",
+  "name": "player",
   "description": "HTML5 with Csound",
   "version": "0.1.0",
   "keywords": [ "Csound", "node-webkit" ],
   "nodejs": true,
   "node-remote": "http://<all-urls>/*",
   "window": {
-    "title": "Parachronic_CsoundAC",
+    "title": "player",
     "icon": "link.png",
     "toolbar": false,
     "frame": false,
