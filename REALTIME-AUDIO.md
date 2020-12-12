@@ -66,18 +66,9 @@ In the browser, there is only 1 input channel, outside the browser there are pro
 
 It is vital to understand that with plain ALSA, only one audio stream can be active at a time. Hence, in the browser, only one tab can use audio at a time. Other audio tabs should be closed before running a WebAssembly piece.
 
-The Chromium browser is invoked by the shell script `/usr/bin/chromium-browser`. Normally, Chromium uses PulseAudio. The script implies that the browser audio configuration can be overridden to use plain ALSA in an initialization file or in an environment variable, but I could not get that to work. However, adding these flags to the final invocation of the command in the startup script _does_ work (although this will break Chromium for anybody who uses PulseAudio or a different ALSA device):
+The Chromium browser is invoked by the shell script `/usr/bin/chromium-browser`. Normally, Chromium uses PulseAudio. The script has comments saying that the browser audio configuration can be overridden to use plain ALSA in an initialization file or in an environment variable. Indeed, I got ALSA to work in Chromium by putting the following into my `~/.chromium-browser.init` file:
 ```
-else
-  if [ $want_temp_profile -eq 0 ] ; then
-    # MKG changed 2020-04-14: exec $LIBDIR/$APPNAME $CHROMIUM_FLAGS "$@"
-    exec $LIBDIR/$APPNAME $CHROMIUM_FLAGS --alsa-input-device='plughw:1,0' --alsa-output-device='plughw:1,0' "$@"
-  else
-    # we can't exec here as we need to clean-up the temporary profile
-    $LIBDIR/$APPNAME $CHROMIUM_FLAGS "$@"
-    rm -rf $TEMP_PROFILE
-  fi
-fi
+export CHROMIUM_FLAGS="${CHROMIUM_FLAGS} --alsa-input-device=plughw:1,0 --alsa-output-device=plughw:1,0"
 ```
 
 ## Rendering to Soundfile
