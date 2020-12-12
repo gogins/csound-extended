@@ -283,7 +283,7 @@ class CsoundAudioNode extends AudioWorkletNode {
     SetStringChannel(name, value) {
         this.port.postMessage(["SetStringChannel", name, value]);
     };
-    // Wiring into Web Audio graph is up here in the upper half, 
+    // Wiring into the Web Audio graph is up here in the upper half, 
     // wiring within Csound is down in the lower half.
     async Start() {
         // this.message_callback("[" + window.performance.now() + " Start.]\n");
@@ -293,7 +293,7 @@ class CsoundAudioNode extends AudioWorkletNode {
             var index = 0;
             var input_connected = false;
             var print_device = function(device) {
-                message_callback_(index + " " + device.kind + ": " + device.label + "\n");
+                message_callback_("mediaDevices: " + index + " " + device.kind + ": " + device.label + "\n");
                 index++;
             };     
             device_list.forEach(print_device);
@@ -334,6 +334,7 @@ class CsoundAudioNode extends AudioWorkletNode {
             }
             this.port.postMessage(["Start"]);
             this.is_playing = true;
+            this.message_callback("is_playing...\n");
         } catch (e) {
             this.message_callback(e);
         }
