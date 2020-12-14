@@ -21,7 +21,11 @@ try {
 <script src="cmask.js"></script>
 <script>
 var csd = null;
-var cmask = cmask_module();
+try {
+    var cmask = cmask_module();
+} catch(e) {
+    console.log(e);
+ }
 var csound_message_callback = function(message) {
     let messages_textarea = document.getElementById("console");
     let existing = messages_textarea.value;

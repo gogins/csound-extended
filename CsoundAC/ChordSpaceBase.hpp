@@ -422,6 +422,10 @@ public:
 #if __cpplusplus >= 201103L
     Chord &operator = (Chord &&other) = default;
 #endif
+    virtual Chord clone() const {
+        Chord clone_ = *this;
+        return clone_;
+    }
     virtual Chord &operator = (const std::vector<double> &other);
     virtual operator std::vector<double>() const;
     /**

@@ -819,7 +819,7 @@ var generate = function() {
      * (] T)        Pop the current turtle state from the stack (return to 
      *              the branching point).
      * (W N e)      Write the current turtle position as a note into the score
-     *              under equivalence class e (0, 0, R).
+     *              under equivalence class e (0, O, R).
      * (F N x e)    Move the turtle position N "forward" x steps S along its 
      *              current orientation O) under equivalence class e 
      *              (0, O, R): 
@@ -923,11 +923,11 @@ var generate = function() {
      * no operations, but may still be used to define replacement rules.
      */
     let lindenmayer = new CsoundAC.ChordLindenmayer();
-    lindenmayer.setAxiom('(= N[d] 1)(= Ra 60)(= N[v] 60) =CR"CM7" =MR"CM7" [ a ] c +Nt01.5 +NRk7 b')
-    lindenmayer.addRule('a', 'WN +T5 a +Nt1.5 +NRk1.5 WC *Okt.03 [ +NRk5 c ] +Q3 a +Nt1 -NRk1 +Nt1 WN [ +NRk12 c ] a');
-    lindenmayer.addRule('b', 'AC K Q5 WN b +NNt17 *NRk1.1 WN [ +NRk5 c ] b +Nt1 -NRk1 +NNt1 WN WCV [ +NRk11 c ] b');
-    lindenmayer.addRule('c', '*SNt.95 *SNd.95 *SRk1.02 +Nt0.5 WN K c +Nt1 +NRk1 WN [ +NRk5 c ] c +Nt1 -NRk1 +Nt1 WN c');
-    lindenmayer.setIterationCount(4);
+    lindenmayer.setAxiom('(= N[d] 1)(= Ra 60)(= N[v] 60)(= C R "CM7")(= M R "CM7")([ T)(a)(] T)(c)(+ N t 0 1.5)(+ N k 7) (b)')
+    lindenmayer.addRule('(a)', '(W N + T 5)(a)(+N t 1.5)(+ N R k 1.5)(W C)(* O k t .03) ([ T)(+ N R k 5)(c)(] T)(+ Q 3)(a)(+ N t 1)(- N R k 1)(+ N t 1)(W N)([ T)(+ N R k 12)(c)(] T)(a)');
+    lindenmayer.addRule('(b)', '(C P)(K C)(Q C 5)(W N 0)(b) +NNt17 *NRk1.1 WN [ +NRk5 c ] b +Nt1 -NRk1 +NNt1 WN WCV [ +NRk11 c ] b');
+    lindenmayer.addRule('(c)', '*SNt.95 *SNd.95 *SRk1.02 +Nt0.5 WN K c +Nt1 +NRk1 WN [ +NRk5 c ] c +Nt1 -NRk1 +Nt1 WN c');
+    lindenmayer.setIterationCount(3);
     csound.message("lindenmayer: " + lindenmayer);
     let rescale = new CsoundAC.Rescale();
     rescale.setRescale(0, true, false, 1., 0.);
