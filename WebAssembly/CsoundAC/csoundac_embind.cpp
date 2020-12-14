@@ -767,6 +767,7 @@ EMSCRIPTEN_BINDINGS(csoundac) {
     // FINISHED
     emscripten::class_<csound::Score, emscripten::base<std::vector<csound::Event>>>("Score")
         .constructor<>()
+        .function("add", &csound::Score::add)
         .function("append", &csound::Score::append_note)
         .function("append_event", &csound::Score::append_event)
         .function("arrange_all", &csound::Score::arrange_all)

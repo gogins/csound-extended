@@ -8,6 +8,18 @@ GNU Lesser General Public License
 
 Part of Silencio, an algorithmic music composition library for Csound.
 
+PLEASE NOTE
+
+This module is deprecated. Please use the code in the WebAssembly build of 
+CsoundAC instead of this code.
+
+A number of errors in the equivalence classes and symmetries of chord space 
+exist in this module, but have been fixed in CsoundAC.
+
+There are some differences in the APIs between this module and CsoundAC, but 
+all functionality is available in CsoundAC with the exception of 
+ParametricLindenmayer.js.
+
 REGARDING BLUE
 
 Steven Yi's Java program blue, for composing with Csound, uses the Nashorn
@@ -29,7 +41,6 @@ if (typeof console === 'undefined') {
 }
 
 (function() {
-    
 
     // All JavaScript dependencies of ChordSpace.js:
     // let numeric = require("numeric.js");

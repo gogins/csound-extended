@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -5,8 +6,6 @@
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="0" />
-        <script src="js/Silencio.js"></script>
-        <script src="js/ChordSpace.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.1/dat.gui.js"></script>
         <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sprintf/1.1.1/sprintf.js"></script>
@@ -31,6 +30,15 @@
         </style>
     </head>
     <body style="background:black;">
+        <script>
+            try {
+                var fs = require("fs");
+                var __dirname = fs.realpathSync.native(".");
+            } catch(e) {
+                console.log(e);
+            }
+        </script>
+        <script src='CsoundAC.js'></script>
         <script src="CsoundAudioNode.js"></script>
         <script src="csound_loader.js"></script>
         <div id = 'webgl_cell' class='canvas' style="width:98vw;height:98vh;"/>
@@ -1105,12 +1113,33 @@ f 0 3600
          * Based on Barry Martin's formula for the hopalong fractal.
          * Updated and adapted for music generation by Michael Gogins.
          */
-        let is_playing = false;
-        let score = new Silencio.Score();
-        let FM9 = ChordSpace.chordForName('FM9');
-        let Bb7 = ChordSpace.chordForName('Bb7');
-        let chord = Bb7.clone();
-        let modality = chord.clone();
+        // Some variables at global scope to allow for async loading of 
+        // WebAssembly modules. 
+        var csound_message_callback = function(message_text) {
+            console.log(message_text);
+            let messages_textarea = document.getElementById("console");
+            let existing = messages_textarea.value;
+            messages_textarea.value = existing + message_text;
+            messages_textarea.scrollTop = messages_textarea.scrollHeight;
+        }
+        var is_playing = false;
+        var csound;
+        var CsoundAC;
+        var chord;
+        var modality;
+        var FM9;
+        var Bb7;
+        // Load WebAssembly modules asynchronously yet not asynchronously.
+        (async function() {
+            csound = await get_csound(csound_message_callback);
+            await csound.Message("Hello, World, this is Csound!\n");
+            CsoundAC = await createCsoundAC(); 
+            await csound.Message(CsoundAC.hello());         
+            FM9 = CsoundAC.chordForName('FM9');
+            Bb7 = CsoundAC.chordForName('Bb7');
+            chord = Bb7.clone();
+            modality = chord.clone();
+        }());
         let RANGE = 60;
         let BASS = 36;
         let INSTRUMENT_COUNT = 13.9;
@@ -1363,11 +1392,6 @@ f 0 3600
                 mouseY = event.touches[ 0 ].pageY - windowHalfY;
             }
         }
-        let csound_message_callback = function(text) {
-            let Log_cell = document.getElementById('console');
-            Log_cell.value += text;
-            Log_cell.scrollTop = Log_cell.scrollHeight;
-         }
         function onWindowResize( event ) {
             let container = document.getElementById('webgl_cell');
             windowHalfX = container.clientWidth / 2;
@@ -1412,11 +1436,12 @@ f 0 3600
                 let instrument = rescaleX(point.x);
                 let key = rescaleY(point.y);
                 let pan = Math.random();
-                score.add(0, parameters.Note_length, 144, instrument, key, 60, 0, pan, 0, 0, 0);
-                score.temper();
-                ChordSpace.conformScoreToChord(score, chord, false);
-                let score_text = score.toString();
-                score.sendToCsound(csound);
+                let event = new CsoundAC.Event(0., parameters.Note_length, 144., instrument, key, 60., 0., pan, 0., 0., 0.);
+                event.temper(12);
+                CsoundAC.conformToChord(event, chord, true);
+                let score_text = event.toCsoundIStatement(12);
+                csound.Message(score_text);
+                csound.ReadScore(score_text);
                 let Chord_cell = document.getElementById('Chord_cell');
                 Chord_cell.innerHTML = chord.name();
                 let Notes_cell = document.getElementById('Notes_cell');
@@ -1429,7 +1454,6 @@ f 0 3600
                 X_cell.innerHTML = sprintf("%011.4f", point.x);
                 let Y_cell  = document.getElementById('Y_cell');
                 Y_cell.innerHTML = sprintf("%011.4f", point.y);
-                score.clear();
                 note_count = note_count + 1;
             }
             setTimeout(createNote, 1000. / parameters.Notes_per_second);
@@ -1763,13 +1787,6 @@ f 0 3600
             slider.onChange(on_parameter_change);
             return slider;
         };
-        function logMessage(message) {
-            console.log(message);
-            let messages_textarea = document.getElementById("console");
-            let existing = messages_textarea.value;
-            messages_textarea.value = existing + message.data;
-            messages_textarea.scrollTop = messages_textarea.scrollHeight;
-        }
         // Used to find out what actually happens when a key is pressed.
         function printKey(e) {
             e = e || event
@@ -1789,7 +1806,7 @@ f 0 3600
             //if (document.forms.keyform[e.type + 'Stop'].checked) {
             //  e.preventDefault ? e.preventDefault() : (e.returnValue = false)
             //}
-            logMessage(message);
+            csound_message_callback(message);
         }
         // The 'keydown' event is used for key bindings.
         $(document).on("keydown", function (e) {
