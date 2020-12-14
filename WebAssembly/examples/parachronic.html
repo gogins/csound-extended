@@ -923,10 +923,16 @@ var generate = function() {
      * no operations, but may still be used to define replacement rules.
      */
     let lindenmayer = new CsoundAC.ChordLindenmayer();
-    lindenmayer.setAxiom('(= N[d] 1)(= Ra 60)(= N[v] 60)(= C R "CM7")(= M R "CM7")([ T)(a)(] T)(c)(+ N t 0 1.5)(+ N k 7) (b)')
-    lindenmayer.addRule('(a)', '(W N + T 5)(a)(+N t 1.5)(+ N R k 1.5)(W C)(* O k t .03) ([ T)(+ N R k 5)(c)(] T)(+ Q 3)(a)(+ N t 1)(- N R k 1)(+ N t 1)(W N)([ T)(+ N R k 12)(c)(] T)(a)');
-    lindenmayer.addRule('(b)', '(C P)(K C)(Q C 5)(W N 0)(b) +NNt17 *NRk1.1 WN [ +NRk5 c ] b +Nt1 -NRk1 +NNt1 WN WCV [ +NRk11 c ] b');
-    lindenmayer.addRule('(c)', '*SNt.95 *SNd.95 *SRk1.02 +Nt0.5 WN K c +Nt1 +NRk1 WN [ +NRk5 c ] c +Nt1 -NRk1 +Nt1 WN c');
+//~     lindenmayer.setAxiom('(= N[d] 1)(= Ra 60)(= N[v] 60)(= C R "CM7")(= M R "CM7")([ T)(a)(] T)(c)(+ N t 0 1.5)(+ N k 7) (b)')
+//~     lindenmayer.addRule('(a)', '(W N + T 5)(a)(+N t 1.5)(+ N R k 1.5)(W C)(* O k t .03) ([ T)(+ N R k 5)(c)(] T)(+ Q 3)(a)(+ N t 1)(- N R k 1)(+ N t 1)(W N)([ T)(+ N R k 12)(c)(] T)(a)');
+//~     lindenmayer.addRule('(b)', '(C P)(K C)(Q C 5)(W N 0)(b) +NNt17 *NRk1.1 WN [ +NRk5 c ] b +Nt1 -NRk1 +NNt1 WN WCV [ +NRk11 c ] b');
+//~     lindenmayer.addRule('(c)', '*SNt.95 *SNd.95 *SRk1.02 +Nt0.5 WN K c +Nt1 +NRk1 WN [ +NRk5 c ] c +Nt1 -NRk1 +Nt1 WN c');
+    
+    lindenmayer.setAxiom("(seed P 3928394)(R P 60)(= N[d] 3)(Sc P)(A)");
+    lindenmayer.addRule("(A)", "(A)(W N)(+ N[k] 20 R)(C Sd 5 R)(W C R)(- Sd 2)([)(+ N[k] 7)(/ S[t] 1.025)(/ S[d] 1.025)(F N 1)(A)(])(uni V 1 24)(uni N[x] 0 1)(+ N[t] 1)(W C R)(C Sd 3)(uni N[i] 1 5)(M Sc 3 0)(Sc P)(W N)(A)(- N[k] 2)(+ N[t] 1)(W N)(A)");
+    
+    
+    
     lindenmayer.setIterationCount(3);
     csound.message("lindenmayer: " + lindenmayer);
     let rescale = new CsoundAC.Rescale();
