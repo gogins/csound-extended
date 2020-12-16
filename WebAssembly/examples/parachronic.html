@@ -4,14 +4,22 @@
 <title>Parachronic</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<script src="csound_loader.js"></script>
+<script type="text/javascript" src="csound_loader.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.1/dat.gui.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sprintf/1.1.1/sprintf.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r123/three.js"></script>
+<script type="text/javascript" src="https://rawgit.com/mrdoob/three.js/master/examples/js/controls/TrackballControls.js"></script>
+<script type="text/javascript" src="piano-roll.js"></script>
+<!--
+<script src="js/TrackballControls.js"></script>
 <script src="js/sprintf.js"></script>
 <script src="js/numeric.js"></script>
-<script src="js/piano-roll.js"></script>
 <script src="js/three.js"></script>
 <script src="js/tinycolor.js"></script>
-<script src="js/TrackballControls.js"></script>
 <script src="js/dat.gui.js"></script>
+-->
 </head>
 <body class="w3-container w3-black">
 <div class="w3-row-padding">
@@ -775,32 +783,43 @@ var csound_message = function(text) {
     messages_textarea.scrollTop = messages_textarea.scrollHeight;
 };
 
-let CsoundAC;
+var CsoundAC;
 (async function() { 
     CsoundAC = await createCsoundAC(); 
     csound_message(CsoundAC.hello()); 
+    var txt = "";
+    txt += "Browser CodeName: " + navigator.appCodeName + "\n";
+    txt += "Browser Name: " + navigator.appName + "\n";
+    txt += "Browser Version: " + navigator.appVersion + "\n";
+    txt += "Cookies Enabled: " + navigator.cookieEnabled + "\n";
+    txt += "Browser Language: " + navigator.language + "\n";
+    txt += "Browser Online: " + navigator.onLine + "\n";
+    txt += "Platform: " + navigator.platform + "\n";
+    txt += "User-agent header: " + navigator.userAgent + "\n";
+    csound_message(txt);
 }());
 
-let csound;
+var csound;
 (async function() {
     csound = await get_csound(csound_message);
     csound.Message("Hello, World, this is Csound!\n");
-}());
+    }());
 
-let title = document.title;
-let csound_score;
-let piano_roll = new PianoRoll();
+var title = document.title;
+var csound_score;
+var score_model;
+var piano_roll = new PianoRoll();
 
 var generate = function() {
-  csound.message("generate()...\n");
+  csound.Message("generate()...\n");
   try {
     score_model = new CsoundAC.ScoreModel();
     score_model.setAuthor("Michael Gogins");
     score_model.setYear("2020");
     let scale = new CsoundAC.Scale("C major");
-    csound.message(scale.information());
+    csound.Message(scale.information());
     let chord = scale.chord(1, 5, 3);
-    csound.message(chord.eOP().information());
+    csound.Message(chord.eOP().information());
     /*
      * A Lindenmayer system consists of a turtle representing a position in 
      * musical space, commands for moving the turtle or writing its state into 
@@ -922,18 +941,10 @@ var generate = function() {
      * no operations, but may still be used to define replacement rules.
      */
     let lindenmayer = new CsoundAC.ChordLindenmayer();
-//~     lindenmayer.setAxiom('(= N[d] 1)(= Ra 60)(= N[v] 60)(= C R "CM7")(= M R "CM7")([ T)(a)(] T)(c)(+ N t 0 1.5)(+ N k 7) (b)')
-//~     lindenmayer.addRule('(a)', '(W N + T 5)(a)(+N t 1.5)(+ N R k 1.5)(W C)(* O k t .03) ([ T)(+ N R k 5)(c)(] T)(+ Q 3)(a)(+ N t 1)(- N R k 1)(+ N t 1)(W N)([ T)(+ N R k 12)(c)(] T)(a)');
-//~     lindenmayer.addRule('(b)', '(C P)(K C)(Q C 5)(W N 0)(b) +NNt17 *NRk1.1 WN [ +NRk5 c ] b +Nt1 -NRk1 +NNt1 WN WCV [ +NRk11 c ] b');
-//~     lindenmayer.addRule('(c)', '*SNt.95 *SNd.95 *SRk1.02 +Nt0.5 WN K c +Nt1 +NRk1 WN [ +NRk5 c ] c +Nt1 -NRk1 +Nt1 WN c');
-    
     lindenmayer.setAxiom("(seed P 3928394)(R P 60)(= N[d] 3)(Sc P)(A)");
     lindenmayer.addRule("(A)", "(A)(W N)(+ N[k] 20 R)(C Sd 5 R)(W C R)(- Sd 2)([)(+ N[k] 7)(/ S[t] 1.025)(/ S[d] 1.025)(F N 1)(A)(])(uni V 1 24)(uni N[x] 0 1)(+ N[t] 1)(W C R)(C Sd 3)(uni N[i] 1 5)(M Sc 3 0)(Sc P)(W N)(A)(- N[k] 2)(+ N[t] 1)(W N)(A)");
-    
-    
-    
     lindenmayer.setIterationCount(3);
-    csound.message("lindenmayer: " + lindenmayer);
+    csound.Message("lindenmayer: " + lindenmayer);
     let rescale = new CsoundAC.Rescale();
     rescale.setRescale(0, true, false, 1., 0.);
     rescale.setRescale(3, true, true, 1., 8.);
@@ -948,7 +959,7 @@ var generate = function() {
     csound_score = score.getCsoundScore(12., true);
     piano_roll.draw3D(score, canvas);
   } catch(err) {
-    csound.message(err.name + ': ' + err.message + ' ' + err.line + '\n');
+    csound.Message(err.name + ': ' + err.message + ' ' + err.line + '\n');
   }
 };
 
@@ -968,7 +979,7 @@ var render = function(output_name, post_process) {
     var csd = document.getElementById('csd').value;
     csound_score = csound_score.concat("\n</CsScore>");
     csd = csd.replace("</CsScore>", csound_score);
-    csound.message("Playing...");
+    csound.Message("Playing...");
     csound.setOption(sprintf('-m%d', 2 + 128 + 32));
     csound.setOption('--nodisplays');
     csound.setOption('--keep-sorted-score');
@@ -976,20 +987,23 @@ var render = function(output_name, post_process) {
     csound.setOption('-W');
     csound.setOption('-f');
     csound.setOption('-o' + output_name);
-    csound.setMetadata("artist", "Michael Gogins");
-    csound.setMetadata("copyright", "Copyright 2020 by Michael Gogins");
-    csound.setMetadata("performer", "Mike Gogins");
-    csound.setMetadata("title", title);
-    csound.setMetadata("date", "2020");
-    csound.setMetadata("publisher", "Irreducible Productions ASCAP");
-    csound.setMetadata("comment", "Lindenmayer system in chord space.");
-    csound.setMetadata("license", "CC BY-NC-SA");
-    csound.setMetadata("genre", "Electroacoustic");
+    // Post-processing is not implemented on Android.
+    if (navigator.userAgent.search("Android") === -1) { 
+        csound.setMetadata("artist", "Michael Gogins");
+        csound.setMetadata("copyright", "Copyright 2020 by Michael Gogins");
+        csound.setMetadata("performer", "Mike Gogins");
+        csound.setMetadata("title", title);
+        csound.setMetadata("date", "2020");
+        csound.setMetadata("publisher", "Irreducible Productions ASCAP");
+        csound.setMetadata("comment", "Lindenmayer system in chord space.");
+        csound.setMetadata("license", "CC BY-NC-SA");
+        csound.setMetadata("genre", "Electroacoustic");
+    }
     if (typeof fs != 'undefined') {
         fs.writeFileSync(title + ".generated.csd", csd);
     }
     csound.compileCsdText(csd);
-    csound.message("Rendering...");
+    csound.Message("Rendering...");
     csound.start();
     if (post_process == true) {
         csound.performAndPostProcess();
