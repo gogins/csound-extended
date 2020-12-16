@@ -3,15 +3,17 @@ Michael Gogins<br>
 https://github.com/gogins<br>
 http://michaelgogins.tumblr.com
 
-## 4 December 2020
+## 16 December 2020
 
 ### [csound-extended package 1.5.0](https://github.com/gogins/csound-extended/releases)
 
-The chord space facility in Csound AC has been very useful to me over the years but recently I took at look at the "chord space group" facility and discovered many bugs in the underlying chord symmetry code, based on the work of Callender, Quinn, and Tymoczko. I have now discovered and, I hope, corrected all major incorrect assumptions and algorithms. The predicates and transformations for octave equivalence (O), permutational equivalence (P), transpositiional equivalence (T), and inversional equivalence (I) have been throughly reviewed. The predicates and transformations for the I, OPT, and OPTI equivalence relations have been rewritten to take into account the cyclical region of OPT and OPTI fundamental domains. This has included deriving the fundamental domains from first principles and implementing the inversion flats in each OPT sector of the cyclical region using linear algebra. All of this work has been subjected to comprehensive unit tests.
+The chord space facility in CsoundAC has been very useful to me over the years but recently I took at look at the "chord space group" facility and discovered many bugs in the underlying chord symmetry code, based on the work of Callender, Quinn, and Tymoczko. I have now discovered and, I hope, corrected all major incorrect assumptions and algorithms. The predicates and transformations for octave equivalence (O), permutational equivalence (P), transpositiional equivalence (T), and inversional equivalence (I) have been throughly reviewed. The predicates and transformations for the I, OPT, and OPTI equivalence relations have been rewritten to take into account the cyclical region of OPT and OPTI fundamental domains. This has included deriving the fundamental domains from first principles and implementing the inversion flats in each OPT sector of the cyclical region using linear algebra. All of this work has been subjected to comprehensive unit tests.
 
 The previous ChordSpaceGroup class has been replaced by a new PITV class that uses prime form (P), inversion (I), transposition (T), and octavewise revoicing (V) as subgroups. Prime form equivalence is used in place of the previous OPTI equivalence because prime abstracts from the cyclical region with its revoicings and is thus orthogonal to octavewise revoicing.
 
 The HarmonyIfs class has been rewritten to use the PITV class.
+
+The JavaScript modules ChordSpace.js and Silencio.js are now deprecated. The mathematical corrections mentioned above have not been made in the ChordSpace.js. Please use the WebAssembly build of CsoundAC for new compositions instead of Silencio.js and ChordSpace.js.
 
 ## 21 May 2020
 
