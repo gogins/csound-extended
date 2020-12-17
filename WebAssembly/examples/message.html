@@ -75,16 +75,16 @@
         font-family: 'Orienta', sans-serif;
     }    
     </style>
-</head>
-<body style="background-color:CadetBlue">
     <script>
-        var csound_message_callback = function(message) {
-            let messages_textarea = document.getElementById("csound_console");
-            let existing = messages_textarea.value;
+        function handleMessage(message) {
+            var messages_textarea = document.getElementById("csound_console");
+            var existing = messages_textarea.value;
             messages_textarea.value = existing + message;
-            messages_textarea.scrollTop = messages_textarea.scrollHeight;        
+            messages_textarea.scrollTop = messages_textarea.scrollHeight;   
         };
     </script>
+ </head>
+<body style="background-color:CadetBlue">
     <script src="CsoundAudioNode.js"></script>
     <script src="csound_loader.js"></script>
     <h1>Message from Another Planet, version 3</h1>
@@ -256,23 +256,24 @@ i 2    0    .      500     .       16         1.00
 <script>    
 $(document).ready(function() {
     $('input').on('input', function(event) {
-        let csound = get_csound(csound_message_callback);
+        let csound = get_csound(handleMessage);
         var slider_value = parseFloat(event.target.value);
         csound.SetControlChannel(event.target.id, slider_value);
         var output_selector = '#' + event.target.id + '_output';
         $(output_selector).val(slider_value);
     });
     $('#play').on('click', async function() {
-        let csound = get_csound(csound_message_callback);
+        csound = get_csound(handleMessage);
+        csound.SetMessageCallback(handleMessage);
         document.getElementById("csound_console").value = "";
         var csd = document.getElementById('csd').value;
         await csound.CompileCsdText(csd);
         $('#restore').trigger('click');
         await csound.Start();
-        csound.Perform();
+        await csound.Perform();
     });
     $('#stop').on('click', async function() {
-        let csound = get_csound(csound_message_callback);
+        let csound = get_csound(handleMessage);
         await csound.Stop();
         await csound.Cleanup();
         csound.Reset();
@@ -283,7 +284,7 @@ $(document).ready(function() {
         });
     });
     $('#restore').on('click', function() {
-        let csound = get_csound(csound_message_callback);
+        let csound = get_csound(handleMessage);
         $('.persistent-element').each(function() {
             this.value = localStorage.getItem(this.id);
             csound.SetControlChannel(this.id, parseFloat(this.value));

@@ -808,6 +808,7 @@ var csound;
 var title = document.title;
 var csound_score;
 var score_model;
+var lindenmayer;
 var piano_roll = new PianoRoll();
 
 var generate = function() {
@@ -940,21 +941,21 @@ var generate = function() {
      * all commands are implemented. Unimplemented commands silently perform 
      * no operations, but may still be used to define replacement rules.
      */
-    let lindenmayer = new CsoundAC.ChordLindenmayer();
+    lindenmayer = new CsoundAC.ChordLindenmayer();
     lindenmayer.setAxiom("(seed P 3928394)(R P 60)(= N[d] 3)(Sc P)(A)");
     lindenmayer.addRule("(A)", "(A)(W N)(+ N[k] 20 R)(C Sd 5 R)(W C R)(- Sd 2)([)(+ N[k] 7)(/ S[t] 1.025)(/ S[d] 1.025)(F N 1)(A)(])(uni V 1 24)(uni N[x] 0 1)(+ N[t] 1)(W C R)(C Sd 3)(uni N[i] 1 5)(M Sc 3 0)(Sc P)(W N)(A)(- N[k] 2)(+ N[t] 1)(W N)(A)");
     lindenmayer.setIterationCount(3);
     csound.Message("lindenmayer: " + lindenmayer);
-    let rescale = new CsoundAC.Rescale();
+    var rescale = new CsoundAC.Rescale();
     rescale.setRescale(0, true, false, 1., 0.);
     rescale.setRescale(3, true, true, 1., 8.);
     rescale.setRescale(4, true, false, 30., 72.);
     rescale.setRescale(5, true, true, 60., 12.);
-    CsoundAC.System.setMessageLevel(15);
+    //CsoundAC.System.setMessageLevel(15);
     rescale.addChild(lindenmayer);
     score_model.addChild(rescale);
     score_model.generate();
-    let score = score_model.getScore();
+    score = score_model.getScore();
     score.setDuration(5 * 60);
     csound_score = score.getCsoundScore(12., true);
     piano_roll.draw3D(score, canvas);
@@ -977,6 +978,7 @@ var generate = function() {
 // 512 = raw, all colours    
 var render = function(output_name, post_process) {
     var csd = document.getElementById('csd').value;
+    csound_score = score.getCsoundScore(12., true);
     csound_score = csound_score.concat("\n</CsScore>");
     csd = csd.replace("</CsScore>", csound_score);
     csound.Message("Playing...");
@@ -987,30 +989,31 @@ var render = function(output_name, post_process) {
     csound.setOption('-W');
     csound.setOption('-f');
     csound.setOption('-o' + output_name);
-    // Post-processing is not implemented on Android.
-    if (navigator.userAgent.search("Android") === -1) { 
-        csound.setMetadata("artist", "Michael Gogins");
-        csound.setMetadata("copyright", "Copyright 2020 by Michael Gogins");
-        csound.setMetadata("performer", "Mike Gogins");
-        csound.setMetadata("title", title);
-        csound.setMetadata("date", "2020");
-        csound.setMetadata("publisher", "Irreducible Productions ASCAP");
-        csound.setMetadata("comment", "Lindenmayer system in chord space.");
-        csound.setMetadata("license", "CC BY-NC-SA");
-        csound.setMetadata("genre", "Electroacoustic");
-    }
-    if (typeof fs != 'undefined') {
-        fs.writeFileSync(title + ".generated.csd", csd);
-    }
+//~     // Post-processing is not implemented on Android.
+//~     if (navigator.userAgent.search("Android") === -1) { 
+//~         csound.setMetadata("artist", "Michael Gogins");
+//~         csound.setMetadata("copyright", "Copyright 2020 by Michael Gogins");
+//~         csound.setMetadata("performer", "Mike Gogins");
+//~         csound.setMetadata("title", title);
+//~         csound.setMetadata("date", "2020");
+//~         csound.setMetadata("publisher", "Irreducible Productions ASCAP");
+//~         csound.setMetadata("comment", "Lindenmayer system in chord space.");
+//~         csound.setMetadata("license", "CC BY-NC-SA");
+//~         csound.setMetadata("genre", "Electroacoustic");
+//~     }
+//~     if (typeof fs != 'undefined') {
+//~         fs.writeFileSync(title + ".generated.csd", csd);
+//~     }
     csound.compileCsdText(csd);
     csound.Message("Rendering...");
     csound.start();
-    if (post_process == true) {
-        csound.performAndPostProcess();
-    } else {
-        csound.perform();
-    }
-    updateScoreTime();
+    csound.perform();
+//~     if (post_process == true) {
+//~         csound.performAndPostProcess();
+//~     } else {
+//~         csound.perform();
+//~     }
+//~     updateScoreTime();
 }
 
 var render_audio = function() {
@@ -1032,7 +1035,7 @@ var stop = function() {
 var updateScoreTime = function() {
     var score_time = csound.getScoreTime();
     setTimeout(updateScoreTime, 200);
-    lsys.score.progress3D(score_time);
+    piano_roll.progress3D(score_time);
 };
 var gk_update = function(name, value) {
     var numberValue = parseFloat(value);
