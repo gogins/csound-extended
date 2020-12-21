@@ -251,7 +251,7 @@ i 2    0    .      500     .       16         1.00
 </CsScore>
 </CsoundSynthesizer>
 </textarea>
-<script src="https://code.jquery.com/jquery-3.3.1.js">
+<script src="js/jquery.js">
 </script>
 <script>    
 $(document).ready(function() {
@@ -264,7 +264,6 @@ $(document).ready(function() {
     });
     $('#play').on('click', async function() {
         csound = get_csound(handleMessage);
-        csound.SetMessageCallback(handleMessage);
         document.getElementById("csound_console").value = "";
         var csd = document.getElementById('csd').value;
         await csound.CompileCsdText(csd);

@@ -1113,8 +1113,8 @@ f 0 3600
          * Based on Barry Martin's formula for the hopalong fractal.
          * Updated and adapted for music generation by Michael Gogins.
          */
-        // Some variables at global scope to allow for async loading of 
-        // WebAssembly modules. 
+        // Some variables must be defined at global scope to allow for 
+        // asynchronous loading of WebAssembly modules. 
         var csound_message_callback = function(message_text) {
             console.log(message_text);
             let messages_textarea = document.getElementById("console");
@@ -1129,7 +1129,7 @@ f 0 3600
         var modality;
         var FM9;
         var Bb7;
-        // Load WebAssembly modules asynchronously yet not asynchronously.
+        // Load WebAssembly modules (asynchronously, yet not asynchronously).
         (async function() {
             csound = await get_csound(csound_message_callback);
             await csound.Message("Hello, World, this is Csound!\n");

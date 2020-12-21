@@ -16,8 +16,8 @@
  * On Linux, PulseAudio may cause problems. It is better to disable PulseAudio
  * and use a low-level ALSA configuration.
  * 
- * On Android, csound.SetMessageCallback does not work. Instead, the 
- * message callback function is assigned to console.log.
+ * On Android, csound.SetMessageCallback does not work. Instead, assign the 
+ * message callback function to console.log.
  */
  
 // These are globals:
@@ -31,9 +31,6 @@ var load_csound = function(csound_message_callback_) {
     if (typeof csound !== 'undefined') {
         csound_injected = csound;
         csound_is_loaded = true;
-        if (navigator.userAgent.search("Android") !== -1) {
-            console.log = csound_message_callback_;
-        }
         csound_message_callback_("Csound already exists in this JavaScript context.\n");
         return;
     }

@@ -776,7 +776,6 @@ try {
 <script>
 
 var csound_message = function(text) {
-    console.log(text);
     var messages_textarea = document.getElementById("console");
     var existing = messages_textarea.value;
     messages_textarea.value = existing + text;
@@ -989,31 +988,11 @@ var render = function(output_name, post_process) {
     csound.setOption('-W');
     csound.setOption('-f');
     csound.setOption('-o' + output_name);
-//~     // Post-processing is not implemented on Android.
-//~     if (navigator.userAgent.search("Android") === -1) { 
-//~         csound.setMetadata("artist", "Michael Gogins");
-//~         csound.setMetadata("copyright", "Copyright 2020 by Michael Gogins");
-//~         csound.setMetadata("performer", "Mike Gogins");
-//~         csound.setMetadata("title", title);
-//~         csound.setMetadata("date", "2020");
-//~         csound.setMetadata("publisher", "Irreducible Productions ASCAP");
-//~         csound.setMetadata("comment", "Lindenmayer system in chord space.");
-//~         csound.setMetadata("license", "CC BY-NC-SA");
-//~         csound.setMetadata("genre", "Electroacoustic");
-//~     }
-//~     if (typeof fs != 'undefined') {
-//~         fs.writeFileSync(title + ".generated.csd", csd);
-//~     }
     csound.compileCsdText(csd);
     csound.Message("Rendering...");
     csound.start();
     csound.perform();
-//~     if (post_process == true) {
-//~         csound.performAndPostProcess();
-//~     } else {
-//~         csound.perform();
-//~     }
-//~     updateScoreTime();
+    updateScoreTime();
 }
 
 var render_audio = function() {
