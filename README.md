@@ -223,6 +223,13 @@ mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ ls eigen3
 Eigen  signature_of_eigen3_matrix_library  unsupported
 ```
 
+You must do the same thing for the boost C++ libraries (header files only):
+```
+mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ 
+mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ ln -s /usr/include/boost boost
+mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ ls boost
+```
+
 Then, to build for WebAssembly for the first time, change to the WebAssembly
 subdirectory of this repository and execute:
 
