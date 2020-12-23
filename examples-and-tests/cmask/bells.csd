@@ -1,6 +1,6 @@
 <CsoundSynthesizer>
 <CsOptions>
--odac -m35 -d
+-odac:plughw:1,0 -m35 -d
 </CsOptions>
 <CsScore>
 i 2 1 12

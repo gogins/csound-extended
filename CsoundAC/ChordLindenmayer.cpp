@@ -184,7 +184,7 @@ double ChordLindenmayer::equivalence(const double &value, const std::string &equ
     if (equivalenceClass == "O") {
         result = Conversions::modulus(value, 12.0);
     } else if (equivalenceClass == "R") {
-        result = Conversions::modulus(value, turtle.rangeSize);
+        result = Conversions::modulus(value, double(turtle.rangeSize));
     }
     return result;
 }

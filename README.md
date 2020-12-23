@@ -220,7 +220,6 @@ directory:
 mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ 
 mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ ln -s /usr/include/eigen3 eigen3
 mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ ls eigen3
-Eigen  signature_of_eigen3_matrix_library  unsupported
 ```
 
 You must do the same thing for the boost C++ libraries (header files only):
