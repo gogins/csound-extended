@@ -1,4 +1,4 @@
-#pragma oncr
+#pragma once
 
 #include <Python.h>
 #include <csound/csound_threaded.hpp>

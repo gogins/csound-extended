@@ -327,7 +327,7 @@ SILENCE_PUBLIC bool gt_tolerance(double a, double b, int epsilons=20, int ulps=2
 
 SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_singular_value_decomposition(const std::vector<Chord> &points_, bool make_eT);
 
-SILENCE_PUBLIC bool in_simplex(const std::vector<Chord> &simplex, const Chord &point, int epsilons=2000, int ulps=2000000);
+///SILENCE_PUBLIC bool in_simplex(const std::vector<Chord> &simplex, const Chord &point, int epsilons=2000, int ulps=2000000);
 
 SILENCE_PUBLIC bool le_tolerance(double a, double b, int epsilons=20, int ulps=200);
 
@@ -1249,16 +1249,16 @@ template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamental
 
 SILENCE_PUBLIC bool ge_tolerance(double a, double b, int epsilons=20,int ulps=200);
 
-/**
- * Given a set of points sufficient to define a hyperplane, computes the 
- * scalar equation of the hyperplane. The algorithm derives vectors from the 
- * points and solves for the scalar equation using the singular value 
- * decomposition. The equation is returned in the form of a unit normal vector 
- * of the hyperplane and a constant factor.
- */
-SILENCE_PUBLIC HyperplaneEquation hyperplane_equation(const std::vector<Chord> &points_in_hyperplane, bool make_eT = true);
+//~ /**
+ //~ * Given a set of points sufficient to define a hyperplane, computes the 
+ //~ * scalar equation of the hyperplane. The algorithm derives vectors from the 
+ //~ * points and solves for the scalar equation using the singular value 
+ //~ * decomposition. The equation is returned in the form of a unit normal vector 
+ //~ * of the hyperplane and a constant factor.
+ //~ */
+//~ SILENCE_PUBLIC HyperplaneEquation hyperplane_equation(const std::vector<Chord> &points_in_hyperplane, bool make_eT = true);
 
-SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_random_inversion_flat(int dimensions, bool transpositional_equivalence = true, int opt_sector = 1);
+//~ SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_random_inversion_flat(int dimensions, bool transpositional_equivalence = true, int opt_sector = 1);
 
 SILENCE_PUBLIC bool gt_tolerance(double a, double b, int epsilons, int ulps);
 

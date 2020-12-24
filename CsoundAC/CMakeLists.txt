@@ -31,6 +31,7 @@ if(BUILD_CSOUND_AC)
     set(libcsoundac_SRCS
         Cell.cpp
         ChordLindenmayer.cpp
+        ChordSpace.cpp
         Composition.cpp
         Conversions.cpp
         Counterpoint.cpp
