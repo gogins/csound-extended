@@ -7,13 +7,13 @@ find . -name "*~" -exec rm {} \;
 rm -rf dist-wasm
 mkdir dist-wasm
 cp src/*.js dist-wasm/
+cp build-wasm/cmask/*.js dist-wasm/
+cp build-wasm/cmask/*.wasm dist-wasm/
 cp build-wasm/CsoundAudio*.* dist-wasm/
 cp build-wasm/CsoundAC.js dist-wasm/
 cp build-wasm/csound_samples.* dist-wasm/
 rm -rf $RELEASE_DIR
 mkdir $RELEASE_DIR
-cp -r cmask/*.js dist-wasm
-cp -r cmask/*.wasm dist-wasm
 cp -r dist-wasm/* examples
 cp -f CsoundAC/piano-roll.js dist-wasm
 cp -f CsoundAC/piano-roll.js examples/
@@ -26,4 +26,6 @@ cp -r dist-wasm/* ../docs/html/
 cp -rf ../silencio/js/* examples/js/
 zip -r ${RELEASE_DIR}.zip ${RELEASE_DIR}
 echo "Files in examples:"
-ls -ll examples/
+ls -ll examples
+echo "Files in ../docs:"
+ls -ll ../docs

@@ -333,7 +333,11 @@ SILENCE_PUBLIC Chord gather(Score &score, double startTime, double endTime);
 SILENCE_PUBLIC void insert(Score &score,
                                   const Chord &chord,
                                   double time_,
-                                  bool voice_is_instrument=true);
+                                  bool voice_is_instrument);
+                                  
+SILENCE_PUBLIC void insert(Score &score,
+                                  const Chord &chord,
+                                  double time_);
                                   
 /**
  * Creates a complete "note on" Event for the indicated voice of the 
@@ -367,7 +371,11 @@ SILENCE_PUBLIC Score notes(const Chord &chord,
  */
 SILENCE_PUBLIC std::vector<Event *> slice(Score &score, double startTime, double endTime);
 
-
-} // End of namespace csound.
+SILENCE_PUBLIC void toScore(const Chord &chord, 
+    Score &score,
+    double time_, bool voiceIsInstrument);
+    
+} 
+// End of namespace csound.
 
 #pragma GCC diagnostic push

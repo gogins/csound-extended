@@ -17,7 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- #pragma once
+#pragma once
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
@@ -64,7 +64,7 @@ namespace csound {
      * Represents a point on a time line in a score space that has a time-
      * harmony subspace. The point consists of a homogeneous column vector 
      * with dimensions: 
-     * ```
+     * <pre>
      * t    Time.
      * P    Set class (or prime form).
      * I    Inversion (or reflection in the origin of pitch space).
@@ -73,7 +73,7 @@ namespace csound {
      * v    MIDI velocity (or loudness).
      * i    Instrument number (1-based).
      * 1    Homogeneity.
-     * ```
+     * </pre>
      * At rendering time, the point will be translated to that pitch which 
      * most closely matches a pitch-class in that chord defined by P, I, 
      * and T.
