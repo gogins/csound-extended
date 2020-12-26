@@ -298,18 +298,18 @@ public:
      * specified time. If there is no such chord, a null pointer is returned.
      */
     virtual Chord *getChord(double time_);
-    double getDuration();
+    virtual double getDuration();
     void getScale(std::vector<Event> &score, int dimension, size_t beginAt, size_t endAt, double &minimum, double &range);
     virtual void insertChord(double tyme, const Chord chord);
-    void setDuration(double targetDuration);
+    virtual void setDuration(double targetDuration);
     void setScale(std::vector<Event> &score,
-                  int dimension,
-                  bool rescaleMinimum,
-                  bool rescaleRange,
-                  size_t beginAt,
-                  size_t endAt,
-                  double targetMinimum,
-                  double targetRange);
+                   int dimension,
+                   bool rescaleMinimum,
+                   bool rescaleRange,
+                   size_t beginAt,
+                   size_t endAt,
+                   double targetMinimum,
+                   double targetRange);
 };
 
 /**
