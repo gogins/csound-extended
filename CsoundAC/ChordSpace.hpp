@@ -292,7 +292,7 @@ public:
      * Conforms the pitch-classes of the events in this to the closest
      * pitch-class of the chord, if any, that obtains at that time.
      */
-    virtual void conformToChords(bool tie_overlaps = true, bool octave_equivalence = true);
+    virtual void conformToChords(bool tie_overlaps, bool octave_equivalence);
     /**
      * Returns a pointer to the first chord that starts at or after the
      * specified time. If there is no such chord, a null pointer is returned.
