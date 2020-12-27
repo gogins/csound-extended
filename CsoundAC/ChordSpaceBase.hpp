@@ -2069,7 +2069,7 @@ template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_RPTg>(const C
     ///CHORD_SPACE_DEBUGGING() = true;
     std::raise(SIGINT);
     for (auto rptt : rptts) {
-        System::message("equate<EQUIVALENCE_RELATION_RPTg: chord %s rptt: %s opt_sector: %d\n", print_chord(chord), print_chord(rptt), opt_sector);
+        System::inform("equate<EQUIVALENCE_RELATION_RPTg: chord %s rptt: %s opt_sector: %d\n", print_chord(chord), print_chord(rptt), opt_sector);
         if (rptt.is_opt_sector(opt_sector) == true) {
             return rptt;
         }
