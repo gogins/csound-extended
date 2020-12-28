@@ -177,6 +177,7 @@ EMSCRIPTEN_BINDINGS(csoundac) {
     emscripten::function("closestPitch", &csound::closestPitch);
     emscripten::function("conformToPitchClassSet", &csound::conformToPitchClassSet);
     emscripten::function("conformToChord", &csound::conformToChord);
+    emscripten::function("conformToChord_equivalence", &csound::conformToChord_equivalence);
     emscripten::function("insert", emscripten::select_overload<void(csound::Score&,const csound::Chord&, double)>(&csound::insert));
     emscripten::function("slice", &csound::slice);
     emscripten::function("apply", &csound::apply);
