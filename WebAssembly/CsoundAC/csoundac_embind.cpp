@@ -30,7 +30,7 @@
 #include <emscripten/bind.h>
 #include <fstream>
 #include <iostream>
-#include <CsoundAC/ChordSpaceBase.hpp>
+#include <CsoundAC/ChordSpace.hpp>
 #include <CsoundAC/Silence.hpp>
 #include <string>
 #include <sstream>
@@ -176,8 +176,8 @@ EMSCRIPTEN_BINDINGS(csoundac) {
     emscripten::function("voiceleadingClosestRange", &csound::voiceleadingClosestRange);
     emscripten::function("closestPitch", &csound::closestPitch);
     emscripten::function("conformToPitchClassSet", &csound::conformToPitchClassSet);
-    emscripten::function("conformToChord", &csound::conformToChord);
-    emscripten::function("conformToChord_equivalence", &csound::conformToChord_equivalence);
+    emscripten::function("conformToChord", &csound::conformToChord, emscripten::allow_raw_pointers());
+    emscripten::function("conformToChord_equivalence", &csound::conformToChord_equivalence, emscripten::allow_raw_pointers());
     emscripten::function("insert", emscripten::select_overload<void(csound::Score&,const csound::Chord&, double)>(&csound::insert));
     emscripten::function("slice", &csound::slice);
     emscripten::function("apply", &csound::apply);
