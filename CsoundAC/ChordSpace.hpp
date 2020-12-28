@@ -321,7 +321,9 @@ public:
  * or less in its original register; otherwise, the pitch of the note is moved 
  * to the closest absolute pitch of the chord.
  */
-SILENCE_PUBLIC void conformToChord(Event &event, const Chord &chord, bool octaveEquivalence = true);
+SILENCE_PUBLIC void conformToChord(Event &event, const Chord &chord, bool octaveEquivalence);
+
+SILENCE_PUBLIC void conformToChord(Event &event, const Chord &chord);
 
 /**
  * Returns a chord containing all the pitches of the score beginning at or 
