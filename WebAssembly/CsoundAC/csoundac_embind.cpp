@@ -220,6 +220,7 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         .function("eTT", &csound::Chord::eTT)
         .function("floor", &csound::Chord::floor)
         .function("fromString", &csound::Chord::fromString)
+        .function("fundamentalDomainByPredicate", &csound::fundamentalDomainByPredicate)
         .function("getDuration", &csound::Chord::getDuration)
         .function("getInstrument", &csound::Chord::getInstrument)
         .function("getLoudness", &csound::Chord::getLoudness)
