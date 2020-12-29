@@ -71,77 +71,22 @@
 
 namespace csound {
     
-SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voiceN, std::string equivalence, double range, double g) {
-    std::set<Chord> equivalentChords;
-    int chordCount = 0;
-    int equivalentChordCount = 0;
-    double upper_bound = 2 * range + 1;
-    double lower_bound = - upper_bound;
-    Chord origin = iterator(voiceN, lower_bound);
-    Chord iterator_ = origin;
-    if (equivalence == "RP") {
-        while (next(iterator_, origin, upper_bound, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseRP(range) == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
+SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voice_count, std::string equivalence_class, double range, double g, int sector, bool printme) {
+    std::vector<Chord> fundamental_domain;
+    if (equivalence_class == "RP") {
+        fundamental_domain = fundamentalDomainByPredicate<EQUIVALENCE_RELATION_RP>(voice_count, range, g, sector, printme);       
+    } else if (equivalence_class == "RPT") {
+        fundamental_domain = fundamentalDomainByPredicate<EQUIVALENCE_RELATION_RPT>(voice_count, range, g, sector, printme);       
+    } else if (equivalence_class == "RPTg") {
+        fundamental_domain = fundamentalDomainByPredicate<EQUIVALENCE_RELATION_RPTg>(voice_count, range, g, sector, printme);       
+    } else if (equivalence_class == "RPI") {
+        fundamental_domain = fundamentalDomainByPredicate<EQUIVALENCE_RELATION_RPI>(voice_count, range, g, sector, printme);       
+    } else if (equivalence_class == "RPTI") {
+        fundamental_domain = fundamentalDomainByPredicate<EQUIVALENCE_RELATION_RPTI>(voice_count, range, g, sector, printme);       
+    } else if (equivalence_class == "RPTgI") {
+        fundamental_domain = fundamentalDomainByPredicate<EQUIVALENCE_RELATION_RPTgI>(voice_count, range, g, sector, printme);       
     }
-    if (equivalence == "RPT") {
-        while (next(iterator_, origin, upper_bound, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseRPT(range) == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    if (equivalence == "RPTT") {
-        while (next(iterator_, origin, upper_bound, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseRPTT(range, g) == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    if (equivalence == "RPI") {
-        while (next(iterator_, origin, upper_bound, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseRPI(range) == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    if (equivalence == "RPTI") {
-        while (next(iterator_, origin, upper_bound, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseRPTI(range) == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    if (equivalence == "RPTTI") {
-        while (next(iterator_, origin, upper_bound, g) == true) {
-            chordCount++;
-            Chord chord = iterator_.eP();
-            if (chord.iseRPTTI(range, g) == true) {
-                equivalentChordCount++;
-                equivalentChords.insert(chord);
-            }
-        }
-    }
-    std::vector<Chord> result;
-    std::copy(equivalentChords.begin(), equivalentChords.end(), std::back_inserter(result));
-    return result;
+    return fundamental_domain;
 }
     
 SILENCE_PUBLIC Chord gather(Score &score, double startTime, double endTime) {

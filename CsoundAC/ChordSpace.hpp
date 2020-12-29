@@ -277,7 +277,7 @@ P, L, and R have been extended as follows, see Fiore and Satyendra,
 
 class SILENCE_PUBLIC ChordScore;
 
-SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voiceN, std::string equivalence, double range, double g);
+SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voice_count, std::string equivalence_class, double range, double g, int sector, bool printme);
 
 SILENCE_PUBLIC void apply(Score &score, const Chord &chord, double startTime, double endTime, bool octaveEquivalence = true);
 
