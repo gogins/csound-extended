@@ -366,6 +366,10 @@ int main(int argc, char **argv) {
     std::cerr << "csound::eq_tolerance(0.1500000000001, 0.15): " << csound::eq_tolerance(0.1500000000001, 0.15) << std::endl;
     std::cerr << "csound::gt_tolerance(14.0, 12.0): " << csound::gt_tolerance(14.0, 12.0) << std::endl;
     std::cerr << "csound::ge_tolerance(14.0, 12.0): " << csound::ge_tolerance(14.0, 12.0) << std::endl;
+    auto chs = csound::allOfEquivalenceClass(3, "RP", 12, 1);
+    for (auto &ch : chs) {
+        csound::System::message("ch: %s\n", ch.toString().c_str());
+    }
     Hyperplane_Equation_for_Test_Points();
 
     auto chordx = csound::chordForName("CM7");
