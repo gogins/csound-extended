@@ -8,6 +8,8 @@
 #include "stdarg.h"
 #include "stdio.h"
 
+#pragma GCC diagnostic ignored "-Wformat-security"
+
 void trace(char *format, ...)
 {
     char msg[256];

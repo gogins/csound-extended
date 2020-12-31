@@ -317,13 +317,6 @@ SILENCE_PUBLIC void add_chord(std::string, const Chord &chord);
 SILENCE_PUBLIC void add_scale(std::string, const Scale &scale);
 
 /**
- * TODO: Change this to use strictly the representative fundamental domains.
- * Each iteration must be sent to the representative fundamental domain, then
- * added to the set.
- */
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> allNormalizedFundamentalDomain(int voices, mp_double range, mp_double g);
-
-/**
  * For all the notes in the Score
  * beginning at or later than the start time,
  * and up to but not including the end time,
@@ -1847,8 +1840,6 @@ SILENCE_PUBLIC Chord transpose_degrees(const Chord &scale, const Chord &original
 SILENCE_PUBLIC std::set<Chord> &unique_chords();
 
 SILENCE_PUBLIC std::set<Scale> &unique_scales();
-
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> uniqueNormalizedFundamentalDomain(int voices, mp_double range, mp_double g);
 
 /**
  * Returns the voice-leading between chords a and b,

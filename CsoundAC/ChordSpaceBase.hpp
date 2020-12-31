@@ -379,8 +379,6 @@ SILENCE_PUBLIC void add_chord(std::string, const Chord &chord);
 
 SILENCE_PUBLIC void add_scale(std::string, const Scale &scale);
 
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> allNormalizedFundamentalDomain(int voices, double range, double g);
-
 SILENCE_PUBLIC double C4();
 
 /**
@@ -637,6 +635,16 @@ public:
     virtual double getPitch(int voice) const;
     virtual double &getPitchReference(int voice);
     /**
+     * Returns whether the voices of this chord are greater than the voices of 
+     * the other.
+     */
+    virtual bool greater(const Chord &other) const;
+    /**
+     * Returns whether the voices of this chord are greater than or equal to
+     * the voices of the other.
+     */
+    virtual bool greater_equals(const Chord &other) const;
+    /**
      * Rebuilds the chord's pitches (only) from a line of text.
      */
     virtual void fromString(std::string text);
@@ -666,6 +674,12 @@ public:
      * Only works in equal temperament.
      */
     virtual bool Iform(const Chord &Y, double g = 1.) const;
+    /**
+     * Print much information about the chord including whether it is within 
+     * important equivalence classes, or what its equivalents would be. The 
+     * printout first enables then restores debugging diagnostics.
+     */
+    virtual std::string information_debug(int opt_sector) const;
     /**
      * Print much information about the chord including whether it is within 
      * important equivalence classes, or what its equivalents would be.
@@ -921,6 +935,16 @@ public:
      */
     virtual double layer() const;
     /**
+     * Returns whether the voices of this chord are less than the voices of 
+     * the other.
+     */
+    virtual bool lesser(const Chord &other) const;
+    /**
+     * Returns whether the voices of this chord are less than or equal to
+     * the voices of the other.
+     */
+    virtual bool lesser_equals(const Chord &other) const;
+    /**
     * Returns the highest pitch in the chord, and also the voice index of that
     * pitch.
     */
@@ -967,8 +991,8 @@ public:
      * http://openmusictheory.com/normalOrder.html/
      * 
      * NOTE: The code here does NOT remove duplicate pitch-classes.
-     * "Normal order" is the most compact ordering of pitch-classes 
-     * in a chord, measured by pitch-class interval.
+     * "Normal order" is the most compact ordering to the left of 
+     * pitch-classes in a chord, measured by pitch-class interval.
       */
     virtual Chord normal_order() const;
     /**
@@ -1145,6 +1169,10 @@ public:
      * class.
      */
     virtual Chord voiceleading(const Chord &destination) const;
+    /**
+     * Returns the number of voices in this chord; that is, the number of 
+     * dimensions in the chord space for this chord.
+     */
     virtual size_t voices() const;
     /**
      * Returns all the 'inversions' (in the musician's sense) or octavewise 
@@ -1226,6 +1254,30 @@ typedef enum {
     EQUIVALENCE_RELATION_RPTI,
     EQUIVALENCE_RELATION_RPTgI,
 } EQUIVALENCE_RELATIONS;
+
+static const char* namesForEquivalenceRelations[] = {
+    "r",
+    "R",
+    "P",
+    "T",
+    "Tg",
+    "I",
+    "RP",
+    "RT",
+    //~ "RTg",
+    //~ "RI",
+    //~ "PT",
+    //~ "PTg",
+    //~ "PI",
+    //~ "TI",
+    "RPT",
+    "RPTg",
+    "RPI",
+    "RTI",
+    "RTgI",
+    "RPTI",
+    "RPTgI",
+};
 
 SILENCE_PUBLIC double factorial(double n);
 
@@ -1325,30 +1377,6 @@ SILENCE_PUBLIC std::string nameForScale(const Scale &scale);
 
 SILENCE_PUBLIC std::multimap<Chord, std::string> &namesForChords();
 
-static const char* namesForEquivalenceRelations[] = {
-    "r",
-    "R",
-    "P",
-    "T",
-    "Tg",
-    "I",
-    "RP",
-    "RT",
-    //~ "RTg",
-    //~ "RI",
-    //~ "PT",
-    //~ "PTg",
-    //~ "PI",
-    //~ "TI",
-    "RPT",
-    "RPTg",
-    "RPI",
-    "RTI",
-    "RTgI",
-    "RPTI",
-    "RPTgI"
-};
-
 SILENCE_PUBLIC std::multimap<Scale, std::string> &namesForScales();
 
 /**
@@ -1397,7 +1425,7 @@ SILENCE_PUBLIC double pitchClassForName(std::string name);
  * chord. Some of these operations will reflect in RP. 
  *
  * NOTE:  Prime form rather than OPTI is used because prime form abstracts 
- * from voicings (i.e. the sectors of the OPTI cyclical region).
+ * from voicings (i.e. from the sectors of the OPT cyclical region).
  */
 class SILENCE_PUBLIC PITV {
 public:
@@ -1643,8 +1671,6 @@ SILENCE_PUBLIC std::set<Chord> &unique_chords();
 
 SILENCE_PUBLIC std::set<Scale> &unique_scales();
 
-template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::set<Chord> uniqueNormalizedFundamentalDomain(int voices, double range, double g);
-
 /**
  * Returns the voice-leading between chords a and b,
  * i.e. what you have to add to a to get b, as a
@@ -1822,6 +1848,7 @@ inline bool Chord::iseP() const {
 template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_P>(const Chord &chord, double range, double g, int opt_sector) {
     Chord normal = chord;
     bool sorted = false;
+    // A bubble sort is adequate for small numbers of elements.
     while (!sorted) {
         sorted = true;
         for (int voice = 1; voice < normal.voices(); voice++) {
@@ -1917,7 +1944,7 @@ template<> inline SILENCE_PUBLIC bool predicate<EQUIVALENCE_RELATION_I>(const Ch
         CHORD_SPACE_DEBUG("predicate<EQUIVALENCE_RELATION_I>: %s is in minor opti sector: %d\n", chord.toString().c_str(), true);
        return true;
     } else {
-        CHORD_SPACE_DEBUG("predicate<EQUIVALENCE_RELATION_I>: %s is in minor opti sector: %d\n", chord.toString().c_str(), false);
+        CHORD_SPACE_DEBUG("predicate<EQUIVALENCE_RELATION_I>: %s is in major opti sector: %d\n", chord.toString().c_str(), false);
         return false;
     }
 }
@@ -1942,10 +1969,10 @@ inline Chord Chord::eI(int opt_sector) const {
 //  EQUIVALENCE_RELATION_RP
 
 template<> inline SILENCE_PUBLIC bool predicate<EQUIVALENCE_RELATION_RP>(const Chord &chord, double range, double g, int opt_sector) {
-    if (!predicate<EQUIVALENCE_RELATION_P>(chord, range, g, opt_sector)) {
+    if (predicate<EQUIVALENCE_RELATION_P>(chord, range, g, opt_sector) == false) {
         return false;
     }
-    if (!predicate<EQUIVALENCE_RELATION_R>(chord, range, g, opt_sector)) {
+    if (predicate<EQUIVALENCE_RELATION_R>(chord, range, g, opt_sector) == false) {
         return false;
     }
     return true;
@@ -2055,6 +2082,7 @@ template<> inline SILENCE_PUBLIC bool predicate<EQUIVALENCE_RELATION_RPTg>(const
 inline bool Chord::iseRPTT(double range, double g, int opt_sector) const {
     return predicate<EQUIVALENCE_RELATION_RPTg>(*this, range, g, opt_sector);
 }
+// TODO: Fix this with eRPTs instead of eRPTTs?
 
 template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_RPTg>(const Chord &chord, double range, double g, int opt_sector) {
     auto rptts = chord.eRPTTs(range, g);
@@ -2129,19 +2157,19 @@ inline Chord Chord::eRPI(double range, int opt_sector) const {
 //	EQUIVALENCE_RELATION_RPTI
 
 template<> inline SILENCE_PUBLIC bool predicate<EQUIVALENCE_RELATION_RPTI>(const Chord &chord, double range, double g, int opt_sector) {
-    if (!predicate<EQUIVALENCE_RELATION_R>(chord, range, g, opt_sector)) {
+    if (predicate<EQUIVALENCE_RELATION_R>(chord, range, g, opt_sector) == false) {
         return false;
     }
-    if (!predicate<EQUIVALENCE_RELATION_P>(chord, range, g, opt_sector)) {
+    if (predicate<EQUIVALENCE_RELATION_P>(chord, range, g, opt_sector) == false) {
         return false;
     }
-    if (!chord.is_opt_sector(opt_sector)) {
+    if (chord.is_opt_sector(opt_sector) == false) {
         return false;
     }
-    if (!predicate<EQUIVALENCE_RELATION_T>(chord, range, g, opt_sector)) {
+    if (predicate<EQUIVALENCE_RELATION_T>(chord, range, g, opt_sector) == false) {
         return false;
     }
-    if (!predicate<EQUIVALENCE_RELATION_I>(chord, range, g, opt_sector)) {
+    if (predicate<EQUIVALENCE_RELATION_I>(chord, range, g, opt_sector) == false) {
         return false;
     }
     return true;
@@ -2562,6 +2590,11 @@ inline const char *print_chord(const Chord &chord) {
     return buffer;
 }
 
+inline std::string Chord::information_debug(int sector_) const {
+    SCOPED_DEBUGGING debugging;
+    return information_sector(sector_);
+}
+
 inline std::string Chord::information() const {
     return information_sector(-1);
 }
@@ -2975,6 +3008,7 @@ inline std::string Chord::toString() const {
     boost::replace_all(text, " -0.", "  0.");
     return text;
 }
+
 /**
  * Rebuilds the chord's pitches (only) from a line of text.
  */
@@ -3503,6 +3537,22 @@ inline bool Chord::equals(const Chord &other) const {
     return *this == other;
 }
 
+inline bool Chord::greater(const Chord &other) const {
+    return *this > other;
+}
+
+inline bool Chord::greater_equals(const Chord &other) const {
+    return *this >= other;
+}
+
+inline bool Chord::lesser(const Chord &other) const {
+    return *this < other;
+}
+
+inline bool Chord::lesser_equals(const Chord &other) const {
+    return *this <= other;
+}
+
 inline SILENCE_PUBLIC double closestPitch(double pitch, const Chord &chord) {
     std::map<double, double> pitchesForDistances;
     for (int voice = 0; voice < chord.voices(); ++voice) {
@@ -3512,7 +3562,6 @@ inline SILENCE_PUBLIC double closestPitch(double pitch, const Chord &chord) {
     }
     return pitchesForDistances.begin()->second;
 }
-
 
 inline SILENCE_PUBLIC double conformToPitchClassSet(double pitch, const Chord &pcs) {
     double pc_ = epc(pitch);
@@ -3547,7 +3596,6 @@ inline SILENCE_PUBLIC double epc(double pitch) {
 // If a and b are not near zero, the tolerance is multiples of ulps, and the result is difference <= tolerance.
 
 inline SILENCE_PUBLIC bool eq_tolerance(double a, double b, int epsilons, int ulps) {
-    static const int PRECISION = DBL_DIG; 
     static const double machine_epsilon = std::numeric_limits<double>::epsilon();
     static const double double_max_ = std::numeric_limits<double>::max();
     if (a == b) {
@@ -3596,11 +3644,9 @@ inline SILENCE_PUBLIC bool eq_tolerance(double a, double b, int epsilons, int ul
         double difference_ulp = boost::math::ulp(difference);
         tolerance = difference_ulp * ulps;
         if (difference <= tolerance) {
-            ///CHORD_SPACE_DEBUG("eq_tolerance: difference <= boost::math::ulp(difference) * ulps)\n    => true  a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference %.*g <= %.*g ulps_tolerance.\n", PRECISION, a, PRECISION, b, epsilons, ulps, PRECISION, difference, PRECISION, tolerance);
             CHORD_SPACE_DEBUG("eq_tolerance: a or b are not strictly equal to 0 and difference of a and b <= ulps tolerance:\n    => return true.\n");
             return true;
         } else {
-            ///CHORD_SPACE_DEBUG("eq_tolerance: difference <= boost::math::ulp(difference) * ulps)\n    => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference %.*g <= %.*g ulps_tolerance.\n", PRECISION, a, PRECISION, b, epsilons, ulps, PRECISION, difference, PRECISION, tolerance);
             CHORD_SPACE_DEBUG("eq_tolerance: a or b are not strictly equal to 0 and difference of a and b > ulps tolerance:\n    => return false.\n");
             return false;
         }
@@ -3667,8 +3713,8 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Cho
     Chord origin = iterator_;
     int chords = 0;
     int normals = 0;
-    static auto target = csound::Chord({-3.0000000,   -1.0000000,    2.0000000,    5.0000000});
-    static bool target_found = false;
+    //~ static auto target = csound::Chord({-3.0000000,   -1.0000000,    2.0000000,    5.0000000});
+    //~ static bool target_found = false;
     while (next(iterator_, origin, upperI, g) == true) {
         chords++;
         bool iterator_is_normal = predicate<EQUIVALENCE_RELATION>(iterator_, range, g, sector);
@@ -3752,7 +3798,7 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Cho
 }
 
 inline SILENCE_PUBLIC bool ge_tolerance(double a, double b, int epsilons, int ulps) {
-    if (eq_tolerance(a, b)) {
+    if (eq_tolerance(a, b, epsilons, ulps)) {
         return true;
     } else {
        if (a > b) {
@@ -3764,7 +3810,7 @@ inline SILENCE_PUBLIC bool ge_tolerance(double a, double b, int epsilons, int ul
 }
 
 inline SILENCE_PUBLIC bool gt_tolerance(double a, double b, int epsilons, int ulps) {
-    if (eq_tolerance(a, b)) {
+    if (eq_tolerance(a, b, epsilons, ulps)) {
         return false;
     } else {
        if (a > b) {
@@ -4132,6 +4178,7 @@ inline SILENCE_PUBLIC Chord reflect_in_unison_diagonal(const Chord &chord) {
 
 
 inline SILENCE_PUBLIC Chord reflect_in_inversion_flat(const Chord &chord, int opt_sector) {
+    // Preserve non-pitch data in the chord.
     Chord result = chord;
     int dimensions = chord.voices();
     HyperplaneEquation hyperplane = chord.hyperplane_equation(opt_sector);
@@ -4659,10 +4706,10 @@ inline void Chord::initialize_sectors() {
 inline double Chord::rownd(double x, int places)  
 {
     double power_of_10 = std::pow(double(10), double(places));
-    double up = x * power_of_10;
-    double rounded = std::round(up);
-    double down = rounded / power_of_10;
-    return down;
+    double multiplied = x * power_of_10;
+    double rounded = std::round(multiplied);
+    double divided = rounded / power_of_10;
+    return divided;
 }    
 
 inline bool Chord::is_compact(double range) const {
@@ -4792,7 +4839,8 @@ inline bool Chord::is_minor() const {
     int upperVoice = voices() - 1;
     // Compare the intervals in a chord with those in its inverse,
     // starting with the "first." This is NOT the same as
-    // whether the chord is less than or equal to its inverse.
+    // whether the chord is less than or equal to its inverse, and NOT 
+    // the same as OPTI "minor" sector.
     while (lowerVoice < upperVoice) {
         double lowerInterval = getPitch(lowerVoice) - getPitch(lowerVoice - 1);
         double upperInterval = getPitch(upperVoice) - getPitch(upperVoice - 1);
