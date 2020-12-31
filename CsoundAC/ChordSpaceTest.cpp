@@ -359,6 +359,15 @@ int main(int argc, char **argv) {
     csound::System::message("C H O R D S P A C E   U N I T   T E S T S\n\n");
     double mp_double_small = .00000000000000000001;
     double mp_double_large = 1e40;
+    double test_a = 1.;
+    double test_b = 0.;
+    for (int i = 1; i <= 100; ++i) 
+    {
+        std::fprintf(stderr, "step %d:\n", i);
+        csound::numerics_information(test_a, test_b, 100, 10000);
+        test_a /= 2.;
+       //test_b *= 2.;
+    }
     std::cerr << "ulp(mp_double_small): " << boost::math::ulp(mp_double_small) << std::endl;
     std::cerr << "ulp(mp_double_large): " << boost::math::ulp(mp_double_large) << std::endl;
     std::cerr << "csound::eq_tolerance(0.15, 0.15): " << csound::eq_tolerance(0.15, 0.15) << std::endl;
@@ -366,10 +375,14 @@ int main(int argc, char **argv) {
     std::cerr << "csound::eq_tolerance(0.1500000000001, 0.15): " << csound::eq_tolerance(0.1500000000001, 0.15) << std::endl;
     std::cerr << "csound::gt_tolerance(14.0, 12.0): " << csound::gt_tolerance(14.0, 12.0) << std::endl;
     std::cerr << "csound::ge_tolerance(14.0, 12.0): " << csound::ge_tolerance(14.0, 12.0) << std::endl;
-    auto chs = csound::allOfEquivalenceClass(3, "RP", 12, 1);
-    for (auto &ch : chs) {
-        csound::System::message("ch: %s\n", ch.toString().c_str());
-    }
+    // SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voice_count, std::string equivalence_class, double range, double g, int sector, bool printme) {
+    auto ops = csound::allOfEquivalenceClass(3, "RP", 12., 1., 0, false);
+    printSet("OPs", ops);
+    auto optts = csound::allOfEquivalenceClass(3, "RPTg", 12., 1., 0, false);
+    printSet("OPTTs", optts);
+    auto opttis = csound::allOfEquivalenceClass(3, "RPTgI", 12., 1., 0, false);
+    printSet("OPTTIs", opttis);
+    //return 0;
     Hyperplane_Equation_for_Test_Points();
 
     auto chordx = csound::chordForName("CM7");
@@ -428,16 +441,16 @@ int main(int argc, char **argv) {
     fundamentalDomainByPredicateForEquivalenceRelations["RPTgI"] =       csound::fundamentalDomainByPredicate<csound::EQUIVALENCE_RELATION_RPTgI>;
         
     auto chordspace_optts_3 = csound::fundamentalDomainByPredicate<csound::EQUIVALENCE_RELATION_RPTg>(3, 12., 1., testSector);
-    //~ printSet("My OPTTs", chordspace_optts_3);
+    printSet("My OPTTs", chordspace_optts_3);
  
     auto chordspace_opttis_3 = csound::fundamentalDomainByPredicate<csound::EQUIVALENCE_RELATION_RPTgI>(3, 12., 1., testSector);
-    //~ printSet("My OPTTIs", chordspace_opttis_3);
+    printSet("My OPTTIs", chordspace_opttis_3);
     
     auto chordspace_optts_4 = csound::fundamentalDomainByPredicate<csound::EQUIVALENCE_RELATION_RPTg>(4, csound::OCTAVE(), 1., testSector);
-    //~ printSet("My OPTTs", chordspace_optts_4);
+    printSet("My OPTTs", chordspace_optts_4);
 
     auto chordspace_opttis_4 = csound::fundamentalDomainByPredicate<csound::EQUIVALENCE_RELATION_RPTgI>(4, csound::OCTAVE(), 1., testSector);
-    //~ printSet("My OPTTIs", chordspace_opttis_4);
+    printSet("My OPTTIs", chordspace_opttis_4);
     
     csound::System::message("\nBehavior of std::fmod and std::remainder:\n\n");
     for (double pitch = -24.0; pitch < 24.0; pitch += 1.0) {
@@ -567,22 +580,6 @@ int main(int argc, char **argv) {
     std::cerr << "Should be Dm9:" << std::endl << Dm9.information().c_str() << std::endl;
     csound::Chord chordForName_ = csound::chordForName("CM9");
     csound::System::message("chordForName(%s): %s\n", "CM9", chordForName_.information().c_str());
-
-    csound::System::message("\nTesting equivalence relations...\n\n");
-    for (int voiceCount = 3; voiceCount <= 4; ++voiceCount) {
-        testEquivalenceRelations(voiceCount, csound::OCTAVE(), 1.0);
-    }
-    
-    csound::PITV pitv_3;
-    pitv_3.initialize(3, 60., 1., true);
-    pitv_3.list(true, true);
-    
-    csound::PITV pitv_4;
-    pitv_4.initialize(4, 60., 1., true);
-    pitv_4.list(true, true);
-    
-    test_pitv(pitv_4, "D#7b5");
-    test_pitv(3, 4);
 
     std::vector<csound::Chord> science_optts_3;
     science_optts_3.push_back(csound::Chord({0., 0., 0.}));
@@ -763,6 +760,21 @@ int main(int argc, char **argv) {
     std::cout << "spun_back:" << std::endl;
     std::cout << spun_back.information() << std::endl;    
 #endif    
+    csound::System::message("\nTesting equivalence relations...\n\n");
+    for (int voiceCount = 3; voiceCount <= 4; ++voiceCount) {
+        testEquivalenceRelations(voiceCount, csound::OCTAVE(), 1.0);
+    }
+    
+    csound::PITV pitv_3;
+    pitv_3.initialize(3, 60., 1., true);
+    pitv_3.list(true, true);
+    
+    csound::PITV pitv_4;
+    pitv_4.initialize(4, 60., 1., true);
+    pitv_4.list(true, true);
+    
+    test_pitv(pitv_4, "D#7b5");
+    test_pitv(3, 4);
 
     summary();
     return 0;

@@ -328,8 +328,6 @@ SILENCE_PUBLIC bool gt_tolerance(double a, double b, int epsilons=20, int ulps=2
 
 SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_singular_value_decomposition(const std::vector<Chord> &points_, bool make_eT);
 
-///SILENCE_PUBLIC bool in_simplex(const std::vector<Chord> &simplex, const Chord &point, int epsilons=2000, int ulps=2000000);
-
 SILENCE_PUBLIC bool le_tolerance(double a, double b, int epsilons=20, int ulps=200);
 
 SILENCE_PUBLIC bool lt_tolerance(double a, double b, int epsilons=20, int ulps=200);
@@ -3549,24 +3547,23 @@ inline SILENCE_PUBLIC double epc(double pitch) {
 // If a and b are not near zero, the tolerance is multiples of ulps, and the result is difference <= tolerance.
 
 inline SILENCE_PUBLIC bool eq_tolerance(double a, double b, int epsilons, int ulps) {
-    ///SCOPED_DEBUGGING debugging;
     static const int PRECISION = DBL_DIG; 
     static const double machine_epsilon = std::numeric_limits<double>::epsilon();
     static const double double_max_ = std::numeric_limits<double>::max();
     if (a == b) {
-        CHORD_SPACE_DEBUG("eq_tolerance:          => true  a: %.*g b: %.*g epsilons: %5d ulps: %5d: a and b are strictly equal.\n", PRECISION, a, PRECISION, b, epsilons, ulps);
+        CHORD_SPACE_DEBUG("eq_tolerance: a and b are strictly equal:\n    => return true.\n");
         return true;
     }
     if ((a == double_max_ || b == double_max_) == true) {
-        CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: a or b is max.\n", PRECISION, a, PRECISION, b, epsilons, ulps);
+        CHORD_SPACE_DEBUG("eq_tolerance: a or b is double_max_:\n    => return false.\n");
         return false;
     }
     if ((std::isinf(a) || std::isinf(b)) == true) {
-        CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: a or b is inf.\n", PRECISION, a, PRECISION, b, epsilons, ulps);
+        CHORD_SPACE_DEBUG("eq_tolerance: a or b is inf:\n    => return false.\n");
         return false;
     }
     if ((std::isnan(a) || std::isnan(b)) == true) {
-        CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: a or b is nan.\n", PRECISION, a, PRECISION, b, epsilons, ulps);
+        CHORD_SPACE_DEBUG("eq_tolerance: a or b is nan:\n    => return false.\n");
         return false;
     }
     double difference = a - b;
@@ -3575,34 +3572,36 @@ inline SILENCE_PUBLIC bool eq_tolerance(double a, double b, int epsilons, int ul
         difference = -difference;
     }
     if ((difference == double_max_) == true) {
-        CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference is max.\n", PRECISION, a, PRECISION, b, epsilons, ulps);
+        CHORD_SPACE_DEBUG("eq_tolerance: difference of and b is double_max_:\n    => return false.\n");
         return false;
     }
     if (std::isinf(difference) == true) {
-        CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference is inf.\n", PRECISION, a, PRECISION, b, epsilons, ulps);
+         CHORD_SPACE_DEBUG("eq_tolerance: difference of and b is inf:\n    => return false.\n");
         return false;
     }
     if (std::isnan(difference) == true) {
-        CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference is nan.\n", PRECISION, a, PRECISION, b, epsilons, ulps);
+         CHORD_SPACE_DEBUG("eq_tolerance: difference of and b is nan:\n    => return false.\n");
         return false;
     }
     double tolerance = epsilons * machine_epsilon;
     if ((a == 0. || b == 0.) == true || difference <= tolerance) {
         if (difference <= tolerance) {
-            CHORD_SPACE_DEBUG("eq_tolerance:          => true  a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference %.*g <= %.*g epsilons_tolerance.\n", PRECISION, a, PRECISION, b, epsilons, ulps, PRECISION, difference, PRECISION, tolerance);
+            CHORD_SPACE_DEBUG("eq_tolerance: a or b is strictly equal to 0 and difference of a and b <= epsilons tolerance:\n    => return true.\n");
             return true;
         } else {
-            CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference %.*g <= %.*g epsilons_tolerance.\n", PRECISION, a, PRECISION, b, epsilons, ulps, PRECISION, difference, PRECISION, tolerance);
+            CHORD_SPACE_DEBUG("eq_tolerance: a or b is strictly equal to 0 and difference of a and b > epsilons tolerance:\n    => return false.\n");
             return false;
         }
     } else {
         double difference_ulp = boost::math::ulp(difference);
         tolerance = difference_ulp * ulps;
         if (difference <= tolerance) {
-            CHORD_SPACE_DEBUG("eq_tolerance:          => true  a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference %.*g <= %.*g ulps_tolerance.\n", PRECISION, a, PRECISION, b, epsilons, ulps, PRECISION, difference, PRECISION, tolerance);
+            ///CHORD_SPACE_DEBUG("eq_tolerance: difference <= boost::math::ulp(difference) * ulps)\n    => true  a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference %.*g <= %.*g ulps_tolerance.\n", PRECISION, a, PRECISION, b, epsilons, ulps, PRECISION, difference, PRECISION, tolerance);
+            CHORD_SPACE_DEBUG("eq_tolerance: a or b are not strictly equal to 0 and difference of a and b <= ulps tolerance:\n    => return true.\n");
             return true;
         } else {
-            CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference %.*g <= %.*g ulps_tolerance.\n", PRECISION, a, PRECISION, b, epsilons, ulps, PRECISION, difference, PRECISION, tolerance);
+            ///CHORD_SPACE_DEBUG("eq_tolerance: difference <= boost::math::ulp(difference) * ulps)\n    => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference %.*g <= %.*g ulps_tolerance.\n", PRECISION, a, PRECISION, b, epsilons, ulps, PRECISION, difference, PRECISION, tolerance);
+            CHORD_SPACE_DEBUG("eq_tolerance: a or b are not strictly equal to 0 and difference of a and b > ulps tolerance:\n    => return false.\n");
             return false;
         }
     }

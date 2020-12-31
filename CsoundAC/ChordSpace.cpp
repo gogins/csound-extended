@@ -152,6 +152,19 @@ Score notes(const Chord &chord,
     return score;
 }
 
+SILENCE_PUBLIC void numerics_information(double a, double b, int epsilons, int ulps) {
+    SCOPED_DEBUGGING debugging;
+    static const int PRECISION = DBL_DIG; 
+    static const double machine_epsilon = std::numeric_limits<double>::epsilon();
+    static const double double_max_ = std::numeric_limits<double>::max();
+    CHORD_SPACE_DEBUG("numerics_information: a: %.*g b: %.*g machine_epsilon: %.*g double_max: %.*g epsilons: %5d ulps: %5d:\n", PRECISION, a, PRECISION, b, PRECISION, machine_epsilon, PRECISION, double_max_, epsilons, ulps);
+    //~ lt_tolerance(a, b, epsilons, ulps);
+    //~ le_tolerance(a, b, epsilons, ulps);
+    eq_tolerance(a, b, epsilons, ulps);
+    //~ ge_tolerance(a, b, epsilons, ulps);
+    //~ gt_tolerance(a, b, epsilons, ulps);
+}
+
 SILENCE_PUBLIC std::vector<Event *> slice(Score &score, double startTime, double endTime) {
     std::vector<Event *> result;
     for (int i = 0, n = score.size(); i < n; ++i) {

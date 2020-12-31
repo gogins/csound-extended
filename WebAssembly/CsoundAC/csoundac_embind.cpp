@@ -161,6 +161,7 @@ EMSCRIPTEN_BINDINGS(csoundac) {
     emscripten::function("next", &csound::next);
     emscripten::function("note", &csound::note);
     emscripten::function("notes", &csound::notes);
+    emscripten::function("numerics_information", &csound::numerics_information);
     emscripten::function("operator==", &csound::operator==);
     emscripten::function("operator<", emscripten::select_overload<bool(const csound::Chord&,const csound::Chord&)>(&csound::operator<));
     emscripten::function("operator<=", &csound::operator<=);

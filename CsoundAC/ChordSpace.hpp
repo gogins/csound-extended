@@ -367,6 +367,8 @@ SILENCE_PUBLIC Score notes(const Chord &chord,
     double channel_ = DBL_MAX,
     double velocity_ = DBL_MAX,
     double pan_ = DBL_MAX);
+    
+SILENCE_PUBLIC void numerics_information(double a, double b, int epsilons, int ulps);
 
 /**
  * Returns a slice of the Score starting at the start time and extending up
