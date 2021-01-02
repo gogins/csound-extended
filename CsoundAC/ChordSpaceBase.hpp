@@ -1883,8 +1883,8 @@ inline bool Chord::iseT() const {
 
 template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_T>(const Chord &chord, double range, double g, int opt_sector) {
     Chord result = chord;
-    auto sum = chord.layer();
-    auto sum_per_voice = sum / double(chord.voices());
+    double sum = chord.layer();
+    double sum_per_voice = sum / chord.voices();
     result = result.T(-sum_per_voice);
     return result;
 }
@@ -3213,9 +3213,9 @@ inline double Chord::distanceToUnisonDiagonal() const {
 
 inline Chord Chord::center() const {
     Chord clone = *this;
-    double g = OCTAVE() / double(voices());
+    double even_ = OCTAVE() / voices();
     for (size_t voice = 0; voice < voices(); voice++) {
-        clone.setPitch(voice,  double(voice) * g);
+        clone.setPitch(voice, voice * even_);
     }
     return clone;
 }
@@ -3745,15 +3745,15 @@ template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC std::vector<csound::Cho
                     normalized_is_normal);
             }
         }
-        //~ if (printme == true) {
-            //~ System::message("fundamentalDomainByPredicate<%s>: %s normal: %6d set: %6d iterator: %12d %s\n", 
-                //~ name_,
-                //~ (iterator_is_normal ? "NORMAL " : "       "), 
-                //~ normals, 
-                //~ fundamentalDomainSet.size(), 
-                //~ chords, 
-                //~ print_chord(iterator_));
-        //~ }
+        if (printme == true) {
+            System::message("fundamentalDomainByPredicate<%s>: %s normal: %6d set: %6d iterator: %12d %s\n", 
+                name_,
+                (iterator_is_normal ? "NORMAL " : "       "), 
+                normals, 
+                fundamentalDomainSet.size(), 
+                chords, 
+                print_chord(iterator_));
+        }
     }
     std::sort(fundamentalDomainVector.begin(), fundamentalDomainVector.end());
     System::message("fundamentalDomainByPredicate<%s>: count: %d unique: %d\n", namesForEquivalenceRelations[EQUIVALENCE_RELATION], fundamentalDomainVector.size(), fundamentalDomainSet.size());
@@ -4092,7 +4092,25 @@ inline SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b) {
     }
 }
 
-inline SILENCE_PUBLIC Vector reflect(const Vector &v, const Vector &u, double c) {
+inline SILENCE_PUBLIC Vector reflect_vector(const Vector &v, const Vector &u, double c) {
+    ///SCOPED_DEBUGGING debugging;
+    CHORD_SPACE_DEBUG("reflect_vector: v: \n%s\nu: \n%s\nc: %g\n", toString(v).c_str(), toString(u).c_str(), c);
+    auto v_dot_u = v.dot(u);
+    CHORD_SPACE_DEBUG("reflect_vector: v_dot_u: %g\n", double(v_dot_u));
+    auto v_dot_u_minus_c = v_dot_u - c;
+    CHORD_SPACE_DEBUG("reflect_vector: v_dot_u_minus_c: %g\n", double(v_dot_u_minus_c));
+    auto u_dot_u = u.dot(u);
+    CHORD_SPACE_DEBUG("reflect_vector: u_dot_u: %g\n", double(u_dot_u));
+    auto quotient = v_dot_u_minus_c / u_dot_u;
+    CHORD_SPACE_DEBUG("reflect_vector: quotient: %g\n", double(quotient));
+    auto subtrahend = u * (2. * quotient);
+    //CHORD_SPACE_DEBUG("reflect_vector: subtrahend: %g\n", double(subtrahend));
+    auto reflection = v - subtrahend;
+    CHORD_SPACE_DEBUG("reflect_vector: reflection:\n%s\n \n", toString(reflection).c_str());
+    return reflection;
+}
+
+inline SILENCE_PUBLIC Vector reflect_vectorx(const Vector &v, const Vector &u, double c) {
     auto v_dot_u = v.dot(u);
     auto v_dot_u_minus_c = v_dot_u - c;
     auto u_dot_u = u.dot(u);
@@ -4182,7 +4200,7 @@ inline SILENCE_PUBLIC Chord reflect_in_inversion_flat(const Chord &chord, int op
     Chord result = chord;
     int dimensions = chord.voices();
     HyperplaneEquation hyperplane = chord.hyperplane_equation(opt_sector);
-    auto reflected = reflect(chord.col(0), hyperplane.unit_normal_vector, hyperplane.constant_term);
+    auto reflected = reflect_vector(chord.col(0), hyperplane.unit_normal_vector, hyperplane.constant_term);
     for (int voice = 0; voice < dimensions; ++voice) {
         result.setPitch(voice, reflected(voice, 0));
     }
@@ -4602,7 +4620,9 @@ inline void Chord::initialize_sectors() {
             std::vector<Chord> original;
             std::vector<Chord> transposed;
             auto center_ = Chord(dimensions_i).center();
+            CHORD_SPACE_DEBUG("  center:            %s\n", center_.toString().c_str());
             auto center_t = center_.eT();
+            CHORD_SPACE_DEBUG("  center_t:          %s\n", center_t.toString().c_str());
             for (int dimension_i = 0; dimension_i < dimensions_i; ++dimension_i) {
                 Chord vertex(dimensions_i);
                 for (int voice_i = 0, start = dimensions_i - dimension_i; voice_i < dimensions_i; ++voice_i) {
@@ -4617,10 +4637,13 @@ inline void Chord::initialize_sectors() {
             }
             // Print in order to check.
             for (int dimension_i = 0; dimension_i < dimensions_i; ++dimension_i) {
-                CHORD_SPACE_DEBUG("  original[%2d][%2d] %s\n", dimensions_i, dimension_i, original[dimension_i].toString().c_str());
+                CHORD_SPACE_DEBUG("  original[%2d][%2d]   %s\n", dimensions_i, dimension_i, original[dimension_i].toString().c_str());
             }
             for (int dimension_i = 0; dimension_i < dimensions_i; ++dimension_i) {
-                CHORD_SPACE_DEBUG("  cyclical[%2d][%2d] %s\n", dimensions_i, dimension_i, cyclical_region[dimension_i].toString().c_str());
+                CHORD_SPACE_DEBUG("  transposed[%2d][%2d] %s\n", dimensions_i, dimension_i, transposed[dimension_i].toString().c_str());
+            }
+            for (int dimension_i = 0; dimension_i < dimensions_i; ++dimension_i) {
+                CHORD_SPACE_DEBUG("  cyclical[%2d][%2d]   %s\n", dimensions_i, dimension_i, cyclical_region[dimension_i].toString().c_str());
             }
             cyclical_regions[dimensions_i] = cyclical_region;
             auto opt_domains = opt_domains_for_dimensions[dimensions_i];
@@ -4632,27 +4655,27 @@ inline void Chord::initialize_sectors() {
                 auto opt_domain = cyclical_regions[dimensions_i];
                 opt_domain[(dimension_i + dimensions_i - 1) % dimensions_i] = center_t;
                 opt_domains.push_back(opt_domain);
-                CHORD_SPACE_DEBUG("  center:          %s\n", center_t.toString().c_str());
+                CHORD_SPACE_DEBUG("  center:            %s\n", center_t.toString().c_str());
                 Chord extra_vertex = center_t.T(1.);
                 std::vector<Chord> opt_simplex = opt_domain;
                 opt_simplex.push_back(extra_vertex);
                 opt_simplexes.push_back(opt_simplex);
                 auto opti_midpoint = midpoint(opt_domain[(dimension_i + dimensions_i) % dimensions_i], opt_domain[(dimension_i + dimensions_i - 2) % dimensions_i]);
-                CHORD_SPACE_DEBUG("  midpoint:        %s\n", opti_midpoint.toString().c_str());
-                CHORD_SPACE_DEBUG("  midpoint_t0:     %s\n", opti_midpoint.et().toString().c_str());
+                CHORD_SPACE_DEBUG("  midpoint:          %s\n", opti_midpoint.toString().c_str());
+                CHORD_SPACE_DEBUG("  midpoint_t0:       %s\n", opti_midpoint.et().toString().c_str());
                 int vertex_i = 0;
                 for (auto vertex : opt_domains[dimension_i]) {
-                    CHORD_SPACE_DEBUG("  OPT [%2d][%2d]     %s\n", opt_domains.size() - 1, vertex_i++, vertex.toString().c_str());
+                    CHORD_SPACE_DEBUG("  OPT [%2d][%2d]       %s\n", opt_domains.size() - 1, vertex_i++, vertex.toString().c_str());
                 }
-                CHORD_SPACE_DEBUG("  extra vertex:    %s\n", extra_vertex.toString().c_str());
+                CHORD_SPACE_DEBUG("  extra vertex:      %s\n", extra_vertex.toString().c_str());
                 auto opti_domain_0 = opt_domain;
                 opti_domain_0[(dimension_i + dimensions_i - 2) % dimensions_i] = opti_midpoint;
                 opti_domains.push_back(opti_domain_0);
                 vertex_i = 0;
                 for (auto vertex : opti_domain_0) {
-                    CHORD_SPACE_DEBUG("  OPTI[%2d][%2d]     %s\n", opti_domains.size() - 1, vertex_i++, vertex.toString().c_str());
+                    CHORD_SPACE_DEBUG("  OPTI[%2d][%2d]       %s\n", opti_domains.size() - 1, vertex_i++, vertex.toString().c_str());
                 }
-                CHORD_SPACE_DEBUG("  extra vertex:    %s\n", extra_vertex.toString().c_str());
+                CHORD_SPACE_DEBUG("  extra vertex:      %s\n", extra_vertex.toString().c_str());
                 std::vector<Chord> opti_simplex_0 = opti_domain_0;
                 opti_simplex_0.push_back(extra_vertex);
                 opti_simplexes.push_back(opti_simplex_0);
@@ -4664,9 +4687,9 @@ inline void Chord::initialize_sectors() {
                 opti_simplexes.push_back(opti_simplex_1);
                 vertex_i = 0;
                 for (auto vertex : opti_domain_1) {
-                    CHORD_SPACE_DEBUG("  OPTI[%2d][%2d]     %s\n", opti_domains.size() - 1, vertex_i++, vertex.toString().c_str());
+                    CHORD_SPACE_DEBUG("  OPTI[%2d][%2d]       %s\n", opti_domains.size() - 1, vertex_i++, vertex.toString().c_str());
                 }
-                CHORD_SPACE_DEBUG("  extra vertex:    %s\n", extra_vertex.toString().c_str());
+                CHORD_SPACE_DEBUG("  extra vertex:      %s\n", extra_vertex.toString().c_str());
                 auto lower_point = opt_domain[(dimensions_i + dimension_i) % dimensions_i];
                 auto upper_point = opt_domain[(dimensions_i + dimension_i - 2) % dimensions_i];
                 CHORD_SPACE_DEBUG("  hyperplane_equation: upper_point: %s\n", upper_point.toString().c_str());
@@ -4857,33 +4880,47 @@ inline bool Chord::is_minor() const {
 }
 
 inline std::vector<int> Chord::opt_domain_sectors() const {
-    auto &opti_sectors_for_dimensions = opti_sectors_for_dimensionalities();
-    auto &opti_sectors = opti_sectors_for_dimensions[voices()];
-    std::multimap<double, int> sectors_for_distances;
-    double minimum_distance = std::numeric_limits<double>::max();
-    auto ot = eOT();
-    for (int sector = 0, n = opti_sectors.size(); sector < n; ++sector) {
-        auto opt_sector = sector / 2;
-        auto distance_ = distance_to_points(ot, opti_sectors[sector]);
-        auto distance = rownd(distance_);
-        sectors_for_distances.insert({distance, opt_sector});
-        if (lt_tolerance(distance, minimum_distance, 1000, 10000) == true) {
-            minimum_distance = distance;
-        }
-        auto delta = minimum_distance - distance;
-        CHORD_SPACE_DEBUG("Chord::opt_domain_sectors: %s sector: %3d distance: %.20g minimum distance: %.20g delta: %.20g\n", toString().c_str(), opt_sector, distance_, minimum_distance, delta);
+    //~ auto &opti_sectors_for_dimensions = opti_sectors_for_dimensionalities();
+    //~ auto &opti_sectors = opti_sectors_for_dimensions[voices()];
+    //~ std::multimap<double, int> sectors_for_distances;
+    //~ double minimum_distance = std::numeric_limits<double>::max();
+    //~ auto ot = eOT();
+    //~ for (int sector = 0, n = opti_sectors.size(); sector < n; ++sector) {
+        //~ auto opt_sector = sector / 2;
+        //~ auto distance_ = distance_to_points(ot, opti_sectors[sector]);
+        //~ auto distance = rownd(distance_);
+        //~ sectors_for_distances.insert({distance, opt_sector});
+        //~ if (lt_tolerance(distance, minimum_distance, 1000, 10000) == true) {
+            //~ minimum_distance = distance;
+        //~ }
+        //~ auto delta = minimum_distance - distance;
+        //~ CHORD_SPACE_DEBUG("Chord::opt_domain_sectors: %s sector: %3d distance: %.20g minimum distance: %.20g delta: %.20g\n", toString().c_str(), opt_sector, distance_, minimum_distance, delta);
+    //~ }
+    //~ std::vector<int> result;
+    //~ auto range = sectors_for_distances.equal_range(minimum_distance);
+    //~ for (auto it = range.first; it != range.second; ++it) {
+        //~ CHORD_SPACE_DEBUG("Chord::opt_domain_sectors: result for: %s sector: %3d distance: %.20g\n", toString().c_str(), it->second, it->first);
+        //~ result.push_back(it->second);
+    //~ }
+    //~ std::sort(result.begin(), result.end());
+    
+    // Counting ukp from OPTI sector 0, every two OPTI sectors is one OPT sector.
+    auto opti_sectors = opti_domain_sectors();
+    std::set<int> opt_sectors;
+    for (auto opti_sector : opti_sectors) {
+        int opt_sector = std::floor(opti_sector / 2.);
+        opt_sectors.insert(opt_sector);
     }
     std::vector<int> result;
-    auto range = sectors_for_distances.equal_range(minimum_distance);
-    for (auto it = range.first; it != range.second; ++it) {
-        CHORD_SPACE_DEBUG("Chord::opt_domain_sectors: result for: %s sector: %3d distance: %.20g\n", toString().c_str(), it->second, it->first);
-        result.push_back(it->second);
+    for (auto opt_sector : opt_sectors) {
+        result.push_back(opt_sector);
     }
     std::sort(result.begin(), result.end());
     return result;
 }
 
 inline std::vector<int> Chord::opti_domain_sectors() const {
+    ///SCOPED_DEBUGGING debug;
     auto &opti_sectors_for_dimensions = opti_sectors_for_dimensionalities();
     auto &opti_sectors = opti_sectors_for_dimensions[voices()];
     std::multimap<double, int> sectors_for_distances;

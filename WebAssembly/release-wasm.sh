@@ -17,13 +17,15 @@ mkdir $RELEASE_DIR
 cp -r dist-wasm/* examples
 cp -f CsoundAC/piano-roll.js dist-wasm
 cp -f CsoundAC/piano-roll.js examples/
-cp -r examples/* ${RELEASE_DIR}/
-cp -r examples/* ../docs
+#~ cp -r examples/* ${RELEASE_DIR}/
+#~ cp -r examples/* ../docs
 cp -f src/csound_loader.js ../silencio/js/
 cp -f CsoundAC/piano-roll.js ../silencio/js/
 cp -f examples/CsoundAC.js ../silencio/js/
 cp -r dist-wasm/* ../docs/html/
 cp -rf ../silencio/js/* examples/js/
+cp -r examples/* ${RELEASE_DIR}/
+cp -r examples/* ../docs
 zip -r ${RELEASE_DIR}.zip ${RELEASE_DIR}
 echo "Files in examples:"
 ls -ll examples

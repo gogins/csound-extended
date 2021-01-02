@@ -357,6 +357,12 @@ static void setDifference(const std::string &a_name, std::vector<csound::Chord> 
 
 int main(int argc, char **argv) {
     csound::System::message("C H O R D S P A C E   U N I T   T E S T S\n\n");
+    std::cout << "Starting diagnostics..." << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
+    csound::Chord CM = csound::chordForName("CM").eOPTT(0);
+    std::cout << CM.information_sector(0) << std::endl;
+    CM.reflect(0);
+    auto domain = csound::allOfEquivalenceClass(3, "RPTg", 12., 1., 0, true);
+    ///return 0;
     double mp_double_small = .00000000000000000001;
     double mp_double_large = 1e40;
     double test_a = 1.;

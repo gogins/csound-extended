@@ -66,6 +66,7 @@ the name that would go to the most commonly used overload.
 EMSCRIPTEN_BINDINGS(csoundac) {  
     emscripten::register_map<std::string,std::string>("StringToStringMap");
     emscripten::register_vector<double>("DoubleVector");
+    emscripten::register_vector<int>("IntVector");
     emscripten::register_vector<csound::Chord>("ChordVector");
     emscripten::register_vector<csound::Scale>("ScaleVector");
     emscripten::register_vector<csound::Event>("EventVector");
@@ -276,10 +277,13 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         .function("nrR", &csound::Chord::nrR)
         .function("nrS", &csound::Chord::nrS)
         .function("operator=", emscripten::select_overload<csound::Chord &(const csound::Chord &)>(&csound::Chord::operator=))
+        .function("opt_domain_sectors", &csound::Chord::opt_domain_sectors)
+        .function("opti_domain_sectors", &csound::Chord::opti_domain_sectors)
         .function("origin", &csound::Chord::origin)
         .function("permutations", &csound::Chord::permutations)
         .function("prime_form", &csound::Chord::prime_form)
         .function("Q", &csound::Chord::Q)
+        .function("reflect", &csound::Chord::reflect)
         .function("resize", &csound::Chord::resize)
         .function("setDuration", &csound::Chord::setDuration)
         .function("setInstrument", &csound::Chord::setInstrument)
