@@ -996,45 +996,37 @@ public:
       */
     virtual Chord normal_order() const;
     /**
-     * Performs the neo-Riemannian dominant transformation.
-     *
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     * Performs the dominant transformation (which is not a neo-Reimannian 
+     * transformation). The result is returned in OP.
      */
     virtual Chord nrD() const;
     /**
-     * Performs the neo-Riemannian hexatonic pole transformation.
-     * 
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     * Performs the neo-Riemannian hexatonic pole transformation. The result
+     * is returned in OP.
      */
     virtual Chord nrH() const;
     /**
-     * Performs the neo-Riemannian Lettonwechsel transformation.
-     * 
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     * Performs the neo-Riemannian Lettonwechsel transformation. The result 
+     * is returned in OP.
      */
     virtual Chord nrL() const;
     /**
-     * Performs the neo-Riemannian Nebenverwandt transformation.
-     *
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     * Performs the neo-Riemannian Nebenverwandt transformation. The result 
+     * is returned in NP.
      */
     virtual Chord nrN() const;
     /**
-     * Performs the neo-Riemannian parallel transformation.
-     * 
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     * Performs the neo-Riemannian parallel transformation. The result is 
+     * returned in OP.
      */
     virtual Chord nrP() const;
     /**
-     * Performs the neo-Riemannian relative transformation.
-     *
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     * Performs the neo-Riemannian parallel transformation..
      */
     virtual Chord nrR() const;
     /**
-     * Performs the neo-Riemannian Slide transformation.
-     *
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
+     * Performs the neo-Riemannian Slide transformation. The result is 
+     * returned in OP.
      */
     virtual Chord nrS() const;
     /**
@@ -3415,46 +3407,65 @@ inline Chord Chord::move(int voice, double interval) const {
     return chord;
 }
 
-inline Chord Chord::nrL() const {
-    // TODO: Wrong, fix.
-    Chord cvt = normal_form();
-    Chord cv = cvt;
-    if (cvt.getPitch(1) == 4.0) {
-        cv.setPitch(0, cv.getPitch(0) - 1.0);
-    } else {
-        if (cvt.getPitch(1) == 3.0) {
-            cv.setPitch(2, cv.getPitch(2) + 1.0);
-        }
+inline Chord Chord::nrR() const {
+    //System::message("Chord::nrR: this:                               %s\n", toString().c_str());
+    auto normal_form_ = normal_form();
+    //System::message("Chord::nrR: normal_form_:                       %s\n", normal_form_.toString().c_str());
+    auto normal_form_transformed = normal_form_;
+    auto transposition_of_normal_form = (normal_form_.layer() - layer()) / voices();
+    //System::message("Chord::nrR: transposition_of_normal_form:       %9.4f\n", transposition_of_normal_form);
+    if (normal_form_.getPitch(1) == 4.0) {
+        normal_form_transformed.setPitch(2, normal_form_.getPitch(2) + 2.0);
+    } else if (normal_form_.getPitch(1) == 3.0) {
+        normal_form_transformed.setPitch(0, normal_form_.getPitch(0) - 2.0);
     }
-    return cv;
+    //System::message("Chord::nrR: normal_form_transformed:            %s\n", normal_form_transformed.toString().c_str());
+    auto normal_form_transformed_transposed = normal_form_transformed.T(-transposition_of_normal_form);
+    //System::message("Chord::nrR: normal_form_transformed_transposed: %s\n", normal_form_transformed_transposed.toString().c_str());
+    auto result = normal_form_transformed_transposed.eOP();
+    //System::message("Chord::nrR: result:                             %s\n", result.toString().c_str());
+    return result;
 }
 
 inline Chord Chord::nrP() const {
-    // TODO: Wrong, fix.
-    Chord cvt = normal_form();
-    Chord cv = cvt;
-    if (cvt.getPitch(1) == 4.0) {
-        cv.setPitch(1, cv.getPitch(1) - 1.0);
-    } else {
-        if (cvt.getPitch(1) == 3.0) {
-            cv.setPitch(1, cv.getPitch(1) + 1.0);
-        }
+    //System::message("Chord::nrP: this:                               %s\n", toString().c_str());
+    auto normal_form_ = normal_form();
+    //System::message("Chord::nrP: normal_form_:                       %s\n", normal_form_.toString().c_str());
+    auto normal_form_transformed = normal_form_;
+    auto transposition_of_normal_form = (normal_form_.layer() - layer()) / voices();
+    //System::message("Chord::nrP: transposition_of_normal_form:       %9.4f\n", transposition_of_normal_form);
+    if (normal_form_.getPitch(1) == 4.0) {
+        normal_form_transformed.setPitch(1, normal_form_.getPitch(1) - 1.0);
+    } else if (normal_form_.getPitch(1) == 3.0) {
+        normal_form_transformed.setPitch(1, normal_form_.getPitch(1) + 1.0);
     }
-    return cv;
+    //System::message("Chord::nrP: normal_form_transformed:            %s\n", normal_form_transformed.toString().c_str());
+    auto normal_form_transformed_transposed = normal_form_transformed.T(-transposition_of_normal_form);
+    //System::message("Chord::nrP: normal_form_transformed_transposed: %s\n", normal_form_transformed_transposed.toString().c_str());
+    auto result = normal_form_transformed_transposed.eOP();
+    //System::message("Chord::nrP: result:                             %s\n", result.toString().c_str());
+    return result;
 }
 
-inline Chord Chord::nrR() const {
-    // TODO: Wrong, fix.
-    Chord cvt = normal_form();
-    Chord cv = cvt;
-    if (cvt.getPitch(1) == 4.0) {
-        cv.setPitch(2, cv.getPitch(2) + 2.0);
-    } else {
-        if (cvt.getPitch(1) == 3.0) {
-            cv.setPitch(0, cv.getPitch(0) - 2.0);
-        }
+inline Chord Chord::nrL() const {
+    //System::message("Chord::nrL: this:                               %s\n", toString().c_str());
+    auto normal_form_ = normal_form();
+    //System::message("Chord::nrL: normal_form_:                       %s\n", normal_form_.toString().c_str());
+    auto normal_form_transformed = normal_form_;
+    auto transposition_of_normal_form = (normal_form_.layer() - layer()) / voices();
+    //System::message("Chord::nrL: normal_form_transformed:            %s\n", normal_form_transformed.toString().c_str());
+    if (normal_form_.getPitch(1) == 4.0) {
+        normal_form_transformed.setPitch(0, normal_form_.getPitch(0) - 1.0);
+    } else if (normal_form_.getPitch(1) == 3.0) {
+        normal_form_transformed.setPitch(2, normal_form_.getPitch(2) + 1.0);
+        transposition_of_normal_form += 8.;
     }
-    return cv;
+    //System::message("Chord::nrL: transposition_of_normal_form:       %9.4f\n", transposition_of_normal_form);
+    auto normal_form_transformed_transposed = normal_form_transformed.T(-transposition_of_normal_form);
+    //System::message("Chord::nrL: normal_form_transformed_transposed: %s\n", normal_form_transformed_transposed.toString().c_str());
+    auto result = normal_form_transformed_transposed.eOP();
+    //System::message("Chord::nrL: result:                             %s\n", result.toString().c_str());
+    return result;
 }
 
 inline Chord Chord::nrN() const {
@@ -3470,7 +3481,7 @@ inline Chord Chord::nrH() const {
 }
 
 inline Chord Chord::nrD() const {
-    return T(-7.0);
+    return T(-7.0). eOP();
 }
 
 inline Chord Chord::K(double range) const {
