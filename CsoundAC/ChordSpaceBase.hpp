@@ -1473,7 +1473,7 @@ SILENCE_PUBLIC const std::map<std::string, double> &pitchClassesForNames();
  * Returns the point reflected in the hyperplane defined by the unit normal 
  * vector and constant term.
  */
-SILENCE_PUBLIC Vector reflect(const Vector &point, const Vector &unit_normal_vector, double constant_term);
+SILENCE_PUBLIC Vector reflect_vector(const Vector &point, const Vector &unit_normal_vector, double constant_term);
 
 SILENCE_PUBLIC Chord reflect_by_householder(const Chord &chord);
 

@@ -207,14 +207,14 @@ static void test_nrR() {
     for (double t = 0.; t < 12.; ++t) {
         auto I = C.T(t);
         csound::System::message("test_nrR: I:       %s normal form: %s\n", I.toString().c_str(), I.normal_form().toString().c_str());
-        auto iii = a.T(t);
-        csound::System::message("test_nrR: iii:     %s normal form: %s\n", iii.toString().c_str(), iii.normal_form().toString().c_str());
+        auto vi = a.T(t);
+        csound::System::message("test_nrR: vi:      %s normal form: %s\n", vi.toString().c_str(), vi.normal_form().toString().c_str());
         auto I_nrR = I.nrR();
         csound::System::message("test_nrR: I_nrR:   %s normal form: %s\n", I_nrR.toString().c_str(), I_nrR.normal_form().toString().c_str());
-        test(I_nrR.eOP().equals(iii.eOP()), "I.nrR() should be iii.\n");
-        auto iii_nrR =iii.nrR();
-        csound::System::message("test_nrR: iii_nrR: %s normal form: %s\n", iii_nrR.toString().c_str(), iii_nrR.normal_form().toString().c_str());
-        test(iii_nrR.eOP().equals(I.eOP()), "iii.nrR() should be I.\n");
+        test(I_nrR.eOP().equals(vi.eOP()), "I.nrR() should be vi.\n");
+        auto vi_nrR =vi.nrR();
+        csound::System::message("test_nrR: vi_nrR:  %s normal form: %s\n", vi_nrR.toString().c_str(), vi_nrR.normal_form().toString().c_str());
+        test(vi_nrR.eOP().equals(I.eOP()), "vi.nrR() should be I.\n");
     }
 }
 
@@ -416,7 +416,7 @@ int main(int argc, char **argv) {
     test_nrR();
     test_nrP();
     test_nrL();
-    return 0;
+    ///return 0;
     csound::Chord CM = csound::chordForName("CM").eOPTT(0);
     std::cout << CM.information_sector(0) << std::endl;
     CM.reflect(0);

@@ -17,7 +17,7 @@ find_library(MUSICXML_LIBRARY musicxml2)
 #find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(FLTK)
 find_package(SWIG)
-find_package(PYTHON COMPONENTS Interpreter Development)
+find_package (Python3 "3.6" COMPONENTS Interpreter Development)
 message(STATUS "Python libraries:  ${PYTHONLIBS_VERSION_STRING}")
 find_library(PORTSMF_LIBRARY portSMF)
 find_library(JPEG_LIBRARY jpeg)
@@ -127,6 +127,8 @@ if(BUILD_CSOUND_AC)
 
     if(BUILD_CSOUND_AC_PYTHON_INTERFACE)
         message(STATUS "Building CsoundAC Python interface.")
+        message(STATUS "Python3_SITEARCH: ${Python3_SITEARCH}")
+        message(STATUS "Python3_SITEARCH: ${Python3_INCLUDE}")
         include_directories(${Python3_INCLUDE_DIRS})
         # Had: 	    SWIG_FLAGS "-threads"
         set_source_files_properties(CsoundAC.i
