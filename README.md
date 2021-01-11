@@ -29,19 +29,17 @@ or collected from older projects of mine. These extensions include:
 7.  Silencio, a JavaScript algorithmic composition library designed to work
     with all Csound/HTML5 environments.
 
-8.  An online _playable_ version of the [_**Csound Reference Manual**_](https://gogins.github.io/csound-extended/html/indexframes.html).
-
-9.  nudruz, a Common Lisp library for algorithmic composition by Drew Krause,
+8.  nudruz, a Common Lisp library for algorithmic composition by Drew Krause,
     hosted here with his permission. This is based upon and includes
     the Common Music library for algorithmic composition and the Fomus
     library for automatically notating generated scores.
     
-10. A foreign function interface to the Csound shared library for the Haskell 
+9.  A foreign function interface to the Csound shared library for the Haskell 
     programming language and the Euterpea package for algorithmic composition, 
     in the haskell directory. This is a dynamic FFI and does not require to be 
     pre-built in order to be used.
     
-11. Some plugin opcodes for Csound, including bformdec2, chuap, cmask, MVerb, 
+10. Some plugin opcodes for Csound, including bformdec2, chuap, cmask, MVerb, 
     and the STK opcodes.
 
 With regret I must announce that CsoundVST and the vst4cs opcodes are no longer
