@@ -43,7 +43,6 @@ Some of the examples herein will run from
 https://gogins.github.io/csound-examples. For more information, see my 
 [csound-examples](https://github.com/gogins/csound-examples) repository.
 
-
 ## Building
 
 See the main README.md of csound-extended for build instructions.
