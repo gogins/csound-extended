@@ -249,6 +249,7 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
         this.has_audio_input = false;
     }
     Start() {
+        this.csound.Message("CsoundAudioProcessor starting...\n");
         this.is_playing = true;
         this.format_validated = false;
         let result = 0;
@@ -259,12 +260,6 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
             this.csound.SetHostImplementedAudioIO(1, 0);
             this.csound.InitializeHostMidi();
             result = this.csound.Start();
-            this.spinBuffer = this.csound.GetSpin();
-            this.spoutBuffer = this.csound.GetSpout();
-            this.zerodBFS = this.csound.Get0dBFS();                                    
-            this.ksmps = this.csound.GetKsmps();
-            this.csound_input_channel_n = this.csound.GetNchnlsInput();
-            this.csound_output_channel_n = this.csound.GetNchnls();
             if (this.input_name.startsWith("adc")) {
                 this.has_audio_input = true;  
                 this.csound.Message("CsoundAudioProcessor uses audio input:          " + this.input_name + "\n");
@@ -277,122 +272,136 @@ class CsoundAudioProcessor extends AudioWorkletProcessor {
             this.csound.Message("CsoundAudioProcessor is rendering to soundfile: " + this.output_name + "\n");
             result = this.csound.Start();
         }
+        this.csound.Message("CsoundAudioProcessor started.\n");
     }
     process(inputs, outputs, parameters) {
-        if (this.is_playing === true) {
-            // If rendering is not real-time, then all audio input and output 
-            // is configured and performed within Csound.
-            if (this.is_realtime === false) {
-                let result = 0;
-                while (result === 0) {
-                    result = this.csound.PerformKsmps();
-                    if (result !== 0) {
-                        this.is_playing = false;
-                        this.csound.Stop();
-                        this.csound.Cleanup();
-                        this.csound.Reset();
-                        this.csound.Message("CsoundAudioProcessor returns 'false'.\n");
-                        return true;
+        try {
+            if (this.is_playing == true) {
+                // If rendering is not real-time, then all audio input and output 
+                // is configured and performed within Csound.
+                if (this.is_realtime == false) {
+                    this.csound.Message("CsoundAudioProcessor: non-real-time performance...\n");
+                    let result = 0;
+                    while (result == 0) {
+                        result = this.csound.PerformKsmps();
+                        if (result != 0) {
+                            this.is_playing = false;
+                            this.csound.Stop();
+                            this.csound.Cleanup();
+                            this.csound.Reset();
+                            this.csound.Message("CsoundAudioProcessor returns 'false'.\n");
+                            return true;
+                        }
                     }
-                }
-            } 
-            // Otherwise, all audio input and output are configured and 
-            // performed in the WebAudio processor, here. Csound adapts 
-            // to the WebAudio input and output configuration, except that 
-            // Csound's ksmps MUST equal the length of the WebAudio input and 
-            // output buffers (always 128 frames). However, the processor 
-            // may have multiple inputs and outputs, and each input or output 
-            // may have multiple channels. 
-            //
-            // Also note, Csound's buffers are in [frame, channel] order, and 
-            // WebAudio's buffers are in [channel, frame] order.
-            let wa_input_buffer = inputs[0];
-            let wa_input_channel_0 = wa_input_buffer[0];
-            let wa_input_channel_n = wa_input_buffer.length;
-            let wa_output_buffer = outputs[0];
-            let wa_output_channel_0 = wa_output_buffer[0];
-            let wa_output_channel_n = wa_output_buffer.length;
-            let wa_frame_n = wa_output_channel_0.length;
-            let csound_input_buffer = this.csound.spinBuffer;
-            let csound_output_buffer = this.csound.spoutBuffer;
-            if (this.format_validated == false) {
-                this.csound.Message("CsoundAudioProcessor frames per quantum:        " +  wa_frame_n + "\n");
-                this.csound.Message("CsoundAudioProcessor input channels:            " +  wa_input_channel_n + "\n");
-                this.csound.Message("CsoundAudioProcessor output channels:           " +  wa_output_channel_n + "\n");
-                if (this.ksmps !== wa_frame_n) {
-                    this.csound.Message("Error! Csound's ksmps doesn't match the WebAudio buffer length!\n");
-                    return false;
                 } 
-                if (this.csound_input_channel_n != wa_input_channel_n) {
-                    this.csound.Message("Warning! Csound nchnls_i (" + this.csound_input_channel_n + ") doesn't match the WebAudio input channel count (" + wa_input_channel_n + ").\n");
+                // Otherwise, all audio input and output are configured and 
+                // performed in the WebAudio processor, here. Csound adapts 
+                // to the WebAudio input and output configuration, except that 
+                // Csound's ksmps MUST equal the length of the WebAudio input and 
+                // output buffers (always 128 frames). However, the processor 
+                // may have multiple inputs and outputs, and each input or output 
+                // may have multiple channels. 
+                //
+                // Also note, Csound's buffers are in [frame, channel] order, and 
+                // WebAudio's buffers are in [channel, frame] order.
+                let wa_input_buffer = inputs[0];
+                let wa_input_channel_n = wa_input_buffer.length;
+                let wa_input_channel_0 = wa_input_buffer[0];
+                let wa_input_channel_buffer;
+                let csound_input_buffer = this.csound.GetSpin();            
+                let csound_input_channel_n = this.csound.GetNchnlsInput();
+                let wa_output_buffer = outputs[0];
+                let csound_output_buffer = this.csound.GetSpout();
+                let csound_output_channel_n = this.csound.GetNchnls();
+                let wa_output_channel_n = wa_output_buffer.length;
+                let wa_output_channel_0 = wa_output_buffer[0];
+                let wa_output_channel_buffer;
+                let wa_frame_n = wa_output_channel_0.length;
+                let ksmps = this.csound.GetKsmps();
+                let zero_dbfs = this.csound.Get0dBFS();
+                if (this.format_validated == false) {
+                    this.csound.Message("CsoundAudioProcessor frames per quantum:        " +  wa_frame_n + "\n");
+                    this.csound.Message("CsoundAudioProcessor input channels:            " +  wa_input_channel_n + "\n");
+                    this.csound.Message("CsoundAudioProcessor output channels:           " +  wa_output_channel_n + "\n");
+                    if (ksmps != wa_frame_n) {
+                        this.csound.Message("Error! Csound's ksmps doesn't match the WebAudio buffer length!\n");
+                        return false;
+                    } 
+                    if (csound_input_channel_n != wa_input_channel_n) {
+                        this.csound.Message("Warning! Csound nchnls_i (" + csound_input_channel_n + ") doesn't match the WebAudio input channel count (" + wa_input_channel_n + ").\n");
+                    }
+                    if (csound_output_channel_n != wa_output_channel_n) {
+                        this.csound.Message("Warning! Csound nchnls (" + csound_output_channel_n + ") doesn't match the WebAudio output channel count (" + wa_output_channel_n + ").\n");
+                    }
+                    this.format_validated = true;
+                    this.csound.Message("CsoundAudioProcessor format_validated: " + this.format_validated + ".\n");
                 }
-                if (this.csound_output_channel_n != wa_output_channel_n) {
-                    this.csound.Message("Warning! Csound nchnls (" + this.csound_output_channel_n + ") doesn't match the WebAudio output channel count of " + wa_output_channel_n + ".\n");
-                }
-            }
-            this.format_validated = true;
-            if (this.has_audio_input == true) 
-                let input_channel_i = 0;
-                // If the WebAudio input channel count is less than Csound's 
-                // spin buffer count, then any extra spin buffer channels are zero-filled.
-                if (wa_input_channel_n < this.csound_input_channel_n) {
-                    for (input_channel_i = 0; input_channel_i < wa_input_channel_n; input_channel_i++) {
-                        let wa_input_channel_buffer = wa_input_buffer[input_channel_i];
-                        for (let frame_i = 0; frame_i < wa_frame_n; frame_i++) {
-                            csound_input_buffer[(frame_i * csound_input_channel_n) + input_channel_i] = (wa_input_channel_buffer[frame_i] * this.zerodBFS);
+                this.format_validated = true;
+                if (this.has_audio_input == true) {
+                    let input_channel_i;
+                    // If the WebAudio input channel count is less than Csound's 
+                    // spin buffer count, then any extra spin buffer channels are zero-filled.
+                    if (wa_input_channel_n < csound_input_channel_n) {
+                        for (input_channel_i = 0; input_channel_i < wa_input_channel_n; input_channel_i++) {
+                            wa_input_channel_buffer = wa_input_buffer[input_channel_i];
+                            for (let frame_i = 0; frame_i < wa_frame_n; frame_i++) {
+                                csound_input_buffer[(frame_i * csound_input_channel_n) + input_channel_i] = (wa_input_channel_buffer[frame_i] * zero_dbfs);
+                            }
+                        }
+                        for ( ; input_channel_i < csound.input_channel_n; input_channel_i++) {
+                            for (let frame_i = 0; frame_i < wa_frame_n; frame_i++) {
+                                csound_input_buffer[(frame_i * csound_input_channel_n) + input_channel_i] = 0.;
+                            }
+                       }
+                    // Otherwise, any extra WebAudio input channels are simply ignored.
+                    } else {
+                        for (input_channel_i = 0; input_channel_i < csound_input_channel_n; input_channel_i++) {
+                            wa_input_channel_buffer = wa_input_buffer[input_channel_i];
+                            for (let frame_i = 0; frame_i < wa_frame_n; frame_i++) {
+                                csound_input_buffer[(frame_i * input_channel_i) + input_channel_i] = (wa_input_channel_buffer[frame_i] * zero_dbfs);
+                            }
                         }
                     }
-                    for ( ; channel_i < this.csound.input_channel_n; ++channel_i) {
+                }
+                let result = this.csound.PerformKsmps();
+                if (result !== 0) {
+                    this.csound.Stop();
+                    this.csound.Cleanup();
+                    this.csound.Reset();
+                    this.csound.Message("Csound has finished playing.\n");
+                    this.is_playing = false;
+                }
+                let output_channel_i;
+                // If the WebAudio output channel count is greater than Csound's 
+                // spout channel count, then the extra WebAudio output channels 
+                // are zero-filled.
+                if (wa_output_channel_n > csound_output_channel_n) {
+                    for (output_channel_i = 0; output_channel_i < csound_output_channel_n; ++output_channel_i) {
+                        wa_output_channel_buffer = wa_output_buffer[output_channel_i];
                         for (let frame_i = 0; frame_i < wa_frame_n; frame_i++) {
-                            csound_input_buffer[(frame_i * this.csound_input_channel_n) + input_channel_i] = 0.;
+                            wa_output_channel_buffer[frame_i] = (csound_output_buffer[(frame_i * csound_output_channel_n) + output_channel_i] / zero_dbfs);
                         }
-                   }
-                // Otherwise, any extra WebAudio input channels are simply ignored.
+                    }
+                    for ( ; output_channel_i < wa_output_channel_n; output_channel_i++) {
+                        wa_output_channel_buffer = wa_output_buffer[output_channel_i];
+                        for (let frame_i = 0; frame_i < wa_frame_n; frame_i++) {
+                            wa_output_channel_buffer[frame_i] = 0.;
+                        }
+                    }
+                // Otherwise, any extra Csound spout buffer channels are simply ignored.
                 } else {
-                    for (input_channel_i = 0; input_channel_i < this.csound_input_channel_n; input_channel_i++) {
-                        let wa_input_channel_buffer = wa_input_buffer[input_channel_i];
+                    for (output_channel_i = 0; output_channel_i < wa_output_channel_n; output_channel_i++) {
+                        wa_output_channel_buffer = wa_output_buffer[output_channel_i];
                         for (let frame_i = 0; frame_i < wa_frame_n; frame_i++) {
-                            csound_input_buffer[(frame_i * input_channel_i) + input_channel_i] = (wa_input_channel_buffer[frame_i] * this.zerodBFS);
+                            wa_output_channel_buffer[frame_i] = (csound_output_buffer[(frame_i * wa_output_channel_n) + output_channel_i] / zero_dbfs);
                         }
                     }
                 }
             }
-            let result = this.csound.PerformKsmps();
-            if (result !== 0) {
-                this.csound.Stop();
-                this.csound.Cleanup();
-                this.csound.Reset();
-                this.csound.Message("Csound has finished playing.\n");
-                this.is_playing = false;
-            }
-            let output_channel_i = 0;
-            // If the WebAudio output channel count is greater than Csound's 
-            // spout channel count, then the extra WebAudio output channels 
-            // are zero-filled.
-            if (wa_output_channel_n > csound.output_channel_n) {
-                for (output_channel_i = 0; output_channel_i < this.csound_output_channel_n; ++output_channel_i) {
-                    let wa_output_channel_buffer = wa_output_buffer[output_channel_i];
-                    for (let frame_i = 0; frame_i < wa_frame_n; frame_i++) {
-                        wa_output_channel_buffer[frame_i] = (csound_output_buffer[(frame_i * csound_output_channel_n) + output_channel_i] / this.zerodBFS);
-                    }
-                }
-                for ( ; output_channel_i < wa_output_channel_n; ++ output_channel_i) {
-                    let wa_output_channel_buffer = wa_output_buffer[output_channel_i];
-                    for (let frame_i = 0; frame_i < wa_frame_n; frame_i++) {
-                        wa_output_channel_buffer[frame_i] = 0.;
-                    }
-                }
-            // Otherwise, any extra Csound spout buffer channels are simply ignored.
-            } else {
-                for (output_channel_i = 0; output_channel_i < wa_channel_n; ++output_channel_i) {
-                    let wa_output_channel_buffer = wa_output_buffer[output_channel_i];
-                    for (let frame_i = 0; frame_i < wa_frame_n; frame_i++) {
-                        wa_output_channel_buffer[frame_i] = (csound_output_buffer[(frame_i * wa_channel_n) + output_channel_i] / this.zerodBFS);
-                    }
-                }
-            }
+            return true;
+        } catch(e) {
+            console.log(e);
         }
-        return true;
     }
 };
 
