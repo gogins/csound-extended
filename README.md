@@ -62,9 +62,10 @@ https://github.com/gogins/csound-extended/issues.
 
 ## Examples
 
-Some tests of basic functionality that also serve as examples and can be used
-as templates for new compositions are installed in the
-/usr/share/doc/csound-extended-dev/tests-and-examples directory.
+Examples for the various aspects of csound-extended are maintained in my 
+separate [csound-examples](https://github.com/gogins/csound-examples) 
+repository. Some of the examples there will run in WebBrowsers using 
+WebAssembly, and these can be viewed at [https://gogins.github.io/csound-examples].
 
 ## Changes
 
