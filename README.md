@@ -27,7 +27,8 @@ or collected from older projects of mine. These extensions include:
     [here](https://github.com/gogins/csound-extended/tree/develop/docs).
 
 7.  Silencio, a JavaScript algorithmic composition library designed to work
-    with all Csound/HTML5 environments.
+    with all Csound/HTML5 environments. PLEASE NOTE: This library is now 
+    deprecated, please use the WebAssembly build of CsoundAC instead.
 
 8.  nudruz, a Common Lisp library for algorithmic composition by Drew Krause,
     hosted here with his permission. This is based upon and includes
@@ -219,13 +220,6 @@ directory:
 mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ 
 mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ ln -s /usr/include/eigen3 eigen3
 mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ ls eigen3
-```
-
-You must do the same thing for the boost C++ libraries (header files only):
-```
-mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ 
-mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ ln -s /usr/include/boost boost
-mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ ls boost
 ```
 
 Then, to build for WebAssembly for the first time, change to the WebAssembly

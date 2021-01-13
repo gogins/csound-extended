@@ -33,11 +33,21 @@ See https://github.com/gogins/csound-extended/commits/develop for the commit log
 
 ## Installation
 
-Download the latest version of `csound-extended-wasm-version.zip` from the 
+Download the latest version of `csound-extended-wasm-{version.zip}` from the 
 [release page here](https://github.com/gogins/csound-extended/releases). Unzip 
 it and it is ready to use.
 
 ## Examples
+
+There is a local Web server and a minimal working example in the release zip 
+file. In the directory where you have unzipped the release, execute:
+
+```
+python2 httpd.py
+```
+
+Then navigate to `http://localhost:5103` and view `minimal.html`. Click on 
+the Play button to validate your installation.
 
 Some of the examples herein will run from 
 https://gogins.github.io/csound-examples. For more information, see my 
