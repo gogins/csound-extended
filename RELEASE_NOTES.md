@@ -3,21 +3,27 @@ Michael Gogins<br>
 https://github.com/gogins<br>
 http://michaelgogins.tumblr.com
 
-## 26 December 2020
+## 14 January 2020
 
 ### [csound-extended package 1.5.0](https://github.com/gogins/csound-extended/releases)
 
 The chord space facility in CsoundAC has been very useful to me over the years, but recently I took at look at the "chord space group" facility and discovered many bugs in the underlying chord symmetry code (based on the theory of Callender, Quinn, and Tymoczko). 
 
-I have now discovered and, I hope, corrected all major incorrect assumptions and algorithms. The predicates and transformations for octave equivalence (O), permutational equivalence (P), transpositiional equivalence (T), and inversional equivalence (I) have been throughly reviewed. The predicates and transformations for the I, OPT, and OPTI equivalence relations have been rewritten to take into account the cyclical region of OPT and OPTI fundamental domains. This has included deriving the fundamental domains from first principles and implementing the inversion flats in each OPT sector of the cyclical region using linear algebra. All of this work has been subjected to comprehensive unit tests.
+I have now discovered and, I hope, corrected all major incorrect assumptions and algorithms. I have thoroughly reviewed the predicates and transformations for octave equivalence (O), permutational equivalence (P), transpositiional equivalence (T), and inversional equivalence (I). I have rewritten the predicates and transformations for the I, OPT, and OPTI equivalence relations have been rewritten to take into account the cyclical region of OPT and OPTI fundamental domains. In doing this I have derived the fundamental domains from first principles and implementing the inversion flats in each OPT sector of the cyclical region using linear algebra. I have subjected all of this work has to what I hope are comprehensive unit tests. Please log an issue here for any bugs you find.
+
+An interactive online demonstration of OP, OPT, and OPTI space for trichords, implemented using the CsoundAC Chord class and the WebAssembly build of Csound, can be found [here](https://gogins.github.io/csound-examples/TrichordSpace.html).
 
 The previous ChordSpaceGroup class has been replaced by a new PITV class that uses prime form (P), inversion (I), transposition (T), and octavewise revoicing (V) as subgroups. Prime form equivalence is used in place of the previous OPTI equivalence because prime abstracts from the cyclical region with its revoicings and is thus orthogonal to octavewise revoicing.
 
 The HarmonyIfs class has been rewritten to use the PITV class.
 
-Examples for Csound, csound-extended, csound-extended-wasm, and my other repositories have been consolidated into my new csound-examples repository.
+The JavaScript modules ChordSpace.js and Silencio.js are now deprecated. The mathematical corrections mentioned above have not been made in ChordSpace.js. Please use the WebAssembly build of CsoundAC for new compositions instead of Silencio.js and ChordSpace.js. The same API is available in Python and C++.
 
-The JavaScript modules ChordSpace.js and Silencio.js are now deprecated. The mathematical corrections mentioned above have not been made in the ChordSpace.js. Please use the WebAssembly build of CsoundAC for new compositions instead of Silencio.js and ChordSpace.js.
+The csound-extended build of Csound for WebAssembly has been updated to be more flexible with respect to the browser's audio configuration. Csound and the browser must use ksmps = 128 but otherwise the number of input and output channels need not be the same between Csound and the browser. This should mean that any Csound piece running in the browser will render to the default audio output and have access to the default audio input.
+
+All of my examples for Csound, csound-extended, csound-extended-wasm, Csound for Android the app, and my other contributions have been consolidated into my [csound-examples](https://github.com/gogins/csound-examples) repository.
+
+The Python interface for CsoundAC now specifically targets Python 3.9 in order to be compatible with Rick Taube's musx Python system for algorithmic composition. Musx provides most of the functionality of Common Music in Python. It should now be possible to use CsoundAC (via its Python interface) with musx.
 
 ## 21 May 2020
 
