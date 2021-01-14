@@ -11,8 +11,8 @@ out of the core Csound Git repository at https://github.com/csound/csound,
 or collected from older projects of mine. These extensions include:
 
 1.  CsoundAC, an algorithmic composition library designed to be used with
-    Csound. CsoundAC is written in C++ and has C++, Python, Java, Common Lisp, 
-    Haskell, and other interfaces.
+    Csound. CsoundAC is written in C++ and has C++, JavaScript, and Python 
+    interfaces.
 
 2.  csound.node, a C++ add-on that embeds Csound in the JavaScript context of
     Web pages running in MW.js from https://nwjs.io/.
@@ -27,8 +27,8 @@ or collected from older projects of mine. These extensions include:
     [here](https://github.com/gogins/csound-extended/tree/develop/docs).
 
 7.  Silencio, a JavaScript algorithmic composition library designed to work
-    with all Csound/HTML5 environments. PLEASE NOTE: This library is now 
-    deprecated, please use the WebAssembly build of CsoundAC instead.
+    with all Csound/HTML5 environments. __PLEASE NOTE: This library is now 
+    deprecated, please use the WebAssembly build of CsoundAC instead.__
 
 8.  nudruz, a Common Lisp library for algorithmic composition by Drew Krause,
     hosted here with his permission. This is based upon and includes
@@ -45,9 +45,12 @@ or collected from older projects of mine. These extensions include:
 
 With regret I must announce that CsoundVST and the vst4cs opcodes are no longer
 maintained here. This is due to efforts by Steinberg to force developers to move
-to the VST3 SDK, which has a more restrictive license that I do not wish to work
-with. **However, CsoundVST and the vst4cs opcodes are still avaiable from me as
-freeware binaries from https://michaelgogins.tumblr.com/csound_extended.**
+to the VST3 SDK. **However, CsoundVST and the vst4cs opcodes are still avaiable 
+from me asfreeware binaries from https://michaelgogins.tumblr.com/csound_extended.** 
+
+As an alternative to the vst4cs opcodes, use my 
+[csound-vst3-opcodes](https://github.com/gogins/csound-vst3-opcodes) that provide 
+VST3 plugin support for Csound on Linux.
 
 New extensions may be added by me in the future. If you would like to add your
 own extensions, enter an issue in this repository or submit a pull request.
@@ -164,7 +167,8 @@ processing must be cloned from GitHub, built with the addition of the
 `-fPIC` compiler option, and installed (CMake should be able to find it in 
 the `/usr/local` tree).
 
-3. The OpenCV library with codecs must be downloaded as source from `https://opencv.org/releases/`, built, and installed.
+3. The OpenCV library with codecs must be downloaded as source from 
+`https://opencv.org/releases/`, built, and installed.
 
 4. The following environment variables MUST be set before building, perhaps in
 your .profile script. Obviously, modify the paths as required to suit your
