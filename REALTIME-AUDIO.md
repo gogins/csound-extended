@@ -73,4 +73,4 @@ export CHROMIUM_FLAGS="${CHROMIUM_FLAGS} --alsa-input-device=plughw:1,0 --alsa-o
 
 ## Rendering to Soundfile
 
-You can and should use a higher-precision format for rendering to soundfiles. All playback software of which I am aware can handle any format and play it back properly.
+You can and should use a high-precision format for rendering to soundfiles. All playback software of which I am aware can handle any format and play it back properly. I recommend using the following Csound options: `--sinesize=65536 --0dbfs=2 --sample-rate=96000 --ksmps=100 --wave`. These options are consistent with contemporary professional practice for digital audio.
