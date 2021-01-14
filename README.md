@@ -46,11 +46,13 @@ or collected from older projects of mine. These extensions include:
 With regret I must announce that CsoundVST and the vst4cs opcodes are no longer
 maintained here. This is due to efforts by Steinberg to force developers to move
 to the VST3 SDK. **However, CsoundVST and the vst4cs opcodes are still avaiable 
-from me asfreeware binaries from https://michaelgogins.tumblr.com/csound_extended.** 
+from me as freeware binaries from https://michaelgogins.tumblr.com/csound_extended.** 
 
-As an alternative to the vst4cs opcodes, use my 
+As an alternative to the vst4cs opcodes, I recommend using Rory Walsh's 
+[Cabbage](https://github.com/rorywalsh/cabbage) system for creating VST 
+plugins using Csound. Or, consider using my 
 [csound-vst3-opcodes](https://github.com/gogins/csound-vst3-opcodes) that provide 
-VST3 plugin support for Csound on Linux.
+VST3 plugin support for Csound on Linux. 
 
 New extensions may be added by me in the future. If you would like to add your
 own extensions, enter an issue in this repository or submit a pull request.
