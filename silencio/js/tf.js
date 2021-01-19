@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2020 Google LLC. All Rights Reserved.
+ * Copyright 2021 Google LLC. All Rights Reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17221,6 +17221,16 @@
 	    }
 
 	    var kernelFunc;
+
+	    if (this.backendName == null) {
+	      // backend has not been initialized yet (backend initialization is lazy
+	      // can be deferred until an op/ kernel is run).
+	      // The below getter has side effects that will try to initialize the
+	      // backend and set properties like this.backendName
+	      // tslint:disable-next-line: no-unused-expression
+	      this.backend;
+	    }
+
 	    var kernel = getKernel(kernelName, this.backendName);
 	    var out;
 
@@ -22775,6 +22785,7 @@
 	  var isVideo = false;
 	  var isImage = false;
 	  var isCanvasLike = false;
+	  var isImageBitmap = false;
 
 	  if (pixels.data instanceof Uint8Array) {
 	    isPixelData = true;
@@ -22786,6 +22797,8 @@
 	    isImage = true; // tslint:disable-next-line: no-any
 	  } else if (pixels.getContext != null) {
 	    isCanvasLike = true;
+	  } else if (typeof ImageBitmap !== 'undefined' && pixels instanceof ImageBitmap) {
+	    isImageBitmap = true;
 	  } else {
 	    throw new Error('pixels passed to tf.browser.fromPixels() must be either an ' + "HTMLVideoElement, HTMLImageElement, HTMLCanvasElement, ImageData " + "in browser, or OffscreenCanvas, ImageData in webworker" + " or {data: Uint32Array, width: number, height: number}, " + ("but was " + pixels.constructor.name));
 	  }
@@ -22823,7 +22836,7 @@
 	    pixels.getContext('2d').getImageData(0, 0, width, height).data;
 	  } else if (isImageData || isPixelData) {
 	    vals = pixels.data;
-	  } else if (isImage || isVideo) {
+	  } else if (isImage || isVideo || isImageBitmap) {
 	    if (fromPixels2DContext == null) {
 	      fromPixels2DContext = document.createElement('canvas').getContext('2d');
 	    }
@@ -23949,7 +23962,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$1 = '2.8.2';
+	var version$1 = '2.8.4';
 
 	/**
 	 * @license
@@ -59278,7 +59291,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$2 = '2.8.2';
+	var version$2 = '2.8.4';
 
 	/**
 	 * Helper function to check the dtype and shape compatibility of a feed value.
@@ -87304,7 +87317,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$3 = '2.8.2';
+	var version$3 = '2.8.4';
 
 	/**
 	 * @license
@@ -93602,7 +93615,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$4 = '2.8.2';
+	var version$4 = '2.8.4';
 
 	/**
 	 * @license
@@ -95843,7 +95856,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$5 = '2.8.2';
+	var version$5 = '2.8.4';
 
 	/**
 	 * @license
@@ -109588,7 +109601,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$6 = '2.8.2';
+	var version$6 = '2.8.4';
 
 	/**
 	 * @license
@@ -112883,8 +112896,8 @@
 	  var x = inputs.x,
 	      weights = inputs.weights;
 	  var size = attrs.size;
-	  var xVals = backend.texData.get(x.dataId).values;
-	  var weightsVals = backend.texData.get(weights.dataId).values;
+	  var xVals = backend.readSync(x.dataId);
+	  var weightsVals = backend.readSync(weights.dataId);
 	  var outVals = bincountImplCPU(xVals, weightsVals, weights.dtype, weights.shape, size);
 	  return backend.makeTensorInfo([size], weights.dtype, outVals);
 	}
@@ -113555,7 +113568,7 @@
 
 	    var inputsValShapes = _tensors2D.map(function (t) {
 	      return {
-	        vals: backend.texData.get(t.dataId).values,
+	        vals: backend.readSync(t.dataId),
 	        shape: t.shape
 	      };
 	    });
@@ -114783,8 +114796,8 @@
 	      binaryOutput = attrs.binaryOutput;
 
 	  if (x.shape.length === 1) {
-	    var xVals = backend.texData.get(x.dataId).values;
-	    var weightsVals = backend.texData.get(weights.dataId).values;
+	    var xVals = backend.readSync(x.dataId);
+	    var weightsVals = backend.readSync(weights.dataId);
 	    var outVals = bincountImplCPU(xVals, weightsVals, weights.dtype, weights.shape, size);
 	    return backend.makeTensorInfo([size], weights.dtype, outVals);
 	  } else if (x.shape.length === 2) {
@@ -116141,6 +116154,7 @@
 	  var numChannels = attrs.numChannels;
 	  var isVideo = typeof HTMLVideoElement !== 'undefined' && pixels instanceof HTMLVideoElement;
 	  var isImage = typeof HTMLImageElement !== 'undefined' && pixels instanceof HTMLImageElement;
+	  var isImageBitmap = typeof ImageBitmap !== 'undefined' && pixels instanceof ImageBitmap;
 
 	  var _ref = isVideo ? [pixels.videoWidth, pixels.videoHeight] : [pixels.width, pixels.height],
 	      width = _ref[0],
@@ -116149,7 +116163,7 @@
 	  var texShape = [height, width];
 	  var outShape = [height, width, numChannels];
 
-	  if (isImage || isVideo) {
+	  if (isImage || isVideo || isImageBitmap) {
 	    if (fromPixels2DContext$1 == null) {
 	      fromPixels2DContext$1 = document.createElement('canvas').getContext('2d');
 	    }
@@ -120336,7 +120350,7 @@
 	  var size = x.shape.slice();
 	  return splitSizes.map(function (s) {
 	    var sliceSize = [].concat(size);
-	    sliceSize[axis] = s;
+	    sliceSize[$axis] = s;
 	    var sliceT = slice$4({
 	      inputs: {
 	        x: x
@@ -120347,7 +120361,7 @@
 	        size: sliceSize
 	      }
 	    });
-	    begin[axis] += s;
+	    begin[$axis] += s;
 	    return sliceT;
 	  });
 	}
@@ -120740,7 +120754,9 @@
 	  var reps = attrs.reps;
 
 	  if (x.dtype === 'string') {
-	    var data = backend.texData.get(x.dataId).values;
+	    // Even thought string tensor is always on CPU, just to be consistent on how
+	    // to access tensor data.
+	    var data = backend.readSync(x.dataId);
 	    var decodedData = data.map(function (d) {
 	      return decodeString(d);
 	    });
@@ -120782,7 +120798,7 @@
 	  var x = inputs.x;
 	  var k = attrs.k,
 	      sorted = attrs.sorted;
-	  var xVals = backend.texData.get(x.dataId).values;
+	  var xVals = backend.readSync(x.dataId);
 
 	  var _topKImplCPU = topKImplCPU(xVals, x.shape, x.dtype, k, sorted),
 	      allTopKVals = _topKImplCPU[0],
@@ -121140,7 +121156,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$7 = '2.8.2';
+	var version$7 = '2.8.4';
 
 	/**
 	 * @license
