@@ -206,15 +206,15 @@ static void test_nrR() {
     auto a = csound::chordForName("Am");
     for (double t = 0.; t < 12.; ++t) {
         auto I = C.T(t);
-        csound::System::message("test_nrR: I:       %s normal form: %s\n", I.toString().c_str(), I.normal_form().toString().c_str());
+        csound::System::message("test_nrR: I:       %s I.eOP():      %s normal form: %s\n", I.toString().c_str(), I.eOP().toString().c_str(), I.normal_form().toString().c_str());
         auto vi = a.T(t);
-        csound::System::message("test_nrR: vi:      %s normal form: %s\n", vi.toString().c_str(), vi.normal_form().toString().c_str());
+        csound::System::message("test_nrR: vi:      %s vi.eOP():     %s normal form: %s\n", vi.toString().c_str(), vi.eOP().toString().c_str(), vi.normal_form().toString().c_str());
         auto I_nrR = I.nrR();
-        csound::System::message("test_nrR: I_nrR:   %s normal form: %s\n", I_nrR.toString().c_str(), I_nrR.normal_form().toString().c_str());
+        csound::System::message("test_nrR: I_nrR:   %s I_nrR.eOP():  %s normal form: %s\n", I_nrR.toString().c_str(), I_nrR.eOP().toString().c_str(), I_nrR.normal_form().toString().c_str());
         test(I_nrR.eOP().equals(vi.eOP()), "I.nrR() should be vi.\n");
         auto vi_nrR =vi.nrR();
-        csound::System::message("test_nrR: vi_nrR:  %s normal form: %s\n", vi_nrR.toString().c_str(), vi_nrR.normal_form().toString().c_str());
-        test(vi_nrR.eOP().equals(I.eOP()), "vi.nrR() should be I.\n");
+        csound::System::message("test_nrR: vi_nrR:  %s vi_nrR.eOP(): %s normal form: %s\n", vi_nrR.toString().c_str(), vi_nrR.eOP().toString().c_str(), vi_nrR.normal_form().toString().c_str());
+        test(vi_nrR.eOP().equals(I.eOP()), "vi.nrR() should be I.\n\n");
     }
 }
 
@@ -223,15 +223,15 @@ static void test_nrP() {
     auto c = csound::chordForName("Cm");
     for (double t = 0.; t < 12.; ++t) {
         auto I = C.T(t);
-        csound::System::message("test_nrP: I:       %s normal form: %s\n", I.toString().c_str(), I.normal_form().toString().c_str());
-        auto i = c.T(t);
-        csound::System::message("test_nrP: i:       %s normal form: %s\n", i.toString().c_str(), i.normal_form().toString().c_str());
+        csound::System::message("test_nrP: I:       %s I.eOP():     %s normal form: %s\n", I.toString().c_str(), I.eOP().toString().c_str(), I.normal_form().toString().c_str());
+        auto i = c.T(t);   
+        csound::System::message("test_nrP: i:       %s i.eOP():     %s normal form: %s\n", i.toString().c_str(), i.eOP().toString().c_str(), i.normal_form().toString().c_str());
         auto I_nrP = I.nrP();
-        csound::System::message("test_nrP: I_nrP:   %s normal form: %s\n", I_nrP.toString().c_str(), I_nrP.normal_form().toString().c_str());
+        csound::System::message("test_nrP: I_nrP:   %s I_nrP.eOP(): %s normal form: %s\n", I_nrP.toString().c_str(), I_nrP.eOP().toString().c_str(), I_nrP.normal_form().toString().c_str());
         test(I_nrP.eOP().equals(i.eOP()), "I.nrP() should be i.\n");
         auto i_nrP = i.nrP();
-        csound::System::message("test_nrP: i_nrP:   %s normal form: %s\n", i_nrP.toString().c_str(), i_nrP.normal_form().toString().c_str());
-        test(i_nrP.eOP().equals(I.eOP()), "i.nrP() should be I.\n");
+        csound::System::message("test_nrP: i_nrP:   %s i_nrP.eOP(): %s normal form: %s\n", i_nrP.toString().c_str(), i_nrP.eOP().toString().c_str(), i_nrP.normal_form().toString().c_str());
+        test(i_nrP.eOP().equals(I.eOP()), "i.nrP() should be I.\n\n");
     }
 }
 
@@ -240,16 +240,16 @@ static void test_nrL() {
     auto e = csound::chordForName("Em");
     for (double t = 0.; t < 12.; ++t) {
         auto I = C.T(t);
-        csound::System::message("test_nrL: I:       %s normal form: %s\n", I.toString().c_str(), I.normal_form().toString().c_str());
+        csound::System::message("test_nrL: I:       %s I.eOP():       %s normal form: %s\n", I.toString().c_str(), I.eOP().toString().c_str(), I.normal_form().toString().c_str());
         auto iii = e.T(t);
-        csound::System::message("test_nrL: iii:     %s normal form: %s\n", iii.toString().c_str(), iii.normal_form().toString().c_str());
+        csound::System::message("test_nrL: iii:     %s iii.eOP():     %s normal form: %s\n", iii.toString().c_str(), iii.eOP().toString().c_str(), iii.normal_form().toString().c_str());
         auto I_nrL = I.nrL();
-        csound::System::message("test_nrL: I_nrL:   %s normal form: %s\n", I_nrL.toString().c_str(), I_nrL.normal_form().toString().c_str());
+        csound::System::message("test_nrL: I_nrL:   %s I_nrL.eOP():   %s normal form: %s\n", I_nrL.toString().c_str(), I_nrL.eOP().toString().c_str(), I_nrL.normal_form().toString().c_str());
         test(I_nrL.eOP().equals(iii.eOP()), "I.nrL() should be iii.\n");
         auto iii_nrL = iii.nrL();
-        csound::System::message("test_nrL: iii_nrL: %s normal form: %s\n", iii_nrL.toString().c_str(), iii_nrL.normal_form().toString().c_str());
+        csound::System::message("test_nrL: iii_nrL: %s iii_nrL.eOP(): %s normal form: %s\n", iii_nrL.toString().c_str(), iii_nrL.eOP().toString().c_str(), iii_nrL.normal_form().toString().c_str());
         char buffer[0x500];
-        std::sprintf(buffer, "iii.nrL() %s should be I %s.\n", iii_nrL.toString().c_str(), I.toString().c_str());
+        std::sprintf(buffer, "iii.nrL() %s should be I %s.\n\n", iii_nrL.toString().c_str(), I.toString().c_str());
         test(iii_nrL.eOP().equals(I.eOP()), buffer);
     }
 }
@@ -407,21 +407,8 @@ static void setDifference(const std::string &a_name, std::vector<csound::Chord> 
     }
     std::sort(difference.begin(), difference.end(), comparator);
  }
-
-int main(int argc, char **argv) {
-    csound::System::message("C H O R D S P A C E   U N I T   T E S T S\n\n");
-    csound::Chord BM = csound::chordForName("BM");
-    std::cout << BM.information_sector(0) << std::endl;
-    std::cout << "Starting diagnostics..." << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
-    test_nrR();
-    test_nrP();
-    test_nrL();
-    ///return 0;
-    csound::Chord CM = csound::chordForName("CM").eOPTT(0);
-    std::cout << CM.information_sector(0) << std::endl;
-    CM.reflect(0);
-    auto domain = csound::allOfEquivalenceClass(3, "RPTg", 12., 1., 0, true);
-    ///return 0;
+ 
+static void test_eq_tolerance() {
     double mp_double_small = .00000000000000000001;
     double mp_double_large = 1e40;
     double test_a = 1.;
@@ -440,6 +427,25 @@ int main(int argc, char **argv) {
     std::cerr << "csound::eq_tolerance(0.1500000000001, 0.15): " << csound::eq_tolerance(0.1500000000001, 0.15) << std::endl;
     std::cerr << "csound::gt_tolerance(14.0, 12.0): " << csound::gt_tolerance(14.0, 12.0) << std::endl;
     std::cerr << "csound::ge_tolerance(14.0, 12.0): " << csound::ge_tolerance(14.0, 12.0) << std::endl;
+}
+
+int main(int argc, char **argv) {
+    csound::System::message("C H O R D S P A C E   U N I T   T E S T S\n\n");
+    csound::Chord CM = csound::chordForName("CM").eOPTT(0);
+    std::cout << CM.information_sector(0) << std::endl;
+    return 0;
+    //~ csound::Chord BM = csound::chordForName("BM");
+    //~ std::cout << BM.information_sector(0) << std::endl;
+    //~ std::cout << "Starting diagnostics..." << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
+   test_eq_tolerance();
+    test_nrR();
+    test_nrP();
+    test_nrL();
+    ///return 0;
+    CM.reflect(0);
+    auto domain = csound::allOfEquivalenceClass(3, "RPTg", 12., 1., 0, true);
+    return 0;
+    return 0;
     // SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voice_count, std::string equivalence_class, double range, double g, int sector, bool printme) {
     auto ops = csound::allOfEquivalenceClass(3, "RP", 12., 1., 0, false);
     printSet("OPs", ops);

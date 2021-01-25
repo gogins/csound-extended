@@ -64,7 +64,13 @@ the name that would go to the most commonly used overload.
 */
 
 EMSCRIPTEN_BINDINGS(csoundac) {  
+    emscripten::register_map<double,double>("DoubleToDoubleMap");
+    emscripten::register_map<std::string,double>("StringToDoubleMap");
     emscripten::register_map<std::string,std::string>("StringToStringMap");
+    emscripten::register_map<csound::Chord,csound::Chord>("ChordToChordMap");
+    emscripten::register_map<int,csound::Chord>("IntToChordMap");
+    emscripten::register_map<csound::Chord,int>("ChordToIntMap");
+    emscripten::register_map<std::string,csound::Scale>("StringToScaleMap");
     emscripten::register_vector<double>("DoubleVector");
     emscripten::register_vector<int>("IntVector");
     emscripten::register_vector<csound::Chord>("ChordVector");

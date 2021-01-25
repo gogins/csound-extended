@@ -4109,7 +4109,7 @@ inline SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b) {
     }
 }
 
-inline SILENCE_PUBLIC Vector reflect_vector(const Vector &v, const Vector &u, double c) {
+inline SILENCE_PUBLIC Vector reflect_vectorx(const Vector &v, const Vector &u, double c) {
     ///SCOPED_DEBUGGING debugging;
     CHORD_SPACE_DEBUG("reflect_vector: v: \n%s\nu: \n%s\nc: %g\n", toString(v).c_str(), toString(u).c_str(), c);
     auto v_dot_u = v.dot(u);
@@ -4127,7 +4127,7 @@ inline SILENCE_PUBLIC Vector reflect_vector(const Vector &v, const Vector &u, do
     return reflection;
 }
 
-inline SILENCE_PUBLIC Vector reflect_vectorx(const Vector &v, const Vector &u, double c) {
+inline SILENCE_PUBLIC Vector reflect_vector(const Vector &v, const Vector &u, double c) {
     auto v_dot_u = v.dot(u);
     auto v_dot_u_minus_c = v_dot_u - c;
     auto u_dot_u = u.dot(u);
@@ -4897,31 +4897,7 @@ inline bool Chord::is_minor() const {
 }
 
 inline std::vector<int> Chord::opt_domain_sectors() const {
-    //~ auto &opti_sectors_for_dimensions = opti_sectors_for_dimensionalities();
-    //~ auto &opti_sectors = opti_sectors_for_dimensions[voices()];
-    //~ std::multimap<double, int> sectors_for_distances;
-    //~ double minimum_distance = std::numeric_limits<double>::max();
-    //~ auto ot = eOT();
-    //~ for (int sector = 0, n = opti_sectors.size(); sector < n; ++sector) {
-        //~ auto opt_sector = sector / 2;
-        //~ auto distance_ = distance_to_points(ot, opti_sectors[sector]);
-        //~ auto distance = rownd(distance_);
-        //~ sectors_for_distances.insert({distance, opt_sector});
-        //~ if (lt_tolerance(distance, minimum_distance, 1000, 10000) == true) {
-            //~ minimum_distance = distance;
-        //~ }
-        //~ auto delta = minimum_distance - distance;
-        //~ CHORD_SPACE_DEBUG("Chord::opt_domain_sectors: %s sector: %3d distance: %.20g minimum distance: %.20g delta: %.20g\n", toString().c_str(), opt_sector, distance_, minimum_distance, delta);
-    //~ }
-    //~ std::vector<int> result;
-    //~ auto range = sectors_for_distances.equal_range(minimum_distance);
-    //~ for (auto it = range.first; it != range.second; ++it) {
-        //~ CHORD_SPACE_DEBUG("Chord::opt_domain_sectors: result for: %s sector: %3d distance: %.20g\n", toString().c_str(), it->second, it->first);
-        //~ result.push_back(it->second);
-    //~ }
-    //~ std::sort(result.begin(), result.end());
-    
-    // Counting ukp from OPTI sector 0, every two OPTI sectors is one OPT sector.
+    // Counting up from OPTI sector 0, every two OPTI sectors is one OPT sector.
     auto opti_sectors = opti_domain_sectors();
     std::set<int> opt_sectors;
     for (auto opti_sector : opti_sectors) {

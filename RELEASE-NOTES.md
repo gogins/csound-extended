@@ -3,7 +3,7 @@ Michael Gogins<br>
 https://github.com/gogins<br>
 http://michaelgogins.tumblr.com
 
-## 16 January 2020
+## 23 January 2021
 
 ### [csound-extended package 2.0.0](https://github.com/gogins/csound-extended/releases)
 
