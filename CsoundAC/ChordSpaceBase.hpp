@@ -277,6 +277,8 @@ P, L, and R have been extended as follows, see Fiore and Satyendra,
                 
 */
 
+SILENCE_PUBLIC std::string chord_space_version();
+
 /**
  * Returns the current state of the chord space debugging flag as a 
  * reference, which can be an lvalue or an rvalue.
@@ -2027,7 +2029,7 @@ template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_RPT>(const Ch
     }
     System::error("Error: Chord equate<EQUIVALENCE_RELATION_RPT>: no RPT in sector %d.\n", opt_sector);
     ///CHORD_SPACE_DEBUGGING() = true;
-    std::raise(SIGINT);
+    ///std::raise(SIGINT);
     for (auto rpt : rpts) {
         System::message("equate<EQUIVALENCE_RELATION_RPT>: chord %s rpt: %s opt_sector: %d\n", print_chord(chord), print_chord(rpt), opt_sector);
         if (rpt.is_opt_sector(opt_sector) == true) {
@@ -4891,32 +4893,8 @@ inline bool Chord::is_minor() const {
 }
 
 inline std::vector<int> Chord::opt_domain_sectors() const {
-    //~ auto &opti_sectors_for_dimensions = opti_sectors_for_dimensionalities();
-    //~ auto &opti_sectors = opti_sectors_for_dimensions[voices()];
-    //~ std::multimap<double, int> sectors_for_distances;
-    //~ double minimum_distance = std::numeric_limits<double>::max();
-    //~ auto ot = eOT();
-    //~ for (int sector = 0, n = opti_sectors.size(); sector < n; ++sector) {
-        //~ auto opt_sector = sector / 2;
-        //~ auto distance_ = distance_to_points(ot, opti_sectors[sector]);
-        //~ auto distance = rownd(distance_);
-        //~ sectors_for_distances.insert({distance, opt_sector});
-        //~ if (lt_tolerance(distance, minimum_distance, 1000, 10000) == true) {
-            //~ minimum_distance = distance;
-        //~ }
-        //~ auto delta = minimum_distance - distance;
-        //~ CHORD_SPACE_DEBUG("Chord::opt_domain_sectors: %s sector: %3d distance: %.20g minimum distance: %.20g delta: %.20g\n", toString().c_str(), opt_sector, distance_, minimum_distance, delta);
-    //~ }
-    //~ std::vector<int> result;
-    //~ auto range = sectors_for_distances.equal_range(minimum_distance);
-    //~ for (auto it = range.first; it != range.second; ++it) {
-        //~ CHORD_SPACE_DEBUG("Chord::opt_domain_sectors: result for: %s sector: %3d distance: %.20g\n", toString().c_str(), it->second, it->first);
-        //~ result.push_back(it->second);
-    //~ }
-    //~ std::sort(result.begin(), result.end());
-    
-    // Counting ukp from OPTI sector 0, every two OPTI sectors is one OPT sector.
-    auto opti_sectors = opti_domain_sectors();
+    // Counting up from OPTI sector 0, every two OPTI sectors is one OPT sector.
+    const auto opti_sectors = opti_domain_sectors();
     std::set<int> opt_sectors;
     for (auto opti_sector : opti_sectors) {
         int opt_sector = std::floor(opti_sector / 2.);
