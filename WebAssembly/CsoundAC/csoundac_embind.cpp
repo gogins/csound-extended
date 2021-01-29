@@ -141,6 +141,7 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         //~ .value("COUNT", CHORD_DIMENSION::COUNT)
     //~ ;
     emscripten::function("allOfEquivalenceClass", &csound::allOfEquivalenceClass);
+    emscripten::function("chord_space_version", &csound::chord_space_version);
     emscripten::function("euclidean", &csound::euclidean);
     emscripten::function("factorial", &csound::factorial);
     emscripten::function("midpoint", &csound::midpoint);

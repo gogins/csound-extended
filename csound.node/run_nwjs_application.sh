@@ -30,6 +30,8 @@ read -r -d '' json_format << EOM
     "plugin": true
   },
   "chromium-args": {
+    "--enable-logging": true,
+    "--v=1": 1,
     "--device-scale-factor": 4,
     "--alsa-input-device": "plughw:1,0",
     "--alsa-output-device": "plughw:1,0"

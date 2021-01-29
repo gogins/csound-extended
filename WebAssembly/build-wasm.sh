@@ -10,18 +10,11 @@ echo "Using EMSCRIPTEN_ROOT: $EMSCRIPTEN_ROOT."
 echo "Python version (must be 3 or higher):"
 python --version
 
-#~ cd cmask
-#~ rm -f CMakeCache.txt
-#~ emcmake cmake .
-#~ emmake make clean
-#~ emmake make "VERBOSE=1"
-#~ cd ..
-
 # Total memory for a WebAssembly module must be a multiple of 64 KB so...
 # 1024 * 64 = 65536 is 64 KB
 # 65536 * 1024 * 4 is 268435456
 
-export CXX_FLAGS="-v -std=c++17 -Wno-implicit-int-float-conversion -DINIT_STATIC_MODULES=1" 
+export CXX_FLAGS="-v -std=c++17 -O2 -Wno-implicit-int-float-conversion -DINIT_STATIC_MODULES=1" 
 
 # Most emcc flags should be the same for both the 'compile' and the 'compile and link' passes.
 
@@ -31,12 +24,17 @@ mkdir -p build-wasm
 cd build-wasm
 rm -f CMakeCache.txt
 
+echo "Packaging some resources..."
+
+python $EMSCRIPTEN_ROOT/tools/file_packager.py csound_samples.data --preload ../../dependencies/csound/samples --js-output=csound_samples.js
+
+echo "Configuring to build static libraries..."
+
 emcmake cmake -G "Unix Makefiles" -Wno-dev ..
+
+echo "Building static libraries..."
+
 emmake make cmask csound-static csoundac-static -j6
-
-#~ echo "Packaging some resources..."
-
-#~ python $EMSCRIPTEN_ROOT/tools/file_packager.py csound_samples.data --preload ../../dependencies/csound/samples --js-output=csound_samples.js
 
 echo "Compiling csound_embind..."
 
@@ -47,9 +45,6 @@ echo "Compiling CsoundAudioProcessor..."
 # HRTF and SoundFont data embedded from directory csound/samples...
 
 em++ ${CXX_FLAGS} -O1 ${EMCC_FLAGS} --bind -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' -s RESERVED_FUNCTION_POINTERS=2 -s SINGLE_FILE=1 -s WASM_ASYNC_COMPILATION=0 --source-map-base . --embed-file ../../dependencies/csound/samples/ --pre-js ../src/CsoundAudioProcessor_prejs.js --post-js ../src/CsoundAudioProcessor_postjs.js csound_web_audio.bc csound/libcsound.a ../deps/lib/libsndfile.a ../deps/lib/libogg.a ../deps/lib/libvorbis.a ../deps/lib/libvorbisenc.a ../deps/lib/libFLAC.a -o CsoundAudioProcessor.js
-
-emcmake cmake -G "Unix Makefiles" -Wno-dev ..
-emmake make cmask csound-static csoundac-static -j6
 
 echo "Compiling CsoundAC..."
 

@@ -5,6 +5,8 @@
 #include <cstdio>
 #include <string>
 
+// g++ -Dlinux -m32 --std=gnu++17 -lstdc++fs -Wno-write-strings -I. -I/usr/include -I/usr/include/eigen3 -O2 -g ChordSpaceTest.cpp -oChordSpaceTest 
+
 #pragma GCC diagnostic ignored "-Wformat"
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> Matrix;
@@ -286,7 +288,8 @@ static bool testNormalsAndEquivalents(std::string equivalence,
         std::sprintf(buffer, "FOUND EQUIVALENT %d\n", count);
         test(found_equivalent->test(), std::string(buffer));
         count = count + 1;
-     }
+    }
+    return count;
  }
 
 static bool testEquivalenceRelation(std::string equivalenceRelation, int voiceCount, double range, double g) {
@@ -431,21 +434,25 @@ static void test_eq_tolerance() {
 
 int main(int argc, char **argv) {
     csound::System::message("C H O R D S P A C E   U N I T   T E S T S\n\n");
-    csound::Chord CM = csound::chordForName("CM").eOPTT(0);
-    std::cout << CM.information_sector(0) << std::endl;
+    std::cout << csound::chord_space_version() << std::endl;
+    csound::Chord CM = csound::chordForName("C+");
+    CM = CM.T(-4.);
+    std::cout << CM.information() << std::endl;
+    std::cout << CM.information_debug(-1) << std::endl;
+    return 0;
+    test_eq_tolerance();
     return 0;
     //~ csound::Chord BM = csound::chordForName("BM");
     //~ std::cout << BM.information_sector(0) << std::endl;
     //~ std::cout << "Starting diagnostics..." << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
-   test_eq_tolerance();
+    test_eq_tolerance();
     test_nrR();
     test_nrP();
     test_nrL();
     ///return 0;
     CM.reflect(0);
     auto domain = csound::allOfEquivalenceClass(3, "RPTg", 12., 1., 0, true);
-    return 0;
-    return 0;
+    ///return 0;
     // SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voice_count, std::string equivalence_class, double range, double g, int sector, bool printme) {
     auto ops = csound::allOfEquivalenceClass(3, "RP", 12., 1., 0, false);
     printSet("OPs", ops);
