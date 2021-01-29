@@ -277,7 +277,10 @@ P, L, and R have been extended as follows, see Fiore and Satyendra,
                 
 */
 
-SILENCE_PUBLIC std::string chord_space_version();
+SILENCE_PUBLIC std::strng chord_space_version() {
+    return "ChordSpaceBase version 2.0.1.";
+}
+
 /**
  * Returns the current state of the chord space debugging flag as a 
  * reference, which can be an lvalue or an rvalue.
@@ -931,7 +934,7 @@ public:
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord K() const;
-    virtual Chord K_range(double range = OCTAVE()) const;
+    virtual Chord K_range(double range) const;
     /**
      * Returns the sum of the pitches in the chord.
      */
