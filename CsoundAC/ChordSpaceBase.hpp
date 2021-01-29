@@ -933,7 +933,8 @@ public:
      * 
      * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
-    virtual Chord K(double range = OCTAVE()) const;
+    virtual Chord K() const;
+    virtual Chord K_range(double range) const;
     /**
      * Returns the sum of the pitches in the chord.
      */
@@ -3488,7 +3489,7 @@ inline Chord Chord::nrD() const {
     return T(-7.0). eOP();
 }
 
-inline Chord Chord::K(double range) const {
+inline Chord Chord::K() const {
     Chord chord = *this;
     if (chord.voices() < 2) {
         return chord;
@@ -3497,6 +3498,11 @@ inline Chord Chord::K(double range) const {
     Chord epc = epcs();
     double center = epc.getPitch(0) + epc.getPitch(1);
     return I(center);
+}
+
+inline Chord Chord::K_range(double range) const {
+    Chord chord = K();
+    return chord.eRP(range);
 }
 
 inline bool Chord::Tform(const Chord &Y, double g) const {
