@@ -277,7 +277,9 @@ P, L, and R have been extended as follows, see Fiore and Satyendra,
                 
 */
 
-SILENCE_PUBLIC std::string chord_space_version();
+SILENCE_PUBLIC std::string chord_space_version() {
+    return "ChordSpaceBase version 2.0.1.";
+}
 
 /**
  * Returns the current state of the chord space debugging flag as a 
