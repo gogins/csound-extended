@@ -1,7 +1,7 @@
 #!/bin/sh
 echo "Creating a release for Csound for WebAssembly..."
-export CSOUND_AUDIO_NODE_VERSION=1.2.0
-export RELEASE_DIR=csound-extended-wasm-${CSOUND_AUDIO_NODE_VERSION}
+export CSOUND_WEB_ASSEMBLY_VERSION=2.0.0
+export RELEASE_DIR=csound-extended-wasm-${CSOUND_WEB_ASSEMBLY_VERSION}
 rm -rf dist-wasm
 mkdir dist-wasm
 rm -rf $RELEASE_DIR

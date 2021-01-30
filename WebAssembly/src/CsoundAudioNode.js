@@ -301,7 +301,7 @@ class CsoundAudioNode extends AudioWorkletNode {
             this.message_callback("WebAudio maximum output channels:   " +  this.context.destination.maxChannelCount + "\n");
             this.connect(this.context.destination);
             if (navigator.requestMIDIAccess) {
-              let midi_access = await navigator.requestMIDIAccess();
+              let midi_access = await navigator.requestMIDIAccess({sysex:false});
               const inputs = midi_access.inputs.values();
               var post_message = this.postMessage;
               for (let entry of midi_access.inputs) {

@@ -135,6 +135,7 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         //~ .value("COUNT", CHORD_DIMENSION::COUNT)
     //~ ;
     emscripten::function("allOfEquivalenceClass", &csound::allOfEquivalenceClass);
+    emscripten::function("chord_space_version", &csound::chord_space_version);
     emscripten::function("euclidean", &csound::euclidean);
     emscripten::function("factorial", &csound::factorial);
     emscripten::function("midpoint", &csound::midpoint);
@@ -257,6 +258,7 @@ EMSCRIPTEN_BINDINGS(csoundac) {
         .function("iseT", &csound::Chord::iseT)
         .function("iseTT", &csound::Chord::iseTT)
         .function("K", &csound::Chord::K)
+        .function("K_range", &csound::Chord::K_range)
         .function("layer", &csound::Chord::layer)
         .function("lesser", &csound::Chord::lesser)
         .function("lesser_equals", &csound::Chord::lesser_equals)
