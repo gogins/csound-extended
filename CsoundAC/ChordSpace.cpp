@@ -71,10 +71,6 @@
 
 namespace csound {
     
-std::string chord_space_version() {
-    return "ChordSpaceBase version 2.0.";
-}
-
 SILENCE_PUBLIC std::vector<Chord> allOfEquivalenceClass(int voice_count, std::string equivalence_class, double range, double g, int sector, bool printme) {
     std::vector<Chord> fundamental_domain;
     if (equivalence_class == "RP") {
@@ -430,59 +426,7 @@ SILENCE_PUBLIC void insert(Score &score,
     toScore(chord, score, time_, voice_is_instrument);
 }
 
-    static std::map<int, std::vector<Chord>> cyclical_regions_for_dimensionalities_;
 
-SILENCE_PUBLIC std::map<int, std::vector<Chord>> &Chord::cyclical_regions_for_dimensionalities() {
-    return cyclical_regions_for_dimensionalities_;
-}
-
-    static std::map<int, std::vector<std::vector<Chord>>> opt_sectors_for_dimensionalities_;
-
-SILENCE_PUBLIC std::map<int, std::vector<std::vector<Chord>>> &Chord::opt_sectors_for_dimensionalities() {
-    return opt_sectors_for_dimensionalities_;
-}
-
-    static std::map<int, std::vector<std::vector<Chord>>> opti_sectors_for_dimensionalities_;
-
-SILENCE_PUBLIC std::map<int, std::vector<std::vector<Chord>>> &Chord::opti_sectors_for_dimensionalities() {
-    return opti_sectors_for_dimensionalities_;
-}
-
-    static std::map<int, std::vector<std::vector<Chord>>> opt_simplexes_for_dimensionalities_;
-
-SILENCE_PUBLIC std::map<int, std::vector<std::vector<Chord>>> &Chord::opt_simplexes_for_dimensionalities() {
-    return opt_simplexes_for_dimensionalities_;
-}
-
-    static std::map<int, std::vector<std::vector<Chord>>> opti_simplexes_for_dimensionalities_;
-
-SILENCE_PUBLIC std::map<int, std::vector<std::vector<Chord>>> &Chord::opti_simplexes_for_dimensionalities() {
-    return opti_simplexes_for_dimensionalities_;
-}
-
-    static std::map<int, std::vector<HyperplaneEquation>> hyperplane_equations_for_opt_sectors_;
-
-SILENCE_PUBLIC std::map<int, std::vector<HyperplaneEquation>> &Chord::hyperplane_equations_for_opt_sectors() {
-    return hyperplane_equations_for_opt_sectors_;
-}
-
-    static std::map<Chord, Chord> cache;
-
-SILENCE_PUBLIC std::map<Chord, Chord> &normal_forms_for_chords() {
-    return cache;
-}
-
-    static std::map<Chord, Chord> cache;
-
-SILENCE_PUBLIC std::map<Chord, Chord> &prime_forms_for_chords() {
-    return cache;
-}
-
-    static std::map<Chord, Chord> cache;
-
-SILENCE_PUBLIC std::map<Chord, Chord> &inverse_prime_forms_for_chords() {
-    return cache;
-}
 
 } // End of namespace csound.
 

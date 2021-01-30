@@ -277,7 +277,7 @@ P, L, and R have been extended as follows, see Fiore and Satyendra,
                 
 */
 
-SILENCE_PUBLIC std::strng chord_space_version() {
+inline SILENCE_PUBLIC std::string chord_space_version() {
     return "ChordSpaceBase version 2.0.1.";
 }
 
@@ -4583,8 +4583,6 @@ inline SILENCE_PUBLIC double voiceleadingSmoothness(const Chord &a, const Chord 
     return L1;
 }
 
-#if 0
-
 inline std::map<int, std::vector<Chord>> &Chord::cyclical_regions_for_dimensionalities() {
     static std::map<int, std::vector<Chord>> cyclical_regions_for_dimensionalities_;
     return cyclical_regions_for_dimensionalities_;
@@ -4614,8 +4612,6 @@ inline std::map<int, std::vector<HyperplaneEquation>> &Chord::hyperplane_equatio
     static std::map<int, std::vector<HyperplaneEquation>> hyperplane_equations_for_opt_sectors_;
     return hyperplane_equations_for_opt_sectors_;
 }
-
-#endif
 
 inline HyperplaneEquation Chord::hyperplane_equation(int opt_sector) const {
     auto hyperplane_equations_for_dimensions = hyperplane_equations_for_opt_sectors();
@@ -5263,7 +5259,6 @@ inline SILENCE_PUBLIC std::vector<Chord> PITV::toChord_vector(const Eigen::Vecto
     return toChord(pitv(0), pitv(1), pitv(2), pitv(3), printme);
 }
 
-#if 0
 inline SILENCE_PUBLIC std::map<Chord, Chord> &normal_forms_for_chords() {
     static std::map<Chord, Chord> cache;
     return cache;
@@ -5278,7 +5273,6 @@ inline SILENCE_PUBLIC std::map<Chord, Chord> &inverse_prime_forms_for_chords() {
     static std::map<Chord, Chord> cache;
     return cache;
 }
-#endif
 
 } // End of namespace csound.
 
