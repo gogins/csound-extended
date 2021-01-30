@@ -439,9 +439,9 @@ int main(int argc, char **argv) {
     CM = CM.T(-4.);
     std::cout << CM.information() << std::endl;
     std::cout << CM.information_debug(-1) << std::endl;
-    return 0;
+    ///return 0;
     test_eq_tolerance();
-    return 0;
+    ///return 0;
     //~ csound::Chord BM = csound::chordForName("BM");
     //~ std::cout << BM.information_sector(0) << std::endl;
     //~ std::cout << "Starting diagnostics..." << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;

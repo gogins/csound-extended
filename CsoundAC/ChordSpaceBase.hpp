@@ -278,7 +278,7 @@ P, L, and R have been extended as follows, see Fiore and Satyendra,
 */
 
 inline SILENCE_PUBLIC std::string chord_space_version() {
-    return "ChordSpaceBase version 2.0.1.";
+    return "ChordSpaceBase version 2.0.3.";
 }
 
 /**
@@ -1297,6 +1297,17 @@ template<int EQUIVALENCE_RELATION> SILENCE_PUBLIC std::vector<Chord> fundamental
 
 SILENCE_PUBLIC bool ge_tolerance(double a, double b, int epsilons=20,int ulps=200);
 
+//~ /**
+ //~ * Given a set of points sufficient to define a hyperplane, computes the 
+ //~ * scalar equation of the hyperplane. The algorithm derives vectors from the 
+ //~ * points and solves for the scalar equation using the singular value 
+ //~ * decomposition. The equation is returned in the form of a unit normal vector 
+ //~ * of the hyperplane and a constant factor.
+ //~ */
+//~ SILENCE_PUBLIC HyperplaneEquation hyperplane_equation(const std::vector<Chord> &points_in_hyperplane, bool make_eT = true);
+
+//~ SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_random_inversion_flat(int dimensions, bool transpositional_equivalence = true, int opt_sector = 1);
+
 SILENCE_PUBLIC bool gt_tolerance(double a, double b, int epsilons, int ulps);
 
 /**
@@ -2021,7 +2032,7 @@ template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_RPT>(const Ch
     }
     System::error("Error: Chord equate<EQUIVALENCE_RELATION_RPT>: no RPT in sector %d.\n", opt_sector);
     ///CHORD_SPACE_DEBUGGING() = true;
-    ///std::raise(SIGINT);
+    std::raise(SIGINT);
     for (auto rpt : rpts) {
         System::message("equate<EQUIVALENCE_RELATION_RPT>: chord %s rpt: %s opt_sector: %d\n", print_chord(chord), print_chord(rpt), opt_sector);
         if (rpt.is_opt_sector(opt_sector) == true) {
@@ -2068,7 +2079,6 @@ template<> inline SILENCE_PUBLIC bool predicate<EQUIVALENCE_RELATION_RPTg>(const
 inline bool Chord::iseRPTT(double range, double g, int opt_sector) const {
     return predicate<EQUIVALENCE_RELATION_RPTg>(*this, range, g, opt_sector);
 }
-
 // TODO: Fix this with eRPTs instead of eRPTTs?
 
 template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_RPTg>(const Chord &chord, double range, double g, int opt_sector) {
@@ -3607,24 +3617,22 @@ inline SILENCE_PUBLIC double epc(double pitch) {
 // If a and b are not near zero, the tolerance is multiples of ulps, and the result is difference <= tolerance.
 
 inline SILENCE_PUBLIC bool eq_tolerance(double a, double b, int epsilons, int ulps) {
-    ///SCOPED_DEBUGGING debugging;
-    static const int PRECISION = DBL_DIG; 
     static const double machine_epsilon = std::numeric_limits<double>::epsilon();
     static const double double_max_ = std::numeric_limits<double>::max();
     if (a == b) {
-        CHORD_SPACE_DEBUG("eq_tolerance:          => true  a: %.*g b: %.*g epsilons: %5d ulps: %5d: a and b are strictly equal.\n", PRECISION, a, PRECISION, b, epsilons, ulps);
+        CHORD_SPACE_DEBUG("eq_tolerance: a and b are strictly equal:\n    => return true.\n");
         return true;
     }
     if ((a == double_max_ || b == double_max_) == true) {
-        CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: a or b is max.\n", PRECISION, a, PRECISION, b, epsilons, ulps);
+        CHORD_SPACE_DEBUG("eq_tolerance: a or b is double_max_:\n    => return false.\n");
         return false;
     }
     if ((std::isinf(a) || std::isinf(b)) == true) {
-        CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: a or b is inf.\n", PRECISION, a, PRECISION, b, epsilons, ulps);
+        CHORD_SPACE_DEBUG("eq_tolerance: a or b is inf:\n    => return false.\n");
         return false;
     }
     if ((std::isnan(a) || std::isnan(b)) == true) {
-        CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: a or b is nan.\n", PRECISION, a, PRECISION, b, epsilons, ulps);
+        CHORD_SPACE_DEBUG("eq_tolerance: a or b is nan:\n    => return false.\n");
         return false;
     }
     double difference = a - b;
@@ -3633,34 +3641,34 @@ inline SILENCE_PUBLIC bool eq_tolerance(double a, double b, int epsilons, int ul
         difference = -difference;
     }
     if ((difference == double_max_) == true) {
-        CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference is max.\n", PRECISION, a, PRECISION, b, epsilons, ulps);
+        CHORD_SPACE_DEBUG("eq_tolerance: difference of and b is double_max_:\n    => return false.\n");
         return false;
     }
     if (std::isinf(difference) == true) {
-        CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference is inf.\n", PRECISION, a, PRECISION, b, epsilons, ulps);
+         CHORD_SPACE_DEBUG("eq_tolerance: difference of and b is inf:\n    => return false.\n");
         return false;
     }
     if (std::isnan(difference) == true) {
-        CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference is nan.\n", PRECISION, a, PRECISION, b, epsilons, ulps);
+         CHORD_SPACE_DEBUG("eq_tolerance: difference of and b is nan:\n    => return false.\n");
         return false;
     }
     double tolerance = epsilons * machine_epsilon;
     if ((a == 0. || b == 0.) == true || difference <= tolerance) {
         if (difference <= tolerance) {
-            CHORD_SPACE_DEBUG("eq_tolerance:          => true  a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference %.*g <= %.*g epsilons_tolerance.\n", PRECISION, a, PRECISION, b, epsilons, ulps, PRECISION, difference, PRECISION, tolerance);
+            CHORD_SPACE_DEBUG("eq_tolerance: a or b is strictly equal to 0 and difference of a and b <= epsilons tolerance:\n    => return true.\n");
             return true;
         } else {
-            CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference %.*g <= %.*g epsilons_tolerance.\n", PRECISION, a, PRECISION, b, epsilons, ulps, PRECISION, difference, PRECISION, tolerance);
+            CHORD_SPACE_DEBUG("eq_tolerance: a or b is strictly equal to 0 and difference of a and b > epsilons tolerance:\n    => return false.\n");
             return false;
         }
     } else {
         double difference_ulp = boost::math::ulp(difference);
         tolerance = difference_ulp * ulps;
         if (difference <= tolerance) {
-            CHORD_SPACE_DEBUG("eq_tolerance:          => true  a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference %.*g <= %.*g ulps_tolerance.\n", PRECISION, a, PRECISION, b, epsilons, ulps, PRECISION, difference, PRECISION, tolerance);
+            CHORD_SPACE_DEBUG("eq_tolerance: a or b are not strictly equal to 0 and difference of a and b <= ulps tolerance:\n    => return true.\n");
             return true;
         } else {
-            CHORD_SPACE_DEBUG("eq_tolerance:          => false a: %.*g b: %.*g epsilons: %5d ulps: %5d: difference %.*g <= %.*g ulps_tolerance.\n", PRECISION, a, PRECISION, b, epsilons, ulps, PRECISION, difference, PRECISION, tolerance);
+            CHORD_SPACE_DEBUG("eq_tolerance: a or b are not strictly equal to 0 and difference of a and b > ulps tolerance:\n    => return false.\n");
             return false;
         }
     }
@@ -3889,12 +3897,9 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_singular_value
  * Returns the sum of the distances of the chord to each of one or more chords.
  */
 inline SILENCE_PUBLIC double distance_to_points(const Chord &chord, const std::vector<Chord> &sector_vertices) {
-    double sum = 0.;
-    //for (auto vertex : sector_vertices) {
-    for (int i = 0; i < sector_vertices.size(); i++) {
-        const Chord &vertex = sector_vertices[i];
-        CHORD_SPACE_DEBUG("distance_to_points: distance: %g vertex[%3d]: %s\n", i, vertex.toString().c_str());
-        double distance = euclidean(chord, vertex);
+    double sum = 0;
+    for (auto vertex : sector_vertices) {
+        auto distance = euclidean(chord, vertex);
         sum = sum + distance;
     }
     return sum;
@@ -4108,7 +4113,7 @@ inline SILENCE_PUBLIC bool parallelFifth(const Chord &a, const Chord &b) {
     }
 }
 
-inline SILENCE_PUBLIC Vector reflect_vectorx(const Vector &v, const Vector &u, double c) {
+inline SILENCE_PUBLIC Vector reflect_vector(const Vector &v, const Vector &u, double c) {
     ///SCOPED_DEBUGGING debugging;
     CHORD_SPACE_DEBUG("reflect_vector: v: \n%s\nu: \n%s\nc: %g\n", toString(v).c_str(), toString(u).c_str(), c);
     auto v_dot_u = v.dot(u);
@@ -4126,7 +4131,7 @@ inline SILENCE_PUBLIC Vector reflect_vectorx(const Vector &v, const Vector &u, d
     return reflection;
 }
 
-inline SILENCE_PUBLIC Vector reflect_vector(const Vector &v, const Vector &u, double c) {
+inline SILENCE_PUBLIC Vector reflect_vectorx(const Vector &v, const Vector &u, double c) {
     auto v_dot_u = v.dot(u);
     auto v_dot_u_minus_c = v_dot_u - c;
     auto u_dot_u = u.dot(u);
@@ -4623,7 +4628,7 @@ inline void Chord::initialize_sectors() {
     static bool initialized = false;
     if (initialized == false) {
         initialized = true;
-        /// SCOPED_DEBUGGING scoped_debugging;
+        SCOPED_DEBUGGING scoped_debugging;
         auto cyclical_regions = cyclical_regions_for_dimensionalities();
         auto &opt_domains_for_dimensions = opt_sectors_for_dimensionalities();
         auto &opti_domains_for_dimensions = opti_sectors_for_dimensionalities();
@@ -4896,8 +4901,32 @@ inline bool Chord::is_minor() const {
 }
 
 inline std::vector<int> Chord::opt_domain_sectors() const {
-    // Counting up from OPTI sector 0, every two OPTI sectors is one OPT sector.
-    const auto opti_sectors = opti_domain_sectors();
+    //~ auto &opti_sectors_for_dimensions = opti_sectors_for_dimensionalities();
+    //~ auto &opti_sectors = opti_sectors_for_dimensions[voices()];
+    //~ std::multimap<double, int> sectors_for_distances;
+    //~ double minimum_distance = std::numeric_limits<double>::max();
+    //~ auto ot = eOT();
+    //~ for (int sector = 0, n = opti_sectors.size(); sector < n; ++sector) {
+        //~ auto opt_sector = sector / 2;
+        //~ auto distance_ = distance_to_points(ot, opti_sectors[sector]);
+        //~ auto distance = rownd(distance_);
+        //~ sectors_for_distances.insert({distance, opt_sector});
+        //~ if (lt_tolerance(distance, minimum_distance, 1000, 10000) == true) {
+            //~ minimum_distance = distance;
+        //~ }
+        //~ auto delta = minimum_distance - distance;
+        //~ CHORD_SPACE_DEBUG("Chord::opt_domain_sectors: %s sector: %3d distance: %.20g minimum distance: %.20g delta: %.20g\n", toString().c_str(), opt_sector, distance_, minimum_distance, delta);
+    //~ }
+    //~ std::vector<int> result;
+    //~ auto range = sectors_for_distances.equal_range(minimum_distance);
+    //~ for (auto it = range.first; it != range.second; ++it) {
+        //~ CHORD_SPACE_DEBUG("Chord::opt_domain_sectors: result for: %s sector: %3d distance: %.20g\n", toString().c_str(), it->second, it->first);
+        //~ result.push_back(it->second);
+    //~ }
+    //~ std::sort(result.begin(), result.end());
+    
+    // Counting ukp from OPTI sector 0, every two OPTI sectors is one OPT sector.
+    auto opti_sectors = opti_domain_sectors();
     std::set<int> opt_sectors;
     for (auto opti_sector : opti_sectors) {
         int opt_sector = std::floor(opti_sector / 2.);
@@ -4913,20 +4942,19 @@ inline std::vector<int> Chord::opt_domain_sectors() const {
 
 inline std::vector<int> Chord::opti_domain_sectors() const {
     ///SCOPED_DEBUGGING debug;
-    const auto &opti_sectors_for_dimensions = opti_sectors_for_dimensionalities();
-    const auto &opti_sectors = opti_sectors_for_dimensions.at(voices());
+    auto &opti_sectors_for_dimensions = opti_sectors_for_dimensionalities();
+    auto &opti_sectors = opti_sectors_for_dimensions[voices()];
     std::multimap<double, int> sectors_for_distances;
     double minimum_distance = std::numeric_limits<double>::max();
-    Chord ot = eOT();
-    CHORD_SPACE_DEBUG("Chord::opti_domain_sectors: ot: %s\n", ot.toString().c_str());
-    for (int sector = 0; sector < opti_sectors.size(); sector++) {
-        double distance_ = distance_to_points(ot, opti_sectors[sector]);
-        double distance = rownd(distance_);
+    auto ot = eOT();
+    for (int sector = 0, n = opti_sectors.size(); sector < n; ++sector) {
+        auto distance_ = distance_to_points(ot, opti_sectors[sector]);
+        auto distance = rownd(distance_);
         sectors_for_distances.insert({distance, sector});
         if (lt_tolerance(distance, minimum_distance, 1000, 10000) == true) {
             minimum_distance = distance;
         }
-        double delta = minimum_distance - distance;
+        auto delta = minimum_distance - distance;
         CHORD_SPACE_DEBUG("Chord::opti_domain_sectors: %s sector: %3d distance: %.20g minimum distance: %.20g delta: %.20g\n", toString().c_str(), sector, distance_, minimum_distance, delta);
     }
     std::vector<int> result;
@@ -5091,7 +5119,7 @@ inline SILENCE_PUBLIC void PITV::list(bool listheader, bool listps, bool listvoi
                 optts_for_sectors.insert({opt_sector, optt.toString()});
             }
             const auto opti_sectors = optti.opti_domain_sectors();
-            for (auto opti_sector : opti_sectors) {
+            for(auto opti_sector : opti_sectors) {
                 opttis_for_sectors.insert({opti_sector, optti.toString()});
             }
             System::message("PsForIndexes[%5d]: chord:         %s\n", index, print_chord(chord));
