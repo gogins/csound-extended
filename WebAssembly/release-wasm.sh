@@ -18,6 +18,7 @@ cp build-wasm/CsoundAC.js dist-wasm/
 cp build-wasm/csound_samples.data dist-wasm/
 cp build-wasm/csound_samples.js dist-wasm/
 cp -f CsoundAC/piano-roll.js dist-wasm/
+cp -f src/csound_loader.js dist-wasm/
 cp -f src/csound_loader.js ../silencio/js/
 cp -f CsoundAC/piano-roll.js ../silencio/js/
 ls -ll dist-wasm/

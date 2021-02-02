@@ -66,6 +66,10 @@ class CsoundAudioNode extends AudioWorkletNode {
                      // this.message_callback("[" + window.performance.now() + " Received GetControlChannelResult with: " + data[1] + ".]\n");
                     this.resolveGetControlChannel(data[1]);
                     break;
+                case "GetScoreTimeResult":
+                     // this.message_callback("[" + window.performance.now() + " Received GetScoreTimeResult with: " + data[1] + ".]\n");
+                    this.resolveGetScoreTime(data[1]);
+                    break;
                 case "ReadScoreResult":
                     // this.message_callback("[" + window.performance.now() + " Received ReadScoreResult with: " + data[1] + ".]\n");
                     this.resolveReadScore(data[1]);
@@ -93,6 +97,7 @@ class CsoundAudioNode extends AudioWorkletNode {
         this.CompileOrcPromise = null;
         this.StopPromise = null;
         this.CleanupPromise = null;
+        this.GetScoreTimePromise = null;
         this.ReadScorePromise = null;
         this.ResetPromise = null;
         this.port.onmessage = this.onMessage.bind(this);
@@ -180,8 +185,16 @@ class CsoundAudioNode extends AudioWorkletNode {
     GetScoreOffsetSeconds() {
         this.port.postMessage(["GetScoreOffsetSeconds"]);
     };
-    GetScoreTime() {
-        this.port.postMessage(["GetScoreTime"]);
+    async GetScoreTime() {
+        // this.message_callback("[" + window.performance.now() + " GetScoreTime.]\n");
+        let promise = new Promise((resolve, reject) => {
+            // Not exactly intuitive!
+            this.resolveGetScoreTime = resolve;
+            this.port.postMessage(["GetScoreTime"]);
+        });
+        let result = await promise;
+        // this.message_callback("[" + window.performance.now() + " GetScoreTime resolved with: " + result + ".]\n");
+        return result;
     };
     GetSr() {
         this.port.postMessage(["GetSr"]);
