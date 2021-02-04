@@ -1,7 +1,10 @@
 (require "asdf")
 ;; Replaces sc's own cm. Works so far...
 (require :nudruz)
-(load "/home/mkg/slipchick/slippery-chicken/all.lsp")
+;; NOT CURRENTLY WORKING AS OF 2021-Feb-03.
+(asdf:load-system :cmn)
+(asdf:load-system :clm)
+(load "/home/mkg/lisp/sc/src/all.lsp")
 (load "/home/mkg/csound-extended/nudruz/sources/nudruz-csound.lisp")
 (load "/home/mkg/csound-extended/nudruz/sources/sc-csound.lisp")
 (in-package :sc)

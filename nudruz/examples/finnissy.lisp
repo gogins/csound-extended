@@ -8,6 +8,7 @@ The generated score is placed into the seq that is passed to events.
 |#
 (require :asdf)
 (require :nudruz)
+(load "example-csd.lisp")
 (in-package :cm)
 
 (defparameter csound-seq (new seq :name "csound-test"))
@@ -29,6 +30,6 @@ The generated score is placed into the seq that is passed to events.
 (defparameter voicelist 1)
 (setf (gethash 0 voices) voicelist)
 (seq-to-lilypond csound-seq "finnissy.ly" *piano-part* partids voices :title "Finnissy Effect" :composer "Drew Krause")
-(render-with-csd csound-seq csd-text :channel-offset 43 :velocity-scale 120 :csd-filename "finnissy.csd")
+(render-with-csd csound-seq csd-text :channel-offset 23 :velocity-scale 120 :csd-filename "finnissy.csd")
 (quit)
 

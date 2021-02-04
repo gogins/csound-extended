@@ -5,6 +5,7 @@
 (require :asdf)
 (require :fomus)
 (require :nudruz)
+(load "example-csd.lisp")
 (in-package :cm)
 
 
@@ -212,5 +213,5 @@
 (defparameter voicelist '(1 2 3))
 (setf (gethash 0 voices) voicelist)
 ;(seq-to-lilypond csound-seq "cring-cm.ly" *piano-part* partids voices :title "Change Ringing" :composer "Rick Taube?")        
-(render-with-csd csound-seq csd-text :channel-offset 56 :velocity-scale 100 :csd-filename "cring-cm.csd")
+(render-with-csd csound-seq csd-text :channel-offset 14 :velocity-scale 100 :csd-filename "cring-cm.csd")
 (quit)

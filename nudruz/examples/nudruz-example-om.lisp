@@ -17,9 +17,9 @@ The generated score is placed into the seq that is passed to events.
     (push "~/.local/share/common-lisp/source/" asdf:*central-registry*)
     (print (format t "ASDF central registry: ~D~%" asdf:*central-registry*))
     (asdf:initialize-source-registry)
-    (asdf:load-system :cl-heredoc)
+    (asdf:oos 'asdf:load-source-op :cl-heredoc)
 )
-(asdf:load-system :nudruz)
+(asdf:oos 'asdf:load-source-op :nudruz)
 
 (in-package :cm)
 

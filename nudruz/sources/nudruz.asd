@@ -40,7 +40,6 @@
   (;; MKG: The strategy here is to comment out demos etc. or anything else that makes a noise,
    ;; also maybe other things that won't load, and reorder by dependency if necessary.
   (:file "nudruz-csound") 
-  (:file "example-csd") 
   (:file "fillins")
   (:file "vendor")
   (:file "data/besthex")

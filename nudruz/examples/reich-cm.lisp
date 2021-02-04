@@ -1,6 +1,7 @@
 (require :asdf)
 (require :nudruz)
 (require :fomus)
+(load "example-csd.lisp")
 (in-package :cm)
 
 (defun piano-phase (trope pulse amp stay move)

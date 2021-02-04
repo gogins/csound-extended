@@ -8,6 +8,7 @@ The generated score is placed into the seq that is passed to events.
 |#
 (require :asdf)
 (require :nudruz)
+(load "example-csd.lisp")
 (in-package :cm)
 (use-package :screamer-user)
 

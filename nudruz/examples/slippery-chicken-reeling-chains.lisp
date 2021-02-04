@@ -43,7 +43,10 @@
 (require "asdf")
 ;; Replaces sc's own cm. Works so far...
 (require :nudruz)
-(load "/home/mkg/slipchick/slippery-chicken/all.lsp")
+(load "example-csd.lisp")
+
+;(load "/home/mkg/slipchick/slippery-chicken/all.lsp")
+(load "/home/mkg/lisp/sc/src//all.lsp")
 (load "/home/mkg/csound-extended/nudruz/sources/nudruz-csound.lisp")
 (load "/home/mkg/csound-extended/nudruz/sources/sc-csound.lisp")
 (in-package :sc)

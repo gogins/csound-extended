@@ -8,6 +8,7 @@ The generated score is placed into the seq that is passed to events.
 |#
 (require :asdf)
 (require :nudruz)
+(load "example-csd.lisp")
 (in-package :cm)
 (use-package :screamer-user)
 
@@ -35,6 +36,6 @@ The generated score is placed into the seq that is passed to events.
 (defparameter voicelist 1)
 (setf (gethash 0 voices) voicelist)
 (seq-to-lilypond csound-seq "scanons.ly" *piano-part* partids voices :title "Stacked Canons" :composer "Drew Krause")
-(render-with-csd csound-seq csd-text :channel-offset 57 :velocity-scale 150 :csd-filename "scanons.csd")
+(render-with-csd csound-seq csd-text :channel-offset 20 :velocity-scale 150 :csd-filename "scanons.csd")
 (quit)
 
