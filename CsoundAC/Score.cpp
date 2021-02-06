@@ -105,14 +105,14 @@ public:
     }
     virtual void endPart (long date) {
     }
-    virtual void newNote (long start_, int channel_, float key_, int velocity_, int duration_) {
+    virtual void newNote (long start_, int instrument_, float key_, int velocity_, int duration_) {
         double start = double(start_) / double(tpq) * tempo;
         double duration = double(duration_) / double(tpq) * tempo;
         double status = 144.0;
-        double channel = double(channel_);
+        double instrument = double(instrument_);
         double key = key_;
         double velocity = velocity_;
-        score.append(start, duration, status, channel, key, velocity);
+        score.append(start, duration, status, instrument, key, velocity);
     }
     virtual void tempoChange (long date, int bpm) {
         tempo = 60.0 / double(bpm);
@@ -304,8 +304,8 @@ static Sxmlelement createScore(const Score &score_, std::string filename)
     std::map<int, std::vector<const Event *> > parts;
     for (size_t i = 0, n = score_.size(); i < n; ++i) {
         const Event &event = score_[i];
-        int instrument = event.getChannel();
-        parts[instrument].push_back(&event);
+        int channel = event.getChannel();
+        parts[channel].push_back(&event);
     }
     // First we have to make our part list.
     score->push(makePartList(parts));

@@ -127,8 +127,25 @@ public:
     virtual int getStatusNumber() const;
     virtual double getStatus() const;
     virtual void setStatus(double status);
+    /**
+     * MIDI channel numbers are 0-based, Csound instrument numbers are 
+     * 1-based. Returns the Csound instrument number minus 1.
+     */
     virtual int getChannel() const;
+    /**
+     * MIDI channel numbers are 0-based, Csound instrument numbers are 
+     * 1-based. Sets the Csound instrument number to the channel plus 1.
+     */
+    virtual void setChannel(int channel);
+    /**
+     * MIDI channel numbers are 0-based, Csound instrument numbers are 
+     * 1-based. Returns the Csound instrument number.
+     */
     virtual double getInstrument() const;
+    /**
+     * MIDI channel numbers are 0-based, Csound instrument numbers are 
+     * 1-based. Sets the Csound instrument number.
+     */
     virtual void setInstrument(double instrument);
     virtual double getTime() const;
     virtual void setTime(double time);

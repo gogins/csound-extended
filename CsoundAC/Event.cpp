@@ -190,7 +190,7 @@ void Event::setMidi(double time, char status, char key, char velocity)
 {
     (*this)[TIME] = time;
     (*this)[STATUS] = (status & 0xf0);
-    (*this)[INSTRUMENT] = (status & 0xf);
+    setChannel(status & 0xf);
     (*this)[DURATION] = INDEFINITE;
     (*this)[KEY] = key;
     (*this)[VELOCITY] = velocity;
@@ -215,7 +215,12 @@ double Event::getStatus() const
 
 int Event::getChannel() const
 {
-    return int(Conversions::round((*this)[INSTRUMENT]));
+    return int(Conversions::round((*this)[INSTRUMENT] - 1));
+}
+
+void Event::setChannel(int channel)
+{
+    setInstrument(channel + 1);
 }
 
 double Event::getInstrument() const

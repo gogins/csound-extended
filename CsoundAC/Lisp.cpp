@@ -106,7 +106,7 @@ cl_object scoreToSeq(Score &score, std::string seq_name)
     for (size_t i = 0, n = score.size(); i < n; ++i) {
         const Event &event = score[i];
         auto time_ = event.getTime();
-        auto channel = event.getInstrument();
+        auto channel = event.getChannel();
         auto keynum = event.getKey();
         auto duration = event.getDuration();
         auto amplitude = (event.getVelocity() / double(127));
