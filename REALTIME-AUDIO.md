@@ -71,6 +71,26 @@ The Chromium browser is invoked by the shell script `/usr/bin/chromium-browser`.
 export CHROMIUM_FLAGS="${CHROMIUM_FLAGS} --alsa-input-device=plughw:1,0 --alsa-output-device=plughw:1,0"
 ```
 
+### Current Problems as of Chromium 88
+
+Chromium is now a snap but it does not correctly use ALSA. Chromium does not even work with apulse (see next). May be related to (this bug)[https://bugs.launchpad.net/snapd/+bug/1835290].
+
+It _is_ possible to use Firefox with apulse as follows; apulse is a set of shared libraries that provides ALSA in the form of a simplified pulseaudio interface.
+
+Install apulse:
+```
+sudo apt install apulse
+```
+Set environment variables to tell apulse what ALSA audio interfaces to use:
+```
+export APULSE_PLAYBACK_DEVICE=plughw:1,0
+export APULSE_CAPTURE_DEVICE=plughw:1,0
+```
+Run firefox with apulse:
+```
+apulse firefox
+```
+
 ## Rendering to Soundfile
 
 You can and should use a high-precision format for rendering to soundfiles. All playback software of which I am aware can handle any format and play it back properly. I recommend using the following Csound options: `--sinesize=65536 --0dbfs=2 --sample-rate=96000 --ksmps=100 --wave`. These options are consistent with contemporary professional practice for digital audio.
