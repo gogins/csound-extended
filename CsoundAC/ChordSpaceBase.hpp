@@ -2032,7 +2032,7 @@ template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_RPT>(const Ch
     }
     System::error("Error: Chord equate<EQUIVALENCE_RELATION_RPT>: no RPT in sector %d.\n", opt_sector);
     ///CHORD_SPACE_DEBUGGING() = true;
-    std::raise(SIGINT);
+    ///std::raise(SIGINT);
     for (auto rpt : rpts) {
         System::message("equate<EQUIVALENCE_RELATION_RPT>: chord %s rpt: %s opt_sector: %d\n", print_chord(chord), print_chord(rpt), opt_sector);
         if (rpt.is_opt_sector(opt_sector) == true) {
@@ -2090,7 +2090,7 @@ template<> inline SILENCE_PUBLIC Chord equate<EQUIVALENCE_RELATION_RPTg>(const C
     }
     System::error("Error: Chord equate<EQUIVALENCE_RELATION_RPTg>: no RPTg in sector %d.\n", opt_sector);
     ///CHORD_SPACE_DEBUGGING() = true;
-    std::raise(SIGINT);
+    ///std::raise(SIGINT);
     for (auto rptt : rptts) {
         System::inform("equate<EQUIVALENCE_RELATION_RPTg: chord %s rptt: %s opt_sector: %d\n", print_chord(chord), print_chord(rptt), opt_sector);
         if (rptt.is_opt_sector(opt_sector) == true) {
@@ -4032,22 +4032,30 @@ inline SILENCE_PUBLIC double modulo(double dividend, double divisor) {
     return remainder;
 }
 
-inline SILENCE_PUBLIC bool next(Chord &iterator_, const Chord &origin, double range, double g) {
-    int leastSignificantVoice = iterator_.voices() - 1;
-    int mostSignificantVoice = 0;
-    if (gt_tolerance(iterator_.getPitch(mostSignificantVoice), (origin.getPitch(mostSignificantVoice) + range)) == true) {
+inline SILENCE_PUBLIC bool next(Chord &iterator_, const Chord &origin, double range_, double increment) {
+    // Corresponds to the ones place for decimal numerals.
+    int least_significant_voice = iterator_.voices() - 1;
+    // Corresponds to the thousands place for 9,999, etc.
+    int most_significant_voice = 0;
+    double upper_bound = origin.getPitch(most_significant_voice) + range_;
+    if (gt_tolerance(iterator_.getPitch(most_significant_voice), upper_bound) == true) {
         return false;
     }
     // Increment, as in an odometer.
-    iterator_.setPitch(leastSignificantVoice, iterator_.getPitch(leastSignificantVoice) + g);
+    iterator_.setPitch(least_significant_voice, iterator_.getPitch(least_significant_voice) + increment);
     // If necessary, carry the increment to the next most significant voice.
-    for (int voice = leastSignificantVoice; voice > mostSignificantVoice; --voice) {
-        if (gt_tolerance(iterator_.getPitch(voice), (origin.getPitch(voice) + range)) == true) {
+    for (int voice = least_significant_voice; voice > most_significant_voice; --voice) {
+        upper_bound = origin.getPitch(voice) + range_;
+        if (gt_tolerance(iterator_.getPitch(voice), upper_bound) == true) {
             iterator_.setPitch(voice, origin.getPitch(voice));
-            iterator_.setPitch(voice - 1, iterator_.getPitch(voice - 1) + g);
+            iterator_.setPitch(voice - 1, iterator_.getPitch(voice - 1) + increment);
         }
     }
-    return true;
+    if (gt_tolerance(iterator_.getPitch(most_significant_voice), upper_bound) == true) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC Chord equate(const Chord &chord, double range) {
@@ -5045,9 +5053,9 @@ inline SILENCE_PUBLIC void PITV::preinitialize(int N_, double range_, double g_)
 inline SILENCE_PUBLIC void PITV::initialize(int N_, double range_, double g_, bool printme) {
     System::message("PITV::initialize: N_: %d range_: %f g_: %f\n", N_, range_, g_);
     preinitialize(N_, range_, g_);
-    // Collect all prime forms within the indicated range.
-    int upperI = 3 * (12 + 1);
-    int lowerI = - (1 * (12 + 1));
+    // Collect all prime forms.
+    int upperI = 24.;
+    int lowerI = 0.;
     Chord iterator_ = iterator(N, lowerI);
     Chord origin = iterator_;
     int chords = 0;
@@ -5077,6 +5085,7 @@ inline SILENCE_PUBLIC void PITV::initialize(int N_, double range_, double g_, bo
         }
     }    
     countP = indexesForPs.size();
+    System::message("PITV::initialize: finished with countP: %d.\n", countP);
 }
 
 inline SILENCE_PUBLIC void PITV::list(bool listheader, bool listps, bool listvoicings) const {

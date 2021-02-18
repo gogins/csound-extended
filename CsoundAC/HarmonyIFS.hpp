@@ -307,7 +307,7 @@ namespace csound {
      * linear progression of time.
      *
      * Usage:  
-     * <nl>
+     * <ol>
      * <li>Call `add_interpolation_point` several times or more to define 
      * the harmony by setting interpolation points for a harmony as a 
      * fractal function of time.</li>
@@ -323,7 +323,7 @@ namespace csound {
      * actually generate the score.</li>
      * The HarmonyIFS object may then be included in a music graph, or used as 
      * a standalone score generator.</li>
-     * </nl>
+     * </ol>
      */
     class SILENCE_PUBLIC HarmonyIFS : public ScoreNode {
         public:
