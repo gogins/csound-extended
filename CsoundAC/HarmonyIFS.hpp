@@ -339,13 +339,13 @@ namespace csound {
              * for a note duration in seconds. g is the generator of 
              * transposition.
              */
-            virtual void initialize(int voices_, double range_, double bass_, double note_duration_, bool tie_overlaps_, bool rescale_, double g_ = 1.) {
+            virtual void initialize(int voices_, double range_, double bass_, double note_duration_, bool tie_overlapping_notes, bool remove_duplicate_notes, double g_ = 1.) {
                 voices = voices_;
                 range = range_;
                 bass = bass_;
                 note_duration = note_duration_;
-                tie_overlaps = tie_overlaps_;
-                rescale = rescale_;
+                tie_overlaps = tie_overlapping_notes;
+                remove_duplicates = remove_duplicate_notes;
                 g = g_;
                 pitv.initialize(voices_, range_, g_, true);
                 interpolation_points.clear();
@@ -354,9 +354,21 @@ namespace csound {
              * Adds an interpolation point to the graph of the fractal interpolation function.
              */
             virtual HarmonyInterpolationPoint add_interpolation_point(double t, double P, double I, double T, double s_P, double s_I, double s_T) {
+                System::message("HarmonyIfs::add_interpolation_point: t: %9.4f P: %9.4f I: %9.4f s_P: %9.4f s_T: %9.4f s_I: %9.4f s_I: %9.4f s_T: %9.4f s_T: %9.4f\n", t, P, I, T, s_P, s_I, s_T);
                 HarmonyInterpolationPoint harmony_interpolation_point = HarmonyInterpolationPoint(t, P, I, T, s_P, s_I, s_T);
                 interpolation_points.push_back(harmony_interpolation_point);
                 return harmony_interpolation_point;        
+            }
+            /**
+             * Adds an interpolation point to the graph of the fractal interpolation function.
+             */
+            virtual HarmonyInterpolationPoint add_interpolation_point_as_chord(double t, const Chord &chord, double s_P, double s_I, double s_T) {
+                const auto &pit = pitv.fromChord(chord);
+                const auto P = pit[0];
+                const auto I = pit[1];
+                const auto T = pit[2];
+                auto interpolation_point = add_interpolation_point(t, P, I, T, s_P, s_I, s_T);
+                return interpolation_point;
             }
             /**
              * Interpolation points are sorted by time and the corresponding 
@@ -380,20 +392,31 @@ namespace csound {
                     HarmonyInterpolationPoint p_i = interpolation_points[i];
                     Eigen::MatrixXd transformation = Eigen::MatrixXd::Identity(8, 8);
                     // t or time dimension.
-                    transformation(0, 0) = (p_i.get_t() - p_i_1.get_t()) / (p_N.get_t() - p_0.get_t());
-                    transformation(0, 7) = ((p_N.get_t() * p_i_1.get_t()) - (p_0.get_t() * p_i.get_t())) / (p_N.get_t() - p_0.get_t());
+                    transformation(HarmonyInterpolationPoint::HIP_TIME, HarmonyInterpolationPoint::HIP_TIME)        
+                        = (p_i.get_t() - p_i_1.get_t()) / (p_N.get_t() - p_0.get_t());
+                    transformation(HarmonyInterpolationPoint::HIP_TIME, HarmonyInterpolationPoint::HIP_HOMOGENEITY) 
+                        = ((p_N.get_t() * p_i_1.get_t()) - (p_0.get_t() * p_i.get_t())) / (p_N.get_t() - p_0.get_t());
                     // P or prime-form dimension.
-                    transformation(1, 0) = ((p_i.get_P() - p_i_1.get_P()) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_P() * ((p_N.get_P() - p_0.get_P()) / (p_N.get_t() - p_0.get_t())));
-                    transformation(1, 1) = p_i.get_s_P();
-                    transformation(1, 7) = (((p_N.get_t() * p_i_1.get_P()) - (p_0.get_t() * p_i.get_P())) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_P() * (((p_i.get_t() * p_0.get_P()) - (p_0.get_t() * p_N.get_P())) / (p_N.get_t() - p_0.get_t())));
+                    transformation(HarmonyInterpolationPoint::HIP_PRIME_FORM, HarmonyInterpolationPoint::HIP_TIME) 
+                        = ((p_i.get_P() - p_i_1.get_P()) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_P() * ((p_N.get_P() - p_0.get_P()) / (p_N.get_t() - p_0.get_t())));
+                    transformation(HarmonyInterpolationPoint::HIP_PRIME_FORM, HarmonyInterpolationPoint::HIP_PRIME_FORM) 
+                        = p_i.get_s_P();
+                    transformation(HarmonyInterpolationPoint::HIP_PRIME_FORM, HarmonyInterpolationPoint::HIP_HOMOGENEITY) 
+                        = (((p_N.get_t() * p_i_1.get_P()) - (p_0.get_t() * p_i.get_P())) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_P() * (((p_i.get_t() * p_0.get_P()) - (p_0.get_t() * p_N.get_P())) / (p_N.get_t() - p_0.get_t())));
                     // I or inversion dimension.
-                    transformation(2, 0) = ((p_i.get_I() - p_i_1.get_I()) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_I() * ((p_N.get_I() - p_0.get_I()) / (p_N.get_t() - p_0.get_t())));
-                    transformation(2, 2) = p_i.get_s_I();
-                    transformation(2, 7) = (((p_N.get_t() * p_i_1.get_I()) - (p_0.get_t() * p_i.get_I())) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_I() * (((p_i.get_t() * p_0.get_I()) - (p_0.get_t() * p_N.get_I())) / (p_N.get_t() - p_0.get_t())));
+                    transformation(HarmonyInterpolationPoint::HIP_INVERSION, HarmonyInterpolationPoint::HIP_TIME) 
+                        = ((p_i.get_I() - p_i_1.get_I()) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_I() * ((p_N.get_I() - p_0.get_I()) / (p_N.get_t() - p_0.get_t())));
+                    transformation(HarmonyInterpolationPoint::HIP_INVERSION, HarmonyInterpolationPoint::HIP_INVERSION) 
+                        = p_i.get_s_I();
+                    transformation(HarmonyInterpolationPoint::HIP_INVERSION, HarmonyInterpolationPoint::HIP_HOMOGENEITY) 
+                        = (((p_N.get_t() * p_i_1.get_I()) - (p_0.get_t() * p_i.get_I())) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_I() * (((p_i.get_t() * p_0.get_I()) - (p_0.get_t() * p_N.get_I())) / (p_N.get_t() - p_0.get_t())));
                     // T or transposition dimension.
-                    transformation(3, 0) = ((p_i.get_T() - p_i_1.get_T()) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_T() * ((p_N.get_T() - p_0.get_T()) / (p_N.get_t() - p_0.get_t())));
-                    transformation(3, 3) = p_i.get_s_T();
-                    transformation(3, 7) = (((p_N.get_t() * p_i_1.get_T()) - (p_0.get_t() * p_i.get_T())) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_T() * (((p_i.get_t() * p_0.get_T()) - (p_0.get_t() * p_N.get_T())) / (p_N.get_t() - p_0.get_t())));
+                    transformation(HarmonyInterpolationPoint::HIP_TRANSPOSITION, HarmonyInterpolationPoint::HIP_TIME) 
+                        = ((p_i.get_T() - p_i_1.get_T()) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_T() * ((p_N.get_T() - p_0.get_T()) / (p_N.get_t() - p_0.get_t())));
+                    transformation(HarmonyInterpolationPoint::HIP_TRANSPOSITION, HarmonyInterpolationPoint::HIP_TRANSPOSITION) 
+                        = p_i.get_s_T();
+                    transformation(HarmonyInterpolationPoint::HIP_TRANSPOSITION, HarmonyInterpolationPoint::HIP_HOMOGENEITY) 
+                        = (((p_N.get_t() * p_i_1.get_T()) - (p_0.get_t() * p_i.get_T())) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_T() * (((p_i.get_t() * p_0.get_T()) - (p_0.get_t() * p_N.get_T())) / (p_N.get_t() - p_0.get_t())));
                     hutchinson_operator.push_back(transformation);
                 }
             }
@@ -430,6 +453,11 @@ namespace csound {
                 }
                 System::inform("                                    after:  %d events.\n", score_attractor.size());
             }
+            virtual void tie_overlapping_notes() {
+                System::inform("HarmonyIFS::tie overlapping notes:  before: %d events...\n", score.size());
+                score.tieOverlappingNotes(true);
+                System::inform("                                    after: %d events.\n", score.size());
+            }
             /**
              * Recursively computes the score graph, translates the points to 
              * notes, adds them to the score, ties overlapping notes in the 
@@ -447,7 +475,7 @@ namespace csound {
                 initial_point.set_v(60.);
                 initial_point.set_i(1);
                 for (auto &transformation : hutchinson_operator) {
-                    std::cerr << transformation << std::endl;
+                    std::cerr << transformation << std::endl << std::endl;
                 }
                 iterate(depth, iteration, initial_point);
                 System::inform("                                      points: %d.\n", score.size());
@@ -456,7 +484,7 @@ namespace csound {
             /**
              * Actully computes the score attractor.
              */
-            virtual void iterate(int depth, int iteration, HarmonyPoint &point) {
+            virtual void iterate(int depth, int iteration, HarmonyPoint point) {
                 iteration = iteration + 1;
                 if (iteration >= depth) {
                     HarmonyEvent event = point_to_note(point);
@@ -481,7 +509,7 @@ namespace csound {
                 double minimum_time = score_attractor.front().note.getTime();
                 double minimum_key = score_attractor.front().note.getKey();
                 double maximum_key = minimum_key;
-                for (auto &event : score_attractor) {
+                for (const auto &event : score_attractor) {
                     if (minimum_time > event.note.getTime()) {
                         minimum_time = event.note.getTime();
                     }
@@ -492,36 +520,41 @@ namespace csound {
                         maximum_key = event.note.getKey();
                     }
                 }
-                double key_range = maximum_key - minimum_key;
-                rescale = 1.;
-                if (key_range != 0.) {
-                    rescale = range / key_range;
+                double actual_key_range = maximum_key - minimum_key;
+                double scale_factor = 1.;
+                if (actual_key_range != 0.) {
+                    scale_factor = range / actual_key_range;
                 }
+                System::inform("HarmonyIFS::translate:\n");
+                System::inform("  minimum key: %9.4f\n", minimum_key);
+                System::inform("  maximum key: %9.4f\n", maximum_key);
+                System::inform("  key range:   %9.4f\n", actual_key_range);
+                System::inform("  rescale by:  %9.4f\n", scale_factor);
                 for (auto &event : score_attractor) {
                     double time_ = event.note.getTime();
                     time_ = time_ - minimum_time;
                     event.note.setTime(time_);
                     double key = event.note.getKey();
                     key = key - minimum_key;
-                    key = key * rescale;
+                    key = key * scale_factor;
                     key = key + minimum_key + bass;
                     event.note.setKey(key);   
                     event.note.temper(12.);
                     conformToChord(event.note, event.chord);
                     score.push_back(event.note);
                 }
-                System::inform("  Removing duplicate notes...\n");
-                remove_duplicate_notes();
-                System::inform("  Tieing overlapping notes...\n");
-                System::inform("HarmonyIFS::tie overlapping notes: before: %d events...\n", score.size());
-                score.tieOverlappingNotes();
-                System::inform("                                    after: %d events.\n", score.size());
+                if (tie_overlaps == true) {
+                    tie_overlapping_notes();
+                }
+                if (remove_duplicates == true) {
+                    remove_duplicate_notes();
+                }
                 score_attractor.clear();
                 System::inform("  Finished translating score attractor to final score.\n");
             }
             /**
              * Returns the number of affine transformation matrices in the 
-             * Hutchinson operattor of the function system that generates the 
+             * Hutchinson operator of the function system that generates the 
              * score.
              */
             virtual int get_transformation_count() const {
@@ -531,7 +564,8 @@ namespace csound {
              * Sets the value of a single matrix element in one of the affine 
              * transformation matrices of the Hutchinson operator. The 
              * matrices are homeogenous transformations with 7 dimensions,
-             * in column major order.
+             * in column major order. The transformation is by default the 
+             * identity matrix.
              */
             virtual void set_transformation(int transformation, int row, int column, double value) {
                 hutchinson_operator[transformation](row, column) = value;
@@ -541,7 +575,7 @@ namespace csound {
             double bass;
             double note_duration;
             bool tie_overlaps;
-            bool rescale;
+            bool remove_duplicates;
             double g;
             PITV pitv;
             std::vector<HarmonyInterpolationPoint> interpolation_points;

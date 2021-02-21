@@ -4033,29 +4033,32 @@ inline SILENCE_PUBLIC double modulo(double dividend, double divisor) {
 }
 
 inline SILENCE_PUBLIC bool next(Chord &iterator_, const Chord &origin, double range_, double increment) {
-    // Corresponds to the ones place for decimal numerals.
-    int least_significant_voice = iterator_.voices() - 1;
-    // Corresponds to the thousands place for 9,999, etc.
-    int most_significant_voice = 0;
-    double upper_bound = origin.getPitch(most_significant_voice) + range_;
-    if (gt_tolerance(iterator_.getPitch(most_significant_voice), upper_bound) == true) {
-        return false;
-    }
-    // Increment, as in an odometer.
-    iterator_.setPitch(least_significant_voice, iterator_.getPitch(least_significant_voice) + increment);
-    // If necessary, carry the increment to the next most significant voice.
-    for (int voice = least_significant_voice; voice > most_significant_voice; --voice) {
-        upper_bound = origin.getPitch(voice) + range_;
-        if (gt_tolerance(iterator_.getPitch(voice), upper_bound) == true) {
+    // The actual range of iteration is from the least pitch of the origin, to 
+    // the least pitch of the origin plus the range.
+    double minimum_pitch = origin.min().front();
+    double maximum_pitch = minimum_pitch + range_;
+    // We are treating the chord as an odometer, with voices as "places", but 
+    // the least significant place is the leftmost voice, not the rightmost 
+    // digit as it would be with a decimal numeral. This reflects common 
+    // musical practice.
+    for (int voice = 0, voice_n = iterator_.voices(); voice < voice_n; ) {
+        double pitch = iterator_.getPitch(voice);
+        double incremented_pitch = pitch + increment;
+        if (le_tolerance(incremented_pitch, maximum_pitch) == true) {
+            // If there is no need to carry, just increment the pitch of the 
+            // current voice, and return true to indicate that iteration can 
+            // continue.
+            iterator_.setPitch(voice, incremented_pitch);
+            return true;
+        } else {
+            // Otherwise, reset this "place" and carry over to the next.
             iterator_.setPitch(voice, origin.getPitch(voice));
-            iterator_.setPitch(voice - 1, iterator_.getPitch(voice - 1) + increment);
+            voice++;
         }
     }
-    if (gt_tolerance(iterator_.getPitch(most_significant_voice), upper_bound) == true) {
-        return false;
-    } else {
-        return true;
-    }
+    // We have used up all our "places," so return false to indicate that 
+    // iteration has finished.
+    return false;
 }
 
 template<int EQUIVALENCE_RELATION> inline SILENCE_PUBLIC Chord equate(const Chord &chord, double range) {

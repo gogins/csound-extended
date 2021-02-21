@@ -13238,6 +13238,578 @@
 	    return this.floatPrecision() === 32 ? EPSILON_FLOAT32 : EPSILON_FLOAT16;
 	  };
 
+	  _proto2.batchMatMul = function batchMatMul(a, b, transposeA, transposeB) {
+	    return notYetImplemented('batchMatMul');
+	  };
+
+	  _proto2.fusedBatchMatMul = function fusedBatchMatMul(_ref) {
+	    var a = _ref.a,
+	        b = _ref.b,
+	        transposeA = _ref.transposeA,
+	        transposeB = _ref.transposeB,
+	        bias = _ref.bias,
+	        activation = _ref.activation,
+	        preluActivationWeights = _ref.preluActivationWeights;
+	    return notYetImplemented('fusedBatchMatMul');
+	  };
+
+	  _proto2.slice = function slice(x, begin, size) {
+	    return notYetImplemented('slice');
+	  };
+
+	  _proto2.stridedSlice = function stridedSlice(x, begin, end, strides) {
+	    return notYetImplemented('stridedSlice');
+	  };
+
+	  _proto2.unstack = function unstack(x, axis) {
+	    return notYetImplemented('unstack');
+	  };
+
+	  _proto2.reverse = function reverse(a, axis) {
+	    return notYetImplemented('reverse');
+	  };
+
+	  _proto2.concat = function concat(tensors, axis) {
+	    return notYetImplemented('concat');
+	  };
+
+	  _proto2.neg = function neg(a) {
+	    return notYetImplemented('neg');
+	  };
+
+	  _proto2.add = function add(a, b) {
+	    return notYetImplemented('add');
+	  };
+
+	  _proto2.addN = function addN(tensors) {
+	    return notYetImplemented('addN');
+	  };
+
+	  _proto2.subtract = function subtract(a, b) {
+	    return notYetImplemented('subtract');
+	  };
+
+	  _proto2.multiply = function multiply(a, b) {
+	    return notYetImplemented('multiply');
+	  };
+
+	  _proto2.realDivide = function realDivide(a, b) {
+	    return notYetImplemented('realDivide');
+	  };
+
+	  _proto2.floorDiv = function floorDiv(a, b) {
+	    return notYetImplemented('floorDiv');
+	  };
+
+	  _proto2.sum = function sum(x, axes) {
+	    return notYetImplemented('sum');
+	  };
+
+	  _proto2.prod = function prod(x, axes) {
+	    return notYetImplemented('prod');
+	  };
+
+	  _proto2.unsortedSegmentSum = function unsortedSegmentSum(x, segmentIds, numSegments) {
+	    return notYetImplemented('unsortedSegmentSum');
+	  };
+
+	  _proto2.argMin = function argMin(x, axis) {
+	    return notYetImplemented('argMin');
+	  };
+
+	  _proto2.argMax = function argMax(x, axis) {
+	    return notYetImplemented('argMax');
+	  };
+
+	  _proto2.equal = function equal(a, b) {
+	    return notYetImplemented('equal');
+	  };
+
+	  _proto2.notEqual = function notEqual(a, b) {
+	    return notYetImplemented('notEqual');
+	  };
+
+	  _proto2.less = function less(a, b) {
+	    return notYetImplemented('less');
+	  };
+
+	  _proto2.lessEqual = function lessEqual(a, b) {
+	    return notYetImplemented('lessEqual');
+	  };
+
+	  _proto2.greater = function greater(a, b) {
+	    return notYetImplemented('greater');
+	  };
+
+	  _proto2.greaterEqual = function greaterEqual(a, b) {
+	    return notYetImplemented('greaterEqual');
+	  };
+
+	  _proto2.logicalNot = function logicalNot(a) {
+	    return notYetImplemented('logicalNot');
+	  };
+
+	  _proto2.logicalAnd = function logicalAnd(a, b) {
+	    return notYetImplemented('logicalAnd');
+	  };
+
+	  _proto2.logicalOr = function logicalOr(a, b) {
+	    return notYetImplemented('logicalOr');
+	  };
+
+	  _proto2.where = function where(condition) {
+	    return notYetImplemented('where');
+	  };
+
+	  _proto2.select = function select(condition, a, b) {
+	    return notYetImplemented('select');
+	  };
+
+	  _proto2.topk = function topk(x, k, sorted) {
+	    return notYetImplemented('topk');
+	  };
+
+	  _proto2.min = function min(x, axes) {
+	    return notYetImplemented('min');
+	  };
+
+	  _proto2.minimum = function minimum(a, b) {
+	    return notYetImplemented('minimum');
+	  };
+
+	  _proto2.mod = function mod(a, b) {
+	    return notYetImplemented('mod');
+	  };
+
+	  _proto2.max = function max(x, axes) {
+	    return notYetImplemented('max');
+	  };
+
+	  _proto2.maximum = function maximum(a, b) {
+	    return notYetImplemented('maximum');
+	  };
+
+	  _proto2.all = function all(x, axes) {
+	    return notYetImplemented('all');
+	  };
+
+	  _proto2.any = function any(x, axes) {
+	    return notYetImplemented('any');
+	  };
+
+	  _proto2.squaredDifference = function squaredDifference(a, b) {
+	    return notYetImplemented('squaredDifference');
+	  };
+
+	  _proto2.ceil = function ceil(x) {
+	    return notYetImplemented('ceil');
+	  };
+
+	  _proto2.floor = function floor(x) {
+	    return notYetImplemented('floor');
+	  };
+
+	  _proto2.round = function round(x) {
+	    return notYetImplemented('round');
+	  };
+
+	  _proto2.sign = function sign(x) {
+	    return notYetImplemented('sign');
+	  };
+
+	  _proto2.isNaN = function isNaN(x) {
+	    return notYetImplemented('isNaN');
+	  };
+
+	  _proto2.isInf = function isInf(x) {
+	    return notYetImplemented('isInf');
+	  };
+
+	  _proto2.isFinite = function isFinite(x) {
+	    return notYetImplemented('isFinite');
+	  };
+
+	  _proto2.pow = function pow(a, b) {
+	    return notYetImplemented('pow');
+	  };
+
+	  _proto2.exp = function exp(x) {
+	    return notYetImplemented('exp');
+	  };
+
+	  _proto2.expm1 = function expm1(x) {
+	    return notYetImplemented('expm1');
+	  };
+
+	  _proto2.softmax = function softmax(x, dim) {
+	    return notYetImplemented('softmax');
+	  };
+
+	  _proto2.log = function log(x) {
+	    return notYetImplemented('log');
+	  };
+
+	  _proto2.log1p = function log1p(x) {
+	    return notYetImplemented('log1p');
+	  };
+
+	  _proto2.sqrt = function sqrt(x) {
+	    return notYetImplemented('sqrt');
+	  };
+
+	  _proto2.rsqrt = function rsqrt(x) {
+	    return notYetImplemented('rsqrt');
+	  };
+
+	  _proto2.square = function square(x) {
+	    return notYetImplemented('square');
+	  };
+
+	  _proto2.reciprocal = function reciprocal(x) {
+	    return notYetImplemented('reciprocal');
+	  };
+
+	  _proto2.relu = function relu(x) {
+	    return notYetImplemented('relu');
+	  };
+
+	  _proto2.relu6 = function relu6(x) {
+	    return notYetImplemented('relu6');
+	  };
+
+	  _proto2.prelu = function prelu(x, a) {
+	    return notYetImplemented('prelu');
+	  };
+
+	  _proto2.elu = function elu(x) {
+	    return notYetImplemented('elu');
+	  };
+
+	  _proto2.eluDer = function eluDer(dy, y) {
+	    return notYetImplemented('eluDer');
+	  };
+
+	  _proto2.selu = function selu(x) {
+	    return notYetImplemented('selu');
+	  };
+
+	  _proto2.int = function int(x) {
+	    return notYetImplemented('int');
+	  };
+
+	  _proto2.clip = function clip(x, min, max) {
+	    return notYetImplemented('clip');
+	  };
+
+	  _proto2.abs = function abs(x) {
+	    return notYetImplemented('abs');
+	  };
+
+	  _proto2.complexAbs = function complexAbs(x) {
+	    return notYetImplemented('complexAbs');
+	  };
+
+	  _proto2.sigmoid = function sigmoid(x) {
+	    return notYetImplemented('sigmoid');
+	  };
+
+	  _proto2.softplus = function softplus(x) {
+	    return notYetImplemented('softplus');
+	  };
+
+	  _proto2.sin = function sin(x) {
+	    return notYetImplemented('sin');
+	  };
+
+	  _proto2.cos = function cos(x) {
+	    return notYetImplemented('cos');
+	  };
+
+	  _proto2.tan = function tan(x) {
+	    return notYetImplemented('tan');
+	  };
+
+	  _proto2.asin = function asin(x) {
+	    return notYetImplemented('asin');
+	  };
+
+	  _proto2.acos = function acos(x) {
+	    return notYetImplemented('acos');
+	  };
+
+	  _proto2.atan = function atan(x) {
+	    return notYetImplemented('atan');
+	  };
+
+	  _proto2.atan2 = function atan2(a, b) {
+	    return notYetImplemented('atan2');
+	  };
+
+	  _proto2.sinh = function sinh(x) {
+	    return notYetImplemented('sinh');
+	  };
+
+	  _proto2.cosh = function cosh(x) {
+	    return notYetImplemented('cosh');
+	  };
+
+	  _proto2.tanh = function tanh(x) {
+	    return notYetImplemented('tanh');
+	  };
+
+	  _proto2.asinh = function asinh(x) {
+	    return notYetImplemented('asinh');
+	  };
+
+	  _proto2.acosh = function acosh(x) {
+	    return notYetImplemented('acosh');
+	  };
+
+	  _proto2.atanh = function atanh(x) {
+	    return notYetImplemented('atanh');
+	  };
+
+	  _proto2.erf = function erf(x) {
+	    return notYetImplemented('erf');
+	  };
+
+	  _proto2.step = function step(x, alpha) {
+	    return notYetImplemented('step');
+	  };
+
+	  _proto2.fusedConv2d = function fusedConv2d(_ref2) {
+	    var input = _ref2.input,
+	        filter = _ref2.filter,
+	        convInfo = _ref2.convInfo,
+	        bias = _ref2.bias,
+	        activation = _ref2.activation,
+	        preluActivationWeights = _ref2.preluActivationWeights;
+	    return notYetImplemented('fusedConv2d');
+	  };
+
+	  _proto2.conv2d = function conv2d(x, filter, convInfo) {
+	    return notYetImplemented('conv2d');
+	  };
+
+	  _proto2.conv2dDerInput = function conv2dDerInput(dy, filter, convInfo) {
+	    return notYetImplemented('conv2dDerInput');
+	  };
+
+	  _proto2.conv2dDerFilter = function conv2dDerFilter(x, dY, convInfo) {
+	    return notYetImplemented('conv2dDerFilter');
+	  };
+
+	  _proto2.fusedDepthwiseConv2D = function fusedDepthwiseConv2D(_ref3) {
+	    var input = _ref3.input,
+	        filter = _ref3.filter,
+	        convInfo = _ref3.convInfo,
+	        bias = _ref3.bias,
+	        activation = _ref3.activation,
+	        preluActivationWeights = _ref3.preluActivationWeights;
+	    return notYetImplemented('fusedDepthwiseConv2D');
+	  };
+
+	  _proto2.depthwiseConv2D = function depthwiseConv2D(input, filter, convInfo) {
+	    return notYetImplemented('depthwiseConv2D');
+	  };
+
+	  _proto2.depthwiseConv2DDerInput = function depthwiseConv2DDerInput(dy, filter, convInfo) {
+	    return notYetImplemented('depthwiseConv2DDerInput');
+	  };
+
+	  _proto2.depthwiseConv2DDerFilter = function depthwiseConv2DDerFilter(x, dY, convInfo) {
+	    return notYetImplemented('depthwiseConv2DDerFilter');
+	  };
+
+	  _proto2.conv3d = function conv3d(x, filter, convInfo) {
+	    return notYetImplemented('conv3d');
+	  };
+
+	  _proto2.conv3dDerInput = function conv3dDerInput(dy, filter, convInfo) {
+	    return notYetImplemented('conv3dDerInput');
+	  };
+
+	  _proto2.conv3dDerFilter = function conv3dDerFilter(x, dY, convInfo) {
+	    return notYetImplemented('conv3dDerFilter');
+	  };
+
+	  _proto2.maxPool = function maxPool(x, convInfo) {
+	    return notYetImplemented('maxPool');
+	  };
+
+	  _proto2.maxPoolBackprop = function maxPoolBackprop(dy, x, y, convInfo) {
+	    return notYetImplemented('maxPoolBackprop');
+	  };
+
+	  _proto2.avgPool = function avgPool(x, convInfo) {
+	    return notYetImplemented('avgPool');
+	  };
+
+	  _proto2.avgPoolBackprop = function avgPoolBackprop(dy, x, convInfo) {
+	    return notYetImplemented('avgPoolBackprop');
+	  };
+
+	  _proto2.avgPool3d = function avgPool3d(x, convInfo) {
+	    return notYetImplemented('avgPool3d');
+	  };
+
+	  _proto2.avgPool3dBackprop = function avgPool3dBackprop(dy, x, convInfo) {
+	    return notYetImplemented('avgPool3dBackprop');
+	  };
+
+	  _proto2.maxPool3d = function maxPool3d(x, convInfo) {
+	    return notYetImplemented('maxPool3d');
+	  };
+
+	  _proto2.maxPool3dBackprop = function maxPool3dBackprop(dy, x, y, convInfo) {
+	    return notYetImplemented('maxPool3dBackprop');
+	  };
+
+	  _proto2.reshape = function reshape(x, shape) {
+	    return notYetImplemented('reshape');
+	  };
+
+	  _proto2.cast = function cast(x, dtype) {
+	    return notYetImplemented('cast');
+	  };
+
+	  _proto2.tile = function tile(x, reps) {
+	    return notYetImplemented('tile');
+	  };
+
+	  _proto2.pad = function pad(x, paddings, constantValue) {
+	    return notYetImplemented('pad');
+	  };
+
+	  _proto2.transpose = function transpose(x, perm) {
+	    return notYetImplemented('transpose');
+	  };
+
+	  _proto2.gather = function gather(x, indices, axis, batchDims) {
+	    if (batchDims === void 0) {
+	      batchDims = 0;
+	    }
+
+	    return notYetImplemented('gather');
+	  };
+
+	  _proto2.gatherND = function gatherND(x, indices) {
+	    return notYetImplemented('gatherND');
+	  };
+
+	  _proto2.scatterND = function scatterND(indices, updates, shape) {
+	    return notYetImplemented('scatterND');
+	  };
+
+	  _proto2.batchToSpaceND = function batchToSpaceND(x, blockShape, crops) {
+	    return notYetImplemented('batchToSpaceND');
+	  };
+
+	  _proto2.spaceToBatchND = function spaceToBatchND(x, blockShape, paddings) {
+	    return notYetImplemented('spaceToBatchND');
+	  };
+
+	  _proto2.resizeBilinear = function resizeBilinear(x, newHeight, newWidth, alignCorners, halfPixelCenters) {
+	    return notYetImplemented('resizeBilinear');
+	  };
+
+	  _proto2.resizeBilinearBackprop = function resizeBilinearBackprop(dy, x, alignCorners) {
+	    return notYetImplemented('resizeBilinearBackprop');
+	  };
+
+	  _proto2.resizeNearestNeighbor = function resizeNearestNeighbor(x, newHEight, newWidth, alignCorners, halfPixelCenters) {
+	    return notYetImplemented('resizeNearestNeighbor');
+	  };
+
+	  _proto2.resizeNearestNeighborBackprop = function resizeNearestNeighborBackprop(dy, x, alignCorners) {
+	    return notYetImplemented('resizeNearestNeighborBackprop');
+	  };
+
+	  _proto2.batchNorm = function batchNorm(x, mean, variance, offset, scale, varianceEpsilon) {
+	    return notYetImplemented('batchNorm');
+	  };
+
+	  _proto2.localResponseNormalization4D = function localResponseNormalization4D(x, radius, bias, alpha, beta) {
+	    return notYetImplemented('localResponseNormalization4D');
+	  };
+
+	  _proto2.LRNGrad = function LRNGrad(dy, inputImage, outputImage, radius, bias, alpha, beta) {
+	    return notYetImplemented('LRNGrad');
+	  };
+
+	  _proto2.multinomial = function multinomial(logits, normalized, numSamples, seed) {
+	    return notYetImplemented('multinomial');
+	  };
+
+	  _proto2.oneHot = function oneHot(indices, depth, onValue, offValue) {
+	    return notYetImplemented('oneHot');
+	  };
+
+	  _proto2.cumsum = function cumsum(x, axis, exclusive, reverse) {
+	    return notYetImplemented('cumsum');
+	  };
+
+	  _proto2.nonMaxSuppression = function nonMaxSuppression(boxes, scores, maxOutputSize, iouThreshold, scoreThreshold) {
+	    return notYetImplemented('nonMaxSuppression');
+	  };
+
+	  _proto2.fft = function fft(x) {
+	    return notYetImplemented('fft');
+	  };
+
+	  _proto2.ifft = function ifft(x) {
+	    return notYetImplemented('ifft');
+	  };
+
+	  _proto2.complex = function complex(real, imag) {
+	    return notYetImplemented('complex');
+	  };
+
+	  _proto2.real = function real(input) {
+	    return notYetImplemented('real');
+	  };
+
+	  _proto2.imag = function imag(input) {
+	    return notYetImplemented('imag');
+	  };
+
+	  _proto2.cropAndResize = function cropAndResize(image, boxes, boxIndex, cropSize, method, extrapolationValue) {
+	    return notYetImplemented('cropAndResize');
+	  };
+
+	  _proto2.depthToSpace = function depthToSpace(x, blockSize, dataFormat) {
+	    return notYetImplemented('depthToSpace');
+	  } // Aligns with the "SplitV" kernel in TensorFlow.
+	  ;
+
+	  _proto2.split = function split(value, sizeSplits, axis) {
+	    return notYetImplemented('split');
+	  };
+
+	  _proto2.sparseToDense = function sparseToDense(sparseIndices, sparseValues, outputShape, defaultValue) {
+	    return notYetImplemented('sparseToDense');
+	  };
+
+	  _proto2.diag = function diag(x) {
+	    return notYetImplemented('diag');
+	  };
+
+	  _proto2.fill = function fill(shape, value, dtype) {
+	    return notYetImplemented('fill');
+	  };
+
+	  _proto2.onesLike = function onesLike(x) {
+	    return notYetImplemented('onesLike');
+	  };
+
+	  _proto2.zerosLike = function zerosLike(x) {
+	    return notYetImplemented('zerosLike');
+	  };
+
+	  _proto2.linspace = function linspace(start, stop, num) {
+	    return notYetImplemented('linspace');
+	  };
+
 	  _proto2.dispose = function dispose() {
 	    return notYetImplemented('dispose');
 	  };
@@ -13294,48 +13866,6 @@
 	    temp = array[counter];
 	    array[counter] = array[index];
 	    array[index] = temp;
-	  }
-	}
-	/**
-	 * Shuffles two arrays in-place the same way using Fisher-Yates algorithm.
-	 *
-	 * ```js
-	 * const a = [1,2,3,4,5];
-	 * const b = [11,22,33,44,55];
-	 * tf.util.shuffleCombo(a, b);
-	 * console.log(a, b);
-	 * ```
-	 *
-	 * @param array The first array to shuffle in-place.
-	 * @param array2 The second array to shuffle in-place with the same permutation
-	 *     as the first array.
-	 *
-	 * @doc {heading: 'Util', namespace: 'util'}
-	 */
-	// tslint:disable-next-line:no-any
-
-	function shuffleCombo(array, // tslint:disable-next-line:no-any
-	array2) {
-	  if (array.length !== array2.length) {
-	    throw Error("Array sizes must match to be shuffled together " + ("First array length was " + array.length) + ("Second array length was " + array2.length));
-	  }
-
-	  var counter = array.length;
-	  var temp, temp2;
-	  var index = 0; // While there are elements in the array
-
-	  while (counter > 0) {
-	    // Pick a random index
-	    index = Math.random() * counter | 0; // Decrease counter by 1
-
-	    counter--; // And swap the last element of each array with it
-
-	    temp = array[counter];
-	    temp2 = array2[counter];
-	    array[counter] = array[index];
-	    array2[counter] = array2[index];
-	    array[index] = temp;
-	    array2[index] = temp2;
 	  }
 	}
 	/** Clamps a value to a specified range. */
@@ -14776,7 +15306,6 @@
 		encodeString: encodeString,
 		decodeString: decodeString,
 		shuffle: shuffle,
-		shuffleCombo: shuffleCombo,
 		clamp: clamp,
 		nearestLargerEven: nearestLargerEven,
 		sum: sum,
@@ -15860,16 +16389,6 @@
 	    return !!instance && instance.data != null && instance.dataSync != null && instance.throwIfDisposed != null;
 	  }
 	});
-	function getGlobalTensorClass() {
-	  // Use getGlobal so that we can augment the Tensor class across package
-	  // boundaries becase the node resolution alg may result in different modules
-	  // being returned for this file depending on the path they are loaded from.
-	  return getGlobal('Tensor', function () {
-	    return Tensor;
-	  });
-	} // Global side effect. Cache global reference to Tensor class
-
-	getGlobalTensorClass();
 	/**
 	 * A mutable `tf.Tensor`, useful for persisting state, e.g. for training.
 	 *
@@ -16109,10 +16628,6 @@
 		isTensorInList: isTensorInList,
 		getTensorsInContainer: getTensorsInContainer
 	};
-
-	function isRegisteredKernelInvocation(kernelInvocation) {
-	  return kernelInvocation.kernelName != null;
-	}
 
 	var EngineState = /*#__PURE__*/function () {
 	  function EngineState() {
@@ -16608,6 +17123,9 @@
 	   * saving a tensor for backwards pass. It makes sure to add the clone
 	   * operation to the tape regardless of being called inside a kernel
 	   * execution.
+	   *
+	   * This method will go away once all kernels are modularized since we won't
+	   * need to turn off the tape inside runKernel().
 	   */
 	  ;
 
@@ -16627,8 +17145,11 @@
 	          var attrs = {
 	            dtype: dtype
 	          };
-	          return ENGINE.runKernel(Cast, gradInputs, // tslint:disable-next-line: no-unnecessary-type-assertion
-	          attrs);
+	          return ENGINE.runKernelFunc(function (backend) {
+	            return backend.cast(dy, dtype);
+	          }, gradInputs, null
+	          /* grad */
+	          , Cast, attrs);
 	        }
 	      };
 	    };
@@ -16652,18 +17173,13 @@
 	   */
 	  ;
 
-	  _proto2.runKernel = function runKernel(kernelName, inputs, attrs) {
-	    var hasKernel = getKernel(kernelName, this.backendName) != null;
+	  _proto2.runKernel = function runKernel(kernelName, inputs, attrs, inputsToSave, outputsToSave) {
+	    var forwardFunc = null;
+	    var backwardsFunc = null; // Call runKernel as a stop-gap until we modularize all kernels.
+	    // Once we modularize all kernels, we will remove the existing
+	    // `runKernelFunc`.
 
-	    if (!hasKernel) {
-	      throw new Error("Kernel '" + kernelName + "' not registered for backend '" + this.backendName + "'");
-	    }
-
-	    return this.runKernelFunc({
-	      kernelName: kernelName,
-	      inputs: inputs,
-	      attrs: attrs
-	    });
+	    return this.runKernelFunc(forwardFunc, inputs, backwardsFunc, kernelName, attrs, inputsToSave, outputsToSave);
 	  };
 
 	  _proto2.shouldCheckForMemLeaks = function shouldCheckForMemLeaks() {
@@ -16692,18 +17208,22 @@
 	    }
 	  }
 	  /**
-	   * Internal helper method to execute a kernel Func
-	   *
-	   * Use `runKernel` to execute kernels from outside of engine.
+	   * @deprecated Use `runKernel` for newly added kernels. Keep using this method
+	   *     only for kernels that are not yet fully modularized.
 	   */
 	  ;
 
-	  _proto2.runKernelFunc = function runKernelFunc(kernelParams) {
+	  _proto2.runKernelFunc = function runKernelFunc(forwardFunc, inputs, backwardsFunc, kernelName, attrs, inputsToSave, outputsToSave) {
 	    var _this6 = this;
 
 	    var outputs;
 	    var saved = [];
 	    var isTapeOn = this.isTapeOn();
+
+	    if (kernelName == null) {
+	      kernelName = this.state.activeScope != null ? this.state.activeScope.name : '';
+	    }
+
 	    var startingBytecount = this.state.numBytes;
 	    var startingNumTensors = this.state.numTensors;
 
@@ -16722,36 +17242,16 @@
 	      this.backend;
 	    }
 
+	    var kernel = getKernel(kernelName, this.backendName);
 	    var out;
-	    var kernelOrScopeName = isRegisteredKernelInvocation(kernelParams) ? kernelParams.kernelName : this.state.activeScope != null ? this.state.activeScope.name : ''; // Create the kernelFunc from either a registered kernel OR passed in
-	    // forward/backward functions (used by custom grad). In this context a
-	    // kernelFunc wraps a kernel implementation with some bookkeeping.
 
-	    if (isRegisteredKernelInvocation(kernelParams)) {
-	      var kernelName = kernelParams.kernelName,
-	          _inputs = kernelParams.inputs,
-	          _attrs = kernelParams.attrs;
-
-	      if (this.backendName == null) {
-	        // backend has not been initialized yet (backend initialization is lazy
-	        // can be deferred until an op/ kernel is run).
-	        // The below getter has side effects that will try to initialize the
-	        // backend and set properties like this.backendName
-	        // tslint:disable-next-line: no-unused-expression
-	        this.backend;
-	      }
-
-	      var kernel = getKernel(kernelName, this.backendName);
-	      assert(kernel != null, function () {
-	        return "Cannot find registered kernel '" + kernelName + "' for backend '" + _this6.backendName + "'";
-	      });
-
+	    if (kernel != null) {
 	      kernelFunc = function kernelFunc() {
 	        var numDataIdsBefore = _this6.backend.numDataIds();
 
 	        out = kernel.kernelFunc({
-	          inputs: _inputs,
-	          attrs: _attrs,
+	          inputs: inputs,
+	          attrs: attrs,
 	          backend: _this6.backend
 	        });
 	        var outInfos = Array.isArray(out) ? out : [out];
@@ -16772,13 +17272,28 @@
 	              shape = outInfo.shape,
 	              dtype = outInfo.dtype;
 	          return _this6.makeTensorFromDataId(dataId, shape, dtype);
-	        }); // Save any required inputs and outputs.
+	        }); // Save the inputs and outputs.
 	        // Do not save unless we are recording to the tape. Otherwise it would
-	        // cause a mem leak since there would be no backprop for these tensors
-	        // (which would otherwise dispose them).
+	        // cause a mem leak since we would never run backprop, which disposes
+	        // the kept tensors.
 
 	        if (isTapeOn) {
-	          var tensorsToSave = _this6.getTensorsForGradient(kernelName, _inputs, outTensors);
+	          var tensorsToSave = _this6.getTensorsForGradient(kernelName, inputs, outTensors);
+
+	          if (tensorsToSave == null) {
+	            // Fallback for ops that call runKernelFunc and pass in
+	            // inputsToSave and outputsToSave. Currently this is the set of ops
+	            // with kernel support in the WASM backend. Once those ops and
+	            // respective gradients are modularised we can remove this path.
+	            if (outputsToSave == null) {
+	              outputsToSave = [];
+	            }
+
+	            var outsToSave = outTensors.filter(function (_, i) {
+	              return outputsToSave[i];
+	            });
+	            tensorsToSave = (inputsToSave || []).slice().concat(outsToSave);
+	          }
 
 	          saved = _this6.saveTensorsForBackwardMode(tensorsToSave);
 	        }
@@ -16786,7 +17301,9 @@
 	        return outTensors;
 	      };
 	    } else {
-	      var forwardFunc = kernelParams.forwardFunc; // Running a customGrad op.
+	      if (forwardFunc == null) {
+	        throw new Error("Error running " + kernelName + ": Neither modular kernel nor forward func passed");
+	      }
 
 	      var saveFunc = function saveFunc(tensors) {
 	        // Do not save unless we are recording to the tape. Otherwise it would
@@ -16810,23 +17327,16 @@
 	        var outs = Array.isArray(out) ? out : [out];
 
 	        if (_this6.shouldCheckForMemLeaks()) {
-	          // Scope name is used to print a more helpful error message if needed.
-	          _this6.checkKernelForMemLeak(kernelOrScopeName, numDataIdsBefore, outs);
+	          _this6.checkKernelForMemLeak(kernelName, numDataIdsBefore, outs);
 	        }
 
 	        return outs;
 	      };
-	    } //
-	    // Run the kernelFunc. Optionally profiling it.
-	    //
+	    } // Stop recording to a tape when running a kernel.
 
 
-	    var inputs = kernelParams.inputs,
-	        attrs = kernelParams.attrs;
-	    var backwardsFunc = isRegisteredKernelInvocation(kernelParams) ? null : kernelParams.backwardsFunc;
 	    var kernelProfile;
-	    this.scopedRun( // Stop recording to a tape when running a kernel.
-	    function () {
+	    this.scopedRun(function () {
 	      return _this6.state.kernelDepth++;
 	    }, function () {
 	      return _this6.state.kernelDepth--;
@@ -16834,7 +17344,7 @@
 	      if (!_this6.ENV.getBool('DEBUG') && !_this6.state.profiling) {
 	        outputs = kernelFunc();
 	      } else {
-	        kernelProfile = _this6.profiler.profileKernel(kernelOrScopeName, inputs, function () {
+	        kernelProfile = _this6.profiler.profileKernel(kernelName, inputs, function () {
 	          return kernelFunc();
 	        });
 
@@ -16847,12 +17357,12 @@
 	    });
 
 	    if (isTapeOn) {
-	      this.addTapeNode(kernelOrScopeName, inputs, outputs, backwardsFunc, saved, attrs);
+	      this.addTapeNode(kernelName, inputs, outputs, backwardsFunc, saved, attrs);
 	    }
 
 	    if (this.state.profiling) {
 	      this.state.activeProfile.kernels.push({
-	        name: kernelOrScopeName,
+	        name: kernelName,
 	        bytesAdded: this.state.numBytes - startingBytecount,
 	        totalBytesSnapshot: this.state.numBytes,
 	        tensorsAdded: this.state.numTensors - startingNumTensors,
@@ -16888,6 +17398,9 @@
 	  /**
 	   * Returns a list of tensors to save for a given gradient calculation.
 	   *
+	   * Returns undefined if their is no registered gradient for this kernel in the
+	   * gradient registry.
+	   *
 	   * @param kernelName name of kernel to look up gradient for.
 	   * @param inputs a map of input tensors.
 	   * @param outputs an array of output tensors from forward mode of kernel.
@@ -16921,15 +17434,11 @@
 	        return outputsToSave[i];
 	      });
 	      return inputTensorsToSave.concat(outputTensorsToSave);
-	    } // We return an empty list rather than throw an error because the kernel we
-	    // are looking up may not actually be relevant to backproping through the
-	    // overall function
-	    //
-	    // See 'does not error if irrelevant (pruned) ops are missing grads' test
-	    // in gradients_test.ts for an example.
+	    } // TODO(yassogba) throw exception here once all runkernelFunc calls with
+	    // inputsToSave/outputsToSave are removed
 
 
-	    return [];
+	    return null;
 	  }
 	  /**
 	   * Internal method used by public APIs for tensor creation. Makes a new
@@ -17378,8 +17887,7 @@
 	      inputs.forEach(function (input, i) {
 	        inputMap[i] = input;
 	      });
-
-	      var forwardFunc = function forwardFunc(_, save) {
+	      return _this11.runKernelFunc(function (_, save) {
 	        res = f.apply(void 0, [].concat(inputs, [save]));
 	        assert(res.value instanceof Tensor, function () {
 	          return 'The function f passed in customGrad(f) must return an ' + 'object where `obj.value` is a tensor';
@@ -17388,9 +17896,7 @@
 	          return 'The function f passed in customGrad(f) must return an ' + 'object where `obj.gradFunc` is a function.';
 	        });
 	        return res.value;
-	      };
-
-	      var backwardsFunc = function backwardsFunc(dy, saved) {
+	      }, inputMap, function (dy, saved) {
 	        var gradRes = res.gradFunc(dy, saved);
 	        var grads = Array.isArray(gradRes) ? gradRes : [gradRes];
 	        assert(grads.length === inputs.length, function () {
@@ -17408,12 +17914,6 @@
 	          };
 	        });
 	        return gradMap;
-	      };
-
-	      return _this11.runKernelFunc({
-	        forwardFunc: forwardFunc,
-	        backwardsFunc: backwardsFunc,
-	        inputs: inputMap
 	      });
 	    };
 	  };
@@ -23478,7 +23978,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$1 = '3.0.0';
+	var version$1 = '2.8.6';
 
 	/**
 	 * @license
@@ -25529,13 +26029,27 @@
 	 *     "NDHWC". Specify the data format of the input and output data. With the
 	 *     default format "NDHWC", the data is stored in the order of: [batch,
 	 *     depth, height, width, channels]. Only "NDHWC" is currently supported.
+	 * @param dilations Deprecated, this field will be gone in v3.0.0.
+	 *     The dilation rates:
+	 *     `[dilationDepth, dilationHeight, dilationWidth]`
+	 *     in which we sample input values across the depth, height and width
+	 *     dimensions in dilated pooling.
+	 *     Defaults to `[1, 1, 1]`. If `dilations` is a single number,
+	 *     then `dilationDepth == dilationHeight == dilationWidth`.
+	 *     If it is greater than 1, then all values of `strides` must be 1.
 	 *
 	 * @doc {heading: 'Operations', subheading: 'Convolution'}
 	 */
 
-	function avgPool3d_(x, filterSize, strides, pad, dimRoundingMode, dataFormat) {
+	function avgPool3d_(x, filterSize, strides, pad, dimRoundingMode, dataFormat, dilations) {
 	  if (dataFormat === void 0) {
 	    dataFormat = 'NDHWC';
+	  }
+
+	  if (dilations == null) {
+	    dilations = [1, 1, 1];
+	  } else {
+	    deprecationWarn('dilations is deprecated, this field will be gone in ' + 'v3.0.0.');
 	  }
 
 	  var $x = convertToTensor(x, 'x', 'avgPool3d', 'float32');
@@ -25553,6 +26067,9 @@
 	  assert(dataFormat === 'NDHWC', function () {
 	    return "Error in avgPool3d: Only NDHWC is currently supported, " + ("but got dataFormat of " + dataFormat);
 	  });
+	  assert(eitherStridesOrDilationsAreOne(strides, dilations), function () {
+	    return 'Error in avgPool3d: Either strides or dilations must be 1. ' + ("Got strides " + strides + " and dilations '" + dilations + "'");
+	  });
 
 	  if (dimRoundingMode != null) {
 	    assert(isInt(pad), function () {
@@ -25568,7 +26085,8 @@
 	    strides: strides,
 	    pad: pad,
 	    dimRoundingMode: dimRoundingMode,
-	    dataFormat: dataFormat
+	    dataFormat: dataFormat,
+	    dilations: dilations
 	  }; // tslint:disable-next-line: no-unnecessary-type-assertion
 
 	  var res = ENGINE.runKernel(AvgPool3D, inputs, attrs);
@@ -30666,16 +31184,30 @@
 	 *     "NDHWC". Specify the data format of the input and output data. With the
 	 *     default format "NDHWC", the data is stored in the order of: [batch,
 	 *     depth, height, width, channels]. Only "NDHWC" is currently supported.
+	 * @param dilations Deprecated, this field will be gone in v3.0.0.
+	 *     The dilation rates: `[dilationDepth, dilationHeight, dilationWidth]`
+	 *     in which we sample input values across the depth, height and width
+	 *     dimensions in dilated pooling.
+	 *     Defaults to `[1, 1, 1]`. If `dilations` is a single number,
+	 *     then `dilationDepth == dilationHeight == dilationWidth`.
+	 *     If it is greater than 1, then all values of `strides` must be 1.
+	 *
 	 * @doc {heading: 'Operations', subheading: 'Convolution'}
 	 */
 
-	function maxPool3d_(x, filterSize, strides, pad, dimRoundingMode, dataFormat) {
+	function maxPool3d_(x, filterSize, strides, pad, dimRoundingMode, dataFormat, dilations) {
 	  if (filterSize === void 0) {
 	    filterSize = [1, 1, 1];
 	  }
 
 	  if (dataFormat === void 0) {
 	    dataFormat = 'NDHWC';
+	  }
+
+	  if (dilations == null) {
+	    dilations = [1, 1, 1];
+	  } else {
+	    deprecationWarn('dilations is deprecated, this field will be gone in ' + 'v3.0.0.');
 	  }
 
 	  var $x = convertToTensor(x, 'x', 'maxPool3d');
@@ -30693,6 +31225,9 @@
 	  assert(dataFormat === 'NDHWC', function () {
 	    return "Error in maxPool3d: Only NDHWC is currently supported, " + ("but got dataFormat of " + dataFormat);
 	  });
+	  assert(eitherStridesOrDilationsAreOne(strides, dilations), function () {
+	    return 'Error in maxPool3d: Either strides or dilations must be 1. ' + ("Got strides " + strides + " and dilations '" + dilations + "'");
+	  });
 
 	  if (dimRoundingMode != null) {
 	    assert(isInt(pad), function () {
@@ -30708,7 +31243,8 @@
 	    strides: strides,
 	    pad: pad,
 	    dimRoundingMode: dimRoundingMode,
-	    dataFormat: dataFormat
+	    dataFormat: dataFormat,
+	    dilations: dilations
 	  }; // tslint:disable-next-line: no-unnecessary-type-assertion
 
 	  var res = ENGINE.runKernel(MaxPool3D, inputs, attrs);
@@ -36554,6 +37090,313 @@
 	}
 
 	var booleanMaskAsync = booleanMaskAsync_;
+
+	/**
+	 * @license
+	 * Copyright 2018 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	/**
+	 * @deprecated
+	 * Strict version of `tf.notEqual` that forces `a` and `b` to be of the same
+	 * shape.
+	 *
+	 * @param a The first input tensor.
+	 * @param b The second input tensor. Must have the same shape and dtype as
+	 *     `a`.
+	 */
+
+	function notEqualStrict_(a, b) {
+	  deprecationWarn('strict variants of ops have been deprecated ' + 'and will be removed in future');
+	  var $a = convertToTensor(a, 'a', 'notEqualStrict');
+	  var $b = convertToTensor(b, 'b', 'notEqualStrict');
+	  assertShapesMatch($a.shape, $b.shape, 'Error in notEqualStrict: ');
+	  return notEqual($a, $b);
+	}
+	/**
+	 * @deprecated
+	 * Strict version of `tf.less` that forces `a` and `b` to be of the same
+	 * shape.
+	 *
+	 * @param a The first input tensor.
+	 * @param b The second input tensor. Must have the same shape and dtype as
+	 *     `a`.
+	 */
+
+
+	function lessStrict_(a, b) {
+	  deprecationWarn('strict variants of ops have been deprecated ' + 'and will be removed in future');
+	  var $a = convertToTensor(a, 'a', 'lessStrict');
+	  var $b = convertToTensor(b, 'b', 'lessStrict');
+	  assertShapesMatch($a.shape, $b.shape, 'Error in lessStrict: ');
+	  return less($a, $b);
+	}
+
+	function equalStrict_(a, b) {
+	  deprecationWarn('strict variants of ops have been deprecated ' + 'and will be removed in future');
+	  var $a = convertToTensor(a, 'a', 'equalStrict');
+	  var $b = convertToTensor(b, 'b', 'equalStrict');
+	  assertShapesMatch($a.shape, $b.shape, 'Error in equalStrict: ');
+	  return equal($a, $b);
+	}
+
+	function lessEqualStrict_(a, b) {
+	  deprecationWarn('strict variants of ops have been deprecated ' + 'and will be removed in future');
+	  var $a = convertToTensor(a, 'a', 'lessEqualStrict');
+	  var $b = convertToTensor(b, 'b', 'lessEqualStrict');
+	  assertShapesMatch($a.shape, $b.shape, 'Error in lessEqualStrict: ');
+	  return lessEqual($a, $b);
+	}
+
+	function greaterStrict_(a, b) {
+	  deprecationWarn('strict variants of ops have been deprecated ' + 'and will be removed in future');
+	  var $a = convertToTensor(a, 'a', 'greaterStrict');
+	  var $b = convertToTensor(b, 'b', 'greaterStrict');
+	  assertShapesMatch($a.shape, $b.shape, 'Error in greaterStrict: ');
+	  return greater($a, $b);
+	}
+
+	function greaterEqualStrict_(a, b) {
+	  deprecationWarn('strict variants of ops have been deprecated ' + 'and will be removed in future');
+	  var $a = convertToTensor(a, 'a', 'greaterEqualStrict');
+	  var $b = convertToTensor(b, 'b', 'greaterEqualStrict');
+	  assertShapesMatch($a.shape, $b.shape, 'Error in greaterEqualStrict: ');
+	  return greaterEqual($a, $b);
+	}
+
+	var equalStrict = op({
+	  equalStrict_: equalStrict_
+	});
+	var greaterEqualStrict = op({
+	  greaterEqualStrict_: greaterEqualStrict_
+	});
+	var greaterStrict = op({
+	  greaterStrict_: greaterStrict_
+	});
+	var lessEqualStrict = op({
+	  lessEqualStrict_: lessEqualStrict_
+	});
+	var lessStrict = op({
+	  lessStrict_: lessStrict_
+	});
+	var notEqualStrict = op({
+	  notEqualStrict_: notEqualStrict_
+	});
+
+	/**
+	 * @license
+	 * Copyright 2018 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	/**
+	 * @deprecated
+	 * Adds two `tf.Tensor`s element-wise, A + B.
+	 *
+	 * Inputs must be the same shape. For broadcasting support, use add() instead.
+	 *
+	 * @param a The first Tensor to add element-wise.
+	 * @param b The second Tensor to add element-wise.
+	 */
+
+	function addStrict_(a, b) {
+	  deprecationWarn('strict variants of ops have been deprecated ' + 'and will be removed in future');
+	  var $a = convertToTensor(a, 'a', 'addStrict');
+	  var $b = convertToTensor(b, 'b', 'addStrict');
+	  assertShapesMatch($a.shape, $b.shape, 'Error in addStrict: ');
+	  return add$1($a, $b);
+	}
+	/**
+	 * @deprecated
+	 * Subtracts two `tf.Tensor`s element-wise, A - B. Inputs must
+	 * be the same shape.
+	 *
+	 * For broadcasting support, use `tf.sub` instead.
+	 *
+	 * @param a The first Tensor to subtract element-wise.
+	 * @param b The second Tensor to subtract element-wise.
+	 */
+
+
+	function subStrict_(a, b) {
+	  deprecationWarn('strict variants of ops have been deprecated ' + 'and will be removed in future');
+	  var $a = convertToTensor(a, 'a', 'subStrict');
+	  var $b = convertToTensor(b, 'b', 'subStrict');
+	  assertShapesMatch($a.shape, $b.shape, 'Error in subStrict: ');
+	  return sub($a, $b);
+	}
+	/**
+	 * @deprecated
+	 * Computes the power of one `tf.Tensor` to another. Inputs must
+	 * be the same shape.
+	 *
+	 * For broadcasting support, use `tf.pow` instead.
+	 *
+	 * @param base The base tensor to pow element-wise.
+	 * @param exp The exponent tensor to pow element-wise.
+	 */
+
+
+	function powStrict_(base, exp) {
+	  deprecationWarn('strict variants of ops have been deprecated ' + 'and will be removed in future');
+	  assertShapesMatch(base.shape, exp.shape, 'Error in powStrict: ');
+	  return pow$5(base, exp);
+	}
+	/**
+	 * @deprecated
+	 * Multiplies two `tf.Tensor`s element-wise, A * B.
+	 *
+	 * Inputs must be the same shape. For broadcasting support, use `tf.mul`.
+	 *
+	 * @param a The first tensor to multiply.
+	 * @param b The first tensor to multiply. Must have the same
+	 *    dtype as `a`.
+	 */
+
+
+	function mulStrict_(a, b) {
+	  deprecationWarn('strict variants of ops have been deprecated ' + 'and will be removed in future');
+	  var $a = convertToTensor(a, 'a', 'mul');
+	  var $b = convertToTensor(b, 'b', 'mul');
+	  assertShapesMatch($a.shape, $b.shape, 'Error in multiplyStrict: ');
+	  return mul($a, $b);
+	}
+	/**
+	 * @deprecated
+	 * Divides two `tf.Tensor`s element-wise, A / B. Inputs must
+	 * be the same shape.
+	 *
+	 * @param a The first tensor as the numerator for element-wise division.
+	 * @param b The second tensor as the denominator for element-wise division.
+	 */
+
+
+	function divStrict_(a, b) {
+	  deprecationWarn('strict variants of ops have been deprecated ' + 'and will be removed in future');
+	  var $a = convertToTensor(a, 'a', 'div');
+	  var $b = convertToTensor(b, 'b', 'div');
+	  assertShapesMatch($a.shape, $b.shape, 'Error in divideStrict: ');
+	  return div($a, $b);
+	}
+	/**
+	 * @deprecated
+	 * Returns the mod of a and b (`a < b ? a : b`) element-wise. Inputs must
+	 * be the same shape. For broadcasting support, use mod().
+	 *
+	 * @param a The first tensor.
+	 * @param b The second tensor. Must have the same dtype as `a`.
+	 */
+
+
+	function modStrict_(a, b) {
+	  deprecationWarn('strict variants of ops have been deprecated ' + 'and will be removed in future');
+	  var $a = convertToTensor(a, 'a', 'modStrict');
+	  var $b = convertToTensor(b, 'b', 'modStrict');
+	  assertShapesMatch($a.shape, $b.shape, 'Error in modStrict: ');
+	  return mod($a, $b);
+	}
+	/**
+	 * @deprecated
+	 * Returns the min of a and b (`a < b ? a : b`) element-wise. Inputs must
+	 * be the same shape. For broadcasting support, use minimum().
+	 *
+	 * @param a The first tensor.
+	 * @param b The second tensor. Must have the same dtype as `a`.
+	 */
+
+
+	function minimumStrict_(a, b) {
+	  deprecationWarn('strict variants of ops have been deprecated ' + 'and will be removed in future');
+	  var $a = convertToTensor(a, 'a', 'minimumStrict');
+	  var $b = convertToTensor(b, 'b', 'minimumStrict');
+	  assertShapesMatch($a.shape, $b.shape, 'Error in minimumStrict: ');
+	  return minimum($a, $b);
+	}
+	/**
+	 * @deprecated
+	 * Returns the max of a and b (`a > b ? a : b`) element-wise. Inputs must
+	 * be the same shape. For broadcasting support, use maximum().
+	 *
+	 * @param a The first tensor.
+	 * @param b The second tensor. Must have the same dtype as `a`.
+	 */
+
+
+	function maximumStrict_(a, b) {
+	  deprecationWarn('strict variants of ops have been deprecated ' + 'and will be removed in future');
+	  var $a = convertToTensor(a, 'a', 'maximumStrict');
+	  var $b = convertToTensor(b, 'b', 'maximumStrict');
+	  assertShapesMatch($a.shape, $b.shape, 'Error in maximumStrict: ');
+	  return maximum($a, $b);
+	}
+	/**
+	 * @deprecated
+	 * Returns (a - b) * (a - b) element-wise.
+	 *
+	 * Inputs must be the same shape. For broadcasting support, use
+	 * `tf.squaredDifference` instead.
+	 *
+	 * @param a The first tensor.
+	 * @param b The second tensor. Must have the same type as `a`.
+	 */
+
+
+	function squaredDifferenceStrict_(a, b) {
+	  deprecationWarn('strict variants of ops have been deprecated ' + 'and will be removed in future');
+	  var $a = convertToTensor(a, 'a', 'squaredDifferenceStrict');
+	  var $b = convertToTensor(b, 'b', 'squaredDifferenceStrict');
+	  assertShapesMatch($a.shape, $b.shape, 'Error in squaredDifferenceStrict: ');
+	  return squaredDifference($a, $b);
+	}
+
+	var addStrict = op({
+	  addStrict_: addStrict_
+	});
+	var divStrict = op({
+	  divStrict_: divStrict_
+	});
+	var maximumStrict = op({
+	  maximumStrict_: maximumStrict_
+	});
+	var minimumStrict = op({
+	  minimumStrict_: minimumStrict_
+	});
+	var modStrict = op({
+	  modStrict_: modStrict_
+	});
+	var mulStrict = op({
+	  mulStrict_: mulStrict_
+	});
+	var powStrict = op({
+	  powStrict_: powStrict_
+	});
+	var squaredDifferenceStrict = op({
+	  squaredDifferenceStrict_: squaredDifferenceStrict_
+	});
+	var subStrict = op({
+	  subStrict_: subStrict_
+	});
 
 	/**
 	 * @license
@@ -43289,6 +44132,51 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	function castTensor(x, dtype, backend) {
+	  if (dtype === 'complex64') {
+	    if (x.dtype === 'complex64') {
+	      return x.clone();
+	    }
+
+	    var zerosTensor = zeros(x.shape);
+	    var floatX = cast(x, 'float32');
+	    var result = backend.complex(floatX, zerosTensor);
+	    zerosTensor.dispose();
+	    floatX.dispose();
+	    return result;
+	  }
+
+	  if (!hasEncodingLoss(x.dtype, dtype)) {
+	    // We don't change the underlying data, since we cast to higher
+	    // precision.
+	    return ENGINE.makeTensorFromDataId(x.dataId, x.shape, dtype);
+	  }
+
+	  if (x.dtype === 'complex64') {
+	    var real = backend.real(x);
+
+	    var _result = cast(real, dtype);
+
+	    real.dispose();
+	    return _result;
+	  }
+
+	  if (dtype === 'int32') {
+	    return backend.int(x);
+	  } else if (dtype === 'bool') {
+	    var zero = scalar(0, x.dtype);
+
+	    var _result2 = backend.notEqual(x, zero);
+
+	    zero.dispose();
+	    return _result2;
+	  } else {
+	    throw new Error("Error in Cast: failed to cast " + x.dtype + " to " + dtype);
+	  }
+	}
+	function reshapeTensor(x, shape) {
+	  return ENGINE.makeTensorFromDataId(x.dataId, shape, x.dtype);
+	}
 	function fromUint8ToStringArray(vals) {
 	  try {
 	    // Decode the bytes into string.
@@ -43309,6 +44197,8 @@
 		__proto__: null,
 		slice_util: slice_util,
 		segment_util: segment_util,
+		castTensor: castTensor,
+		reshapeTensor: reshapeTensor,
 		fromUint8ToStringArray: fromUint8ToStringArray,
 		fromStringArrayToUint8: fromStringArrayToUint8,
 		upcastType: upcastType,
@@ -43399,23 +44289,6 @@
 	/**
 	 * @license
 	 * Copyright 2020 Google Inc. All Rights Reserved.
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 * http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 * =============================================================================
-	 */
-
-	/**
-	 * @license
-	 * Copyright 2017 Google LLC. All Rights Reserved.
 	 * Licensed under the Apache License, Version 2.0 (the "License");
 	 * you may not use this file except in compliance with the License.
 	 * You may obtain a copy of the License at
@@ -43864,13 +44737,24 @@
 	 * @param strides The strides of the pooling:
 	 *     `[strideDepth, strideHeight, strideWidth]`. If
 	 *     `strides` is a single number, then `strideHeight == strideWidth`.
+	 * @param dilations Deprecated, this field will be gone in v3.0.0. The dilation
+	 *     rates: `[dilationDepth, dilationHeight, dilationWidth]`
+	 *     in which we sample input values across the depth, height and width
+	 *     dimensions in dilated pooling.
+	 *     Defaults to `[1, 1, 1]`. If `dilations` is a single number,
+	 *     then `dilationDepth == dilationHeight == dilationWidth`.
+	 *     If it is greater than 1, then all values of `strides` must be 1.
 	 * @param pad A string from: 'same', 'valid'. The type of padding algorithm
 	 *     used in the forward prop of the op.
 	 * @param dimRoundingMode A string from: 'ceil', 'round', 'floor'. If none is
 	 *     provided, it will default to truncate.
 	 */
 
-	function avgPool3dGrad_(dy, input, filterSize, strides, pad, dimRoundingMode) {
+	function avgPool3dGrad_(dy, input, filterSize, strides, dilations, pad, dimRoundingMode) {
+	  if (dilations === void 0) {
+	    dilations = [1, 1, 1];
+	  }
+
 	  var $dy = convertToTensor(dy, 'dy', 'avgPool3dGrad');
 	  var $input = convertToTensor(input, 'input', 'avgPool3dGrad');
 	  var dy5D = $dy;
@@ -43889,6 +44773,9 @@
 	  assert(input5D.rank === 5, function () {
 	    return "Error in avgPool3dGrad: input must be rank 5 but got rank " + (input5D.rank + ".");
 	  });
+	  assert(eitherStridesOrDilationsAreOne(strides, dilations), function () {
+	    return 'Error in avgPool3dGrad: Either strides or dilations ' + ("must be 1. Got strides " + strides + " and dilations '" + dilations + "'");
+	  });
 
 	  if (dimRoundingMode != null) {
 	    assert(isInt(pad), function () {
@@ -43903,6 +44790,7 @@
 	  var attrs = {
 	    filterSize: filterSize,
 	    strides: strides,
+	    dilations: dilations,
 	    pad: pad,
 	    dimRoundingMode: dimRoundingMode
 	  }; // tslint:disable-next-line: no-unnecessary-type-assertion
@@ -43943,11 +44831,13 @@
 	    var _x = saved[0];
 	    var filterSize = attrs.filterSize,
 	        strides = attrs.strides,
+	        dilations = attrs.dilations,
 	        pad = attrs.pad,
 	        dimRoundingMode = attrs.dimRoundingMode;
+	    var $dilations = dilations == null ? [1, 1, 1] : dilations;
 	    return {
 	      x: function x() {
-	        return avgPool3dGrad(dy, _x, filterSize, strides, pad, dimRoundingMode);
+	        return avgPool3dGrad(dy, _x, filterSize, strides, $dilations, pad, dimRoundingMode);
 	      }
 	    };
 	  }
@@ -45657,13 +46547,24 @@
 	 * @param strides The strides of the pooling:
 	 *     `[strideDepth, strideHeight, strideWidth]`. If
 	 *     `strides` is a single number, then `strideHeight == strideWidth`.
+	 * @param dilations Deprecated, this field will be gone in v3.0.0.
+	 *     The dilation rates: `[dilationDepth, dilationHeight, dilationWidth]`
+	 *     in which we sample input values across the depth, height and width
+	 *     dimensions in dilated pooling.
+	 *     Defaults to `[1, 1, 1]`. If `dilations` is a single number,
+	 *     then `dilationDepth == dilationHeight == dilationWidth`.
+	 *     If it is greater than 1, then all values of `strides` must be 1.
 	 * @param pad A string from: 'same', 'valid'. The type of padding algorithm
 	 *     used in the forward prop of the op.
 	 * @param dimRoundingMode A string from: 'ceil', 'round', 'floor'. If none is
 	 *     provided, it will default to truncate.
 	 */
 
-	function maxPool3dGrad_(dy, input, output, filterSize, strides, pad, dimRoundingMode) {
+	function maxPool3dGrad_(dy, input, output, filterSize, strides, dilations, pad, dimRoundingMode) {
+	  if (dilations === void 0) {
+	    dilations = [1, 1, 1];
+	  }
+
 	  var $dy = convertToTensor(dy, 'dy', 'maxPool3dGrad');
 	  var $input = convertToTensor(input, 'input', 'maxPool3dGrad');
 	  var $output = convertToTensor(output, 'output', 'maxPool3dGrad');
@@ -45688,6 +46589,9 @@
 	  assert(output5D.rank === 5, function () {
 	    return "Error in maxPool3dGrad: output must be rank 5 but got rank " + (output5D.rank + ".");
 	  });
+	  assert(eitherStridesOrDilationsAreOne(strides, dilations), function () {
+	    return 'Error in maxPool3dGrad: Either strides or dilations ' + ("must be 1. Got strides " + strides + " and dilations '" + dilations + "'");
+	  });
 
 	  if (dimRoundingMode != null) {
 	    assert(isInt(pad), function () {
@@ -45703,6 +46607,7 @@
 	  var attrs = {
 	    filterSize: filterSize,
 	    strides: strides,
+	    dilations: dilations,
 	    pad: pad,
 	    dimRoundingMode: dimRoundingMode
 	  }; // tslint:disable-next-line: no-unnecessary-type-assertion
@@ -45745,11 +46650,13 @@
 	        y = saved[1];
 	    var filterSize = attrs.filterSize,
 	        strides = attrs.strides,
+	        dilations = attrs.dilations,
 	        pad = attrs.pad,
 	        dimRoundingMode = attrs.dimRoundingMode;
+	    var $dilations = dilations == null ? [1, 1, 1] : dilations;
 	    return {
 	      x: function x() {
-	        return maxPool3dGrad(dy, _x, y, filterSize, strides, pad, dimRoundingMode);
+	        return maxPool3dGrad(dy, _x, y, filterSize, strides, $dilations, pad, dimRoundingMode);
 	      }
 	    };
 	  }
@@ -47573,7 +48480,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.abs = function () {
+	Tensor.prototype.abs = function () {
 	  this.throwIfDisposed();
 	  return abs$8(this);
 	};
@@ -47595,7 +48502,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.acos = function () {
+	Tensor.prototype.acos = function () {
 	  this.throwIfDisposed();
 	  return acos(this);
 	};
@@ -47617,7 +48524,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.acosh = function () {
+	Tensor.prototype.acosh = function () {
 	  this.throwIfDisposed();
 	  return acosh(this);
 	};
@@ -47638,8 +48545,33 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	/**
+	 * @deprecated strict variants of ops have been deprecated
+	 */
 
-	getGlobalTensorClass().prototype.add = function (b) {
+	Tensor.prototype.addStrict = function (x) {
+	  this.throwIfDisposed();
+	  return addStrict(this, x);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.add = function (b) {
 	  this.throwIfDisposed();
 	  return add$1(this, b);
 	};
@@ -47661,7 +48593,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.all = function (axis, keepDims) {
+	Tensor.prototype.all = function (axis, keepDims) {
 	  this.throwIfDisposed();
 	  return all(this, axis, keepDims);
 	};
@@ -47683,7 +48615,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.any = function (axis, keepDims) {
+	Tensor.prototype.any = function (axis, keepDims) {
 	  this.throwIfDisposed();
 	  return any(this, axis, keepDims);
 	};
@@ -47705,7 +48637,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.argMax = function (axis) {
+	Tensor.prototype.argMax = function (axis) {
 	  this.throwIfDisposed();
 	  return argMax(this, axis);
 	};
@@ -47727,7 +48659,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.argMin = function (axis) {
+	Tensor.prototype.argMin = function (axis) {
 	  this.throwIfDisposed();
 	  return argMin(this, axis);
 	};
@@ -47748,12 +48680,11 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
-	/**
-	 * Converts a size-1 `tf.Tensor` to a `tf.Scalar`.
+	/** Converts a size-1 `tf.Tensor` to a `tf.Scalar`.
 	 * @doc {heading: 'Tensors', subheading: 'Classes'}
 	 */
 
-	getGlobalTensorClass().prototype.asScalar = function () {
+	Tensor.prototype.asScalar = function () {
 	  this.throwIfDisposed();
 	  assert(this.size === 1, function () {
 	    return 'The array must have only 1 element.';
@@ -47785,7 +48716,7 @@
 	 * @doc {heading: 'Tensors', subheading: 'Classes'}
 	 */
 
-	getGlobalTensorClass().prototype.asType = function (dtype) {
+	Tensor.prototype.asType = function (dtype) {
 	  this.throwIfDisposed();
 	  return cast(this, dtype);
 	};
@@ -47806,12 +48737,11 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
-	/**
-	 * Converts a `tf.Tensor` to a `tf.Tensor1D`.
+	/** Converts a `tf.Tensor` to a `tf.Tensor1D`.
 	 * @doc {heading: 'Tensors', subheading: 'Classes'}
 	 */
 
-	getGlobalTensorClass().prototype.as1D = function () {
+	Tensor.prototype.as1D = function () {
 	  this.throwIfDisposed();
 	  return reshape(this, [this.size]);
 	};
@@ -47840,7 +48770,7 @@
 	 * @doc {heading: 'Tensors', subheading: 'Classes'}
 	 */
 
-	getGlobalTensorClass().prototype.as2D = function (rows, columns) {
+	Tensor.prototype.as2D = function (rows, columns) {
 	  this.throwIfDisposed();
 	  return reshape(this, [rows, columns]);
 	};
@@ -47870,7 +48800,7 @@
 	 * @doc {heading: 'Tensors', subheading: 'Classes'}
 	 */
 
-	getGlobalTensorClass().prototype.as3D = function (rows, columns, depth) {
+	Tensor.prototype.as3D = function (rows, columns, depth) {
 	  this.throwIfDisposed();
 	  return reshape(this, [rows, columns, depth]);
 	};
@@ -47901,7 +48831,7 @@
 	 * @doc {heading: 'Tensors', subheading: 'Classes'}
 	 */
 
-	getGlobalTensorClass().prototype.as4D = function (rows, columns, depth, depth2) {
+	Tensor.prototype.as4D = function (rows, columns, depth, depth2) {
 	  this.throwIfDisposed();
 	  return reshape(this, [rows, columns, depth, depth2]);
 	};
@@ -47934,7 +48864,7 @@
 	 * @doc {heading: 'Tensors', subheading: 'Classes'}
 	 */
 
-	getGlobalTensorClass().prototype.as5D = function (rows, columns, depth, depth2, depth3) {
+	Tensor.prototype.as5D = function (rows, columns, depth, depth2, depth3) {
 	  this.throwIfDisposed();
 	  return reshape(this, [rows, columns, depth, depth2, depth3]);
 	};
@@ -47956,7 +48886,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.asin = function () {
+	Tensor.prototype.asin = function () {
 	  this.throwIfDisposed();
 	  return asin(this);
 	};
@@ -47978,7 +48908,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.asinh = function () {
+	Tensor.prototype.asinh = function () {
 	  this.throwIfDisposed();
 	  return asinh$1(this);
 	};
@@ -48000,7 +48930,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.atan = function () {
+	Tensor.prototype.atan = function () {
 	  this.throwIfDisposed();
 	  return atan(this);
 	};
@@ -48022,7 +48952,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.atan2 = function (b) {
+	Tensor.prototype.atan2 = function (b) {
 	  this.throwIfDisposed();
 	  return atan2(this, b);
 	};
@@ -48044,7 +48974,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.atanh = function () {
+	Tensor.prototype.atanh = function () {
 	  this.throwIfDisposed();
 	  return atanh(this);
 	};
@@ -48066,7 +48996,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.avgPool = function (filterSize, strides, pad, dimRoundingMode) {
+	Tensor.prototype.avgPool = function (filterSize, strides, pad, dimRoundingMode) {
 	  this.throwIfDisposed();
 	  return avgPool(this, filterSize, strides, pad, dimRoundingMode);
 	};
@@ -48088,7 +49018,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.batchToSpaceND = function (blockShape, crops) {
+	Tensor.prototype.batchToSpaceND = function (blockShape, crops) {
 	  this.throwIfDisposed();
 	  return batchToSpaceND(this, blockShape, crops);
 	};
@@ -48110,7 +49040,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.batchNorm = function (mean, variance, offset, scale, varianceEpsilon) {
+	Tensor.prototype.batchNorm = function (mean, variance, offset, scale, varianceEpsilon) {
 	  this.throwIfDisposed();
 	  return batchNorm(this, mean, variance, offset, scale, varianceEpsilon);
 	};
@@ -48132,7 +49062,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.broadcastTo = function (shape) {
+	Tensor.prototype.broadcastTo = function (shape) {
 	  this.throwIfDisposed();
 	  return broadcastTo(this, shape);
 	};
@@ -48154,7 +49084,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.cast = function (dtype) {
+	Tensor.prototype.cast = function (dtype) {
 	  this.throwIfDisposed();
 	  return cast(this, dtype);
 	};
@@ -48176,7 +49106,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.ceil = function () {
+	Tensor.prototype.ceil = function () {
 	  this.throwIfDisposed();
 	  return ceil$3(this);
 	};
@@ -48198,7 +49128,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.clipByValue = function (min, max) {
+	Tensor.prototype.clipByValue = function (min, max) {
 	  this.throwIfDisposed();
 	  return clipByValue(this, min, max);
 	};
@@ -48220,7 +49150,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.concat = function (x, axis) {
+	Tensor.prototype.concat = function (x, axis) {
 	  this.throwIfDisposed();
 
 	  if (x instanceof Tensor) {
@@ -48247,7 +49177,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.conv1d = function (filter, stride, pad, dataFormat, dilation, dimRoundingMode) {
+	Tensor.prototype.conv1d = function (filter, stride, pad, dataFormat, dilation, dimRoundingMode) {
 	  this.throwIfDisposed();
 	  return conv1d(this, filter, stride, pad, dataFormat, dilation, dimRoundingMode);
 	};
@@ -48269,7 +49199,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.conv2dTranspose = function (filter, outputShape, strides, pad, dimRoundingMode) {
+	Tensor.prototype.conv2dTranspose = function (filter, outputShape, strides, pad, dimRoundingMode) {
 	  this.throwIfDisposed();
 	  return conv2dTranspose(this, filter, outputShape, strides, pad, dimRoundingMode);
 	};
@@ -48291,7 +49221,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.conv2d = function (filter, strides, pad, dataFormat, dilations, dimRoundingMode) {
+	Tensor.prototype.conv2d = function (filter, strides, pad, dataFormat, dilations, dimRoundingMode) {
 	  this.throwIfDisposed();
 	  return conv2d(this, filter, strides, pad, dataFormat, dilations, dimRoundingMode);
 	};
@@ -48313,7 +49243,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.cos = function () {
+	Tensor.prototype.cos = function () {
 	  this.throwIfDisposed();
 	  return cos(this);
 	};
@@ -48335,7 +49265,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.cosh = function () {
+	Tensor.prototype.cosh = function () {
 	  this.throwIfDisposed();
 	  return cosh(this);
 	};
@@ -48357,7 +49287,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.cumsum = function (axis, exclusive, reverse) {
+	Tensor.prototype.cumsum = function (axis, exclusive, reverse) {
 	  this.throwIfDisposed();
 	  return cumsum(this, axis, exclusive, reverse);
 	};
@@ -48379,7 +49309,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.depthToSpace = function (blockSize, dataFormat) {
+	Tensor.prototype.depthToSpace = function (blockSize, dataFormat) {
 	  this.throwIfDisposed();
 	  return depthToSpace(this, blockSize, dataFormat);
 	};
@@ -48400,8 +49330,12 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	/**
+	 * @deprecated Use `depthwiseConv2d` instead.
+	 */
 
-	getGlobalTensorClass().prototype.depthwiseConv2d = function (filter, strides, pad, dataFormat, dilations, dimRoundingMode) {
+	Tensor.prototype.depthwiseConv2D = function (filter, strides, pad, dataFormat, dilations, dimRoundingMode) {
+	  deprecationWarn('depthwiseConv2D is deprecated, use depthwiseConv2d instead');
 	  this.throwIfDisposed();
 	  return depthwiseConv2d(this, filter, strides, pad, dataFormat, dilations, dimRoundingMode);
 	};
@@ -48423,7 +49357,29 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.dilation2d = function (filter, strides, pad, dilations, dataFormat) {
+	Tensor.prototype.depthwiseConv2d = function (filter, strides, pad, dataFormat, dilations, dimRoundingMode) {
+	  this.throwIfDisposed();
+	  return depthwiseConv2d(this, filter, strides, pad, dataFormat, dilations, dimRoundingMode);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.dilation2d = function (filter, strides, pad, dilations, dataFormat) {
 	  this.throwIfDisposed();
 	  return dilation2d(this, filter, strides, pad, dilations, dataFormat);
 	};
@@ -48445,7 +49401,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.divNoNan = function (b) {
+	Tensor.prototype.divNoNan = function (b) {
 	  this.throwIfDisposed();
 	  return divNoNan(this, b);
 	};
@@ -48467,7 +49423,29 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.div = function (b) {
+	Tensor.prototype.divStrict = function (x) {
+	  this.throwIfDisposed();
+	  return divStrict(this, x);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.div = function (b) {
 	  this.throwIfDisposed();
 	  return div(this, b);
 	};
@@ -48489,7 +49467,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.dot = function (b) {
+	Tensor.prototype.dot = function (b) {
 	  this.throwIfDisposed();
 	  return dot(this, b);
 	};
@@ -48511,7 +49489,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.elu = function () {
+	Tensor.prototype.elu = function () {
 	  this.throwIfDisposed();
 	  return elu(this);
 	};
@@ -48532,8 +49510,33 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	/**
+	 * @deprecated strict variants of ops have been deprecated
+	 */
 
-	getGlobalTensorClass().prototype.equal = function (b) {
+	Tensor.prototype.equalStrict = function (x) {
+	  this.throwIfDisposed();
+	  return equalStrict(this, x);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.equal = function (b) {
 	  this.throwIfDisposed();
 	  return equal(this, b);
 	};
@@ -48555,7 +49558,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.erf = function () {
+	Tensor.prototype.erf = function () {
 	  this.throwIfDisposed();
 	  return erf(this);
 	};
@@ -48577,7 +49580,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.exp = function () {
+	Tensor.prototype.exp = function () {
 	  this.throwIfDisposed();
 	  return exp$3(this);
 	};
@@ -48599,7 +49602,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.expandDims = function (axis) {
+	Tensor.prototype.expandDims = function (axis) {
 	  this.throwIfDisposed();
 	  return expandDims(this, axis);
 	};
@@ -48621,7 +49624,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.expm1 = function () {
+	Tensor.prototype.expm1 = function () {
 	  this.throwIfDisposed();
 	  return expm1(this);
 	};
@@ -48643,7 +49646,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.fft = function () {
+	Tensor.prototype.fft = function () {
 	  this.throwIfDisposed();
 	  return fft(this);
 	};
@@ -48664,12 +49667,11 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
-	/**
-	 * Flatten a Tensor to a 1D array.
+	/** Flatten a Tensor to a 1D array.
 	 * @doc {heading: 'Tensors', subheading: 'Classes'}
 	 */
 
-	getGlobalTensorClass().prototype.flatten = function () {
+	Tensor.prototype.flatten = function () {
 	  this.throwIfDisposed();
 	  return reshape(this, [this.size]);
 	};
@@ -48691,7 +49693,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.floor = function () {
+	Tensor.prototype.floor = function () {
 	  this.throwIfDisposed();
 	  return floor$a(this);
 	};
@@ -48713,7 +49715,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.floorDiv = function (b) {
+	Tensor.prototype.floorDiv = function (b) {
 	  this.throwIfDisposed();
 	  return floorDiv(this, b);
 	};
@@ -48735,7 +49737,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.gather = function (indices, axis) {
+	Tensor.prototype.gather = function (indices, axis) {
 	  this.throwIfDisposed();
 	  return gather(this, indices, axis);
 	};
@@ -48756,8 +49758,33 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	/**
+	 * @deprecated strict variants of ops have been deprecated
+	 */
 
-	getGlobalTensorClass().prototype.greaterEqual = function (b) {
+	Tensor.prototype.greaterEqualStrict = function (x) {
+	  this.throwIfDisposed();
+	  return greaterEqualStrict(this, x);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.greaterEqual = function (b) {
 	  this.throwIfDisposed();
 	  return greaterEqual(this, b);
 	};
@@ -48778,8 +49805,33 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	/**
+	 * @deprecated strict variants of ops have been deprecated
+	 */
 
-	getGlobalTensorClass().prototype.greater = function (b) {
+	Tensor.prototype.greaterStrict = function (x) {
+	  this.throwIfDisposed();
+	  return greaterStrict(this, x);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.greater = function (b) {
 	  this.throwIfDisposed();
 	  return greater(this, b);
 	};
@@ -48801,7 +49853,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.ifft = function () {
+	Tensor.prototype.ifft = function () {
 	  this.throwIfDisposed();
 	  return ifft(this);
 	};
@@ -48823,7 +49875,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.irfft = function () {
+	Tensor.prototype.irfft = function () {
 	  this.throwIfDisposed();
 	  return irfft(this);
 	};
@@ -48845,7 +49897,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.isFinite = function () {
+	Tensor.prototype.isFinite = function () {
 	  this.throwIfDisposed();
 	  return isFinite$1(this);
 	};
@@ -48867,7 +49919,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.isInf = function () {
+	Tensor.prototype.isInf = function () {
 	  this.throwIfDisposed();
 	  return isInf(this);
 	};
@@ -48889,7 +49941,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.isNaN = function () {
+	Tensor.prototype.isNaN = function () {
 	  this.throwIfDisposed();
 	  return isNaN$1(this);
 	};
@@ -48911,7 +49963,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.leakyRelu = function (alpha) {
+	Tensor.prototype.leakyRelu = function (alpha) {
 	  this.throwIfDisposed();
 	  return leakyRelu(this, alpha);
 	};
@@ -48932,8 +49984,33 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	/**
+	 * @deprecated strict variants of ops have been deprecated
+	 */
 
-	getGlobalTensorClass().prototype.lessEqual = function (b) {
+	Tensor.prototype.lessEqualStrict = function (x) {
+	  this.throwIfDisposed();
+	  return lessEqualStrict(this, x);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.lessEqual = function (b) {
 	  this.throwIfDisposed();
 	  return lessEqual(this, b);
 	};
@@ -48955,7 +50032,29 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.less = function (b) {
+	Tensor.prototype.lessStrict = function (x) {
+	  this.throwIfDisposed();
+	  return lessStrict(this, x);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.less = function (b) {
 	  this.throwIfDisposed();
 	  return less(this, b);
 	};
@@ -48977,7 +50076,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.localResponseNormalization = function (depthRadius, bias, alpha, beta) {
+	Tensor.prototype.localResponseNormalization = function (depthRadius, bias, alpha, beta) {
 	  this.throwIfDisposed();
 	  return localResponseNormalization(this, depthRadius, bias, alpha, beta);
 	};
@@ -48999,7 +50098,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.logSigmoid = function () {
+	Tensor.prototype.logSigmoid = function () {
 	  this.throwIfDisposed();
 	  return logSigmoid(this);
 	};
@@ -49021,7 +50120,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.logSoftmax = function (axis) {
+	Tensor.prototype.logSoftmax = function (axis) {
 	  this.throwIfDisposed();
 	  return logSoftmax(this, axis);
 	};
@@ -49043,7 +50142,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.logSumExp = function (axis, keepDims) {
+	Tensor.prototype.logSumExp = function (axis, keepDims) {
 	  this.throwIfDisposed();
 	  return logSumExp(this, axis, keepDims);
 	};
@@ -49065,7 +50164,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.log = function () {
+	Tensor.prototype.log = function () {
 	  this.throwIfDisposed();
 	  return log$9(this);
 	};
@@ -49087,7 +50186,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.log1p = function () {
+	Tensor.prototype.log1p = function () {
 	  this.throwIfDisposed();
 	  return log1p(this);
 	};
@@ -49109,7 +50208,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.logicalAnd = function (b) {
+	Tensor.prototype.logicalAnd = function (b) {
 	  this.throwIfDisposed();
 	  return logicalAnd(this, b);
 	};
@@ -49131,7 +50230,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.logicalNot = function () {
+	Tensor.prototype.logicalNot = function () {
 	  this.throwIfDisposed();
 	  return logicalNot(this);
 	};
@@ -49153,7 +50252,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.logicalOr = function (b) {
+	Tensor.prototype.logicalOr = function (b) {
 	  this.throwIfDisposed();
 	  return logicalOr(this, b);
 	};
@@ -49175,7 +50274,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.logicalXor = function (b) {
+	Tensor.prototype.logicalXor = function (b) {
 	  this.throwIfDisposed();
 	  return logicalXor(this, b);
 	};
@@ -49197,7 +50296,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.matMul = function (b, transposeA, transposeB) {
+	Tensor.prototype.matMul = function (b, transposeA, transposeB) {
 	  this.throwIfDisposed();
 	  return matMul(this, b, transposeA, transposeB);
 	};
@@ -49219,7 +50318,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.maxPool = function (filterSize, strides, pad, dimRoundingMode) {
+	Tensor.prototype.maxPool = function (filterSize, strides, pad, dimRoundingMode) {
 	  this.throwIfDisposed();
 	  return maxPool(this, filterSize, strides, pad, dimRoundingMode);
 	};
@@ -49241,7 +50340,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.max = function (axis, keepDims) {
+	Tensor.prototype.max = function (axis, keepDims) {
 	  this.throwIfDisposed();
 	  return max$4(this, axis, keepDims);
 	};
@@ -49262,8 +50361,33 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	/**
+	 * @deprecated strict variants of ops have been deprecated
+	 */
 
-	getGlobalTensorClass().prototype.maximum = function (b) {
+	Tensor.prototype.maximumStrict = function (x) {
+	  this.throwIfDisposed();
+	  return maximumStrict(this, x);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.maximum = function (b) {
 	  this.throwIfDisposed();
 	  return maximum(this, b);
 	};
@@ -49285,7 +50409,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.mean = function (axis, keepDims) {
+	Tensor.prototype.mean = function (axis, keepDims) {
 	  this.throwIfDisposed();
 	  return mean(this, axis, keepDims);
 	};
@@ -49307,7 +50431,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.min = function (axis, keepDims) {
+	Tensor.prototype.min = function (axis, keepDims) {
 	  this.throwIfDisposed();
 	  return min$9(this, axis, keepDims);
 	};
@@ -49328,8 +50452,33 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	/**
+	 * @deprecated strict variants of ops have been deprecated
+	 */
 
-	getGlobalTensorClass().prototype.minimum = function (b) {
+	Tensor.prototype.minimumStrict = function (x) {
+	  this.throwIfDisposed();
+	  return minimumStrict(this, x);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.minimum = function (b) {
 	  this.throwIfDisposed();
 	  return minimum(this, b);
 	};
@@ -49351,7 +50500,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.mirrorPad = function (paddings, mode) {
+	Tensor.prototype.mirrorPad = function (paddings, mode) {
 	  this.throwIfDisposed();
 	  return mirrorPad(this, paddings, mode);
 	};
@@ -49372,8 +50521,33 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	/**
+	 * @deprecated strict variants of ops have been deprecated
+	 */
 
-	getGlobalTensorClass().prototype.mod = function (b) {
+	Tensor.prototype.modStrict = function (x) {
+	  this.throwIfDisposed();
+	  return modStrict(this, x);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.mod = function (b) {
 	  this.throwIfDisposed();
 	  return mod(this, b);
 	};
@@ -49394,8 +50568,33 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	/**
+	 * @deprecated strict variants of ops have been deprecated
+	 */
 
-	getGlobalTensorClass().prototype.mul = function (b) {
+	Tensor.prototype.mulStrict = function (x) {
+	  this.throwIfDisposed();
+	  return mulStrict(this, x);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.mul = function (b) {
 	  this.throwIfDisposed();
 	  return mul(this, b);
 	};
@@ -49417,7 +50616,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.neg = function () {
+	Tensor.prototype.neg = function () {
 	  this.throwIfDisposed();
 	  return neg(this);
 	};
@@ -49439,7 +50638,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.norm = function (ord, axis, keepDims) {
+	Tensor.prototype.norm = function (ord, axis, keepDims) {
 	  this.throwIfDisposed();
 	  return norm(this, ord, axis, keepDims);
 	};
@@ -49460,8 +50659,33 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	/**
+	 * @deprecated strict variants of ops have been deprecated
+	 */
 
-	getGlobalTensorClass().prototype.notEqual = function (b) {
+	Tensor.prototype.notEqualStrict = function (x) {
+	  this.throwIfDisposed();
+	  return notEqualStrict(this, x);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.notEqual = function (b) {
 	  this.throwIfDisposed();
 	  return notEqual(this, b);
 	};
@@ -49483,7 +50707,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.oneHot = function (depth, onValue, offValue) {
+	Tensor.prototype.oneHot = function (depth, onValue, offValue) {
 	  if (onValue === void 0) {
 	    onValue = 1;
 	  }
@@ -49513,7 +50737,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.onesLike = function () {
+	Tensor.prototype.onesLike = function () {
 	  this.throwIfDisposed();
 	  return onesLike(this);
 	};
@@ -49535,7 +50759,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.pad = function (paddings, constantValue) {
+	Tensor.prototype.pad = function (paddings, constantValue) {
 	  this.throwIfDisposed();
 	  return pad(this, paddings, constantValue);
 	};
@@ -49557,7 +50781,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.pool = function (windowShape, poolingType, padding, dilationRate, strides) {
+	Tensor.prototype.pool = function (windowShape, poolingType, padding, dilationRate, strides) {
 	  this.throwIfDisposed();
 	  return pool(this, windowShape, poolingType, padding, dilationRate, strides);
 	};
@@ -49578,8 +50802,33 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	/**
+	 * @deprecated strict variants of ops have been deprecated
+	 */
 
-	getGlobalTensorClass().prototype.pow = function (exp) {
+	Tensor.prototype.powStrict = function (exp) {
+	  this.throwIfDisposed();
+	  return powStrict(this, exp);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.pow = function (exp) {
 	  this.throwIfDisposed();
 	  return pow$5(this, exp);
 	};
@@ -49601,7 +50850,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.prelu = function (alpha) {
+	Tensor.prototype.prelu = function (alpha) {
 	  this.throwIfDisposed();
 	  return prelu(this, alpha);
 	};
@@ -49623,7 +50872,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.prod = function (axis, keepDims) {
+	Tensor.prototype.prod = function (axis, keepDims) {
 	  this.throwIfDisposed();
 	  return prod(this, axis, keepDims);
 	};
@@ -49645,7 +50894,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.reciprocal = function () {
+	Tensor.prototype.reciprocal = function () {
 	  this.throwIfDisposed();
 	  return reciprocal(this);
 	};
@@ -49667,7 +50916,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.relu = function () {
+	Tensor.prototype.relu = function () {
 	  this.throwIfDisposed();
 	  return relu(this);
 	};
@@ -49689,7 +50938,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.relu6 = function () {
+	Tensor.prototype.relu6 = function () {
 	  this.throwIfDisposed();
 	  return relu6(this);
 	};
@@ -49718,7 +50967,7 @@
 	 * @doc {heading: 'Tensors', subheading: 'Classes'}
 	 */
 
-	getGlobalTensorClass().prototype.reshapeAs = function (x) {
+	Tensor.prototype.reshapeAs = function (x) {
 	  this.throwIfDisposed();
 	  return reshape(this, x.shape);
 	};
@@ -49740,7 +50989,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.reshape = function (shape) {
+	Tensor.prototype.reshape = function (shape) {
 	  this.throwIfDisposed();
 	  return reshape(this, shape);
 	};
@@ -49762,7 +51011,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.resizeBilinear = function (newShape2D, alignCorners, halfPixelCenters) {
+	Tensor.prototype.resizeBilinear = function (newShape2D, alignCorners, halfPixelCenters) {
 	  this.throwIfDisposed();
 	  return resizeBilinear(this, newShape2D, alignCorners, halfPixelCenters);
 	};
@@ -49784,7 +51033,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.resizeNearestNeighbor = function (newShape2D, alignCorners, halfFloatCenters) {
+	Tensor.prototype.resizeNearestNeighbor = function (newShape2D, alignCorners, halfFloatCenters) {
 	  this.throwIfDisposed();
 	  return resizeNearestNeighbor(this, newShape2D, alignCorners, halfFloatCenters);
 	};
@@ -49806,7 +51055,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.reverse = function (axis) {
+	Tensor.prototype.reverse = function (axis) {
 	  this.throwIfDisposed();
 	  return reverse(this, axis);
 	};
@@ -49828,7 +51077,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.rfft = function () {
+	Tensor.prototype.rfft = function () {
 	  this.throwIfDisposed();
 	  return rfft(this);
 	};
@@ -49850,7 +51099,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.round = function () {
+	Tensor.prototype.round = function () {
 	  this.throwIfDisposed();
 	  return round$1(this);
 	};
@@ -49872,7 +51121,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.rsqrt = function () {
+	Tensor.prototype.rsqrt = function () {
 	  this.throwIfDisposed();
 	  return rsqrt(this);
 	};
@@ -49894,7 +51143,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.selu = function () {
+	Tensor.prototype.selu = function () {
 	  this.throwIfDisposed();
 	  return selu(this);
 	};
@@ -49916,7 +51165,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.separableConv2d = function (depthwiseFilter, pointwiseFilter, strides, pad, dilation, dataFormat) {
+	Tensor.prototype.separableConv2d = function (depthwiseFilter, pointwiseFilter, strides, pad, dilation, dataFormat) {
 	  this.throwIfDisposed();
 	  return separableConv2d(this, depthwiseFilter, pointwiseFilter, strides, pad, dilation, dataFormat);
 	};
@@ -49938,7 +51187,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.sigmoid = function () {
+	Tensor.prototype.sigmoid = function () {
 	  this.throwIfDisposed();
 	  return sigmoid(this);
 	};
@@ -49960,7 +51209,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.sign = function () {
+	Tensor.prototype.sign = function () {
 	  this.throwIfDisposed();
 	  return sign(this);
 	};
@@ -49982,7 +51231,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.sin = function () {
+	Tensor.prototype.sin = function () {
 	  this.throwIfDisposed();
 	  return sin(this);
 	};
@@ -50004,7 +51253,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.sinh = function () {
+	Tensor.prototype.sinh = function () {
 	  this.throwIfDisposed();
 	  return sinh(this);
 	};
@@ -50026,7 +51275,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.slice = function (begin, size) {
+	Tensor.prototype.slice = function (begin, size) {
 	  this.throwIfDisposed();
 	  return slice$2(this, begin, size);
 	};
@@ -50048,7 +51297,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.softmax = function (dim) {
+	Tensor.prototype.softmax = function (dim) {
 	  this.throwIfDisposed();
 	  return softmax(this, dim);
 	};
@@ -50070,7 +51319,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.softplus = function () {
+	Tensor.prototype.softplus = function () {
 	  this.throwIfDisposed();
 	  return softplus(this);
 	};
@@ -50092,7 +51341,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.spaceToBatchND = function (blockShape, paddings) {
+	Tensor.prototype.spaceToBatchND = function (blockShape, paddings) {
 	  this.throwIfDisposed();
 	  return spaceToBatchND(this, blockShape, paddings);
 	};
@@ -50114,7 +51363,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.split = function (numOrSizeSplits, axis) {
+	Tensor.prototype.split = function (numOrSizeSplits, axis) {
 	  this.throwIfDisposed();
 	  return split$1(this, numOrSizeSplits, axis);
 	};
@@ -50136,7 +51385,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.sqrt = function () {
+	Tensor.prototype.sqrt = function () {
 	  this.throwIfDisposed();
 	  return sqrt$3(this);
 	};
@@ -50158,7 +51407,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.square = function () {
+	Tensor.prototype.square = function () {
 	  this.throwIfDisposed();
 	  return square(this);
 	};
@@ -50180,7 +51429,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.squaredDifference = function (b) {
+	Tensor.prototype.squaredDifference = function (b) {
 	  this.throwIfDisposed();
 	  return squaredDifference(this, b);
 	};
@@ -50201,8 +51450,33 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	/**
+	 * @deprecated strict variants of ops have been deprecated
+	 */
 
-	getGlobalTensorClass().prototype.squeeze = function (axis) {
+	Tensor.prototype.squaredDifferenceStrict = function (x) {
+	  this.throwIfDisposed();
+	  return squaredDifferenceStrict(this, x);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.squeeze = function (axis) {
 	  this.throwIfDisposed();
 	  return squeeze(this, axis);
 	};
@@ -50224,7 +51498,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.stack = function (x, axis) {
+	Tensor.prototype.stack = function (x, axis) {
 	  this.throwIfDisposed();
 	  var tensorsToBeStacked = x instanceof Tensor ? [this, x] : [this].concat(x);
 	  return stack(tensorsToBeStacked, axis);
@@ -50247,7 +51521,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.step = function (alpha) {
+	Tensor.prototype.step = function (alpha) {
 	  this.throwIfDisposed();
 	  return step(this, alpha);
 	};
@@ -50269,7 +51543,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.stridedSlice = function (begin, end, strides, beginMask, endMask, ellipsisMask, newAxisMask, shrinkAxisMask) {
+	Tensor.prototype.stridedSlice = function (begin, end, strides, beginMask, endMask, ellipsisMask, newAxisMask, shrinkAxisMask) {
 	  this.throwIfDisposed();
 	  return stridedSlice(this, begin, end, strides, beginMask, endMask, ellipsisMask, newAxisMask, shrinkAxisMask);
 	};
@@ -50290,8 +51564,33 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	/**
+	 * @deprecated strict variants of ops have been deprecated
+	 */
 
-	getGlobalTensorClass().prototype.sub = function (b) {
+	Tensor.prototype.subStrict = function (x) {
+	  this.throwIfDisposed();
+	  return subStrict(this, x);
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	Tensor.prototype.sub = function (b) {
 	  this.throwIfDisposed();
 	  return sub(this, b);
 	};
@@ -50313,7 +51612,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.sum = function (axis, keepDims) {
+	Tensor.prototype.sum = function (axis, keepDims) {
 	  this.throwIfDisposed();
 	  return sum$1(this, axis, keepDims);
 	};
@@ -50335,7 +51634,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.tan = function () {
+	Tensor.prototype.tan = function () {
 	  this.throwIfDisposed();
 	  return tan(this);
 	};
@@ -50357,7 +51656,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.tanh = function () {
+	Tensor.prototype.tanh = function () {
 	  this.throwIfDisposed();
 	  return tanh$1(this);
 	};
@@ -50379,7 +51678,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.tile = function (reps) {
+	Tensor.prototype.tile = function (reps) {
 	  this.throwIfDisposed();
 	  return tile(this, reps);
 	};
@@ -50400,13 +51699,12 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
-	/**
-	 * Casts the array to type `bool`
+	/** Casts the array to type `bool`
 	 *
 	 * @doc {heading: 'Tensors', subheading: 'Classes'}
 	 */
 
-	getGlobalTensorClass().prototype.toBool = function () {
+	Tensor.prototype.toBool = function () {
 	  this.throwIfDisposed();
 	  return cast(this, 'bool');
 	};
@@ -50427,13 +51725,12 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
-	/**
-	 * Casts the array to type `float32`
+	/** Casts the array to type `float32`
 	 *
 	 * @doc {heading: 'Tensors', subheading: 'Classes'}
 	 */
 
-	getGlobalTensorClass().prototype.toFloat = function () {
+	Tensor.prototype.toFloat = function () {
 	  this.throwIfDisposed();
 	  return cast(this, 'float32');
 	};
@@ -50454,13 +51751,12 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
-	/**
-	 * Casts the array to type `int32`
+	/** Casts the array to type `int32`
 	 *
 	 * @doc {heading: 'Tensors', subheading: 'Classes'}
 	 */
 
-	getGlobalTensorClass().prototype.toInt = function () {
+	Tensor.prototype.toInt = function () {
 	  this.throwIfDisposed();
 	  return cast(this, 'int32');
 	};
@@ -50482,7 +51778,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.topk = function (k, sorted) {
+	Tensor.prototype.topk = function (k, sorted) {
 	  this.throwIfDisposed();
 	  return topk(this, k, sorted);
 	};
@@ -50504,7 +51800,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.transpose = function (perm) {
+	Tensor.prototype.transpose = function (perm) {
 	  this.throwIfDisposed();
 	  return transpose(this, perm);
 	};
@@ -50526,7 +51822,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.unique = function (axis) {
+	Tensor.prototype.unique = function (axis) {
 	  this.throwIfDisposed();
 	  return unique(this, axis);
 	};
@@ -50548,7 +51844,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.unsortedSegmentSum = function (segmentIds, numSegments) {
+	Tensor.prototype.unsortedSegmentSum = function (segmentIds, numSegments) {
 	  this.throwIfDisposed();
 	  return unsortedSegmentSum(this, segmentIds, numSegments);
 	};
@@ -50570,7 +51866,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.unstack = function (axis) {
+	Tensor.prototype.unstack = function (axis) {
 	  this.throwIfDisposed();
 	  return unstack(this, axis);
 	};
@@ -50592,7 +51888,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.where = function (condition, x) {
+	Tensor.prototype.where = function (condition, x) {
 	  this.throwIfDisposed();
 	  return where(condition, this, x);
 	};
@@ -50614,7 +51910,7 @@
 	 * =============================================================================
 	 */
 
-	getGlobalTensorClass().prototype.zerosLike = function () {
+	Tensor.prototype.zerosLike = function () {
 	  this.throwIfDisposed();
 	  return zerosLike(this);
 	};
@@ -50622,6 +51918,23 @@
 	/**
 	 * @license
 	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+
+	/**
+	 * @license
+	 * Copyright 2017 Google LLC. All Rights Reserved.
 	 * Licensed under the Apache License, Version 2.0 (the "License");
 	 * you may not use this file except in compliance with the License.
 	 * You may obtain a copy of the License at
@@ -57994,7 +59307,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$2 = '3.0.0';
+	var version$2 = '2.8.6';
 
 	/**
 	 * Helper function to check the dtype and shape compatibility of a feed value.
@@ -86020,7 +87333,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$3 = '3.0.0';
+	var version$3 = '2.8.6';
 
 	/**
 	 * @license
@@ -91178,12 +92491,12 @@
 	    var _this3 = this;
 
 	    return tidy(function () {
-	      var expandedImage = expandDims(cast(img, 'float32'), 0);
+	      var expandedImage = img.toFloat().expandDims(0);
 	      var resizedImage;
 	      resizedImage = image.cropAndResize(expandedImage, _this3.cropBox, _this3.cropBoxInd, _this3.cropSize, 'bilinear'); // Extract image from batch cropping.
 
 	      var shape = resizedImage.shape;
-	      return reshape(resizedImage, shape.slice(1));
+	      return resizedImage.reshape(shape.slice(1));
 	    });
 	  } // Capture one frame from the video stream, and extract the value from
 	  // iterator.next() result.
@@ -92318,7 +93631,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$4 = '3.0.0';
+	var version$4 = '2.8.6';
 
 	/**
 	 * @license
@@ -94559,7 +95872,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$5 = '3.0.0';
+	var version$5 = '2.8.6';
 
 	/**
 	 * @license
@@ -96047,11 +97360,16 @@
 	      strides = attrs.strides,
 	      pad = attrs.pad,
 	      dimRoundingMode = attrs.dimRoundingMode,
-	      dataFormat = attrs.dataFormat;
+	      dataFormat = attrs.dataFormat,
+	      dilations = attrs.dilations;
 	  assertNotComplex(x, 'avgPool3d');
-	  var convInfo = computePool3DInfo(x.shape, filterSize, strides, 1
-	  /* dilations */
-	  , pad, dimRoundingMode, dataFormat);
+	  var $dilations = dilations;
+
+	  if ($dilations == null) {
+	    $dilations = [1, 1, 1];
+	  }
+
+	  var convInfo = computePool3DInfo(x.shape, filterSize, strides, $dilations, pad, dimRoundingMode, dataFormat);
 	  var xValues = backend.data.get(x.dataId).values;
 	  var outBuf = pool3d$1(xValues, x.shape, x.dtype, computeStrides(x.shape), convInfo, 'avg');
 	  return backend.makeTensorInfo(outBuf.shape, 'float32', outBuf.values);
@@ -96087,11 +97405,10 @@
 	  var filterSize = attrs.filterSize,
 	      strides = attrs.strides,
 	      pad = attrs.pad,
+	      dilations = attrs.dilations,
 	      dimRoundingMode = attrs.dimRoundingMode;
 	  assertNotComplex([dy, input], 'avgPool3DGrad');
-	  var convInfo = computePool3DInfo(input.shape, filterSize, strides, 1
-	  /* dilations */
-	  , pad, dimRoundingMode);
+	  var convInfo = computePool3DInfo(input.shape, filterSize, strides, dilations, pad, dimRoundingMode);
 	  var strideDepth = convInfo.strideDepth;
 	  var strideHeight = convInfo.strideHeight;
 	  var strideWidth = convInfo.strideWidth;
@@ -100034,11 +101351,16 @@
 	      strides = attrs.strides,
 	      pad = attrs.pad,
 	      dimRoundingMode = attrs.dimRoundingMode,
-	      dataFormat = attrs.dataFormat;
+	      dataFormat = attrs.dataFormat,
+	      dilations = attrs.dilations;
 	  assertNotComplex(x, 'maxPool3d');
-	  var convInfo = computePool3DInfo(x.shape, filterSize, strides, 1
-	  /* dilations */
-	  , pad, dimRoundingMode, dataFormat);
+	  var $dilations = dilations;
+
+	  if ($dilations == null) {
+	    $dilations = [1, 1, 1];
+	  }
+
+	  var convInfo = computePool3DInfo(x.shape, filterSize, strides, $dilations, pad, dimRoundingMode, dataFormat);
 	  var xValues = backend.data.get(x.dataId).values;
 	  var outBuf = pool3d$1(xValues, x.shape, x.dtype, computeStrides(x.shape), convInfo, 'max');
 	  return backend.makeTensorInfo(outBuf.shape, 'float32', outBuf.values);
@@ -100074,11 +101396,10 @@
 	  var filterSize = attrs.filterSize,
 	      strides = attrs.strides,
 	      pad = attrs.pad,
+	      dilations = attrs.dilations,
 	      dimRoundingMode = attrs.dimRoundingMode;
 	  assertNotComplex([dy, input], 'maxPool3DGrad');
-	  var convInfo = computePool3DInfo(input.shape, filterSize, strides, 1
-	  /* dilations */
-	  , pad, dimRoundingMode);
+	  var convInfo = computePool3DInfo(input.shape, filterSize, strides, dilations, pad, dimRoundingMode);
 	  var inputBuf = backend.bufferSync(input);
 	  var maxPosBuf = maxPool3dPositions(inputBuf, convInfo);
 	  var strideDepth = convInfo.strideDepth;
@@ -108311,7 +109632,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$6 = '3.0.0';
+	var version$6 = '2.8.6';
 
 	/**
 	 * @license
@@ -113431,7 +114752,7 @@
 	    throw new Error("WebGL cumsum shader expects an inner-most axis=" + (x.shape.length - 1) + " " + ("but got axis=" + axis));
 	  }
 
-	  var size = x.shape[permutedAxis];
+	  var size = permutedX.shape[permutedAxis];
 	  var result = identity$2({
 	    inputs: {
 	      x: permutedX
@@ -119869,7 +121190,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$7 = '3.0.0';
+	var version$7 = '2.8.6';
 
 	/**
 	 * @license
@@ -120103,6 +121424,7 @@
 	exports.acosh = acosh;
 	exports.add = add$1;
 	exports.addN = addN;
+	exports.addStrict = addStrict;
 	exports.all = all;
 	exports.any = any;
 	exports.argMax = argMax;
@@ -120164,6 +121486,7 @@
 	exports.disposeVariables = disposeVariables;
 	exports.div = div;
 	exports.divNoNan = divNoNan;
+	exports.divStrict = divStrict;
 	exports.dot = dot;
 	exports.dropout = dropout;
 	exports.elu = elu;
@@ -120173,6 +121496,7 @@
 	exports.engine = engine;
 	exports.env = env;
 	exports.equal = equal;
+	exports.equalStrict = equalStrict;
 	exports.erf = erf;
 	exports.exp = exp$3;
 	exports.expandDims = expandDims;
@@ -120196,6 +121520,8 @@
 	exports.grads = grads;
 	exports.greater = greater;
 	exports.greaterEqual = greaterEqual;
+	exports.greaterEqualStrict = greaterEqualStrict;
+	exports.greaterStrict = greaterStrict;
 	exports.ifft = ifft;
 	exports.imag = imag;
 	exports.image = image;
@@ -120213,6 +121539,8 @@
 	exports.leakyRelu = leakyRelu;
 	exports.less = less;
 	exports.lessEqual = lessEqual;
+	exports.lessEqualStrict = lessEqualStrict;
+	exports.lessStrict = lessStrict;
 	exports.linalg = linalg;
 	exports.linspace = linspace;
 	exports.loadGraphModel = loadGraphModel;
@@ -120235,24 +121563,29 @@
 	exports.maxPool3d = maxPool3d;
 	exports.maxPoolWithArgmax = maxPoolWithArgmax;
 	exports.maximum = maximum;
+	exports.maximumStrict = maximumStrict;
 	exports.mean = mean;
 	exports.memory = memory;
 	exports.metrics = exports_metrics;
 	exports.min = min$9;
 	exports.minimum = minimum;
+	exports.minimumStrict = minimumStrict;
 	exports.mirrorPad = mirrorPad;
 	exports.mod = mod;
+	exports.modStrict = modStrict;
 	exports.model = model;
 	exports.models = exports_models;
 	exports.moments = moments;
 	exports.movingAverage = movingAverage;
 	exports.mul = mul;
+	exports.mulStrict = mulStrict;
 	exports.multiRNNCell = multiRNNCell;
 	exports.multinomial = multinomial;
 	exports.neg = neg;
 	exports.nextFrame = nextFrame;
 	exports.norm = norm;
 	exports.notEqual = notEqual;
+	exports.notEqualStrict = notEqualStrict;
 	exports.oneHot = oneHot;
 	exports.ones = ones$1;
 	exports.onesLike = onesLike;
@@ -120265,6 +121598,7 @@
 	exports.pad4d = pad4d;
 	exports.pool = pool;
 	exports.pow = pow$5;
+	exports.powStrict = powStrict;
 	exports.prelu = prelu;
 	exports.print = print;
 	exports.prod = prod;
@@ -120325,11 +121659,13 @@
 	exports.sqrt = sqrt$3;
 	exports.square = square;
 	exports.squaredDifference = squaredDifference;
+	exports.squaredDifferenceStrict = squaredDifferenceStrict;
 	exports.squeeze = squeeze;
 	exports.stack = stack;
 	exports.step = step;
 	exports.stridedSlice = stridedSlice;
 	exports.sub = sub;
+	exports.subStrict = subStrict;
 	exports.sum = sum$1;
 	exports.sumOutType = sumOutType;
 	exports.tan = tan;
