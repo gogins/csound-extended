@@ -21,7 +21,7 @@ int main(int argc, const char **argv)
     csound::System::setMessageLevel(7);
     csound::HarmonyIFS harmony_ifs;
     // initialize(int voices_, double range_, double bass_, double note_duration_, bool tie_overlaps_, bool remove_duplicates, double g_ = 1.) {
-    harmony_ifs.initialize(4 , 60., 30., .5, false, false, 1.);
+    harmony_ifs.initialize(4 , 60., 30., 1., false, false, 1.);
     auto tonic = csound::chordForName("CM7");
     auto subdominant = csound::chordForName("Dm7");
     auto dominant = csound::chordForName("G7");
@@ -29,61 +29,29 @@ int main(int argc, const char **argv)
     csound::System::message("ii:\n%s\n", subdominant.information_sector(0).c_str());
     csound::System::message("V:\n%s\n", dominant.information_sector(0).c_str());
     auto &score = harmony_ifs.getScore();
-    // Must contract QUITE A BIT in order to converge to these interpolation points!
-    // This is supposed to elaborate on I - ii - V - I.
-    harmony_ifs.add_interpolation_point_as_chord(  0., tonic,       .01, .01, .01);
-    harmony_ifs.add_interpolation_point_as_chord(100., subdominant, .01, .01, .01);
-    harmony_ifs.add_interpolation_point_as_chord(200., dominant,    .01, .01, .01);
-    harmony_ifs.add_interpolation_point_as_chord(400., tonic,       .01, .01, .01);
-    harmony_ifs.add_interpolation_point_as_chord(400., tonic,       .01, .01, .01);
+    harmony_ifs.add_interpolation_point_as_chord(0., tonic,       3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9.);
+    harmony_ifs.add_interpolation_point_as_chord(1., subdominant, 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9.);
+    harmony_ifs.add_interpolation_point_as_chord(2., dominant,    1./2., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9.);
+    harmony_ifs.add_interpolation_point_as_chord(3., tonic,       3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9.);
     harmony_ifs.initialize_hutchinson_operator();
     double A = 5.13 * M_PI / 180.;
     csound::System::message("A: %9.4f\n", A);
-    // Add a rotation in the velocity/key plane, and the key/instrument
-    // plane.
     int t = 0;
-    int P = 1;
     int k = 4;
     int v = 5;
-    int c = 6;
-    Eigen::MatrixXd t1 =  Eigen::MatrixXd::Identity(8, 8);
-    t1(k, k) = .5;
-    t1(k, 7) = -1.;
-    harmony_ifs.hutchinson_operator.push_back(t1);
-    Eigen::MatrixXd t2 =  Eigen::MatrixXd::Identity(8, 8);
-    t1(k, k) = .5;
-    t1(k, 7) =  1.;
-    harmony_ifs.hutchinson_operator.push_back(t2);
-    Eigen::MatrixXd t3 =  Eigen::MatrixXd::Identity(8, 8);
-    t1(k, k) = .5;
-    t1(k, 7) = -1.;
-    harmony_ifs.hutchinson_operator.push_back(t3);
-    //~ Eigen::MatrixXd rotation1 = Eigen::MatrixXd::Identity(8, 8);
-    //~ rotation1(k, k) = std::cos(A);
-    //~ rotation1(k, v) = - std::sin(A);
-    //~ rotation1(v, k) = std::sin(A);
-    //~ rotation1(v, v) = std::cos(A);
-    //~ harmony_ifs.hutchinson_operator.push_back(rotation1);
-    //~ Eigen::MatrixXd rotation2 = Eigen::MatrixXd::Identity(8, 8);
-    //~ rotation2(k, k) = std::cos(A);
-    //~ rotation2(k, c) = - std::sin(A);
-    //~ rotation2(c, k) = std::sin(A);
-    //~ rotation2(c, c) = std::cos(A);
-    //~ harmony_ifs.hutchinson_operator.push_back(rotation2);
-    //~ // Add a rotation in the time/set-class plane.
-    //~ Eigen::MatrixXd rotation3 = Eigen::MatrixXd::Identity(8, 8);
-    //~ rotation3(t, t) = std::cos(A);
-    //~ rotation3(t, P) = - std::sin(A);
-    //~ rotation3(P, t) = std::sin(A);
-    //~ rotation3(P, P) = std::cos(A);
-    //~ // Uncomment this to see how rotating in the time-harmony plane breaks
-    //~ // the fractal interpolation function.
-    //~ // harmony_ifs.hutchinson_operator.push_back(rotation3);
-    harmony_ifs.generate_score_attractor(5 );
+    int i = 6;
+    int h = 7;
+    harmony_ifs.set_transformation(0, k, k,  0.5);
+    harmony_ifs.set_transformation(1, k, k,  0.5);
+    harmony_ifs.set_transformation(2, k, k,  0.5);
+    harmony_ifs.set_transformation(0, k, h,  0.05);
+    harmony_ifs.set_transformation(1, k, h,  0.05);
+    harmony_ifs.set_transformation(2, k, h, -0.05);
+    harmony_ifs.generate_score_attractor(6);
     csound::Rescale rescale;
     //  rescale.setRescale(csound::Event::TIME, true, false, 4., 0.);
-    rescale.setRescale(csound::Event::INSTRUMENT, true, true, 1., 0.);
-    rescale.setRescale(csound::Event::KEY, true, false, 36., 0.);
+    rescale.setRescale(csound::Event::INSTRUMENT, true, true, 1., 2.999);
+    //rescale.setRescale(csound::Event::KEY, true, false, 36., 0.);
     rescale.setRescale(csound::Event::VELOCITY, true, true, 60., 6.);
     rescale.addChild(&harmony_ifs);
     model.addChild(&rescale);
@@ -103,10 +71,12 @@ seed 574382
 ;gi_Protoverb vstinit "/home/mkg/.u-he/Protoverb/Protoverb.64.avx.so", 1
 gi_Mverb2020 vstinit "/home/mkg/.local/lib/Mverb2020.so", 1
 gi_ReverbDragonfly vstinit "/home/mkg/.local/lib/DragonflyHallReverb-vst.so", 1
+gi_Pianoteq vstinit "/home/mkg/Pianoteq\ 7/x86-64bit/Pianoteq\ 7.so", 1
 
 gi_Organteq vstinit "/home/mkg/Organteq\ 1/x86-64bit/Organteq\ 1.lv2/Organteq_1.so", 0
 
-alwayson "OrganOutOrganteq"
+;alwayson "OrganOutOrganteq"
+alwayson "PianoOutPianoteq"
 ; alwayson "ReverbSC"
 alwayson "Mverb2020"
 ; alwayson "ReverbDragonfly"
@@ -115,10 +85,40 @@ alwayson "Mverb2020"
 ; alwayson "NReverb"
 alwayson "MasterOutput"
 
+connect "PianoOutPianoteq", "outleft", "Mverb2020", "inleft"
+connect "PianoOutPianoteq", "outright", "Mverb2020", "inright"
 connect "OrganOutOrganteq", "outleft", "Mverb2020", "inleft"
 connect "OrganOutOrganteq", "outright", "Mverb2020", "inright"
 connect "Mverb2020", "outleft", "MasterOutput", "inleft"
 connect "Mverb2020", "outright", "MasterOutput", "inright"
+
+gk_PianoNotePianoteq_midi_dynamic_range init 127
+instr 1,2,3,4
+if p3 == -1 then
+  p3 = 1000000
+endif
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_PianoNotePianoteq_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+i_homogeneity = p11
+instances active p1
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+i_pitch_correction = 44100 / sr
+; prints "Pitch factor:   %9.4f\n", i_pitch_correction
+vstnote gi_Pianoteq, 0, i_midi_key, i_midi_velocity, i_duration
+endin
 
 gk_OrganNoteOrganteq_midi_dynamic_range init 127
 ; These are the pedalboard and three manuals.
@@ -144,6 +144,58 @@ instances active p1
 prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 vstnote gi_Organteq, i_midi_channel, i_midi_key, i_midi_velocity, i_duration
 endin
+
+// This must be initialized in the orc header before any #includes.
+
+
+gk_PianoOutPianoteq_level init 0
+gi_PianoOutPianoteq_print init 1
+gk_PianoOutPianoteq_front_to_back init 0
+gk_PianoOutPianoteq_left_to_right init 0.5
+gk_PianoOutPianoteq_bottom_to_top init 0
+
+instr PianoOutPianoteq
+; Should be "D4 Daily Practice".
+vstprogset gi_Pianoteq, 0
+; Sustain off.
+vstparamset gi_Pianoteq, 0, 0
+; Reverb off.
+vstparamset gi_Pianoteq, 72, 0
+k_gain = ampdb(gk_PianoOutPianoteq_level)
+i_overall_amps = 89
+i_normalization = ampdb(-i_overall_amps) * 2
+i_amplitude = ampdb(80) * i_normalization
+if gi_PianoOutPianoteq_print == 1 then
+  vstinfo gi_PianoOutPianoteq_print
+endif
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+ainleft init 0
+ainright init 0
+aoutleft, aoutright vstaudio gi_Pianoteq, ainleft, ainright
+a_signal = aoutleft + aoutright
+a_signal *= k_gain
+a_signal *= i_amplitude
+a_out_left, a_out_right pan2 a_signal, gk_PianoOutPianoteq_left_to_right
+; printks "vstaudio:       %9.4f   %9.4f\n", 0.5, aoutleft, aoutright
+#ifdef USE_SPATIALIZATION
+a_signal = a_out_left + a_out_right
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, gk_PianoOutPianoteq_front_to_back, gk_PianoOutPianoteq_left_to_right, gk_PianoOutPianoteq_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+; printks "PianoOutPt     L %9.4f R %9.4f l %9.4f\\n", 0.5, a_out_left, a_out_right, gk_Piano_level
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
 
 gk_OrganOutOrganteq_level init 0
 gi_OrganOutOrganteq_print init 1

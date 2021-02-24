@@ -112,25 +112,25 @@ namespace csound {
                 operator *= (0);
                 (*this)[HP_HOMOGENEITY] = 1.0;
             };
-            virtual double get_t() const {
+            virtual double t() const {
                 return (*this)[HP_TIME];
             };
-            virtual double get_P() const {
+            virtual double P() const {
                 return (*this)[HP_PRIME_FORM];
             };
-            virtual double get_I() const {
+            virtual double I() const {
                 return (*this)[HP_INVERSION];
             };
-            virtual double get_T() const {
+            virtual double T() const {
                 return (*this)[HP_TRANSPOSITION];
             };
-            virtual double get_k() const {
+            virtual double k() const {
                 return (*this)[HP_MIDI_KEY];
             };
-            virtual double get_v() const {
+            virtual double v() const {
                 return (*this)[HP_MIDI_VELOCITY];
             };
-            virtual double get_i() const {
+            virtual double i() const {
                 return (*this)[HP_INSTRUMENT];
             };
             virtual void set_t(double value) {
@@ -154,121 +154,77 @@ namespace csound {
             virtual void set_i(double value) {
                 (*this)[HP_INSTRUMENT] = value;
             };
+            virtual void set_homogeneity(double value) {
+                (*this)[HP_HOMOGENEITY] = value;
+            };
             virtual std::string toString() const {
                 char buffer[0x1000];
                 std::snprintf(buffer, 0x1000, "t: %9.4f P: %9.4f I: %9.4f T: %9.4f k: %9.4f v: %9.4f i: %9.4f 1: %9.4f\n", 
-                    get_t(), get_P(), get_I(), get_T(), get_k(), get_v(), get_i(), (*this)[HP_HOMOGENEITY]);
+                    t(), P(), I(), T(), k(), v(), i(), (*this)[HP_HOMOGENEITY]);
                 return buffer;
             };
-     };
+    };
      
     /**
-     * Represents an interpolation point for a fractal interpolation function in the
-     * __time-harmony subspace__ of the score space, with dimensions:
-     * ```
-     * t    Time.
-     * P    Prime form.
-     * I    Inversion.
-     * T    Transposition.
-     * s_P  Scaling factor of prime form.
-     * s_I  Scaling factor of inversion.
-     * s_T  Scaling factor of transposition.
-     *```
+     * Represents an interpolation point with scaling factors for a fractal 
+     * interpolation function in the __time-harmony subspace__ of the score 
+     * space.
      */     
-     class SILENCE_PUBLIC HarmonyInterpolationPoint : public Eigen::VectorXd {
+    class SILENCE_PUBLIC HarmonyInterpolationPoint {
          public:
-            typedef enum
-            {
-                HIP_TIME = 0,
-                HIP_PRIME_FORM,
-                HIP_INVERSION,
-                HIP_TRANSPOSITION,
-                HIP_PRIME_FORM_SCALING,
-                HIP_INVERSION_SCALING,
-                HIP_TRANSPOSITION_SCALING,
-                HIP_HOMOGENEITY,
-                HIP_ELEMENT_COUNT
-            } Dimensions;
+            double t;
+            double P;
+            double I;
+            double T;
+            double s_PP;
+            double s_PI;
+            double s_PT;
+            double s_IP;
+            double s_II;
+            double s_IT;
+            double s_TP;
+            double s_TI;
+            double s_TT;
             HarmonyInterpolationPoint() {
-                initialize();
             }
             HarmonyInterpolationPoint(const HarmonyInterpolationPoint &other) {
                 *this = other;
             }
-            HarmonyInterpolationPoint(double t, double P, double I, double T, double s_P, double s_I, double s_T) {
-                initialize();
-                set_t(t);
-                set_P(P);
-                set_I(I);
-                set_T(T);
-                set_s_P(s_P);
-                set_s_I(s_I);
-                set_s_T(s_T);
+            HarmonyInterpolationPoint(double t_, 
+                                      double P_,    double I_,    double T_, 
+                                      double s_PP_, double s_PI_, double s_PT_,
+                                      double s_IP_, double s_II_, double s_IT_,
+                                      double s_TP_, double s_TI_, double s_TT_) {
+                t = t_;
+                P = P_;
+                I = I_;
+                T = T_;
+                s_PP = s_PP_;
+                s_PI = s_PI_;
+                s_PT = s_PT_;
+                s_IP = s_IP_;
+                s_II = s_II_;
+                s_IT = s_IT_;
+                s_TP = s_TP_;
+                s_TI = s_TI_;
+                s_TT = s_TT_;
             }
-            HarmonyInterpolationPoint &operator = (const HarmonyInterpolationPoint &other) {
-                Eigen::VectorXd::operator = (other);
-                return *this;
-            }
-            HarmonyInterpolationPoint &operator = (const Eigen::VectorXd &other) {
-                Eigen::VectorXd::operator = (other);
-                return *this;
-            }            
             virtual ~HarmonyInterpolationPoint() {
             }
-            virtual void initialize() {
-                resize(HIP_ELEMENT_COUNT);
-                operator *= (0);
-                (*this)[HIP_HOMOGENEITY] = 1.0;
-            }
-            virtual double get_t() const {
-                return (*this)[HIP_TIME];
-            }
-            virtual double get_P() const {
-                return (*this)[HIP_PRIME_FORM];
-            }
-            virtual double get_I() const {
-                return (*this)[HIP_INVERSION];
-            }
-            virtual double get_T() const {
-                return (*this)[HIP_TRANSPOSITION];
-            }
-            virtual double get_s_P() const {
-                return (*this)[HIP_PRIME_FORM_SCALING];
-            }
-            virtual double get_s_I() const {
-                return (*this)[HIP_INVERSION_SCALING];
-            }
-            virtual double get_s_T() const {
-                return (*this)[HIP_TRANSPOSITION_SCALING];
-            }
-            virtual void set_t(double value) {
-                (*this)[HIP_TIME] = value;
-            }
-            virtual void set_P(double value) {
-                (*this)[HIP_PRIME_FORM] = value;
-            }
-            virtual void set_I(double value) {
-                (*this)[HIP_INVERSION] = value;
-            }
-            virtual void set_T(double value) {
-                (*this)[HIP_TRANSPOSITION] = value;
-            }
-            virtual void set_s_P(double value) {
-                (*this)[HIP_PRIME_FORM_SCALING] = value;
-            }  
-            virtual void set_s_I(double value) {
-                (*this)[HIP_INVERSION_SCALING] = value;
-            }  
-            virtual void set_s_T(double value) {
-                (*this)[HIP_TRANSPOSITION_SCALING] = value;
-            }  
             virtual std::string toString() const {
                 char buffer[0x1000];
-                std::snprintf(buffer, 0x1000, "t: %9.4f P: %9.4f I: %9.4f T: %9.4f s_P: %9.4f s_I: %9.4f s_T: %9.4f 1: %9.4f\n", 
-                    get_t(), get_P(), get_I(), get_T(), get_s_P(), get_s_I(), get_s_T(), (*this)[HIP_HOMOGENEITY]);
+                std::snprintf(buffer, 0x1000, "t:    %9.4f\n"
+                                              "P:    %9.4f I:    %9.4f T:  %9.4f\n"
+                                              "s_PP: %9.4f s_PI: %9.4f PT: %9.4f\n"
+                                              "s_IP: %9.4f s_II: %9.4f IT: %9.4f\n"
+                                              "s_TP: %9.4f s_TI: %9.4f TT: %9.4f\n",
+                                              t,
+                                              P, I, T,
+                                              s_PT, s_PI, s_PT,
+                                              s_IT, s_II, s_IT,
+                                              s_TT, s_TI, s_TT);
                 return buffer;
             }
-                
     };
     
     /**
@@ -292,7 +248,7 @@ namespace csound {
     };
     
     SILENCE_PUBLIC inline bool interpolation_point_less(const HarmonyInterpolationPoint &a, const HarmonyInterpolationPoint &b) {
-        if (a.get_t() < b.get_t()) {
+        if (a.t < b.t) {
             return true;
         } else {
             return false;
@@ -331,8 +287,8 @@ namespace csound {
             }
             virtual ~HarmonyIFS() {
             }
-            virtual PITV &get_pitv() {
-                return pitv;
+            virtual PITV &pitv() {
+                return pitv_;
             }
             /**
              * Initialize the HarmonyIFS for N voices in a range of MIDI keys 
@@ -347,27 +303,45 @@ namespace csound {
                 tie_overlaps = tie_overlapping_notes;
                 remove_duplicates = remove_duplicate_notes;
                 g = g_;
-                pitv.initialize(voices_, range_, g_, true);
+                pitv_.initialize(voices_, range_, g_, true);
                 interpolation_points.clear();
             }
             /**
              * Adds an interpolation point to the graph of the fractal interpolation function.
              */
-            virtual HarmonyInterpolationPoint add_interpolation_point(double t, double P, double I, double T, double s_P, double s_I, double s_T) {
-                System::message("HarmonyIfs::add_interpolation_point: t: %9.4f P: %9.4f I: %9.4f s_P: %9.4f s_T: %9.4f s_I: %9.4f s_I: %9.4f s_T: %9.4f s_T: %9.4f\n", t, P, I, T, s_P, s_I, s_T);
-                HarmonyInterpolationPoint harmony_interpolation_point = HarmonyInterpolationPoint(t, P, I, T, s_P, s_I, s_T);
+            virtual HarmonyInterpolationPoint add_interpolation_point(double t,    
+                                                                      double P,    double I,    double T, 
+                                                                      double s_PP, double s_PI, double s_PT, 
+                                                                      double s_IP, double s_II, double s_IT, 
+                                                                      double s_TP, double s_TI, double s_TT) {                 
+                HarmonyInterpolationPoint harmony_interpolation_point = HarmonyInterpolationPoint(
+                    t,    
+                    P,    I,    T, 
+                    s_PP, s_PI, s_PT, 
+                    s_IP, s_II, s_IT, 
+                    s_TP, s_TI, s_TT);
+                System::message("HarmonyIfs::add_interpolation_point:\n%s\n", harmony_interpolation_point.toString().c_str());
                 interpolation_points.push_back(harmony_interpolation_point);
                 return harmony_interpolation_point;        
             }
             /**
              * Adds an interpolation point to the graph of the fractal interpolation function.
              */
-            virtual HarmonyInterpolationPoint add_interpolation_point_as_chord(double t, const Chord &chord, double s_P, double s_I, double s_T) {
-                const auto &pit = pitv.fromChord(chord);
-                const auto P = pit[0];
-                const auto I = pit[1];
-                const auto T = pit[2];
-                auto interpolation_point = add_interpolation_point(t, P, I, T, s_P, s_I, s_T);
+            virtual HarmonyInterpolationPoint add_interpolation_point_as_chord(double t_, 
+                                                                               const Chord &chord, 
+                                                                               double s_PP_, double s_PI_, double s_PT_, 
+                                                                               double s_IP_, double s_II_, double s_IT_, 
+                                                                               double s_TP_, double s_TI_, double s_TT_) {                 
+                const auto &pit = pitv_.fromChord(chord);
+                const auto P_ = pit[0];
+                const auto I_ = pit[1];
+                const auto T_ = pit[2];
+                System::message("HarmonyInterpolationPoint::add_interpolation_point_as_chord:\n%s\n", chord.toString().c_str());
+                auto interpolation_point = add_interpolation_point(t_,    
+                                                                   P_,    I_,    T_, 
+                                                                   s_PP_, s_PI_, s_PT_, 
+                                                                   s_IP_, s_II_, s_IT_, 
+                                                                   s_TP_, s_TI_, s_TT_);
                 return interpolation_point;
             }
             /**
@@ -377,46 +351,102 @@ namespace csound {
              * and Theoharis Theoharis, "Curve Fitting by Fractal 
              * Interpolation." In: Transactions on Computational
              * Science 1 (Jan. 2008), pp. 85-103. 
-             * doi: 10.1007/978-3-540-79299-4_4. Once this function has been 
-             * called, the non-shear elements of the transformation matrices 
-             * may be modified in any way as long as the Hutchinson operator
-             * remains contractive.
+             * doi: 10.1007/978-3-540-79299-4_4. 
+             * 
+             * Once this function has been called, the non-shear elements of 
+             * the transformation matrices may be modified. A warning is 
+             * issued if the modulus of the scaling submatrix of any 
+             * transformation is >= 0, indicating it is not contractive.
              */
             virtual void initialize_hutchinson_operator() {
                 hutchinson_operator.clear();
                 std::sort(interpolation_points.begin(), interpolation_points.end(), interpolation_point_less);
                 HarmonyInterpolationPoint p_0 = interpolation_points.front();
-                HarmonyInterpolationPoint p_N = interpolation_points.back();
+                HarmonyInterpolationPoint p_n = interpolation_points.back();
                 for (int i = 1, n = interpolation_points.size(); i < n; ++i) {
                     HarmonyInterpolationPoint p_i_1 = interpolation_points[i - 1];
                     HarmonyInterpolationPoint p_i = interpolation_points[i];
-                    Eigen::MatrixXd transformation = Eigen::MatrixXd::Identity(8, 8);
-                    // t or time dimension.
-                    transformation(HarmonyInterpolationPoint::HIP_TIME, HarmonyInterpolationPoint::HIP_TIME)        
-                        = (p_i.get_t() - p_i_1.get_t()) / (p_N.get_t() - p_0.get_t());
-                    transformation(HarmonyInterpolationPoint::HIP_TIME, HarmonyInterpolationPoint::HIP_HOMOGENEITY) 
-                        = ((p_N.get_t() * p_i_1.get_t()) - (p_0.get_t() * p_i.get_t())) / (p_N.get_t() - p_0.get_t());
-                    // P or prime-form dimension.
-                    transformation(HarmonyInterpolationPoint::HIP_PRIME_FORM, HarmonyInterpolationPoint::HIP_TIME) 
-                        = ((p_i.get_P() - p_i_1.get_P()) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_P() * ((p_N.get_P() - p_0.get_P()) / (p_N.get_t() - p_0.get_t())));
-                    transformation(HarmonyInterpolationPoint::HIP_PRIME_FORM, HarmonyInterpolationPoint::HIP_PRIME_FORM) 
-                        = p_i.get_s_P();
-                    transformation(HarmonyInterpolationPoint::HIP_PRIME_FORM, HarmonyInterpolationPoint::HIP_HOMOGENEITY) 
-                        = (((p_N.get_t() * p_i_1.get_P()) - (p_0.get_t() * p_i.get_P())) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_P() * (((p_i.get_t() * p_0.get_P()) - (p_0.get_t() * p_N.get_P())) / (p_N.get_t() - p_0.get_t())));
-                    // I or inversion dimension.
-                    transformation(HarmonyInterpolationPoint::HIP_INVERSION, HarmonyInterpolationPoint::HIP_TIME) 
-                        = ((p_i.get_I() - p_i_1.get_I()) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_I() * ((p_N.get_I() - p_0.get_I()) / (p_N.get_t() - p_0.get_t())));
-                    transformation(HarmonyInterpolationPoint::HIP_INVERSION, HarmonyInterpolationPoint::HIP_INVERSION) 
-                        = p_i.get_s_I();
-                    transformation(HarmonyInterpolationPoint::HIP_INVERSION, HarmonyInterpolationPoint::HIP_HOMOGENEITY) 
-                        = (((p_N.get_t() * p_i_1.get_I()) - (p_0.get_t() * p_i.get_I())) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_I() * (((p_i.get_t() * p_0.get_I()) - (p_0.get_t() * p_N.get_I())) / (p_N.get_t() - p_0.get_t())));
-                    // T or transposition dimension.
-                    transformation(HarmonyInterpolationPoint::HIP_TRANSPOSITION, HarmonyInterpolationPoint::HIP_TIME) 
-                        = ((p_i.get_T() - p_i_1.get_T()) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_T() * ((p_N.get_T() - p_0.get_T()) / (p_N.get_t() - p_0.get_t())));
-                    transformation(HarmonyInterpolationPoint::HIP_TRANSPOSITION, HarmonyInterpolationPoint::HIP_TRANSPOSITION) 
-                        = p_i.get_s_T();
-                    transformation(HarmonyInterpolationPoint::HIP_TRANSPOSITION, HarmonyInterpolationPoint::HIP_HOMOGENEITY) 
-                        = (((p_N.get_t() * p_i_1.get_T()) - (p_0.get_t() * p_i.get_T())) / (p_N.get_t() - p_0.get_t())) - (p_i.get_s_T() * (((p_i.get_t() * p_0.get_T()) - (p_0.get_t() * p_N.get_T())) / (p_N.get_t() - p_0.get_t())));
+                    Eigen::MatrixXd transformation = Eigen::MatrixXd::Identity(HarmonyPoint::HP_ELEMENT_COUNT, HarmonyPoint::HP_ELEMENT_COUNT);
+                    // Time row:
+                    //   Time column:
+                    double t_t = (p_i.t - p_i_1.t) / (p_n.t - p_0.t);
+                    //   Homogeneity or transposition column:
+                    double h_t = ((p_n.t * p_i_1.t) - (p_0.t * p_i.t)) / (p_n.t - p_0.t);
+                    // Prime-form row:
+                    //   Time column:
+                    double P_t =      ((p_i.P - p_i_1.P) / (p_n.t - p_0.t)) 
+                        - (p_i.s_PP * ((p_n.P - p_0.P)   / (p_n.t - p_0.t)))
+                        - (p_i.s_PI * ((p_n.I - p_0.I)   / (p_n.t - p_0.t)))
+                        - (p_i.s_PT * ((p_n.T - p_0.T)   / (p_n.t - p_0.t)));
+                    //   Prime-form column:
+                    double P_sPP = p_i.s_PP;
+                    //   Inversion column:
+                    double P_sPI = p_i.s_PI;
+                    //   Transposition column:
+                    double P_sPT = p_i.s_PT;
+                    //   Homogeneity or transposition column:
+                    double P_h =     (((p_n.t * p_i_1.P) - (p_0.t * p_i.P)) / (p_n.t - p_0.t)) 
+                        - (p_i.s_PP * (((p_n.t * p_0.P)  - (p_0.t * p_n.P)) / (p_n.t - p_0.t)));
+                        - (p_i.s_PI * (((p_0.t * p_0.I)  - (p_0.t * p_n.I)) / (p_n.t - p_0.t)));
+                        - (p_i.s_PT * (((p_0.t * p_0.T)  - (p_0.t * p_n.T)) / (p_n.t - p_0.t)));
+                    // Inversion row:
+                    //   Time column:
+                    double I_t =      ((p_i.I - p_i_1.I) / (p_n.t - p_0.t))  
+                        - (p_i.s_IP * ((p_n.P - p_0.P)   / (p_n.t - p_0.t)))
+                        - (p_i.s_II * ((p_n.I - p_0.I)   / (p_n.t - p_0.t)))
+                        - (p_i.s_IT * ((p_n.T - p_0.T)   / (p_n.t - p_0.t)));
+                    //   Prime-form column:
+                    double I_sIP = p_i.s_IP;
+                    //   Inversion column:
+                    double I_sII = p_i.s_II;
+                    //   Transposition column:
+                    double I_sIT = p_i.s_IT;
+                    //   Homogeneity or transposition column:
+                    double I_h =      (((p_n.t * p_i_1.I) - (p_0.t * p_i.I)) / (p_n.t - p_0.t)) 
+                        - (p_i.s_IP * (((p_n.t * p_0.P)   - (p_0.t * p_n.P)) / (p_n.t - p_0.t)))
+                        - (p_i.s_II * (((p_0.t * p_0.I)   - (p_0.t * p_n.I)) / (p_n.t - p_0.t)))
+                        - (p_i.s_IT * (((p_0.t * p_0.T)   - (p_0.t * p_n.T)) / (p_n.t - p_0.t)));
+                    // Transposition row:
+                    //   Time column:
+                    double T_t =      ((p_i.T - p_i_1.T) / (p_n.t - p_0.t)) 
+                        - (p_i.s_TP * ((p_n.P - p_0.P)   / (p_n.t - p_0.t)))
+                        - (p_i.s_TI * ((p_n.I - p_0.I)   / (p_n.t - p_0.t)))
+                        - (p_i.s_TT * ((p_n.T - p_0.T)   / (p_n.t - p_0.t)));
+                    //   Prime-form column:
+                    double T_sTP = p_i.s_TP;
+                    //   Inversion column:
+                    double T_sTI = p_i.s_TI;
+                    //   Transposition column:
+                    double T_sTT = p_i.s_TT;
+                    //   Homogeneity or transposition column:
+                    double T_h =      (((p_n.t * p_i_1.T) - (p_0.t * p_i.T)) / (p_n.t - p_0.t)) 
+                        - (p_i.s_TP * (((p_n.t * p_0.P)   - (p_0.t * p_n.P)) / (p_n.t - p_0.t)))
+                        - (p_i.s_TI * (((p_0.t * p_0.I)   - (p_0.t * p_n.I)) / (p_n.t - p_0.t)))
+                        - (p_i.s_TT * (((p_0.t * p_0.T)   - (p_0.t * p_n.T)) / (p_n.t - p_0.t)));
+                                      // Time row.
+                                      // t, P,     I,     T,     k, v, i, translation.
+                    transformation << t_t,  0,     0,     0,     0, 0, 0, h_t,
+                                      // Prime-form row.
+                                      P_t,  P_sPP, P_sPI, P_sPT, 0, 0, 0, P_h,
+                                      // Inversion row.
+                                      I_t,  I_sIP, I_sII, I_sIT, 0, 0, 0, I_h,
+                                      // Transposition row.
+                                      T_t,  T_sTP, T_sTI, T_sTT, 0, 0, 0, T_h,
+                                      // Key row.
+                                      0,    0,     0,     0,     0, 0, 0, 0,   
+                                      // Velocity row.
+                                      0,    0,     0,     0,     0, 0, 0, 0,   
+                                      // Instrument row.
+                                      0,    0,     0,     0,     0, 0, 0, 0,
+                                      // Homogeneity row.
+                                      0,    0,     0,     0,     0, 0, 0, 1;     
+                    auto scaling_matrix = transformation.block<3, 3>(1, 1); 
+                    auto modulus = std::abs(scaling_matrix.determinant());
+                    System::inform("HarmonyIFS::initialize_hutchinson_operator: modulus of contraction: %9.4f\n", modulus);
+                    if (ge_tolerance(modulus, 1.) == true) {
+                        System::warn("HarmonyIFS::initialize_hutchinson_operator: Warning!\n"
+                            "This transformation is not contractive.\n");
+                    }
                     hutchinson_operator.push_back(transformation);
                 }
             }
@@ -426,16 +456,16 @@ namespace csound {
              */
             virtual HarmonyEvent point_to_note(const HarmonyPoint &point) {
                 HarmonyEvent event;
-                event.note.setTime(point.get_t());
+                event.note.setTime(point.t());
                 event.note.setDuration(note_duration);
                 event.note.setStatus(144);
-                event.note.setInstrument(point.get_i());
-                int P = std::round(point.get_P());
-                int I = std::round(point.get_I());
-                int T = std::round(point.get_T());
-                event.chord = pitv.toChord(P, I, T, 0)[2];
-                event.note.setKey(point.get_k());
-                event.note.setVelocity(point.get_v());
+                event.note.setInstrument(point.i());
+                int P = std::round(point.P());
+                int I = std::round(point.I());
+                int T = std::round(point.T());
+                event.chord = pitv_.toChord(P, I, T, 0)[2];
+                event.note.setKey(point.k());
+                event.note.setVelocity(point.v());
                 return event;
             }
             /**
@@ -456,7 +486,7 @@ namespace csound {
             virtual void tie_overlapping_notes() {
                 System::inform("HarmonyIFS::tie overlapping notes:  before: %d events...\n", score.size());
                 score.tieOverlappingNotes(true);
-                System::inform("                                    after: %d events.\n", score.size());
+                System::inform("                                    after:  %d events.\n", score.size());
             }
             /**
              * Recursively computes the score graph, translates the points to 
@@ -471,14 +501,20 @@ namespace csound {
                 score_attractor.clear();
                 int iteration = 0;
                 HarmonyPoint initial_point;
+                auto op = hutchinson_operator.front();
+                initial_point.set_t(op(0, 0));                
+                initial_point.set_P(op(0, 1));                
+                initial_point.set_I(op(0, 2));                
+                initial_point.set_T(op(0, 3));                
                 initial_point.set_k(60.);
                 initial_point.set_v(60.);
                 initial_point.set_i(1);
+                initial_point.set_homogeneity(1);
                 for (auto &transformation : hutchinson_operator) {
                     std::cerr << transformation << std::endl << std::endl;
                 }
                 iterate(depth, iteration, initial_point);
-                System::inform("                                      points: %d.\n", score.size());
+                System::inform("points: %d.\n", score.size());
                 translate_score_attractor_to_score();
             }
             /**
@@ -488,6 +524,7 @@ namespace csound {
                 iteration = iteration + 1;
                 if (iteration >= depth) {
                     HarmonyEvent event = point_to_note(point);
+                    System::inform("HarmonyIFS::iterate: depth: %2d iteration: %9d point: %s", depth, iteration, point.toString().c_str());
                     score_attractor.push_back(event);
                     return;
                 }
@@ -531,6 +568,7 @@ namespace csound {
                 System::inform("  key range:   %9.4f\n", actual_key_range);
                 System::inform("  rescale by:  %9.4f\n", scale_factor);
                 for (auto &event : score_attractor) {
+                    System::inform("  pre-translation:  %s\n", event.note.toString().c_str());
                     double time_ = event.note.getTime();
                     time_ = time_ - minimum_time;
                     event.note.setTime(time_);
@@ -541,6 +579,7 @@ namespace csound {
                     event.note.setKey(key);   
                     event.note.temper(12.);
                     conformToChord(event.note, event.chord);
+                    System::inform("  post-translation: %s\n\n", event.note.toString().c_str());
                     score.push_back(event.note);
                 }
                 if (tie_overlaps == true) {
@@ -557,7 +596,7 @@ namespace csound {
              * Hutchinson operator of the function system that generates the 
              * score.
              */
-            virtual int get_transformation_count() const {
+            virtual int transformation_count() const {
                 return hutchinson_operator.size();
             }
             /**
@@ -577,7 +616,7 @@ namespace csound {
             bool tie_overlaps;
             bool remove_duplicates;
             double g;
-            PITV pitv;
+            PITV pitv_;
             std::vector<HarmonyInterpolationPoint> interpolation_points;
             std::vector<Eigen::MatrixXd> hutchinson_operator;
             std::vector<HarmonyEvent> score_attractor;
