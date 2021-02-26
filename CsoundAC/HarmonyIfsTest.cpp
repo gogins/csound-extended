@@ -29,10 +29,10 @@ int main(int argc, const char **argv)
     csound::System::message("ii:\n%s\n", subdominant.information_sector(0).c_str());
     csound::System::message("V:\n%s\n", dominant.information_sector(0).c_str());
     auto &score = harmony_ifs.getScore();
-    harmony_ifs.add_interpolation_point_as_chord(0., tonic,       3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9.);
-    harmony_ifs.add_interpolation_point_as_chord(1., subdominant, 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9.);
-    harmony_ifs.add_interpolation_point_as_chord(2., dominant,    1./2., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9.);
-    harmony_ifs.add_interpolation_point_as_chord(3., tonic,       3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9., 3./9.);
+    harmony_ifs.add_interpolation_point_as_chord(  0., tonic,       2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9.);
+    harmony_ifs.add_interpolation_point_as_chord(100., subdominant, 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9.);
+    harmony_ifs.add_interpolation_point_as_chord(200., dominant,    2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9.);
+    harmony_ifs.add_interpolation_point_as_chord(300., tonic,       2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9.);
     harmony_ifs.initialize_hutchinson_operator();
     double A = 5.13 * M_PI / 180.;
     csound::System::message("A: %9.4f\n", A);
@@ -44,18 +44,16 @@ int main(int argc, const char **argv)
     harmony_ifs.set_transformation(0, k, k,  0.5);
     harmony_ifs.set_transformation(1, k, k,  0.5);
     harmony_ifs.set_transformation(2, k, k,  0.5);
-    harmony_ifs.set_transformation(0, k, h,  0.05);
+    harmony_ifs.set_transformation(0, k, h, -0.05);
     harmony_ifs.set_transformation(1, k, h,  0.05);
     harmony_ifs.set_transformation(2, k, h, -0.05);
     harmony_ifs.generate_score_attractor(6);
     csound::Rescale rescale;
-    //  rescale.setRescale(csound::Event::TIME, true, false, 4., 0.);
     rescale.setRescale(csound::Event::INSTRUMENT, true, true, 1., 2.999);
-    //rescale.setRescale(csound::Event::KEY, true, false, 36., 0.);
     rescale.setRescale(csound::Event::VELOCITY, true, true, 60., 6.);
     rescale.addChild(&harmony_ifs);
     model.addChild(&rescale);
-    model.setDuration(180.);
+    ///model.setDuration(180.);
     const char orc[] = R"(
     
 sr = 48000
@@ -492,6 +490,7 @@ endin
 
 )";
     model.setCsoundOrchestra(orc);
+    model.setCsoundScoreHeader("f 0 420\n");
     model.processArgv(argc, argv);
 }
 

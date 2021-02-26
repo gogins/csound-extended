@@ -362,70 +362,70 @@ namespace csound {
                 hutchinson_operator.clear();
                 std::sort(interpolation_points.begin(), interpolation_points.end(), interpolation_point_less);
                 HarmonyInterpolationPoint p_0 = interpolation_points.front();
-                HarmonyInterpolationPoint p_n = interpolation_points.back();
-                for (int i = 1, n = interpolation_points.size(); i < n; ++i) {
-                    HarmonyInterpolationPoint p_i_1 = interpolation_points[i - 1];
-                    HarmonyInterpolationPoint p_i = interpolation_points[i];
+                HarmonyInterpolationPoint p_N = interpolation_points.back();
+                for (int n = 1, N = interpolation_points.size(); n < N; ++n) {
+                    HarmonyInterpolationPoint p_n_1 = interpolation_points[n - 1];
+                    HarmonyInterpolationPoint p_n = interpolation_points[n];
                     Eigen::MatrixXd transformation = Eigen::MatrixXd::Identity(HarmonyPoint::HP_ELEMENT_COUNT, HarmonyPoint::HP_ELEMENT_COUNT);
                     // Time row:
                     //   Time column:
-                    double t_t = (p_i.t - p_i_1.t) / (p_n.t - p_0.t);
-                    //   Homogeneity or transposition column:
-                    double h_t = ((p_n.t * p_i_1.t) - (p_0.t * p_i.t)) / (p_n.t - p_0.t);
+                    double t_t =       (p_n.t - p_n_1.t) / (p_N.t - p_0.t);
+                    //   Homogeneity or translation column:
+                    double t_h =      ((p_N.t * p_n_1.t) - (p_0.t * p_n.t)) / (p_N.t - p_0.t);
                     // Prime-form row:
                     //   Time column:
-                    double P_t =      ((p_i.P - p_i_1.P) / (p_n.t - p_0.t)) 
-                        - (p_i.s_PP * ((p_n.P - p_0.P)   / (p_n.t - p_0.t)))
-                        - (p_i.s_PI * ((p_n.I - p_0.I)   / (p_n.t - p_0.t)))
-                        - (p_i.s_PT * ((p_n.T - p_0.T)   / (p_n.t - p_0.t)));
+                    double P_t =      ((p_n.P - p_n_1.P) / (p_N.t - p_0.t)) 
+                        - (p_n.s_PP * ((p_N.P - p_0.P)   / (p_N.t - p_0.t)))
+                        - (p_n.s_PI * ((p_N.I - p_0.I)   / (p_N.t - p_0.t)))
+                        - (p_n.s_PT * ((p_N.T - p_0.T)   / (p_N.t - p_0.t)));
                     //   Prime-form column:
-                    double P_sPP = p_i.s_PP;
+                    double P_sPP = p_n.s_PP;
                     //   Inversion column:
-                    double P_sPI = p_i.s_PI;
+                    double P_sPI = p_n.s_PI;
                     //   Transposition column:
-                    double P_sPT = p_i.s_PT;
-                    //   Homogeneity or transposition column:
-                    double P_h =     (((p_n.t * p_i_1.P) - (p_0.t * p_i.P)) / (p_n.t - p_0.t)) 
-                        - (p_i.s_PP * (((p_n.t * p_0.P)  - (p_0.t * p_n.P)) / (p_n.t - p_0.t)));
-                        - (p_i.s_PI * (((p_0.t * p_0.I)  - (p_0.t * p_n.I)) / (p_n.t - p_0.t)));
-                        - (p_i.s_PT * (((p_0.t * p_0.T)  - (p_0.t * p_n.T)) / (p_n.t - p_0.t)));
+                    double P_sPT = p_n.s_PT;
+                    //   Homogeneity or translation column:
+                    double P_h =      (((p_N.t * p_n_1.P) - (p_0.t * p_n.P)) / (p_N.t - p_0.t)) 
+                        - (p_n.s_PP * (((p_N.t * p_0.P)   - (p_0.t * p_N.P)) / (p_N.t - p_0.t)));
+                        - (p_n.s_PI * (((p_N.t * p_0.I)   - (p_0.t * p_N.I)) / (p_N.t - p_0.t)));
+                        - (p_n.s_PT * (((p_N.t * p_0.T)   - (p_0.t * p_N.T)) / (p_N.t - p_0.t)));
                     // Inversion row:
                     //   Time column:
-                    double I_t =      ((p_i.I - p_i_1.I) / (p_n.t - p_0.t))  
-                        - (p_i.s_IP * ((p_n.P - p_0.P)   / (p_n.t - p_0.t)))
-                        - (p_i.s_II * ((p_n.I - p_0.I)   / (p_n.t - p_0.t)))
-                        - (p_i.s_IT * ((p_n.T - p_0.T)   / (p_n.t - p_0.t)));
+                    double I_t =      ((p_n.I - p_n_1.I) / (p_N.t - p_0.t))  
+                        - (p_n.s_IP * ((p_N.P - p_0.P)   / (p_N.t - p_0.t)))
+                        - (p_n.s_II * ((p_N.I - p_0.I)   / (p_N.t - p_0.t)))
+                        - (p_n.s_IT * ((p_N.T - p_0.T)   / (p_N.t - p_0.t)));
                     //   Prime-form column:
-                    double I_sIP = p_i.s_IP;
+                    double I_sIP = p_n.s_IP;
                     //   Inversion column:
-                    double I_sII = p_i.s_II;
+                    double I_sII = p_n.s_II;
                     //   Transposition column:
-                    double I_sIT = p_i.s_IT;
-                    //   Homogeneity or transposition column:
-                    double I_h =      (((p_n.t * p_i_1.I) - (p_0.t * p_i.I)) / (p_n.t - p_0.t)) 
-                        - (p_i.s_IP * (((p_n.t * p_0.P)   - (p_0.t * p_n.P)) / (p_n.t - p_0.t)))
-                        - (p_i.s_II * (((p_0.t * p_0.I)   - (p_0.t * p_n.I)) / (p_n.t - p_0.t)))
-                        - (p_i.s_IT * (((p_0.t * p_0.T)   - (p_0.t * p_n.T)) / (p_n.t - p_0.t)));
+                    double I_sIT = p_n.s_IT;
+                    //   Homogeneity or translation column:
+                    double I_h =      (((p_N.t * p_n_1.I) - (p_0.t * p_n.I)) / (p_N.t - p_0.t)) 
+                        - (p_n.s_IP * (((p_N.t * p_0.P)   - (p_0.t * p_N.P)) / (p_N.t - p_0.t)))
+                        - (p_n.s_II * (((p_N.t * p_0.I)   - (p_0.t * p_N.I)) / (p_N.t - p_0.t)))
+                        - (p_n.s_IT * (((p_N.t * p_0.T)   - (p_0.t * p_N.T)) / (p_N.t - p_0.t)));
                     // Transposition row:
                     //   Time column:
-                    double T_t =      ((p_i.T - p_i_1.T) / (p_n.t - p_0.t)) 
-                        - (p_i.s_TP * ((p_n.P - p_0.P)   / (p_n.t - p_0.t)))
-                        - (p_i.s_TI * ((p_n.I - p_0.I)   / (p_n.t - p_0.t)))
-                        - (p_i.s_TT * ((p_n.T - p_0.T)   / (p_n.t - p_0.t)));
+                    double T_t =      ((p_n.T - p_n_1.T) / (p_N.t - p_0.t)) 
+                        - (p_n.s_TP * ((p_N.P - p_0.P)   / (p_N.t - p_0.t)))
+                        - (p_n.s_TI * ((p_N.I - p_0.I)   / (p_N.t - p_0.t)))
+                        - (p_n.s_TT * ((p_N.T - p_0.T)   / (p_N.t - p_0.t)));
                     //   Prime-form column:
-                    double T_sTP = p_i.s_TP;
+                    double T_sTP = p_n.s_TP;
                     //   Inversion column:
-                    double T_sTI = p_i.s_TI;
+                    double T_sTI = p_n.s_TI;
                     //   Transposition column:
-                    double T_sTT = p_i.s_TT;
-                    //   Homogeneity or transposition column:
-                    double T_h =      (((p_n.t * p_i_1.T) - (p_0.t * p_i.T)) / (p_n.t - p_0.t)) 
-                        - (p_i.s_TP * (((p_n.t * p_0.P)   - (p_0.t * p_n.P)) / (p_n.t - p_0.t)))
-                        - (p_i.s_TI * (((p_0.t * p_0.I)   - (p_0.t * p_n.I)) / (p_n.t - p_0.t)))
-                        - (p_i.s_TT * (((p_0.t * p_0.T)   - (p_0.t * p_n.T)) / (p_n.t - p_0.t)));
+                    double T_sTT = p_n.s_TT;
+                    //   Homogeneity or translation column:
+                    double T_h =      (((p_N.t * p_n_1.T) - (p_0.t * p_n.T)) / (p_N.t - p_0.t)) 
+                        - (p_n.s_TP * (((p_N.t * p_0.P)   - (p_0.t * p_N.P)) / (p_N.t - p_0.t)))
+                        - (p_n.s_TI * (((p_N.t * p_0.I)   - (p_0.t * p_N.I)) / (p_N.t - p_0.t)))
+                        - (p_n.s_TT * (((p_N.t * p_0.T)   - (p_0.t * p_N.T)) / (p_N.t - p_0.t)));
                                       // Time row.
                                       // t, P,     I,     T,     k, v, i, translation.
-                    transformation << t_t,  0,     0,     0,     0, 0, 0, h_t,
+                    transformation << t_t,  0,     0,     0,     0, 0, 0, t_h,
                                       // Prime-form row.
                                       P_t,  P_sPP, P_sPI, P_sPT, 0, 0, 0, P_h,
                                       // Inversion row.
@@ -506,32 +506,32 @@ namespace csound {
                 initial_point.set_P(op(0, 1));                
                 initial_point.set_I(op(0, 2));                
                 initial_point.set_T(op(0, 3));                
-                initial_point.set_k(60.);
-                initial_point.set_v(60.);
-                initial_point.set_i(1);
+                initial_point.set_k(range/2.);
+                initial_point.set_v(range/2.);
+                initial_point.set_i(1.);
                 initial_point.set_homogeneity(1);
                 for (auto &transformation : hutchinson_operator) {
                     std::cerr << transformation << std::endl << std::endl;
                 }
-                iterate(depth, iteration, initial_point);
-                System::inform("points: %d.\n", score.size());
+                iterate(depth, iteration, 0, initial_point);
+                System::inform("points: %d.\n", score_attractor.size());
                 translate_score_attractor_to_score();
             }
             /**
-             * Actully computes the score attractor.
+             * Actua lly computes the score attractor.
              */
-            virtual void iterate(int depth, int iteration, HarmonyPoint point) {
+            virtual void iterate(int depth, int iteration, int index, HarmonyPoint point) {
                 iteration = iteration + 1;
                 if (iteration >= depth) {
                     HarmonyEvent event = point_to_note(point);
-                    System::inform("HarmonyIFS::iterate: depth: %2d iteration: %9d point: %s", depth, iteration, point.toString().c_str());
+                    System::inform("HarmonyIFS::iterate: depth: %2d index: [%2d] iteration: %9d point: %s", depth, index, iteration, point.toString().c_str());
                     score_attractor.push_back(event);
                     return;
                 }
                 for (int i = 0, n = hutchinson_operator.size(); i < n; ++i) {
                     const Eigen::MatrixXd &T = hutchinson_operator[i];
                     point = T * point;
-                    iterate(depth, iteration, point);
+                    iterate(depth, iteration, i, point);
                 }
             }
             /**
