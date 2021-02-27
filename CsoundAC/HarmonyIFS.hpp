@@ -501,37 +501,37 @@ namespace csound {
                 score_attractor.clear();
                 int iteration = 0;
                 HarmonyPoint initial_point;
-                auto op = hutchinson_operator.front();
-                initial_point.set_t(op(0, 0));                
-                initial_point.set_P(op(0, 1));                
-                initial_point.set_I(op(0, 2));                
-                initial_point.set_T(op(0, 3));                
                 initial_point.set_k(range/2.);
                 initial_point.set_v(range/2.);
                 initial_point.set_i(1.);
                 initial_point.set_homogeneity(1);
-                for (auto &transformation : hutchinson_operator) {
-                    std::cerr << transformation << std::endl << std::endl;
+                System::inform("HarmonyIFS::generate_score_attractor: initial point:\n%s\n", toString(initial_point).c_str());
+                for (int i = 0, n = hutchinson_operator.size(); i < n; ++i) {
+                    System::inform("HarmonyIFS::generate_score_attractor: transformation[%3d]\n", i + 1);
+                    std::cerr << hutchinson_operator[i] << std::endl << std::endl;
                 }
                 iterate(depth, iteration, 0, initial_point);
                 System::inform("points: %d.\n", score_attractor.size());
                 translate_score_attractor_to_score();
             }
             /**
-             * Actua lly computes the score attractor.
+             * Actually computes the score attractor.
              */
-            virtual void iterate(int depth, int iteration, int index, HarmonyPoint point) {
+            virtual void iterate(int depth, int iteration, int index, const HarmonyPoint point) {
                 iteration = iteration + 1;
-                if (iteration >= depth) {
-                    HarmonyEvent event = point_to_note(point);
-                    System::inform("HarmonyIFS::iterate: depth: %2d index: [%2d] iteration: %9d point: %s", depth, index, iteration, point.toString().c_str());
-                    score_attractor.push_back(event);
+                if (iteration > depth) {
                     return;
                 }
                 for (int i = 0, n = hutchinson_operator.size(); i < n; ++i) {
                     const Eigen::MatrixXd &T = hutchinson_operator[i];
-                    point = T * point;
-                    iterate(depth, iteration, i, point);
+                    HarmonyPoint new_point = point;
+                    new_point = T * new_point;
+                    if (iteration == depth) {
+                        HarmonyEvent event = point_to_note(new_point);
+                        System::inform("HarmonyIFS::iterate: depth: %2d index: [%2d] iteration: %9d point:\n%s\n", depth, index, iteration, toString(new_point).c_str());
+                        score_attractor.push_back(event);
+                    }
+                    iterate(depth, iteration, i, new_point);
                 }
             }
             /**

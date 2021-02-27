@@ -21,14 +21,14 @@ int main(int argc, const char **argv)
     csound::System::setMessageLevel(7);
     csound::HarmonyIFS harmony_ifs;
     // initialize(int voices_, double range_, double bass_, double note_duration_, bool tie_overlaps_, bool remove_duplicates, double g_ = 1.) {
-    harmony_ifs.initialize(4 , 60., 30., 1., false, false, 1.);
+    harmony_ifs.initialize(4 , 60., 30., .125, true, true, 1.);
     auto tonic = csound::chordForName("CM7");
     auto subdominant = csound::chordForName("Dm7");
     auto dominant = csound::chordForName("G7");
     csound::System::message("I:\n%s\n", tonic.information_sector(0).c_str());
     csound::System::message("ii:\n%s\n", subdominant.information_sector(0).c_str());
     csound::System::message("V:\n%s\n", dominant.information_sector(0).c_str());
-    auto &score = harmony_ifs.getScore();
+    ///auto &score = harmony_ifs.getScore();
     harmony_ifs.add_interpolation_point_as_chord(  0., tonic,       2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9.);
     harmony_ifs.add_interpolation_point_as_chord(100., subdominant, 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9.);
     harmony_ifs.add_interpolation_point_as_chord(200., dominant,    2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9., 2.99/9.);
@@ -47,7 +47,7 @@ int main(int argc, const char **argv)
     harmony_ifs.set_transformation(0, k, h, -0.05);
     harmony_ifs.set_transformation(1, k, h,  0.05);
     harmony_ifs.set_transformation(2, k, h, -0.05);
-    harmony_ifs.generate_score_attractor(6);
+    harmony_ifs.generate_score_attractor(7);
     csound::Rescale rescale;
     rescale.setRescale(csound::Event::INSTRUMENT, true, true, 1., 2.999);
     rescale.setRescale(csound::Event::VELOCITY, true, true, 60., 6.);
@@ -144,7 +144,6 @@ vstnote gi_Organteq, i_midi_channel, i_midi_key, i_midi_velocity, i_duration
 endin
 
 // This must be initialized in the orc header before any #includes.
-
 
 gk_PianoOutPianoteq_level init 0
 gi_PianoOutPianoteq_print init 1
