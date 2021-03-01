@@ -592,6 +592,16 @@ namespace csound {
                 System::inform("  Finished translating score attractor to final score.\n");
             }
             /**
+             * Adds a new affine transformation matrix to the Hutchinson operator.
+             * The value of this matrix is initially the identity matrix.
+             */
+            virtual Eigen::MatrixXd &add_transformation() {
+                Eigen::MatrixXd transformation = Eigen::MatrixXd::Identity(HarmonyPoint::HP_ELEMENT_COUNT, 
+                    HarmonyPoint::HP_ELEMENT_COUNT);
+                hutchinson_operator.push_back(transformation);
+                return hutchinson_operator.back();
+            };
+            /**
              * Returns the number of affine transformation matrices in the 
              * Hutchinson operator of the function system that generates the 
              * score.
@@ -599,6 +609,38 @@ namespace csound {
             virtual int transformation_count() const {
                 return hutchinson_operator.size();
             }
+            /**
+             * Creates a scaling transformation in one of the affine 
+             * transformation matrices of the Hutchinson operator.
+             */
+            virtual void set_scaling(int transformation, int dimension, double value) {
+                hutchinson_operator[transformation](dimension, dimension) = value;
+            }
+            /**
+             * Creates a shear transformation parallel to one non-time axis in one of 
+             * the affine transformation matrices of the Hutchinson operator.
+             */
+            virtual void set_shear(int transformation, int dimension, double value) {
+                hutchinson_operator[transformation](HarmonyPoint::HP_TIME, dimension) = value;
+            }
+            /**
+             * Creates a translation transformation in one of the affine 
+             * affine transformation matrices of the Hutchinson operator.
+             */
+            virtual void set_translation(int transformation, int dimension, double value) {
+                hutchinson_operator[transformation](dimension, 8) = value;
+            }
+            /**
+             * Creates a rotation in one plane in one of the affine 
+             * affine transformation matrices of the Hutchinson operator.
+             */
+            virtual void set_rotation(int transformation, int dimension1, int dimension2, double degrees) {
+                auto radians = degrees * M_PI / 180.;
+                hutchinson_operator[transformation](dimension1,dimension1) =  std::cos(radians);
+                hutchinson_operator[transformation](dimension1,dimension2) = -std::sin(radians);
+                hutchinson_operator[transformation](dimension2,dimension1) =  std::sin(radians);
+                hutchinson_operator[transformation](dimension2,dimension2) =  std::cos(radians);
+           }
             /**
              * Sets the value of a single matrix element in one of the affine 
              * transformation matrices of the Hutchinson operator. The 
