@@ -29,13 +29,12 @@
                     ],
                     'libraries': 
                     [
-                        '-lcsound64 -lpython2.7 -lecl -lgc -lpthread',
+                        '-lcsound64 -lecl -lgc -lpthread',
                     ],
                     'include_dirs': 
                     [
                         '/usr/local/include/csound/',
                         '/usr/include/csound/',
-                        '/usr/include/python2.7/',
                         '../CsoundAC/',
                     ],
                 }

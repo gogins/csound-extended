@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Python.h>
 #include <csound/csound_threaded.hpp>
 #include <cstdio>
 #include <cstdlib>
@@ -398,15 +397,6 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
             virtual bool GetDoGitCommit() const {
                 return do_git_commit;
             }
-            virtual void InitializePython() {
-                Py_Initialize();
-                // Ensure that this instance of Csound is available in the 
-                // Python runtime context. For ctcsound, the CSOUND pointer 
-                // is just an int.
-                char code[0x100];
-                std::snprintf(code, 0x100, "csound = int(%p)", csound);
-                PyRun_SimpleString(code);
-            }
             virtual cl_env_ptr GetCommonLispEnvironment() {
                 return common_lisp_environment;
             }
@@ -449,14 +439,7 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
              */
             virtual int RunScript(const std::string script, const std::string language) {
                 int result = 0;
-                if (language == "Python3.6m") {
-                    result = PyRun_SimpleString(script.c_str());
-                    if (result == 0) {
-                        //log(csound, "Result: %d\n", result);
-                    } else {
-                        Message("PyRun_SimpleString failed with: %d\n", result);
-                    }
-                } else if (language == "Common Lisp") {
+                if (language == "Common Lisp") {
                     evaluate_form(script.c_str());
                 } else {
                     Message("Sorry, CsoundProducer does not support %s in this environment.\n", language.c_str());

@@ -386,8 +386,8 @@ namespace csound {
                     double P_sPT = p_n.s_PT;
                     //   Homogeneity or translation column:
                     double P_h =      (((p_N.t * p_n_1.P) - (p_0.t * p_n.P)) / (p_N.t - p_0.t)) 
-                        - (p_n.s_PP * (((p_N.t * p_0.P)   - (p_0.t * p_N.P)) / (p_N.t - p_0.t)));
-                        - (p_n.s_PI * (((p_N.t * p_0.I)   - (p_0.t * p_N.I)) / (p_N.t - p_0.t)));
+                        - (p_n.s_PP * (((p_N.t * p_0.P)   - (p_0.t * p_N.P)) / (p_N.t - p_0.t)))
+                        - (p_n.s_PI * (((p_N.t * p_0.I)   - (p_0.t * p_N.I)) / (p_N.t - p_0.t)))
                         - (p_n.s_PT * (((p_N.t * p_0.T)   - (p_0.t * p_N.T)) / (p_N.t - p_0.t)));
                     // Inversion row:
                     //   Time column:
