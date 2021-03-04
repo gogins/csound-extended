@@ -3,7 +3,7 @@
 
 <p>
   <a href="https://www.paypal.me/irreducible/">
-      <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" alt="paypal">
+      <img src="https://clipartsworld.com/images/paypal-donate-png-4.png alt="paypal">
   </a>
 </p>
 
