@@ -21,10 +21,10 @@ int main(int argc, const char **argv)
     csound::System::setMessageLevel(7);
     csound::HarmonyIFS harmony_ifs;
     // initialize(int voices_, double range_, double bass_, double note_duration_, bool tie_overlaps_, bool remove_duplicates, double g_ = 1.) {
-    harmony_ifs.initialize(4 , 60., 30., .125, true, true, 1.);
-    auto tonic = csound::chordForName("CM7");
-    auto subdominant = csound::chordForName("Dm7");
-    auto dominant = csound::chordForName("G7");
+    harmony_ifs.initialize(5 , 60., 30., .05, true, true, 1.);
+    auto tonic = csound::chordForName("CM9");
+    auto subdominant = csound::chordForName("Dm9");
+    auto dominant = csound::chordForName("G9");
     csound::System::message("I:\n%s\n", tonic.information_sector(0).c_str());
     csound::System::message("ii:\n%s\n", subdominant.information_sector(0).c_str());
     csound::System::message("V:\n%s\n", dominant.information_sector(0).c_str());
@@ -48,7 +48,7 @@ int main(int argc, const char **argv)
     
     harmony_ifs.set_transformation(1, t, t,   .5);
     harmony_ifs.set_transformation(1, t, h,   .0);
-    harmony_ifs.set_transformation(1, k, k,   .5);
+    harmony_ifs.set_transformation(1, k, k,   .45);
     harmony_ifs.set_transformation(1, k, h,  1.0);
     
     harmony_ifs.set_transformation(2, t, t,   .5);
@@ -71,11 +71,11 @@ int main(int argc, const char **argv)
     //~ //t3(t, h) = 1.;
     //~ //t3(k, k) = .5;
     csound::Rescale rescale;
-    rescale.setRescale(csound::Event::INSTRUMENT, true, true, 1., 2.999);
+    rescale.setRescale(csound::Event::INSTRUMENT, true, true, 3., .999);
     rescale.setRescale(csound::Event::VELOCITY, true, true, 60., 6.);
     rescale.addChild(&harmony_ifs);
     model.addChild(&rescale);
-    model.setDuration(180.);
+    model.setDuration(400.);
     const char orc[] = R"(
     
 sr = 48000
