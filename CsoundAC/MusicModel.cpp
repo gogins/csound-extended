@@ -73,7 +73,7 @@ int MusicModel::render()
     return errorStatus;
 }
 
-void MusicModel::createCsoundScore(std::string addToScore, double extendSeconds)
+void MusicModel::createCsoundScore(std::string addToScore, double extendSeconds_)
 {
     System::inform("addToScore.length(): %d\n", addToScore.length());
     if (addToScore.length() > 2) {
@@ -81,12 +81,12 @@ void MusicModel::createCsoundScore(std::string addToScore, double extendSeconds)
         cppSound->addScoreLine(addToScore);
     }
     cppSound->addScoreLine(score.getCsoundScore(tonesPerOctave, conformPitches));
-    char buffer[0x100];
-    //std::sprintf(buffer, "\ns %9.3f", extendSeconds);
-    //cppSound->addScoreLine(buffer);
-    std::sprintf(buffer, "\ne %9.3f\n", extendSeconds);
-    cppSound->addScoreLine(buffer);
-    //cppSound->exportForPerformance();
+    if (extendSeconds_ >= 0.) {
+        extendSeconds = extendSeconds_;
+        char e_statement[0x100];
+        std::snprintf(e_statement, 0x100, "\s 0.0\ne %9.4f\n", extendSeconds);
+        cppSound->addScoreLine(e_statement);
+    }
 }
 
 int MusicModel::perform()
@@ -97,7 +97,7 @@ int MusicModel::perform()
     auto csound_command = getCsoundCommand();
     System::message("MusicModel::perform using Csound command: %s\n", csound_command.c_str());
     cppSound->setCommand(getCsoundCommand());
-    createCsoundScore(csoundScoreHeader);
+    createCsoundScore(csoundScoreHeader, getExtendSeconds());
     std::string csd = cppSound->getCSD();
     // Always save the generated csd.
     std::string csd_filename = getOutputSoundfileFilepath() + "-generated.csd";

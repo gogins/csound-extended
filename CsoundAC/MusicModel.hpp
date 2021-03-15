@@ -59,7 +59,7 @@ public:
      * The time given by extendSeconds is used for a concluding e statement.
      */
     virtual void createCsoundScore(std::string addToScore = "",
-                                   double extendSeconds = 5.0);
+                                   double extendSeconds = 0.);
     /**
      * Convenience function that erases the existing score,
      * appends optional text to it,
@@ -211,6 +211,12 @@ public:
     virtual void cppsoundStop() {
         cppSound->stop();
     }
+    virtual double getExtendSeconds() const {
+        return extendSeconds;
+    }
+    virtual void setExtendSeconds(double extendSeconds_) {
+        extendSeconds = extendSeconds_;
+    }
 protected:
     /**
      * Self-contained Csound object.
@@ -227,6 +233,7 @@ protected:
      * Prepended to generated score.
      */
     std::string csoundScoreHeader;
+    double extendSeconds = -1;
 };
 
 }

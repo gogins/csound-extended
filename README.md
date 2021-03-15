@@ -1,12 +1,5 @@
 # csound-extended
 ![GitHub All Releases (total)](https://img.shields.io/github/downloads/gogins/csound-extended/total.svg)<br>
-
-<p>
-  <a href="https://www.paypal.me/irreducible/">
-      <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="paypal">
-  </a>
-</p>
-
 Michael Gogins<br>
 https://github.com/gogins<br>
 http://michaelgogins.tumblr.com
@@ -49,7 +42,7 @@ or collected from older projects of mine. These extensions include:
     
 10. Some plugin opcodes for Csound, including bformdec2, chuap, cmask, MVerb, 
     and the STK opcodes.
-
+    
 With regret I must announce that CsoundVST and the vst4cs opcodes are no longer
 maintained here. This is due to efforts by Steinberg to force developers to move
 to the VST3 SDK. **However, CsoundVST and the vst4cs opcodes are still avaiable 
