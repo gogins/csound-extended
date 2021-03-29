@@ -14456,6 +14456,7 @@
 	var Tanh = 'Tanh';
 	var Tile = 'Tile';
 	var TopK = 'TopK';
+	var Transform = 'Transform';
 	var Transpose = 'Transpose';
 	var Unique = 'Unique';
 	var Unpack = 'Unpack';
@@ -17698,6 +17699,11 @@
 
 	ENV.registerFlag('CHECK_COMPUTATION_FOR_ERRORS', function () {
 	  return true;
+	});
+	/** Whether the backend needs to wrap input to imageBitmap. */
+
+	ENV.registerFlag('WRAP_TO_IMAGEBITMAP', function () {
+	  return false;
 	});
 
 	/**
@@ -22392,6 +22398,55 @@
 
 	  var outShape = [height, width, numChannels];
 	  return tensor3d(values, outShape, 'int32');
+	} // Helper functions for |fromPixelsAsync| to check whether the input can
+	// be wrapped into imageBitmap.
+
+
+	function isPixelData(pixels) {
+	  return pixels != null && pixels.data instanceof Uint8Array;
+	}
+
+	function isImageBitmapFullySupported() {
+	  return typeof window !== 'undefined' && typeof ImageBitmap !== 'undefined' && window.hasOwnProperty('createImageBitmap');
+	}
+
+	function isNonEmptyPixels(pixels) {
+	  return pixels != null && pixels.width !== 0 && pixels.height !== 0;
+	}
+
+	function canWrapPixelsToImageBitmap(pixels) {
+	  return isImageBitmapFullySupported() && !(pixels instanceof ImageBitmap) && isNonEmptyPixels(pixels) && !isPixelData(pixels);
+	}
+	/**
+	 * Creates a `tf.Tensor` from an image in async way.
+	 *
+	 * ```js
+	 * const image = new ImageData(1, 1);
+	 * image.data[0] = 100;
+	 * image.data[1] = 150;
+	 * image.data[2] = 200;
+	 * image.data[3] = 255;
+	 *
+	 * (await tf.browser.fromPixelsAsync(image)).print();
+	 * ```
+	 * This API is the async version of fromPixels. The API will first
+	 * check |WRAP_TO_IMAGEBITMAP| flag, and try to wrap the input to
+	 * imageBitmap if the flag is set to true.
+	 *
+	 * @param pixels The input image to construct the tensor from. The
+	 * supported image types are all 4-channel. You can also pass in an image
+	 * object with following attributes:
+	 * `{data: Uint8Array; width: number; height: number}`
+	 * @param numChannels The number of channels of the output tensor. A
+	 * numChannels value less than 4 allows you to ignore channels. Defaults to
+	 * 3 (ignores alpha channel of input image).
+	 *
+	 * @doc {heading: 'Browser', namespace: 'browser', ignoreCI: true}
+	 */
+
+
+	function fromPixelsAsync(_x, _x2) {
+	  return _fromPixelsAsync.apply(this, arguments);
 	}
 	/**
 	 * Draws a `tf.Tensor` of pixel values to a byte array or optionally a
@@ -22414,18 +22469,84 @@
 	 * @doc {heading: 'Browser', namespace: 'browser'}
 	 */
 
+	function _fromPixelsAsync() {
+	  _fromPixelsAsync = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(pixels, numChannels) {
+	    var inputs, imageBitmap;
+	    return regeneratorRuntime.wrap(function _callee$(_context) {
+	      while (1) {
+	        switch (_context.prev = _context.next) {
+	          case 0:
+	            if (numChannels === void 0) {
+	              numChannels = 3;
+	            }
 
-	function toPixels(_x, _x2) {
+	            inputs = null; // Check whether the backend needs to wrap |pixels| to imageBitmap and
+	            // whether |pixels| can be wrapped to imageBitmap.
+
+	            if (!(env().getBool('WRAP_TO_IMAGEBITMAP') && canWrapPixelsToImageBitmap(pixels))) {
+	              _context.next = 15;
+	              break;
+	            }
+
+	            _context.prev = 3;
+	            _context.next = 6;
+	            return createImageBitmap(pixels, {
+	              premultiplyAlpha: 'none'
+	            });
+
+	          case 6:
+	            imageBitmap = _context.sent;
+	            _context.next = 12;
+	            break;
+
+	          case 9:
+	            _context.prev = 9;
+	            _context.t0 = _context["catch"](3);
+	            imageBitmap = null;
+
+	          case 12:
+	            // createImageBitmap will clip the source size.
+	            // In some cases, the input will have larger size than its content.
+	            // E.g. new Image(10, 10) but with 1 x 1 content. Using
+	            // createImageBitmap will clip the size from 10 x 10 to 1 x 1, which
+	            // is not correct. We should avoid wrapping such resouce to
+	            // imageBitmap.
+	            if (imageBitmap != null && imageBitmap.width === pixels.width && imageBitmap.height === pixels.height) {
+	              inputs = imageBitmap;
+	            } else {
+	              inputs = pixels;
+	            }
+
+	            _context.next = 16;
+	            break;
+
+	          case 15:
+	            inputs = pixels;
+
+	          case 16:
+	            return _context.abrupt("return", fromPixels_(inputs, numChannels));
+
+	          case 17:
+	          case "end":
+	            return _context.stop();
+	        }
+	      }
+	    }, _callee, null, [[3, 9]]);
+	  }));
+	  return _fromPixelsAsync.apply(this, arguments);
+	}
+
+	function toPixels(_x3, _x4) {
 	  return _toPixels.apply(this, arguments);
 	}
 
 	function _toPixels() {
-	  _toPixels = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(img, canvas) {
+	  _toPixels = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(img, canvas) {
 	    var $img, originalImgTensor, _$img$shape$slice, height, width, depth, data, multiplier, bytes, i, rgba, d, value, j, ctx, imageData;
 
-	    return regeneratorRuntime.wrap(function _callee$(_context) {
+	    return regeneratorRuntime.wrap(function _callee2$(_context2) {
 	      while (1) {
-	        switch (_context.prev = _context.next) {
+	        switch (_context2.prev = _context2.next) {
 	          case 0:
 	            $img = convertToTensor(img, 'img', 'toPixels');
 
@@ -22437,7 +22558,7 @@
 	            }
 
 	            if (!($img.rank !== 2 && $img.rank !== 3)) {
-	              _context.next = 4;
+	              _context2.next = 4;
 	              break;
 	            }
 
@@ -22448,7 +22569,7 @@
 	            depth = $img.rank === 2 ? 1 : $img.shape[2];
 
 	            if (!(depth > 4 || depth === 2)) {
-	              _context.next = 8;
+	              _context2.next = 8;
 	              break;
 	            }
 
@@ -22456,25 +22577,25 @@
 
 	          case 8:
 	            if (!($img.dtype !== 'float32' && $img.dtype !== 'int32')) {
-	              _context.next = 10;
+	              _context2.next = 10;
 	              break;
 	            }
 
 	            throw new Error("Unsupported type for toPixels: " + $img.dtype + "." + " Please use float32 or int32 tensors.");
 
 	          case 10:
-	            _context.next = 12;
+	            _context2.next = 12;
 	            return $img.data();
 
 	          case 12:
-	            data = _context.sent;
+	            data = _context2.sent;
 	            multiplier = $img.dtype === 'float32' ? 255 : 1;
 	            bytes = new Uint8ClampedArray(width * height * 4);
 	            i = 0;
 
 	          case 16:
 	            if (!(i < height * width)) {
-	              _context.next = 41;
+	              _context2.next = 41;
 	              break;
 	            }
 
@@ -22483,36 +22604,36 @@
 
 	          case 19:
 	            if (!(d < depth)) {
-	              _context.next = 33;
+	              _context2.next = 33;
 	              break;
 	            }
 
 	            value = data[i * depth + d];
 
 	            if (!($img.dtype === 'float32')) {
-	              _context.next = 26;
+	              _context2.next = 26;
 	              break;
 	            }
 
 	            if (!(value < 0 || value > 1)) {
-	              _context.next = 24;
+	              _context2.next = 24;
 	              break;
 	            }
 
 	            throw new Error("Tensor values for a float32 Tensor must be in the " + ("range [0 - 1] but encountered " + value + "."));
 
 	          case 24:
-	            _context.next = 29;
+	            _context2.next = 29;
 	            break;
 
 	          case 26:
 	            if (!($img.dtype === 'int32')) {
-	              _context.next = 29;
+	              _context2.next = 29;
 	              break;
 	            }
 
 	            if (!(value < 0 || value > 255)) {
-	              _context.next = 29;
+	              _context2.next = 29;
 	              break;
 	            }
 
@@ -22529,7 +22650,7 @@
 
 	          case 30:
 	            d++;
-	            _context.next = 19;
+	            _context2.next = 19;
 	            break;
 
 	          case 33:
@@ -22541,7 +22662,7 @@
 
 	          case 38:
 	            ++i;
-	            _context.next = 16;
+	            _context2.next = 16;
 	            break;
 
 	          case 41:
@@ -22557,14 +22678,14 @@
 	              $img.dispose();
 	            }
 
-	            return _context.abrupt("return", bytes);
+	            return _context2.abrupt("return", bytes);
 
 	          case 44:
 	          case "end":
-	            return _context.stop();
+	            return _context2.stop();
 	        }
 	      }
-	    }, _callee);
+	    }, _callee2);
 	  }));
 	  return _toPixels.apply(this, arguments);
 	}
@@ -22575,6 +22696,7 @@
 
 	var browser = {
 		__proto__: null,
+		fromPixelsAsync: fromPixelsAsync,
 		toPixels: toPixels,
 		fromPixels: fromPixels
 	};
@@ -23491,7 +23613,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$1 = '3.2.0';
+	var version$1 = '3.3.0';
 
 	/**
 	 * @license
@@ -39654,6 +39776,94 @@
 
 	/**
 	 * @license
+	 * Copyright 2021 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	/**
+	 * Applies the given transform(s) to the image(s).
+	 *
+	 * @param image 4d tensor of shape `[batch, imageHeight, imageWidth, depth]`.
+	 * @param transforms Projective transform matrix/matrices. A tensor1d of length
+	 *     8 or tensor of size N x 8. If one row of transforms is [a0, a1, a2, b0
+	 *     b1, b2, c0, c1], then it maps the output point (x, y) to a transformed
+	 *     input point (x', y') = ((a0 x + a1 y + a2) / k, (b0 x + b1 y + b2) / k),
+	 *     where k = c0 x + c1 y + 1. The transforms are inverted compared to the
+	 *     transform mapping input points to output points.
+	 * @param interpolation Interpolation mode.
+	 *     Supported values: 'nearest', 'bilinear'. Default to 'nearest'.
+	 * @param fillMode Points outside the boundaries of the input are filled
+	 *     according to the given mode, one of 'constant', 'reflect', 'wrap',
+	 *     'nearest'. Default to 'constant'.
+	 *     'reflect': (d c b a | a b c d | d c b a ) The input is extended by
+	 *     reflecting about the edge of the last pixel.
+	 *     'constant': (k k k k | a b c d | k k k k) The input is extended by
+	 *     filling all values beyond the edge with the same constant value k.
+	 *     'wrap': (a b c d | a b c d | a b c d) The input is extended by
+	 *     wrapping around to the opposite edge.
+	 *     'nearest': (a a a a | a b c d | d d d d) The input is extended by
+	 *     the nearest pixel.
+	 * @param fillValue A float represents the value to be filled outside the
+	 *     boundaries when fillMode is 'constant'.
+	 * @param Output dimension after the transform, [height, width]. If undefined,
+	 *     output is the same size as input image.
+	 *
+	 * @doc {heading: 'Operations', subheading: 'Images', namespace: 'image'}
+	 */
+
+	function transform_(image, transforms, interpolation, fillMode, fillValue, outputShape) {
+	  if (interpolation === void 0) {
+	    interpolation = 'nearest';
+	  }
+
+	  if (fillMode === void 0) {
+	    fillMode = 'constant';
+	  }
+
+	  if (fillValue === void 0) {
+	    fillValue = 0;
+	  }
+
+	  var $image = convertToTensor(image, 'image', 'transform', 'float32');
+	  var $transforms = convertToTensor(transforms, 'transforms', 'transform', 'float32');
+	  assert($image.rank === 4, function () {
+	    return 'Error in transform: image must be rank 4,' + ("but got rank " + $image.rank + ".");
+	  });
+	  assert($transforms.rank === 2 && ($transforms.shape[0] === $image.shape[0] || $transforms.shape[0] === 1) && $transforms.shape[1] === 8, function () {
+	    return "Error in transform: Input transform should be batch x 8 or 1 x 8";
+	  });
+	  assert(outputShape == null || outputShape.length === 2, function () {
+	    return 'Error in transform: outputShape must be [height, width] or null, ' + ("but got " + outputShape + ".");
+	  });
+	  var inputs = {
+	    image: $image,
+	    transforms: $transforms
+	  };
+	  var attrs = {
+	    interpolation: interpolation,
+	    fillMode: fillMode,
+	    fillValue: fillValue,
+	    outputShape: outputShape
+	  };
+	  return ENGINE.runKernel(Transform, inputs, attrs);
+	}
+
+	var transform = op({
+	  transform_: transform_
+	});
+
+	/**
+	 * @license
 	 * Copyright 2020 Google LLC. All Rights Reserved.
 	 * Licensed under the Apache License, Version 2.0 (the "License");
 	 * you may not use this file except in compliance with the License.
@@ -40728,7 +40938,8 @@
 	  nonMaxSuppressionWithScore: nonMaxSuppressionWithScore,
 	  nonMaxSuppressionWithScoreAsync: nonMaxSuppressionWithScoreAsync,
 	  nonMaxSuppressionPadded: nonMaxSuppressionPadded,
-	  nonMaxSuppressionPaddedAsync: nonMaxSuppressionPaddedAsync
+	  nonMaxSuppressionPaddedAsync: nonMaxSuppressionPaddedAsync,
+	  transform: transform
 	}; // linalg namespace
 	var linalg = {
 	  bandPart: bandPart,
@@ -58007,7 +58218,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$2 = '3.2.0';
+	var version$2 = '3.3.0';
 
 	/**
 	 * Helper function to check the dtype and shape compatibility of a feed value.
@@ -79035,6 +79246,22 @@
 	    'type': 'dtype',
 	    'notSupported': true
 	  }]
+	}, {
+	  'tfOpName': 'LookupTableSize',
+	  'category': 'hash_table',
+	  'inputs': [{
+	    'start': 0,
+	    'name': 'tableHandle',
+	    'type': 'tensor'
+	  }]
+	}, {
+	  'tfOpName': 'LookupTableSizeV2',
+	  'category': 'hash_table',
+	  'inputs': [{
+	    'start': 0,
+	    'name': 'tableHandle',
+	    'type': 'tensor'
+	  }]
 	}];
 
 	var hashTable = {
@@ -83335,6 +83562,14 @@
 	    return this.tensorMap.size;
 	  }
 	  /**
+	   * The number of items in the hash table as a rank-0 tensor.
+	   */
+	  ;
+
+	  _proto.tensorSize = function tensorSize() {
+	    return scalar(this.size(), 'int32');
+	  }
+	  /**
 	   * Replaces the contents of the table with the specified keys and values.
 	   * @param keys Keys to store in the hashtable.
 	   * @param values Values to store in the hashtable.
@@ -83489,14 +83724,14 @@
 
 	var executeOp$8 = /*#__PURE__*/function () {
 	  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(node, tensorMap, context, resourceManager) {
-	    var keyDType, valueDType, hashTable, handle, keys, values, _hashTable, _handle, _keys, defaultValue, _hashTable2;
+	    var keyDType, valueDType, hashTable, handle, keys, values, _hashTable, _handle, _keys, defaultValue, _hashTable2, _handle2, _hashTable3;
 
 	    return regeneratorRuntime.wrap(function _callee$(_context) {
 	      while (1) {
 	        switch (_context.prev = _context.next) {
 	          case 0:
 	            _context.t0 = node.op;
-	            _context.next = _context.t0 === 'HashTable' ? 3 : _context.t0 === 'HashTableV2' ? 3 : _context.t0 === 'LookupTableImport' ? 8 : _context.t0 === 'LookupTableImportV2' ? 8 : _context.t0 === 'LookupTableFind' ? 16 : _context.t0 === 'LookupTableFindV2' ? 16 : 24;
+	            _context.next = _context.t0 === 'HashTable' ? 3 : _context.t0 === 'HashTableV2' ? 3 : _context.t0 === 'LookupTableImport' ? 8 : _context.t0 === 'LookupTableImportV2' ? 8 : _context.t0 === 'LookupTableFind' ? 16 : _context.t0 === 'LookupTableFindV2' ? 16 : _context.t0 === 'LookupTableSize' ? 24 : _context.t0 === 'LookupTableSizeV2' ? 24 : 27;
 	            break;
 
 	          case 3:
@@ -83531,9 +83766,14 @@
 	            return _context.abrupt("return", [_context.t2]);
 
 	          case 24:
+	            _handle2 = getParamValue('tableHandle', node, tensorMap, context, resourceManager);
+	            _hashTable3 = resourceManager.getHashTableById(_handle2.id);
+	            return _context.abrupt("return", [_hashTable3.tensorSize()]);
+
+	          case 27:
 	            throw TypeError("Node type " + node.op + " is not implemented");
 
-	          case 25:
+	          case 28:
 	          case "end":
 	            return _context.stop();
 	        }
@@ -84715,7 +84955,7 @@
 	}
 	var CONTROL_FLOW_OPS = ['Switch', 'Merge', 'Enter', 'Exit', 'NextIteration', 'StatelessIf', 'StatelessWhile', 'if', 'While'];
 	var DYNAMIC_SHAPE_OPS = ['NonMaxSuppressionV2', 'NonMaxSuppressionV3', 'NonMaxSuppressionV5', 'Where'];
-	var HASH_TABLE_OPS = ['HashTable', 'HashTableV2', 'LookupTableImport', 'LookupTableImportV2', 'LookupTableFind', 'LookupTableFindV2'];
+	var HASH_TABLE_OPS = ['HashTable', 'HashTableV2', 'LookupTableImport', 'LookupTableImportV2', 'LookupTableFind', 'LookupTableFindV2', 'LookupTableSize', 'LookupTableSizeV2'];
 	function isControlFlow(node) {
 	  return CONTROL_FLOW_OPS.indexOf(node.op) >= 0;
 	}
@@ -86114,7 +86354,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$3 = '3.2.0';
+	var version$3 = '3.3.0';
 
 	/**
 	 * @license
@@ -92412,7 +92652,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$4 = '3.2.0';
+	var version$4 = '3.3.0';
 
 	/**
 	 * @license
@@ -94682,7 +94922,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$5 = '3.2.0';
+	var version$5 = '3.3.0';
 
 	/**
 	 * @license
@@ -103001,6 +103241,226 @@
 
 	/**
 	 * @license
+	 * Copyright 2021 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	function transform$1(args) {
+	  var inputs = args.inputs,
+	      attrs = args.attrs,
+	      backend = args.backend;
+	  var image = inputs.image,
+	      transforms = inputs.transforms;
+	  var interpolation = attrs.interpolation,
+	      fillMode = attrs.fillMode,
+	      fillValue = attrs.fillValue,
+	      outputShape = attrs.outputShape;
+	  var _image$shape = image.shape,
+	      batch = _image$shape[0],
+	      imageHeight = _image$shape[1],
+	      imageWidth = _image$shape[2],
+	      numChannels = _image$shape[3];
+
+	  var _ref = outputShape != null ? outputShape : [imageHeight, imageWidth],
+	      outHeight = _ref[0],
+	      outWidth = _ref[1];
+
+	  var outShape = [batch, outHeight, outWidth, numChannels];
+	  var strides = computeStrides(image.shape);
+	  var batchStride = strides[0];
+	  var rowStride = strides[1];
+	  var colStride = strides[2];
+	  var outVals = getTypedArrayFromDType(image.dtype, sizeFromShape(outShape));
+	  outVals.fill(fillValue);
+	  var imageVals = backend.data.get(image.dataId).values;
+	  var transformVals = backend.data.get(transforms.dataId).values; // Ref TF implementation:
+	  // https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/kernels/image/image_ops.h
+
+	  for (var b = 0; b < batch; ++b) {
+	    var _transform = transforms.shape[0] === 1 ? transformVals : transformVals.subarray(b * 8, b * 8 + 8);
+
+	    for (var outY = 0; outY < outHeight; ++outY) {
+	      for (var outX = 0; outX < outWidth; ++outX) {
+	        for (var channel = 0; channel < numChannels; ++channel) {
+	          var val = void 0;
+	          var projection = _transform[6] * outX + _transform[7] * outY + 1;
+
+	          if (projection === 0) {
+	            // Return the fill value for infinite coordinates,
+	            // which are outside the input image
+	            continue;
+	          }
+
+	          var inX = (_transform[0] * outX + _transform[1] * outY + _transform[2]) / projection;
+	          var inY = (_transform[3] * outX + _transform[4] * outY + _transform[5]) / projection;
+	          var x = mapCoord(inX, imageWidth, fillMode);
+	          var y = mapCoord(inY, imageHeight, fillMode);
+
+	          switch (interpolation) {
+	            case 'nearest':
+	              val = nearestInterpolation(imageVals, imageHeight, imageWidth, batchStride, rowStride, colStride, b, y, x, channel, fillValue);
+	              break;
+
+	            case 'bilinear':
+	              val = bilinearInterpolation(imageVals, imageHeight, imageWidth, batchStride, rowStride, colStride, b, y, x, channel, fillValue);
+	              break;
+
+	            default:
+	              throw new Error("Error in Transform: Expect 'nearest' or " + ("'bilinear', but got " + interpolation));
+	          }
+
+	          var ind = b * batchStride + outY * rowStride + outX * colStride + channel;
+	          outVals[ind] = val;
+	        }
+	      }
+	    }
+
+	    return backend.makeTensorInfo(outShape, image.dtype, outVals);
+	  }
+
+	  var dataId = backend.write(outVals, outShape, image.dtype);
+	  return {
+	    dataId: dataId,
+	    shape: image.shape,
+	    dtype: image.dtype
+	  };
+	}
+	var transformConfig = {
+	  kernelName: Transform,
+	  backendName: 'cpu',
+	  kernelFunc: transform$1
+	};
+
+	function mapCoord(outCoord, len, mode) {
+	  switch (mode) {
+	    case 'reflect':
+	      return mapCoordReflect(outCoord, len);
+
+	    case 'wrap':
+	      return mapCoordWrap(outCoord, len);
+
+	    case 'nearest':
+	      return mapCoordNearest(outCoord, len);
+
+	    case 'constant':
+	    default:
+	      return mapCoordConstant(outCoord, len);
+	  }
+	}
+
+	function mapCoordReflect(outCoord, len) {
+	  // Reflect [abcd] to [dcba|abcd|dcba].
+	  var inCoord = outCoord;
+
+	  if (inCoord < 0) {
+	    if (len <= 1) {
+	      inCoord = 0;
+	    } else {
+	      var sz2 = 2 * len;
+
+	      if (inCoord < sz2) {
+	        inCoord = sz2 * Math.trunc(-inCoord / sz2) + inCoord;
+	      }
+
+	      inCoord = inCoord < -len ? inCoord + sz2 : -inCoord - 1;
+	    }
+	  } else if (inCoord > len - 1) {
+	    if (len <= 1) {
+	      inCoord = 0;
+	    } else {
+	      var _sz = 2 * len;
+
+	      inCoord -= _sz * Math.trunc(inCoord / _sz);
+
+	      if (inCoord >= len) {
+	        inCoord = _sz - inCoord - 1;
+	      }
+	    }
+	  } // clamp is necessary because when outCoord = 3.5 and len = 4,
+	  // inCoord = 3.5 and will be rounded to 4 in nearest interpolation.
+
+
+	  return clamp(0, inCoord, len - 1);
+	}
+
+	function mapCoordWrap(outCoord, len) {
+	  // Wrap [abcd] to [abcd|abcd|abcd].
+	  var inCoord = outCoord;
+
+	  if (inCoord < 0) {
+	    if (len <= 1) {
+	      inCoord = 0;
+	    } else {
+	      var sz = len - 1;
+	      inCoord += len * (Math.trunc(-inCoord / sz) + 1);
+	    }
+	  } else if (inCoord > len - 1) {
+	    if (len <= 1) {
+	      inCoord = 0;
+	    } else {
+	      var _sz2 = len - 1;
+
+	      inCoord -= len * Math.trunc(inCoord / _sz2);
+	    }
+	  } // clamp is necessary because when outCoord = -0.5 and len = 4,
+	  // inCoord = 3.5 and will be rounded to 4 in nearest interpolation.
+
+
+	  return clamp(0, inCoord, len - 1);
+	}
+
+	function mapCoordConstant(outCoord, len) {
+	  return outCoord;
+	}
+
+	function mapCoordNearest(outCoord, len) {
+	  return clamp(0, outCoord, len - 1);
+	}
+
+	function readWithFillValue(imageVals, imageHeight, imageWidth, batchStride, rowStride, colStride, batch, y, x, channel, fillValue) {
+	  var ind = batch * batchStride + y * rowStride + x * colStride + channel;
+
+	  if (0 <= y && y < imageHeight && 0 <= x && x < imageWidth) {
+	    return imageVals[ind];
+	  } else {
+	    return fillValue;
+	  }
+	}
+
+	function nearestInterpolation(imageVals, imageHeight, imageWidth, batchStride, rowStride, colStride, batch, y, x, channel, fillValue) {
+	  var $y = Math.round(y);
+	  var $x = Math.round(x);
+	  return readWithFillValue(imageVals, imageHeight, imageWidth, batchStride, rowStride, colStride, batch, $y, $x, channel, fillValue);
+	}
+
+	function bilinearInterpolation(imageVals, imageHeight, imageWidth, batchStride, rowStride, colStride, batch, y, x, channel, fillValue) {
+	  var yFloor = Math.floor(y);
+	  var xFloor = Math.floor(x);
+	  var yCeil = yFloor + 1;
+	  var xCeil = xFloor + 1; // f(x, yFloor) = (xCeil - x) / (xCeil - xFloor) * f(xFloor, yFloor)
+	  //               + (x - xFloor) / (xCeil - xFloor) * f(xCeil, yFloor)
+
+	  var valueYFloor = (xCeil - x) * readWithFillValue(imageVals, imageHeight, imageWidth, batchStride, rowStride, colStride, batch, yFloor, xFloor, channel, fillValue) + (x - xFloor) * readWithFillValue(imageVals, imageHeight, imageWidth, batchStride, rowStride, colStride, batch, yFloor, xCeil, channel, fillValue); // f(x, yCeil) = (xCeil - x) / (xCeil - xFloor) * f(xFloor, yCeil)
+	  //             + (x - xFloor) / (xCeil - xFloor) * f(xCeil, yCeil)
+
+	  var valueYCeil = (xCeil - x) * readWithFillValue(imageVals, imageHeight, imageWidth, batchStride, rowStride, colStride, batch, yCeil, xFloor, channel, fillValue) + (x - xFloor) * readWithFillValue(imageVals, imageHeight, imageWidth, batchStride, rowStride, colStride, batch, yCeil, xCeil, channel, fillValue); // f(x, y) = (yCeil - y) / (yCeil - yFloor) * f(x, yFloor)
+	  //         + (y - yFloor) / (yCeil - yFloor) * f(x, yCeil)
+
+	  return (yCeil - y) * valueYFloor + (y - yFloor) * valueYCeil;
+	}
+
+	/**
+	 * @license
 	 * Copyright 2020 Google LLC. All Rights Reserved.
 	 * Licensed under the Apache License, Version 2.0 (the License);
 	 * you may not use this file except in compliance with the License.
@@ -103238,7 +103698,7 @@
 	 * =============================================================================
 	 */
 
-	var kernelConfigs = [_fusedMatMulConfig, absConfig, acosConfig, acoshConfig, addConfig, addNConfig, allConfig, anyConfig, argMaxConfig, argMinConfig, asinConfig, asinhConfig, atanConfig, atan2Config, atanhConfig, avgPoolConfig, avgPool3DConfig, avgPool3DGradConfig$1, avgPoolGradConfig$1, batchMatMulConfig, batchNormConfig, batchToSpaceNDConfig, bincountConfig, castConfig, ceilConfig, clipConfig, complexConfig, complexAbsConfig, concatConfig, conv2DBackpropFilterConfig, conv2DBackpropInputConfig, conv2DConfig, conv3DBackpropFilterV2Config, conv3DBackpropInputV2Config, conv3DConfig, cosConfig, coshConfig, cropAndResizeConfig, cumsumConfig, denseBincountConfig, depthToSpaceConfig, depthwiseConv2dNativeConfig, depthwiseConv2dNativeBackpropFilterConfig, depthwiseConv2dNativeBackpropInputConfig, diagConfig, dilation2dConfig, dilation2dBackpropInputConfig, dilation2dBackpropFilterConfig, realDivConfig, eluConfig, eluGradConfig$1, equalConfig, erfConfig, expConfig, expandDimsConfig, expm1Config, fftConfig, fillConfig, flipLeftRightConfig, floorConfig, floorDivConfig, fusedConv2DConfig, fusedDepthwiseConv2DConfig, gatherNdConfig, gatherV2Config, greaterConfig, greaterEqualConfig, identityConfig, ifftConfig, imagConfig, isFiniteConfig, isInfConfig, isNaNConfig, leakyReluConfig, lessConfig, lessEqualConfig, linSpaceConfig, logConfig, log1pConfig, logicalAndConfig, logicalNotConfig, logicalOrConfig, lRNConfig, lRNGradConfig, maximumConfig, maxPoolConfig, maxPool3DConfig, maxPool3DGradConfig$1, maxPoolGradConfig$1, maxPoolWithArgmaxConfig, maxConfig, meanConfig, minConfig, minimumConfig, mirrorPadConfig, modConfig, multinomialConfig, multiplyConfig, negConfig, nonMaxSuppressionV3Config, nonMaxSuppressionV4Config, nonMaxSuppressionV5Config, notEqualConfig, oneHotConfig, onesLikeConfig, packConfig, padV2Config, powConfig, preluConfig, prodConfig, rangeConfig, realConfig, reciprocalConfig, reluConfig, relu6Config, reshapeConfig, resizeBilinearConfig, resizeBilinearGradConfig$1, resizeNearestNeighborConfig, resizeNearestNeighborGradConfig$1, reverseConfig, rotateWithOffsetConfig, roundConfig, rsqrtConfig, scatterNdConfig, selectConfig, seluConfig, sigmoidConfig, signConfig, sinConfig, sinhConfig, sliceConfig, softmaxConfig, softplusConfig, spaceToBatchNDConfig, sparseToDenseConfig, splitVConfig, sqrtConfig, squareConfig, squaredDifferenceConfig, stepConfig, stridedSliceConfig, subConfig, sumConfig, tanConfig, tanhConfig, tileConfig, topKConfig, transposeConfig, uniqueConfig, unpackConfig, unsortedSegmentSumConfig, zerosLikeConfig];
+	var kernelConfigs = [_fusedMatMulConfig, absConfig, acosConfig, acoshConfig, addConfig, addNConfig, allConfig, anyConfig, argMaxConfig, argMinConfig, asinConfig, asinhConfig, atanConfig, atan2Config, atanhConfig, avgPoolConfig, avgPool3DConfig, avgPool3DGradConfig$1, avgPoolGradConfig$1, batchMatMulConfig, batchNormConfig, batchToSpaceNDConfig, bincountConfig, castConfig, ceilConfig, clipConfig, complexConfig, complexAbsConfig, concatConfig, conv2DBackpropFilterConfig, conv2DBackpropInputConfig, conv2DConfig, conv3DBackpropFilterV2Config, conv3DBackpropInputV2Config, conv3DConfig, cosConfig, coshConfig, cropAndResizeConfig, cumsumConfig, denseBincountConfig, depthToSpaceConfig, depthwiseConv2dNativeConfig, depthwiseConv2dNativeBackpropFilterConfig, depthwiseConv2dNativeBackpropInputConfig, diagConfig, dilation2dConfig, dilation2dBackpropInputConfig, dilation2dBackpropFilterConfig, realDivConfig, eluConfig, eluGradConfig$1, equalConfig, erfConfig, expConfig, expandDimsConfig, expm1Config, fftConfig, fillConfig, flipLeftRightConfig, floorConfig, floorDivConfig, fusedConv2DConfig, fusedDepthwiseConv2DConfig, gatherNdConfig, gatherV2Config, greaterConfig, greaterEqualConfig, identityConfig, ifftConfig, imagConfig, isFiniteConfig, isInfConfig, isNaNConfig, leakyReluConfig, lessConfig, lessEqualConfig, linSpaceConfig, logConfig, log1pConfig, logicalAndConfig, logicalNotConfig, logicalOrConfig, lRNConfig, lRNGradConfig, maximumConfig, maxPoolConfig, maxPool3DConfig, maxPool3DGradConfig$1, maxPoolGradConfig$1, maxPoolWithArgmaxConfig, maxConfig, meanConfig, minConfig, minimumConfig, mirrorPadConfig, modConfig, multinomialConfig, multiplyConfig, negConfig, nonMaxSuppressionV3Config, nonMaxSuppressionV4Config, nonMaxSuppressionV5Config, notEqualConfig, oneHotConfig, onesLikeConfig, packConfig, padV2Config, powConfig, preluConfig, prodConfig, rangeConfig, realConfig, reciprocalConfig, reluConfig, relu6Config, reshapeConfig, resizeBilinearConfig, resizeBilinearGradConfig$1, resizeNearestNeighborConfig, resizeNearestNeighborGradConfig$1, reverseConfig, rotateWithOffsetConfig, roundConfig, rsqrtConfig, scatterNdConfig, selectConfig, seluConfig, sigmoidConfig, signConfig, sinConfig, sinhConfig, sliceConfig, softmaxConfig, softplusConfig, spaceToBatchNDConfig, sparseToDenseConfig, splitVConfig, sqrtConfig, squareConfig, squaredDifferenceConfig, stepConfig, stridedSliceConfig, subConfig, sumConfig, tanConfig, tanhConfig, tileConfig, topKConfig, transposeConfig, transformConfig, uniqueConfig, unpackConfig, unsortedSegmentSumConfig, zerosLikeConfig];
 
 	for (var _i$1 = 0, _kernelConfigs = kernelConfigs; _i$1 < _kernelConfigs.length; _i$1++) {
 	  var kernelConfig = _kernelConfigs[_i$1];
@@ -104420,12 +104880,12 @@
 	 * command flush are delayed un til the end of javascript task. This value is
 	 * measured in millisecond. Typically you want to set this value to close to 1.
 	 *
-	 * Default value -1 indicates that we will not enforce manual flush and depend
-	 * on system default flush schedule.
+	 * Default value 1 for mobile chrome, and -1 for rest cases. -1 indicates that
+	 * we will not enforce manual flush and depend on system default flush schedule.
 	 */
 
 	ENV$1.registerFlag('WEBGL_FLUSH_THRESHOLD', function () {
-	  return -1;
+	  return isMobile() && ENV$1.getBool('IS_CHROME') ? 1 : -1;
 	}, function (threshold) {
 	  if (threshold < 0 && threshold !== -1) {
 	    throw new Error("WEBGL_FLUSH_THRESHOLD must be -1 (indicating never " + ("manual flush) or at least 0, but got " + threshold + "."));
@@ -108484,7 +108944,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$6 = '3.2.0';
+	var version$6 = '3.3.0';
 
 	/**
 	 * @license
@@ -115034,7 +115494,6 @@
 	  var numChannels = attrs.numChannels;
 	  var isVideo = typeof HTMLVideoElement !== 'undefined' && pixels instanceof HTMLVideoElement;
 	  var isImage = typeof HTMLImageElement !== 'undefined' && pixels instanceof HTMLImageElement;
-	  var isImageBitmap = typeof ImageBitmap !== 'undefined' && pixels instanceof ImageBitmap;
 
 	  var _ref = isVideo ? [pixels.videoWidth, pixels.videoHeight] : [pixels.width, pixels.height],
 	      width = _ref[0],
@@ -115043,7 +115502,7 @@
 	  var texShape = [height, width];
 	  var outShape = [height, width, numChannels];
 
-	  if (isImage || isVideo || isImageBitmap) {
+	  if (isImage || isVideo) {
 	    if (fromPixels2DContext$1 == null) {
 	      fromPixels2DContext$1 = document.createElement('canvas').getContext('2d');
 	    }
@@ -117706,32 +118165,50 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
-	var PadProgram = function PadProgram(xShape, paddings, constantValue) {
-	  this.variableNames = ['x'];
-	  this.outputShape = paddings.map(function (p, i) {
-	    return p[0]
-	    /* beforePad */
-	    + xShape[i] + p[1];
-	  }
-	  /* afterPad */
-	  );
-	  var rank = xShape.length;
-	  var type = getCoordsDataType(rank);
-	  var start = paddings.map(function (p) {
-	    return p[0];
-	  }).join(',');
-	  var end = paddings.map(function (p, i) {
-	    return p[0] + xShape[i];
-	  }).join(',');
-	  var unpackedCoords = ['coords[0]', 'coords[1]', 'coords[2]', 'coords[3]'].slice(0, rank);
+	var PadProgram = /*#__PURE__*/function () {
+	  function PadProgram(xShape, paddings, constantValue) {
+	    this.variableNames = ['x'];
+	    this.outputShape = paddings.map(function (p, i) {
+	      return p[0]
+	      /* beforePad */
+	      + xShape[i] + p[1];
+	    }
+	    /* afterPad */
+	    );
+	    var rank = xShape.length;
+	    var type = getCoordsDataType(rank);
+	    var start = paddings.map(function (p) {
+	      return p[0];
+	    }).join(',');
+	    var end = paddings.map(function (p, i) {
+	      return p[0] + xShape[i];
+	    }).join(',');
+	    var unpackedCoords = ['coords[0]', 'coords[1]', 'coords[2]', 'coords[3]'].slice(0, rank);
 
-	  if (rank === 1) {
-	    this.userCode = "\n        int start = " + start + ";\n        int end = " + end + ";\n\n        void main() {\n          int outC = getOutputCoords();\n          if (outC < start || outC >= end) {\n            setOutput(float(" + constantValue + "));\n          } else {\n            setOutput(getX(outC - start));\n          }\n        }\n      ";
-	    return;
+	    if (rank === 1) {
+	      this.userCode = "\n        int start = " + start + ";\n        int end = " + end + ";\n        uniform float value;\n\n        void main() {\n          int outC = getOutputCoords();\n          if (outC < start || outC >= end) {\n            setOutput(value);\n          } else {\n            setOutput(getX(outC - start));\n          }\n        }\n      ";
+	      return;
+	    }
+
+	    this.userCode = "\n      " + type + " start = " + type + "(" + start + ");\n      " + type + " end = " + type + "(" + end + ");\n      uniform float value;\n\n      void main() {\n        " + type + " outC = getOutputCoords();\n        if (any(lessThan(outC, start)) || any(greaterThanEqual(outC, end))) {\n          setOutput(value);\n        } else {\n          " + type + " coords = outC - start;\n          setOutput(getX(" + unpackedCoords + "));\n        }\n      }\n    ";
 	  }
 
-	  this.userCode = "\n      " + type + " start = " + type + "(" + start + ");\n      " + type + " end = " + type + "(" + end + ");\n\n      void main() {\n        " + type + " outC = getOutputCoords();\n        if (any(lessThan(outC, start)) || any(greaterThanEqual(outC, end))) {\n          setOutput(float(" + constantValue + "));\n        } else {\n          " + type + " coords = outC - start;\n          setOutput(getX(" + unpackedCoords + "));\n        }\n      }\n    ";
-	};
+	  var _proto = PadProgram.prototype;
+
+	  _proto.getCustomSetupFunc = function getCustomSetupFunc(value) {
+	    var _this = this;
+
+	    return function (gpgpu, webGLProgram) {
+	      if (_this.valueLoc == null) {
+	        _this.valueLoc = gpgpu.getUniformLocationNoThrow(webGLProgram, 'value');
+	      }
+
+	      gpgpu.gl.uniform1f(_this.valueLoc, value);
+	    };
+	  };
+
+	  return PadProgram;
+	}();
 
 	/**
 	 * @license
@@ -117749,40 +118226,58 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
-	var PadPackedProgram = function PadPackedProgram(xShape, paddings, constantValue) {
-	  this.variableNames = ['x'];
-	  this.packedInputs = true;
-	  this.packedOutput = true;
-	  this.outputShape = paddings.map(function (p, i) {
-	    return p[0]
-	    /* beforePad */
-	    + xShape[i] + p[1];
-	  }
-	  /* afterPad */
-	  );
-	  var rank = xShape.length;
-	  var dtype = getCoordsDataType(rank);
-	  var start = paddings.map(function (p) {
-	    return p[0];
-	  }).join(',');
-	  var end = paddings.map(function (p, i) {
-	    return p[0] + xShape[i];
-	  }).join(',');
-	  var coords = getChannels('rc', rank);
-	  var source = getChannels('source', rank);
-	  var cLimit = coords[rank - 1] + " < " + this.outputShape[rank - 1];
-	  var innerDims = rank === 1 ? 'source' : "vec2(" + source.slice(-2).join() + ")";
-	  var componentSetup = [dtype + " rc = outputLoc;", coords[rank - 1] + " += 1;\n       if(" + cLimit + ") {\n      ", rank === 1 ? '' : "}\n       rc = outputLoc;\n       " + coords[rank - 2] + " += 1;\n       if(" + coords[rank - 2] + " < " + this.outputShape[rank - 2] + ") {", rank === 1 ? '' : "  " + coords[rank - 1] + " += 1;\n         if(" + cLimit + ") {"];
-	  var paddingArea = rank === 1 ? 'rc < start || rc >= end' : 'any(lessThan(rc, start)) || any(greaterThanEqual(rc, end))';
-	  var mainLoop = '';
+	var PadPackedProgram = /*#__PURE__*/function () {
+	  function PadPackedProgram(xShape, paddings, constantValue) {
+	    this.variableNames = ['x'];
+	    this.packedInputs = true;
+	    this.packedOutput = true;
+	    this.outputShape = paddings.map(function (p, i) {
+	      return p[0]
+	      /* beforePad */
+	      + xShape[i] + p[1];
+	    }
+	    /* afterPad */
+	    );
+	    var rank = xShape.length;
+	    var dtype = getCoordsDataType(rank);
+	    var start = paddings.map(function (p) {
+	      return p[0];
+	    }).join(',');
+	    var end = paddings.map(function (p, i) {
+	      return p[0] + xShape[i];
+	    }).join(',');
+	    var coords = getChannels('rc', rank);
+	    var source = getChannels('source', rank);
+	    var cLimit = coords[rank - 1] + " < " + this.outputShape[rank - 1];
+	    var innerDims = rank === 1 ? 'source' : "vec2(" + source.slice(-2).join() + ")";
+	    var componentSetup = [dtype + " rc = outputLoc;", coords[rank - 1] + " += 1;\n       if(" + cLimit + ") {\n      ", rank === 1 ? '' : "}\n       rc = outputLoc;\n       " + coords[rank - 2] + " += 1;\n       if(" + coords[rank - 2] + " < " + this.outputShape[rank - 2] + ") {", rank === 1 ? '' : "  " + coords[rank - 1] + " += 1;\n         if(" + cLimit + ") {"];
+	    var paddingArea = rank === 1 ? 'rc < start || rc >= end' : 'any(lessThan(rc, start)) || any(greaterThanEqual(rc, end))';
+	    var mainLoop = '';
 
-	  for (var i = 0, j = rank === 1 ? 2 : 4; i < j; i++) {
-	    mainLoop += "\n        " + componentSetup[i] + "\n        if (" + paddingArea + ") {\n          result[" + i + "] = float(" + constantValue + ");\n        } else {\n          " + dtype + " source = rc - start;\n          result[" + i + "] = getChannel(getX(" + source.join() + "), " + innerDims + ");\n        }\n      ";
+	    for (var i = 0, j = rank === 1 ? 2 : 4; i < j; i++) {
+	      mainLoop += "\n        " + componentSetup[i] + "\n        if (" + paddingArea + ") {\n          result[" + i + "] = float(value);\n        } else {\n          " + dtype + " source = rc - start;\n          result[" + i + "] = getChannel(getX(" + source.join() + "), " + innerDims + ");\n        }\n      ";
+	    }
+
+	    mainLoop += rank === 1 ? "} " : "}}";
+	    this.userCode = "\n      const " + dtype + " start = " + dtype + "(" + start + ");\n      const " + dtype + " end = " + dtype + "(" + end + ");\n      uniform float value;\n\n      void main() {\n        " + dtype + " outputLoc = getOutputCoords();\n        vec4 result = vec4(0.);\n        " + mainLoop + "\n        setOutput(result);\n      }\n    ";
 	  }
 
-	  mainLoop += rank === 1 ? "} " : "}}";
-	  this.userCode = "\n      const " + dtype + " start = " + dtype + "(" + start + ");\n      const " + dtype + " end = " + dtype + "(" + end + ");\n\n      void main() {\n        " + dtype + " outputLoc = getOutputCoords();\n        vec4 result = vec4(0.);\n        " + mainLoop + "\n        setOutput(result);\n      }\n    ";
-	};
+	  var _proto = PadPackedProgram.prototype;
+
+	  _proto.getCustomSetupFunc = function getCustomSetupFunc(value) {
+	    var _this = this;
+
+	    return function (gpgpu, webGLProgram) {
+	      if (_this.valueLoc == null) {
+	        _this.valueLoc = gpgpu.getUniformLocationNoThrow(webGLProgram, 'value');
+	      }
+
+	      gpgpu.gl.uniform1f(_this.valueLoc, value);
+	    };
+	  };
+
+	  return PadPackedProgram;
+	}();
 
 	/**
 	 * @license
@@ -117808,7 +118303,8 @@
 	  var paddings = attrs.paddings,
 	      constantValue = attrs.constantValue;
 	  var program = env().getBool('WEBGL_PACK_ARRAY_OPERATIONS') ? new PadPackedProgram(x.shape, paddings, constantValue) : new PadProgram(x.shape, paddings, constantValue);
-	  return backend.runWebGLProgram(program, [x], x.dtype);
+	  var customSetup = program.getCustomSetupFunc(constantValue);
+	  return backend.runWebGLProgram(program, [x], x.dtype, customSetup);
 	};
 	var padV2Config$1 = {
 	  kernelName: PadV2,
@@ -118579,31 +119075,40 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
-	var RotateProgram = function RotateProgram(imageShape, radians, fillValue, center) {
-	  this.variableNames = ['Image'];
-	  this.outputShape = [];
-	  var imageHeight = imageShape[1];
-	  var imageWidth = imageShape[2];
-	  var sinFactor = Math.sin(radians).toFixed(3);
-	  var cosFactor = Math.cos(radians).toFixed(3);
-	  this.outputShape = imageShape;
+	var RotateProgram = /*#__PURE__*/function () {
+	  function RotateProgram(imageShape, fillValue) {
+	    this.variableNames = ['Image'];
+	    this.outputShape = [];
+	    var imageHeight = imageShape[1];
+	    var imageWidth = imageShape[2];
+	    this.outputShape = imageShape;
+	    var fillSnippet = '';
 
-	  var _backend_util$getImag = getImageCenter(center, imageHeight, imageWidth),
-	      centerX = _backend_util$getImag[0],
-	      centerY = _backend_util$getImag[1];
+	    if (typeof fillValue === 'number') {
+	      fillSnippet = "float outputValue = " + fillValue.toFixed(2) + ";";
+	    } else {
+	      fillSnippet = "\n        vec3 fill = vec3(" + fillValue.join(',') + ");\n        float outputValue = fill[coords[3]];";
+	    }
 
-	  var centerXString = centerX.toFixed(3);
-	  var centerYString = centerY.toFixed(3);
-	  var fillSnippet = '';
-
-	  if (typeof fillValue === 'number') {
-	    fillSnippet = "float outputValue = " + fillValue.toFixed(2) + ";";
-	  } else {
-	    fillSnippet = "\n        vec3 fill = vec3(" + fillValue.join(',') + ");\n        float outputValue = fill[coords[3]];";
+	    this.userCode = "\n        uniform vec4 params;\n        void main() {\n          ivec4 coords = getOutputCoords();\n          int x = coords[2];\n          int y = coords[1];\n          float coordXFloat = (float(x) - params[0]) * params[3] -\n            (float(y) - params[1]) * params[2];\n          float coordYFloat = (float(x) - params[0]) * params[2] +\n            (float(y) - params[1]) * params[3];\n          int coordX = int(round(coordXFloat + params[0]));\n          int coordY = int(round(coordYFloat + params[1]));\n          " + fillSnippet + "\n          if(coordX >= 0 && coordX < " + imageWidth + " && coordY >= 0 && coordY < " + imageHeight + ") {\n            outputValue = getImage(coords[0], coordY, coordX, coords[3]);\n          }\n          setOutput(outputValue);\n        }\n    ";
 	  }
 
-	  this.userCode = "\n        void main() {\n          ivec4 coords = getOutputCoords();\n          int x = coords[2];\n          int y = coords[1];\n          float coordXFloat = (float(x) - " + centerXString + ") * " + cosFactor + " - (float(y) - " + centerYString + ") * " + sinFactor + ";\n          float coordYFloat = (float(x) - " + centerXString + ") * " + sinFactor + " + (float(y) - " + centerYString + ") * " + cosFactor + ";\n          int coordX = int(round(coordXFloat + " + centerXString + "));\n          int coordY = int(round(coordYFloat + " + centerYString + "));\n          " + fillSnippet + "\n          if(coordX >= 0 && coordX < " + imageWidth + " && coordY >= 0 && coordY < " + imageHeight + ") {\n            outputValue = getImage(coords[0], coordY, coordX, coords[3]);\n          }\n          setOutput(outputValue);\n        }\n    ";
-	};
+	  var _proto = RotateProgram.prototype;
+
+	  _proto.getCustomSetupFunc = function getCustomSetupFunc(centerX, centerY, sinFactor, cosFactor) {
+	    var _this = this;
+
+	    return function (gpgpu, webGLProgram) {
+	      if (_this.paramsLoc == null) {
+	        _this.paramsLoc = gpgpu.getUniformLocationNoThrow(webGLProgram, 'params');
+	      }
+
+	      gpgpu.gl.uniform4f(_this.paramsLoc, centerX, centerY, sinFactor, cosFactor);
+	    };
+	  };
+
+	  return RotateProgram;
+	}();
 
 	/**
 	 * @license
@@ -118633,8 +119138,14 @@
 	        fillValue = attrs.fillValue,
 	        center = attrs.center;
 	    var webglBackend = backend;
-	    var program = new RotateProgram(image.shape, radians, fillValue, center);
-	    var output = webglBackend.runWebGLProgram(program, [image], image.dtype);
+	    var program = new RotateProgram(image.shape, fillValue);
+
+	    var _backend_util$getImag = getImageCenter(center, image.shape[1], image.shape[2]),
+	        centerX = _backend_util$getImag[0],
+	        centerY = _backend_util$getImag[1];
+
+	    var customSetup = program.getCustomSetupFunc(centerX, centerY, Math.sin(radians), Math.cos(radians));
+	    var output = webglBackend.runWebGLProgram(program, [image], image.dtype, customSetup);
 	    return output;
 	  }
 	};
@@ -119694,6 +120205,99 @@
 
 	/**
 	 * @license
+	 * Copyright 2021 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	var TransformProgram = function TransformProgram(imageHeight, imageWidth, interpolation, fillMode, fillValue, outShape) {
+	  this.variableNames = ['Image', 'Transforms'];
+	  this.outputShape = outShape;
+	  var interpolationModeId = interpolation === 'nearest' ? 1 : 2;
+	  var fillModeId;
+
+	  switch (fillMode) {
+	    case 'constant':
+	      fillModeId = 1;
+	      break;
+
+	    case 'reflect':
+	      fillModeId = 2;
+	      break;
+
+	    case 'wrap':
+	      fillModeId = 3;
+	      break;
+
+	    case 'nearest':
+	      fillModeId = 4;
+	      break;
+
+	    default:
+	      fillModeId = 1;
+	      break;
+	  }
+
+	  this.userCode = "\n            float mapCoord(float outCoord, float len) {\n              float inCoord = outCoord;\n              if(" + fillModeId + " == 2) {\n                if (inCoord < 0.0) {\n                  if (len <= 1.0) {\n                    inCoord = 0.0;\n                  } else {\n                    float sz2 = 2.0 * len;\n                    if (inCoord < sz2) {\n                      inCoord = sz2 * float(int(float(-inCoord / sz2))) +\n                      inCoord;\n                    }\n                    inCoord = inCoord < -len ? inCoord + sz2 : -inCoord - 1.0;\n                  }\n                } else if (inCoord > len - 1.0) {\n                  if (len <= 1.0) {\n                    inCoord = 0.0;\n                  } else {\n                    float sz2 = 2.0 * len;\n                    inCoord -= sz2 * float(int(float(inCoord / sz2)));\n                    if (inCoord >= len) {\n                      inCoord = sz2 - inCoord - 1.0;\n                    }\n                  }\n                }\n                return clamp(inCoord, 0.0, len - 1.0);\n              } else if (" + fillModeId + " == 3) {\n                if (inCoord < 0.0) {\n                  if (len <= 1.0) {\n                    inCoord = 0.0;\n                  } else {\n                    float sz = len - 1.0;\n                    inCoord += len * (float(int(float(-inCoord / sz))) + 1.0);\n                  }\n                } else if (inCoord > len - 1.0) {\n                  if (len <= 1.0) {\n                    inCoord = 0.0;\n                  } else {\n                    float sz = len - 1.0;\n                    inCoord -= len * float(int(float(inCoord / sz)));\n                  }\n                }\n                return clamp(inCoord, 0.0, len - 1.0);\n              } else if (" + fillModeId + " == 4) {\n                return clamp(outCoord, 0.0, len - 1.0);\n              } else {\n                return outCoord;\n              }\n            }\n\n            float readWithFillValue(int batch, int coordY, int coordX,\n              int channel) {\n              float outputValue;\n              if (0 <= coordY && coordY < " + imageHeight + " && 0 <= coordX && coordX < " + imageWidth + ") {\n                  outputValue = getImage(batch, coordY, coordX, channel);\n              } else {\n                outputValue = float(" + fillValue + ");\n              }\n              return outputValue;\n            }\n\n            void main() {\n              ivec4 coords = getOutputCoords();\n              float outputValue;\n              int batch = coords[0];\n              int x = coords[2];\n              int y = coords[1];\n              int channel = coords[3];\n              float xf = float(x);\n              float yf = float(y);\n              float a1 = getTransforms(batch, 0);\n              float a2 = getTransforms(batch, 1);\n              float a3 = getTransforms(batch, 2);\n              float b1 = getTransforms(batch, 3);\n              float b2 = getTransforms(batch, 4);\n              float b3 = getTransforms(batch, 5);\n              float c1 = getTransforms(batch, 6);\n              float c2 = getTransforms(batch, 7);\n              float projection = c1 * xf + c2 * yf + 1.0;\n              if (projection == 0.0) {\n                outputValue = float(" + fillValue + ");\n              } else {\n                float inX = (a1 * xf + a2 * yf + a3) / projection;\n                float inY = (b1 * xf + b2 * yf + b3) / projection;\n                float mapX = mapCoord(inX, float(" + imageWidth + "));\n                float mapY = mapCoord(inY, float(" + imageHeight + "));\n\n                if (" + interpolationModeId + " == 1) {\n                  int coordY = int(round(mapY));\n                  int coordX = int(round(mapX));\n                  outputValue = readWithFillValue(batch, coordY, coordX,\n                    channel);\n                } else {\n                  float yFloor = floor(mapY);\n                  float xFloor = floor(mapX);\n                  float yCeil = yFloor + 1.0;\n                  float xCeil = xFloor + 1.0;\n                  float valueYFloor = (xCeil - mapX) *\n                  readWithFillValue(batch, int(yFloor), int(xFloor), channel) +\n                  (mapX - xFloor) *\n                  readWithFillValue(batch, int(yFloor), int(xCeil), channel);\n                  float valueYCeil = (xCeil - mapX) *\n                  readWithFillValue(batch, int(yCeil), int(xFloor), channel) +\n                  (mapX - xFloor) *\n                  readWithFillValue(batch, int(yCeil), int(xCeil), channel);\n                  outputValue = (yCeil - mapY) * valueYFloor +\n                  (mapY - yFloor) * valueYCeil;\n                }\n              }\n              setOutput(outputValue);\n            }\n        ";
+	};
+
+	/**
+	 * @license
+	 * Copyright 2021 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	function transform$2(args) {
+	  var inputs = args.inputs,
+	      backend = args.backend,
+	      attrs = args.attrs;
+	  var image = inputs.image,
+	      transforms = inputs.transforms;
+	  var interpolation = attrs.interpolation,
+	      fillMode = attrs.fillMode,
+	      fillValue = attrs.fillValue,
+	      outputShape = attrs.outputShape;
+	  var _image$shape = image.shape,
+	      batch = _image$shape[0],
+	      imageHeight = _image$shape[1],
+	      imageWidth = _image$shape[2],
+	      numChannels = _image$shape[3];
+
+	  var _ref = outputShape != null ? outputShape : [imageHeight, imageWidth],
+	      outHeight = _ref[0],
+	      outWidth = _ref[1];
+
+	  var outShape = [batch, outHeight, outWidth, numChannels];
+	  var program = new TransformProgram(imageHeight, imageWidth, interpolation, fillMode, fillValue, outShape);
+	  return backend.runWebGLProgram(program, [image, transforms], 'float32');
+	}
+	var transformConfig$1 = {
+	  kernelName: Transform,
+	  backendName: 'webgl',
+	  kernelFunc: transform$2
+	};
+
+	/**
+	 * @license
 	 * Copyright 2020 Google LLC. All Rights Reserved.
 	 * Licensed under the Apache License, Version 2.0 (the License);
 	 * you may not use this file except in compliance with the License.
@@ -120010,7 +120614,7 @@
 	 * =============================================================================
 	 */
 
-	var kernelConfigs$1 = [LRNConfig, LRNGradConfig, _fusedMatMulConfig$1, absConfig$1, acosConfig$1, acoshConfig$1, addConfig$1, addNConfig$1, allConfig$1, anyConfig$1, argMaxConfig$1, argMinConfig$1, asinConfig$1, asinhConfig$1, atan2Config$1, atanConfig$1, atanhConfig$1, avgPool3DConfig$1, avgPoolConfig$1, avgPoolGrad3DConfig, avgPoolGradConfig$2, batchMatMulConfig$1, batchNormConfig$1, batchToSpaceNDConfig$1, bincountConfig$1, castConfig$1, ceilConfig$1, clipByValueConfig, complexAbsConfig$1, complexConfig$1, concatConfig$1, conv2DBackpropFilterConfig$1, conv2DBackpropInputConfig$1, conv2DConfig$1, conv3DBackpropFilterV2Config$1, conv3DBackpropInputConfig, conv3DConfig$1, cosConfig$1, coshConfig$1, cropAndResizeConfig$1, cumsumConfig$1, denseBincountConfig$1, depthToSpaceConfig$1, depthwiseConv2dNativeBackpropFilterConfig$1, depthwiseConv2dNativeBackpropInputConfig$1, depthwiseConv2dNativeConfig$1, diagConfig$1, dilation2DConfig, eluConfig$1, eluGradConfig$2, equalConfig$1, erfConfig$1, expConfig$1, expandDimsConfig$1, expm1Config$1, fftConfig$1, fillConfig$1, flipLeftRightConfig$1, floorConfig$1, floorDivConfig$1, fromPixelsConfig, fusedConv2DConfig$1, fusedDepthwiseConv2DConfig$1, gatherNdConfig$1, gatherV2Config$1, greaterConfig$1, greaterEqualConfig$1, identityConfig$1, ifftConfig$1, imagConfig$1, isFiniteConfig$1, isInfConfig$1, isNaNConfig$1, leakyReluConfig$1, lessConfig$1, lessEqualConfig$1, linSpaceConfig$1, log1pConfig$1, logConfig$1, logicalAndConfig$1, logicalNotConfig$1, logicalOrConfig$1, maxConfig$1, maxPool3DConfig$1, maxPoolConfig$1, maxPoolGrad3DConfig, maxPoolGradConfig$2, maxPoolWithArgmaxConfig$1, maximumConfig$1, meanConfig$1, minConfig$1, minimumConfig$1, mirrorPadConfig$1, modConfig$1, multinomialConfig$1, multiplyConfig$1, negConfig$1, nonMaxSuppressionV3Config$1, nonMaxSuppressionV4Config$1, nonMaxSuppressionV5Config$1, notEqualConfig$1, oneHotConfig$1, onesLikeConfig$1, packConfig$1, padV2Config$1, powConfig$1, preluConfig$1, prodConfig$1, rangeConfig$1, realConfig$1, realDivConfig$1, reciprocalConfig$1, relu6Config$1, reluConfig$1, reshapeConfig$1, resizeBilinearConfig$1, resizeBilinearGradConfig$2, resizeNearestNeighborConfig$1, resizeNearestNeighborGradConfig$2, reverseConfig$1, rotateWithOffsetConfig$1, roundConfig$1, rsqrtConfig$1, scatterNdConfig$1, selectConfig$1, seluConfig$1, sigmoidConfig$1, signConfig$1, sinConfig$1, sinhConfig$1, sliceConfig$1, softmaxConfig$1, softplusConfig$1, spaceToBatchNDConfig$1, sparseToDenseConfig$1, splitVConfig$1, sqrtConfig$1, squareConfig$1, squaredDifferenceConfig$1, stepConfig$1, stridedSliceConfig$1, subConfig$1, sumConfig$1, tanConfig$1, tanhConfig$1, tileConfig$1, topKConfig$1, transposeConfig$1, uniqueConfig$1, unpackConfig$1, unsortedSegmentSumConfig$1, zerosLikeConfig$1];
+	var kernelConfigs$1 = [LRNConfig, LRNGradConfig, _fusedMatMulConfig$1, absConfig$1, acosConfig$1, acoshConfig$1, addConfig$1, addNConfig$1, allConfig$1, anyConfig$1, argMaxConfig$1, argMinConfig$1, asinConfig$1, asinhConfig$1, atan2Config$1, atanConfig$1, atanhConfig$1, avgPool3DConfig$1, avgPoolConfig$1, avgPoolGrad3DConfig, avgPoolGradConfig$2, batchMatMulConfig$1, batchNormConfig$1, batchToSpaceNDConfig$1, bincountConfig$1, castConfig$1, ceilConfig$1, clipByValueConfig, complexAbsConfig$1, complexConfig$1, concatConfig$1, conv2DBackpropFilterConfig$1, conv2DBackpropInputConfig$1, conv2DConfig$1, conv3DBackpropFilterV2Config$1, conv3DBackpropInputConfig, conv3DConfig$1, cosConfig$1, coshConfig$1, cropAndResizeConfig$1, cumsumConfig$1, denseBincountConfig$1, depthToSpaceConfig$1, depthwiseConv2dNativeBackpropFilterConfig$1, depthwiseConv2dNativeBackpropInputConfig$1, depthwiseConv2dNativeConfig$1, diagConfig$1, dilation2DConfig, eluConfig$1, eluGradConfig$2, equalConfig$1, erfConfig$1, expConfig$1, expandDimsConfig$1, expm1Config$1, fftConfig$1, fillConfig$1, flipLeftRightConfig$1, floorConfig$1, floorDivConfig$1, fromPixelsConfig, fusedConv2DConfig$1, fusedDepthwiseConv2DConfig$1, gatherNdConfig$1, gatherV2Config$1, greaterConfig$1, greaterEqualConfig$1, identityConfig$1, ifftConfig$1, imagConfig$1, isFiniteConfig$1, isInfConfig$1, isNaNConfig$1, leakyReluConfig$1, lessConfig$1, lessEqualConfig$1, linSpaceConfig$1, log1pConfig$1, logConfig$1, logicalAndConfig$1, logicalNotConfig$1, logicalOrConfig$1, maxConfig$1, maxPool3DConfig$1, maxPoolConfig$1, maxPoolGrad3DConfig, maxPoolGradConfig$2, maxPoolWithArgmaxConfig$1, maximumConfig$1, meanConfig$1, minConfig$1, minimumConfig$1, mirrorPadConfig$1, modConfig$1, multinomialConfig$1, multiplyConfig$1, negConfig$1, nonMaxSuppressionV3Config$1, nonMaxSuppressionV4Config$1, nonMaxSuppressionV5Config$1, notEqualConfig$1, oneHotConfig$1, onesLikeConfig$1, packConfig$1, padV2Config$1, powConfig$1, preluConfig$1, prodConfig$1, rangeConfig$1, realConfig$1, realDivConfig$1, reciprocalConfig$1, relu6Config$1, reluConfig$1, reshapeConfig$1, resizeBilinearConfig$1, resizeBilinearGradConfig$2, resizeNearestNeighborConfig$1, resizeNearestNeighborGradConfig$2, reverseConfig$1, rotateWithOffsetConfig$1, roundConfig$1, rsqrtConfig$1, scatterNdConfig$1, selectConfig$1, seluConfig$1, sigmoidConfig$1, signConfig$1, sinConfig$1, sinhConfig$1, sliceConfig$1, softmaxConfig$1, softplusConfig$1, spaceToBatchNDConfig$1, sparseToDenseConfig$1, splitVConfig$1, sqrtConfig$1, squareConfig$1, squaredDifferenceConfig$1, stepConfig$1, stridedSliceConfig$1, subConfig$1, sumConfig$1, tanConfig$1, tanhConfig$1, tileConfig$1, topKConfig$1, transformConfig$1, transposeConfig$1, uniqueConfig$1, unpackConfig$1, unsortedSegmentSumConfig$1, zerosLikeConfig$1];
 
 	for (var _i$2 = 0, _kernelConfigs$1 = kernelConfigs$1; _i$2 < _kernelConfigs$1.length; _i$2++) {
 	  var kernelConfig$1 = _kernelConfigs$1[_i$2];
@@ -120036,7 +120640,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$7 = '3.2.0';
+	var version$7 = '3.3.0';
 
 	/**
 	 * @license
@@ -120258,6 +120862,7 @@
 	exports.TensorBuffer = TensorBuffer;
 	exports.Tile = Tile;
 	exports.TopK = TopK;
+	exports.Transform = Transform;
 	exports.Transpose = Transpose;
 	exports.Unique = Unique;
 	exports.Unpack = Unpack;

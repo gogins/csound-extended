@@ -4639,7 +4639,7 @@ inline void Chord::initialize_sectors() {
     static bool initialized = false;
     if (initialized == false) {
         initialized = true;
-        SCOPED_DEBUGGING scoped_debugging;
+        //SCOPED_DEBUGGING scoped_debugging;
         auto cyclical_regions = cyclical_regions_for_dimensionalities();
         auto &opt_domains_for_dimensions = opt_sectors_for_dimensionalities();
         auto &opti_domains_for_dimensions = opti_sectors_for_dimensionalities();

@@ -1394,4 +1394,19 @@ const Event &Score::getScaleActualRanges() const {
     return scaleActualRanges;
 }
 
+double Score::getDurationFromZero() const {
+    double end = 0.0;
+    for (int i = 0, n = size(); i < n; ++i) {
+        const Event &event = at(i);
+        if (i == 0) {
+            end = event.getOffTime();
+        } else {
+            if (event.getOffTime() > end) {
+                end = event.getOffTime();
+            }
+        }
+    }
+    return end;
+}
+
 }

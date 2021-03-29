@@ -111,6 +111,7 @@ public:
     virtual void dump(std::ostream &stream);
     virtual std::string toString();
     virtual double getDuration();
+    virtual double getDurationFromZero() const;
     virtual void rescale(int dimension, bool rescaleMinimum, double minimum, bool rescaleRange = false, double range = 0.0);
     /**
      * Translate the Silence events in this to a Csound score, that is, to a list of i statements.
