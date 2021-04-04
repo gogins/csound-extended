@@ -110,7 +110,14 @@ public:
     virtual void sort();
     virtual void dump(std::ostream &stream);
     virtual std::string toString();
+    /**
+     * Returns the time from the first event to the last event.
+     */
     virtual double getDuration();
+    /**
+     * Returns the time from 0 to the final off time; this assumes that no 
+     * events start before time 0.
+     */
     virtual double getDurationFromZero() const;
     virtual void rescale(int dimension, bool rescaleMinimum, double minimum, bool rescaleRange = false, double range = 0.0);
     /**

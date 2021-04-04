@@ -1560,7 +1560,8 @@ class SILENCE_PUBLIC Scale : public Chord {
          * Chord can first be resized (e.g. from a 9th chord to a triad) in 
          * order to find more or fewer possible modulations.
          */
-        virtual std::vector<Scale> modulations(const Chord &chord, int voices = -1) const;
+        virtual std::vector<Scale> modulations(const Chord &chord) const;
+        virtual std::vector<Scale> modulations_for_voices(const Chord &chord, int voices) const;
         /**
          * For any Chord belonging to this Scale, returns in the argument a 
          * list of other Scales to which that Chord also belongs. Switching to 
@@ -4397,12 +4398,21 @@ inline SILENCE_PUBLIC void Scale::modulations_for_scale_types(std::vector<Scale>
     }
 }
 
-inline SILENCE_PUBLIC std::vector<Scale> Scale::modulations(const Chord &chord, int voices) const {
+inline SILENCE_PUBLIC std::vector<Scale> Scale::modulations_for_voices(const Chord &chord, int voices) const {
     std::vector<Scale> result;
     std::vector<std::string> type_names;
     type_names.push_back("major");
     type_names.push_back("harmonic minor");
     modulations_for_scale_types(result, chord, voices, type_names);
+    return result;
+}
+
+inline SILENCE_PUBLIC std::vector<Scale> Scale::modulations(const Chord &chord) const {
+    std::vector<Scale> result;
+    std::vector<std::string> type_names;
+    type_names.push_back("major");
+    type_names.push_back("harmonic minor");
+    modulations_for_scale_types(result, chord, chord.voices(), type_names);
     return result;
 }
 

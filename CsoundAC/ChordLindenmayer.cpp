@@ -626,7 +626,7 @@ void ChordLindenmayer::scaleOperation(const std::string &operation,
 #if DEBUGGING
         System::debug("  chord at degree:                %s\n", chord.toString().c_str());
 #endif
-            auto modulations = turtle.scale.modulations(chord, voices);
+            auto modulations = turtle.scale.modulations_for_voices(chord, voices);
             if (modulations.size() > 0) {
                 while (choice < 0) {
                     choice = choice + modulations.size();
