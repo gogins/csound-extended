@@ -3848,7 +3848,7 @@ inline SILENCE_PUBLIC double I(double pitch, double center) {
 }
 
 inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_singular_value_decomposition(const std::vector<Chord> &points_, bool make_eT) {
-    std::cout << "hyperplane_equation_from_singular_value_decomposition: original points:" << std::endl;
+    std::cerr << "hyperplane_equation_from_singular_value_decomposition: original points:" << std::endl;
     std::vector<Chord> points;
     if (make_eT == true) {
         for (auto point : points_) {
@@ -3857,13 +3857,13 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_singular_value
     } else {
         points = points_;
     }
-    std::cout << "hyperplane_equation_from_singular_value_decomposition: points:" << std::endl;
+    std::cerr << "hyperplane_equation_from_singular_value_decomposition: points:" << std::endl;
     auto opt = "";
     if (make_eT == true) {
         opt = "T: ";
     }
     for (auto point: points) {
-        std::cout << opt <<  point.col(0).transpose() << std::endl;
+        std::cerr << opt <<  point.col(0).transpose() << std::endl;
     }
     auto subtrahend = points.back().col(0);
     Matrix matrix(subtrahend.rows(), points.size() - 1);
@@ -3871,26 +3871,26 @@ inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_singular_value
         Vector difference = points[i].col(0) - subtrahend;
         matrix.col(i) = difference;
     }
-    std::cout << "hyperplane_equation_from_singular_value_decomposition: vectors:" << std::endl << matrix << std::endl;
+    std::cerr << "hyperplane_equation_from_singular_value_decomposition: vectors:" << std::endl << matrix << std::endl;
     matrix.transposeInPlace();
-    std::cout << "hyperplane_equation_from_singular_value_decomposition: vectors transposed:" << std::endl << matrix << std::endl;
+    std::cerr << "hyperplane_equation_from_singular_value_decomposition: vectors transposed:" << std::endl << matrix << std::endl;
     Eigen::JacobiSVD<Matrix, Eigen::FullPivHouseholderQRPreconditioner> svd(matrix, Eigen::ComputeFullU | Eigen::ComputeFullV);
-    std::cout << "hyperplane_equation_from_singular_value_decomposition: U:" << std::endl << svd.matrixU() << std::endl;
-    std::cout << "hyperplane_equation_from_singular_value_decomposition: singular values:" << std::endl << svd.singularValues() << std::endl;
-    std::cout << "hyperplane_equation_from_singular_value_decomposition: V:" << std::endl << svd.matrixV() << std::endl;
+    std::cerr << "hyperplane_equation_from_singular_value_decomposition: U:" << std::endl << svd.matrixU() << std::endl;
+    std::cerr << "hyperplane_equation_from_singular_value_decomposition: singular values:" << std::endl << svd.singularValues() << std::endl;
+    std::cerr << "hyperplane_equation_from_singular_value_decomposition: V:" << std::endl << svd.matrixV() << std::endl;
     //~ auto rhs = Matrix::Zero(svd.singularValues().rows(), 1);
     //~ auto solution = svd.solve(rhs);
-    //~ std::cout << "solution:\n";
-    //~ std::cout << solution << std::endl;
+    //~ std::cerr << "solution:\n";
+    //~ std::cerr << solution << std::endl;
     HyperplaneEquation hyperplane_equation_;
     hyperplane_equation_.unit_normal_vector = svd.matrixV().rightCols(1);
     auto norm = hyperplane_equation_.unit_normal_vector.norm();
-    std::cout << "hyperplane_equation_from_singular_value_decomposition: norm:" << std::endl << norm << std::endl;
+    std::cerr << "hyperplane_equation_from_singular_value_decomposition: norm:" << std::endl << norm << std::endl;
     hyperplane_equation_.unit_normal_vector = hyperplane_equation_.unit_normal_vector / norm;
     auto constant_term = hyperplane_equation_.unit_normal_vector.adjoint() * subtrahend;
     hyperplane_equation_.constant_term = constant_term(0, 0);
-    std::cout << "hyperplane_equation_from_singular_value_decomposition: unit normal vector: " << std::endl << hyperplane_equation_.unit_normal_vector << std::endl;
-    std::cout << "hyperplane_equation_from_singular_value_decomposition: constant term: " << std::endl << hyperplane_equation_.constant_term << std::endl;
+    std::cerr << "hyperplane_equation_from_singular_value_decomposition: unit normal vector: " << std::endl << hyperplane_equation_.unit_normal_vector << std::endl;
+    std::cerr << "hyperplane_equation_from_singular_value_decomposition: constant term: " << std::endl << hyperplane_equation_.constant_term << std::endl;
     return hyperplane_equation_;
 }
 

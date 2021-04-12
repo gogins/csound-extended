@@ -434,17 +434,17 @@ static void test_eq_tolerance() {
 
 int main(int argc, char **argv) {
     csound::System::message("C H O R D S P A C E   U N I T   T E S T S\n\n");
-    std::cout << csound::chord_space_version() << std::endl;
+    std::cerr << csound::chord_space_version() << std::endl;
     csound::Chord CM = csound::chordForName("C+");
     CM = CM.T(-4.);
-    std::cout << CM.information() << std::endl;
-    std::cout << CM.information_debug(-1) << std::endl;
+    std::cerr << CM.information() << std::endl;
+    std::cerr << CM.information_debug(-1) << std::endl;
     ///return 0;
     test_eq_tolerance();
     ///return 0;
     //~ csound::Chord BM = csound::chordForName("BM");
-    //~ std::cout << BM.information_sector(0) << std::endl;
-    //~ std::cout << "Starting diagnostics..." << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
+    //~ std::cerr << BM.information_sector(0) << std::endl;
+    //~ std::cerr << "Starting diagnostics..." << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
     test_eq_tolerance();
     test_nrR();
     test_nrP();
@@ -809,34 +809,34 @@ int main(int argc, char **argv) {
 
 #if 1    
     csound::Chord c1({-7, 2, 5});
-    std::cout << c1.information() << std::endl;
+    std::cerr << c1.information() << std::endl;
     csound::Chord c2({-5, -2, 7});
-    std::cout << c2.information() << std::endl;
+    std::cerr << c2.information() << std::endl;
     
     auto prior_level = csound::System::setMessageLevel(15);
     
     auto original = csound::Chord({0, 3, 7}).eOPT();
-    std::cout << "original:" << std::endl;
-    std::cout << original.information() << std::endl;
+    std::cerr << "original:" << std::endl;
+    std::cerr << original.information() << std::endl;
     auto reflected = csound::reflect_by_householder(original);
-    std::cout << "reflect_by_householder:" << std::endl;
-    std::cout << reflected.information() << std::endl;
+    std::cerr << "reflect_by_householder:" << std::endl;
+    std::cerr << reflected.information() << std::endl;
     reflected =  (original);
-    std::cout << "reflect_in_inversion_flat:" << std::endl;
-    std::cout << reflected.information() << std::endl;
+    std::cerr << "reflect_in_inversion_flat:" << std::endl;
+    std::cerr << reflected.information() << std::endl;
     auto spun_back = reflected.eOPT();
-    std::cout << "spun_back:" << std::endl;
-    std::cout << spun_back.information() << std::endl;
+    std::cerr << "spun_back:" << std::endl;
+    std::cerr << spun_back.information() << std::endl;
 
     original = csound::chordForName("C7");
-    std::cout << "original:" << std::endl;
-    std::cout << original.information() << std::endl;
+    std::cerr << "original:" << std::endl;
+    std::cerr << original.information() << std::endl;
     reflected = reflect_in_inversion_flat(original, testSector);
-    std::cout << "reflected:" << std::endl;
-    std::cout << reflected.information() << std::endl;
+    std::cerr << "reflected:" << std::endl;
+    std::cerr << reflected.information() << std::endl;
     spun_back = reflected.eOPTT();
-    std::cout << "spun_back:" << std::endl;
-    std::cout << spun_back.information() << std::endl;    
+    std::cerr << "spun_back:" << std::endl;
+    std::cerr << spun_back.information() << std::endl;    
 #endif    
     csound::System::message("\nTesting equivalence relations...\n\n");
     for (int voiceCount = 3; voiceCount <= 4; ++voiceCount) {

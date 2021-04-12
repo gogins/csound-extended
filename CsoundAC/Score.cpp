@@ -381,7 +381,7 @@ void Score::save(std::ostream &stream)
         }
     }
     // Write with time in seconds.
-    // seq.write(std::cout, true);
+    // seq.write(std::cerr, true);
     seq.smf_write(stream);
 }
 

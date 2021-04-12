@@ -674,7 +674,7 @@ void MidiFile::computeTimes()
     {
         int frameCode = (-midiHeader.timeFormat) >> 8;
         double framesPerSecond;
-        //cout << " frameCode:   " << frameCode;
+        //cerr << " frameCode:   " << frameCode;
         switch(frameCode)
         {
         case 24:
@@ -692,9 +692,9 @@ void MidiFile::computeTimes()
         default:
             framesPerSecond = 30.0;
         }
-        //cout << " framesPerSecond: " << framesPerSecond;
+        //cerr << " framesPerSecond: " << framesPerSecond;
         int ticksPerFrame = midiHeader.timeFormat & 0xff;
-        //cout << " ticksPerFrame:   " << ticksPerFrame;
+        //cerr << " ticksPerFrame:   " << ticksPerFrame;
         currentSecondsPerTick = (1.0 / framesPerSecond) / ticksPerFrame;
     }
     else
@@ -702,11 +702,11 @@ void MidiFile::computeTimes()
         double ticksPerQuarterNote = double(midiHeader.timeFormat);
         double secondsPerQuarterNote = microsecondsPerQuarterNote / 1000000.0;
         currentSecondsPerTick = secondsPerQuarterNote / ticksPerQuarterNote;
-        //cout << " ticksPerQuarterNote:   " << ticksPerQuarterNote;
-        //cout << " secondsPerQuarterNote: " << secondsPerQuarterNote;
+        //cerr << " ticksPerQuarterNote:   " << ticksPerQuarterNote;
+        //cerr << " secondsPerQuarterNote: " << secondsPerQuarterNote;
     }
-    //cout << " currentSecondsPerTick: " << currentSecondsPerTick;
-    //cout << endl;
+    //cerr << " currentSecondsPerTick: " << currentSecondsPerTick;
+    //cerr << endl;
     tempoMap[currentTick] = currentSecondsPerTick;
 }
 

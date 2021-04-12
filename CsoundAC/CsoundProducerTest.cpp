@@ -268,8 +268,8 @@ int main(int argc, const char **argv) {
     csound.InitializeCommonLisp(argc, argv);
     csound.RunScript("(format t \"*csound*: 0x~x~%)\" *csound*)", "Common Lisp");
     int thread = csound.Perform();//AndPostProcess();
-    std::cout << "Performing in thread 0x" << std::hex << thread << "..." << std::endl;
+    std::cerr << "Performing in thread 0x" << std::hex << thread << "..." << std::endl;
     csound.Join();
-    std::cout << "Finished." << std::endl;
+    std::cerr << "Finished." << std::endl;
     return 0;
 }
