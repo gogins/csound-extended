@@ -354,6 +354,36 @@ std::string Event::getProperties() const {
     return result;
 }
 
+std::string Event::toAthenaCL(double tonesPerOctave) const 
+{
+    char buffer[0x1000];
+    /** 
+     * Csound dimensions for athenaCL are:
+     * i_instrument = p1
+     * i_time = p2
+     * i_duration = p3
+     * i_dbspa = p4
+     * i_pch = p5
+     * optional properties = p12, printed as a string 
+     * ("'name'='value', ['name'='value']")
+     */
+    double velocity = getVelocity();
+    double dbsp = velocity / 127. * 90.;
+    double midi_key = getKey_tempered(tonesPerOctave);
+    double octave = std::floor(Conversions::midiToOctave(midi_key));
+    double pitch_class = std::fmod(midi_key, 12.);
+    double pch = octave + pitch_class;
+    sprintf(buffer, "i %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %s\n",
+            getInstrument(),
+            getTime(),
+            getDuration(),
+            dbsp,
+            pch,
+            getPan(),
+            getProperties().c_str());
+    return buffer;
+}
+
 std::string Event::toCsoundIStatement(double tonesPerOctave) const
 {
     char buffer[0x1000];

@@ -121,6 +121,11 @@ public:
     virtual double getDurationFromZero() const;
     virtual void rescale(int dimension, bool rescaleMinimum, double minimum, bool rescaleRange = false, double range = 0.0);
     /**
+     * Translate the Silence events in this to a Csound score for athenaCL, 
+     * that is, to a list of i statements with with inso, time, duration, dbsp, pch, pan.
+     */
+    virtual std::string getAthenaCLScore(double tonesPerOctave = 12.0, bool conformPitches = false);
+    /**
      * Translate the Silence events in this to a Csound score, that is, to a list of i statements.
      * The Silence events are rounded off to the nearest equally tempered pitch by the
      * specified number of tones per octave; if this argument is zero, the pitch is not tempered.

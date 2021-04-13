@@ -673,6 +673,36 @@ void Score::rescale(int dimension, bool rescaleMinimum, double minimum, bool res
     setScale(*this, dimension, rescaleMinimum, rescaleRange, 0, size(), minimum, range);
 }
 
+std::string Score::getAthenaCLScore(double tonesPerOctave, bool conformPitches)
+{
+    std::string csoundScore;
+    sort();
+    for( Score::iterator it = begin(); it != end(); ++it ) {
+        int oldInstrument = int( std::floor( it->getInstrument() ) );
+        if( gains.find( oldInstrument ) != gains.end() ) {
+            double inputDb = it->getVelocity();
+            double gain = gains[oldInstrument];
+            double outputDb = inputDb + gain;
+            it->setVelocity( outputDb );
+        }
+        if( pans.find( oldInstrument ) != pans.end() ) {
+            double pan = pans[oldInstrument];
+            it->setPan( pan );
+        }
+        if( reassignments.find( oldInstrument ) != reassignments.end() ) {
+            it->setInstrument( reassignments[oldInstrument] );
+        }
+        if( conformPitches ) {
+            it->conformToPitchClassSet();
+        }
+        if (it->isNote() == true) {
+            csoundScore.append( it->toAthenaCL( tonesPerOctave ) );
+        }
+    }
+    return csoundScore;
+}
+
+
 std::string Score::getCsoundScore(double tonesPerOctave, bool conformPitches)
 {
     std::string csoundScore;
