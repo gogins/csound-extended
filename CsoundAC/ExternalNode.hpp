@@ -38,16 +38,30 @@
 namespace csound
 {
 /**
- * Node class that runs a stored script using a specified program, 
- * and parses stdout, assumed to consist of Csound "i" statements, 
- * to append to the Score object in this.
+ * ExternalNode runs a stored script with a specified command line, and 
+ * imports Csound "i" statements printed by the script to stdout as CsoundAC 
+ * Event objects in a CsoundAC Score. The format of the "i" statements must 
+ * be the same as used in CsoundAC's Event::toCsoundIStatement method:
+ * <pre>
+ * p1  Csound instrument number.
+ * p2  Time in seconds from the beginning of the score.
+ * p3  Duration of the note in seconds.
+ * p4  MIDI key number as a real number, may have a fractional part.
+ * p5  MIDI velocity number as a real number.
+ * p6  Spatial location depth (Ambisonic X axis).
+ * p7  Spatial location width (Ambisonic Y axis, stereo pan).
+ * p8  Spatial location height (Ambisonic Z axis).
+ * p9  Audio phase in radians.
+ * p10 Mason number, i.e. a pitch-class set as a sum of powers of 2.
+ * </pre>
+ * Lines of text read from stdout that do not begin with "i " are ignored.
  */
 class SILENCE_PUBLIC ExternalNode :
     public ScoreNode
 {
 protected:
+    std::string command;
     std::string script;
-    std::string program;
 public:
     virtual void generate();
     virtual void generate(Score &collectingScore);

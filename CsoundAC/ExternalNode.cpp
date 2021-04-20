@@ -20,11 +20,13 @@
 #include "Event.hpp"
 #include "ExternalNode.hpp"
 #include <cstdio>
+#include <stdio.h>
 #include <cstring>
 #include <iostream>
 #include <fstream>
 #include <boost/process.hpp>
 #include <boost/tokenizer.hpp>
+#include "System.hpp"
 
 namespace csound
 {
@@ -82,17 +84,26 @@ static void parse_line(std::string line, Score &score) {
     score.push_back(event);
 }
 
+// TODO: This is POSIX-specific.
+
 void ExternalNode::generate()
 {
     score.clear();
-    auto script_filename = std::tmpnam(nullptr);
-    std::fstream stream;
-    stream.open(script_filename, std::ios_base::in | std::ios_base::out | std::ios_base::binary);
-    stream.write(script.data(), script.length());
-    stream.close();
-    auto program_path = boost::process::search_path(program);
+    char script_filename[] = "/tmp/externalXXXXXX.py";
+    auto file_descriptor = mkstemps(script_filename, 3);
+    if (file_descriptor == -1) {
+        System::error("ExternalNode::generate: Error: Could not create remporary file.\n");
+    }
+    System::inform("ExternalNode::generate: Created temporary script file: %s\n", script_filename);
+    auto script_file = fdopen(file_descriptor, "w+");
+    rewind(script_file);
+    auto bytes_written = fwrite(getScript().c_str(), sizeof(getScript().front()), getScript().length(), script_file);
+    System::inform("ExternalNode::generate: Wrote %d bytes.\n", bytes_written);
     boost::process::ipstream stdout_stream;
-    boost::process::child child_process(program, script_filename, boost::process::std_out > stdout_stream);
+    char command_line[0x500];
+    std::sprintf(command_line, "%s %s", getCommand().c_str(), script_filename);
+    System::inform("ExternalNode::generate: Executing: %s\n", command_line);
+    boost::process::child child_process(const_cast<const char *>(command_line), boost::process::std_out > stdout_stream);
     std::string line;
     while (stdout_stream && std::getline(stdout_stream, line) && !line.empty()) {
         std::cerr << line << std::endl;
@@ -114,6 +125,23 @@ void ExternalNode::generate(Score &collectingScore)
         collectingScore.back().process = score[i].process;
     }
 }
+
+void ExternalNode::setCommand(std::string command_) {
+    command = command_;
+}
+
+std::string ExternalNode::getCommand() const {
+    return command;
+}
+
+void ExternalNode::setScript(std::string script_) {
+    script = script_;
+}
+
+std::string ExternalNode::getScript() const {
+    return script;
+}
+
 
 
 }
