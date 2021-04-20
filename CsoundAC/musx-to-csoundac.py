@@ -134,6 +134,9 @@ if __name__ == '__main__':
     f = MidiFile("rm.mid", [t0, t1]).write()
     for track in f:
         print(track.print())
+        print(dir(track[0]))
+        print(track[0].toextern())
+        print(track[0].tostring())
     # To automatially play demos use setmidiplayer() to assign a shell
     # command that will play midi files on your computer. Example:
     setmidiplayer("timidity")
