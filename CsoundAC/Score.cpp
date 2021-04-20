@@ -673,7 +673,7 @@ void Score::rescale(int dimension, bool rescaleMinimum, double minimum, bool res
     setScale(*this, dimension, rescaleMinimum, rescaleRange, 0, size(), minimum, range);
 }
 
-std::string Score::getAthenaCLScore(double tonesPerOctave, bool conformPitches)
+std::string Score::getBlueScore(double tonesPerOctave, bool conformPitches)
 {
     std::string csoundScore;
     sort();
@@ -696,7 +696,7 @@ std::string Score::getAthenaCLScore(double tonesPerOctave, bool conformPitches)
             it->conformToPitchClassSet();
         }
         if (it->isNote() == true) {
-            csoundScore.append( it->toAthenaCL( tonesPerOctave ) );
+            csoundScore.append( it->toBlueIStatement( tonesPerOctave ) );
         }
     }
     return csoundScore;

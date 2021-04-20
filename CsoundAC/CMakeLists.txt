@@ -38,6 +38,7 @@ if(BUILD_CSOUND_AC)
         CounterpointMain.cpp
         CounterpointNode.cpp
         Event.cpp
+        ExternalNode.cpp
         ImageToScore.cpp
         Lindenmayer.cpp
         MCRM.cpp
