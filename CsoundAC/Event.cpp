@@ -354,7 +354,7 @@ std::string Event::getProperties() const {
     return result;
 }
 
-std::string Event::toAthenaCL(double tonesPerOctave) const 
+std::string Event::toBlueIStatement(double tonesPerOctave) const 
 {
     char buffer[0x1000];
     /** 
@@ -369,7 +369,7 @@ std::string Event::toAthenaCL(double tonesPerOctave) const
      */
     double velocity = getVelocity();
     double dbsp = velocity / 127. * 90.;
-    double midi_key = getKey_tempered(tonesPerOctave);
+    double midi_key = getKey_tempered(tonesPerOctave) - 60.;
     double octave = std::floor(Conversions::midiToOctave(midi_key));
     double pitch_class = std::fmod(midi_key, 12.);
     double pch = octave + pitch_class;

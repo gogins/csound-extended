@@ -182,7 +182,7 @@ public:
     /** Returns a Csound score statement suitable for use by athenaCL:
      * insno, time, duration, dbsp, pch, pan.
      */
-    virtual std::string toAthenaCL(double tempering = 12.0) const;
+    virtual std::string toBlueIStatement(double tempering = 12.0) const;
     virtual std::string toCsoundIStatement(double tempering = 12.0) const;
     virtual std::string toCsoundIStatementHeld(int tag, double tempering = 12.0) const;
     virtual std::string toCsoundIStatementRelease(int tag, double tempering = 12.0) const;
