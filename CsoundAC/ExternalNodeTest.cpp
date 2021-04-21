@@ -1,24 +1,28 @@
 #include <Silence.hpp>
 
 auto script = R"(
-c = .9
-y = 0
+import math
+
+c = .98
+y = 0.5
+bass = 36
+range_ = 60
 for i in range(100):
-    y1 = y * c * 4 * (1 - y);
+    y1 = c * y * (1 - y) * 4
     y = y1
+    midi_key = math.floor(bass + (y * range_)) 
     insno = 1
-    time = i / 8.
+    time_ = i / 8.
     duration = .5
-    midi_key = y * 60. + 36.
     midi_velocity = 60.
-    print("i ", insno, time, duration, midi_key, midi_velocity)
+    print("i ", insno, time_, duration, midi_key, midi_velocity)
 )";
 
 int main(int argc, const char **argv) 
 {
     csound::System::setMessageLevel(15);
     csound::ExternalNode externalNode;
-    externalNode.setCommand("/usr/bin/python");
+    externalNode.setCommand("/usr/bin/python3.9");
     externalNode.setScript(script);
     externalNode.generate();
     std::cout << "Generated:" << std::endl;
