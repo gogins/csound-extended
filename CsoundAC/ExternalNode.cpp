@@ -104,12 +104,12 @@ void ExternalNode::generate()
     std::sprintf(command_line, "%s %s", getCommand().c_str(), script_filename);
     System::inform("ExternalNode::generate: Executing: %s\n", command_line);
     boost::process::child child_process(const_cast<const char *>(command_line), boost::process::std_out > stdout_stream);
+    child_process.wait();
     std::string line;
-    while (stdout_stream && std::getline(stdout_stream, line) && !line.empty()) {
+    while (stdout_stream && std::getline(stdout_stream, line)) {
         std::cerr << line << std::endl;
         parse_line(line, score);
     }
-    child_process.wait();
     score.sort();
     if (duration != 0.0) {
         score.setDuration(duration);

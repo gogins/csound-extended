@@ -137,11 +137,18 @@ if __name__ == '__main__':
         print(dir(track[0]))
         print(track[0].toextern())
         print(track[0].tostring())
+    print(dir(t1[1062]))
+        
+    # For CsoundAC, we create a Score for each MidiSeq.
+    # Each MidiSeq is just a list of MIDI note on and note off events.
+    # We create csound:Event for each note on, and when we encounter a 
+    # matching note off, we update the Event and mark the note off as 
+    # consumed.
     # To automatially play demos use setmidiplayer() to assign a shell
     # command that will play midi files on your computer. Example:
     setmidiplayer("timidity")
     print(f"Wrote '{f.pathname}'.")
-    playfile(f.pathname)
+    #5playfile(f.pathname)
 
 
 
