@@ -33,8 +33,9 @@ namespace csound
     
 static void parse_line(std::string line, Score &score) {
     std::vector<std::string> pfields;
-    boost::tokenizer<> tokenizer(line);
-    for(boost::tokenizer<>::iterator it = tokenizer.begin(); it != tokenizer.end(); ++it) {
+    boost::char_separator<char> sep(" ");
+    boost::tokenizer<boost::char_separator<char> > tokenizer(line, sep);
+    for(auto it = tokenizer.begin(); it != tokenizer.end(); ++it) {
         pfields.push_back(*it);
     }
     if (pfields.front() != "i") {
@@ -98,18 +99,19 @@ void ExternalNode::generate()
     auto script_file = fdopen(file_descriptor, "w+");
     rewind(script_file);
     auto bytes_written = fwrite(getScript().c_str(), sizeof(getScript().front()), getScript().length(), script_file);
+    std::fclose(script_file);
     System::inform("ExternalNode::generate: Wrote %d bytes.\n", bytes_written);
     boost::process::ipstream stdout_stream;
     char command_line[0x500];
     std::sprintf(command_line, "%s %s", getCommand().c_str(), script_filename);
     System::inform("ExternalNode::generate: Executing: %s\n", command_line);
     boost::process::child child_process(const_cast<const char *>(command_line), boost::process::std_out > stdout_stream);
-    child_process.wait();
     std::string line;
     while (stdout_stream && std::getline(stdout_stream, line)) {
-        std::cerr << line << std::endl;
+        System::debug("ExternalNode::generate: parsing: %s\n", line.c_str());
         parse_line(line, score);
     }
+    child_process.wait();
     score.sort();
     if (duration != 0.0) {
         score.setDuration(duration);

@@ -20,7 +20,7 @@ for i in range(100):
 
 int main(int argc, const char **argv) 
 {
-    csound::System::setMessageLevel(15);
+    csound::System::setMessageLevel(7);
     csound::ExternalNode externalNode;
     externalNode.setCommand("/usr/bin/python3.9");
     externalNode.setScript(script);
