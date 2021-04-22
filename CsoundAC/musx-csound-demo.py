@@ -1,6 +1,4 @@
-###############################################################################
-"""
-
+'''
 Author: Michael Gogins, based on messaien.py example by Rick Taube.
 
 This file demonstrates how to use musx with Csound. This works for both live 
@@ -16,8 +14,7 @@ Isorhythmic piano and cello parts to Liturgie de Cristal, by Olivier Messiaen.
 Both parts employ a rotational technique taken from isorythmic motets in the 
 middle ages that produce cyclical patterns of rhythms (talea) and pitches 
 (color) that don't line up each time they repeat.
-
-"""
+'''
 import musx_csound
 import ctcsound
 
