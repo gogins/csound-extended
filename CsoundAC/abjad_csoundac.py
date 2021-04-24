@@ -2,6 +2,10 @@
 Author: Michael Gogins.
 
 This file demonstrates how to translate an abjad Score to a CsoundAC Score.
+
+There's a lot to like about abjad, but it mostly seems like the pet of a few 
+programmer/composers or composer/programmers, and to defer to Lilypond for all 
+the grunt work.
 '''
 import abjad
 import CsoundAC
@@ -57,18 +61,25 @@ abjad.override(note).hairpin.to_barline = False
 
 abjad.persist.as_midi(score, "fragment")
 
+# Does produce a MIDI file, squirreled away in ~/.abjad/output/{tempfilename}.mid.
+# This can be configured with arguments to the Player creator. The Player seems to 
+# use Lilypond exclusively for output.
+
+abjad.play(score)
+
 # Not much help, actually.
 
 print(help(score))
 print(dir(abjad.score.Note))
 print(dir(abjad.score.Leaf))
+print(help(abjad.io.Player))
 
 # Now we're getting somewhere. Timeline seems to flatten the containers.
 # Times and durations are rational numbers relative to the beat implied by 
 # the time signature. Pitches are Lilypond pitches, i.e. c is c3, c' is c5, 
 # c, is c2. Changes of tempo would warp this, not sure how that works for 
-# MIDI, maybe that's why MIDI dropped out of abjad. MIDI remains in Lilypond 
-# however.
+# MIDI, maybe that's why MIDI dropped out of abjad. MIDI remains in Lilypond, 
+# but there is no hook into the MIDI file creation from Python.
 
 for leaf in abjad.iterate(score).timeline():
     print(type(leaf), leaf, leaf._start_offset, leaf._get_duration(), leaf._multiplier)
