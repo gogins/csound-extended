@@ -1,4 +1,5 @@
 (require :asdf)
+(require :fomus)
 (require :nudruz)
 (load "example-csd.lisp")
 (in-package :cm)

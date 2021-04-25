@@ -105,3 +105,6 @@ The local `example-csd.lisp` and `example-orc.lisp` files contain a canned Csoun
 orchestra that is used to play the examples. As these files are not part of the 
 nudruz system, they are run as source code and therefore edits will be playable 
 immediately.
+
+PLEASE NOTE: It is generally necessary to `(require :fomus)` before `(require 
+:nudruz)` thanks to some quirk I have not yet deciphered.
