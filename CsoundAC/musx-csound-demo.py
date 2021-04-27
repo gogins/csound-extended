@@ -614,7 +614,7 @@ endin
     csound.setOption("-m195")
     csound.setOption("-f")
     # Change this for your actual audio configuration, try "aplay -l" to see what they are.
-    csound.setOption("-odac:plughw:2,0")
+    csound.setOption("-odac:plughw:1,0")
     # Can also be a soundfile.
     # csound.setOption("-otest.wav")
     csound.compileOrc(orc)

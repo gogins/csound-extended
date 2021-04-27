@@ -9,10 +9,20 @@ i instrument_number time_seconds duration_seconds midi_key midi_velocity
 Assigns a duration to the event at the given index in the given MIDI sequence.
 If the event is a note on event, the duration is the difference between the 
 time of the first matching note off message and the time of the note on event.
+
+For unisons, the first note on is also the first note turned off.
 '''
 from musx.midi import MidiNote, MidiSeq, MidiFile
 
-
+'''
+Assuming the event at the index is a note on event, searches forwards in time 
+in the sequence until the first note off event whose MIDI channel and MIDI key 
+number match the note on event, and which has not already been used as a note 
+off event, e.g. in a unison. When a match is found, the duration is obtained 
+and assigned to the note on event, and the note off is saved in a set that 
+identified it as having already been used. Thus, in unisons, the first note on 
+events are also the first notes turned off.
+'''
 def assign_duration(index, midiseq, turnoffs):
     event = midiseq[index]
     event.duration = 0

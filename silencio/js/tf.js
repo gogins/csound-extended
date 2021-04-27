@@ -14721,11 +14721,12 @@
 	var SpaceToBatchND = 'SpaceToBatchND';
 	var SplitV = 'SplitV';
 	var Softmax = 'Softmax';
+	var SparseReshape = 'SparseReshape';
+	var SparseToDense = 'SparseToDense';
 	var SquaredDifference = 'SquaredDifference';
 	var Square = 'Square';
-	var Sub = 'Sub';
-	var SparseToDense = 'SparseToDense';
 	var StridedSlice = 'StridedSlice';
+	var Sub = 'Sub';
 	var Tan = 'Tan';
 	var Tanh = 'Tanh';
 	var Tile = 'Tile';
@@ -23901,7 +23902,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$1 = '3.4.0';
+	var version$1 = '3.5.0';
 
 	/**
 	 * @license
@@ -28071,6 +28072,8 @@
 	 * tf.diag(x).print()
 	 * ```
 	 * @param x The input tensor.
+	 *
+	 * @doc {heading: 'Tensors', subheading: 'Creation'}
 	 */
 
 	function diag_(x) {
@@ -32881,6 +32884,8 @@
 	 * @param randFunction A random number generator function which is called
 	 * for each element in the output tensor.
 	 * @param dtype The data type of the output tensor. Defaults to 'float32'.
+	 *
+	 * @doc {heading: 'Tensors', subheading: 'Random'}
 	 */
 
 	function rand_(shape, randFunction, dtype) {
@@ -38049,6 +38054,8 @@
 	    return prelu(x, preluActivationWeights);
 	  } else if (activation === 'leakyrelu') {
 	    return leakyRelu(x, leakyreluAlpha);
+	  } else if (activation === 'sigmoid') {
+	    return sigmoid(x);
 	  }
 
 	  throw new Error("Unknown fused activation " + activation + ".");
@@ -41362,6 +41369,90 @@
 
 	/**
 	 * @license
+	 * Copyright 2021 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	/**
+	 * This operation has the same semantics as reshape on the represented dense
+	 * tensor. The `inputIndices` are recomputed based on the requested `newShape`.
+	 * If one component of `newShape` is the special value -1, the size of that
+	 * dimension is computed so that the total dense size remains constant. At most
+	 * one component of `newShape` can be -1. The number of dense elements implied
+	 * by `newShape` must be the same as the number of dense elements originally
+	 * implied by `inputShape`. Reshaping does not affect the order of values in the
+	 * SparseTensor. If the input tensor has rank R_in and N non-empty values, and
+	 * `newShape` has length R_out, then `inputIndices` has shape [N, R_in],
+	 * `inputShape` has length R_in, `outputIndices` has shape [N, R_out], and
+	 * `outputShape` has length R_out.
+	 *
+	 * ```js
+	 * const result = tf.sparse.sparseReshape(
+	 *   [[0, 0, 0], [0, 0, 1], [0, 1, 0], [1, 0, 0], [1, 2, 3]],
+	 *   [2, 3, 6], [9, -1]);
+	 * console.log(result);
+	 * result['outputIndices'].print(); //[[0, 0], [0, 1], [1, 2], [4, 2], [8, 1]]
+	 * result['outputShape'].print(); // [9, 4]
+	 * ```
+	 * @param inputIndices: 2-D. N x R_in matrix with the indices of non-empty
+	 * values in a SparseTensor.
+	 * @param inputShape: 1-D. R_in Tensor1D with the input SparseTensor's dense
+	 * shape.
+	 * @param newShape: 1-D. R_out Tensor1D with the requested new dense shape.
+	 * @return A map with the following properties:
+	 *     - outputIndices: 2-D. N x R_out matrix with the updated indices of
+	 *       non-empty values in the output SparseTensor.
+	 *     - outputShape: 1-D. R_out vector with the full dense shape of the output
+	 *       SparseTensor. This is the same as newShape but with any -1 dimensions
+	 *        filled in.
+	 * @doc {heading: 'Operations', subheading: 'Sparse'}
+	 */
+
+	function sparseReshape_(inputIndices, inputShape, newShape) {
+	  var $inputIndices = convertToTensor(inputIndices, 'inputIndices', 'sparseReshape');
+	  var $inputShape = convertToTensor(inputShape, 'inputShape', 'sparseReshape');
+	  var $newShape = convertToTensor(newShape, 'newShape', 'sparseReshape');
+
+	  if ($inputIndices.rank !== 2) {
+	    throw new Error("Input indices should be Tensor2D but received shape\n        " + $inputIndices.shape);
+	  }
+
+	  if ($inputShape.rank !== 1) {
+	    throw new Error("Input shape should be Tensor1D but received shape " + $inputShape.shape);
+	  }
+
+	  if ($newShape.rank !== 1) {
+	    throw new Error("New shape should be Tensor1D but received shape " + $newShape.shape);
+	  }
+
+	  var inputs = {
+	    inputIndices: $inputIndices,
+	    inputShape: $inputShape,
+	    newShape: $newShape
+	  };
+	  var result = ENGINE.runKernel(SparseReshape, inputs);
+	  return {
+	    outputIndices: result[0],
+	    outputShape: result[1]
+	  };
+	}
+
+	var sparseReshape = op({
+	  sparseReshape_: sparseReshape_
+	});
+
+	/**
+	 * @license
 	 * Copyright 2020 Google LLC. All Rights Reserved.
 	 * Licensed under the Apache License, Version 2.0 (the "License");
 	 * you may not use this file except in compliance with the License.
@@ -41417,6 +41508,9 @@
 	  meanSquaredError: meanSquaredError,
 	  sigmoidCrossEntropy: sigmoidCrossEntropy,
 	  softmaxCrossEntropy: softmaxCrossEntropy
+	};
+	var sparse = {
+	  sparseReshape: sparseReshape
 	}; // Second level exports.
 
 	/** @doc {heading: 'Training', subheading: 'Classes', namespace: 'train'} */
@@ -58929,7 +59023,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$2 = '3.4.0';
+	var version$2 = '3.5.0';
 
 	/**
 	 * Helper function to check the dtype and shape compatibility of a feed value.
@@ -66280,6 +66374,37 @@
 
 	Swish.className = 'swish';
 	registerClass(Swish);
+	/**
+	 * Mish activation function
+	 */
+
+	var Mish = /*#__PURE__*/function (_Activation14) {
+	  _inheritsLoose(Mish, _Activation14);
+
+	  function Mish() {
+	    return _Activation14.apply(this, arguments) || this;
+	  }
+
+	  var _proto15 = Mish.prototype;
+
+	  /**
+	   * Calculate the activation function.
+	   *
+	   * @param x Tensor.
+	   * @returns a Tensor of the same shape as x
+	   */
+	  _proto15.apply = function apply(x) {
+	    return tidy(function () {
+	      return mul(x, tanh$1(softplus(x)));
+	    });
+	  };
+
+	  return Mish;
+	}(Activation);
+	/** @nocollapse */
+
+	Mish.className = 'mish';
+	registerClass(Mish);
 	function serializeActivation(activation) {
 	  return activation.getClassName();
 	}
@@ -82605,7 +82730,8 @@
 		losses: losses,
 		spectral: spectral,
 		fused: fused_ops,
-		signal: signal
+		signal: signal,
+		sparse: sparse
 	};
 
 	/**
@@ -85474,7 +85600,7 @@
 
 	/**
 	 * @license
-	 * Copyright 2018 Google LLC. All Rights Reserved.
+	 * Copyright 2021 Google LLC. All Rights Reserved.
 	 * Licensed under the Apache License, Version 2.0 (the "License");
 	 * you may not use this file except in compliance with the License.
 	 * You may obtain a copy of the License at
@@ -85489,6 +85615,39 @@
 	 * =============================================================================
 	 */
 	var executeOp$f = function executeOp(node, tensorMap, context) {
+	  switch (node.op) {
+	    case 'SparseReshape':
+	      {
+	        var _tfOps$sparse$sparseR = sparse.sparseReshape(getParamValue('inputIndices', node, tensorMap, context), getParamValue('inputShape', node, tensorMap, context), getParamValue('newShape', node, tensorMap, context)),
+	            outputIndices = _tfOps$sparse$sparseR.outputIndices,
+	            outputShape = _tfOps$sparse$sparseR.outputShape;
+
+	        return [outputIndices, outputShape];
+	      }
+
+	    default:
+	      throw TypeError("Node type " + node.op + " is not implemented");
+	  }
+	};
+	var CATEGORY$f = 'convolution';
+
+	/**
+	 * @license
+	 * Copyright 2018 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	var executeOp$g = function executeOp(node, tensorMap, context) {
 	  switch (node.op) {
 	    case 'FFT':
 	      {
@@ -85514,7 +85673,7 @@
 	      throw TypeError("Node type " + node.op + " is not implemented");
 	  }
 	};
-	var CATEGORY$f = 'spectral';
+	var CATEGORY$g = 'spectral';
 
 	/**
 	 * @license
@@ -85532,7 +85691,7 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
-	var executeOp$g = function executeOp(node, tensorMap, context) {
+	var executeOp$h = function executeOp(node, tensorMap, context) {
 	  switch (node.op) {
 	    case 'Cast':
 	      {
@@ -85599,7 +85758,7 @@
 	      throw TypeError("Node type " + node.op + " is not implemented");
 	  }
 	};
-	var CATEGORY$g = 'transformation';
+	var CATEGORY$h = 'transformation';
 
 	/**
 	 * @license
@@ -85625,7 +85784,7 @@
 	 * @param resourceManager Optional. Contains global resources of the model.
 	 */
 
-	function executeOp$h(node, tensorMap, context, resourceManager) {
+	function executeOp$i(node, tensorMap, context, resourceManager) {
 	  var value = function (node, tensorMap, context) {
 	    switch (node.category) {
 	      case 'arithmetic':
@@ -85694,14 +85853,19 @@
 	          return executeOp$e(node, tensorMap, context);
 	        });
 
-	      case 'spectral':
+	      case 'sparse':
 	        return tidy(function () {
 	          return executeOp$f(node, tensorMap, context);
 	        });
 
-	      case 'transformation':
+	      case 'spectral':
 	        return tidy(function () {
 	          return executeOp$g(node, tensorMap, context);
+	        });
+
+	      case 'transformation':
+	        return tidy(function () {
+	          return executeOp$h(node, tensorMap, context);
 	        });
 
 	      case 'hash_table':
@@ -86225,7 +86389,7 @@
 	        var node = orderedNodes[i];
 
 	        if (!tensorsMap[node.name]) {
-	          var tensors = executeOp$h(node, tensorsMap, context, _this2._resourceManager);
+	          var tensors = executeOp$i(node, tensorsMap, context, _this2._resourceManager);
 
 	          if (isPromise(tensors)) {
 	            throw new Error("The execution of the op '" + node.op + "' returned a promise. " + "Please use model.executeAsync() instead.");
@@ -86594,7 +86758,7 @@
 
 
 	      if (tensorMap[item.node.name] == null) {
-	        var tensors = executeOp$h(item.node, tensorMap, context, _this5._resourceManager);
+	        var tensors = executeOp$i(item.node, tensorMap, context, _this5._resourceManager);
 
 	        if (!nodeName) {
 	          var _getNodeNameAndIndex2 = getNodeNameAndIndex(item.node.name, context);
@@ -87478,7 +87642,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$3 = '3.4.0';
+	var version$3 = '3.5.0';
 
 	/**
 	 * @license
@@ -93776,7 +93940,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$4 = '3.4.0';
+	var version$4 = '3.5.0';
 
 	/**
 	 * @license
@@ -95683,6 +95847,113 @@
 
 	/**
 	 * @license
+	 * Copyright 2021 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	function sparseReshapeImpl(inputIndices, inputIndicesShape, inputDType, inputShape, targetShape) {
+	  var denseSize = sizeFromShape(inputShape);
+	  var nnz = inputIndicesShape[0];
+	  var outputRank = targetShape.length; // Compute the output shape. Determine product of specified dimensions, and
+	  // find the index of the unspecified one.
+
+	  var outputShape = [];
+	  var product = 1;
+	  var unknownIndex = -1;
+
+	  for (var d = 0; d < outputRank; ++d) {
+	    var size = targetShape[d];
+
+	    if (size === -1) {
+	      if (unknownIndex !== -1) {
+	        throw new Error("only one output dimension may be -1, not both " + unknownIndex + " and " + d);
+	      }
+
+	      unknownIndex = d;
+	      outputShape.push(1);
+	    } else {
+	      if (size < 0) {
+	        throw new Error("size " + d + " must be non-negative, not " + size);
+	      }
+
+	      product *= size;
+	      outputShape.push(size);
+	    }
+	  }
+
+	  if (unknownIndex !== -1) {
+	    if (product <= 0) {
+	      throw new Error('reshape cannot infer the missing ' + 'input size for an empty tensor unless all ' + 'specified input sizes are non-zero');
+	    }
+
+	    var missing = Math.trunc(denseSize / product);
+
+	    if (product * missing !== denseSize) {
+	      throw new Error("Input to reshape is a SparseTensor with " + denseSize + "\n          dense values, but the requested shape requires a multiple of " + product + ". inputShape=" + inputShape + " outputShape= " + outputShape);
+	    }
+
+	    outputShape[unknownIndex] = missing;
+	  }
+
+	  var outputSize = sizeFromShape(outputShape);
+
+	  if (outputSize !== denseSize) {
+	    throw new Error("Input to reshape is a tensor with " + denseSize + " dense values, but the requested shape has " + outputSize + ". inputShape=" + inputShape + " outputShape=" + outputShape);
+	  }
+
+	  var inputRank = inputShape.length;
+	  var inputStrides = [];
+
+	  if (inputRank > 0) {
+	    inputStrides[inputRank - 1] = 1;
+
+	    for (var _d = inputRank - 2; _d >= 0; --_d) {
+	      inputStrides[_d] = inputStrides[_d + 1] * inputShape[_d + 1];
+	    }
+	  }
+
+	  var outputStrides = [];
+
+	  if (outputRank > 0) {
+	    outputStrides[outputRank - 1] = 1;
+
+	    for (var _d2 = outputRank - 2; _d2 >= 0; --_d2) {
+	      outputStrides[_d2] = outputStrides[_d2 + 1] * outputShape[_d2 + 1];
+	    }
+	  }
+
+	  var newIndices = getArrayFromDType(inputDType, nnz * outputRank);
+
+	  for (var i = 0; i < nnz; ++i) {
+	    var id = 0;
+
+	    for (var j = 0; j < inputRank; ++j) {
+	      // inputIndices is a 2d tensor with shape of [nnz, inputRank]
+	      id += inputIndices[i * inputRank + j] * inputStrides[j];
+	    }
+
+	    for (var _j = 0; _j < outputRank; ++_j) {
+	      // newIndices is a 2d tensor with shape of [nnz, outputRank]
+	      newIndices[i * outputRank + _j] = Math.trunc(id / outputStrides[_j]);
+	      id %= outputStrides[_j];
+	    }
+	  }
+
+	  return [newIndices, [nnz, outputRank], outputShape];
+	}
+
+	/**
+	 * @license
 	 * Copyright 2020 Google LLC. All Rights Reserved.
 	 * Licensed under the Apache License, Version 2.0 (the "License");
 	 * you may not use this file except in compliance with the License.
@@ -96046,7 +96317,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$5 = '3.4.0';
+	var version$5 = '3.5.0';
 
 	/**
 	 * @license
@@ -96228,6 +96499,31 @@
 	/**
 	 * @license
 	 * Copyright 2020 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the License);
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an AS IS BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	var sigmoid$1 = unaryKernelFunc(Sigmoid, function (xi) {
+	  return 1 / (1 + Math.exp(-xi));
+	});
+	var sigmoidConfig = {
+	  kernelName: Sigmoid,
+	  backendName: 'cpu',
+	  kernelFunc: sigmoid$1
+	};
+
+	/**
+	 * @license
+	 * Copyright 2020 Google LLC. All Rights Reserved.
 	 * Licensed under the Apache License, Version 2.0 (the "License");
 	 * you may not use this file except in compliance with the License.
 	 * You may obtain a copy of the License at
@@ -96287,6 +96583,13 @@
 	      attrs: {
 	        alpha: leakyreluAlpha
 	      }
+	    });
+	  } else if (activation === 'sigmoid') {
+	    return sigmoid$1({
+	      inputs: {
+	        x: x
+	      },
+	      backend: backend
 	    });
 	  }
 
@@ -99315,7 +99618,7 @@
 
 	    for (var yR = 0; yR < convInfo.outHeight; ++yR) {
 	      var yOffset2 = yOffset1 + yR * y.strides[1];
-	      var xRCorner = yR * convInfo.strideHeight - padLeft;
+	      var xRCorner = yR * convInfo.strideHeight - padTop;
 
 	      for (var wR = 0; wR < filterHeight; ++wR) {
 	        var xR = xRCorner + wR * dilationHeight;
@@ -99329,7 +99632,7 @@
 
 	        for (var yC = 0; yC < convInfo.outWidth; ++yC) {
 	          var yOffset3 = yOffset2 + yC * y.strides[2];
-	          var xCCorner = yC * convInfo.strideWidth - padTop;
+	          var xCCorner = yC * convInfo.strideWidth - padLeft;
 
 	          for (var wC = 0; wC < filterWidth; ++wC) {
 	            var xC = xCCorner + wC * dilationWidth;
@@ -103843,31 +104146,6 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
-	var sigmoid$1 = unaryKernelFunc(Sigmoid, function (xi) {
-	  return 1 / (1 + Math.exp(-xi));
-	});
-	var sigmoidConfig = {
-	  kernelName: Sigmoid,
-	  backendName: 'cpu',
-	  kernelFunc: sigmoid$1
-	};
-
-	/**
-	 * @license
-	 * Copyright 2020 Google LLC. All Rights Reserved.
-	 * Licensed under the Apache License, Version 2.0 (the License);
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 * http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an AS IS BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 * =============================================================================
-	 */
 	var sign$2 = unaryKernelFunc(Sign, function (xi) {
 	  if (xi < 0) {
 	    return -1;
@@ -104068,6 +104346,58 @@
 	  kernelName: SpaceToBatchND,
 	  backendName: 'cpu',
 	  kernelFunc: spaceToBatchND$1
+	};
+
+	/**
+	 * @license
+	 * Copyright 2021 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	function sparseReshape$1(args) {
+	  var inputs = args.inputs,
+	      backend = args.backend;
+	  var inputIndices = inputs.inputIndices,
+	      inputShape = inputs.inputShape,
+	      newShape = inputs.newShape;
+
+	  if (inputIndices.shape.length !== 2) {
+	    throw new Error("Input indices should be a matrix but received shape\n        " + inputIndices.shape);
+	  }
+
+	  if (inputShape.shape.length !== 1) {
+	    throw new Error("Input shape should be a vector but received shape\n        " + inputShape.shape);
+	  }
+
+	  if (newShape.shape.length !== 1) {
+	    throw new Error("Target shape should be a vector but received shape " + newShape.shape);
+	  }
+
+	  var $inputShape = Array.from(backend.data.get(inputShape.dataId).values);
+	  var $inputIndices = backend.data.get(inputIndices.dataId).values;
+	  var targetShape = Array.from(backend.data.get(newShape.dataId).values);
+
+	  var _sparseReshapeImpl = sparseReshapeImpl($inputIndices, inputIndices.shape, inputIndices.dtype, $inputShape, targetShape),
+	      newIndices = _sparseReshapeImpl[0],
+	      indicesShape = _sparseReshapeImpl[1],
+	      outputShape = _sparseReshapeImpl[2];
+
+	  return [backend.makeTensorInfo(indicesShape, inputIndices.dtype, newIndices), backend.makeTensorInfo([outputShape.length], newShape.dtype, new Int32Array(outputShape))];
+	}
+	var sparseReshapeConfig = {
+	  kernelName: SparseReshape,
+	  backendName: 'cpu',
+	  kernelFunc: sparseReshape$1
 	};
 
 	/**
@@ -104942,7 +105272,7 @@
 	 * =============================================================================
 	 */
 
-	var kernelConfigs = [_fusedMatMulConfig, absConfig, acosConfig, acoshConfig, addConfig, addNConfig, allConfig, anyConfig, argMaxConfig, argMinConfig, asinConfig, asinhConfig, atanConfig, atan2Config, atanhConfig, avgPoolConfig, avgPool3DConfig, avgPool3DGradConfig$1, avgPoolGradConfig$1, batchMatMulConfig, batchNormConfig, batchToSpaceNDConfig, bincountConfig, castConfig, ceilConfig, clipConfig, complexConfig, complexAbsConfig, concatConfig, conv2DBackpropFilterConfig, conv2DBackpropInputConfig, conv2DConfig, conv3DBackpropFilterV2Config, conv3DBackpropInputV2Config, conv3DConfig, cosConfig, coshConfig, cropAndResizeConfig, cumsumConfig, denseBincountConfig, depthToSpaceConfig, depthwiseConv2dNativeConfig, depthwiseConv2dNativeBackpropFilterConfig, depthwiseConv2dNativeBackpropInputConfig, diagConfig, dilation2dConfig, dilation2dBackpropInputConfig, dilation2dBackpropFilterConfig, realDivConfig, einsumConfig, eluConfig, eluGradConfig$1, equalConfig, erfConfig, expConfig, expandDimsConfig, expm1Config, fftConfig, fillConfig, flipLeftRightConfig, floorConfig, floorDivConfig, fusedConv2DConfig, fusedDepthwiseConv2DConfig, gatherNdConfig, gatherV2Config, greaterConfig, greaterEqualConfig, identityConfig, ifftConfig, imagConfig, isFiniteConfig, isInfConfig, isNaNConfig, leakyReluConfig, lessConfig, lessEqualConfig, linSpaceConfig, logConfig, log1pConfig, logicalAndConfig, logicalNotConfig, logicalOrConfig, lRNConfig, lRNGradConfig, maximumConfig, maxPoolConfig, maxPool3DConfig, maxPool3DGradConfig$1, maxPoolGradConfig$1, maxPoolWithArgmaxConfig, maxConfig, meanConfig, minConfig, minimumConfig, mirrorPadConfig, modConfig, multinomialConfig, multiplyConfig, negConfig, nonMaxSuppressionV3Config, nonMaxSuppressionV4Config, nonMaxSuppressionV5Config, notEqualConfig, oneHotConfig, onesLikeConfig, packConfig, padV2Config, powConfig, preluConfig, prodConfig, rangeConfig, realConfig, reciprocalConfig, reluConfig, relu6Config, reshapeConfig, resizeBilinearConfig, resizeBilinearGradConfig$1, resizeNearestNeighborConfig, resizeNearestNeighborGradConfig$1, reverseConfig, rotateWithOffsetConfig, roundConfig, rsqrtConfig, scatterNdConfig, selectConfig, seluConfig, sigmoidConfig, signConfig, sinConfig, sinhConfig, sliceConfig, softmaxConfig, softplusConfig, spaceToBatchNDConfig, sparseToDenseConfig, splitVConfig, sqrtConfig, squareConfig, squaredDifferenceConfig, stepConfig, stridedSliceConfig, subConfig, sumConfig, tanConfig, tanhConfig, tileConfig, topKConfig, transposeConfig, transformConfig, uniqueConfig, unpackConfig, unsortedSegmentSumConfig, zerosLikeConfig];
+	var kernelConfigs = [_fusedMatMulConfig, absConfig, acosConfig, acoshConfig, addConfig, addNConfig, allConfig, anyConfig, argMaxConfig, argMinConfig, asinConfig, asinhConfig, atanConfig, atan2Config, atanhConfig, avgPoolConfig, avgPool3DConfig, avgPool3DGradConfig$1, avgPoolGradConfig$1, batchMatMulConfig, batchNormConfig, batchToSpaceNDConfig, bincountConfig, castConfig, ceilConfig, clipConfig, complexConfig, complexAbsConfig, concatConfig, conv2DBackpropFilterConfig, conv2DBackpropInputConfig, conv2DConfig, conv3DBackpropFilterV2Config, conv3DBackpropInputV2Config, conv3DConfig, cosConfig, coshConfig, cropAndResizeConfig, cumsumConfig, denseBincountConfig, depthToSpaceConfig, depthwiseConv2dNativeConfig, depthwiseConv2dNativeBackpropFilterConfig, depthwiseConv2dNativeBackpropInputConfig, diagConfig, dilation2dConfig, dilation2dBackpropInputConfig, dilation2dBackpropFilterConfig, realDivConfig, einsumConfig, eluConfig, eluGradConfig$1, equalConfig, erfConfig, expConfig, expandDimsConfig, expm1Config, fftConfig, fillConfig, flipLeftRightConfig, floorConfig, floorDivConfig, fusedConv2DConfig, fusedDepthwiseConv2DConfig, gatherNdConfig, gatherV2Config, greaterConfig, greaterEqualConfig, identityConfig, ifftConfig, imagConfig, isFiniteConfig, isInfConfig, isNaNConfig, leakyReluConfig, lessConfig, lessEqualConfig, linSpaceConfig, logConfig, log1pConfig, logicalAndConfig, logicalNotConfig, logicalOrConfig, lRNConfig, lRNGradConfig, maximumConfig, maxPoolConfig, maxPool3DConfig, maxPool3DGradConfig$1, maxPoolGradConfig$1, maxPoolWithArgmaxConfig, maxConfig, meanConfig, minConfig, minimumConfig, mirrorPadConfig, modConfig, multinomialConfig, multiplyConfig, negConfig, nonMaxSuppressionV3Config, nonMaxSuppressionV4Config, nonMaxSuppressionV5Config, notEqualConfig, oneHotConfig, onesLikeConfig, packConfig, padV2Config, powConfig, preluConfig, prodConfig, rangeConfig, realConfig, reciprocalConfig, reluConfig, relu6Config, reshapeConfig, resizeBilinearConfig, resizeBilinearGradConfig$1, resizeNearestNeighborConfig, resizeNearestNeighborGradConfig$1, reverseConfig, rotateWithOffsetConfig, roundConfig, rsqrtConfig, scatterNdConfig, selectConfig, seluConfig, sigmoidConfig, signConfig, sinConfig, sinhConfig, sliceConfig, softmaxConfig, softplusConfig, spaceToBatchNDConfig, sparseReshapeConfig, sparseToDenseConfig, splitVConfig, sqrtConfig, squareConfig, squaredDifferenceConfig, stepConfig, stridedSliceConfig, subConfig, sumConfig, tanConfig, tanhConfig, tileConfig, topKConfig, transposeConfig, transformConfig, uniqueConfig, unpackConfig, unsortedSegmentSumConfig, zerosLikeConfig];
 
 	for (var _i$1 = 0, _kernelConfigs = kernelConfigs; _i$1 < _kernelConfigs.length; _i$1++) {
 	  var kernelConfig = _kernelConfigs[_i$1];
@@ -105990,7 +106320,7 @@
 	// TODO: https://github.com/tensorflow/tfjs/issues/1679
 
 	ENV$1.registerFlag('WEBGL_PACK_DEPTHWISECONV', function () {
-	  return true;
+	  return ENV$1.getBool('WEBGL_PACK');
 	});
 	/** Whether we will pack binary ops. */
 
@@ -108416,6 +108746,7 @@
 	    rsqrtImplCPU = rsqrtImpl,
 	    simpleAbsImplCPU = simpleAbsImpl,
 	    sliceImplCPU = sliceImpl,
+	    sparseReshapeImplCPU = sparseReshapeImpl,
 	    stridedSliceImplCPU = stridedSliceImpl,
 	    subImplCPU = subImpl,
 	    tileImplCPU = tileImpl,
@@ -108904,6 +109235,7 @@
 	var RELU = CHECK_NAN_SNIPPET + "\n  return (x < 0.0) ? 0.0 : x;\n";
 	var RELU6 = CHECK_NAN_SNIPPET + "\n  return (x < 0.0) ? 0.0 : min(6.0, x);\n";
 	var CLONE = 'return x;';
+	var SIGMOID = "return 1.0 / (1.0 + exp(-1.0 * x));";
 
 	/**
 	 * @license
@@ -108925,6 +109257,7 @@
 	var ELU$2 = "\n  vec4 result;\n\n  result.r = (x.r >= 0.0) ? x.r : (exp(x.r) - 1.0);\n  result.g = (x.g >= 0.0) ? x.g : (exp(x.g) - 1.0);\n  result.b = (x.b >= 0.0) ? x.b : (exp(x.b) - 1.0);\n  result.a = (x.a >= 0.0) ? x.a : (exp(x.a) - 1.0);\n\n  return result;\n";
 	var RELU$1 = "\n  vec4 result = x * vec4(greaterThanEqual(x, vec4(0.0)));\n  bvec4 isNaN = isnan(x);\n\n  result.r = isNaN.r ? x.r : result.r;\n  result.g = isNaN.g ? x.g : result.g;\n  result.b = isNaN.b ? x.b : result.b;\n  result.a = isNaN.a ? x.a : result.a;\n\n  return result;\n";
 	var RELU6$1 = "\n  vec4 result = min(x, vec4(6.)) * vec4(greaterThanEqual(x, vec4(0.0)));\n  bvec4 isNaN = isnan(x);\n\n  result.r = isNaN.r ? x.r : result.r;\n  result.g = isNaN.g ? x.g : result.g;\n  result.b = isNaN.b ? x.b : result.b;\n  result.a = isNaN.a ? x.a : result.a;\n\n  return result;\n";
+	var SIGMOID$1 = "return 1.0 / (1.0 + exp(-1.0 * x));";
 	var UnaryOpPackedProgram = function UnaryOpPackedProgram(aShape, opSnippet) {
 	  this.variableNames = ['A'];
 	  this.packedInputs = true;
@@ -109047,7 +109380,7 @@
 	  };
 
 	  _proto.numDataIds = function numDataIds() {
-	    return this.texData.numDataIds() + (this.cpuBackend ? this.cpuBackend.numDataIds() : 0) - this.pendingDeletes;
+	    return this.texData.numDataIds() - this.pendingDeletes;
 	  };
 
 	  _proto.write = function write(values, shape, dtype) {
@@ -110168,7 +110501,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$6 = '3.4.0';
+	var version$6 = '3.5.0';
 
 	/**
 	 * @license
@@ -110648,6 +110981,12 @@
 	    }
 
 	    return LEAKYRELU;
+	  } else if (activation === 'sigmoid') {
+	    if (packed) {
+	      return SIGMOID$1;
+	    }
+
+	    return SIGMOID;
 	  }
 
 	  throw new Error("Activation " + activation + " has not been implemented for the WebGL backend.");
@@ -114116,25 +114455,54 @@
 	    backend.disposeIntermediateTensorInfo(realConcated);
 	    backend.disposeIntermediateTensorInfo(imagConcated);
 	    return _result;
-	  } // Run on cpu if dtype is string. For string, the backend represents it
+	  }
+
+	  var runOnCpu = backend.shouldExecuteOnCPU(inputs); // Run on cpu if dtype is string. For string, the backend represents it
 	  // as Uint8Array[], where each Uint8Array is a character. Given that the
 	  // computation is only on the outer array, uploading the whole data onto
 	  // gpu is wasteful. Also, currently webgl doesn't have a design to
 	  // upload and retrieve Uint8Array[] between cpu and gpu. Therefore, we
 	  // just run the kernel on cpu if dtype is string.
 
-
 	  if (dtype === 'string') {
-	    var _computeTensors2D = computeTensors2D(inputs, axis, backend),
-	        _tensors2D = _computeTensors2D.tensors2D,
-	        _outShape = _computeTensors2D.outShape;
+	    runOnCpu = true;
+	  }
+
+	  if (runOnCpu) {
+	    // Any concat of n-dimensional tensors across any axis can be reduced to
+	    // a concatenation of two-dimensional tensors across the axis 1 by first
+	    // partitioning the axes of the original tensors into those less than the
+	    // axis to be concatenated and the rest. Then reshape the tensors
+	    // into a two-dimensional tensor by collapsing these two sets of axes and
+	    // concatenate the resulting matrices across the axis 1, finally reshaping
+	    // the result to have the proper shape.
+	    var _tensors2D = inputs.map(function (t) {
+	      var innerSize = sizeFromShape(t.shape.slice(axis));
+	      var shape = [-1, innerSize];
+	      return reshape$3({
+	        inputs: {
+	          x: t
+	        },
+	        backend: backend,
+	        attrs: {
+	          shape: shape
+	        }
+	      });
+	    });
 
 	    var inputsValShapes = _tensors2D.map(function (t) {
 	      return {
 	        vals: backend.readSync(t.dataId),
 	        shape: t.shape
 	      };
-	    });
+	    }); // Concats 2d tensors along axis=1.
+
+
+	    var _outShape = computeOutShape$1(_tensors2D.map(function (t) {
+	      return t.shape;
+	    }), 1
+	    /* axis */
+	    );
 
 	    var simplyConcat = _tensors2D[0].shape[0] === 1;
 	    var outVals = concatImplCPU(inputsValShapes, _outShape, dtype, simplyConcat);
@@ -114170,9 +114538,9 @@
 	    return backend.runWebGLProgram(_program, inputs, dtype);
 	  }
 
-	  var _computeTensors2D2 = computeTensors2D(inputs, axis, backend),
-	      tensors2D = _computeTensors2D2.tensors2D,
-	      outShape = _computeTensors2D2.outShape;
+	  var _computeTensors2D = computeTensors2D(inputs, axis, backend),
+	      tensors2D = _computeTensors2D.tensors2D,
+	      outShape = _computeTensors2D.outShape;
 
 	  var program = new ConcatProgram(tensors2D.map(function (t) {
 	    return t.shape;
@@ -120814,9 +121182,9 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
-	var SIGMOID = "return 1.0 / (1.0 + exp(-1.0 * x));";
+	var SIGMOID$2 = "return 1.0 / (1.0 + exp(-1.0 * x));";
 	var sigmoid$2 = unaryKernelFunc$1({
-	  opSnippet: SIGMOID
+	  opSnippet: SIGMOID$2
 	});
 	var sigmoidConfig$1 = {
 	  kernelName: Sigmoid,
@@ -121018,6 +121386,58 @@
 	  kernelName: SpaceToBatchND,
 	  backendName: 'webgl',
 	  kernelFunc: spaceToBatchND$2
+	};
+
+	/**
+	 * @license
+	 * Copyright 2021 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	function sparseReshape$2(args) {
+	  var inputs = args.inputs,
+	      backend = args.backend;
+	  var inputIndices = inputs.inputIndices,
+	      inputShape = inputs.inputShape,
+	      newShape = inputs.newShape;
+
+	  if (inputIndices.shape.length !== 2) {
+	    throw new Error("Input indices should be a matrix but received shape " + inputIndices.shape);
+	  }
+
+	  if (inputShape.shape.length !== 1) {
+	    throw new Error("Input shape should be a vector but received shape " + inputShape.shape);
+	  }
+
+	  if (newShape.shape.length !== 1) {
+	    throw new Error("Target shape should be a vector but received shape " + newShape.shape);
+	  }
+
+	  var $inputShape = Array.from(backend.readSync(inputShape.dataId));
+	  var $inputIndices = backend.readSync(inputIndices.dataId);
+	  var targetShape = Array.from(backend.readSync(newShape.dataId));
+
+	  var _sparseReshapeImplCPU = sparseReshapeImplCPU($inputIndices, inputIndices.shape, inputIndices.dtype, $inputShape, targetShape),
+	      newIndices = _sparseReshapeImplCPU[0],
+	      indicesShape = _sparseReshapeImplCPU[1],
+	      outputShape = _sparseReshapeImplCPU[2];
+
+	  return [backend.makeTensorInfo(indicesShape, inputIndices.dtype, newIndices), backend.makeTensorInfo([outputShape.length], newShape.dtype, new Int32Array(outputShape))];
+	}
+	var sparseReshapeConfig$1 = {
+	  kernelName: SparseReshape,
+	  backendName: 'webgl',
+	  kernelFunc: sparseReshape$2
 	};
 
 	/**
@@ -121503,9 +121923,9 @@
 	      backend = params.backend,
 	      attrs = params.attrs;
 	  var x = inputs.x;
-	  var reps = attrs.reps;
+	  var reps = attrs.reps; // tile gpu program cannot handle rank > 5 case.
 
-	  if (x.dtype === 'string') {
+	  if (x.dtype === 'string' || x.shape.length > 5) {
 	    // Even thought string tensor is always on CPU, just to be consistent on how
 	    // to access tensor data.
 	    var data = backend.readSync(x.dataId);
@@ -121975,7 +122395,7 @@
 	 * =============================================================================
 	 */
 
-	var kernelConfigs$1 = [LRNConfig, LRNGradConfig, _fusedMatMulConfig$1, absConfig$1, acosConfig$1, acoshConfig$1, addConfig$1, addNConfig$1, allConfig$1, anyConfig$1, argMaxConfig$1, argMinConfig$1, asinConfig$1, asinhConfig$1, atan2Config$1, atanConfig$1, atanhConfig$1, avgPool3DConfig$1, avgPoolConfig$1, avgPoolGrad3DConfig, avgPoolGradConfig$2, batchMatMulConfig$1, batchNormConfig$1, batchToSpaceNDConfig$1, bincountConfig$1, castConfig$1, ceilConfig$1, clipByValueConfig, complexAbsConfig$1, complexConfig$1, concatConfig$1, conv2DBackpropFilterConfig$1, conv2DBackpropInputConfig$1, conv2DConfig$1, conv3DBackpropFilterV2Config$1, conv3DBackpropInputConfig, conv3DConfig$1, cosConfig$1, coshConfig$1, cropAndResizeConfig$1, cumsumConfig$1, denseBincountConfig$1, depthToSpaceConfig$1, depthwiseConv2dNativeBackpropFilterConfig$1, depthwiseConv2dNativeBackpropInputConfig$1, depthwiseConv2dNativeConfig$1, diagConfig$1, dilation2DConfig, einsumConfig$1, eluConfig$1, eluGradConfig$2, equalConfig$1, erfConfig$1, expConfig$1, expandDimsConfig$1, expm1Config$1, fftConfig$1, fillConfig$1, flipLeftRightConfig$1, floorConfig$1, floorDivConfig$1, fromPixelsConfig, fusedConv2DConfig$1, fusedDepthwiseConv2DConfig$1, gatherNdConfig$1, gatherV2Config$1, greaterConfig$1, greaterEqualConfig$1, identityConfig$1, ifftConfig$1, imagConfig$1, isFiniteConfig$1, isInfConfig$1, isNaNConfig$1, leakyReluConfig$1, lessConfig$1, lessEqualConfig$1, linSpaceConfig$1, log1pConfig$1, logConfig$1, logicalAndConfig$1, logicalNotConfig$1, logicalOrConfig$1, maxConfig$1, maxPool3DConfig$1, maxPoolConfig$1, maxPoolGrad3DConfig, maxPoolGradConfig$2, maxPoolWithArgmaxConfig$1, maximumConfig$1, meanConfig$1, minConfig$1, minimumConfig$1, mirrorPadConfig$1, modConfig$1, multinomialConfig$1, multiplyConfig$1, negConfig$1, nonMaxSuppressionV3Config$1, nonMaxSuppressionV4Config$1, nonMaxSuppressionV5Config$1, notEqualConfig$1, oneHotConfig$1, onesLikeConfig$1, packConfig$1, padV2Config$1, powConfig$1, preluConfig$1, prodConfig$1, rangeConfig$1, realConfig$1, realDivConfig$1, reciprocalConfig$1, relu6Config$1, reluConfig$1, reshapeConfig$1, resizeBilinearConfig$1, resizeBilinearGradConfig$2, resizeNearestNeighborConfig$1, resizeNearestNeighborGradConfig$2, reverseConfig$1, rotateWithOffsetConfig$1, roundConfig$1, rsqrtConfig$1, scatterNdConfig$1, selectConfig$1, seluConfig$1, sigmoidConfig$1, signConfig$1, sinConfig$1, sinhConfig$1, sliceConfig$1, softmaxConfig$1, softplusConfig$1, spaceToBatchNDConfig$1, sparseToDenseConfig$1, splitVConfig$1, sqrtConfig$1, squareConfig$1, squaredDifferenceConfig$1, stepConfig$1, stridedSliceConfig$1, subConfig$1, sumConfig$1, tanConfig$1, tanhConfig$1, tileConfig$1, topKConfig$1, transformConfig$1, transposeConfig$1, uniqueConfig$1, unpackConfig$1, unsortedSegmentSumConfig$1, zerosLikeConfig$1];
+	var kernelConfigs$1 = [LRNConfig, LRNGradConfig, _fusedMatMulConfig$1, absConfig$1, acosConfig$1, acoshConfig$1, addConfig$1, addNConfig$1, allConfig$1, anyConfig$1, argMaxConfig$1, argMinConfig$1, asinConfig$1, asinhConfig$1, atan2Config$1, atanConfig$1, atanhConfig$1, avgPool3DConfig$1, avgPoolConfig$1, avgPoolGrad3DConfig, avgPoolGradConfig$2, batchMatMulConfig$1, batchNormConfig$1, batchToSpaceNDConfig$1, bincountConfig$1, castConfig$1, ceilConfig$1, clipByValueConfig, complexAbsConfig$1, complexConfig$1, concatConfig$1, conv2DBackpropFilterConfig$1, conv2DBackpropInputConfig$1, conv2DConfig$1, conv3DBackpropFilterV2Config$1, conv3DBackpropInputConfig, conv3DConfig$1, cosConfig$1, coshConfig$1, cropAndResizeConfig$1, cumsumConfig$1, denseBincountConfig$1, depthToSpaceConfig$1, depthwiseConv2dNativeBackpropFilterConfig$1, depthwiseConv2dNativeBackpropInputConfig$1, depthwiseConv2dNativeConfig$1, diagConfig$1, dilation2DConfig, einsumConfig$1, eluConfig$1, eluGradConfig$2, equalConfig$1, erfConfig$1, expConfig$1, expandDimsConfig$1, expm1Config$1, fftConfig$1, fillConfig$1, flipLeftRightConfig$1, floorConfig$1, floorDivConfig$1, fromPixelsConfig, fusedConv2DConfig$1, fusedDepthwiseConv2DConfig$1, gatherNdConfig$1, gatherV2Config$1, greaterConfig$1, greaterEqualConfig$1, identityConfig$1, ifftConfig$1, imagConfig$1, isFiniteConfig$1, isInfConfig$1, isNaNConfig$1, leakyReluConfig$1, lessConfig$1, lessEqualConfig$1, linSpaceConfig$1, log1pConfig$1, logConfig$1, logicalAndConfig$1, logicalNotConfig$1, logicalOrConfig$1, maxConfig$1, maxPool3DConfig$1, maxPoolConfig$1, maxPoolGrad3DConfig, maxPoolGradConfig$2, maxPoolWithArgmaxConfig$1, maximumConfig$1, meanConfig$1, minConfig$1, minimumConfig$1, mirrorPadConfig$1, modConfig$1, multinomialConfig$1, multiplyConfig$1, negConfig$1, nonMaxSuppressionV3Config$1, nonMaxSuppressionV4Config$1, nonMaxSuppressionV5Config$1, notEqualConfig$1, oneHotConfig$1, onesLikeConfig$1, packConfig$1, padV2Config$1, powConfig$1, preluConfig$1, prodConfig$1, rangeConfig$1, realConfig$1, realDivConfig$1, reciprocalConfig$1, relu6Config$1, reluConfig$1, reshapeConfig$1, resizeBilinearConfig$1, resizeBilinearGradConfig$2, resizeNearestNeighborConfig$1, resizeNearestNeighborGradConfig$2, reverseConfig$1, rotateWithOffsetConfig$1, roundConfig$1, rsqrtConfig$1, scatterNdConfig$1, selectConfig$1, seluConfig$1, sigmoidConfig$1, signConfig$1, sinConfig$1, sinhConfig$1, sliceConfig$1, softmaxConfig$1, softplusConfig$1, spaceToBatchNDConfig$1, sparseReshapeConfig$1, sparseToDenseConfig$1, splitVConfig$1, sqrtConfig$1, squareConfig$1, squaredDifferenceConfig$1, stepConfig$1, stridedSliceConfig$1, subConfig$1, sumConfig$1, tanConfig$1, tanhConfig$1, tileConfig$1, topKConfig$1, transformConfig$1, transposeConfig$1, uniqueConfig$1, unpackConfig$1, unsortedSegmentSumConfig$1, zerosLikeConfig$1];
 
 	for (var _i$2 = 0, _kernelConfigs$1 = kernelConfigs$1; _i$2 < _kernelConfigs$1.length; _i$2++) {
 	  var kernelConfig$1 = _kernelConfigs$1[_i$2];
@@ -122001,7 +122421,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$7 = '3.4.0';
+	var version$7 = '3.5.0';
 
 	/**
 	 * @license
@@ -122208,6 +122628,7 @@
 	exports.Softmax = Softmax;
 	exports.Softplus = Softplus;
 	exports.SpaceToBatchND = SpaceToBatchND;
+	exports.SparseReshape = SparseReshape;
 	exports.SparseToDense = SparseToDense;
 	exports.SplitV = SplitV;
 	exports.Sqrt = Sqrt;
@@ -122455,6 +122876,7 @@
 	exports.softmax = softmax;
 	exports.softplus = softplus;
 	exports.spaceToBatchND = spaceToBatchND;
+	exports.sparse = sparse;
 	exports.sparseToDense = sparseToDense;
 	exports.spectral = spectral;
 	exports.split = split$1;
