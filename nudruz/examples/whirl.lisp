@@ -7,6 +7,7 @@ Contrary to CM documentation, the events function does not return a usable seq o
 The generated score is placed into the seq that is passed to events.
 |#
 (require :asdf)
+(require :fomus)
 (require :nudruz)
 (load "example-csd.lisp")
 

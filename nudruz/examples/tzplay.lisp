@@ -7,10 +7,9 @@ Contrary to CM documentation, the events function does not return a usable seq
 object. The generated score is placed into the seq that is passed to events.
 |#
 (require :asdf)
-;; There's a bug in Fomus. The first time you run this program, uncomment the 
-;; following line, then run it again with the line commented out again.
-;;(require :fomus)
-(asdf:load-system :nudruz)
+#+ecl (load "/home/mkg/cmn/cmn-all.lisp")
+(require :fomus)
+(require :nudruz)
 (load "example-orc.lisp")
 (in-package :cm)
 
@@ -26,4 +25,4 @@ object. The generated score is placed into the seq that is passed to events.
 (defparameter voices (make-hash-table))
 (setf (gethash 0 voices) (list 1 2))
 (seq-to-lilypond csound-seq "tzplay.ly" *piano-part* partids voices :title "tzplay" :composer "Drew Krause")
-(render-with-orc csound-seq orc-text :channel-offset 32 :velocity-scale 120 :csd-filename "tzplay.csd" :output "dac:plughw:1,0")
+(render-with-orc csound-seq orc-text :channel-offset 32 :velocity-scale 120 :csd-filename "tzplay.csd" :output "test.wav")

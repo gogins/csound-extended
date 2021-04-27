@@ -1,4 +1,5 @@
 (require :asdf)
+(require :fomus)
 (require :nudruz)
 (in-package :cm)
 
