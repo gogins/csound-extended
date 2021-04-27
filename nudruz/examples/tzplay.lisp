@@ -7,9 +7,9 @@ Contrary to CM documentation, the events function does not return a usable seq
 object. The generated score is placed into the seq that is passed to events.
 |#
 (require :asdf)
-#+ecl (load "/home/mkg/cmn/cmn-all.lisp")
-(require :fomus)
-(require :nudruz)
+(require :quicklisp)
+(ql:quickload "fomus")
+(ql:quickload "nudruz")
 (load "example-orc.lisp")
 (in-package :cm)
 

@@ -49,6 +49,7 @@ def assign_durations(midifile):
             event = assign_duration(index, track, turnoffs)
             if event.is_note_on() == True:
                 i_statement = to_i_statement(event)
+                
 '''
 Translates the MIDI event into a Csound "i" statement.
 '''
