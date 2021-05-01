@@ -159,8 +159,13 @@ if(BUILD_CSOUND_AC)
         install(TARGETS ${SWIG_MODULE_CsoundAC_REAL_NAME}
             LIBRARY DESTINATION "${Python3_SITEARCH}"
             ARCHIVE DESTINATION "${Python3_SITEARCH}")
-            install(FILES "${BUILD_LIB_DIR}/CsoundAC.py"
+            
+        install(FILES "${BUILD_LIB_DIR}/CsoundAC.py"
             DESTINATION ${Python3_SITEARCH})
+            
+        install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIRECTORY}"
+            DESTINATION ${Python3_SITEARCH}
+            FILES_MATCHING PATTERN "*.py")
     endif()
 
 endif()
