@@ -62,6 +62,24 @@ def toCsoundAcScore(athena_object, csoundac_score):
             csoundac_score.append(csoundac_event)
     print("toCsoundAC.")
     
+    
+'''
+Generates an athenaCL "score" by optionally creating an Interpreter, and then 
+running the script. Python '#' comments are ignored. The generated score is 
+the state of the AthenaObject instance in the interpreter, that is, 
+interpreter.ao.
+'''
+
+def interpret(script, interpreter=None):
+    if interpreter == None:
+        interpreter = athenaObj.Interpreter()
+    for line in script.split("\n"):
+        line = line.strip()
+        if len(line) > 1 and line[0] != '#':
+            print("command:", line)
+            print(interpreter.cmd(line))
+    return interpreter
+    
 if __name__ == '__main__':
     
     # Unit test:
@@ -70,6 +88,7 @@ if __name__ == '__main__':
     emo cn
     pin a d3,e3,g3,a3,b3,d4,e4,g4,a4,b4,d5,e5,g5,a5,b5
     tmo ha
+    # This is a comment.
     tin a 6 27
     tie r pt,(c,16),(ig,(bg,rc,(1,2,3,5,7)),(bg,rc,(3,6,9,12))),(c,1)
     tie a om,(ls,e,9,(ru,.2,1),(ru,.2,1)),(wp,e,23,0,0,1)
@@ -79,13 +98,7 @@ if __name__ == '__main__':
     tie d3 c,1
     tie d3 ru,1,4
     '''
-
-    interpreter = athenaObj.Interpreter()
-    for line in script.split("\n"):
-        line = line.strip()
-        if len(line) > 1:
-            print("command:", line)
-            print(interpreter.cmd(line))
+    interpreter = interpret(script)
     csoundac_score = CsoundAC.Score()
     toCsoundAcScore(interpreter.ao, csoundac_score)    
     print()

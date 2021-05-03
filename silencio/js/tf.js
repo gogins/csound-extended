@@ -14721,6 +14721,7 @@
 	var SpaceToBatchND = 'SpaceToBatchND';
 	var SplitV = 'SplitV';
 	var Softmax = 'Softmax';
+	var SparseFillEmptyRows = 'SparseFillEmptyRows';
 	var SparseReshape = 'SparseReshape';
 	var SparseToDense = 'SparseToDense';
 	var SquaredDifference = 'SquaredDifference';
@@ -23902,7 +23903,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$1 = '3.5.0';
+	var version$1 = '3.6.0';
 
 	/**
 	 * @license
@@ -40249,6 +40250,131 @@
 	 * you may not use this file except in compliance with the License.
 	 * You may obtain a copy of the License at
 	 *
+	 * https://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	/**
+	 * Performs image binarization with corresponding threshold
+	 * (depends on the method)value, which creates a binary image from a grayscale.
+	 * @param image 3d tensor of shape [imageHeight,imageWidth, depth],
+	 * where imageHeight and imageWidth must be positive.The image color
+	 * range should be [0, 255].
+	 * @param method Optional string from `'binary' | 'otsu'`
+	 * which specifies the method for thresholding. Defaults to 'binary'.
+	 * @param inverted Optional boolean whichspecifies
+	 * if colours should be inverted. Defaults to false.
+	 * @param threshValue Optional number which defines threshold value from 0 to 1.
+	 * Defaults to 0.5.
+	 * @return A 3d tensor of shape [imageHeight,imageWidth, depth], which
+	 * contains binarized image.
+	 */
+
+	function threshold_(image, method, inverted, threshValue) {
+	  if (method === void 0) {
+	    method = 'binary';
+	  }
+
+	  if (inverted === void 0) {
+	    inverted = false;
+	  }
+
+	  if (threshValue === void 0) {
+	    threshValue = 0.5;
+	  }
+
+	  var $image = convertToTensor(image, 'image', 'threshold');
+	  /* 0.2989, 0.5870, 0.1140 are represent luma coefficients in CCIR601.
+	  Reference for converting between RGB and grayscale: https://en.wikipedia.org/wiki/Luma_%28video%29  */
+
+	  var RED_INTENCITY_COEF = 0.2989;
+	  var GREEN_INTENCITY_COEF = 0.5870;
+	  var BLUE_INTENCITY_COEF = 0.1140;
+	  var totalPixelsInImage = $image.shape[0] * $image.shape[1];
+	  var $threshold = mul(tensor1d([threshValue]), 255);
+	  var r, g, b, grayscale;
+	  assert($image.rank === 3, function () {
+	    return 'Error in threshold: image must be rank 3,' + ("but got rank " + $image.rank + ".");
+	  });
+	  assert($image.shape[2] === 3 || $image.shape[2] === 1, function () {
+	    return 'Error in threshold: ' + 'image color channel must be equal to 3 or 1' + ("but got " + $image.shape[2] + ".");
+	  });
+	  assert($image.dtype === 'int32' || $image.dtype === 'float32', function () {
+	    return 'Error in dtype: image dtype must be int32 or float32,' + ("but got dtype " + $image.dtype + ".");
+	  });
+	  assert(method === 'otsu' || method === 'binary', function () {
+	    return "Method must be binary or otsu, but was " + method;
+	  });
+
+	  if ($image.shape[2] === 3) {
+	    var _split = split$1($image, [1, 1, 1], -1);
+
+	    r = _split[0];
+	    g = _split[1];
+	    b = _split[2];
+	    var $r = mul(r, RED_INTENCITY_COEF);
+	    var $g = mul(g, GREEN_INTENCITY_COEF);
+	    var $b = mul(b, BLUE_INTENCITY_COEF);
+	    grayscale = add$1(add$1($r, $g), $b);
+	  } else {
+	    grayscale = image;
+	  }
+
+	  if (method === 'otsu') {
+	    var $histogram = bincount(cast(round$1(grayscale), 'int32'), tensor([]), 256);
+	    $threshold = otsu($histogram, totalPixelsInImage);
+	  }
+
+	  var invCondition = inverted ? lessEqual(grayscale, $threshold) : greater(grayscale, $threshold);
+	  var result = cast(mul(invCondition, 255), 'int32');
+	  return result;
+	}
+
+	function otsu(histogram, total) {
+	  var bestThresh = tensor1d([-1]);
+	  var bestInBetVar = tensor1d([0]);
+	  var cInBetVar = tensor1d([0]);
+	  var classFirst, classSecond, meanFirst, meanSec, weightForeground, weightBack;
+
+	  for (var index = 0; index < histogram.size - 1; index++) {
+	    classFirst = slice$2(histogram, 0, index + 1);
+	    classSecond = slice$2(histogram, index + 1);
+	    weightForeground = div(sum$1(classFirst), total);
+	    weightBack = div(sum$1(classSecond), total);
+	    var meanFirstDivA = sum$1(mul(classFirst, range(0, classFirst.size)));
+	    meanFirst = div(meanFirstDivA, sum$1(classFirst));
+	    var meanSecFill = fill(classSecond.shape, classFirst.size);
+	    var meanSecAdd = add$1(range(0, classSecond.size), meanSecFill);
+	    var meanSecMul = mul(classSecond, meanSecAdd);
+	    meanSec = div(sum$1(meanSecMul), sum$1(classSecond));
+	    var cInBetVarSubA = sub(meanFirst, meanSec);
+	    var cInBetVarSubB = sub(meanFirst, meanSec);
+	    var cInBetVarMul = mul(weightForeground, weightBack);
+	    cInBetVar = mul(mul(cInBetVarMul, cInBetVarSubA), cInBetVarSubB);
+	    var condition = greater(cInBetVar, bestInBetVar);
+	    bestInBetVar = where(condition, cInBetVar, bestInBetVar);
+	    bestThresh = where(condition, tensor1d([index]), bestThresh);
+	  }
+
+	  return bestThresh;
+	}
+
+	var threshold = op({
+	  threshold_: threshold_
+	});
+
+	/**
+	 * @license
+	 * Copyright 2021 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
 	 * http://www.apache.org/licenses/LICENSE-2.0
 	 *
 	 * Unless required by applicable law or agreed to in writing, software
@@ -41384,6 +41510,120 @@
 	 * =============================================================================
 	 */
 	/**
+	 * The input SparseTensor is represented via the map of inputs {`indices`,
+	 * `values`, `denseShape`}. The output SparseTensor has the same `denseShape`
+	 * but with indices `outputIndices` and values `outputValues`. This op inserts a
+	 * single entry for every row that doesn't have any values. The index is created
+	 * as `[row, 0, ..., 0]` and the inserted value is `defaultValue`.
+	 *
+	 * For example, suppose `spInput` has shape [5, 6] and non-empty values:
+	 * [0, 1]: a
+	 * [0, 3]: b
+	 * [2, 0]: c
+	 * [3, 1]: d
+	 *
+	 * Rows 1 and 4 are empty, so the output will be of shape [5, 6] with values:
+	 * [0, 1]: a
+	 * [0, 3]: b
+	 * [1, 0]: `defaultValue`
+	 * [2, 0]: c
+	 * [3, 1]: d
+	 * [4, 0]: `defaultValue`
+	 *
+	 * The output SparseTensor will be in row-major order and will have the same
+	 * shape as the input.
+	 *
+	 * This op also returns an indicator vector shaped [dense_shape[0]] such that
+	 * emptyRowIndicator[i] = True iff row i was an empty row.
+	 *
+	 * And a reverse index map vector shaped [indices.shape[0]] that is used during
+	 * backpropagation, reverseIndexMap[i] = outi s.t. indices[i, j] ==
+	 * outputIndices[outi, j] for all j
+	 *
+	 * ```js
+	 * const result = tf.sparse.sparseFillEmptyRows(
+	 *   [[0, 0], [1, 0], [1, 3], [1, 4], [3, 2], [3, 3]],
+	 *   [0, 10, 13, 14, 32, 33], [5, 6], -1);
+	 * console.log(result);
+	 * result['outputIndices'].print(); // [[0, 0], [1, 0], [1, 3], [1, 4],
+	 *                                  //  [2, 0], [3, 2], [3, 3], [4, 0]]
+	 * result['outputValues'].print(); // [0, 10, 13, 14,-1, 32, 33, -1]
+	 * result['emptyRowIndicator'].print(); // [0, 0, 1, 0, 1]
+	 * result['reverseIndexMap'].print(); // [0, 1, 2, 3, 5, 6]
+	 * ```
+	 * @param indices: 2-D. the indices of the sparse tensor.
+	 * @param values: 1-D. the values of the sparse tensor.
+	 * @param denseShape: 1-D. the shape of the sparse tensor.
+	 * @param defaultValue: 0-D. default value to insert into location [row, 0, ...,
+	 *     0] for rows missing from the input sparse tensor.
+	 * @return A map with the following properties:
+	 *     - outputIndices
+	 *     - outputValues: 1-D. the values of the filled sparse tensor.
+	 *     - emptyRowIndicator: 1-D. whether the dense row was missing in the input
+	 * sparse tensor.
+	 *     - reverseIndexMap: 1-D. a map from the input indices to the output
+	 * indices.
+	 * @doc {heading: 'Operations', subheading: 'Sparse'}
+	 */
+
+	function sparseFillEmptyRows_(indices, values, denseShape, defaultValue) {
+	  var $indices = convertToTensor(indices, 'indices', 'sparseFillEmptyRows');
+	  var $values = convertToTensor(values, 'values', 'sparseFillEmptyRows');
+	  var $denseShape = convertToTensor(denseShape, 'denseShape', 'sparseFillEmptyRows');
+	  var $defaultValue = convertToTensor(defaultValue, 'defaultValue', 'sparseFillEmptyRows', $values.dtype);
+
+	  if ($indices.rank !== 2) {
+	    throw new Error("Indices should be Tensor2D but received shape\n        " + $indices.shape);
+	  }
+
+	  if ($values.rank !== 1) {
+	    throw new Error("Values should be Tensor1D but received shape " + $values.shape);
+	  }
+
+	  if ($denseShape.rank !== 1) {
+	    throw new Error("Dense shape should be Tensor1D but received shape " + $denseShape.shape);
+	  }
+
+	  if ($defaultValue.rank !== 0) {
+	    throw new Error("Default value should be a scalar but received shape " + $defaultValue.shape);
+	  }
+
+	  var inputs = {
+	    indices: $indices,
+	    values: $values,
+	    denseShape: $denseShape,
+	    defaultValue: $defaultValue
+	  };
+	  var result = ENGINE.runKernel(SparseFillEmptyRows, inputs);
+	  return {
+	    outputIndices: result[0],
+	    outputValues: result[1],
+	    emptyRowIndicator: result[2],
+	    reverseIndexMap: result[3]
+	  };
+	}
+
+	var sparseFillEmptyRows = op({
+	  sparseFillEmptyRows_: sparseFillEmptyRows_
+	});
+
+	/**
+	 * @license
+	 * Copyright 2021 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	/**
 	 * This operation has the same semantics as reshape on the represented dense
 	 * tensor. The `inputIndices` are recomputed based on the requested `newShape`.
 	 * If one component of `newShape` is the special value -1, the size of that
@@ -41491,6 +41731,7 @@
 	  nonMaxSuppressionWithScoreAsync: nonMaxSuppressionWithScoreAsync,
 	  nonMaxSuppressionPadded: nonMaxSuppressionPadded,
 	  nonMaxSuppressionPaddedAsync: nonMaxSuppressionPaddedAsync,
+	  threshold: threshold,
 	  transform: transform
 	}; // linalg namespace
 	var linalg = {
@@ -41510,6 +41751,7 @@
 	  softmaxCrossEntropy: softmaxCrossEntropy
 	};
 	var sparse = {
+	  sparseFillEmptyRows: sparseFillEmptyRows,
 	  sparseReshape: sparseReshape
 	}; // Second level exports.
 
@@ -59023,7 +59265,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$2 = '3.5.0';
+	var version$2 = '3.6.0';
 
 	/**
 	 * Helper function to check the dtype and shape compatibility of a feed value.
@@ -87642,7 +87884,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$3 = '3.5.0';
+	var version$3 = '3.6.0';
 
 	/**
 	 * @license
@@ -93940,7 +94182,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$4 = '3.5.0';
+	var version$4 = '3.6.0';
 
 	/**
 	 * @license
@@ -95861,6 +96103,139 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	function sparseFillEmptyRowsImpl(indices, indicesShape, indicesDType, values, valuesDType, denseShape, defaultValue) {
+	  var indicesCount = indicesShape[0];
+	  var denseRows = denseShape[0];
+	  var emptyRowIndicator = new Array(denseRows);
+	  var reverseIndexMap = new Array(indicesCount);
+	  var rank = indicesShape[1];
+
+	  if (denseRows === 0) {
+	    if (indicesCount !== 0) {
+	      throw new Error("Received SparseTensor with denseShape[0] = 0 but\n         indices.shape[0] = " + indicesCount);
+	    }
+
+	    var outputIndices = getArrayFromDType(indicesDType, 0);
+	    var outputValues = getArrayFromDType(valuesDType, 0);
+	    return [outputIndices, [0, rank], outputValues, emptyRowIndicator, reverseIndexMap];
+	  }
+
+	  var rowsAreOrdered = true;
+	  var lastIndicesRow = 0;
+	  var csrOffset = new Array(denseRows).fill(0);
+
+	  for (var i = 0; i < indicesCount; ++i) {
+	    // indices is a 2d tensor with shape of [N, rank]
+	    var row = indices[i * rank];
+
+	    if (row < 0) {
+	      throw new Error("indices(" + i + ", 0) is invalid: " + row + " < 0");
+	    }
+
+	    if (row >= denseRows) {
+	      throw new Error("indices(" + i + ", 0) is invalid: " + row + " >= " + denseRows);
+	    }
+
+	    ++csrOffset[row];
+	    rowsAreOrdered = rowsAreOrdered && row >= lastIndicesRow;
+	    lastIndicesRow = row;
+	  }
+
+	  var allRowsFull = true;
+
+	  for (var _row = 0; _row < denseRows; ++_row) {
+	    // csrOffset here describes the number of elements in this dense row
+	    var rowEmpty = csrOffset[_row] === 0;
+	    emptyRowIndicator[_row] = rowEmpty;
+	    allRowsFull = allRowsFull && !rowEmpty; // In filled version, each row has at least one element.
+
+	    csrOffset[_row] = Math.max(csrOffset[_row], 1); // Update csrOffset to represent the number of elements up to and
+	    // including denseRows + 1:
+	    //  csrOffset[0] == #{elements of row 0}
+	    //  csrOffset[1] == #{elements of row 1} + #{elements of row 0}
+	    //  ..
+	    //  csrOffset[i] == starting index for elements in row i + 1.
+
+	    if (_row > 0) {
+	      csrOffset[_row] += csrOffset[_row - 1];
+	    }
+	  }
+
+	  if (allRowsFull && rowsAreOrdered) {
+	    var _outputIndices = indices;
+	    var _outputValues = values;
+
+	    for (var _i = 0; _i < indicesCount; ++_i) {
+	      reverseIndexMap[_i] = _i;
+	    }
+
+	    return [_outputIndices, [indicesCount, rank], _outputValues, emptyRowIndicator, reverseIndexMap];
+	  } else {
+	    var fullIndicesCount = csrOffset[denseRows - 1];
+
+	    var _outputIndices2 = getArrayFromDType(indicesDType, fullIndicesCount * rank);
+
+	    var _outputValues2 = getArrayFromDType(valuesDType, fullIndicesCount);
+
+	    var filledCount = new Array(denseRows).fill(0); // Fill in values for rows that are not missing
+
+	    for (var _i2 = 0; _i2 < indicesCount; ++_i2) {
+	      // indices is a 2d tensor with shape of [N, rank]
+	      var _row2 = indices[_i2 * rank];
+	      var offset = filledCount[_row2];
+	      var outputI = (_row2 === 0 ? 0 : csrOffset[_row2 - 1]) + offset;
+	      filledCount[_row2]++; // Increment the filled count for this row.
+
+	      for (var j = 0; j < rank; ++j) {
+	        // indices and outputIndices are 2d tensors with shape of [N, rank]
+	        _outputIndices2[outputI * rank + j] = indices[_i2 * rank + j];
+	      }
+
+	      _outputValues2[outputI] = values[_i2]; // We'll need this reverse index map to backprop correctly.
+
+	      reverseIndexMap[_i2] = outputI;
+	    } // Fill in values for rows that are missing
+
+
+	    for (var _row3 = 0; _row3 < denseRows; ++_row3) {
+	      var rowCount = filledCount[_row3];
+
+	      if (rowCount === 0) {
+	        // We haven't filled this row
+	        var startingIndex = _row3 === 0 ? 0 : csrOffset[_row3 - 1]; // Remaining index values were set to zero already.
+	        // Just need to set the row index in the right location.
+	        // outputIndices is a 2d tensor with shape of [N, rank]
+
+	        _outputIndices2[startingIndex * rank + 0] = _row3;
+
+	        for (var col = 1; col < rank; ++col) {
+	          _outputIndices2[startingIndex * rank + col] = 0;
+	        }
+
+	        _outputValues2[startingIndex] = defaultValue;
+	      }
+	    }
+
+	    return [_outputIndices2, [indicesCount, rank], _outputValues2, emptyRowIndicator, reverseIndexMap];
+	  }
+	}
+
+	/**
+	 * @license
+	 * Copyright 2021 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
 	function sparseReshapeImpl(inputIndices, inputIndicesShape, inputDType, inputShape, targetShape) {
 	  var denseSize = sizeFromShape(inputShape);
 	  var nnz = inputIndicesShape[0];
@@ -96317,7 +96692,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$5 = '3.5.0';
+	var version$5 = '3.6.0';
 
 	/**
 	 * @license
@@ -104232,14 +104607,14 @@
 	// https://math.byu.edu/~schow/work/IEEEFloatingPoint.htm
 
 	var epsilon$1 = 1.1920928955078125e-7;
-	var threshold = Math.log(epsilon$1) + 2.0;
+	var threshold$1 = Math.log(epsilon$1) + 2.0;
 	var softplus$1 = unaryKernelFunc(Softplus, function (xi) {
 	  // Value above which exp(x) may overflow, but softplus(x) == x
 	  // is within machine epsilon.
-	  var tooLarge = xi > -threshold; // Value below which exp(x) may underflow, but softplus(x) == exp(x)
+	  var tooLarge = xi > -threshold$1; // Value below which exp(x) may underflow, but softplus(x) == exp(x)
 	  // is within machine epsilon.
 
-	  var tooSmall = xi < threshold;
+	  var tooSmall = xi < threshold$1;
 	  var expX = Math.exp(xi);
 	  var result;
 
@@ -104346,6 +104721,68 @@
 	  kernelName: SpaceToBatchND,
 	  backendName: 'cpu',
 	  kernelFunc: spaceToBatchND$1
+	};
+
+	/**
+	 * @license
+	 * Copyright 2021 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	function sparseFillEmptyRows$1(args) {
+	  var inputs = args.inputs,
+	      backend = args.backend;
+	  var indices = inputs.indices,
+	      values = inputs.values,
+	      denseShape = inputs.denseShape,
+	      defaultValue = inputs.defaultValue;
+
+	  if (denseShape.shape.length !== 1) {
+	    throw new Error("Dense shape must be a vector, saw:\n        " + denseShape.shape);
+	  }
+
+	  if (indices.shape.length !== 2) {
+	    throw new Error("Indices must be a matrix, saw:\n        " + indices.shape);
+	  }
+
+	  if (values.shape.length !== 1) {
+	    throw new Error("Values must be a vector, saw:\n        " + values.shape);
+	  }
+
+	  if (defaultValue.shape.length !== 0) {
+	    throw new Error("Default value must be a scalar, saw:\n        " + defaultValue.shape);
+	  }
+
+	  var $indices = backend.data.get(indices.dataId).values;
+	  var $values = backend.data.get(values.dataId).values;
+	  var $denseShape = backend.data.get(denseShape.dataId).values;
+	  var $defaultValue = backend.data.get(defaultValue.dataId).values[0];
+
+	  var _sparseFillEmptyRowsI = sparseFillEmptyRowsImpl($indices, indices.shape, indices.dtype, $values, values.dtype, $denseShape, $defaultValue),
+	      outputIndices = _sparseFillEmptyRowsI[0],
+	      outputIndicesShape = _sparseFillEmptyRowsI[1],
+	      outputValues = _sparseFillEmptyRowsI[2],
+	      emptyRowIndicator = _sparseFillEmptyRowsI[3],
+	      reverseIndexMap = _sparseFillEmptyRowsI[4];
+
+	  return [backend.makeTensorInfo(outputIndicesShape, indices.dtype, outputIndices), backend.makeTensorInfo([outputIndicesShape[0]], values.dtype, outputValues), backend.makeTensorInfo([emptyRowIndicator.length], 'bool', new Uint8Array(emptyRowIndicator.map(function (value) {
+	    return Number(value);
+	  }))), backend.makeTensorInfo([reverseIndexMap.length], indices.dtype, new Int32Array(reverseIndexMap))];
+	}
+	var sparseFillEmptyRowsConfig = {
+	  kernelName: SparseFillEmptyRows,
+	  backendName: 'cpu',
+	  kernelFunc: sparseFillEmptyRows$1
 	};
 
 	/**
@@ -105272,7 +105709,7 @@
 	 * =============================================================================
 	 */
 
-	var kernelConfigs = [_fusedMatMulConfig, absConfig, acosConfig, acoshConfig, addConfig, addNConfig, allConfig, anyConfig, argMaxConfig, argMinConfig, asinConfig, asinhConfig, atanConfig, atan2Config, atanhConfig, avgPoolConfig, avgPool3DConfig, avgPool3DGradConfig$1, avgPoolGradConfig$1, batchMatMulConfig, batchNormConfig, batchToSpaceNDConfig, bincountConfig, castConfig, ceilConfig, clipConfig, complexConfig, complexAbsConfig, concatConfig, conv2DBackpropFilterConfig, conv2DBackpropInputConfig, conv2DConfig, conv3DBackpropFilterV2Config, conv3DBackpropInputV2Config, conv3DConfig, cosConfig, coshConfig, cropAndResizeConfig, cumsumConfig, denseBincountConfig, depthToSpaceConfig, depthwiseConv2dNativeConfig, depthwiseConv2dNativeBackpropFilterConfig, depthwiseConv2dNativeBackpropInputConfig, diagConfig, dilation2dConfig, dilation2dBackpropInputConfig, dilation2dBackpropFilterConfig, realDivConfig, einsumConfig, eluConfig, eluGradConfig$1, equalConfig, erfConfig, expConfig, expandDimsConfig, expm1Config, fftConfig, fillConfig, flipLeftRightConfig, floorConfig, floorDivConfig, fusedConv2DConfig, fusedDepthwiseConv2DConfig, gatherNdConfig, gatherV2Config, greaterConfig, greaterEqualConfig, identityConfig, ifftConfig, imagConfig, isFiniteConfig, isInfConfig, isNaNConfig, leakyReluConfig, lessConfig, lessEqualConfig, linSpaceConfig, logConfig, log1pConfig, logicalAndConfig, logicalNotConfig, logicalOrConfig, lRNConfig, lRNGradConfig, maximumConfig, maxPoolConfig, maxPool3DConfig, maxPool3DGradConfig$1, maxPoolGradConfig$1, maxPoolWithArgmaxConfig, maxConfig, meanConfig, minConfig, minimumConfig, mirrorPadConfig, modConfig, multinomialConfig, multiplyConfig, negConfig, nonMaxSuppressionV3Config, nonMaxSuppressionV4Config, nonMaxSuppressionV5Config, notEqualConfig, oneHotConfig, onesLikeConfig, packConfig, padV2Config, powConfig, preluConfig, prodConfig, rangeConfig, realConfig, reciprocalConfig, reluConfig, relu6Config, reshapeConfig, resizeBilinearConfig, resizeBilinearGradConfig$1, resizeNearestNeighborConfig, resizeNearestNeighborGradConfig$1, reverseConfig, rotateWithOffsetConfig, roundConfig, rsqrtConfig, scatterNdConfig, selectConfig, seluConfig, sigmoidConfig, signConfig, sinConfig, sinhConfig, sliceConfig, softmaxConfig, softplusConfig, spaceToBatchNDConfig, sparseReshapeConfig, sparseToDenseConfig, splitVConfig, sqrtConfig, squareConfig, squaredDifferenceConfig, stepConfig, stridedSliceConfig, subConfig, sumConfig, tanConfig, tanhConfig, tileConfig, topKConfig, transposeConfig, transformConfig, uniqueConfig, unpackConfig, unsortedSegmentSumConfig, zerosLikeConfig];
+	var kernelConfigs = [_fusedMatMulConfig, absConfig, acosConfig, acoshConfig, addConfig, addNConfig, allConfig, anyConfig, argMaxConfig, argMinConfig, asinConfig, asinhConfig, atanConfig, atan2Config, atanhConfig, avgPoolConfig, avgPool3DConfig, avgPool3DGradConfig$1, avgPoolGradConfig$1, batchMatMulConfig, batchNormConfig, batchToSpaceNDConfig, bincountConfig, castConfig, ceilConfig, clipConfig, complexConfig, complexAbsConfig, concatConfig, conv2DBackpropFilterConfig, conv2DBackpropInputConfig, conv2DConfig, conv3DBackpropFilterV2Config, conv3DBackpropInputV2Config, conv3DConfig, cosConfig, coshConfig, cropAndResizeConfig, cumsumConfig, denseBincountConfig, depthToSpaceConfig, depthwiseConv2dNativeConfig, depthwiseConv2dNativeBackpropFilterConfig, depthwiseConv2dNativeBackpropInputConfig, diagConfig, dilation2dConfig, dilation2dBackpropInputConfig, dilation2dBackpropFilterConfig, realDivConfig, einsumConfig, eluConfig, eluGradConfig$1, equalConfig, erfConfig, expConfig, expandDimsConfig, expm1Config, fftConfig, fillConfig, flipLeftRightConfig, floorConfig, floorDivConfig, fusedConv2DConfig, fusedDepthwiseConv2DConfig, gatherNdConfig, gatherV2Config, greaterConfig, greaterEqualConfig, identityConfig, ifftConfig, imagConfig, isFiniteConfig, isInfConfig, isNaNConfig, leakyReluConfig, lessConfig, lessEqualConfig, linSpaceConfig, logConfig, log1pConfig, logicalAndConfig, logicalNotConfig, logicalOrConfig, lRNConfig, lRNGradConfig, maximumConfig, maxPoolConfig, maxPool3DConfig, maxPool3DGradConfig$1, maxPoolGradConfig$1, maxPoolWithArgmaxConfig, maxConfig, meanConfig, minConfig, minimumConfig, mirrorPadConfig, modConfig, multinomialConfig, multiplyConfig, negConfig, nonMaxSuppressionV3Config, nonMaxSuppressionV4Config, nonMaxSuppressionV5Config, notEqualConfig, oneHotConfig, onesLikeConfig, packConfig, padV2Config, powConfig, preluConfig, prodConfig, rangeConfig, realConfig, reciprocalConfig, reluConfig, relu6Config, reshapeConfig, resizeBilinearConfig, resizeBilinearGradConfig$1, resizeNearestNeighborConfig, resizeNearestNeighborGradConfig$1, reverseConfig, rotateWithOffsetConfig, roundConfig, rsqrtConfig, scatterNdConfig, selectConfig, seluConfig, sigmoidConfig, signConfig, sinConfig, sinhConfig, sliceConfig, softmaxConfig, softplusConfig, spaceToBatchNDConfig, sparseFillEmptyRowsConfig, sparseReshapeConfig, sparseToDenseConfig, splitVConfig, sqrtConfig, squareConfig, squaredDifferenceConfig, stepConfig, stridedSliceConfig, subConfig, sumConfig, tanConfig, tanhConfig, tileConfig, topKConfig, transposeConfig, transformConfig, uniqueConfig, unpackConfig, unsortedSegmentSumConfig, zerosLikeConfig];
 
 	for (var _i$1 = 0, _kernelConfigs = kernelConfigs; _i$1 < _kernelConfigs.length; _i$1++) {
 	  var kernelConfig = _kernelConfigs[_i$1];
@@ -106317,7 +106754,6 @@
 	  return ENV$1.getBool('WEBGL_PACK');
 	});
 	/** Whether we will pack the depthwise conv op. */
-	// TODO: https://github.com/tensorflow/tfjs/issues/1679
 
 	ENV$1.registerFlag('WEBGL_PACK_DEPTHWISECONV', function () {
 	  return ENV$1.getBool('WEBGL_PACK');
@@ -107284,13 +107720,19 @@
 	  };
 
 	  _proto.createProgram = function createProgram$1(fragmentShaderSource) {
+	    var _this6 = this;
+
 	    this.throwIfDisposed();
 	    var gl = this.gl;
 	    var fragmentShader = createFragmentShader(gl, fragmentShaderSource);
-	    var vertexShader = createVertexShader$1(gl);
+
+	    if (this.vertexShader == null) {
+	      this.vertexShader = createVertexShader$1(gl);
+	    }
+
 	    var program = createProgram(gl);
 	    callAndCheck(gl, function () {
-	      return gl.attachShader(program, vertexShader);
+	      return gl.attachShader(program, _this6.vertexShader);
 	    });
 	    callAndCheck(gl, function () {
 	      return gl.attachShader(program, fragmentShader);
@@ -107310,7 +107752,7 @@
 	  };
 
 	  _proto.deleteProgram = function deleteProgram(program) {
-	    var _this6 = this;
+	    var _this7 = this;
 
 	    this.throwIfDisposed();
 
@@ -107320,13 +107762,13 @@
 
 	    if (program != null) {
 	      callAndCheck(this.gl, function () {
-	        return _this6.gl.deleteProgram(program);
+	        return _this7.gl.deleteProgram(program);
 	      });
 	    }
 	  };
 
 	  _proto.setProgram = function setProgram(program) {
-	    var _this7 = this;
+	    var _this8 = this;
 
 	    this.throwIfDisposed();
 	    this.program = program;
@@ -107336,7 +107778,7 @@
 	    }
 
 	    callAndCheck(this.gl, function () {
-	      return _this7.gl.useProgram(program);
+	      return _this8.gl.useProgram(program);
 	    });
 	  };
 
@@ -107355,11 +107797,11 @@
 	  };
 
 	  _proto.getAttributeLocation = function getAttributeLocation(program, attribute) {
-	    var _this8 = this;
+	    var _this9 = this;
 
 	    this.throwIfDisposed();
 	    return callAndCheck(this.gl, function () {
-	      return _this8.gl.getAttribLocation(program, attribute);
+	      return _this9.gl.getAttribLocation(program, attribute);
 	    });
 	  };
 
@@ -107419,11 +107861,11 @@
 	  };
 
 	  _proto.blockUntilAllProgramsCompleted = function blockUntilAllProgramsCompleted() {
-	    var _this9 = this;
+	    var _this10 = this;
 
 	    this.throwIfDisposed();
 	    callAndCheck(this.gl, function () {
-	      return _this9.gl.finish();
+	      return _this10.gl.finish();
 	    });
 	  };
 
@@ -107477,7 +107919,7 @@
 
 	  _proto.waitForQueryAndGetTime = /*#__PURE__*/function () {
 	    var _waitForQueryAndGetTime = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(query) {
-	      var _this10 = this;
+	      var _this11 = this;
 
 	      return regeneratorRuntime.wrap(function _callee$(_context) {
 	        while (1) {
@@ -107485,10 +107927,10 @@
 	            case 0:
 	              _context.next = 2;
 	              return repeatedTry(function () {
-	                return _this10.disposed || // while testing contexts are created / disposed
+	                return _this11.disposed || // while testing contexts are created / disposed
 	                // in rapid succession, so without this check we
 	                // may poll for the query timer indefinitely
-	                _this10.isQueryAvailable(query, env().getNumber('WEBGL_DISJOINT_QUERY_TIMER_EXTENSION_VERSION'));
+	                _this11.isQueryAvailable(query, env().getNumber('WEBGL_DISJOINT_QUERY_TIMER_EXTENSION_VERSION'));
 	              });
 
 	            case 2:
@@ -107558,10 +108000,10 @@
 	  };
 
 	  _proto.pollFence = function pollFence(fenceContext) {
-	    var _this11 = this;
+	    var _this12 = this;
 
 	    return new Promise(function (resolve) {
-	      _this11.addItemToPoll(function () {
+	      _this12.addItemToPoll(function () {
 	        return fenceContext.isFencePassed();
 	      }, function () {
 	        return resolve();
@@ -107584,7 +108026,7 @@
 	  };
 
 	  _proto.addItemToPoll = function addItemToPoll(isDoneFn, resolveFn) {
-	    var _this12 = this;
+	    var _this13 = this;
 
 	    this.itemsToPoll.push({
 	      isDoneFn: isDoneFn,
@@ -107598,10 +108040,10 @@
 
 
 	    repeatedTry(function () {
-	      _this12.pollItems(); // End the loop if no more items to poll.
+	      _this13.pollItems(); // End the loop if no more items to poll.
 
 
-	      return _this12.itemsToPoll.length === 0;
+	      return _this13.itemsToPoll.length === 0;
 	    });
 	  };
 
@@ -107652,11 +108094,11 @@
 	  };
 
 	  _proto.setOutputMatrixWriteRegionDriver = function setOutputMatrixWriteRegionDriver(x, y, width, height) {
-	    var _this13 = this;
+	    var _this14 = this;
 
 	    this.throwIfDisposed();
 	    callAndCheck(this.gl, function () {
-	      return _this13.gl.scissor(x, y, width, height);
+	      return _this14.gl.scissor(x, y, width, height);
 	    });
 	  };
 
@@ -108746,6 +109188,7 @@
 	    rsqrtImplCPU = rsqrtImpl,
 	    simpleAbsImplCPU = simpleAbsImpl,
 	    sliceImplCPU = sliceImpl,
+	    sparseFillEmptyRowsImplCPU = sparseFillEmptyRowsImpl,
 	    sparseReshapeImplCPU = sparseReshapeImpl,
 	    stridedSliceImplCPU = stridedSliceImpl,
 	    subImplCPU = subImpl,
@@ -110501,7 +110944,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$6 = '3.5.0';
+	var version$6 = '3.6.0';
 
 	/**
 	 * @license
@@ -115990,7 +116433,7 @@
 	  var mainLoop = "\n      int xR; int xC; int xCOffset;\n      vec4 wTexel; vec4 previous; vec4 final;";
 
 	  for (var c = 0; c < filterWidth; c++) {
-	    mainLoop += "\n          vec4 xTexelC" + c * 2 + ";\n          vec4 xC" + c + ";";
+	    mainLoop += "\n          vec4 xTexelC" + c * 2 + ";\n          int xTexelC" + c * 2 + "Ready;\n          vec4 xC" + c + ";";
 	  }
 	  /**
 	   * This vectorized implementation works by gathering the values needed for
@@ -116004,18 +116447,20 @@
 
 	  for (var r = 0; r < filterHeight; r++) {
 	    for (var _c = 0; _c < filterWidth; _c++) {
-	      mainLoop += "\n          xTexelC" + _c * 2 + " = vec4(0.0);\n          xC" + _c + " = vec4(0.0);";
+	      mainLoop += "\n          xTexelC" + _c * 2 + " = vec4(0.0);\n          xTexelC" + _c * 2 + "Ready = 0;\n          xC" + _c + " = vec4(0.0);";
 	    }
 
 	    mainLoop += "\n        xR = xRCorner + " + r * dilationHeight + ";\n        if (xR >=0 && xR < " + xNumRows + ") {\n      ";
 
-	    for (var texelC = 0; texelC < texelsAcross / 2 + 1; texelC++) {
-	      var _c2 = texelC * 2;
+	    for (var texelC = 0; texelC < (texelsAcross + 1) / 2; texelC++) {
+	      var colIndex = texelC * 2;
 
-	      mainLoop += "\n          xC = xCCorner + " + _c2 * dilationWidth + ";\n          ";
+	      var _c2 = colIndex * dilationWidth;
+
+	      mainLoop += "\n          xC = xCCorner + " + _c2 + ";\n          ";
 
 	      if (strideWidth === 1) {
-	        if (_c2 < filterWidth) {
+	        if (colIndex < filterWidth) {
 	          // If padding is odd, the outer texels have to be composed.
 	          if (padLeft % 2 === 1) {
 	            // TODO: Ensure vec4 previous does not result in redundant sample,
@@ -116025,17 +116470,17 @@
 	            // - If padding is odd, we must add 1 to ensure we ask for an
 	            // even-numbered row.
 	            // - We subtract 2 to access the previous texel.
-	            mainLoop += "\n                xCOffset = xC + 1;\n                if (xCOffset >= 0 && xCOffset < " + xNumCols + ") {\n                  xTexelC" + _c2 + " = getX(batch, xR, xCOffset, d1);\n\n                  // Need to manually clear unused channels in case\n                  // we're reading from recycled texture.\n                  if (xCOffset + 1 >= " + xNumCols + ") {\n                    xTexelC" + _c2 + ".zw = vec2(0.0);\n                  }\n                }\n              "; // This texel has been read in previous iteration if the dilation
+	            mainLoop += "\n                xCOffset = xC + 1;\n                if (xCOffset >= 0 && xCOffset < " + xNumCols + " && xTexelC" + _c2 + "Ready == 0) {\n                  xTexelC" + _c2 + " = getX(batch, xR, xCOffset, d1);\n\n                  // Need to manually clear unused channels in case\n                  // we're reading from recycled texture.\n                  if (xCOffset + 1 >= " + xNumCols + ") {\n                    xTexelC" + _c2 + ".zw = vec2(0.0);\n                  }\n                  xTexelC" + _c2 + "Ready = 1;\n                }\n              "; // This texel has been read in previous iteration if the dilation
 	            // is 1.
 
 	            if (dilationWidth === 1 && _c2 > 0) {
-	              mainLoop += "\n                xC" + _c2 + " = vec4(xTexelC" + (_c2 - 2) + ".zw, xTexelC" + _c2 + ".xy);\n                ";
+	              mainLoop += "\n                xC" + colIndex + " = vec4(xTexelC" + (_c2 - 2) + ".zw, xTexelC" + _c2 + ".xy);\n                ";
 	            } else {
-	              mainLoop += "\n                  xCOffset = xC + 1 - 2;\n\n                  if (xCOffset >= 0 && xCOffset < " + xNumCols + ") {\n                    previous = getX(batch, xR, xCOffset, d1);\n\n                    // Need to manually clear unused channels in case\n                    // we're reading from recycled texture.\n                    if (xCOffset + 1 >= " + xNumCols + ") {\n                      previous.zw = vec2(0.0);\n                    }\n\n                    xC" + _c2 + " = vec4(previous.zw, xTexelC" + _c2 + ".xy);\n                  } else {\n                    xC" + _c2 + " = vec4(0.0, 0.0, xTexelC" + _c2 + ".xy);\n                  }\n                  ";
+	              mainLoop += "\n                  xCOffset = xC + 1 - 2;\n\n                  if (xCOffset >= 0 && xCOffset < " + xNumCols + ") {\n                    previous = getX(batch, xR, xCOffset, d1);\n\n                    // Need to manually clear unused channels in case\n                    // we're reading from recycled texture.\n                    if (xCOffset + 1 >= " + xNumCols + ") {\n                      previous.zw = vec2(0.0);\n                    }\n\n                    xC" + colIndex + " = vec4(previous.zw, xTexelC" + _c2 + ".xy);\n                  } else {\n                    xC" + colIndex + " = vec4(0.0, 0.0, xTexelC" + _c2 + ".xy);\n                  }\n                  ";
 	            }
 	          } else {
 	            // Padding is even, so xRC corresponds to a single texel.
-	            mainLoop += "\n                if (xC >= 0 && xC < " + xNumCols + ") {\n                  xTexelC" + _c2 + " = getX(batch, xR, xC, d1);\n                  if (xC + 1 >= " + xNumCols + ") {\n                    xTexelC" + _c2 + ".zw = vec2(0.0);\n                  }\n                }\n\n                xC" + _c2 + " = xTexelC" + _c2 + ";\n                ";
+	            mainLoop += "\n                if (xC >= 0 && xC < " + xNumCols + " && xTexelC" + _c2 + "Ready == 0) {\n                  xTexelC" + _c2 + " = getX(batch, xR, xC, d1);\n                  if (xC + 1 >= " + xNumCols + ") {\n                    xTexelC" + _c2 + ".zw = vec2(0.0);\n                  }\n                  xTexelC" + _c2 + "Ready = 1;\n                }\n\n                xC" + colIndex + " = xTexelC" + _c2 + ";\n                ";
 	          }
 
 	          if (_c2 + 1 < filterWidth) {
@@ -116047,22 +116492,22 @@
 	            var nextTexelOffset = padLeft % 2 === 0 ? nearestLargerEven(dilationWidth) : dilationWidth;
 
 	            if (dilationWidth % 2 === 0 && padLeft % 2 === 1 || dilationWidth % 2 !== 0 && padLeft % 2 !== 1) {
-	              mainLoop += "\n                  xCOffset = xC + " + padLeft % 2 + " + " + nextTexelOffset + ";\n\n                  if (xCOffset >= 0 && xCOffset < " + xNumCols + ") {\n                    xTexelC" + (_c2 + 2) + " = getX(batch, xR, xCOffset, d1);\n\n                    // Need to manually clear unused channels in case\n                    // we're reading from recycled texture.\n                    if (xCOffset + 1 >= " + xNumCols + ") {\n                      xTexelC" + (_c2 + 2) + ".zw = vec2(0.0);\n                    }\n                  }\n                  "; // If dilation > 1 then the xRC's will not be able to share any
+	              mainLoop += "\n                  xCOffset = xC + " + padLeft % 2 + " + " + nextTexelOffset + ";\n\n                  if (xCOffset >= 0 && xCOffset < " + xNumCols + " && xTexelC" + (_c2 + 2) + "Ready == 0) {\n                    xTexelC" + (_c2 + 2) + " = getX(batch, xR, xCOffset, d1);\n\n                    // Need to manually clear unused channels in case\n                    // we're reading from recycled texture.\n                    if (xCOffset + 1 >= " + xNumCols + ") {\n                      xTexelC" + (_c2 + 2) + ".zw = vec2(0.0);\n                    }\n                    xTexelC" + (_c2 + 2) + "Ready = 1;\n                  }\n                  "; // If dilation > 1 then the xRC's will not be able to share any
 	              // values, so each xRC will require two unique calls to getX.
 
 	              if (dilationWidth > 1) {
-	                mainLoop += "\n                    xCOffset -= 2;\n                    if (xCOffset >= 0 && xCOffset < " + xNumCols + ") {\n                      xTexelC" + _c2 + " = getX(batch, xR, xCOffset, d1);\n                    }\n                    ";
+	                mainLoop += "\n                    xCOffset -= 2;\n                    if (xCOffset >= 0 && xCOffset < " + xNumCols + " && xTexelC" + _c2 + "Ready == 0) {\n                      xTexelC" + _c2 + " = getX(batch, xR, xCOffset, d1);\n                      xTexelC" + _c2 + "Ready = 1;\n                    }\n                    ";
 	              }
 
-	              mainLoop += "\n                  xC" + (_c2 + 1) + " = vec4(xTexelC" + _c2 + ".zw, xTexelC" + (_c2 + 2) + ".xy);\n                  ";
+	              mainLoop += "\n                  xC" + (colIndex + 1) + " = vec4(xTexelC" + _c2 + ".zw, xTexelC" + (_c2 + 2) + ".xy);\n                  ";
 	            } else {
-	              // If dialtion is 1 and padding is odd, we have already read the
+	              // If dilation is 1 and padding is odd, we have already read the
 	              // texel when constructing the previous x value. Here we can
 	              // simply skip the texture read.
 	              if (nextTexelOffset === 1) {
-	                mainLoop += "\n                    xC" + (_c2 + 1) + " = xTexelC" + _c2 + ";\n                    ";
+	                mainLoop += "\n                    xC" + (colIndex + 1) + " = xTexelC" + _c2 + ";\n                    ";
 	              } else {
-	                mainLoop += "\n                    xCOffset = xC + " + nextTexelOffset + ";\n\n                    if (xCOffset >= 0 && xCOffset < " + xNumCols + ") {\n                      xTexelC" + (_c2 + 2) + " = getX(batch, xR, xCOffset, d1);\n                      if (xCOffset + 1 >= " + xNumCols + ") {\n                        xTexelC" + (_c2 + 2) + ".zw = vec2(0.0);\n                      }\n                    }\n\n                    xC" + (_c2 + 1) + " = xTexelC" + (_c2 + 2) + ";\n                    ";
+	                mainLoop += "\n                    xCOffset = xC + " + nextTexelOffset + ";\n\n                    if (xCOffset >= 0 && xCOffset < " + xNumCols + " && xTexelC" + (_c2 + 2) + "Ready == 0) {\n                      xTexelC" + (_c2 + 2) + " = getX(batch, xR, xCOffset, d1);\n                      if (xCOffset + 1 >= " + xNumCols + ") {\n                        xTexelC" + (_c2 + 2) + ".zw = vec2(0.0);\n                      }\n                      xTexelC" + (_c2 + 2) + "Ready = 1;\n                    }\n\n                    xC" + (colIndex + 1) + " = xTexelC" + (_c2 + 2) + ";\n                    ";
 	              }
 	            }
 	          }
@@ -116071,23 +116516,23 @@
 	        // stride === 2
 	        if (_c2 < filterWidth) {
 	          // Depending on whether padLeft is even or odd, we want either the
-	          // xy or zw channels from X texels for xC${c}. If padLeft is
-	          // even, xC${c + 1} is simply the zw channels of texels we've
+	          // xy or zw channels from X texels for xC${colIndex}. If padLeft is
+	          // even, xC${colIndex +1} is simply the zw channels of texels we've
 	          // already sampled. But if padLeft is odd, xC{$c + 1}.zw will
 	          // need to come from the xy channels of a new texel, hence the `
 	          // vec4
 	          // final` initialized below.
 	          if (padLeft % 2 === 1) {
-	            mainLoop += "\n                xCOffset = xC + 1 - " + strideWidth + ";\n                if(xCOffset >= 0 && xCOffset < " + xNumCols + ") {\n                  xTexelC" + _c2 + " = getX(batch, xR, xCOffset, d1);\n                  // Need to manually clear unused channels in case\n                  // we're reading from recycled texture.\n                  if (xCOffset + 1 >= " + xNumCols + ") {\n                    xTexelC" + _c2 + ".zw = vec2(0.0);\n                  }\n                }\n\n                if(xC + 1 >= 0 && xC + 1 < " + xNumCols + ") {\n                  xTexelC" + (_c2 + 2) + " = getX(batch, xR, xC + 1, d1);\n                  // Need to manually clear unused channels in case\n                  // we're reading from recycled texture.\n                  if (xC + 2 >= " + xNumCols + ") {\n                    xTexelC" + (_c2 + 2) + ".zw = vec2(0.0);\n                  }\n                }\n\n                xC" + _c2 + " = vec4(xTexelC" + _c2 + ".zw, xTexelC" + (_c2 + 2) + ".zw);\n              ";
+	            mainLoop += "\n                xCOffset = xC + 1 - " + strideWidth + ";\n                if(xCOffset >= 0 && xCOffset < " + xNumCols + " && xTexelC" + _c2 + "Ready == 0) {\n                  xTexelC" + _c2 + " = getX(batch, xR, xCOffset, d1);\n                  // Need to manually clear unused channels in case\n                  // we're reading from recycled texture.\n                  if (xCOffset + 1 >= " + xNumCols + ") {\n                    xTexelC" + _c2 + ".zw = vec2(0.0);\n                  }\n                  xTexelC" + _c2 + "Ready = 1;\n                }\n\n                if(xC + 1 >= 0 && xC + 1 < " + xNumCols + " && xTexelC" + (_c2 + 2) + "Ready == 0) {\n                  xTexelC" + (_c2 + 2) + " = getX(batch, xR, xC + 1, d1);\n                  // Need to manually clear unused channels in case\n                  // we're reading from recycled texture.\n                  if (xC + 2 >= " + xNumCols + ") {\n                    xTexelC" + (_c2 + 2) + ".zw = vec2(0.0);\n                  }\n                  xTexelC" + (_c2 + 2) + "Ready = 1;\n                }\n\n                xC" + colIndex + " = vec4(xTexelC" + _c2 + ".zw, xTexelC" + (_c2 + 2) + ".zw);\n              ";
 
 	            if (_c2 + 1 < filterWidth) {
-	              mainLoop += "\n                  final = vec4(0.0);\n                  xCOffset = xC + 1 + " + strideWidth + ";\n                  if(xCOffset >= 0 && xCOffset < " + xNumCols + ") {\n                    final = getX(batch, xR, xCOffset, d1);\n                  }\n                  xC" + (_c2 + 1) + " = vec4(xTexelC" + (_c2 + 2) + ".xy, final.xy);\n                ";
+	              mainLoop += "\n                  final = vec4(0.0);\n                  xCOffset = xC + 1 + " + strideWidth + ";\n                  if(xCOffset >= 0 && xCOffset < " + xNumCols + ") {\n                    final = getX(batch, xR, xCOffset, d1);\n                  }\n                  xC" + (colIndex + 1) + " = vec4(xTexelC" + (_c2 + 2) + ".xy, final.xy);\n                ";
 	            }
 	          } else {
-	            mainLoop += "\n                if(xC >= 0 && xC < " + xNumCols + ") {\n                  xTexelC" + _c2 + " = getX(batch, xR, xC, d1);\n                  if (xC + 1 >= " + xNumCols + ") {\n                    xTexelC" + _c2 + ".zw = vec2(0.0);\n                  }\n                }\n\n                xCOffset = xC + " + strideWidth + ";\n                if(xCOffset >= 0 && xCOffset < " + xNumCols + ") {\n                  xTexelC" + (_c2 + 2) + " = getX(batch, xR, xCOffset, d1);\n                  if (xCOffset + 1 >= " + xNumCols + ") {\n                    xTexelC" + (_c2 + 2) + ".zw = vec2(0.);\n                  }\n                }\n\n                xC" + _c2 + " = vec4(\n                  xTexelC" + _c2 + ".xy, xTexelC" + (_c2 + 2) + ".xy);\n              ";
+	            mainLoop += "\n                if(xC >= 0 && xC < " + xNumCols + " && xTexelC" + _c2 + "Ready == 0) {\n                  xTexelC" + _c2 + " = getX(batch, xR, xC, d1);\n                  if (xC + 1 >= " + xNumCols + ") {\n                    xTexelC" + _c2 + ".zw = vec2(0.0);\n                  }\n                  xTexelC" + _c2 + "Ready = 1;\n                }\n\n                xCOffset = xC + " + strideWidth + ";\n                if(xCOffset >= 0 && xCOffset < " + xNumCols + " && xTexelC" + (_c2 + 2) + "Ready == 0) {\n                  xTexelC" + (_c2 + 2) + " = getX(batch, xR, xCOffset, d1);\n                  if (xCOffset + 1 >= " + xNumCols + ") {\n                    xTexelC" + (_c2 + 2) + ".zw = vec2(0.);\n                  }\n                  xTexelC" + (_c2 + 2) + "Ready = 1;\n                }\n\n                xC" + colIndex + " = vec4(\n                  xTexelC" + _c2 + ".xy, xTexelC" + (_c2 + 2) + ".xy);\n              ";
 
 	            if (_c2 + 1 < filterWidth) {
-	              mainLoop += "\n                  xC" + (_c2 + 1) + " = vec4(xTexelC" + _c2 + ".zw, xTexelC" + (_c2 + 2) + ".zw);\n                ";
+	              mainLoop += "\n                  xC" + (colIndex + 1) + " = vec4(xTexelC" + _c2 + ".zw, xTexelC" + (_c2 + 2) + ".zw);\n                ";
 	            }
 	          }
 	        }
@@ -116097,11 +116542,11 @@
 	      // 50 variables)
 
 
-	      if (_c2 < filterWidth) {
-	        mainLoop += "\n            wTexel = getW(" + r + ", " + _c2 + ", d1, q);\n            dotProd += xC" + _c2 + " * vec4(wTexel.xz, wTexel.xz);\n          ";
+	      if (colIndex < filterWidth) {
+	        mainLoop += "\n            wTexel = getW(" + r + ", " + _c2 + ", d1, q);\n            dotProd += xC" + colIndex + " * vec4(wTexel.xz, wTexel.xz);\n          ";
 
 	        if (_c2 + 1 < filterWidth) {
-	          mainLoop += "\n              wTexel = getW(" + r + ", " + (_c2 + 1) + ", d1, q);\n              dotProd += xC" + (_c2 + 1) + " * vec4(wTexel.xz, wTexel.xz);\n            ";
+	          mainLoop += "\n              wTexel = getW(" + r + ", " + (_c2 + 1) + ", d1, q);\n              dotProd += xC" + (colIndex + 1) + " * vec4(wTexel.xz, wTexel.xz);\n            ";
 	        }
 	      }
 	    }
@@ -120518,6 +120963,47 @@
 
 	/**
 	 * @license
+	 * Copyright 2019 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
+	var ResizeNearestNeighborPackedProgram = function ResizeNearestNeighborPackedProgram(inputShape, newHeight, newWidth, alignCorners, halfPixelCenters) {
+	  this.variableNames = ['A'];
+	  this.packedInputs = true;
+	  this.packedOutput = true;
+	  this.outputShape = [];
+	  var batch = inputShape[0],
+	      oldHeight = inputShape[1],
+	      oldWidth = inputShape[2],
+	      depth = inputShape[3];
+	  this.outputShape = [batch, newHeight, newWidth, depth];
+	  var effectiveInSize = [alignCorners && newHeight > 1 ? oldHeight - 1 : oldHeight, alignCorners && newWidth > 1 ? oldWidth - 1 : oldWidth];
+	  var effectiveOutSize = [alignCorners && newHeight > 1 ? newHeight - 1 : newHeight, alignCorners && newWidth > 1 ? newWidth - 1 : newWidth]; // When align corners is false, we rounds the value with floor.
+
+	  var roundBase = alignCorners ? '0.5' : '0.0';
+	  var sourceFracIndexRC;
+
+	  if (halfPixelCenters) {
+	    sourceFracIndexRC = "max((vec3(yRC) + vec3(0.5)) * " + "effectiveInputOverOutputRatioRC, vec3(0.0))";
+	  } else {
+	    sourceFracIndexRC = "vec3(yRC) * effectiveInputOverOutputRatioRC";
+	  }
+
+	  this.userCode = "\n      const vec3 effectiveInputOverOutputRatioRC = vec3(\n          " + effectiveInSize[0] / effectiveOutSize[0] + ",\n          " + effectiveInSize[1] / effectiveOutSize[1] + ",\n          " + effectiveInSize[1] / effectiveOutSize[1] + ");\n      const vec3 inputShapeRC = vec3(" + oldHeight + ".0, " + oldWidth + ".0,\n                                     " + oldWidth + ".0);\n\n      float getAValue(int b, int r, int c, int d) {\n        return getChannel(getA(b, r, c, d), vec2(c, d));\n      }\n\n      void main() {\n        ivec4 coords = getOutputCoords();\n        int b = coords[0];\n        int d = coords[3];\n        // Calculate values for next column in yRC.z.\n        ivec3 yRC = coords.yzz + ivec3(0, 0, 1);\n\n        // Fractional source index.\n        vec3 sourceFracIndexRC = " + sourceFracIndexRC + ";\n\n        // Compute the coordinators of nearest neighbor point.\n        ivec3 sourceNearestRC = ivec3(\n          min(inputShapeRC - 1.0, floor(sourceFracIndexRC + " + roundBase + ")));\n\n        // Should we calculate next column and row elements in 2x2 packed cell.\n        bool hasNextCol = d < " + (depth - 1) + ";\n        bool hasNextRow = coords.z < " + (newWidth - 1) + ";\n\n        vec4 newValue = vec4(\n          getAValue(b, sourceNearestRC.x, sourceNearestRC.y, d),\n          hasNextCol ? getAValue(b, sourceNearestRC.x, sourceNearestRC.y, d + 1)\n                     : 0.0,\n          hasNextRow ? getAValue(b, sourceNearestRC.x, sourceNearestRC.z, d)\n                     : 0.0,\n          (hasNextRow && hasNextCol) ?\n            getAValue(b, sourceNearestRC.x, sourceNearestRC.z, d + 1) : 0.0);\n\n        setOutput(newValue);\n      }\n    ";
+	};
+
+	/**
+	 * @license
 	 * Copyright 2020 Google LLC. All Rights Reserved.
 	 * Licensed under the Apache License, Version 2.0 (the "License");
 	 * you may not use this file except in compliance with the License.
@@ -120542,7 +121028,7 @@
 	      size = attrs.size;
 	  var newHeight = size[0],
 	      newWidth = size[1];
-	  var program = new ResizeNearestNeighborProgram(images.shape, newHeight, newWidth, alignCorners, halfPixelCenters);
+	  var program = env().getBool('WEBGL_PACK_IMAGE_OPERATIONS') ? new ResizeNearestNeighborPackedProgram(images.shape, newHeight, newWidth, alignCorners, halfPixelCenters) : new ResizeNearestNeighborProgram(images.shape, newHeight, newWidth, alignCorners, halfPixelCenters);
 	  return backend.runWebGLProgram(program, [images], images.dtype);
 	}
 	var resizeNearestNeighborConfig$1 = {
@@ -121404,6 +121890,68 @@
 	 * limitations under the License.
 	 * =============================================================================
 	 */
+	function sparseFillEmptyRows$2(args) {
+	  var inputs = args.inputs,
+	      backend = args.backend;
+	  var indices = inputs.indices,
+	      values = inputs.values,
+	      denseShape = inputs.denseShape,
+	      defaultValue = inputs.defaultValue;
+
+	  if (denseShape.shape.length !== 1) {
+	    throw new Error("Dense shape must be a vector, saw:\n         " + denseShape.shape);
+	  }
+
+	  if (indices.shape.length !== 2) {
+	    throw new Error("Indices must be a matrix, saw:\n         " + indices.shape);
+	  }
+
+	  if (values.shape.length !== 1) {
+	    throw new Error("Values must be a vector, saw:\n         " + values.shape);
+	  }
+
+	  if (defaultValue.shape.length !== 0) {
+	    throw new Error("Default value must be a scalar, saw:\n        " + defaultValue.shape);
+	  }
+
+	  var $indices = backend.readSync(indices.dataId);
+	  var $values = backend.readSync(values.dataId);
+	  var $denseShape = backend.readSync(denseShape.dataId);
+	  var $defaultValue = backend.readSync(defaultValue.dataId)[0];
+
+	  var _sparseFillEmptyRowsI = sparseFillEmptyRowsImplCPU($indices, indices.shape, indices.dtype, $values, values.dtype, $denseShape, $defaultValue),
+	      outputIndices = _sparseFillEmptyRowsI[0],
+	      outputIndicesShape = _sparseFillEmptyRowsI[1],
+	      outputValues = _sparseFillEmptyRowsI[2],
+	      emptyRowIndicator = _sparseFillEmptyRowsI[3],
+	      reverseIndexMap = _sparseFillEmptyRowsI[4];
+
+	  return [backend.makeTensorInfo(outputIndicesShape, indices.dtype, outputIndices), backend.makeTensorInfo([outputIndicesShape[0]], values.dtype, outputValues), backend.makeTensorInfo([emptyRowIndicator.length], 'bool', new Uint8Array(emptyRowIndicator.map(function (value) {
+	    return Number(value);
+	  }))), backend.makeTensorInfo([reverseIndexMap.length], indices.dtype, new Int32Array(reverseIndexMap))];
+	}
+	var sparseFillEmptyRowsConfig$1 = {
+	  kernelName: SparseFillEmptyRows,
+	  backendName: 'webgl',
+	  kernelFunc: sparseFillEmptyRows$2
+	};
+
+	/**
+	 * @license
+	 * Copyright 2021 Google LLC. All Rights Reserved.
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 * =============================================================================
+	 */
 	function sparseReshape$2(args) {
 	  var inputs = args.inputs,
 	      backend = args.backend;
@@ -121929,10 +122477,10 @@
 	    // Even thought string tensor is always on CPU, just to be consistent on how
 	    // to access tensor data.
 	    var data = backend.readSync(x.dataId);
-	    var decodedData = data.map(function (d) {
+	    var value = x.dtype === 'string' ? data.map(function (d) {
 	      return decodeString(d);
-	    });
-	    var buf = buffer(x.shape, x.dtype, decodedData);
+	    }) : data;
+	    var buf = buffer(x.shape, x.dtype, value);
 	    var outBuf = tileImplCPU(buf, reps);
 	    return backend.makeTensorInfo(outBuf.shape, outBuf.dtype, outBuf.values);
 	  }
@@ -122395,7 +122943,7 @@
 	 * =============================================================================
 	 */
 
-	var kernelConfigs$1 = [LRNConfig, LRNGradConfig, _fusedMatMulConfig$1, absConfig$1, acosConfig$1, acoshConfig$1, addConfig$1, addNConfig$1, allConfig$1, anyConfig$1, argMaxConfig$1, argMinConfig$1, asinConfig$1, asinhConfig$1, atan2Config$1, atanConfig$1, atanhConfig$1, avgPool3DConfig$1, avgPoolConfig$1, avgPoolGrad3DConfig, avgPoolGradConfig$2, batchMatMulConfig$1, batchNormConfig$1, batchToSpaceNDConfig$1, bincountConfig$1, castConfig$1, ceilConfig$1, clipByValueConfig, complexAbsConfig$1, complexConfig$1, concatConfig$1, conv2DBackpropFilterConfig$1, conv2DBackpropInputConfig$1, conv2DConfig$1, conv3DBackpropFilterV2Config$1, conv3DBackpropInputConfig, conv3DConfig$1, cosConfig$1, coshConfig$1, cropAndResizeConfig$1, cumsumConfig$1, denseBincountConfig$1, depthToSpaceConfig$1, depthwiseConv2dNativeBackpropFilterConfig$1, depthwiseConv2dNativeBackpropInputConfig$1, depthwiseConv2dNativeConfig$1, diagConfig$1, dilation2DConfig, einsumConfig$1, eluConfig$1, eluGradConfig$2, equalConfig$1, erfConfig$1, expConfig$1, expandDimsConfig$1, expm1Config$1, fftConfig$1, fillConfig$1, flipLeftRightConfig$1, floorConfig$1, floorDivConfig$1, fromPixelsConfig, fusedConv2DConfig$1, fusedDepthwiseConv2DConfig$1, gatherNdConfig$1, gatherV2Config$1, greaterConfig$1, greaterEqualConfig$1, identityConfig$1, ifftConfig$1, imagConfig$1, isFiniteConfig$1, isInfConfig$1, isNaNConfig$1, leakyReluConfig$1, lessConfig$1, lessEqualConfig$1, linSpaceConfig$1, log1pConfig$1, logConfig$1, logicalAndConfig$1, logicalNotConfig$1, logicalOrConfig$1, maxConfig$1, maxPool3DConfig$1, maxPoolConfig$1, maxPoolGrad3DConfig, maxPoolGradConfig$2, maxPoolWithArgmaxConfig$1, maximumConfig$1, meanConfig$1, minConfig$1, minimumConfig$1, mirrorPadConfig$1, modConfig$1, multinomialConfig$1, multiplyConfig$1, negConfig$1, nonMaxSuppressionV3Config$1, nonMaxSuppressionV4Config$1, nonMaxSuppressionV5Config$1, notEqualConfig$1, oneHotConfig$1, onesLikeConfig$1, packConfig$1, padV2Config$1, powConfig$1, preluConfig$1, prodConfig$1, rangeConfig$1, realConfig$1, realDivConfig$1, reciprocalConfig$1, relu6Config$1, reluConfig$1, reshapeConfig$1, resizeBilinearConfig$1, resizeBilinearGradConfig$2, resizeNearestNeighborConfig$1, resizeNearestNeighborGradConfig$2, reverseConfig$1, rotateWithOffsetConfig$1, roundConfig$1, rsqrtConfig$1, scatterNdConfig$1, selectConfig$1, seluConfig$1, sigmoidConfig$1, signConfig$1, sinConfig$1, sinhConfig$1, sliceConfig$1, softmaxConfig$1, softplusConfig$1, spaceToBatchNDConfig$1, sparseReshapeConfig$1, sparseToDenseConfig$1, splitVConfig$1, sqrtConfig$1, squareConfig$1, squaredDifferenceConfig$1, stepConfig$1, stridedSliceConfig$1, subConfig$1, sumConfig$1, tanConfig$1, tanhConfig$1, tileConfig$1, topKConfig$1, transformConfig$1, transposeConfig$1, uniqueConfig$1, unpackConfig$1, unsortedSegmentSumConfig$1, zerosLikeConfig$1];
+	var kernelConfigs$1 = [LRNConfig, LRNGradConfig, _fusedMatMulConfig$1, absConfig$1, acosConfig$1, acoshConfig$1, addConfig$1, addNConfig$1, allConfig$1, anyConfig$1, argMaxConfig$1, argMinConfig$1, asinConfig$1, asinhConfig$1, atan2Config$1, atanConfig$1, atanhConfig$1, avgPool3DConfig$1, avgPoolConfig$1, avgPoolGrad3DConfig, avgPoolGradConfig$2, batchMatMulConfig$1, batchNormConfig$1, batchToSpaceNDConfig$1, bincountConfig$1, castConfig$1, ceilConfig$1, clipByValueConfig, complexAbsConfig$1, complexConfig$1, concatConfig$1, conv2DBackpropFilterConfig$1, conv2DBackpropInputConfig$1, conv2DConfig$1, conv3DBackpropFilterV2Config$1, conv3DBackpropInputConfig, conv3DConfig$1, cosConfig$1, coshConfig$1, cropAndResizeConfig$1, cumsumConfig$1, denseBincountConfig$1, depthToSpaceConfig$1, depthwiseConv2dNativeBackpropFilterConfig$1, depthwiseConv2dNativeBackpropInputConfig$1, depthwiseConv2dNativeConfig$1, diagConfig$1, dilation2DConfig, einsumConfig$1, eluConfig$1, eluGradConfig$2, equalConfig$1, erfConfig$1, expConfig$1, expandDimsConfig$1, expm1Config$1, fftConfig$1, fillConfig$1, flipLeftRightConfig$1, floorConfig$1, floorDivConfig$1, fromPixelsConfig, fusedConv2DConfig$1, fusedDepthwiseConv2DConfig$1, gatherNdConfig$1, gatherV2Config$1, greaterConfig$1, greaterEqualConfig$1, identityConfig$1, ifftConfig$1, imagConfig$1, isFiniteConfig$1, isInfConfig$1, isNaNConfig$1, leakyReluConfig$1, lessConfig$1, lessEqualConfig$1, linSpaceConfig$1, log1pConfig$1, logConfig$1, logicalAndConfig$1, logicalNotConfig$1, logicalOrConfig$1, maxConfig$1, maxPool3DConfig$1, maxPoolConfig$1, maxPoolGrad3DConfig, maxPoolGradConfig$2, maxPoolWithArgmaxConfig$1, maximumConfig$1, meanConfig$1, minConfig$1, minimumConfig$1, mirrorPadConfig$1, modConfig$1, multinomialConfig$1, multiplyConfig$1, negConfig$1, nonMaxSuppressionV3Config$1, nonMaxSuppressionV4Config$1, nonMaxSuppressionV5Config$1, notEqualConfig$1, oneHotConfig$1, onesLikeConfig$1, packConfig$1, padV2Config$1, powConfig$1, preluConfig$1, prodConfig$1, rangeConfig$1, realConfig$1, realDivConfig$1, reciprocalConfig$1, relu6Config$1, reluConfig$1, reshapeConfig$1, resizeBilinearConfig$1, resizeBilinearGradConfig$2, resizeNearestNeighborConfig$1, resizeNearestNeighborGradConfig$2, reverseConfig$1, rotateWithOffsetConfig$1, roundConfig$1, rsqrtConfig$1, scatterNdConfig$1, selectConfig$1, seluConfig$1, sigmoidConfig$1, signConfig$1, sinConfig$1, sinhConfig$1, sliceConfig$1, softmaxConfig$1, softplusConfig$1, spaceToBatchNDConfig$1, sparseFillEmptyRowsConfig$1, sparseReshapeConfig$1, sparseToDenseConfig$1, splitVConfig$1, sqrtConfig$1, squareConfig$1, squaredDifferenceConfig$1, stepConfig$1, stridedSliceConfig$1, subConfig$1, sumConfig$1, tanConfig$1, tanhConfig$1, tileConfig$1, topKConfig$1, transformConfig$1, transposeConfig$1, uniqueConfig$1, unpackConfig$1, unsortedSegmentSumConfig$1, zerosLikeConfig$1];
 
 	for (var _i$2 = 0, _kernelConfigs$1 = kernelConfigs$1; _i$2 < _kernelConfigs$1.length; _i$2++) {
 	  var kernelConfig$1 = _kernelConfigs$1[_i$2];
@@ -122421,7 +122969,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$7 = '3.5.0';
+	var version$7 = '3.6.0';
 
 	/**
 	 * @license
@@ -122628,6 +123176,7 @@
 	exports.Softmax = Softmax;
 	exports.Softplus = Softplus;
 	exports.SpaceToBatchND = SpaceToBatchND;
+	exports.SparseFillEmptyRows = SparseFillEmptyRows;
 	exports.SparseReshape = SparseReshape;
 	exports.SparseToDense = SparseToDense;
 	exports.SplitV = SplitV;

@@ -51,8 +51,8 @@ sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-5
 sudo apt-get update
 sudo apt-get install -y clang-5.0
 sudo -k
-echo "Updating python3.5-dev..."
-sudo apt-get install python3.5-dev
+echo "Updating python3.9-dev..."
+sudo apt-get install python3.9-dev
 echo "Updating sbcl..."
 sudo apt-get install sbcl
 
