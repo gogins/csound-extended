@@ -12,6 +12,7 @@ time of the first matching note off message and the time of the note on event.
 
 For unisons, the first note on is also the first note turned off.
 '''
+import math
 from musx.midi import MidiNote, MidiSeq, MidiFile
 
 '''
@@ -47,14 +48,12 @@ def assign_durations(midifile):
         turnoffs = set()
         for index in range(len(track)):
             event = assign_duration(index, track, turnoffs)
-            if event.is_note_on() == True:
-                i_statement = to_i_statement(event)
                 
 '''
 Translates the MIDI event into a Csound "i" statement.
 '''
-def to_i_statement(midi_event):
-    i_statement = "i {} {} {} {} {}".format(1 + midi_event.channel(), midi_event.time, midi_event.duration, midi_event.keynum(), midi_event.velocity())
+def to_i_statement(channel, time_, duration, midi_key, midi_velocity):
+    i_statement = "i {} {} {} {} {}".format(1 + channel, time_, duration, midi_key, midi_velocity)
     return i_statement
     
 '''
@@ -63,13 +62,50 @@ It is assumed that times are in seconds.
 '''
 def to_csound_score(midifile):
     assign_durations(midifile)
+    fractional_keys_for_channels, channels_per_instrument = tuning_system(midifile)
     csound_score = []
     for track in midifile:
         for event in track:
             if event.is_note_on():
                 if event.duration > 0:
-                    i_statement = to_i_statement(event)
+                    # Adjust channel and MIDI key for microtonality.
+                    if channels_per_instrument > 1:
+                        channel = event.channel()
+                        fraction = fractional_keys_for_channels[channel]
+                        key = event.keynum()
+                        fractional_key = key + fraction
+                        print("fractioal_key:", fractional_key)
+                        channel = math.floor(channel / channels_per_instrument)
+                    i_statement = to_i_statement(channel, event.time, event.duration, fractional_key, event.velocity())
                     csound_score.append(i_statement + "\n")
     return ''.join(csound_score)
     
-                    
+'''
+Assuming that musx's system of microtonality is being used, returns 
+a lookup table of fractional MIDI keys to be added to note on and note off 
+messages for each channel; also returns the number of channels used for 
+each (microtonal) instrument.
+'''
+def tuning_system(midifile):
+    semitones_for_channels = {}
+    for midiseq in midifile:
+        for event in midiseq:
+            if event.is_pitch_bend() == True:
+                channel = event.channel()
+                # No pitch bend is 0x2000.
+                # Find the fractional part of the MIDI key number.
+                fractional_key = (event.bend() - 0x2000) / 4000
+                print("pitch bend: channel: {:3d} bend: {:6d} fractional key: {}".format(channel, event.bend(), fractional_key))
+                semitones_for_channels[channel] = fractional_key
+    # Find the number of MIDI channels used per microtonal instrument.
+    channels_per_instrument = 0
+    zeroes = 0
+    for key, value in semitones_for_channels.items():
+        if value == 0:
+            zeroes = zeroes + 1
+            if zeroes > 1:
+                break
+        channels_per_instrument = channels_per_instrument + 1
+    print("MIDI channels per microtonal instrument:", channels_per_instrument)
+    return semitones_for_channels, channels_per_instrument
+
