@@ -220,33 +220,13 @@ namespace csound {
                                               "s_TP: %9.4f s_TI: %9.4f TT: %9.4f TV: %9.4f\n",
                                               "s_VP: %9.4f s_VI: %9.4f VT: %9.4f VV: %9.4f\n",
                                               t,
-                                              P, I, T, V,
+                                              P,    I,    T,    V,
                                               s_PT, s_PI, s_PT, s_PV,
                                               s_IT, s_II, s_IT, s_IV,
                                               s_TT, s_TI, s_TT, s_TV,
                                               s_VT, s_VI, s_VT, s_VV);
                 return buffer;
             }
-    };
-    
-    /**
-     * Associates a Chord with an Event representing a musical note.
-     */
-    struct SILENCE_PUBLIC HarmonyEvent {
-        Event note;
-        Chord chord;
-        const Event &get_note() const {
-            return note;
-        }
-        void set_note(const Event &event) {
-            note = event;
-        }
-        const Chord &get_chord() const {
-            return chord;
-        }
-        void set_chord(const Chord &chord_) {
-            chord = chord_;
-        }
     };
     
     SILENCE_PUBLIC inline bool interpolation_point_less(const HarmonyInterpolationPoint &a, const HarmonyInterpolationPoint &b) {
@@ -487,25 +467,7 @@ namespace csound {
                     hutchinson_operator.push_back(transformation);
                 }
             }
-            /** 
-             * Translates a point in the attractor of the IFS to a note and 
-             * associated chord.
-             */
-            virtual HarmonyEvent point_to_note(const HarmonyPoint &point) {
-                HarmonyEvent event;
-                event.note.setTime(point.t());
-                event.note.setDuration(note_duration);
-                event.note.setStatus(144);
-                event.note.setInstrument(point.i());
-                int P = std::round(point.P());
-                int I = std::round(point.I());
-                int T = std::round(point.T());
-                event.chord = pitv_.toChord(P, I, T, 0)[2];
-                event.note.setKey(point.k());
-                event.note.setVelocity(point.v());
-                return event;
-            }
-            /**
+             /**
              * Removes duplicate notes from the generated score.
              */
             virtual void remove_duplicate_notes() {
@@ -520,6 +482,10 @@ namespace csound {
                 }
                 System::inform("                                    after:  %d events.\n", score_attractor.size());
             }
+            /**
+             * Notes in the generated chords have a nominal duration. Notes 
+             * on the same voice and key that overlap are tied (merged).
+             */
             virtual void tie_overlapping_notes() {
                 System::inform("HarmonyIFS::tie overlapping notes:  before: %d events...\n", score.size());
                 score.tieOverlappingNotes(true);
@@ -549,7 +515,7 @@ namespace csound {
                 }
                 iterate(depth, iteration, 0, initial_point);
                 System::inform("points: %d.\n", score_attractor.size());
-                translate_score_attractor_to_score();
+                post_process_score();
             }
             /**
              * Actually computes the score attractor.
@@ -564,69 +530,35 @@ namespace csound {
                     HarmonyPoint new_point = point;
                     new_point = T * new_point;
                     if (iteration == depth) {
-                        HarmonyEvent event = point_to_note(new_point);
-                        System::inform("HarmonyIFS::iterate: depth: %2d index: [%2d] iteration: %9d point:\n%s\n", depth, index, iteration, toString(new_point).c_str());
-                        score_attractor.push_back(event);
+                        double tyme = new_point.t();
+                        int P = std::floor(new_point.P());
+                        int I = std::floor(new_point.I());
+                        int T = std::floor(new_point.T());
+                        int V= std::floor(new_point.V());
+                        Chord chord = pitv_.toChord(P, I, T, V)[2];
+                        System::inform("HarmonyIFS::iterate: depth: %2d index: [%2d] iteration: %9d time: %9.4f chord:\n%s\n", depth, index, iteration, tyme, chord.toString().c_str());
+                        toScore(chord, score, tyme, true);
                     }
                     iterate(depth, iteration, i, new_point);
                 }
             }
             /**
              * Processes the score attractor (the raw notes in the score) to 
-             * quantize and rescale certain dimensions, to remove duplicate 
-             * notes, and to conform pitches to chords.
+             * quantize and rescale certain dimensions, and to remove duplicate 
+             * notes.
              */
-            virtual void translate_score_attractor_to_score() {
-                System::inform("HarmonyIFS::translate_score_attractor_to_score...\n");
-                score.clear();
-                System::inform("  Rescaling, tempering, and conforming notes...\n");
-                double minimum_time = score_attractor.front().note.getTime();
-                double minimum_key = score_attractor.front().note.getKey();
-                double maximum_key = minimum_key;
-                for (const auto &event : score_attractor) {
-                    if (minimum_time > event.note.getTime()) {
-                        minimum_time = event.note.getTime();
-                    }
-                    if (minimum_key > event.note.getKey()) {
-                        minimum_key = event.note.getKey();
-                    }
-                    if (maximum_key < event.note.getKey()) {
-                        maximum_key = event.note.getKey();
-                    }
-                }
-                double actual_key_range = maximum_key - minimum_key;
-                double scale_factor = 1.;
-                if (actual_key_range != 0.) {
-                    scale_factor = range / actual_key_range;
-                }
-                System::inform("HarmonyIFS::translate:\n");
-                System::inform("  minimum key: %9.4f\n", minimum_key);
-                System::inform("  maximum key: %9.4f\n", maximum_key);
-                System::inform("  key range:   %9.4f\n", actual_key_range);
-                System::inform("  rescale by:  %9.4f\n", scale_factor);
-                for (auto &event : score_attractor) {
-                    System::inform("  pre-translation:  %s\n", event.note.toString().c_str());
-                    double time_ = event.note.getTime();
-                    time_ = time_ - minimum_time;
-                    event.note.setTime(time_);
-                    double key = event.note.getKey();
-                    key = key - minimum_key;
-                    key = key * scale_factor;
-                    key = key + minimum_key + bass;
-                    event.note.setKey(key);   
-                    event.note.temper(12.);
-                    conformToChord(event.note, event.chord);
-                    System::inform("  post-translation: %s\n\n", event.note.toString().c_str());
-                    score.push_back(event.note);
-                }
+            virtual void post_process_score() {
+                System::inform("HarmonyIFS::post_process_score...\n");
+                score.rescale(Event::TIME, true, 0., false, 0);                
+                score.rescale(Event::DURATION, true, note_duration, true, 0.);                
+                score.rescale(Event::KEY, true, bass, false, 0.);                
                 if (tie_overlaps == true) {
                     tie_overlapping_notes();
                 }
                 if (remove_duplicates == true) {
                     remove_duplicate_notes();
                 }
-                score_attractor.clear();
-                System::inform("  Finished translating score attractor to final score.\n");
+                 System::inform("  Finished post-processing score score.\n");
             }
             /**
              * Adds a new affine transformation matrix to the Hutchinson operator.
@@ -698,7 +630,7 @@ namespace csound {
             PITV pitv_;
             std::vector<HarmonyInterpolationPoint> interpolation_points;
             std::vector<Eigen::MatrixXd> hutchinson_operator;
-            std::vector<HarmonyEvent> score_attractor;
-     };
+        };
+    };
      
  }
