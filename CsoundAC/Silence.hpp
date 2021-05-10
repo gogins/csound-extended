@@ -323,6 +323,7 @@
 #include "ScoreNode.hpp"
 #include "Cell.hpp"
 #include "HarmonyIFS.hpp"
+#include "HarmonyIFS2.hpp"
 #include "Rescale.hpp"
 #include "ScoreModel.hpp"
 #if !defined(EMSCRIPTEN)

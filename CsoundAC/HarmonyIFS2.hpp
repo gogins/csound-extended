@@ -76,7 +76,7 @@ namespace csound {
      * most closely matches a pitch-class in that chord defined by P, I, 
      * and T.
      */     
-    class SILENCE_PUBLIC HarmonyPoint : public Eigen::VectorXd {
+    class SILENCE_PUBLIC HarmonyPoint2 : public Eigen::VectorXd {
          public:
             typedef enum
             {
@@ -88,21 +88,21 @@ namespace csound {
                 HP_HOMOGENEITY,
                 HP_ELEMENT_COUNT
             } Dimensions;
-            HarmonyPoint() {
+            HarmonyPoint2() {
                 initialize();
             };
-            HarmonyPoint(const HarmonyPoint &other) {
+            HarmonyPoint2(const HarmonyPoint2 &other) {
                 *this = other;
             }
-            HarmonyPoint &operator = (const HarmonyPoint &other) {
+            HarmonyPoint2 &operator = (const HarmonyPoint2 &other) {
                 Eigen::VectorXd::operator = (other);
                 return *this;
             };
-            HarmonyPoint &operator = (const Eigen::VectorXd &other) {
+            HarmonyPoint2 &operator = (const Eigen::VectorXd &other) {
                 Eigen::VectorXd::operator = (other);
                 return *this;
             };
-            virtual ~HarmonyPoint() {};
+            virtual ~HarmonyPoint2() {};
             virtual void initialize() {
                 resize(HP_ELEMENT_COUNT);
                 operator *= (0);
@@ -154,7 +154,7 @@ namespace csound {
      * interpolation function in the __time-harmony subspace__ of the score 
      * space.
      */     
-    class SILENCE_PUBLIC HarmonyInterpolationPoint {
+    class SILENCE_PUBLIC HarmonyInterpolationPoint2 {
          public:
             double t;
             double P;
@@ -177,12 +177,12 @@ namespace csound {
             double s_VI;
             double s_VT;
             double s_VV;
-            HarmonyInterpolationPoint() {
+            HarmonyInterpolationPoint2() {
             }
-            HarmonyInterpolationPoint(const HarmonyInterpolationPoint &other) {
+            HarmonyInterpolationPoint2(const HarmonyInterpolationPoint2 &other) {
                 *this = other;
             }
-            HarmonyInterpolationPoint(double t_, 
+            HarmonyInterpolationPoint2(double t_, 
                                       double P_,    double I_,    double T_,    double V_,
                                       double s_PP_, double s_PI_, double s_PT_, double s_PV_,
                                       double s_IP_, double s_II_, double s_IT_, double s_IV_,
@@ -209,7 +209,7 @@ namespace csound {
                 s_VT = s_VT_;
                 s_VV = s_VV_;
             }
-            virtual ~HarmonyInterpolationPoint() {
+            virtual ~HarmonyInterpolationPoint2() {
             }
             virtual std::string toString() const {
                 char buffer[0x1000];
@@ -229,7 +229,7 @@ namespace csound {
             }
     };
     
-    SILENCE_PUBLIC inline bool interpolation_point_less(const HarmonyInterpolationPoint &a, const HarmonyInterpolationPoint &b) {
+    SILENCE_PUBLIC inline bool interpolation_point_less2(const HarmonyInterpolationPoint2 &a, const HarmonyInterpolationPoint2 &b) {
         if (a.t < b.t) {
             return true;
         } else {
@@ -291,13 +291,13 @@ namespace csound {
             /**
              * Adds an interpolation point to the graph of the fractal interpolation function.
              */
-            virtual HarmonyInterpolationPoint add_interpolation_point(double t,    
+            virtual HarmonyInterpolationPoint2 add_interpolation_point(double t,    
                                                                       double P,    double I,    double T,    double V,
                                                                       double s_PP, double s_PI, double s_PT, double s_PV, 
                                                                       double s_IP, double s_II, double s_IT, double s_IV, 
                                                                       double s_TP, double s_TI, double s_TT, double s_TV,
                                                                       double s_VP, double s_VI, double s_VT, double s_VV) {                 
-                HarmonyInterpolationPoint harmony_interpolation_point = HarmonyInterpolationPoint(
+                HarmonyInterpolationPoint2 harmony_interpolation_point = HarmonyInterpolationPoint2(
                     t,    
                     P,    I,    T,    V,
                     s_PP, s_PI, s_PT, s_PV,
@@ -311,7 +311,7 @@ namespace csound {
             /**
              * Adds an interpolation point to the graph of the fractal interpolation function.
              */
-            virtual HarmonyInterpolationPoint add_interpolation_point_as_chord(double t_, 
+            virtual HarmonyInterpolationPoint2 add_interpolation_point_as_chord(double t_, 
                                                                                const Chord &chord, 
                                                                                double s_PP_, double s_PI_, double s_PT_, double s_PV_,
                                                                                double s_IP_, double s_II_, double s_IT_, double s_IV_,
@@ -322,7 +322,7 @@ namespace csound {
                 const auto I_ = pit[1];
                 const auto T_ = pit[2];
                 const auto V_ = pit[3];
-                System::message("HarmonyInterpolationPoint::add_interpolation_point_as_chord:\n%s\n", chord.toString().c_str());
+                System::message("HarmonyInterpolationPoint2::add_interpolation_point_as_chord:\n%s\n", chord.toString().c_str());
                 auto interpolation_point = add_interpolation_point(t_,    
                                                                    P_,    I_,    T_,    V_,
                                                                    s_PP_, s_PI_, s_PT_, s_PV_,
@@ -347,13 +347,13 @@ namespace csound {
              */
             virtual void initialize_hutchinson_operator() {
                 hutchinson_operator.clear();
-                std::sort(interpolation_points.begin(), interpolation_points.end(), interpolation_point_less);
-                HarmonyInterpolationPoint p_0 = interpolation_points.front();
-                HarmonyInterpolationPoint p_N = interpolation_points.back();
+                std::sort(interpolation_points.begin(), interpolation_points.end(), interpolation_point_less2);
+                HarmonyInterpolationPoint2 p_0 = interpolation_points.front();
+                HarmonyInterpolationPoint2 p_N = interpolation_points.back();
                 for (int n = 1, N = interpolation_points.size(); n < N; ++n) {
-                    HarmonyInterpolationPoint p_n_1 = interpolation_points[n - 1];
-                    HarmonyInterpolationPoint p_n = interpolation_points[n];
-                    Eigen::MatrixXd transformation = Eigen::MatrixXd::Identity(HarmonyPoint::HP_ELEMENT_COUNT, HarmonyPoint::HP_ELEMENT_COUNT);
+                    HarmonyInterpolationPoint2 p_n_1 = interpolation_points[n - 1];
+                    HarmonyInterpolationPoint2 p_n = interpolation_points[n];
+                    Eigen::MatrixXd transformation = Eigen::MatrixXd::Identity(HarmonyPoint2::HP_ELEMENT_COUNT, HarmonyPoint2::HP_ELEMENT_COUNT);
                     // Time row:
                     //   Time column:
                     double t_t =       (p_n.t - p_n_1.t) / (p_N.t - p_0.t);
@@ -406,7 +406,7 @@ namespace csound {
                     double T_t =      ((p_n.T - p_n_1.T) / (p_N.t - p_0.t)) 
                         - (p_n.s_TP * ((p_N.P - p_0.P)   / (p_N.t - p_0.t)))
                         - (p_n.s_TI * ((p_N.I - p_0.I)   / (p_N.t - p_0.t)))
-                        - (p_n.s_TT * ((p_N.T - p_0.T)   / (p_N.t - p_0.t)));
+                        - (p_n.s_TT * ((p_N.T - p_0.T)   / (p_N.t - p_0.t)))
                         - (p_n.s_TV * ((p_N.V - p_0.V)   / (p_N.t - p_0.t)));
                     //   Prime-form column:
                     double T_sTP = p_n.s_TP;
@@ -427,7 +427,7 @@ namespace csound {
                     double V_t =      ((p_n.T - p_n_1.T) / (p_N.t - p_0.t)) 
                         - (p_n.s_VP * ((p_N.P - p_0.P)   / (p_N.t - p_0.t)))
                         - (p_n.s_VI * ((p_N.I - p_0.I)   / (p_N.t - p_0.t)))
-                        - (p_n.s_VT * ((p_N.T - p_0.T)   / (p_N.t - p_0.t)));
+                        - (p_n.s_VT * ((p_N.T - p_0.T)   / (p_N.t - p_0.t)))
                         - (p_n.s_VV * ((p_N.V - p_0.V)   / (p_N.t - p_0.t)));
                     //   Prime-form column:
                     double V_sVP = p_n.s_VP;
@@ -503,7 +503,7 @@ namespace csound {
                 System::inform("HarmonyIFS::generate_score_attractor: depth:  %d...\n", depth);
                 score.clear();
                 int iteration = 0;
-                HarmonyPoint initial_point;
+                HarmonyPoint2 initial_point;
                 initial_point.set_homogeneity(1);
                 System::inform("HarmonyIFS::generate_score_attractor: initial point:\n%s\n", toString(initial_point).c_str());
                 for (int i = 0, n = hutchinson_operator.size(); i < n; ++i) {
@@ -517,14 +517,14 @@ namespace csound {
             /**
              * Actually computes the score attractor.
              */
-            virtual void iterate(int depth, int iteration, int index, const HarmonyPoint point) {
+            virtual void iterate(int depth, int iteration, int index, const HarmonyPoint2 point) {
                 iteration = iteration + 1;
                 if (iteration > depth) {
                     return;
                 }
                 for (int i = 0, n = hutchinson_operator.size(); i < n; ++i) {
                     const Eigen::MatrixXd &T = hutchinson_operator[i];
-                    HarmonyPoint new_point = point;
+                    HarmonyPoint2 new_point = point;
                     new_point = T * new_point;
                     if (iteration == depth) {
                         double tyme = new_point.t();
@@ -562,8 +562,8 @@ namespace csound {
              * The value of this matrix is initially the identity matrix.
              */
             virtual Eigen::MatrixXd &add_transformation() {
-                Eigen::MatrixXd transformation = Eigen::MatrixXd::Identity(HarmonyPoint::HP_ELEMENT_COUNT, 
-                    HarmonyPoint::HP_ELEMENT_COUNT);
+                Eigen::MatrixXd transformation = Eigen::MatrixXd::Identity(HarmonyPoint2::HP_ELEMENT_COUNT, 
+                    HarmonyPoint2::HP_ELEMENT_COUNT);
                 hutchinson_operator.push_back(transformation);
                 return hutchinson_operator.back();
             };
@@ -587,7 +587,7 @@ namespace csound {
              * the affine transformation matrices of the Hutchinson operator.
              */
             virtual void set_shear(int transformation, int dimension, double value) {
-                hutchinson_operator[transformation](HarmonyPoint::HP_TIME, dimension) = value;
+                hutchinson_operator[transformation](HarmonyPoint2::HP_TIME, dimension) = value;
             }
             /**
              * Creates a translation transformation in one of the affine 
@@ -625,7 +625,7 @@ namespace csound {
             bool remove_duplicates;
             double g;
             PITV pitv_;
-            std::vector<HarmonyInterpolationPoint> interpolation_points;
+            std::vector<HarmonyInterpolationPoint2> interpolation_points;
             std::vector<Eigen::MatrixXd> hutchinson_operator;
         };
  };

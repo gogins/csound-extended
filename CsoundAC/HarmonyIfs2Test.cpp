@@ -6,6 +6,7 @@
 #include <memory>
 #include <MusicModel.hpp>
 #include <random>
+#include <Rescale.hpp>
 #include <ScoreNode.hpp>
 #include <VoiceleadingNode.hpp>
 #include <vector>
@@ -29,10 +30,11 @@ int main(int argc, const char **argv)
     csound::System::message("ii:\n%s\n", subdominant.information_sector(0).c_str());
     csound::System::message("V:\n%s\n", dominant.information_sector(0).c_str());
     ///auto &score = harmony_ifs.getScore();
-    harmony_ifs.add_interpolation_point_as_chord(  0., tonic,       .01, .01, .01, .01, .01, .01, .01, .01, .01);
-    harmony_ifs.add_interpolation_point_as_chord(100., subdominant, .01, .01, .01, .01, .01, .01, .01, .01, .01);
-    harmony_ifs.add_interpolation_point_as_chord(220., dominant,    .01, .01, .01, .01, .01, .01, .01, .01, .01);
-    harmony_ifs.add_interpolation_point_as_chord(300., tonic,       .01, .01, .01, .01, .01, .01, .01, .01, .01);
+    //                                                              1    2    3    4    5    6    7    8    9    10   11   12   13   14   15   16
+    harmony_ifs.add_interpolation_point_as_chord(  0., tonic,       .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01);
+    harmony_ifs.add_interpolation_point_as_chord(100., subdominant, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01);
+    harmony_ifs.add_interpolation_point_as_chord(220., dominant,    .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01);
+    harmony_ifs.add_interpolation_point_as_chord(300., tonic,       .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01, .01);
     harmony_ifs.initialize_hutchinson_operator();
     double A = 5.13 * M_PI / 180.;
     csound::System::message("A: %9.4f\n", A);
