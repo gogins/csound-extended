@@ -19,7 +19,7 @@ int main(int argc, const char **argv)
     model.setYear("2021");
     model.setPerformanceRightsOrganization("Irreducible Productions, ASCAP");
     csound::System::setMessageLevel(7);
-    csound::HarmonyIFS harmony_ifs;
+    csound::HarmonyIFS2 harmony_ifs;
     // initialize(int voices_, double range_, double bass_, double note_duration_, bool tie_overlaps_, bool remove_duplicates, double g_ = 1.) {
     harmony_ifs.initialize(5 , 60., 30., .05, true, true, 1.);
     auto tonic = csound::chordForName("CM9");

@@ -217,14 +217,14 @@ namespace csound {
                                               "P:    %9.4f I:    %9.4f T:  %9.4f V:  %9.4f\n"
                                               "s_PP: %9.4f s_PI: %9.4f PT: %9.4f PV: %9.4f\n"
                                               "s_IP: %9.4f s_II: %9.4f IT: %9.4f IV: %9.4f\n"
-                                              "s_TP: %9.4f s_TI: %9.4f TT: %9.4f TV: %9.4f\n",
+                                              "s_TP: %9.4f s_TI: %9.4f TT: %9.4f TV: %9.4f\n"
                                               "s_VP: %9.4f s_VI: %9.4f VT: %9.4f VV: %9.4f\n",
                                               t,
                                               P,    I,    T,    V,
-                                              s_PT, s_PI, s_PT, s_PV,
-                                              s_IT, s_II, s_IT, s_IV,
-                                              s_TT, s_TI, s_TT, s_TV,
-                                              s_VT, s_VI, s_VT, s_VV);
+                                              s_PP, s_PI, s_PT, s_PV,
+                                              s_IP, s_II, s_IT, s_IV,
+                                              s_TP, s_TI, s_TT, s_TV,
+                                              s_VP, s_VI, s_VT, s_VV);
                 return buffer;
             }
     };
@@ -263,11 +263,11 @@ namespace csound {
      * a standalone score generator.</li>
      * </ol>
      */
-    class SILENCE_PUBLIC HarmonyIFS : public ScoreNode {
+    class SILENCE_PUBLIC HarmonyIFS2 : public ScoreNode {
         public:
-            HarmonyIFS() {
+            HarmonyIFS2() {
             }
-            virtual ~HarmonyIFS() {
+            virtual ~HarmonyIFS2() {
             }
             virtual PITV &pitv() {
                 return pitv_;
@@ -325,10 +325,10 @@ namespace csound {
                 System::message("HarmonyInterpolationPoint::add_interpolation_point_as_chord:\n%s\n", chord.toString().c_str());
                 auto interpolation_point = add_interpolation_point(t_,    
                                                                    P_,    I_,    T_,    V_,
-                                                                   s_PP_, s_PI_, s_PT_, s_PV,
-                                                                   s_IP_, s_II_, s_IT_, s_IV, 
-                                                                   s_TP_, s_TI_, s_TT_, s_TV,
-                                                                   s_VP_, s_VI_, s_TV_. s_VV);
+                                                                   s_PP_, s_PI_, s_PT_, s_PV_,
+                                                                   s_IP_, s_II_, s_IT_, s_IV_, 
+                                                                   s_TP_, s_TI_, s_TT_, s_TV_,
+                                                                   s_VP_, s_VI_, s_VT_, s_VV_);
                 return interpolation_point;
             }
             /**
@@ -424,7 +424,7 @@ namespace csound {
                         - (p_n.s_TV * (((p_N.t * p_0.V)   - (p_0.t * p_N.V)) / (p_N.t - p_0.t)));
                     // Voicing row:
                     //   Time column:
-                    double T_t =      ((p_n.T - p_n_1.T) / (p_N.t - p_0.t)) 
+                    double V_t =      ((p_n.T - p_n_1.T) / (p_N.t - p_0.t)) 
                         - (p_n.s_VP * ((p_N.P - p_0.P)   / (p_N.t - p_0.t)))
                         - (p_n.s_VI * ((p_N.I - p_0.I)   / (p_N.t - p_0.t)))
                         - (p_n.s_VT * ((p_N.T - p_0.T)   / (p_N.t - p_0.t)));
@@ -438,7 +438,7 @@ namespace csound {
                     //   Voicing column:
                     double V_sVV = p_n.s_VV;
                     //   Homogeneity or translation column:
-                    double T_h =      (((p_N.t * p_n_1.T) - (p_0.t * p_n.T)) / (p_N.t - p_0.t)) 
+                    double V_h =      (((p_N.t * p_n_1.T) - (p_0.t * p_n.T)) / (p_N.t - p_0.t)) 
                         - (p_n.s_VP * (((p_N.t * p_0.P)   - (p_0.t * p_N.P)) / (p_N.t - p_0.t)))
                         - (p_n.s_VI * (((p_N.t * p_0.I)   - (p_0.t * p_N.I)) / (p_N.t - p_0.t)))
                         - (p_n.s_VT * (((p_N.t * p_0.T)   - (p_0.t * p_N.T)) / (p_N.t - p_0.t)))
@@ -455,7 +455,7 @@ namespace csound {
                                       T_t,  T_sTP, T_sTI, T_sTT, T_sTV, T_h,
                                       // Voicing row.
                                       V_t,  V_sVP, V_sVI, V_sVT, V_sVV, V_h,
-                                       // Homogeneity row.
+                                      // Homogeneity row.
                                       0,    0,     0,     0,     0,     1;     
                     auto scaling_matrix = transformation.block<4, 4>(1, 1); 
                     auto modulus = std::abs(scaling_matrix.determinant());
@@ -471,7 +471,7 @@ namespace csound {
              * Removes duplicate notes from the generated score.
              */
             virtual void remove_duplicate_notes() {
-                System::inform("HarmonyIFS::remove_duplicate_notes: before: %d events...\n", score_attractor.size());
+                System::inform("HarmonyIFS::remove_duplicate_notes: before: %d events...\n", score.size());
                 std::map<std::string, Event> unique_events;
                 for (auto &event : score) {
                     unique_events[event.toString()] = event;
@@ -480,7 +480,7 @@ namespace csound {
                 for (auto &event : unique_events) {
                     score.push_back(event.second);
                 }
-                System::inform("                                    after:  %d events.\n", score_attractor.size());
+                System::inform("                                    after:  %d events.\n", score.size());
             }
             /**
              * Notes in the generated chords have a nominal duration. Notes 
@@ -501,12 +501,9 @@ namespace csound {
              */
             virtual void generate_score_attractor(int depth) {
                 System::inform("HarmonyIFS::generate_score_attractor: depth:  %d...\n", depth);
-                score_attractor.clear();
+                score.clear();
                 int iteration = 0;
                 HarmonyPoint initial_point;
-                initial_point.set_k(range/2.);
-                initial_point.set_v(range/2.);
-                initial_point.set_i(1.);
                 initial_point.set_homogeneity(1);
                 System::inform("HarmonyIFS::generate_score_attractor: initial point:\n%s\n", toString(initial_point).c_str());
                 for (int i = 0, n = hutchinson_operator.size(); i < n; ++i) {
@@ -514,7 +511,7 @@ namespace csound {
                     std::cerr << hutchinson_operator[i] << std::endl << std::endl;
                 }
                 iterate(depth, iteration, 0, initial_point);
-                System::inform("points: %d.\n", score_attractor.size());
+                System::inform("points: %d.\n", score.size());
                 post_process_score();
             }
             /**
@@ -631,6 +628,4 @@ namespace csound {
             std::vector<HarmonyInterpolationPoint> interpolation_points;
             std::vector<Eigen::MatrixXd> hutchinson_operator;
         };
-    };
-     
- }
+ };
