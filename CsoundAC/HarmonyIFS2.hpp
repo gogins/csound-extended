@@ -380,6 +380,7 @@ namespace csound {
                         - (p_n.s_PI * (((p_N.t * p_0.I)   - (p_0.t * p_N.I)) / (p_N.t - p_0.t)))
                         - (p_n.s_PT * (((p_N.t * p_0.T)   - (p_0.t * p_N.T)) / (p_N.t - p_0.t)))
                         - (p_n.s_PV * (((p_N.t * p_0.V)   - (p_0.t * p_N.V)) / (p_N.t - p_0.t)));
+                        
                     // Inversion row:
                     //   Time column:
                     double I_t =      ((p_n.I - p_n_1.I) / (p_N.t - p_0.t))  
@@ -401,6 +402,7 @@ namespace csound {
                         - (p_n.s_II * (((p_N.t * p_0.I)   - (p_0.t * p_N.I)) / (p_N.t - p_0.t)))
                         - (p_n.s_IT * (((p_N.t * p_0.T)   - (p_0.t * p_N.T)) / (p_N.t - p_0.t)))
                         - (p_n.s_IV * (((p_N.t * p_0.V)   - (p_0.t * p_N.V)) / (p_N.t - p_0.t)));
+                        
                     // Transposition row:
                     //   Time column:
                     double T_t =      ((p_n.T - p_n_1.T) / (p_N.t - p_0.t)) 
@@ -422,9 +424,10 @@ namespace csound {
                         - (p_n.s_TI * (((p_N.t * p_0.I)   - (p_0.t * p_N.I)) / (p_N.t - p_0.t)))
                         - (p_n.s_TT * (((p_N.t * p_0.T)   - (p_0.t * p_N.T)) / (p_N.t - p_0.t)))
                         - (p_n.s_TV * (((p_N.t * p_0.V)   - (p_0.t * p_N.V)) / (p_N.t - p_0.t)));
+                        
                     // Voicing row:
                     //   Time column:
-                    double V_t =      ((p_n.T - p_n_1.T) / (p_N.t - p_0.t)) 
+                    double V_t =      ((p_n.T - p_n_1.V) / (p_N.t - p_0.t)) 
                         - (p_n.s_VP * ((p_N.P - p_0.P)   / (p_N.t - p_0.t)))
                         - (p_n.s_VI * ((p_N.I - p_0.I)   / (p_N.t - p_0.t)))
                         - (p_n.s_VT * ((p_N.T - p_0.T)   / (p_N.t - p_0.t)))
@@ -438,7 +441,7 @@ namespace csound {
                     //   Voicing column:
                     double V_sVV = p_n.s_VV;
                     //   Homogeneity or translation column:
-                    double V_h =      (((p_N.t * p_n_1.T) - (p_0.t * p_n.T)) / (p_N.t - p_0.t)) 
+                    double V_h =      (((p_N.t * p_n_1.V) - (p_0.t * p_n.T)) / (p_N.t - p_0.t)) 
                         - (p_n.s_VP * (((p_N.t * p_0.P)   - (p_0.t * p_N.P)) / (p_N.t - p_0.t)))
                         - (p_n.s_VI * (((p_N.t * p_0.I)   - (p_0.t * p_N.I)) / (p_N.t - p_0.t)))
                         - (p_n.s_VT * (((p_N.t * p_0.T)   - (p_0.t * p_N.T)) / (p_N.t - p_0.t)))
@@ -531,9 +534,9 @@ namespace csound {
                         int P = std::floor(new_point.P());
                         int I = std::floor(new_point.I());
                         int T = std::floor(new_point.T());
-                        int V= std::floor(new_point.V());
-                        Chord chord = pitv_.toChord(P, I, T, V)[2];
-                        System::inform("HarmonyIFS::iterate: depth: %2d index: [%2d] iteration: %9d time: %9.4f chord:\n%s\n", depth, index, iteration, tyme, chord.toString().c_str());
+                        int V = std::floor(new_point.V());
+                        Chord chord = pitv_.toChord(P, I, T, V)[0];
+                        System::inform("HarmonyIFS::iterate: depth: %2d index: [%2d] iteration: %9d\n      point: %s\n   => chord: %s\n", depth, index, iteration, point.toString().c_str(), chord.toString().c_str());
                         toScore(chord, score, tyme, true);
                     }
                     iterate(depth, iteration, i, new_point);
