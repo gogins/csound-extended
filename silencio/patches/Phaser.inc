@@ -1,9 +1,9 @@
 gk_Phaser_attack init .125
 gk_Phaser_release init .125
 gk_Phaser_ratio1 init 1
-gk_Phaser_ratio2 init 1/3
-gk_Phaser_index1 init 2
-gk_Phaser_index2 init 0.0125
+gk_Phaser_ratio2 init 1/5
+gk_Phaser_index1 init 1.01
+gk_Phaser_index2 init .103
 gk_Phaser_level init 0.5
 gk_Phaser_midi_dynamic_range init 127
 gi_Phaser_sine ftgen 0,0,65537,10,1

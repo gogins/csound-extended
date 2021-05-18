@@ -1,6 +1,6 @@
 // This must be initialized in the orc header before any #includes.
 
-gi_Pianoteq vstinit "/home/mkg/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
+gi_Pianoteq vstinit "/home/mkg/Pianoteq\ 7/x86-64bit/Pianoteq\ 7.so", 0
 vstinfo gi_Pianoteq 
 
 gk_PianoOutPianoteq_level init 0
