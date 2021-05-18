@@ -35,12 +35,7 @@ or collected from older projects of mine. These extensions include:
     the Common Music library for algorithmic composition and the Fomus
     library for automatically notating generated scores.
     
-9.  A foreign function interface to the Csound shared library for the Haskell 
-    programming language and the Euterpea package for algorithmic composition, 
-    in the haskell directory. This is a dynamic FFI and does not require to be 
-    pre-built in order to be used.
-    
-10. Some plugin opcodes for Csound, including bformdec2, chuap, cmask, MVerb, 
+9.  Some plugin opcodes for Csound, including bformdec2, chuap, cmask, MVerb, 
     and the STK opcodes.
     
 With regret I must announce that CsoundVST and the vst4cs opcodes are no longer
@@ -52,7 +47,7 @@ As an alternative to the vst4cs opcodes, I recommend using Rory Walsh's
 [Cabbage](https://github.com/rorywalsh/cabbage) system for creating VST 
 plugins using Csound. Or, consider using my 
 [csound-vst3-opcodes](https://github.com/gogins/csound-vst3-opcodes) that provide 
-VST3 plugin support for Csound on Linux. 
+VST3 plugin support for Csound on Linux, and soon on Mac OS and Windows. 
 
 New extensions may be added by me in the future. If you would like to add your
 own extensions, enter an issue in this repository or submit a pull request.
