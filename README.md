@@ -29,13 +29,8 @@ or collected from older projects of mine. These extensions include:
 7.  Silencio, a JavaScript algorithmic composition library designed to work
     with all Csound/HTML5 environments. __PLEASE NOTE: This library is now 
     deprecated, please use the WebAssembly build of CsoundAC instead.__
-
-8.  nudruz, a Common Lisp library for algorithmic composition by Drew Krause,
-    hosted here with his permission. This is based upon and includes
-    the Common Music library for algorithmic composition and the Fomus
-    library for automatically notating generated scores.
-    
-9.  Some plugin opcodes for Csound, including bformdec2, chuap, cmask, MVerb, 
+  
+8.  Some plugin opcodes for Csound, including bformdec2, chuap, cmask, MVerb, 
     and the STK opcodes.
     
 With regret I must announce that CsoundVST and the vst4cs opcodes are no longer
