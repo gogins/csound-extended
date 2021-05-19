@@ -118,7 +118,6 @@ find_package(GMM)
 find_package(Java)
 find_package(JNI)
 find_package(LIBLO)
-find_package(LLVM)
 find_package(OpenCV REQUIRED)
 find_package(PORTSMF)
 find_package(PNG)
@@ -210,16 +209,6 @@ add_subdirectory(Opcodes/bformdec2)
 add_subdirectory(Opcodes/MVerb)
 add_subdirectory(Opcodes/stk)
 add_subdirectory(CsoundAC)
-ExternalProject_Add(CsoundNode
-    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/csound.node"
-    BUILD_IN_SOURCE "1"
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND node-gyp rebuild
-    INSTALL_COMMAND "")
-install(FILES "${CMAKE_SOURCE_DIR}/csound.node/build/Release/csound.node"
-    # PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
-    DESTINATION "${EXECUTABLE_INSTALL_DIR}"
-    COMPONENT csound-node)
 
 # These are the real targets: the packages.
 
@@ -237,13 +226,13 @@ if(NOT DISTRO_CODENAME)
   endif()
 endif()
 
-set(CPACK_COMPONENTS_ALL csound-base csound-node csound-cmask csound-bformdec2 csound-mverb csound-stk)
+set(CPACK_COMPONENTS_ALL csound-base csound-cmask csound-bformdec2 csound-mverb csound-stk)
 set(CPACK_COMPONENTS_ALL_IN_ONE_PACKAGE "OFF")
 set(CPACK_GENERATOR TGZ; DEB)
 set(CPACK_PACKAGE_CONTACT "${CPACK_DEBIAN_PACKAGE_MAINTAINER}")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_PACKAGE_NAME "csound-extended-dev")
-set(CPACK_PACKAGE_VERSION "2.0.4")
+set(CPACK_PACKAGE_VERSION "2.1.0")
 # set(CPACK_STRIP_FILES "YES")
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/copyright.txt")
@@ -298,26 +287,6 @@ install(FILES ${CMAKE_SOURCE_DIR}/copyright.txt
     RENAME copyright)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/doc/html
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME})
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/dependencies/cm2/
-    DESTINATION share/common-lisp/source/${CPACK_DEBIAN_PACKAGE_NAME}/cm2
-    FILES_MATCHING
-    PATTERN "*.asd"
-    PATTERN "*.lisp"
-    PATTERN "*.lsp"
-#    PATTERN "*.html"
-#    PATTERN "*.css"
-#    PATTERN "*.png"
-    PATTERN "*.md"
-    PATTERN "*.pdf")
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/nudruz/
-    DESTINATION share/common-lisp/source/${CPACK_DEBIAN_PACKAGE_NAME}/nudruz
-    FILES_MATCHING
-    PATTERN "*.asd"
-    PATTERN "*.lisp"
-    PATTERN "*.lsp"
-    PATTERN "*.md"
-    PATTERN "*.csd"
-    PATTERN "*.orc")
 install(FILES "${CMAKE_SOURCE_DIR}/debian/changelog.gz"
     DESTINATION "share/doc/${CPACK_DEBIAN_PACKAGE_NAME}")
 install(FILES ${CMAKE_SOURCE_DIR}/cmake/cpack/deb/lintian/overrides/csound-extended-dev
@@ -330,23 +299,11 @@ install(FILES "README.md"
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME})
 install(FILES "REALTIME-AUDIO.md"
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME})
-install(FILES "csound.node/README.md"
-    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
-    RENAME "README-CSOUND-NODE.md")
 install(FILES "silencio/patches/README.md"
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
     RENAME "README-CSOUND-PATCHES.md")
 install(FILES "silencio/README.md"
     DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
     RENAME "README-SILENCIO.md")
-install(FILES "nudruz/README.md"
-    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
-    RENAME "README-NUDRUZ.md")
-install(FILES "WebAssembly/README.md"
-    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
-    RENAME "README-WEBASSEMBLY.md")
-install(FILES "OM2Csound/README.md"
-    DESTINATION share/doc/${CPACK_DEBIAN_PACKAGE_NAME}
-    RENAME "README-OM2CSOUND.md")
 
 include (CPack)
