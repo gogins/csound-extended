@@ -25,9 +25,6 @@
 [submodule "dependencies/weyl"]
 	path = dependencies/weyl
 	url = https://github.com/OdonataResearchLLC/weyl.git
-[submodule "dependencies/cope/david-cope-cmmc"]
-	path = dependencies/cope/david-cope-cmmc
-	url = https://github.com/HeinrichApfelmus/david-cope-cmmc.git
 [submodule "dependencies/bformdec2"]
 	path = dependencies/bformdec2
 	url = https://github.com/pzinemanas/bformdec2.git
