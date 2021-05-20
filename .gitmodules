@@ -1,6 +1,3 @@
-[submodule "dependencies/libsndfile"]
-	path = dependencies/libsndfile
-	url = https://github.com/erikd/libsndfile.git
 [submodule "dependencies/oboe"]
 	path = dependencies/oboe
 	url = https://github.com/google/oboe.git
