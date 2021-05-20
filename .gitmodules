@@ -16,9 +16,6 @@
 [submodule "dependencies/stk"]
 	path = dependencies/stk
 	url = https://github.com/thestk/stk.git
-[submodule "dependencies/liblo"]
-	path = dependencies/liblo
-	url = https://github.com/radarsat1/liblo.git
 [submodule "dependencies/cmask"]
 	path = dependencies/cmask
 	url = https://github.com/gogins/cmask.git
