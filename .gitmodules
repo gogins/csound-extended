@@ -40,6 +40,3 @@
 [submodule "dependencies/bformdec2"]
 	path = dependencies/bformdec2
 	url = https://github.com/pzinemanas/bformdec2.git
-[submodule "dependencies/cm-fomus"]
-	path = dependencies/cm-fomus
-	url = https://github.com/ormf/cm-fomus.git
