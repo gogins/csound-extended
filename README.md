@@ -14,23 +14,14 @@ or collected from older projects of mine. These extensions include:
     Csound. CsoundAC is written in C++ and has C++, JavaScript, and Python 
     interfaces.
 
-2.  csound.node, a C++ add-on that embeds Csound in the JavaScript context of
-    Web pages running in MW.js from https://nwjs.io/.
-
-3.  A port of the algorithmic composition program CMask by Andre Bartetzki
+2.  A port of the algorithmic composition program CMask by Andre Bartetzki
     to WebAssembly and to a Linux Csound plugin opcode.
 
-6.  Csound for WebAssembly, almost all features of Csound as a WebAssembly
-    module that will run Csound from a JavaScript interface in any current
-    Web browser. This version includes useful plugin opcodes statically
-    linked. Some live examples run from
-    [here](https://github.com/gogins/csound-extended/tree/develop/docs).
-
-7.  Silencio, a JavaScript algorithmic composition library designed to work
+3.  Silencio, a JavaScript algorithmic composition library designed to work
     with all Csound/HTML5 environments. __PLEASE NOTE: This library is now 
     deprecated, please use the WebAssembly build of CsoundAC instead.__
   
-8.  Some plugin opcodes for Csound, including bformdec2, chuap, cmask, MVerb, 
+4.  Some plugin opcodes for Csound, including bformdec2, chuap, cmask, MVerb, 
     and the STK opcodes.
     
 With regret I must announce that CsoundVST and the vst4cs opcodes are no longer
@@ -84,10 +75,6 @@ log.
     create a symbolic link to your ~/.local/share/common-lisp/source/
     directory.
 
-2.  The  silencio library and WebAssembly build of Csound are packaged in
-    the csound-extended-wasm-version.zip archive released from this
-    repository.
-
 You may also install locally by first building from sources, as described
 below. You may then install the software by running `sudo make install` in
 the build-linux directory. However, be warned that this installs the
@@ -107,12 +94,6 @@ these files to your home directory or other places.
   and even to build C++ pieces and plugin opcodes, from the editor. Believe 
   me, I tried all the other editors, and this is the one that is both simple 
   and useful.
-
-- `run_nwjs_application.sh`: Create a symbolic link to this script in your 
-  home dirctory to assist with running pieces written for csound.node that run 
-  in NW.js. This also requires installing the SDK version of NW.js and 
-  creating a symbolic link from the installation directory to `nwjs` in your 
-  home directory.
 
 - `silencio`: Create a symbolic link to this directory in every directory in 
   which you are writing or running a piece that uses the Silencio library.
@@ -148,33 +129,23 @@ files have been generated.
 
 Manual configuration steps include, but are not necessarily limited to:
 
-1. Node.js and npm must be installed, not from any Linux 
-package repository, but according to the instructions for binary archives at 
-https://github.com/nodejs/help/wiki/Installation. When that has been done, 
-execute `npm install -g node-gyp` and `npm install -g node-addon-api`. Also 
-put node-gyp into your executable PATH.
-
-2. Lance Putnum's Gamma library for C++ audio signal 
+1. Lance Putnum's Gamma library for C++ audio signal 
 processing must be cloned from GitHub, built with the addition of the 
 `-fPIC` compiler option, and installed (CMake should be able to find it in 
 the `/usr/local` tree).
 
-3. The OpenCV library with codecs must be downloaded as source from 
+2. The OpenCV library with codecs must be downloaded as source from 
 `https://opencv.org/releases/`, built, and installed.
 
-4. The following environment variables MUST be set before building, perhaps in
+3. The following environment variables MUST be set before building, perhaps in
 your .profile script. Obviously, modify the paths as required to suit your
 home directory and installation details. These are exported in `build-env.sh` 
 which you can source in your .profile script.
 
 ```
 CSOUND_SRC_ROOT=/home/mkg/csound-extended/dependencies/csound
-NODE_PATH=/home/mkg/csound/csound/frontends/nwjs/build/Release
 OPCODE6DIR64=/usr/local/lib/csound/plugins64-6.0
 RAWWAVE_PATH=/home/mkg/stk/rawwaves
-export PATH=/usr/local/lib/node-v12.14.1-linux-x64/bin:${PATH}
-unset NODE_ADDON_API_INCLUDE
-export NODE_ADDON_API_INCLUDE=/usr/local/lib/node-v12.14.1-linux-x64/lib/node_modules/node-addon-api
 
 ```
 
@@ -202,69 +173,5 @@ To make clean, execute `bash clean-linux.sh`.
 To install, change to build-linux and execute `sudo install
 ./csound-extended-dev-{version}-Linux.deb --reinstall`.
 
-#### Building for WebAssembly
-
-First, install the Emscripten SDK according to instructions at 
-`https://emscripten.org/docs/getting_started/downloads.html`.
-
-You will need to make sure that the Eigen library for matrix algebra is 
-available to the Emscripten toolchain. The easiest way to do this is to 
-install the `libeigen3-dev` system package, and then create a symbolic 
-link to the system eigen3 include directory to the Emscripten C++ include 
-directory:
-```
-mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ 
-mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ ln -s /usr/include/eigen3 eigen3
-mkg@xenakis:~/emsdk/upstream/emscripten/system/include/libcxx$ ls eigen3
-```
-
-Then, to build for WebAssembly for the first time, change to the WebAssembly
-subdirectory of this repository and execute:
-
-- The script `bash fresh-build-build.sh`, which performs the following steps:
-
-    - Updates the Emscripten toolchain.
-    
-    - Executes `bash clean-build-wasm.sh`, which:
-    
-        * Cleans the previous build.
-        
-        * Runs `bash download-and-build-libsndfile-wasm.sh.`
-        
-        * Runs `bash build-wasm.sh`, which:
-        
-            > Builds the CMask opcodes for Csound. 
-            
-            > Builds the Csound static library. 
-            
-            > Builds two Csound JavaScript interface classes.
-            
-            > Runs `bash release-wasm.sh` to package the build and examples for release. 
-
-Any of the bash scripts in this sequence can be run independently, and will 
-continue to the end of the sequence.
-
-#### Building csound.node
-
-If csound.node fails to build: 
-
-1.  You may need to add the NPM bin directory to your PATH variable so that 
-    CMake can find node-gyp.
-    
-2.  You may need to manually configure `csound.node/binding.gyp` to explicly
-    include the directory containing `napi.h` more or less as follows:
-    ```
-    'target_defaults': 
-    {
-       "cflags!": [ "-fno-exceptions" ],
-        "cflags_cc!": [ "-fno-exceptions" ],
-        "include_dirs": 
-        [
-            ## This is theoretically required but causes the build to fail: 
-            ## "<!@(node -p \"require('node-addon-api').include\")",
-            ## This does work but must be manually configured here:
-            "/usr/local/lib/node-v12.14.1-linux-x64/lib/node_modules/node-addon-api",
-        ],
-    ```
 
 

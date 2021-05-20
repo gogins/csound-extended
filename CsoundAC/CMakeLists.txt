@@ -112,7 +112,8 @@ if(BUILD_CSOUND_AC)
 
     install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIRECTORY}"
         DESTINATION "include/csound"
-        FILES_MATCHING PATTERN "*.hpp")
+        FILES_MATCHING PATTERN "*.hpp"
+        PATTERN "__pycache__" EXCLUDE)
 
     install(TARGETS libCsoundAC
         LIBRARY DESTINATION "${LIBRARY_INSTALL_DIR}"
@@ -165,7 +166,8 @@ if(BUILD_CSOUND_AC)
             
         install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIRECTORY}"
             DESTINATION ${Python3_SITEARCH}
-            FILES_MATCHING PATTERN "*.py")
+            FILES_MATCHING PATTERN "*.py"
+            PATTERN "__pycache__" EXCLUDE)
     endif()
 
 endif()
