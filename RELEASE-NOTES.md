@@ -3,6 +3,17 @@ Michael Gogins<br>
 https://github.com/gogins<br>
 http://michaelgogins.tumblr.com
 
+## 20 May 2021
+
+I have refactored my GitHub projects, repositories, build systems, and 
+packages. 
+
+Basically, csound-extended itself now targets only C++ and Python. Other 
+targets have been moved out into their own repositories.
+
+See this GitHub issue for details: 
+https://github.com/gogins/csound-extended/issues/158
+
 ## 3 February 2021
 
 ### [csound-extended package 2.0.0](https://github.com/gogins/csound-extended/releases)
