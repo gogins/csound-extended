@@ -100,9 +100,9 @@ these files to your home directory or other places.
 
 ## Building
 
-Currently, the supported platforms are Linux and WebAssembly.
-The code is generally "cross-platform" in nature and this build system could
-be adapted to build for Windows or OS X.
+Currently, the supported platforms is Linux. The code is generally 
+"cross-platform" in nature and this build system could be adapted to build for 
+Windows or OS X.
 
 ### Build and Install Csound
 
@@ -117,12 +117,11 @@ First clone the Git repository at https://github.com/gogins/csound-extended.
 
 #### Building on Linux
 
-The build script involves some user interaction for sudo or deletions.
-Otherwise, the build is highly automated. Many dependencies are local. All
-dependencies are fetched automatically. Most targets are built for release
-with debug information. I have tried to keep configuration options, and 
-manual configuration steps, to an absolute minimum, all controlled by 
-environment variables in `build-env.sh`.
+The build is highly automated. Many dependencies are local. All dependencies 
+are fetched automatically. Most targets are built for release with debug 
+information. I have tried to keep configuration options, and manual 
+configuration steps, to an absolute minimum, all controlled by environment 
+variables in `build-env.sh`.
 
 When the build is complete, all targets have been built and the package 
 files have been generated.
@@ -149,7 +148,7 @@ RAWWAVE_PATH=/home/mkg/stk/rawwaves
 
 ```
 
-The very first time you build csound-extended, go to about line 280 in 
+The very first time you build csound-extended, go to about line 260 in 
 CMakeLists.txt and do as it says there:
 ```
 # For your first build on your system, set this to "OFF", build, and install.
@@ -157,7 +156,11 @@ CMakeLists.txt and do as it says there:
 # bug in how CPack interacts with shlibdeps.
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS "ON")
 ```
-Change to your csound-extended repository and execute `fresh-build-linux-release.sh`,
+Change to your csound-extended repository and execute:
+```
+sudo -u {your-username} --non-interactive fresh-build-linux-release.sh`
+```
+
 which does the following:
 
 1.  Execute `bash update-dependencies.sh`. Do this periodically or whenever
@@ -166,7 +169,8 @@ which does the following:
 2.  Execute `bash build-linux.sh`. The build compiles all targets and creates
     all packages.
 
-Subsequently, you can perform these steps independently.
+Subsequently, you can perform these steps independently, usually prefaced by 
+`sudo -u mkg --non-interactive`.
 
 To make clean, execute `bash clean-linux.sh`.
 
