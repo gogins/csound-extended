@@ -22,9 +22,6 @@
 [submodule "dependencies/cmask"]
 	path = dependencies/cmask
 	url = https://github.com/gogins/cmask.git
-[submodule "dependencies/cm2"]
-	path = dependencies/cm2
-	url = https://github.com/andersvi/cm2.git
 [submodule "dependencies/--force"]
 	path = dependencies/--force
 	url = https://github.com/ormf/fomus.git
