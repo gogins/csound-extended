@@ -8,7 +8,6 @@ import time
 CsoundAC.Random_seed(int(time.time()))
 
 model = CsoundAC.MusicModel()
-csound.setPythonMessageCallback()
 strangeAttractor = CsoundAC.StrangeAttractor()
 strangeAttractor.reset()
 strangeAttractor.setDimensionCount(4)
@@ -16,30 +15,30 @@ strangeAttractor.setAttractorType(3)
 strangeAttractor.setIterationCount(2000)
 while strangeAttractor.searchForAttractor():
         pass
-print "ScoreType = ", strangeAttractor.getScoreType()
+print("ScoreType = ", strangeAttractor.getScoreType())
 #strangeAttractor.setCode('OMPDPTWXBMXDRRWRJCLXRVRTPWRYBMFPJBFFVGGNAKAGUIJFAKLAIAIEYNTHKFCUGRVDCYILYPTDNUITMFVGESBHSRKYWEGWTNVGNQKUMUJULEDMKRBGAFNIXVDMCLJIITUVQNNBXYLMCJYARPSACEYKFGHBVYXIWLCYJEBJIUCNFLKKNUXRHGWUONWFPMOALWLODJQTKLGFBYGXQYMKPPTYANECOPBJSDLLYJYERXEOBOWFKKYNXGHNCCYWTINDFIJXAUEEQXBEQLORVORIGISBC')
 #strangeAttractor.setCode('OMPDPTWXBMXDRRWRJCLXRVRTPWRYBMFPJBFFVGGNAKAGUIJFAKLAIAIEYNTHKFCUGRVDCYILYPTDNUITMFVGESBHSRKYWEGWTNVGNQKUMUJULEDMKRBGAFNIXVDMCLJIITUVQNNBXYLMCJYARPSACEYKFGHBVYXIWLCYJEBJIUCNFLKKNUXRHGWUONWFPMOALWLODJQTKLGFBYGXQYMKPPTYANECOPBJSDLLYJYERXEOBOWFKKYNXGHNCCYWTINDFIJXAUEEQXBEQLORVORIGISBC')
 #strangeAttractor.setCode('SJEOSGBEDTSYIUJLGICPVYJPNDRYXLUDFHBSMFMNEBWKWJPXLOWIARKQBEXJDBSYVQHHACDSVATCJELUKHHBUEJUXNKEMNARCJBMBVSBKS')
 #strangeAttractor.setCode('WVBEKJFDCWESFBQVBQAISKEKDYLCVBXTSWATPPGCNCLVTXHJWEETRGIHRRMFVVPPBYNEHKXBSYKYVTYINHCNVFCNOGOYCMQANLBLBCJQJCUWRQMIIWSSIEQCIIOHEXQNMDAFGSWQRKCGOSYTTHYAONPBUCDVAPMAYUCBOWJYSUHUTVUKEISHDEIENUXJVHNLQNRNKGIHOKLXFSMGMTSNJMSYTSECNJHLBDWEJJCETRSDOKVFDIQDSMWWMYVIANAIANOXDDPKLOJFOUMWBQFQADWBE')
 #strangeAttractor.setCode('TPKRWTCCXRDACSDWAAXJATYTBGEWBYGLUCGENDPQMCTRVJLNNFKWNEJOQVVUCWXDPUQFDFMJGMLRVDESPKXXSIXVNWJOAIDHFUPVBQJIMCBTAHJRKHDPFCHOKSEBOKMQKSWQXSXFVAJNTXFLTGGVVUEOADTMTAPOIRWUMAHPJ')
-print "Code = ", strangeAttractor.getCode()
+print("Code = ", strangeAttractor.getCode())
 strangeAttractor.generate()
-print "Generated events = ", len(strangeAttractor.getScore())
+print("Generated events = ", len(strangeAttractor.getScore()))
 
 # Place the Lindenmayer node inside a Random node to randomize velocity and pan,
 # place the Random node inside a Rescale node,
 # and place the Rescale node inside the MusicModel.
 
 random = CsoundAC.Random()
-print 'random:', random
+print('random:', random)
 random.createDistribution("uniform_01")
 random.setElement(6, 11, 1)
 random.setElement(8, 11, 1)
 
 rescale = CsoundAC.Rescale()
-print 'rescale:', rescale
+print('rescale:', rescale)
 rescale.setRescale( 0, True, True,  0,     300)
-rescale.setRescale( 1, True, False,  2,       4)
+rescale.setRescale( 1, True, False, 2,       4)
 rescale.setRescale( 3, True, True, 10,       4)
 rescale.setRescale( 4, True, True, 36,      60)
 rescale.setRescale( 5, True, True, 75,      12)
@@ -51,16 +50,16 @@ rescale.addChild(random)
 # Add these nodes to the builtin MusicModel instance.
 model.addChild(rescale)
 model.setTonesPerOctave(12.0)
-print 'generating...'
+print('generating...')
 model.generate()
-print 'finished.'
+print('finished.')
 
 model.cppsoundLoad('../csound-vst/CsoundAC.csd')
-model.setCsoundCommand("--0dbfs=1 -m195 -RWdfo StrangeAttractor.py.wav")
+model.setCsoundCommand("--0dbfs=1 -m195 -odac:plughw:1,0")
 score = model.getScore()
-print 'Events in generated score:', len(score)
+print('Events in generated score:', len(score))
 duration = score.getDuration()
-print 'Duration: %9.4f' % (duration)
+print('Duration: %9.4f' % (duration))
 score.arrange(0, 7)
 score.arrange(1, 5)
 score.arrange(2, 13)
@@ -69,8 +68,8 @@ score.arrange(4, 14)
 score.arrange(5, 7)
 score.arrange(6, 5)
 score.arrange(7, 9)
-print "Score: ", model.getScore()
-print "Command:", model.getCsoundCommand()
+print("Score: ", model.getScore())
+print("Command:", model.getCsoundCommand())
 model.perform()
 
 

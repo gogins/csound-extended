@@ -58,7 +58,7 @@ iampheadroom                    init                    ampdb(idbaheadroom)
                                 prints                  "Amplitude at headroom:        %9.4f\n", iampheadroom
                                 prints                  "Balance so the overall amps at the end of performance -6 dbfs.\n"
 
-giPianoteq                      vstinit                 "/home/mkg/pianoteq_linux_v630/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
+giPianoteq                      vstinit                 "/home/mkg/Pianoteq\ 7/x86-64bit/Pianoteq\ 7.so", 0
                                 vstinfo                 giPianoteq
 
 giFluidsynth		            fluidEngine		        0, 0
