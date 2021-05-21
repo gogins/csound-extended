@@ -156,12 +156,13 @@ CMakeLists.txt and do as it says there:
 # bug in how CPack interacts with shlibdeps.
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS "ON")
 ```
-Change to your csound-extended repository and execute:
+Change to your csound-extended repository and execute
 ```
-sudo -u {your-username} --non-interactive fresh-build-linux-release.sh`
+bash fresh-build-linux-release.sh`
 ```
 
-which does the following:
+during which sudo may prompt you for your password. This script does the 
+following:
 
 1.  Execute `bash update-dependencies.sh`. Do this periodically or whenever
     you think a dependency has changed.
@@ -169,8 +170,7 @@ which does the following:
 2.  Execute `bash build-linux.sh`. The build compiles all targets and creates
     all packages.
 
-Subsequently, you can perform these steps independently, usually prefaced by 
-`sudo -u mkg --non-interactive`.
+Subsequently, you can perform these steps independently.
 
 To make clean, execute `bash clean-linux.sh`.
 

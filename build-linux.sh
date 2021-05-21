@@ -2,7 +2,8 @@
 echo "Building all for Linux..."
 mkdir -p build-linux
 cd dependencies
-bash build-link.sh
+# Uncomment the next line, if you need to test the Ableton Link opcodes.
+# bash build-link.sh
 cd ..
 cd build-linux
 rm -f CMakeCache.txt
