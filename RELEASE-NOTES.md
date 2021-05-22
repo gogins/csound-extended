@@ -5,8 +5,8 @@ http://michaelgogins.tumblr.com
 
 ## 22 May 2021
 
-I have refactored my GitHub projects, repositories, build systems, and 
-packages. 
+In order to simplify use and maintenance, I have refactored my GitHub 
+projects, repositories, build systems, and packages. 
 
 All Csound examples and tests for all my repositories have now also been moved 
 into their own repository at https://github.com/gogins/csound-examples.
