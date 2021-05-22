@@ -34,8 +34,6 @@ echo "Updating fluidsynth..."
 apt-get install libfluidsynth-dev
 echo "Updating libgit2-dev..."
 apt-get install libgit2-dev
-echo "Updating gcc-arm-linux-gnueabi..."
-apt-get install gcc-arm-linux-gnueabi
 echo "Updating PortAudio..."
 apt-get install portaudio19-dev
 echo "Updating PortMidi..."
@@ -44,20 +42,8 @@ echo "Updating PortSMF..."
 apt-get install libportsmf-dev
 echo "Updating libsox-dev..."
 apt-get install libsox-dev
-echo "Updating gcc-aarch64-linux-gnu..."
-apt-get install gcc-aarch64-linux-gnu
-echo "Updating linux-libc-dev:i386..."
-apt-get install linux-libc-dev:i386
-echo "Updating LLVM..."
-wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
-apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-5.0 main"
-apt-get update
-apt-get install -y clang-5.0
--k
 echo "Updating python3.9-dev..."
 apt-get install python3.9-dev
 echo "Updating OpenCV..."
 apt-get libopencv-dev --fix-missig
-echo "Updating sbcl..."
-apt-get install sbcl
 echo "Finished updating all Debian packages required for csound-extended."

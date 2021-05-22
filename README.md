@@ -135,10 +135,7 @@ processing must be cloned from GitHub, built with the addition of the
 `-fPIC` compiler option, and installed (CMake should be able to find it in 
 the `/usr/local` tree).
 
-2. The OpenCV library with codecs must be downloaded as source from 
-`https://opencv.org/releases/`, built, and installed.
-
-3. The following environment variables MUST be set before building, perhaps in
+2. The following environment variables MUST be set before building, perhaps in
 your .profile script. Obviously, modify the paths as required to suit your
 home directory and installation details. These are exported in `build-env.sh` 
 which you can source in your .profile script.
