@@ -11,6 +11,9 @@ echo "Updating autoconf..."
 apt-get install autoconf
 echo "Updating autotools..."
 apt-get install autotools
+echo "Updating boost..."
+apt-get install libboost-dev
+apt-get install libboost-math1.71-dev
 echo "Updating FFmpeg..."
 apt-get install ffmpeg
 apt-get install libavfilter-dev
@@ -53,6 +56,8 @@ apt-get install -y clang-5.0
 -k
 echo "Updating python3.9-dev..."
 apt-get install python3.9-dev
+echo "Updating OpenCV..."
+apt-get libopencv-dev --fix-missig
 echo "Updating sbcl..."
 apt-get install sbcl
 echo "Finished updating all Debian packages required for csound-extended."
