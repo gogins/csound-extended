@@ -47,10 +47,12 @@ https://github.com/gogins/csound-extended/issues.
 
 ## Examples
 
-Examples for the various aspects of csound-extended are maintained in my 
-separate [csound-examples](https://github.com/gogins/csound-examples) 
+Examples (some of which can also serve as tests) for the various aspects of 
+csound-extended are maintained in my separate 
+[csound-examples](https://github.com/gogins/csound-examples) 
 repository. Some of the examples there will run in WebBrowsers using 
-WebAssembly, and these can be viewed at https://gogins.github.io/csound-examples.
+WebAssembly, and these can be viewed at 
+https://gogins.github.io/csound-examples.
 
 ## Changes
 
