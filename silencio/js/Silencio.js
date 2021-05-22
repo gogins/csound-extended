@@ -751,57 +751,6 @@ if (typeof console === 'undefined') {
         }
     };
 
-    Score.prototype.draw = function(canvas, W, H) {
-        this.findScales();
-        // Draw the score in the central 90% of the canvas.
-        console.info("minima:  " + this.minima + "\n");
-        console.info("ranges:  " + this.ranges + "\n");
-        var xsize = this.getDuration();
-        var ysize = this.ranges.key;
-        var inner_scale = 0.9;
-        // Create a border.
-        var xscale = Math.abs(W * inner_scale / xsize);
-        var yscale = Math.abs(H * inner_scale / ysize);
-        var xmove = this.minima.time;
-        var ymove = this.minima.key;
-        context = canvas.getContext("2d");
-        context.scale(xscale, -yscale);
-        //context.translate(-xmove, -ymove - ysize);
-        context.translate(-xmove + (xsize * (1 - inner_scale) / 2), (-ymove - ysize) - (ysize * (1 - inner_scale) / 2));
-        console.info("score:  " + xsize + ", " + ysize + "\n");
-        console.info("canvas: " + W + ", " + H + "\n");
-        console.info("scale:  " + xscale + ", " + yscale + "\n");
-        console.info("move:   " + xmove + ", " + ymove + "\n");
-        var channelRange = this.ranges.channel;
-        if (channelRange === 0) {
-            channelRange = 1;
-        }
-        var velocityRange = this.ranges.velocity;
-        if (velocityRange === 0) {
-            velocityRange = 1;
-        }
-        for (var i = 0; i < this.data.length; i++) {
-            var x1 = this.data[i].time;
-            var x2 = this.data[i].end;
-            var y = this.data[i].key;
-            var hue = this.data[i].channel - this.minima.channel;
-            hue = 100 * (hue / channelRange);
-            var value = this.data[i].velocity - this.minima.velocity;
-            value = value / velocityRange;
-            value = 0.5 + value / 2;
-            var hsv = "hsv(" + hue + "," + 1 + "," + value + ")";
-            context.strokeStyle = tinycolor(hsv).toHexString();
-            //console.info("color: " + context.strokeStyle + "\n");
-            //context.strokeStyle = 'red';
-            context.beginPath();
-            context.moveTo(x1, y);
-            context.lineTo(x2, y);
-            context.stroke();
-            //console.info(this.data[i].toString() + ' x1: ' + x1 + ' x2: ' + x2 + ' y: ' + y + ' hsv: ' + hsv + '.');
-        }
-        return context;
-    };
-
     /**
      * Displays the score cursor at the current time.
      */

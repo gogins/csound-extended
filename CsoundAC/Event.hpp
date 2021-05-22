@@ -17,8 +17,8 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef EVENT_H
-#define EVENT_H
+#pragma once
+
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
@@ -127,8 +127,25 @@ public:
     virtual int getStatusNumber() const;
     virtual double getStatus() const;
     virtual void setStatus(double status);
+    /**
+     * MIDI channel numbers are 0-based, Csound instrument numbers are 
+     * 1-based. Returns the Csound instrument number minus 1.
+     */
     virtual int getChannel() const;
+    /**
+     * MIDI channel numbers are 0-based, Csound instrument numbers are 
+     * 1-based. Sets the Csound instrument number to the channel plus 1.
+     */
+    virtual void setChannel(int channel);
+    /**
+     * MIDI channel numbers are 0-based, Csound instrument numbers are 
+     * 1-based. Returns the Csound instrument number.
+     */
     virtual double getInstrument() const;
+    /**
+     * MIDI channel numbers are 0-based, Csound instrument numbers are 
+     * 1-based. Sets the Csound instrument number.
+     */
     virtual void setInstrument(double instrument);
     virtual double getTime() const;
     virtual void setTime(double time);
@@ -138,7 +155,7 @@ public:
     virtual void setOffTime(double offTime);
     virtual int getKeyNumber() const;
     virtual double getKey() const;
-    virtual double getKey(double tonesPerOctave) const;
+    virtual double getKey_tempered(double tonesPerOctave) const;
     virtual void setKey(double key);
     virtual double getFrequency() const;
     virtual void setFrequency(double frequency);
@@ -162,6 +179,10 @@ public:
     virtual double getRightGain() const;
     virtual void dump(std::ostream &stream);
     virtual std::string toString() const;
+    /** Returns a Csound score statement suitable for use by athenaCL:
+     * insno, time, duration, dbsp, pch, pan.
+     */
+    virtual std::string toBlueIStatement(double tempering = 12.0) const;
     virtual std::string toCsoundIStatement(double tempering = 12.0) const;
     virtual std::string toCsoundIStatementHeld(int tag, double tempering = 12.0) const;
     virtual std::string toCsoundIStatementRelease(int tag, double tempering = 12.0) const;
@@ -187,11 +208,16 @@ public:
 #endif
     virtual Event &operator = (const Eigen::VectorXd &a);
 #ifndef SWIG
+    /** 
+     * Returns any properties of this as a string consisting of 
+     * "key"="value" pairs in CSV format.
+     */
+    virtual std::string getProperties() const;
     static int SORT_ORDER[];
     static const char *labels[];
 #endif
 };
 
 bool SILENCE_PUBLIC operator < (const Event& a, const Event &b);
+
 }
-#endif

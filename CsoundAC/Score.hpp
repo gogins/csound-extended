@@ -17,8 +17,8 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef SCORE_H
-#define SCORE_H
+#pragma once
+
 #include "Platform.hpp"
 #ifdef SWIG
 %module CsoundAC
@@ -56,6 +56,7 @@ public:
     std::vector<bool> rescaleMinima;
     Event scaleTargetRanges;
     std::vector<bool> rescaleRanges;
+    Event scaleActualMaxima;
     Event scaleActualMinima;
     Event scaleActualRanges;
     MidiFile midifile;
@@ -66,7 +67,10 @@ public:
     virtual ~Score();
     virtual void initialize();
     virtual void append(Event event);
-    virtual void append(double time, double duration, double status, double channel, double key, double velocity, double phase=0, double pan=0, double depth=0, double height=0, double pitches=4095);
+    virtual void append_event(Event event);
+    virtual void append(double time, double duration, double status, double instrument, double key, double velocity, double phase=0, double pan=0, double depth=0, double height=0, double pitches=4095);
+    virtual void add(double time, double duration, double status, double instrument, double key, double velocity, double phase=0, double pan=0, double depth=0, double height=0, double pitches=4095);
+    virtual void append_note(double time, double duration, double status, double instrument, double key, double velocity, double phase=0, double pan=0, double depth=0, double height=0, double pitches=4095);
     virtual void remove(size_t index);
     /**
      * Loads score data from a MIDI (.mid) file,
@@ -74,6 +78,7 @@ public:
      * Non-sounding data is ignored.
      */
     virtual void load(std::string filename);
+    virtual void load_filename(std::string filename);
     virtual void load(std::istream &stream);
     //virtual void load(MidiFile &midiFile);
     /**
@@ -83,6 +88,7 @@ public:
      * Only sounding data is saved.
      */
     virtual void save(std::string filename);
+    virtual void save_filename(std::string filename);
     /**
      * Save as a MIDI file, format 1.
      */
@@ -96,6 +102,7 @@ public:
     virtual void findScale();
     virtual void rescale();
     virtual void rescale(Event &event);
+    virtual void rescale_event(Event &event);
     /**
      * Sort all events in the score by time, instrument number, pitch, duration, loudness,
      * and other dimensions as given by Event::SORT_ORDER.
@@ -103,8 +110,21 @@ public:
     virtual void sort();
     virtual void dump(std::ostream &stream);
     virtual std::string toString();
+    /**
+     * Returns the time from the first event to the last event.
+     */
     virtual double getDuration();
+    /**
+     * Returns the time from 0 to the final off time; this assumes that no 
+     * events start before time 0.
+     */
+    virtual double getDurationFromZero() const;
     virtual void rescale(int dimension, bool rescaleMinimum, double minimum, bool rescaleRange = false, double range = 0.0);
+    /**
+     * Translate the Silence events in this to a Csound score for blue, 
+     * that is, to a list of i statements with with inso, time, duration, dbsp, pch, pan.
+     */
+    virtual std::string getBlueScore(double tonesPerOctave = 12.0, bool conformPitches = false);
     /**
      * Translate the Silence events in this to a Csound score, that is, to a list of i statements.
      * The Silence events are rounded off to the nearest equally tempered pitch by the
@@ -126,6 +146,7 @@ public:
      * Re-assign instrument number, adjust gain, and change pan for export to Csound score.
      */
     virtual void arrange(int oldInstrumentNumber, int newInstrumentNumber, double gain, double pan);
+    virtual void arrange_all(int oldInstrumentNumber, int newInstrumentNumber, double gain, double pan);
     /**
      * Remove instrument number, gain, and pan assignments.
      */
@@ -230,6 +251,14 @@ public:
                            double range,
                            bool avoidParallelFifths,
                            size_t divisionsPerOctave = 12);
+    virtual void voicelead_segments(size_t beginSource,
+                           size_t endSource,
+                           size_t beginTarget,
+                           size_t endTarget,
+                           double lowest,
+                           double range,
+                           bool avoidParallelFifths,
+                           size_t divisionsPerOctave = 12);
     /**
      * Performs voice-leading between
      * the specified segments of the score
@@ -245,6 +274,15 @@ public:
      * See: http://ruccas.org/pub/Gogins/music_atoms.pdf
      */
     virtual void voicelead(size_t beginSource,
+                           size_t endSource,
+                           size_t beginTarget,
+                           size_t endTarget,
+                           const std::vector<double> &targetPitches,
+                           double lowest,
+                           double range,
+                           bool avoidParallelFifths,
+                           size_t divisionsPerOctave = 12);
+    virtual void voicelead_pitches(size_t beginSource,
                            size_t endSource,
                            size_t beginTarget,
                            size_t endTarget,
@@ -361,6 +399,15 @@ public:
      * Multiply each event in this by the transformation.
      */
     virtual void transform(const Eigen::MatrixXd &transformation);
+    /*
+     * Exposed as functions for Embind.
+     */     
+    virtual Event &getScaleTargetMinima();
+    virtual std::vector<bool> &getRescaleMinima();
+    virtual Event &getScaleTargetRanges();
+    virtual std::vector<bool> &getRescaleRanges();
+    virtual const Event &getScaleActualMinima() const;
+    virtual const Event &getScaleActualRanges() const;
 };
+
 }
-#endif

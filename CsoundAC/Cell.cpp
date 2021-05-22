@@ -19,6 +19,7 @@
  */
 #include <array>
 #include "Cell.hpp"
+#include "ChordSpaceBase.hpp"
 #include "System.hpp"
 
 namespace csound
@@ -103,7 +104,6 @@ void Intercut::traverse(const Eigen::MatrixXd &globalCoordinates,
     if (children.size() < 2) {
         System::message("Intercut must have at least 2 child nodes.\n");
     }
-    size_t beginAt = collectingScore.size();
     std::vector<Score> scores;
     std::vector<size_t> scoreIndexes;
     scores.resize(children.size());
@@ -131,7 +131,7 @@ void Intercut::traverse(const Eigen::MatrixXd &globalCoordinates,
             size_t nextNoteI = noteI + 1;
             if (nextNoteI >= intercutScore.size()) {
                 inChord = false;
-            } else if (Conversions::eq_epsilon(intercutScore[nextNoteI].getTime(), eventTime)) {
+            } else if (eq_tolerance(intercutScore[nextNoteI].getTime(), eventTime)) {
                 inChord = true;
             } else {
                 inChord = false;
@@ -158,7 +158,6 @@ void Stack::traverse(const Eigen::MatrixXd &globalCoordinates,
     if (children.size() < 2) {
         System::message("Stack must have at least 2 child nodes.\n");
     }
-    size_t beginAt = collectingScore.size();
     std::vector<Score> scores;
     scores.resize(children.size());
     for (int i = 0, n = children.size(); i < n; ++i) {
@@ -197,7 +196,6 @@ void Koch::traverse(const Eigen::MatrixXd &globalCoordinates,
     if (children.size() < 2) {
         System::message("Koch must have at least 2 child nodes.\n");
     }
-    size_t beginAt = collectingScore.size();
     Eigen::MatrixXd rescaler = Eigen::MatrixXd::Identity(Event::ELEMENT_COUNT, Event::ELEMENT_COUNT);
     // All notes produced by upper are stacked on top of each note produced by lower.
     // This is the uppermost layer.

@@ -17,8 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef CSOUND_VOICELEAD_HPP
-#define CSOUND_VOICELEAD_HPP
+#pragma once
 
 #include "Platform.hpp"
 #ifdef SWIG
@@ -416,7 +415,7 @@ public:
     /**
      * Return the pitch-class transposition of chord c by n semitones.
      */
-    static std::vector<double> T(const std::vector<double> &c, double n);
+    static std::vector<double> T_vector(const std::vector<double> &c, double n);
 
     /**
      * Return the pitch-class inversion of pitch p by n semitones.
@@ -426,7 +425,7 @@ public:
     /**
      * Return the pitch-class inversion of chord c by n semitones.
      */
-    static std::vector<double> I(const std::vector<double> &c, double n);
+    static std::vector<double> I_vector(const std::vector<double> &c, double n);
 
     /**
      * Invert chord c by exchange.
@@ -456,5 +455,5 @@ public:
      */
     static const double semitonesPerOctave;
 };
+
 }
-#endif

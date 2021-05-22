@@ -1,6 +1,4 @@
-#ifndef SILENCE_H_INCLUDED
-#define SILENCE_H_INCLUDED
-
+#pragma once
 /**
  * This header file only library declares and defines a system for creatng
  * fixed-topology audio signal flow graphs in C++, e.g. to use for writing 
@@ -291,6 +289,4 @@ struct MeshEQ : Node {
     }
 };
 
-
 };
-#endif

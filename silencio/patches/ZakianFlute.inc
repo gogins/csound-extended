@@ -2,6 +2,21 @@ gk_ZakianFlute_midi_dynamic_range init 20
 gk_ZakianFlute_level init 0
 gk_ZakianFlute_pan init .5
 gi_ZakianFLute_seed init .5
+gi_ZakianFLute_f2  ftgen 0, 0, 16, -2, 40, 40, 80, 160, 320, 640, 1280, 2560, 5120, 10240, 10240
+gi_ZakianFlute_f26 ftgen 0, 0, 65537, -10, 2000, 489, 74, 219, 125, 9, 33, 5, 5
+gi_ZakianFlute_f27 ftgen 0, 0, 65537, -10, 2729, 1926, 346, 662, 537, 110, 61, 29, 7
+gi_ZakianFlute_f28 ftgen 0, 0, 65537, -10, 2558, 2012, 390, 361, 534, 139, 53, 22, 10, 13, 10
+gi_ZakianFlute_f29 ftgen 0, 0, 65537, -10, 12318, 8844, 1841, 1636, 256, 150, 60, 46, 11
+gi_ZakianFlute_f30 ftgen 0, 0, 65537, -10, 1229, 16, 34, 57, 32
+gi_ZakianFlute_f31 ftgen 0, 0, 65537, -10, 163, 31, 1, 50, 31
+gi_ZakianFlute_f32 ftgen 0, 0, 65537, -10, 4128, 883, 354, 79, 59, 23
+gi_ZakianFlute_f33 ftgen 0, 0, 65537, -10, 1924, 930, 251, 50, 25, 14
+gi_ZakianFlute_f34 ftgen 0, 0, 65537, -10, 94, 6, 22, 8
+gi_ZakianFlute_f35 ftgen 0, 0, 65537, -10, 2661, 87, 33, 18
+gi_ZakianFlute_f36 ftgen 0, 0, 65537, -10, 174, 12
+gi_ZakianFlute_f37 ftgen 0, 0, 65537, -10, 314, 13
+gi_ZakianFlute_wtsin ftgen 0, 0, 65537, 10, 1
+
 instr ZakianFlute
 ; Author: Lee Zakian
 ; Adapted by: Michael Gogins
@@ -28,20 +43,6 @@ iHz = cpsmidinn(i_midi_key)
 kHz = k(iHz)
 aenvelope transeg 1.0, 20.0, -10.0, 0.05
 ip3 = (p3 < 3.0 ? p3 : 3.0)
-if2 ftgenonce 0, 0, 16, -2, 40, 40, 80, 160, 320, 640, 1280, 2560, 5120, 10240, 10240
-if26 ftgenonce 0, 0, 65537, -10, 2000, 489, 74, 219, 125, 9, 33, 5, 5
-if27 ftgenonce 0, 0, 65537, -10, 2729, 1926, 346, 662, 537, 110, 61, 29, 7
-if28 ftgenonce 0, 0, 65537, -10, 2558, 2012, 390, 361, 534, 139, 53, 22, 10, 13, 10
-if29 ftgenonce 0, 0, 65537, -10, 12318, 8844, 1841, 1636, 256, 150, 60, 46, 11
-if30 ftgenonce 0, 0, 65537, -10, 1229, 16, 34, 57, 32
-if31 ftgenonce 0, 0, 65537, -10, 163, 31, 1, 50, 31
-if32 ftgenonce 0, 0, 65537, -10, 4128, 883, 354, 79, 59, 23
-if33 ftgenonce 0, 0, 65537, -10, 1924, 930, 251, 50, 25, 14
-if34 ftgenonce 0, 0, 65537, -10, 94, 6, 22, 8
-if35 ftgenonce 0, 0, 65537, -10, 2661, 87, 33, 18
-if36 ftgenonce 0, 0, 65537, -10, 174, 12
-if37 ftgenonce 0, 0, 65537, -10, 314, 13
-iwtsin ftgenonce 0, 0, 65537, 10, 1
 ; parameters
 ; p4 overall amplitude scaling factor
 ip4 init i_amplitude
@@ -71,7 +72,7 @@ iattack = ip7 * (1.1 - .2*gi_ZakianFLute_seed) ; attack time with up to +-10% ra
 gi_ZakianFLute_seed = frac(gi_ZakianFLute_seed*105.947) ; reset gi_ZakianFLute_seed
 idecay = ip8 * (1.1 - .2*gi_ZakianFLute_seed) ; decay time with up to +-10% random deviation
 gi_ZakianFLute_seed = frac(gi_ZakianFLute_seed*105.947)
-ifiltcut tablei ip9, if2 ; lowpass filter cutoff frequency
+ifiltcut tablei ip9, gi_ZakianFLute_f2 ; lowpass filter cutoff frequency
 iattack = (iattack < 6/kr ? 6/kr : iattack) ; minimal attack length
 idecay = (idecay < 6/kr ? 6/kr : idecay) ; minimal decay length
 isustain = p3 - iattack - idecay
@@ -104,7 +105,7 @@ vibrato2:
 kvibrater randi .1*kvibrate, 5, gi_ZakianFLute_seed ; up to 10% vibrato rate variation
 gi_ZakianFLute_seed = frac(gi_ZakianFLute_seed*105.947)
 kvibrate = kvibrate + kvibrater
-kvib oscili kvibdepth, kvibrate, iwtsin
+kvib oscili kvibdepth, kvibrate, gi_ZakianFlute_wtsin
 ifdev1 = -.03 * gi_ZakianFLute_seed ; frequency deviation
 gi_ZakianFLute_seed = frac(gi_ZakianFLute_seed*105.947)
 ifdev2 = .003 * gi_ZakianFLute_seed
@@ -133,9 +134,9 @@ kamp3 linseg 0, iatt, 0.005, iatt, -0.026, iatt, 0.023, iatt, \
 0.133, iatt, 0.060, iatt, -1.245, isus, -0.760, isus, 1.000, isus, \
 0.360, isus, -0.526, idec, 0.165, idec, 0.184, idec, 0.060, idec, \
 0.010, idec, 0.013, idec, 0
-iwt1 = if26 ; wavetable numbers
-iwt2 = if27
-iwt3 = if28
+iwt1 = gi_ZakianFlute_f26 ; wavetable numbers
+iwt2 = gi_ZakianFlute_f27
+iwt3 = gi_ZakianFlute_f28
 inorm = 3949
 goto end
 range2: ; for low mid-range tones
@@ -151,9 +152,9 @@ kamp3 linseg 0, iatt, 1.000, iatt, 0.520, iatt, -0.303, iatt, \
 0.059, iatt, -4.103, iatt, -6.784, isus, 7.006, isus, 11, isus, \
 12.495, isus, -0.562, idec, -4.946, idec, -0.587, idec, 0.440, idec, \
 0.174, idec, -0.027, idec, 0
-iwt1 = if29
-iwt2 = if30
-iwt3 = if31
+iwt1 = gi_ZakianFlute_f29
+iwt2 = gi_ZakianFlute_f30
+iwt3 = gi_ZakianFlute_f31
 inorm = 27668.2
 goto end
 range3: ; for high mid-range tones
@@ -169,9 +170,9 @@ kamp3 linseg 0, iatt, 0.722, iatt, 1.500, iatt, 3.697, iatt, \
 0.080, iatt, -2.327, iatt, -0.684, isus, -2.638, isus, 0.000, isus, \
 1.347, isus, 0.485, idec, -0.419, idec, -.700, idec, -0.278, idec, \
 0.167, idec, -0.059, idec, 0
-iwt1 = if32
-iwt2 = if33
-iwt3 = if34
+iwt1 = gi_ZakianFlute_f32
+iwt2 = gi_ZakianFlute_f33
+iwt3 = gi_ZakianFlute_f34
 inorm = 3775
 goto end
 range4: ; for high range tones
@@ -187,9 +188,9 @@ kamp3 linseg 0, iatt, 0.000, iatt, 1.000, iatt, 0.426, iatt, \
 0.222, iatt, 0.175, iatt, -0.153, isus, 0.355, isus, 0.175, isus, \
 0.16, isus, -0.246, idec, -0.045, idec, -0.072, idec, 0.057, idec, \
 -0.024, idec, 0.002, idec, 0
-iwt1 = if35
-iwt2 = if36
-iwt3 = if37
+iwt1 = gi_ZakianFlute_f35
+iwt2 = gi_ZakianFlute_f36
+iwt3 = gi_ZakianFlute_f37
 inorm = 4909.05
 goto end
 end:

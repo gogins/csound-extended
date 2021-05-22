@@ -17,8 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef MUSICMODEL_H
-#define MUSICMODEL_H
+#pragma once
 
 #include "Platform.hpp"
 #ifdef SWIG
@@ -60,7 +59,7 @@ public:
      * The time given by extendSeconds is used for a concluding e statement.
      */
     virtual void createCsoundScore(std::string addToScore = "",
-                                   double extendSeconds = 5.0);
+                                   double extendSeconds = 0.);
     /**
      * Convenience function that erases the existing score,
      * appends optional text to it,
@@ -212,7 +211,12 @@ public:
     virtual void cppsoundStop() {
         cppSound->stop();
     }
-    
+    virtual double getExtendSeconds() const {
+        return extendSeconds;
+    }
+    virtual void setExtendSeconds(double extendSeconds_) {
+        extendSeconds = extendSeconds_;
+    }
 protected:
     /**
      * Self-contained Csound object.
@@ -229,7 +233,7 @@ protected:
      * Prepended to generated score.
      */
     std::string csoundScoreHeader;
+    double extendSeconds = -1;
 };
-}
 
-#endif
+}

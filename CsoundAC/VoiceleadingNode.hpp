@@ -17,8 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef VOICELEADNODE_H
-#define VOICELEADNODE_H
+#pragma once
 
 #include "Platform.hpp"
 #include "Voicelead.hpp"
@@ -204,9 +203,9 @@ public:
      * to the beginning of the next operation
      * or the end of the score, whichever comes first,
      * conform notes produced by this node or its children
-     * to the specified prime chord, transposition, and voicing.
+     * to the specified prime chord, transpostion, and voicing.
      * Note that PTV specifies what musicians normally call
-     * the voicing, or inversion, of a chord.
+     * the voicing, or octavewise inversion, of a chord.
      */
     void PTV(double time, double P_, double T, double V_);
     /**
@@ -232,34 +231,48 @@ public:
      */
     void C(double time, double C_);
     /**
-     * Same as PT, except that a single number
-     * is used in place of the P and T numbers.
-     */
-    void C(double time, std::string C_);
-    /**
      * Same as C, except the chord can be specified by
      * jazz-type name (e.g. EbM7) instead of C number.
      */
-    void CV(double time, double C_, double V_);
+    void C_name(double time, std::string C_);
     /**
-     * Same as PTV, except the chord is specified by
-     * a single number instead of the P and T numbers.
+     * Beginning at the specified time and continuing
+     * to the beginning of the next operation
+     * or the end of the score, whichever comes first,
+     * conform notes produced by this node or its children
+     * to the specified prime chord, transpostion, and voicing.
+     * Note that CV (equivalent to PTV) specifies what musicians normally 
+     * call the voicing, or octavewise inversion, of a chord.
      */
-    void CV(double time, std::string C_, double V_);
+    void CV(double time, double C_, double V_);
     /**
      * Same as CV, except the chord is specified by
      * jazz-type name (e.g. EbM7) instead of C number.
      */
+    void CV_name(double time, std::string C_, double V_);
+    /**
+     * Beginning at the specified time and continuing
+     * to the beginning of the next operation
+     * or the end of the score, whichever comes first,
+     * conform notes produced by this node or its children
+     * to the specified chord; the voicing of the chord will be
+     * the smoothest voice-leading from the pitches of the previous chord.
+     * Optionally, parallel fifths can be avoided.
+     * Note that CL (equivalent to PTL) specifies what musicians normally 
+     * call the voice-leading of a chord.
+     */
     void CL(double time, double C_, bool avoidParallels = true);
     /**
-     * Same as PTL, except the chord is specified by
-     * a single number instead of P and T numbers.
+     * Same as CL, except the chord is specified by
+     * jazz-type name (e.g. EbM7) instead of C number.
      */
-    void CL(double time, std::string C_, bool avoidParallels = true);
+    void CL_name(double time, std::string C_, bool avoidParallels = true);
     /**
      * Find the C of the previous segment, and contextually invert it; apply
      * the resulting C to the current segment. Contextual inversion is
      * that inversion of C in which the first two pitch-classes are exchanged.
+     * If the chords are major or minor triads, produces the relative minor 
+     * or major.
      */
     void K(double time);
     /**
@@ -292,10 +305,9 @@ public:
     void QV(double time, double Q_, double V_);
     /**
      * Find the C of the previous segment, and contextually transpose it;
-     * apply the resulting C to the current segment, using the closest
-     * voiceleading from the pitches of the previous segment.
-     * Contextual transposition transposes C up by Q if C is an I-form,
-     * and down by Q if C is a T-form.
+     * apply the resulting C to the current segment, using the specified 
+     * octavewise revoicing. Contextual transposition transposes C up by Q if 
+     * C is an I-form, and down by Q if C is a T-form.
      */
     void QL(double time, double Q_, bool avoidParallels = true);
     /**
@@ -305,7 +317,7 @@ public:
      * conform notes produced by this node or its children
      * to the specified voicing of the chord.
      * Note that V specifies what musicians normally call
-     * the voicing or inversion of the chord.
+     * the voicing or octavewise inversion of the chord.
      */
     void V(double time, double V_);
     /**
@@ -321,11 +333,11 @@ public:
      */
     void L(double time, bool avoidParallels = true);
     /**
-     * Apply the chord to the current segement.
+     * Apply the specified chord to the current segement.
      */
     void chord(const csound::Chord &chord, double time);
     /**
-     * Apply the chord to the current segement, using the
+     * Apply the specified chord to the current segement, using the
      * closest voice-leading from the pitches of the previous segment.
      */
     void chordVoiceleading(const csound::Chord &chord, double time, bool avoid_parallels);
@@ -338,5 +350,5 @@ public:
     virtual void setModality(const std::vector<double> &pcs);
     virtual std::vector<double> getModality() const;
 };
+
 }
-#endif

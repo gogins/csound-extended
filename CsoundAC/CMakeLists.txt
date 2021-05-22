@@ -1,13 +1,12 @@
 # Build CsoundAC
-
+cmake_minimum_required(VERSION 3.10)
 include(CheckIncludeFiles)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 # TODO: These will need something more sophisticated.
 # For now I am hard-coding them to the Csound Debian control values.
 
-set(PYTHON_MODULE_INSTALL_DIR "/usr/lib/python2.7/dist-packages/")
 set(CMAKE_INCLUDE_CURRENT_DIR "On")
 
 option(BUILD_CSOUND_AC "Build CsoundAC extension module for Csound with algorithmic composition (needs C++ interface)" ON)
@@ -15,10 +14,10 @@ option(BUILD_CSOUND_AC_PYTHON_INTERFACE "Build the Csound AC Python interface" O
 option(USE_SYSTEM_PORTSMF ON)
 
 find_library(MUSICXML_LIBRARY musicxml2)
+#find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(FLTK)
 find_package(SWIG)
-find_package(PythonInterp)
-find_package(PythonLibs)
+find_package (Python3 COMPONENTS Interpreter Development)
 message(STATUS "Python libraries:  ${PYTHONLIBS_VERSION_STRING}")
 find_library(PORTSMF_LIBRARY portSMF)
 find_library(JPEG_LIBRARY jpeg)
@@ -32,12 +31,14 @@ if(BUILD_CSOUND_AC)
     set(libcsoundac_SRCS
         Cell.cpp
         ChordLindenmayer.cpp
+        ChordSpace.cpp
         Composition.cpp
         Conversions.cpp
         Counterpoint.cpp
         CounterpointMain.cpp
         CounterpointNode.cpp
         Event.cpp
+        ExternalNode.cpp
         ImageToScore.cpp
         Lindenmayer.cpp
         MCRM.cpp
@@ -53,7 +54,6 @@ if(BUILD_CSOUND_AC)
         Shell.cpp
         Soundfile.cpp
         StrangeAttractor.cpp
-        System.cpp
         Voicelead.cpp
         VoiceleadingNode.cpp)
 
@@ -76,6 +76,7 @@ if(BUILD_CSOUND_AC)
         add_library(libCsoundAC SHARED ${libcsoundac_SRCS})
     endif()
 
+    target_include_directories(libCsoundAC SYSTEM PRIVATE ${Python3_INCLUDE_DIRS})
     target_include_directories(libCsoundAC SYSTEM PRIVATE ${CSOUND_INCLUDE_PATH})
     target_include_directories(libCsoundAC PRIVATE ${EIGEN3_INCLUDE_PATH})
     target_include_directories(libCsoundAC PRIVATE ${FLTK_INCLUDE_DIR})
@@ -87,7 +88,7 @@ if(BUILD_CSOUND_AC)
         LIBRARY_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"
         ARCHIVE_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}")
 
-    target_link_libraries(libCsoundAC PRIVATE csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY})
+    target_link_libraries(libCsoundAC PRIVATE ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY})
     if(USE_SYSTEM_PORTSMF)
         target_link_libraries(libCsoundAC PRIVATE ${PORTSMF_LIBRARY})
     endif()
@@ -127,17 +128,21 @@ if(BUILD_CSOUND_AC)
 
     if(BUILD_CSOUND_AC_PYTHON_INTERFACE)
         message(STATUS "Building CsoundAC Python interface.")
-        include_directories(${PYTHON_INCLUDE_PATH})
+        message(STATUS "Python3_SITEARCH: ${Python3_SITEARCH}")
+        message(STATUS "Python3_SITEARCH: ${Python3_INCLUDE}")
+        include_directories(${Python3_INCLUDE_DIRS})
         # Had: 	    SWIG_FLAGS "-threads"
         set_source_files_properties(CsoundAC.i
             PROPERTIES CPLUSPLUS ON
             SWIG_MODULE_NAME CsoundAC)
 
-        swig_add_module(CsoundAC python CsoundAC.i)
-        swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${PYTHON_LIBRARIES})
+        swig_add_library(CsoundAC 
+            LANGUAGE python 
+            SOURCES CsoundAC.i)
+        swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${Python3_LIBRARIES})
 
         if(MUSICXML_LIBRARY)
-            swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY} ${PYTHON_LIBRARIES})
+            swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY} ${Python3_LIBRARIES})
         endif()
 
         if(APPLE)
@@ -152,10 +157,15 @@ if(BUILD_CSOUND_AC)
             ARCHIVE_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}")
 
         install(TARGETS ${SWIG_MODULE_CsoundAC_REAL_NAME}
-            LIBRARY DESTINATION "${PYTHON_MODULE_INSTALL_DIR}"
-            ARCHIVE DESTINATION "${PYTHON_MODULE_INSTALL_DIR}")
-            install(FILES "${BUILD_LIB_DIR}/CsoundAC.py"
-            DESTINATION ${PYTHON_MODULE_INSTALL_DIR})
+            LIBRARY DESTINATION "${Python3_SITEARCH}"
+            ARCHIVE DESTINATION "${Python3_SITEARCH}")
+            
+        install(FILES "${BUILD_LIB_DIR}/CsoundAC.py"
+            DESTINATION ${Python3_SITEARCH})
+            
+        install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIRECTORY}"
+            DESTINATION ${Python3_SITEARCH}
+            FILES_MATCHING PATTERN "*.py")
     endif()
 
 endif()

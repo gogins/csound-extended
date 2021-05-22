@@ -17,8 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef SCOREMODEL_H
-#define SCOREMODEL_H
+#pragma once
 
 #include "Platform.hpp"
 #ifdef SWIG
@@ -73,6 +72,41 @@ public:
      * Returns the address of this as a Node pointer.
      */
     virtual Node *getThisNode();
+    /*
+     * Redefining for Embind which does not support multiple inheritance:
+     */
+    virtual Eigen::MatrixXd getLocalCoordinates() const {
+        return Node::getLocalCoordinates();
+    }
+    virtual void traverse(const Eigen::MatrixXd &global_coordinates,
+                      Score &global_score) {
+        Node::traverse(global_coordinates, global_score);
+    }
+    virtual void generate(Score &score_from_this) {
+        Node::generate(score_from_this);
+    }
+    virtual void transform(Score &score_from_children) {
+        Node::transform(score_from_children);
+    }
+    virtual Eigen::MatrixXd createTransform() {
+        return Node::createTransform();
+    }
+    virtual double &element(size_t row, size_t column) {
+        return Node::element(row, column);
+    }
+    virtual void setElement(size_t row, size_t column, double value) {
+        Node::setElement(row, column, value);
+    }
+    virtual void addChild(Node *node) {
+        Node::addChild(node);
+    }
+    virtual size_t childCount() const {
+        return Node::childCount();
+    }
+    virtual Node* getChild(size_t index) {
+        return Node::getChild(index);
+    }
+     
 };
+
 }
-#endif

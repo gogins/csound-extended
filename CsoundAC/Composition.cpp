@@ -29,12 +29,13 @@
 
 namespace csound
 {
+
 Composition::Composition() :
+    score(baseScore),
     tonesPerOctave(12.0),
     conformPitches(false),
     tieOverlappingNotes(false),
-    duration(0),
-    score(baseScore)
+    duration(0)
 {
 }
 
@@ -115,6 +116,8 @@ bool Composition::getConformPitches() const
     return conformPitches;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-result"
 std::string Composition::getOutputDirectory() const
 {
     if (output_directory.empty() == true) {
@@ -124,6 +127,7 @@ std::string Composition::getOutputDirectory() const
     }
     return output_directory;
 }
+#pragma GCC diagnostic pop
 
 void Composition::setOutputDirectory(std::string output_directory)
 {
@@ -254,32 +258,30 @@ int Composition::tagFile(std::string filename) const
 
 int Composition::performMaster()
 {
-    System::inform("BEGAN Composition::performMaster()...\n");
+    System::inform("Composition::performMaster...\n");
     int errorStatus = perform();
-    System::inform("ENDED Composition::performMaster().\n");
+    System::inform("Composition::performMaster.\n");
     return errorStatus;
 }
 
 int Composition::performAll()
 {
-    System::inform("BEGAN Composition::performAll()...\n");
+    System::inform("Composition::performAll...\n");
     auto started_at = System::startTiming();
     int errorStatus = performMaster();
-    if (errorStatus) {
-        return errorStatus;
-    }
+    System::inform("Composition::performMaster ended with %d.\n", errorStatus);
     double seconds = System::stopTiming(started_at);
     System::message("Performance took %9.4f seconds.\n", seconds);
     started_at = System::startTiming();
     errorStatus = translateMaster();
-    System::inform("ENDED Composition::performAll().\n");
+    System::inform("Composition::translateMaster ended with %d.\n", errorStatus);
     return errorStatus;
 }
 
 int Composition::translateMaster()
 {
     auto started_at = System::startTiming();
-    System::inform("BEGAN Composition::translateMaster...\n");
+    System::inform("Composition::translateMaster...\n");
     int errorStatus = tagFile(getOutputSoundfileFilepath());
     if (errorStatus) {
         return errorStatus;
@@ -299,7 +301,7 @@ int Composition::translateMaster()
     errorStatus = translateToMp4();
     auto seconds = System::stopTiming(started_at);
     System::message("Translation took %9.4f seconds.\n", seconds);
-    System::inform("ENDED Composition::translateMaster.\n");
+    System::inform("Composition::translateMaster.\n");
     return errorStatus;
 }
 
@@ -430,7 +432,6 @@ void Composition::generateAllNames()
     if (artist.empty() == true) {
         artist = author;
     }
-    album  = album;
     System::inform("timestamp:                       %s\n", timestamp.c_str());
     System::inform("author:                          %s\n", author.c_str());
     System::inform("title:                           %s\n", getTitle().c_str());

@@ -1,7 +1,5 @@
-#ifndef CSOUND_PRODUCER_HPP
-#define CSOUND_PRODUCER_HPP
+#pragma once
 
-#include <Python.h>
 #include <csound/csound_threaded.hpp>
 #include <cstdio>
 #include <cstdlib>
@@ -36,7 +34,7 @@ inline void initialize_ecl(int argc, char **argv)
     initialized_ecl = true;
     cl_boot(argc, argv);
     atexit(cl_shutdown);
-    std::printf("Initialized Embeddable Common Lisp.\n");
+    std::fprintf(stderr, "Initialized Embeddable Common Lisp.\n");
 }
 
 /**
@@ -95,7 +93,7 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
         std::string filename_base = filename.substr(0, period_index);
         std::string filename_extension = filename.substr(period_index + 1, std::string::npos);
         if (csound == nullptr) {
-            std::printf("Began PostProcess(%s)...\n", filename.c_str());
+            std::fprintf(stderr, "Began PostProcess(%s)...\n", filename.c_str());
         } else {
             csound->Message("Began PostProcess(%s)...\n", filename.c_str());
         }
@@ -121,7 +119,7 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
                 found = std::strstr(found, " ");
                 max_volume = std::atof(found);
                 if (csound == nullptr) {
-                    std::printf("Original maximum level: %9.4f dBFS\n", max_volume);
+                    std::fprintf(stderr, "Original maximum level: %9.4f dBFS\n", max_volume);
                 } else {
                     csound->Message("Original maximum level: %9.4f dBFS\n", max_volume);
                 }
@@ -131,7 +129,7 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
         auto result = pclose(pipe);
         max_volume = (max_volume + 6) * -1;
         if (csound == nullptr) {
-            std::printf("Correction: %9.4f dB\n", max_volume);
+            std::fprintf(stderr, "Correction: %9.4f dB\n", max_volume);
         } else {
             csound->Message("Correction: %9.4f dB\n", max_volume);
         }
@@ -139,8 +137,8 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
         const char *volume_command = "ffmpeg -y -i %s.%s -filter:a \"volume=%fdB\" -codec:a pcm_s32le -format:a flt %s \"%s-normalized.wav\"";
         std::snprintf(buffer, 0x1000, volume_command, filename_base.c_str(), filename_extension.c_str(), max_volume, tag_options.c_str(), filename_base.c_str());
         if (csound == nullptr) {
-            std::printf("%s", buffer);
-            std::printf("Volume command:      %s\n", buffer);
+            std::fprintf(stderr, "%s", buffer);
+            std::fprintf(stderr, "Volume command:      %s\n", buffer);
         } else {
             csound->Message("%s", buffer);
             csound->Message("Volume command:      %s\n", buffer);
@@ -150,8 +148,8 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
         const char *mp3_command = "ffmpeg -y -i %s-normalized.wav -acodec libmp3lame -b:a 192k -r:a 48k %s \"%s.mp3\"";
         std::snprintf(buffer, 0x1000, mp3_command, filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
         if (csound == nullptr) {
-            std::printf("%s", buffer);
-            std::printf("MP3 command:         %s\n", buffer);
+            std::fprintf(stderr, "%s", buffer);
+            std::fprintf(stderr, "MP3 command:         %s\n", buffer);
         } else {
             csound->Message("%s", buffer);
             csound->Message("MP3 command:         %s\n", buffer);
@@ -161,8 +159,8 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
         const char *cda_command = "ffmpeg -y -i %s-normalized.wav -acodec pcm_s16le -ar 44100 -ac 2 -f wav %s \"%s.cd.wav\"";
         std::snprintf(buffer, 0x1000, cda_command, filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
         if (csound == nullptr) {
-            std::printf("%s", buffer);
-            std::printf("CD audio command:    %s\n", buffer);
+            std::fprintf(stderr, "%s", buffer);
+            std::fprintf(stderr, "CD audio command:    %s\n", buffer);
         } else {
             csound->Message("%s", buffer);
             csound->Message("CD audio command:    %s\n", buffer);
@@ -172,8 +170,8 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
         const char *flac_command = "ffmpeg -y -i %s-normalized.wav -af aformat=s32 %s \"%s.flac\"";
         std::snprintf(buffer, 0x1000, flac_command, filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
         if (csound == nullptr) {
-            std::printf("%s", buffer);
-            std::printf("FLAC command:        %s\n", buffer);
+            std::fprintf(stderr, "%s", buffer);
+            std::fprintf(stderr, "FLAC command:        %s\n", buffer);
         } else {
             csound->Message("%s", buffer);
             csound->Message("FLAC command:        %s\n", buffer);
@@ -183,8 +181,8 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
         const char *png_command = "ffmpeg -y -i %s.cd.wav -lavfi showspectrumpic=s=wxga:mode=separate %s.png";
         std::snprintf(buffer, 0x1000, png_command, filename_base.c_str(), filename_base.c_str());
         if (csound == nullptr) {
-            std::printf("%s", buffer);
-            std::printf("Spectrogram command: %s\n", buffer);
+            std::fprintf(stderr, "%s", buffer);
+            std::fprintf(stderr, "Spectrogram command: %s\n", buffer);
         } else {
             csound->Message("%s", buffer);
             csound->Message("Spectrogram command: %s\n", buffer);
@@ -194,8 +192,8 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
         const char *mp4_command = "ffmpeg -y -loop 1 -framerate 2 -i %s.png -i %s-normalized.wav -c:v libx264 -preset medium -tune stillimage -crf 18 -codec:a aac -strict -2 -b:a 384k -r:a 48000 -shortest -pix_fmt yuv420p -vf \"scale=trunc(iw/2)*2:trunc(ih/2)*2\" %s %s-unlabeled.mp4";
         std::snprintf(buffer, 0x1000, mp4_command, filename_base.c_str(), filename_base.c_str(), tag_options.c_str(), filename_base.c_str());
         if (csound == nullptr) {
-            std::printf("%s", buffer);
-            std::printf("MP4 command:         %s\n", buffer);
+            std::fprintf(stderr, "%s", buffer);
+            std::fprintf(stderr, "MP4 command:         %s\n", buffer);
         } else {
             csound->Message("%s", buffer);
             csound->Message("MP4 command:         %s\n", buffer);
@@ -210,15 +208,15 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
         const char *label_command = "ffmpeg -y -i %s-unlabeled.mp4 -max_muxing_queue_size 9999 -vf drawtext=fontfile=OpenSans-Regular.ttf:text='%s\n%s\n%s\n%s %s':fontcolor=white:fontsize=36:alpha=.5:x=w/2-tw/2:y=h/6 -codec:a copy %s.mp4";
         std::snprintf(buffer, 0x1000, label_command, filename_base.c_str(), artist.c_str(), title.c_str(), publisher.c_str(), copyright.c_str(), license.c_str(), filename_base.c_str());
         if (csound == nullptr) {
-            std::printf("%s", buffer);
-            std::printf("Label command: %s\n", buffer);
+            std::fprintf(stderr, "%s", buffer);
+            std::fprintf(stderr, "Label command: %s\n", buffer);
         } else {
             csound->Message("%s", buffer);
             csound->Message("Label command: %s\n", buffer);
         }
         result = std::system(buffer);
         
-        std::printf("Ended PostProcess.\n");
+        std::fprintf(stderr, "Ended PostProcess.\n");
     }
     
     static void PostProcess(std::map<std::string, std::string> &tags, std::string filename) {
@@ -399,15 +397,6 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
             virtual bool GetDoGitCommit() const {
                 return do_git_commit;
             }
-            virtual void InitializePython() {
-                Py_Initialize();
-                // Ensure that this instance of Csound is available in the 
-                // Python runtime context. For ctcsound, the CSOUND pointer 
-                // is just an int.
-                char code[0x100];
-                std::snprintf(code, 0x100, "csound = int(%p)", csound);
-                PyRun_SimpleString(code);
-            }
             virtual cl_env_ptr GetCommonLispEnvironment() {
                 return common_lisp_environment;
             }
@@ -424,6 +413,20 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
                 cl_object lisp_csound = evaluate_form(form);
             }
             /**
+             * Causes the calling thread to wait for the end of the performance
+             * thread routine.
+             */
+            virtual void Join()
+            {
+                Message("CsoundProducer::Join...\n");
+                if (performance_thread.get_id() != std::this_thread::get_id()) {
+                    if (performance_thread.joinable()) {
+                        performance_thread.join();
+                    }
+                }
+                Message("CsoundProducer::Join.\n");
+            }
+            /**
              * Runs a script in a dynamic language, e.g. to generate a score 
              * for Csound to render. This instance of Csound is exposed in the 
              * runtime context of the script as a raw pointer or handle named 
@@ -436,14 +439,7 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
              */
             virtual int RunScript(const std::string script, const std::string language) {
                 int result = 0;
-                if (language == "Python3.6m") {
-                    result = PyRun_SimpleString(script.c_str());
-                    if (result == 0) {
-                        //log(csound, "Result: %d\n", result);
-                    } else {
-                        Message("PyRun_SimpleString failed with: %d\n", result);
-                    }
-                } else if (language == "Common Lisp") {
+                if (language == "Common Lisp") {
                     evaluate_form(script.c_str());
                 } else {
                     Message("Sorry, CsoundProducer does not support %s in this environment.\n", language.c_str());
@@ -461,6 +457,3 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
     };
     
 };
-
-#endif
-

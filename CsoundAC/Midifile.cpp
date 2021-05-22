@@ -21,6 +21,7 @@
 #pragma warning (disable:4786)
 #endif
 #include "Midifile.hpp"
+#include "System.hpp"
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -171,11 +172,11 @@ void Chunk::read(std::istream &stream)
     _idString[4] = 0;
     if(id != _id)
     {
-        std::cout << "Unexpected chunk id: " << _idString << " (should be " << idString << ")." << std::endl;
+        System::warn("Unexpected chunk id: %s (should be %s).\n", _idString, idString);
     }
     else
     {
-        std::cout << "Read chunk: " << _idString << "." << std::endl;
+        System::inform("Read chunk: %s\n", _idString);
     }
     chunkSize = MidiFile::readInt(stream);
 }
@@ -492,18 +493,14 @@ void MidiEvent::read(std::istream &stream, MidiFile &midiFile)
     }
     if(peeked < 0x80)
     {
-#ifdef _DEBUG
-        //                      fprintf(stderr, "Running status: %x\n", midiFile.lastStatus);
-#endif
+        System::debug("Running status: %x\n", midiFile.lastStatus);
         push_back(midiFile.lastStatus);
     }
     else
     {
         read(stream);
         midiFile.lastStatus = getStatus();
-#ifdef _DEBUG
-        //                      fprintf(stderr, "Status:         %x\n", getStatus());
-#endif
+        System::debug("Status:         %x\n", getStatus());
     }
     switch(getStatusNybble())
     {
@@ -541,41 +538,40 @@ void MidiEvent::read(std::istream &stream, MidiFile &midiFile)
             {
                 read(stream);
             }
-            std::cout << "Meta event " << getMetaType() << " (" << n << " bytes): ";
+             System::inform("Meta event %d (%d bytes):\n");
             switch(getMetaType())
             {
             case MidiFile::META_SET_TEMPO:
             {
-                std::cout << "set tempo";
+                System::inform("set tempo\n");
                 midiFile.microsecondsPerQuarterNote = (getMetaData(0) << 16) + (getMetaData(1) << 8) + getMetaData(2);
                 midiFile.computeTimes();
             }
             break;
             case MidiFile::META_TIME_SIGNATURE:
             {
-                std::cout << "time signature" << std::endl;
+                System::inform("time signature\n");
                 double numerator = getMetaData(0);
                 double denominator = getMetaData(1);
                 double clocksPerBeat = getMetaData(2);
                 double thirtySecondNotesPerMidiQuarterNote = getMetaData(3);
-                std::cout << "numerator:" << numerator << std::endl;
-                std::cout << "denominator:" << denominator << std::endl;
-                std::cout << "clocksPerBeat:" << clocksPerBeat << std::endl;
-                std::cout << "thirtySecondNotesPerMidiQuarterNote:" << thirtySecondNotesPerMidiQuarterNote << std::endl;
+                System::inform("numerator: %9.4f\n", numerator);
+                System::inform("denominator: %9.4f\n", denominator);
+                System::inform("clocksPerBeat: %9.4f\n", clocksPerBeat);
+                System::inform("thirtySecondNotesPerMidiQuarterNote: %9.4f\n", thirtySecondNotesPerMidiQuarterNote);
 
             }
             break;
             case MidiFile::META_SEQUENCER_SPECIFIC:
-                std::cout << "sequencer specific" << std::endl;
+                System::inform("sequencer specific\n");
                 break;
             case MidiFile::META_END_OF_TRACK:
-                std::cout << "end of track" << std::endl;
+                System::inform("end of track\n");
                 break;
             default:
-                std::cout << "not handled" << std::endl;
+                 System::inform("not handled\n");
                 break;
             }
-            std::cout << std::endl;
         }
         break;
         }
@@ -584,11 +580,11 @@ void MidiEvent::read(std::istream &stream, MidiFile &midiFile)
     default:
     {
         int badStatus = getStatus();
-        std::cout << "Error reading midi event: status == " << badStatus << std::endl;
+        System::error("Error reading midi event: status == %d\n", badStatus);
     }
     break;
     }
-    std::cerr << toString();
+    System::inform("%s\n", toString().c_str());
 }
 
 void MidiTrack::write(std::ostream &stream, MidiFile &midiFile)
@@ -678,7 +674,7 @@ void MidiFile::computeTimes()
     {
         int frameCode = (-midiHeader.timeFormat) >> 8;
         double framesPerSecond;
-        //cout << " frameCode:   " << frameCode;
+        //cerr << " frameCode:   " << frameCode;
         switch(frameCode)
         {
         case 24:
@@ -696,9 +692,9 @@ void MidiFile::computeTimes()
         default:
             framesPerSecond = 30.0;
         }
-        //cout << " framesPerSecond: " << framesPerSecond;
+        //cerr << " framesPerSecond: " << framesPerSecond;
         int ticksPerFrame = midiHeader.timeFormat & 0xff;
-        //cout << " ticksPerFrame:   " << ticksPerFrame;
+        //cerr << " ticksPerFrame:   " << ticksPerFrame;
         currentSecondsPerTick = (1.0 / framesPerSecond) / ticksPerFrame;
     }
     else
@@ -706,11 +702,11 @@ void MidiFile::computeTimes()
         double ticksPerQuarterNote = double(midiHeader.timeFormat);
         double secondsPerQuarterNote = microsecondsPerQuarterNote / 1000000.0;
         currentSecondsPerTick = secondsPerQuarterNote / ticksPerQuarterNote;
-        //cout << " ticksPerQuarterNote:   " << ticksPerQuarterNote;
-        //cout << " secondsPerQuarterNote: " << secondsPerQuarterNote;
+        //cerr << " ticksPerQuarterNote:   " << ticksPerQuarterNote;
+        //cerr << " secondsPerQuarterNote: " << secondsPerQuarterNote;
     }
-    //cout << " currentSecondsPerTick: " << currentSecondsPerTick;
-    //cout << endl;
+    //cerr << " currentSecondsPerTick: " << currentSecondsPerTick;
+    //cerr << endl;
     tempoMap[currentTick] = currentSecondsPerTick;
 }
 

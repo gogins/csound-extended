@@ -564,6 +564,7 @@ char *Conversions::dupstr(const char *string)
     copy[len] = '\0';
     return copy;
 }
+
 double Conversions::gainToDb(double inputDb, double gain, bool odbfs)
 {
     double factor = 1.0;
@@ -583,74 +584,6 @@ void Conversions::stringToVector(const std::string &text, std::vector<double> &v
         }
         vector.push_back(std::atof(text.substr(index, nextIndex - index).c_str()));
         index = nextIndex + 1;
-    }
-}
-
-double Conversions::EPSILON()
-{
-    static double epsilon = 1.0;
-    if (epsilon == 1.0) {
-        for (;;) {
-            epsilon = epsilon / 2.0;
-            double nextEpsilon = epsilon / 2.0;
-            double onePlusNextEpsilon = 1.0 + nextEpsilon;
-            if (onePlusNextEpsilon == 1.0) {
-                break;
-            }
-        }
-    }
-    return epsilon;
-}
-
-double &Conversions::epsilonFactor()
-{
-    static double epsilonFactor = 100000.0;
-    return epsilonFactor;
-}
-
-bool Conversions::eq_epsilon(double a, double b)
-{
-    if (std::abs(a - b) < (EPSILON() * epsilonFactor())) {
-        return true;
-    } else {
-        return false;
-    }
-
-}
-
-bool Conversions::gt_epsilon(double a, double b)
-{
-    if (eq_epsilon(a, b)) {
-        return false;
-    } else {
-        return (a > b);
-    }
-}
-
-bool Conversions::lt_epsilon(double a, double b)
-{
-    if (eq_epsilon(a, b)) {
-        return false;
-    } else {
-        return (a < b);
-    }
-}
-
-bool Conversions::ge_epsilon(double a, double b)
-{
-    if (eq_epsilon(a, b)) {
-        return true;
-    } else {
-        return (a > b);
-    }
-}
-
-bool Conversions::le_epsilon(double a, double b)
-{
-    if (eq_epsilon(a, b)) {
-        return true;
-    } else {
-        return (a < b);
     }
 }
 

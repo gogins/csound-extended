@@ -190,7 +190,7 @@ void Event::setMidi(double time, char status, char key, char velocity)
 {
     (*this)[TIME] = time;
     (*this)[STATUS] = (status & 0xf0);
-    (*this)[INSTRUMENT] = (status & 0xf);
+    setChannel(status & 0xf);
     (*this)[DURATION] = INDEFINITE;
     (*this)[KEY] = key;
     (*this)[VELOCITY] = velocity;
@@ -215,7 +215,12 @@ double Event::getStatus() const
 
 int Event::getChannel() const
 {
-    return int(Conversions::round((*this)[INSTRUMENT]));
+    return int(Conversions::round((*this)[INSTRUMENT] - 1));
+}
+
+void Event::setChannel(int channel)
+{
+    setInstrument(channel + 1);
 }
 
 double Event::getInstrument() const
@@ -324,7 +329,7 @@ double Event::getGain() const
     return Conversions::midiToGain(getVelocity());
 }
 
-double Event::getKey(double tonesPerOctave) const
+double Event::getKey_tempered(double tonesPerOctave) const
 {
     if(tonesPerOctave == 0.0)
     {
@@ -337,9 +342,51 @@ double Event::getKey(double tonesPerOctave) const
     }
 }
 
+std::string Event::getProperties() const {
+    std::string result = "";
+    if (properties.empty() == false) {
+        result += "\"";
+        for (auto pair : properties) {
+            result += "'" + pair.first + "'='" + pair.second + "', ";
+         }
+        result += "\"";
+    }
+    return result;
+}
+
+std::string Event::toBlueIStatement(double tonesPerOctave) const 
+{
+    char buffer[0x1000];
+    /** 
+     * Csound dimensions for athenaCL are:
+     * i_instrument = p1
+     * i_time = p2
+     * i_duration = p3
+     * i_dbspa = p4
+     * i_pch = p5
+     * optional properties = p12, printed as a string 
+     * ("'name'='value', ['name'='value']")
+     */
+    double velocity = getVelocity();
+    double dbsp = velocity / 127. * 90.;
+    double midi_key = getKey_tempered(tonesPerOctave) - 60.;
+    double octave = std::floor(Conversions::midiToOctave(midi_key));
+    double pitch_class = std::fmod(midi_key, 12.);
+    double pch = octave + pitch_class;
+    sprintf(buffer, "i %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %s\n",
+            getInstrument(),
+            getTime(),
+            getDuration(),
+            dbsp,
+            pch,
+            getPan(),
+            getProperties().c_str());
+    return buffer;
+}
+
 std::string Event::toCsoundIStatement(double tonesPerOctave) const
 {
-    char buffer[0x100];
+    char buffer[0x1000];
     /** 
      * Csound dimensions now are:
      * i_instrument = p1
@@ -353,31 +400,34 @@ std::string Event::toCsoundIStatement(double tonesPerOctave) const
      * i_phase = p9
      * i_pitches = p10
      * i_homogeneity = p11    
+     * optional properties = p12, printed as a string 
+     * ("'name'='value', ['name'='value']")
      */
-    sprintf(buffer, "i %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g\n",
+    sprintf(buffer, "i %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %s\n",
             getInstrument(),
             getTime(),
             getDuration(),
-            getKey(tonesPerOctave),
+            getKey_tempered(tonesPerOctave),
             getVelocity(),
             getDepth(),
             getPan(),
             getHeight(),
             getPhase(),
             getPitches(),
-            (*this)[HOMOGENEITY]);
+            (*this)[HOMOGENEITY],
+            getProperties().c_str());
     return buffer;
 }
 
 std::string Event::toCsoundIStatementHeld(int tag, double tempering) const
 {
-    char buffer[0x100];
+    char buffer[0x1000];
     double octave = Conversions::midiToOctave(getKey());
     if(tempering != 0.0)
     {
         octave = Conversions::temper(octave, tempering);
     }
-    sprintf(buffer, "i %d.%d %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g\n",
+    sprintf(buffer, "i %d.%d %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %s\n",
             (int) Conversions::round(getInstrument()),
             tag,
             getTime(),
@@ -389,19 +439,20 @@ std::string Event::toCsoundIStatementHeld(int tag, double tempering) const
             getHeight(),
             getPhase(),
             getPitches(),
-            (*this)[HOMOGENEITY]);
+            (*this)[HOMOGENEITY],
+            getProperties().c_str());
     return buffer;
 }
 
 std::string Event::toCsoundIStatementRelease(int tag, double tempering) const
 {
-    char buffer[0x100];
+    char buffer[0x1000];
     double octave = Conversions::midiToOctave(getKey());
     if(tempering != 0.0)
     {
         octave = Conversions::temper(octave, tempering);
     }
-    sprintf(buffer, "i -%d.%d %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g\n",
+    sprintf(buffer, "i %d.%d %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %s\n",
             (int) Conversions::round(getInstrument()),
             tag,
             getTime(),
@@ -413,14 +464,15 @@ std::string Event::toCsoundIStatementRelease(int tag, double tempering) const
             getHeight(),
             getPhase(),
             getPitches(),
-            (*this)[HOMOGENEITY]);
+            (*this)[HOMOGENEITY],
+            getProperties().c_str());
     return buffer;
 }
 
 std::string Event::toString() const
 {
     char buffer[0x100];
-    sprintf(buffer, "t%8.3f d%8.3f s%3.0f i%6.2f k%6.2f v%6.2f y%5.2f pcs%8.2f",
+    sprintf(buffer, "t%8.3f d%8.3f s%3.0f i%6.2f k%6.2f v%6.2f y%5.2f pcs%8.2f %s",
             getTime(),
             getDuration(),
             getStatus(),
@@ -428,7 +480,8 @@ std::string Event::toString() const
             getKey(),
             getVelocity(),
             getPan(),
-            getPitches());
+            getPitches(),
+            getProperties().c_str());
     return buffer;
 }
 

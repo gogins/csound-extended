@@ -35,7 +35,6 @@ Sequence::~Sequence()
 void Sequence::traverse(const Eigen::MatrixXd &globalCoordinates,
                         Score &collectingScore)
 {
-    size_t beginAt = collectingScore.size();
     // Obtain the composite transformation of coordinate system
     // by post-concatenating the local transformation of coordinate system
     // with the global, or enclosing, transformation of coordinate system.

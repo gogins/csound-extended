@@ -3,6 +3,7 @@ gk_Harpsichord_level init 0
 gk_Harpsichord_pick init .075
 gk_Harpsichord_reflection init .5
 gk_Harpsichord_pluck init .75
+gi_Harpsichord_harptable ftgen 0, 0, 65537, 7, -1, 1024, 1, 1024, -1
 instr Harpsichord
 i_instrument = p1
 i_time = p2
@@ -16,25 +17,23 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 82.4
+i_level_correction = 110
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Harpsichord_level)
 iHz = cpsmidinn(i_midi_key)
 kHz = k(iHz)
-aenvelope transeg 1.0, 20.0, -10.0, 0.05
-k_amplitude = 1
-apluck pluck 1, kHz, iHz, 0, 1
-iharptable ftgenonce 0, 0, 65536, 7, -1, 1024, 1, 1024, -1
-aharp poscil 1, kHz, iharptable
+aenvelope transeg 1.0, 40.0, -25.0, 0.0
+apluck pluck i_amplitude * k_gain, kHz, iHz, 0, 1
+aharp poscil aenvelope, kHz, gi_Harpsichord_harptable
 aharp2 balance apluck, aharp
 a_signal	= (apluck + aharp2)
-i_attack = .002
+i_attack = .0005
 i_sustain = p3
 i_release = 0.01
 xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
-a_signal = a_signal * i_amplitude * a_declicking * k_gain
+a_signal = a_signal * a_declicking * k_gain
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

@@ -17,8 +17,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#ifndef SILENCE_H
-#define SILENCE_H
+#pragma once
 
  /**
  * \page csoundac CsoundAC
@@ -310,12 +309,12 @@
 #include <map>
 #include <eigen3/Eigen/Dense>
 #endif
-
 #include "Conversions.hpp"
 #include "System.hpp"
 #include "Event.hpp"
 #include "Midifile.hpp"
 #include "Score.hpp"
+#include "ChordSpaceBase.hpp"
 #include "ChordSpace.hpp"
 #include "Composition.hpp"
 #include "Node.hpp"
@@ -323,12 +322,18 @@
 #include "CounterpointNode.hpp"
 #include "ScoreNode.hpp"
 #include "Cell.hpp"
+#include "HarmonyIFS.hpp"
+#include "HarmonyIFS2.hpp"
 #include "Rescale.hpp"
 #include "ScoreModel.hpp"
+#if !defined(EMSCRIPTEN)
 #include "MusicModel.hpp"
+#endif
 #include "Sequence.hpp"
 #include "Random.hpp"
+#if !defined(EMSCRIPTEN)
 #include "ImageToScore.hpp"
+#endif
 #include "StrangeAttractor.hpp"
 #include "Lindenmayer.hpp"
 #include "MCRM.hpp"
@@ -336,5 +341,5 @@
 #include "Voicelead.hpp"
 #include "VoiceleadingNode.hpp"
 #include "ChordLindenmayer.hpp"
-
-#endif
+#include "HarmonyIFS.hpp"
+#include "ExternalNode.hpp"

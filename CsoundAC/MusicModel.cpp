@@ -29,8 +29,8 @@
 namespace csound
 {
 MusicModel::MusicModel() :
-    cppSound(&cppSound_),
-    threadCount(1)
+    threadCount(1),
+    cppSound(&cppSound_)
 {
 }
 
@@ -52,6 +52,9 @@ int MusicModel::generate()
     }
     traverse(getLocalCoordinates(), score);
     score.process();
+    if (duration > 0.) {
+        score.setDuration(duration);
+    }
     System::message("Generated %d events.\n", score.size());
     // Not implemented fully yet.
     //score.save(getMusicXmlfileFilepath());
@@ -70,7 +73,7 @@ int MusicModel::render()
     return errorStatus;
 }
 
-void MusicModel::createCsoundScore(std::string addToScore, double extendSeconds)
+void MusicModel::createCsoundScore(std::string addToScore, double extendSeconds_)
 {
     System::inform("addToScore.length(): %d\n", addToScore.length());
     if (addToScore.length() > 2) {
@@ -78,12 +81,12 @@ void MusicModel::createCsoundScore(std::string addToScore, double extendSeconds)
         cppSound->addScoreLine(addToScore);
     }
     cppSound->addScoreLine(score.getCsoundScore(tonesPerOctave, conformPitches));
-    char buffer[0x100];
-    //std::sprintf(buffer, "\ns %9.3f", extendSeconds);
-    //cppSound->addScoreLine(buffer);
-    std::sprintf(buffer, "\ne %9.3f\n", extendSeconds);
-    cppSound->addScoreLine(buffer);
-    //cppSound->exportForPerformance();
+    if (extendSeconds_ >= 0.) {
+        extendSeconds = extendSeconds_;
+        char e_statement[0x100];
+        std::snprintf(e_statement, 0x100, "\s 0.0\ne %9.4f\n", extendSeconds);
+        cppSound->addScoreLine(e_statement);
+    }
 }
 
 int MusicModel::perform()
@@ -94,7 +97,7 @@ int MusicModel::perform()
     auto csound_command = getCsoundCommand();
     System::message("MusicModel::perform using Csound command: %s\n", csound_command.c_str());
     cppSound->setCommand(getCsoundCommand());
-    createCsoundScore(csoundScoreHeader);
+    createCsoundScore(csoundScoreHeader, getExtendSeconds());
     std::string csd = cppSound->getCSD();
     // Always save the generated csd.
     std::string csd_filename = getOutputSoundfileFilepath() + "-generated.csd";
@@ -233,7 +236,7 @@ Node *MusicModel::getThisNode()
 
 int MusicModel::processArgs(const std::vector<std::string> &args)
 {
-    System::inform("BEGAN MusicModel::processArgs()...\n");
+    System::inform("MusicModel::processArgs...\n");
     generateAllNames();
     std::map<std::string, std::string> argsmap;
     std::string key;
@@ -308,13 +311,13 @@ int MusicModel::processArgs(const std::vector<std::string> &args)
         System::inform("Csound command: %s\n", command);
         errorStatus = std::system(command);
     }
-    System::inform("ENDED MusicModel::processArgv().\n");
+    System::inform("MusicModel::processArgv.\n");
     return errorStatus;
 }
 
 void MusicModel::stop()
 {
-    std::cout << "MusicModel::stop()..." << std::endl;
+    System::inform("MusicModel::stop...\n");
     cppSound->stop();
 }
 }

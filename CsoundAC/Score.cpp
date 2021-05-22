@@ -105,14 +105,14 @@ public:
     }
     virtual void endPart (long date) {
     }
-    virtual void newNote (long start_, int channel_, float key_, int velocity_, int duration_) {
+    virtual void newNote (long start_, int instrument_, float key_, int velocity_, int duration_) {
         double start = double(start_) / double(tpq) * tempo;
         double duration = double(duration_) / double(tpq) * tempo;
         double status = 144.0;
-        double channel = double(channel_);
+        double instrument = double(instrument_);
         double key = key_;
         double velocity = velocity_;
-        score.append(start, duration, status, channel, key, velocity);
+        score.append(start, duration, status, instrument, key, velocity);
     }
     virtual void tempoChange (long date, int bpm) {
         tempo = 60.0 / double(bpm);
@@ -133,7 +133,7 @@ protected:
 
 void Score::load(std::string filename)
 {
-    System::inform("BEGAN Score::load(%s)...\n", filename.c_str());
+    System::inform("Score::load(%s)...\n", filename.c_str());
     if (filename.find(".mid") != std::string::npos ||
             filename.find(".MID") != std::string::npos) {
         std::ifstream stream;
@@ -169,7 +169,12 @@ void Score::load(std::string filename)
     else {
         System::error("Unknown file format in Score::load().\n");
     }
-    System::inform("ENDED Score::load().\n");
+    System::inform("Score::load.\n");
+}
+
+void Score::load_filename(std::string filename)
+{
+    load(filename);
 }
 
 void Score::load(std::istream &stream)
@@ -299,8 +304,8 @@ static Sxmlelement createScore(const Score &score_, std::string filename)
     std::map<int, std::vector<const Event *> > parts;
     for (size_t i = 0, n = score_.size(); i < n; ++i) {
         const Event &event = score_[i];
-        int instrument = event.getChannel();
-        parts[instrument].push_back(&event);
+        int channel = event.getChannel();
+        parts[channel].push_back(&event);
     }
     // First we have to make our part list.
     score->push(makePartList(parts));
@@ -314,13 +319,13 @@ static Sxmlelement createScore(const Score &score_, std::string filename)
 
 void Score::save(std::string filename)
 {
-    System::inform("BEGAN Score::save(%s)...\n", filename.c_str());
+    System::inform("Score::save(%s)...\n", filename.c_str());
     std::fstream stream;
     stream.open(filename.c_str(), std::ios_base::out | std::ios_base::binary);
     if (filename.find(".mid") != std::string::npos ||
             filename.find(".MID") != std::string::npos) {
         save(stream);
-        System::inform("ENDED Score::save().\n");
+        System::inform("Score::save.\n");
     }
 #if defined(HAVE_MUSICXML2)
     else if (filename.find(".xml") != std::string::npos ||
@@ -348,6 +353,11 @@ void Score::save(std::string filename)
     stream.close();
 }
 
+void Score::save_filename(std::string filename)
+{
+    save(filename);
+}
+
 void Score::save(std::ostream &stream)
 {
     Alg_seq seq;
@@ -371,10 +381,8 @@ void Score::save(std::ostream &stream)
         }
     }
     // Write with time in seconds.
-    seq.write(std::cout, true);
+    // seq.write(std::cerr, true);
     seq.smf_write(stream);
-    // save(midifile);
-    // midifile.write(stream);
 }
 
 static double max(double a, double b)
@@ -518,6 +526,11 @@ void Score::rescale(Event &event)
     }
 }
 
+void Score::rescale_event(Event &event)
+{
+    rescale(event);
+}
+
 void Score::dump(std::ostream &stream)
 {
     stream << "silence::Score = " << int(size()) << " events:" << std::endl;
@@ -566,6 +579,42 @@ void Score::initialize(void)
     rescaleRanges[Event::HOMOGENEITY] = false;
 }
 
+void Score::add(double time_, double duration, double status, double instrument, double key, double velocity, double phase, double pan, double depth, double height, double pitches) 
+{
+    Event event;
+    event.setTime(time_);
+    event.setDuration(duration);
+    event.setStatus(status);
+    event.setInstrument(instrument);
+    event.setKey(key);
+    event.setVelocity(velocity);
+    event.setPhase(phase);
+    event.setPan(pan);
+    event.setDepth(depth);
+    event.setHeight(height);
+    event.setPitches(pitches);
+    push_back(event);
+}
+
+
+
+void Score::append_note(double time_, double duration, double status, double instrument, double key, double velocity, double phase, double pan, double depth, double height, double pitches) 
+{
+    Event event;
+    event.setTime(time_);
+    event.setDuration(duration);
+    event.setStatus(status);
+    event.setInstrument(instrument);
+    event.setKey(key);
+    event.setVelocity(velocity);
+    event.setPhase(phase);
+    event.setPan(pan);
+    event.setDepth(depth);
+    event.setHeight(height);
+    event.setPitches(pitches);
+    push_back(event);
+}
+
 void Score::append(double time_, double duration, double status, double instrument, double key, double velocity, double phase, double pan, double depth, double height, double pitches)
 {
     Event event;
@@ -580,6 +629,11 @@ void Score::append(double time_, double duration, double status, double instrume
     event.setDepth(depth);
     event.setHeight(height);
     event.setPitches(pitches);
+    push_back(event);
+}
+
+void Score::append_event(Event event)
+{
     push_back(event);
 }
 
@@ -618,6 +672,36 @@ void Score::rescale(int dimension, bool rescaleMinimum, double minimum, bool res
 {
     setScale(*this, dimension, rescaleMinimum, rescaleRange, 0, size(), minimum, range);
 }
+
+std::string Score::getBlueScore(double tonesPerOctave, bool conformPitches)
+{
+    std::string csoundScore;
+    sort();
+    for( Score::iterator it = begin(); it != end(); ++it ) {
+        int oldInstrument = int( std::floor( it->getInstrument() ) );
+        if( gains.find( oldInstrument ) != gains.end() ) {
+            double inputDb = it->getVelocity();
+            double gain = gains[oldInstrument];
+            double outputDb = inputDb + gain;
+            it->setVelocity( outputDb );
+        }
+        if( pans.find( oldInstrument ) != pans.end() ) {
+            double pan = pans[oldInstrument];
+            it->setPan( pan );
+        }
+        if( reassignments.find( oldInstrument ) != reassignments.end() ) {
+            it->setInstrument( reassignments[oldInstrument] );
+        }
+        if( conformPitches ) {
+            it->conformToPitchClassSet();
+        }
+        if (it->isNote() == true) {
+            csoundScore.append( it->toBlueIStatement( tonesPerOctave ) );
+        }
+    }
+    return csoundScore;
+}
+
 
 std::string Score::getCsoundScore(double tonesPerOctave, bool conformPitches)
 {
@@ -666,6 +750,13 @@ void Score::arrange(int oldInstrumentNumber, int newInstrumentNumber, double gai
     pans[oldInstrumentNumber] = pan;
 }
 
+void Score::arrange_all(int oldInstrumentNumber, int newInstrumentNumber, double gain, double pan)
+{
+    reassignments[oldInstrumentNumber] = newInstrumentNumber;
+    gains[oldInstrumentNumber] = gain;
+    pans[oldInstrumentNumber] = pan;
+}
+
 void Score::removeArrangement()
 {
     reassignments.clear();
@@ -675,7 +766,7 @@ void Score::removeArrangement()
 
 std::vector<double> Score::getPitches(size_t begin_, size_t end_, size_t divisionsPerOctave_) const
 {
-    System::inform("BEGAN Score::getPitches(%d, %d, %d)\n", begin_, end_, divisionsPerOctave_);
+    System::inform("Score::getPitches(%d, %d, %d)...\n", begin_, end_, divisionsPerOctave_);
     if (end_ > size()) {
         end_ = size();
     }
@@ -683,7 +774,7 @@ std::vector<double> Score::getPitches(size_t begin_, size_t end_, size_t divisio
     std::vector<double> chord;
     for (size_t i = begin_; i < end_; i++) {
         const Event &event = (*this)[i];
-        double pitch = event.getKey(divisionsPerOctave_);
+        double pitch = event.getKey_tempered(divisionsPerOctave_);
         if (pitches.find(pitch) == pitches.end()) {
             pitches.insert(pitch);
             chord.push_back(pitch);
@@ -692,7 +783,7 @@ std::vector<double> Score::getPitches(size_t begin_, size_t end_, size_t divisio
     }
     std::sort(chord.begin(), chord.end());
     printChord("  pitches:             ", chord);
-    System::inform("ENDED Score::getPitches.\n");
+    System::inform("Score::getPitches.\n");
     return chord;
 }
 
@@ -755,12 +846,12 @@ void Score::setPTV(size_t begin_,
     if (begin_ == end_) {
         return;
     }
-    System::inform("BEGAN Score::setPTV(%d, %d, %f, %f, %f, %f, %f, %d)...\n", begin_, end_, P, T, V, lowest, range, divisionsPerOctave_);
+    System::inform("Score::setPTV(%d, %d, %f, %f, %f, %f, %f, %d)...\n", begin_, end_, P, T, V, lowest, range, divisionsPerOctave_);
     std::vector<double> voicing = Voicelead::ptvToChord(P, T, V, lowest, lowest + range, divisionsPerOctave_);
     setPitches(begin_, end_, voicing);
     std::vector<double> pcs = Voicelead::uniquePcs(voicing, divisionsPerOctave_);
     printChord("pcs of voicing: ", pcs);
-    System::inform("ENDED Score::setPTV.\n");
+    System::inform("Score::setPTV.\n");
 }
 
 std::vector<double> Score::getPT(size_t begin_,
@@ -796,7 +887,7 @@ void Score::setPT(size_t begin_,
     if (begin_ == end_) {
         return;
     }
-    System::inform("BEGAN Score::setPT(%d, %d, %f, %f, %f, %f, %d)...\n", begin_, end_, P, T, lowest, range, divisionsPerOctave_);
+    System::inform("Score::setPT(%d, %d, %f, %f, %f, %f, %d)...\n", begin_, end_, P, T, lowest, range, divisionsPerOctave_);
     std::vector<double> pitchClassSet = Voicelead::pAndTtoPitchClassSet(P, T, divisionsPerOctave_);
     printChord("  pitch-class set:     ", pitchClassSet);
     setPitchClassSet(begin_, end_, pitchClassSet, divisionsPerOctave_);
@@ -804,14 +895,14 @@ void Score::setPT(size_t begin_,
     printChord("  result:              ", result);
     std::vector<double> resultTones = Voicelead::uniquePcs(result, divisionsPerOctave_);
     printChord("  as pitch-class set:  ", resultTones);
-    System::inform("ENDED Score::setPT.\n");
+    System::inform("Score::setPT.\n");
 }
 
 std::vector<double> Score::getVoicing(size_t begin_,
                                       size_t end_,
                                       size_t divisionsPerOctave_) const
 {
-    System::inform("BEGAN Score::getVoicing(%d, %d, %d)...\n", begin_, end_, divisionsPerOctave_);
+    System::inform("Score::getVoicing(%d, %d, %d)...\n", begin_, end_, divisionsPerOctave_);
     std::vector<double> pitches = getPitches(begin_, end_, divisionsPerOctave_);
     std::set<double> pcs;
     std::vector<double> voicing;
@@ -827,7 +918,7 @@ std::vector<double> Score::getVoicing(size_t begin_,
     printChord("  voicing:             ", voicing);
     std::vector<double> resultTones = Voicelead::uniquePcs(voicing, divisionsPerOctave_);
     printChord("  as pitch-class set:  ", resultTones);
-    System::inform("ENDED Score::getVoicing.\n");
+    System::inform("Score::getVoicing.\n");
     return voicing;
 }
 
@@ -873,7 +964,7 @@ void Score::voicelead(size_t beginSource,
 {
     if ( (System::getMessageLevel() & System::INFORMATION_LEVEL) == System::INFORMATION_LEVEL) {
         std::stringstream stream;
-        stream << "BEGAN Score::voicelead:..." << std::endl;
+        stream << "Score::voicelead:..." << std::endl;
         stream << "  beginSource:         " << beginSource << std::endl;
         stream << "  endSource:           " << endSource << std::endl;
         stream << "  beginTarget:         " << beginTarget << std::endl;
@@ -948,7 +1039,19 @@ void Score::voicelead(size_t beginSource,
     printChord("  result:              ", result);
     std::vector<double> resultTones = Voicelead::uniquePcs(result, divisionsPerOctave_);
     printChord("  as pitch-class set:  ", resultTones);
-    System::inform("ENDED Score::voicelead.\n");
+    System::inform("Score::voicelead.\n");
+}
+
+void Score::voicelead_segments(size_t beginSource,
+                      size_t endSource,
+                      size_t beginTarget,
+                      size_t endTarget,
+                      double lowest,
+                      double range,
+                      bool avoidParallelFifths,
+                      size_t divisionsPerOctave_)
+{
+    voicelead(beginSource, endSource, beginTarget, lowest, range, avoidParallelFifths, divisionsPerOctave_);
 }
 
 void Score::voicelead(size_t beginSource,
@@ -963,7 +1066,7 @@ void Score::voicelead(size_t beginSource,
 {
     if ( (System::getMessageLevel() & System::INFORMATION_LEVEL) == System::INFORMATION_LEVEL ) {
         std::stringstream stream;
-        stream << "BEGAN Score::voicelead:..." << std::endl;
+        stream << "Score::voicelead:..." << std::endl;
         stream << "  beginSource:         " << beginSource << std::endl;
         stream << "  endSource:           " << endSource << std::endl;
         stream << "  beginTarget:         " << beginTarget << std::endl;
@@ -1042,8 +1145,22 @@ void Score::voicelead(size_t beginSource,
     printChord("  result:              ", result);
     std::vector<double> resultTones = Voicelead::uniquePcs(result, divisionsPerOctave_);
     printChord("  as pitch-class set:  ", resultTones);
-    System::inform("ENDED Score::voicelead.\n");
+    System::inform("Score::voicelead.\n");
 }
+
+void Score::voicelead_pitches(size_t beginSource,
+                      size_t endSource,
+                      size_t beginTarget,
+                      size_t endTarget,
+                      const std::vector<double> &target,
+                      double lowest,
+                      double range,
+                      bool avoidParallelFifths,
+                      size_t divisionsPerOctave_)
+{
+    voicelead(beginSource, endSource, beginTarget, endTarget, target, lowest, range, avoidParallelFifths, divisionsPerOctave_);
+}
+
 
 void Score::setK(size_t priorBegin, size_t begin, size_t end, double base, double range)
 {
@@ -1089,7 +1206,7 @@ static std::vector<double> matchContextSize(const std::vector<double> context, c
 }
 void Score::setQ(size_t priorBegin, size_t begin, size_t end, double Q, const std::vector<double> &context, double base, double range)
 {
-    System::inform("BEGAN Score::setQ(%f)...\n", Q);
+    System::inform("Score::setQ(%f)...\n", Q);
     std::vector<double> pitches = getPitches(priorBegin, begin);
     std::vector<double> pcs = Voicelead::uniquePcs(pitches);
     printChord("  prior pcs:     ", pcs);
@@ -1105,7 +1222,7 @@ void Score::setQ(size_t priorBegin, size_t begin, size_t end, double Q, const st
     pitches = getPitches(begin, end);
     pcs = Voicelead::uniquePcs(pitches);
     printChord("  posterior pcs: ", pcs);
-    System::inform("ENDED Score::setQ.\n");
+    System::inform("Score::setQ.\n");
 }
 
 void Score::setQV(size_t priorBegin, size_t begin, size_t end, double Q, const std::vector<double> &context, double V, double base, double range)
@@ -1265,7 +1382,7 @@ void Score::temper(double tonesPerOctave)
 
 void Score::process()
 {
-    System::inform("BEGAN Score::process()...\n");
+    System::inform("Score::process...\n");
     sort();
     for (size_t i = 0, n = size(); i < n; ++i) {
         Event &event = at(i);
@@ -1274,13 +1391,52 @@ void Score::process()
             event.process(*this, event);
         }
     }
-    System::inform("ENDED Score::process()\n");
+    System::inform("Score::process.\n");
 }
 
 void Score::transform(const Eigen::MatrixXd &transformation) {
     for(int i = 0, n = size(); i < n; ++i) {
         at(i) = transformation * at(i);
     }
+}
+
+Event &Score::getScaleTargetMinima() {
+    return scaleTargetMinima;
+}
+
+std::vector<bool> &Score::getRescaleMinima() {
+    return rescaleMinima;
+}
+
+Event &Score::getScaleTargetRanges() {
+    return scaleTargetRanges;
+}
+
+std::vector<bool> &Score::getRescaleRanges() {
+    return rescaleRanges;
+}
+
+const Event &Score::getScaleActualMinima() const {
+    return scaleActualMinima;
+}
+
+const Event &Score::getScaleActualRanges() const {
+    return scaleActualRanges;
+}
+
+double Score::getDurationFromZero() const {
+    double end = 0.0;
+    for (int i = 0, n = size(); i < n; ++i) {
+        const Event &event = at(i);
+        if (i == 0) {
+            end = event.getOffTime();
+        } else {
+            if (event.getOffTime() > end) {
+                end = event.getOffTime();
+            }
+        }
+    }
+    return end;
 }
 
 }

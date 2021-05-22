@@ -312,7 +312,7 @@ int Shell::runScript()
 
 int Shell::runScript(std::string script_)
 {
-    csound::System::message("BEGAN Shell::runScript()...\n");
+    csound::System::message("Shell::runScript...\n");
     clock_t began = std::clock();
     int result = 0;
     try
@@ -333,7 +333,7 @@ int Shell::runScript(std::string script_)
     clock_t ended = std::clock();
     double elapsed = double(ended - began) / double(CLOCKS_PER_SEC);
     csound::System::message("PyRun_SimpleString returned %d after %.3f seconds.\n", result, elapsed);
-    csound::System::message("ENDED Shell::runScript().\n");
+    csound::System::message("Shell::runScript.\n");
     return result;
 }
 

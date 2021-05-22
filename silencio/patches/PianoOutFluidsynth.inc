@@ -25,7 +25,7 @@ i_overall_amps = -19
 i_normalization = ampdb(-i_overall_amps) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_PianoOutFluidsynth_level)
-fluidProgramSelect gi_Fluidsynth, 0, gi_FluidSteinway, 0, 1
+//fluidProgramSelect gi_Fluidsynth, 0, gi_FluidSteinway, 0, 1
 a_out_left, a_out_right fluidOut gi_Fluidsynth
 a_signal = a_out_left + a_out_right
 a_signal *= i_amplitude

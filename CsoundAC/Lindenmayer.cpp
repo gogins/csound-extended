@@ -301,7 +301,7 @@ void Lindenmayer::interpret(std::string action, bool render)
     }
     catch(void *x)
     {
-        std::cout << x << std::endl;
+        System::error("Caught exception: %p\n", x);
     }
 }
 
@@ -360,7 +360,7 @@ void Lindenmayer::updateActual(Event &event)
 
 void Lindenmayer::rewrite()
 {
-    System::inform("BEGAN Lindenmayer::rewrite()...");
+    System::debug("Lindenmayer::rewrite...");
     std::stringstream production(axiom);
     std::stringstream priorProduction;
     std::string symbol;
@@ -384,7 +384,7 @@ void Lindenmayer::rewrite()
             production << replacement;
         }
     }
-    System::inform("ENDED Lindenmayer::rewrite().");
+    System::debug("Lindenmayer::rewrite.");
 }
 
 double Lindenmayer::getAngle() const

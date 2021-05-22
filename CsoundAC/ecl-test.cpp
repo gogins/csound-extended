@@ -37,7 +37,7 @@ csound-seq
         auto keynum = ecl_to_double(ecl_slot_value(event, "keynum"));
         auto duration = ecl_to_double(ecl_slot_value(event, "duration"));
         auto amplitude = ecl_to_double(ecl_slot_value(event, "amplitude"));
-        //std::printf("event %8ld t %9.4f c %9.4f k %9.4f d %9.4f a %9.4f\n", (1 + i), time_, channel, keynum, duration, amplitude);
+        System::debug("event %8ld t %9.4f c %9.4f k %9.4f d %9.4f a %9.4f\n", (1 + i), time_, channel, keynum, duration, amplitude);
     }
     cl_object result = evaluate_form("(list-objects csound-seq)");
     return 0;

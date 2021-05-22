@@ -1,5 +1,6 @@
 #include "CppSound.hpp"
 #include "Counterpoint.hpp"
+#include "System.hpp"
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -86,7 +87,7 @@ void Counterpoint::toCsoundScore(std::string filename, double secondsPerPulse)
     char buffer[0x100];
     std::fstream stream(filename.c_str(), std::ios::in | std::ios::out | std::ios::trunc);
     int totalnotes = 0;
-    fprintf(stderr, "\n; %s\n", filename.c_str());
+    csound::System::inform("\n; %s\n", filename.c_str());
     for(voice = 0; voice < Ctrpt.cols(); voice++)
     {
         time = 0;
@@ -97,13 +98,13 @@ void Counterpoint::toCsoundScore(std::string filename, double secondsPerPulse)
             key = double(Ctrpt(note,voice));
             sprintf(buffer, "i %d %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g %-1.7g\n",
                     (int)(voice + 1), time, duration, key, velocity, phase, x, y, z, pcs);
-            fprintf(stderr, "%s", buffer);
+            csound::System::inform("%s", buffer);
             stream << buffer;
             totalnotes++;
         }
     }
     sprintf(buffer, "; Total notes = %d\n", totalnotes);
-    fprintf(stderr, "%s", buffer);
+    //~ ("%s", buffer);
     stream << buffer;
 }
 
@@ -116,17 +117,10 @@ void Counterpoint::message(const char *format,...)
 }
 void Counterpoint::message(const char *format, va_list valist)
 {
-    if(messageCallback)
-    {
-        messageCallback(0, -1, format, valist);
-    }
-    else
-    {
-        vfprintf(stdout, format, valist);
-    }
-}
+    csound::System::message(format, valist);
+ }
 
-Counterpoint::Counterpoint() : messageCallback(0), LowestSemitone(24), HighestSemitone(72)
+Counterpoint::Counterpoint() : LowestSemitone(24), HighestSemitone(72)
 {
     UnisonPenalty                         = Counterpoint::Bad;
     DirectToFifthPenalty                  = Counterpoint::RealBad;

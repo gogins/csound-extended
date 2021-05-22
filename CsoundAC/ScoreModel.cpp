@@ -51,6 +51,9 @@ int ScoreModel::generate()
         score.tieOverlappingNotes(true);
     }
     score.process();
+    if (duration > 0.) {
+        score.setDuration(duration);
+    }
     System::message("Generated %d events.\n", score.size());
     return 0;
 }

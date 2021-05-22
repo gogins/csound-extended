@@ -6,6 +6,8 @@ http://michaelgogins.tumblr.com
 
 ## Introduction
 
+__**PLEASE NOTE: The algorithmic composition code here is now deprecated in favor of the WebAssembly build/JavaScript interface to CsoundAC, also maintained in this repository. The JavaScript ChordSpace code contains many errors that have been fixed in the CsoundAC Chord class. Please use CsoundAC for new compositions.**__
+
 Generative music, algorithmic composition, score generation, call it what you will. Silencio is the first system for algorithmic composition that is designed to run on smartphones and tablets as well as personal computers. 
 
 Silencio features advanced score generators based on recurrent iterated function systems and parametric Lindenmayer systems, and includes code for chord transformations and voice-leading inspired by the work of [Dmitri Tymoczko](http://dmitri.mycpanel.princeton.edu/) and other mathematical music theorists. I have been performing works composed with Silencio at conferences and festivals for several years.

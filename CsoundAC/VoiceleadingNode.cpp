@@ -37,8 +37,8 @@ extern void SILENCE_PUBLIC printChord(std::string label, const std::vector<doubl
  */
 VoiceleadingOperation::VoiceleadingOperation() :
     beginTime(0.0),
-    endTime(0.0),
     rescaledBeginTime(0.0),
+    endTime(0.0),
     rescaledEndTime(0.0),
     P_(DBL_MAX),
     T_(DBL_MAX),
@@ -108,7 +108,7 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
 {
     if ( (System::getMessageLevel() & System::INFORMATION_LEVEL) == System::INFORMATION_LEVEL) {
         std::stringstream stream;
-        stream << "BEGAN VoiceleadingNode::apply:..." << std::endl;
+        stream << "VoiceleadingNode::apply:..." << std::endl;
         stream << "  Events in score:     " << score.size() << std::endl;
         stream << "  Score duration:      " << score.getDuration() << std::endl;
         stream << "  Events in operation: " << (operation.end - operation.begin) << std::endl;
@@ -121,6 +121,40 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
     }
     if (operation.begin == operation.end) {
         return;
+    }
+    // For actual Chord objects...
+    if ((operation.P_ == DBL_MAX) && 
+        (operation.T_ == DBL_MAX) && 
+        (operation.C_ == DBL_MAX) && 
+        (operation.K_ == DBL_MAX) && 
+        (operation.Q_ == DBL_MAX) && 
+        (operation.V_ == DBL_MAX)) {
+        auto epcs_ = operation.chord.epcs();
+        std::vector<double> pcs;
+        for (int voice = 0, voices = epcs_.voices(); voice < voices; ++voice) {
+            auto pc = epcs_.getPitch(voice);
+            if (std::find(pcs.begin(), pcs.end(), pc) == pcs.end()) {
+                pcs.push_back(pc);
+            }
+        }
+        // Without voice-leading from the prior segment.
+        if (operation.L_ != DBL_MAX) {
+            System::inform("  Operation: chord\n");
+            score.setPitchClassSet(operation.begin, operation.end, pcs);
+        // With voice-leading from the prior segment.
+        } else {
+            System::inform("  Operation: chordVoiceLeading\n");
+            score.voicelead(priorOperation.begin,
+                            priorOperation.end,
+                            operation.begin,
+                            operation.end,
+                            pcs,
+                            base,
+                            range,
+                            avoidParallels,
+                            divisionsPerOctave);
+            return;
+        }
     }
     if (!(operation.K_ == DBL_MAX)) {
         if ((operation.V_ == DBL_MAX) && (!operation.L_)) {
@@ -280,7 +314,7 @@ void VoiceleadingNode::apply(Score &score, const VoiceleadingOperation &priorOpe
                             divisionsPerOctave);
         }
     }
-    System::message("ENDED VoiceleadingNode::apply.\n");
+    System::inform("VoiceleadingNode::apply.\n");
 }
 
 void VoiceleadingNode::PT(double time, double P_, double T_)
@@ -313,7 +347,7 @@ void VoiceleadingNode::C(double time, double C_)
     operations[time].C_ = C_;
 }
 
-void VoiceleadingNode::C(double time, std::string C_)
+void VoiceleadingNode::C_name(double time, std::string C_)
 {
     C(time, Voicelead::nameToC(C_, divisionsPerOctave));
 }
@@ -325,7 +359,7 @@ void VoiceleadingNode::CV(double time, double C_, double V_)
     operations[time].V_ = V_;
 }
 
-void VoiceleadingNode::CV(double time, std::string C_, double V_)
+void VoiceleadingNode::CV_name(double time, std::string C_, double V_)
 {
     CV(time, Voicelead::nameToC(C_, divisionsPerOctave), V_);
 }
@@ -338,7 +372,7 @@ void VoiceleadingNode::CL(double time, double C_, bool avoidParallels)
     operations[time].avoidParallels = avoidParallels;
 }
 
-void VoiceleadingNode::CL(double time, std::string C_, bool avoidParallels)
+void VoiceleadingNode::CL_name(double time, std::string C_, bool avoidParallels)
 {
     CL(time, Voicelead::nameToC(C_, divisionsPerOctave), avoidParallels);
 }
@@ -411,7 +445,7 @@ void VoiceleadingNode::transform(Score &score)
     double scoreMaxTime = scoreMinTime + scoreDuration;
     double operationMaxTime = 0.0;
     double timeScale = 1.0;
-    System::inform("BEGAN VoiceleadingNode::transform...\n");
+    System::inform("VoiceleadingNode::transform...\n");
     System::inform("  operations:    %d\n", operations.size());
     System::inform("  scoreMinTime:  %f\n", scoreMinTime);
     System::inform("  scoreDuration: %f\n", scoreDuration);
@@ -457,7 +491,7 @@ void VoiceleadingNode::transform(Score &score)
         currentOperation->end = score.indexAfterTime(currentOperation->rescaledEndTime);
         apply(score, *priorOperation, *currentOperation);
     }
-    System::inform("ENDED VoiceleadingNode::transform.\n");
+    System::inform("VoiceleadingNode::transform.\n");
 }
 
 void VoiceleadingNode::setModality(const std::vector<double> &pcs)

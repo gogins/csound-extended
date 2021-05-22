@@ -13,10 +13,10 @@ nchnls_i = 1
 // the note and the audio patches.
 
 gi_Fluidsynth fluidEngine 0, 0
-gi_FluidSteinway fluidLoad "Steinway_C.sf2", gi_Fluidsynth, 1
+gi_FluidSteinway fluidLoad "/home/mkg/Dropbox/Steinway_C.sf2", gi_Fluidsynth, 1
 fluidProgramSelect gi_Fluidsynth, 0, gi_FluidSteinway, 0, 1
 
-gi_Pianoteq vstinit "/home/mkg/Pianoteq\ 6/amd64/Pianoteq\ 6.so", 0
+gi_Pianoteq vstinit "/home/mkg/Pianoteq\ 7/x86-64bit/Pianoteq\ 7.so", 0
 vstinfo gi_Pianoteq 
 
 alwayson "PianoOutFluidsynth"
@@ -66,7 +66,7 @@ def generate_score():
     score += 'i 1 %9.4f %9.4f %9.4f %9.4f 0 0.5\n' % (time_, 5, 64, 70)
     time_ += 7
     # Generate a random pattern.
-    for note_i in xrange(50):
+    for note_i in range(50):
         duration = random.choice([0.125, 0.33334, 0.25, 0.66667, 1])
         time_ += duration / 2;
         key = random.choice(range(24, 108, 1))

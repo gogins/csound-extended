@@ -1,15 +1,3 @@
-[submodule "dependencies/csound"]
-	path = dependencies/csound
-	url = https://github.com/csound/csound.git
-[submodule "dependencies/libsndfile"]
-	path = dependencies/libsndfile
-	url = https://github.com/erikd/libsndfile.git
-[submodule "dependencies/oboe"]
-	path = dependencies/oboe
-	url = https://github.com/google/oboe.git
-[submodule "dependencies/portaudio"]
-	path = dependencies/portaudio
-	url = https://git.assembla.com/portaudio.git
 [submodule "dependencies/libmusicxml"]
 	path = dependencies/libmusicxml
 	url = https://github.com/grame-cncm/libmusicxml.git
@@ -19,30 +7,12 @@
 [submodule "dependencies/stk"]
 	path = dependencies/stk
 	url = https://github.com/thestk/stk.git
-[submodule "dependencies/liblo"]
-	path = dependencies/liblo
-	url = https://github.com/radarsat1/liblo.git
 [submodule "dependencies/cmask"]
 	path = dependencies/cmask
 	url = https://github.com/gogins/cmask.git
-[submodule "dependencies/cm2"]
-	path = dependencies/cm2
-	url = https://github.com/andersvi/cm2.git
 [submodule "dependencies/--force"]
 	path = dependencies/--force
 	url = https://github.com/ormf/fomus.git
-[submodule "dependencies/fomus"]
-	path = dependencies/fomus
-	url = https://github.com/ormf/fomus.git
-[submodule "dependencies/weyl"]
-	path = dependencies/weyl
-	url = https://github.com/OdonataResearchLLC/weyl.git
-[submodule "dependencies/cope/david-cope-cmmc"]
-	path = dependencies/cope/david-cope-cmmc
-	url = https://github.com/HeinrichApfelmus/david-cope-cmmc.git
 [submodule "dependencies/bformdec2"]
 	path = dependencies/bformdec2
 	url = https://github.com/pzinemanas/bformdec2.git
-[submodule "dependencies/cm-fomus"]
-	path = dependencies/cm-fomus
-	url = https://github.com/ormf/cm-fomus.git

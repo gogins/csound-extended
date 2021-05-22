@@ -102,6 +102,17 @@ void Node::addChild(Node *node)
     children.push_back(node);
 }
 
+size_t Node::childCount() const 
+{
+    return children.size();
+}
+
+Node* Node::getChild(size_t index)
+{
+    return children[index];
+}
+
+
 void RemoveDuplicates::transform(Score &collectingScore)
 {
     std::set<std::string> uniqueEvents;

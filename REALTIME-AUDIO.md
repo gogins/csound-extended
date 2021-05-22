@@ -66,20 +66,31 @@ In the browser, there is only 1 input channel, outside the browser there are pro
 
 It is vital to understand that with plain ALSA, only one audio stream can be active at a time. Hence, in the browser, only one tab can use audio at a time. Other audio tabs should be closed before running a WebAssembly piece.
 
-The Chromium browser is invoked by the shell script `/usr/bin/chromium-browser`. Normally, Chromium uses PulseAudio. The script implies that the browser audio configuration can be overridden to use plain ALSA in an initialization file or in an environment variable, but I could not get that to work. However, adding these flags to the final invocation of the command in the startup script _does_ work (although this will break Chromium for anybody who uses PulseAudio or a different ALSA device):
+The Chromium browser is invoked by the shell script `/usr/bin/chromium-browser`. Normally, Chromium uses PulseAudio. The script has comments saying that the browser audio configuration can be overridden to use plain ALSA in an initialization file or in an environment variable. Indeed, I got ALSA to work in Chromium by putting the following into my `~/.chromium-browser.init` file:
 ```
-else
-  if [ $want_temp_profile -eq 0 ] ; then
-    # MKG changed 2020-04-14: exec $LIBDIR/$APPNAME $CHROMIUM_FLAGS "$@"
-    exec $LIBDIR/$APPNAME $CHROMIUM_FLAGS --alsa-input-device='plughw:1,0' --alsa-output-device='plughw:1,0' "$@"
-  else
-    # we can't exec here as we need to clean-up the temporary profile
-    $LIBDIR/$APPNAME $CHROMIUM_FLAGS "$@"
-    rm -rf $TEMP_PROFILE
-  fi
-fi
+export CHROMIUM_FLAGS="${CHROMIUM_FLAGS} --alsa-input-device=plughw:1,0 --alsa-output-device=plughw:1,0"
+```
+
+### Current Problems as of Chromium 88
+
+Chromium is now a snap but it does not correctly use ALSA. Chromium does not even work with apulse (see next). May be related to (this bug)[https://bugs.launchpad.net/snapd/+bug/1835290].
+
+It _is_ possible to use Firefox with apulse as follows; apulse is a set of shared libraries that provides ALSA in the form of a simplified pulseaudio interface.
+
+Install apulse:
+```
+sudo apt install apulse
+```
+Set environment variables to tell apulse what ALSA audio interfaces to use:
+```
+export APULSE_PLAYBACK_DEVICE=plughw:1,0
+export APULSE_CAPTURE_DEVICE=plughw:1,0
+```
+Run firefox with apulse:
+```
+apulse firefox
 ```
 
 ## Rendering to Soundfile
 
-You can and should use a higher-precision format for rendering to soundfiles. All playback software of which I am aware can handle any format and play it back properly.
+You can and should use a high-precision format for rendering to soundfiles. All playback software of which I am aware can handle any format and play it back properly. I recommend using the following Csound options: `--sinesize=65536 --0dbfs=2 --sample-rate=96000 --ksmps=100 --wave`. These options are consistent with contemporary professional practice for digital audio.
