@@ -9,7 +9,9 @@ In order to simplify use and maintenance, I have refactored my GitHub
 projects, repositories, build systems, and packages. 
 
 All Csound examples and tests for all my repositories have now also been moved 
-into their own repository at https://github.com/gogins/csound-examples.
+into their own repository at https://github.com/gogins/csound-examples. 
+Therefore, the github pages for csound-extended have been moved to 
+csound-examples.
 
 Basically, csound-extended itself now targets only C++ and Python. Other 
 targets have been moved out into their own repositories.
