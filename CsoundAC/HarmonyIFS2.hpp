@@ -123,7 +123,25 @@ namespace csound {
             virtual double V() const {
                 return (*this)[HP_VOICING];
             };
-             virtual void set_t(double value) {
+            virtual double get_t() const {
+                return (*this)[HP_TIME];
+            };
+            virtual double get_P() const {
+                return (*this)[HP_PRIME_FORM];
+            };
+            virtual double get_I() const {
+                return (*this)[HP_INVERSION];
+            };
+            virtual double get_T() const {
+                return (*this)[HP_TRANSPOSITION];
+            };
+            virtual double get_V() const {
+                return (*this)[HP_VOICING];
+            };
+            virtual double get_homogeneity() const {
+                return (*this)[HP_HOMOGENEITY];
+            };
+            virtual void set_t(double value) {
                 (*this)[HP_TIME] = value;
             };
             virtual void set_P(double value) {
