@@ -773,11 +773,8 @@ WARN_LOGFILE           =
 
 INPUT                  = ../README.md \
                          ../CsoundAC \
-                         ../dependencies/csound/H \
-                         ../dependencies/csound/include \
-                         ../dependencies/csound/interfaces \
-                         ../dependencies/cmask/source \
                          ../Opcodes/cmask \
+                         ../dependencies/cmask
                          .
 
 # This tag can be used to specify the character encoding of the source files
@@ -2020,7 +2017,10 @@ SEARCH_INCLUDES        = YES
 # preprocessor.
 # This tag requires that the tag SEARCH_INCLUDES is set to YES.
 
-INCLUDE_PATH           =
+INCLUDE_PATH           = ../CsoundAC \
+                         ../Opcodes/cmask \
+                         ../dependencies/cmask/source \
+                         ../dependencies/csound
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard
 # patterns (like *.h and *.hpp) to filter out the header-files in the

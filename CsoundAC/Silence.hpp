@@ -40,8 +40,7 @@
  * See the <a href="namespacecsound.html">csound</a>
  * namespace for information about the classes in CsoundAC.
  */
- /**
- * \namespace csound
+ /** \namespace csound
  *
  * The csound namespace contains classes for doing algorithmic composition,
  * and for rendering audio from algorithmically generated scores,

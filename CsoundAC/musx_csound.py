@@ -68,15 +68,17 @@ def to_csound_score(midifile):
         for event in track:
             if event.is_note_on():
                 if event.duration > 0:
-                    # Adjust channel and MIDI key for microtonality.
+                    channel = event.channel()
+                    key = event.keynum()
+                    # Adjust channel and MIDI key for microtonality?
                     if channels_per_instrument > 1:
-                        channel = event.channel()
                         fraction = fractional_keys_for_channels[channel]
-                        key = event.keynum()
                         fractional_key = key + fraction
-                        print("fractioal_key:", fractional_key)
+                        #print("fractional_key:", fractional_key, "original channel:", channel)
                         channel = math.floor(channel / channels_per_instrument)
-                    i_statement = to_i_statement(channel, event.time, event.duration, fractional_key, event.velocity())
+                        #print("corrected channel:", channel)
+                        key = fractional_key
+                    i_statement = to_i_statement(channel, event.time, event.duration, key, event.velocity())
                     csound_score.append(i_statement + "\n")
     return ''.join(csound_score)
     
