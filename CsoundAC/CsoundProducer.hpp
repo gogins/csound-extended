@@ -88,7 +88,7 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
      * tagged with metadata. This function is called automatically by 
      * PerformAndPostProcess. 
      */
-    static void PostProcess_(std::map<std::string, std::string> &tags, std::string filename, CsoundThreaded *csound) {
+    static void PostProcess(std::map<std::string, std::string> &tags, std::string filename, CsoundThreaded *csound) {
         auto period_index = filename.rfind(".");
         std::string filename_base = filename.substr(0, period_index);
         std::string filename_extension = filename.substr(period_index + 1, std::string::npos);
@@ -219,11 +219,6 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
         std::fprintf(stderr, "Ended PostProcess.\n");
     }
     
-    static void PostProcess(std::map<std::string, std::string> &tags, std::string filename) {
-        PostProcess_(tags, filename, nullptr);
-    }
-    
-
     /** 
      * Optionally adds metadata, performs post-processing, translates to 
      * various soundfile formats as automatic steps in the Csound rendering of 
@@ -267,7 +262,7 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
                 if (do_git_commit == true) {
                     char temporary_filename[0x200];
                     auto discard = std::tmpnam(temporary_filename);
-                    char command[0x200];
+                    char command[0x300];
                     std::sprintf(command, "git rev-parse --short HEAD > %s", temporary_filename);
                     auto result = std::system(command);
                     std::fstream hash_file(temporary_filename);
@@ -374,7 +369,7 @@ void defun(const std::string &name, cl_object fun(Params... params)) {
                 output_filename.append(".");
                 output_filename.append(output_type);
                 Message("Post-processing output file: %s.\n", output_filename.c_str());
-                PostProcess_(tags, output_filename, this);
+                PostProcess(tags, output_filename, this);
                 seconds = stopTiming(clock_started);
                 Message("Post-processing %s took %9.4f seconds.\n", output_filename.c_str(), seconds);                
                 Message("Ended CsoundProducer::PerformAndPostProcessRoutine with %d.\n", result);
