@@ -31,7 +31,7 @@ webview = WebKit2.WebView()
 scrolled_window = Gtk.ScrolledWindow() 
 scrolled_window.add(webview) 
 
-main_window = builder.get_object("GtkApplicationWindow")
+main_window = builder.get_object("main_window")
 main_window.add(scrolled_window) 
 main_window.connect("destroy", Gtk.main_quit)
 main_window.show_all() 
