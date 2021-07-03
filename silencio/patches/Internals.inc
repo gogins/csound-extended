@@ -3,13 +3,6 @@
 ; Adapted from Sean Costello and J. Lato
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-opcode power_meter, 0, aaS
-a_left, a_right, S_label xin
-k_rms_left  rms a_left
-k_rms_right rms a_right
-printks "%s: rms L %9.4f R %9.4f\n", .5, S_label, k_rms_left, k_rms_right
-endop
-
 opcode Internals_channel, a, akkkikk
 a_signal, k_delay_level, k_lowpass_cutoff, k_delay_jitter_level, i_delay_modulation_mode, k_delay_modulation_level, k_delay_modulation_hz xin
 a_filtered_1 init 0
@@ -88,7 +81,6 @@ k_space_bottom_to_top = p8
 i_phase = p9
 a_in_left  inleta "inleft"
 a_in_right inleta "inright"
-power_meter a_in_left, a_in_right, "Internals inlets"
 
 
 a_left  Internals_channel a_in_left,  gk_Internals_delay_level, gk_Internals_lowpass_cutoff, gk_Internals_delay_jitter_level, gi_Internals_delay_modulation_mode, gk_Internals_delay_modulation_level, gk_Internals_delay_modulation_hz
@@ -98,7 +90,6 @@ a_out_left =  (a_left * gk_Internals_wet) + (a_left * gk_Internals_dry)
 a_out_right = (a_right * gk_Internals_wet) + (a_right * gk_Internals_dry)
 a_out_left *= k_gain
 a_out_right *= k_gain
-power_meter a_in_left, a_in_right, "Internals outlets"
 outleta "outleft",  a_out_left 
 outleta "outright", a_out_right
 prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
