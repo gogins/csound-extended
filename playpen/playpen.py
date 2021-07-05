@@ -25,16 +25,17 @@ builder = Gtk.Builder()
 builder.add_from_file(glade_file)
 
 
-webview = WebKit2.WebView() 
-# print(help(webview))
-
-scrolled_window = Gtk.ScrolledWindow() 
-scrolled_window.add(webview) 
 
 main_window = builder.get_object("main_window")
-main_window.add(scrolled_window) 
 main_window.connect("destroy", Gtk.main_quit)
+html_window = builder.get_object("html_window")
+webview = WebKit2.WebView() 
+webview.load_uri("http://csound.com/") 
+html_window.add(webview);
+help_window = builder.get_object("help_window")
+helpview = WebKit2.WebView() 
+helpview.load_uri("https://github.com/gogins/csound-extended/tree/develop/playpen") 
+help_window.add(helpview);
 main_window.show_all() 
 
-webview.load_uri("http://w3.org/") 
 Gtk.main()
