@@ -52,9 +52,9 @@ operating systems.
 3. [GTK 3](https://www.gtk.org/docs/installations/), note that GTK 4 is now 
    the current version but it is the previous version, GTK 3, that is used here.
 4. [GStreamer 3](https://gstreamer.freedesktop.org/documentation/installing/index.html?gi-language=c).
-5. [WebKit2 4.0 development libraries]; on Ubuntu Linux this is done by 
+5. _WebKit2 4.0 development libraries_; on Ubuntu Linux this is done by 
    executing `sudo apt install libwebkit2gtk-4.0-37` or a compatible version.
-6. [WebKit2 GNU introspection libraries]; on Ubuntu Linux this 
+6. _WebKit2 GNU introspection libraries_; on Ubuntu Linux this 
    is done by executing `sudo apt install gir1.2-webkit2-4.0`.
 6. [Glade](https://wiki.gnome.org/Apps/Glade); on Ubuntu Linux it may be 
    better to execute `sudo apt install glade`.
