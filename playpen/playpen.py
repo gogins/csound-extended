@@ -17,25 +17,23 @@ from gi.repository import WebKit2
 
 Gst.init(sys.argv)
 
-title = sys.argv[0].split(".")[0]
+title = "Playpen"
 print("title:", title)
-glade_file = title + ".glade"
 
 builder = Gtk.Builder()
-builder.add_from_file(glade_file)
-
-
+builder.add_from_file("playpen.glade")
 
 main_window = builder.get_object("main_window")
 main_window.connect("destroy", Gtk.main_quit)
 html_window = builder.get_object("html_window")
 webview = WebKit2.WebView() 
-webview.load_uri("http://csound.com/") 
+webview.load_uri("http://csound.com") 
 html_window.add(webview);
 help_window = builder.get_object("help_window")
 helpview = WebKit2.WebView() 
 helpview.load_uri("https://github.com/gogins/csound-extended/tree/develop/playpen") 
-help_window.add(helpview);
+help_window.add(helpview)
+main_window.resize(1200, 800)
 main_window.show_all() 
 
 Gtk.main()
