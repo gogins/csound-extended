@@ -62,7 +62,8 @@ operating systems.
    which automatically generates Python bindings for GTK, GStreamer, and WebKit 
    based on their introspection libraries.
 7. [Csound](https://csound.com/download.html), on Linux it is best to build 
-   from source code.
+   from source code. `Copy the ctcsound.py` file that comes with your version 
+   of Csound to a directory where it can be loaded by Python.
 8. The playpen itself is part of csound-extended. Clone the 
    [csound-extended](https://github.com/gogins/csound-extended) repository to 
    your local filesystem. Change to the `csound-extended/playpen` directory. 

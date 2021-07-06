@@ -25,19 +25,7 @@
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">New</property>
                 <property name="label" translatable="yes">New...</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="save_button">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Save</property>
-                <property name="label" translatable="yes">Save</property>
-                <property name="use_underline">True</property>
+                <signal name="clicked" handler="on_new_button_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -51,6 +39,21 @@
                 <property name="tooltip_text" translatable="yes">Open a file</property>
                 <property name="label" translatable="yes">Open,,,</property>
                 <property name="use_underline">True</property>
+                <signal name="clicked" handler="on_open_button_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="save_button">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Save</property>
+                <property name="label" translatable="yes">Save</property>
+                <property name="use_underline">True</property>
+                <signal name="clicked" handler="on_save_button_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -64,6 +67,7 @@
                 <property name="tooltip_text" translatable="yes">Save the file under a new name</property>
                 <property name="label" translatable="yes">Save as...</property>
                 <property name="use_underline">True</property>
+                <signal name="clicked" handler="on_save_as_button_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -77,6 +81,7 @@
                 <property name="tooltip_text" translatable="yes">Play real-time audio</property>
                 <property name="label" translatable="yes">Play</property>
                 <property name="use_underline">True</property>
+                <signal name="clicked" handler="on_play_audio_button_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -90,6 +95,7 @@
                 <property name="tooltip_text" translatable="yes">Render to soundfile and post-process</property>
                 <property name="label" translatable="yes">Render</property>
                 <property name="use_underline">True</property>
+                <signal name="clicked" handler="on_render_soundfile_button_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -103,6 +109,7 @@
                 <property name="tooltip_text" translatable="yes">Stop playing or rendering</property>
                 <property name="label" translatable="yes">Stop</property>
                 <property name="use_underline">True</property>
+                <signal name="clicked" handler="on_stop_button_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -271,6 +278,7 @@
                   <object class="GtkTextView" id="messages_text_view">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="tooltip_text" translatable="yes">Csound runtime messages</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <property name="hscroll_policy">natural</property>
