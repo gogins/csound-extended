@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import math
+import os.path
 import random
 import sys
 import time
@@ -30,6 +31,9 @@ from gi.repository import GObject
 from gi.repository import GLib
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk 
+settings = Gtk.Settings.get_default()
+settings.set_property("gtk-theme-name", "Adwaita")
+settings.set_property("gtk-application-prefer-dark-theme", True)
 ## gi.require_version("Gst", "1.0")
 ## from gi.repository import Gst 
 gi.require_version("WebKit2", "4.0")
@@ -37,6 +41,7 @@ from gi.repository import WebKit2
 gi.require_version("GtkSource", "3.0")
 from gi.repository import GtkSource
 import ctcsound
+
 
 csound = ctcsound.Csound()
 
@@ -70,133 +75,182 @@ def piece_is_html():
         return False
     
 def on_new_button_clicked(button):
-    print(button.get_label())
-    file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
-        parent=None, 
-        action=Gtk.FileChooserAction.SAVE)
-    file_chooser_dialog.add_buttons(
-    Gtk.STOCK_CANCEL,
-    Gtk.ResponseType.CANCEL,
-    Gtk.STOCK_SAVE,
-    Gtk.ResponseType.OK)
-    file_chooser_dialog.run()
-    filename = file_chooser_dialog.get_filename()
-    print(filename)
+    try:
+        print(button.get_label())
+        file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
+            parent=None, 
+            action=Gtk.FileChooserAction.SAVE)
+        file_chooser_dialog.add_buttons(
+        Gtk.STOCK_CANCEL,
+        Gtk.ResponseType.CANCEL,
+        Gtk.STOCK_SAVE,
+        Gtk.ResponseType.OK)
+        file_chooser_dialog.run()
+        filename = file_chooser_dialog.get_filename()
+        print(filename)
+    except:
+        traceback.print_exc()
     
 def load(filename):
-    print("loading:", filename)
-    with open(filename, "r") as file:
-        text = file.read()
-        code_editor.get_buffer().set_text(text)
+    try:
+        print("loading:", filename)
+        with open(filename, "r") as file:
+            text = file.read()
+            code_editor.get_buffer().set_text(text)
+    except:
+        traceback.print_exc()
 
 def on_open_button_clicked(button):
-    print(button.get_label())
-    file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
-        parent=None, 
-        action=Gtk.FileChooserAction.OPEN)
-    file_chooser_dialog.add_buttons(
-    Gtk.STOCK_CANCEL,
-    Gtk.ResponseType.CANCEL,
-    Gtk.STOCK_SAVE,
-    Gtk.ResponseType.OK)
-    file_chooser_dialog.run()
-    filename = file_chooser_dialog.get_filename()
-    load(filename)
-    file_chooser_dialog.close()
+    try:
+        print(button.get_label())
+        file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
+            parent=None, 
+            action=Gtk.FileChooserAction.OPEN)
+        file_chooser_dialog.add_buttons(
+        Gtk.STOCK_CANCEL,
+        Gtk.ResponseType.CANCEL,
+        Gtk.STOCK_SAVE,
+        Gtk.ResponseType.OK)
+        file_chooser_dialog.run()
+        filename = file_chooser_dialog.get_filename()
+        load(filename)
+        file_chooser_dialog.close()
+    except:
+        traceback.print_exc()
         
 def on_save_button_clicked(button):
-    print(button.get_label())
-    buffer = code_editor.get_buffer()
-    piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
-    print("piece:")
-    print(piece)
-    with open(filename, "w") as file:
-        file.write(piece)
+    try:
+        print(button.get_label())
+        buffer = code_editor.get_buffer()
+        piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
+        print("piece:")
+        print(piece)
+        with open(filename, "w") as file:
+            file.write(piece)
+    except:
+        traceback.print_exc()
     
 def on_save_as_button_clicked(button):
-    print(button.get_label())
-    file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
-        parent=None, 
-        action=Gtk.FileChooserAction.SAVE)
-    file_chooser_dialog.add_buttons(
-    Gtk.STOCK_CANCEL,
-    Gtk.ResponseType.CANCEL,
-    Gtk.STOCK_SAVE,
-    Gtk.ResponseType.OK)
-    file_chooser_dialog.run()
-    print(file_chooser_dialog.get_filename())
-    buffer = code_editor.get_buffer()
-    piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
-    print("piece:")
-    print(piece)
-    with open(filename, "w") as file:
-        file.write(piece)
+    try:
+        print(button.get_label())
+        file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
+            parent=None, 
+            action=Gtk.FileChooserAction.SAVE)
+        file_chooser_dialog.add_buttons(
+        Gtk.STOCK_CANCEL,
+        Gtk.ResponseType.CANCEL,
+        Gtk.STOCK_SAVE,
+        Gtk.ResponseType.OK)
+        file_chooser_dialog.run()
+        print(file_chooser_dialog.get_filename())
+        buffer = code_editor.get_buffer()
+        piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
+        print("piece:")
+        print(piece)
+        with open(filename, "w") as file:
+            file.write(piece)
+    except:
+        traceback.print_exc()
 
 def on_play_audio_button_clicked(button):
-    print(button.get_label())
-    buffer = code_editor.get_buffer()
-    piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
-    print("piece:")
-    print(piece)
-    if piece_is_csound():
-        csound.compileCsdText(piece)
-        csound.start()
-        # Try to keep the UI responsive during performance.
-        while csound.performBuffer() == 0:
-            Gtk.main_iteration_do(False)
-            message_count = csound.messageCnt()
-            for message_index in range(message_count):
-                message = csound.firstMessage()
-                csound.popFirstMessage()
-                sys.stdout.write(message)
-        csound.stop()
-        csound.cleanup()
-        csound.reset()
+    try:
+        print(button.get_label())
+        buffer = code_editor.get_buffer()
+        piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
+        print("piece:")
+        print(piece)
+        glade_file = "xanadu.glade"
+        if os.path.exists(glade_file) == True:
+            with open(glade_file, "r") as file:
+                glade_xml = file.read()
+                print("glade:", glade_xml)
+                controls_window = builder.get_object("controls_window")
+                print("controls_window:", controls_window)
+                controls_layout.add(controls_window)
+        else:
+            print("Glade file not found, not defining controls.")
+        if piece_is_csound():
+            # Change output target here.
+            csound.createMessageBuffer(False)
+            csound.compileCsdText(piece)
+            csound.start()
+            # Try to keep the UI responsive during performance.
+            while csound.performBuffer() == 0:
+                Gtk.main_iteration_do(False)
+                message_count = csound.messageCnt()
+                for message_index in range(message_count):
+                    message = csound.firstMessage()
+                    csound.popFirstMessage()
+                    sys.stdout.write(message)
+                    messages_text_buffer.insert(messages_text_buffer.get_end_iter(), message, -1)
+                    end_iter = messages_text_buffer.get_end_iter()
+                    messages_text_view.scroll_to_iter(end_iter, 0, False, .5, .5)
+                    Gtk.main_iteration_do(False)
+            csound.stop()
+            csound.cleanup()
+            csound.reset()
+            # Post-process and edit here.
+    except:
+        traceback.print_exc()
+        
+def render():
+    pass
+    
+def post_process():
+    pass
     
 def on_render_soundfile_button_clicked(button):
-    print(button.get_label())
-    buffer = code_editor.get_buffer()
-    piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
-    print("piece:")
-    print(piece)
-    glade_file = "xanadu.glade"
-    with open(glade_file, "r") as file:
-        glade_xml = file.read()
-        print("glade:", glade_xml)
-        controls_window = builder.get_object("controls_window")
-        print("controls_window:", controls_window)
-        controls_layout.add(controls_window)
-    if piece_is_csound():
-        # Change output target here.
-        csound.createMessageBuffer(False)
-        csound.compileCsdText(piece)
-        csound.start()
-        # Try to keep the UI responsive during performance.
-        while csound.performBuffer() == 0:
-            Gtk.main_iteration_do(False)
-            message_count = csound.messageCnt()
-            for message_index in range(message_count):
-                message = csound.firstMessage()
-                csound.popFirstMessage()
-                sys.stdout.write(message)
-                messages_text_buffer.insert(messages_text_buffer.get_end_iter(), message, -1)
-                #Gtk.main_iteration_do(False)
-                end_iter = messages_text_buffer.get_end_iter()
-                messages_text_view.scroll_to_iter(end_iter, 0, False, .5, .5)
+    try:
+        print(button.get_label())
+        buffer = code_editor.get_buffer()
+        piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
+        print("piece:")
+        print(piece)
+        glade_file = "xanadu.glade"
+        if os.path.exists(glade_file) == True:
+            with open(glade_file, "r") as file:
+                glade_xml = file.read()
+                print("glade:", glade_xml)
+                controls_window = builder.get_object("controls_window")
+                print("controls_window:", controls_window)
+                controls_layout.add(controls_window)
+        else:
+            print("Glade file not found, not defining controls.")
+        if piece_is_csound():
+            # Change output target here.
+            csound.createMessageBuffer(False)
+            csound.compileCsdText(piece)
+            csound.start()
+            # Try to keep the UI responsive during performance.
+            while csound.performBuffer() == 0:
                 Gtk.main_iteration_do(False)
-        csound.stop()
-        csound.cleanup()
-        csound.reset()
-        # Post-process and edit here.
+                message_count = csound.messageCnt()
+                for message_index in range(message_count):
+                    message = csound.firstMessage()
+                    csound.popFirstMessage()
+                    sys.stdout.write(message)
+                    messages_text_buffer.insert(messages_text_buffer.get_end_iter(), message, -1)
+                    end_iter = messages_text_buffer.get_end_iter()
+                    messages_text_view.scroll_to_iter(end_iter, 0, False, .5, .5)
+                    Gtk.main_iteration_do(False)
+            csound.stop()
+            csound.cleanup()
+            csound.reset()
+            # Post-process and edit here.
+    except:
+        traceback.print_exc()
      
 def on_stop_button_clicked(button):
-    print(button.get_label())
-    if piece_is_csound():
-        print("Stopping csound...")
-        csound.stop()
-        csound.cleanup()
-        csound.reset()
-        print("Csound has been stopped and reset.")
+    try:
+        print(button.get_label())
+        if piece_is_csound():
+            print("Stopping csound...")
+            csound.stop()
+            csound.cleanup()
+            csound.reset()
+            print("Csound has been stopped and reset.")
+    except:
+        traceback.print_exc()
 
 def on_control_change(control):
     print("on_control_change", control)

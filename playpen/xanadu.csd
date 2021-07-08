@@ -1,6 +1,6 @@
- <CsoundSynthesizer>
+<CsoundSynthesizer>
 <CsOptions>
--RWdf --sample-accurate -oxanadu-high-resolution.wav
+-RWdf --sample-accurate -odac
 </CsOptions>
 <CsInstruments>
 sr          =           96000
