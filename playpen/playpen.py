@@ -19,10 +19,13 @@ piece.normalized.wav will then be opened for inspection in Audacity.
 
 All user-defined Python graphical user interfaces are stored in a glade file 
 with the same filename, i.e. my_piece.py goes with my_piece.glade, and the 
-widget tree thus defined is rooted in the controls_layout widget. The user 
-need write no code for handling UI events; the convention is that all UI 
-events are handled in a single function that dispatches all widget event 
-values to a Csound control channel with the same name as the widget.
+widget tree thus defined is re-parented to the controls_layout widget. The 
+user need write no code for handling UI events; the convention is that all UI 
+events from the user-defined controls are handled in a single function that 
+dispatches all widget event values to a Csound control channel with the same 
+name as the widget. 
+
+
 
 '''
 
@@ -56,6 +59,13 @@ builder.add_from_file("playpen.glade")
 filename = ""
 piece = ""
 
+def print_(text):
+    print(text)
+    messages_text_buffer.insert(messages_text_buffer.get_end_iter(), text + "\n", -1)
+    end_iter = messages_text_buffer.get_end_iter()
+    messages_text_view.scroll_to_iter(end_iter, 0, False, .5, .5)
+    Gtk.main_iteration_do(False)
+    
 def piece_is_csound():
     if filename.lower().endswith('.csd'):
         return True
@@ -76,7 +86,7 @@ def piece_is_html():
     
 def on_new_button_clicked(button):
     try:
-        print(button.get_label())
+        print_(button.get_label())
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
             parent=None, 
             action=Gtk.FileChooserAction.SAVE)
@@ -87,22 +97,64 @@ def on_new_button_clicked(button):
         Gtk.ResponseType.OK)
         file_chooser_dialog.run()
         filename = file_chooser_dialog.get_filename()
-        print(filename)
+        print_(filename)
     except:
-        traceback.print_exc()
+        print_(traceback.format_exc())
     
 def load(filename):
     try:
-        print("loading:", filename)
+        print_("loading:" + filename)
         with open(filename, "r") as file:
             text = file.read()
             code_editor.get_buffer().set_text(text)
+        load_glade("xanadu.glade")
     except:
-        traceback.print_exc()
+        print_(traceback.format_exc())
+    
+def connect_controls(container, handler):
+    children = container.get_children()
+    for child in children:
+        print(child)
+        try:
+            child.connect("value-changed", handler)
+            print("Connected {} value-changed to {}.".format(child, handler))
+        except:
+            pass
+        try:
+            child.connect("changed", handler)
+            print("Connected {} changed to {}.".format(child, handler))
+        except:
+            pass
+        try:
+            child.connect("clicked", handler)
+            print("Connected {} clicked to {}.".format(child, handler))
+        except:
+            pass
+        if issubclass(type(child), Gtk.Container):
+            connect_controls(child, handler)
+            
+def load_glade(glade_file):
+    if os.path.exists(glade_file) == True:
+        try:
+            with open(glade_file, "r") as file:
+                glade_xml = file.read()
+                print("glade:", glade_xml)
+                result = builder.add_from_string(glade_xml)
+                if result == 0:
+                    print_("Failed to parse {} file.".format(glade_file))
+                user_controls_layout = builder.get_object("user_controls_layout")
+                print_("user_controls_layout: {}".format(user_controls_layout))
+                controls_layout.add(user_controls_layout)
+                connect_controls(controls_layout, on_control_change)
+        except:
+            print_("Error: failed to load user-defined controls layout.")
+            print_(traceback.format_exc())
+    else:
+        print_("Glade file not found, not defining controls.")
 
 def on_open_button_clicked(button):
     try:
-        print(button.get_label())
+        print_(button.get_label())
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
             parent=None, 
             action=Gtk.FileChooserAction.OPEN)
@@ -116,11 +168,11 @@ def on_open_button_clicked(button):
         load(filename)
         file_chooser_dialog.close()
     except:
-        traceback.print_exc()
+        print_(traceback.format_exc())
         
 def on_save_button_clicked(button):
     try:
-        print(button.get_label())
+        print_(button.get_label())
         buffer = code_editor.get_buffer()
         piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
         print("piece:")
@@ -128,11 +180,11 @@ def on_save_button_clicked(button):
         with open(filename, "w") as file:
             file.write(piece)
     except:
-        traceback.print_exc()
+        print_(traceback.format_exc())
     
 def on_save_as_button_clicked(button):
     try:
-        print(button.get_label())
+        print_(button.get_label())
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
             parent=None, 
             action=Gtk.FileChooserAction.SAVE)
@@ -142,7 +194,7 @@ def on_save_as_button_clicked(button):
         Gtk.STOCK_SAVE,
         Gtk.ResponseType.OK)
         file_chooser_dialog.run()
-        print(file_chooser_dialog.get_filename())
+        print_(file_chooser_dialog.get_filename())
         buffer = code_editor.get_buffer()
         piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
         print("piece:")
@@ -150,25 +202,16 @@ def on_save_as_button_clicked(button):
         with open(filename, "w") as file:
             file.write(piece)
     except:
-        traceback.print_exc()
+        print_(traceback.format_exc())
 
 def on_play_audio_button_clicked(button):
     try:
-        print(button.get_label())
+        print_(button.get_label())
         buffer = code_editor.get_buffer()
         piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
         print("piece:")
         print(piece)
-        glade_file = "xanadu.glade"
-        if os.path.exists(glade_file) == True:
-            with open(glade_file, "r") as file:
-                glade_xml = file.read()
-                print("glade:", glade_xml)
-                controls_window = builder.get_object("controls_window")
-                print("controls_window:", controls_window)
-                controls_layout.add(controls_window)
-        else:
-            print("Glade file not found, not defining controls.")
+        load_glade("xanadu.glade")
         if piece_is_csound():
             # Change output target here.
             csound.createMessageBuffer(False)
@@ -191,7 +234,7 @@ def on_play_audio_button_clicked(button):
             csound.reset()
             # Post-process and edit here.
     except:
-        traceback.print_exc()
+        print_(traceback.format_exc())
         
 def render():
     pass
@@ -201,21 +244,12 @@ def post_process():
     
 def on_render_soundfile_button_clicked(button):
     try:
-        print(button.get_label())
+        print_(button.get_label())
         buffer = code_editor.get_buffer()
         piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
         print("piece:")
         print(piece)
-        glade_file = "xanadu.glade"
-        if os.path.exists(glade_file) == True:
-            with open(glade_file, "r") as file:
-                glade_xml = file.read()
-                print("glade:", glade_xml)
-                controls_window = builder.get_object("controls_window")
-                print("controls_window:", controls_window)
-                controls_layout.add(controls_window)
-        else:
-            print("Glade file not found, not defining controls.")
+        load_glade("xanadu.glade")
         if piece_is_csound():
             # Change output target here.
             csound.createMessageBuffer(False)
@@ -238,25 +272,42 @@ def on_render_soundfile_button_clicked(button):
             csound.reset()
             # Post-process and edit here.
     except:
-        traceback.print_exc()
+        print_(traceback.format_exc())
      
 def on_stop_button_clicked(button):
     try:
-        print(button.get_label())
+        print_(button.get_label())
         if piece_is_csound():
-            print("Stopping csound...")
+            print_("Stopping csound...")
             csound.stop()
             csound.cleanup()
             csound.reset()
-            print("Csound has been stopped and reset.")
+            print_("Csound has been stopped and reset.")
     except:
-        traceback.print_exc()
-
+        print_(traceback.format_exc())
+        
+def get_widget_value(widget):
+    try:
+        widget.get_value
+        return widget.get_value()
+    except:
+        pass
+    try:
+        widget.get_text
+        return widget.get_text()
+    except:
+        pass
+    return None
+        
 def on_control_change(control):
-    print("on_control_change", control)
+    name = control.get_name()
+    value = get_widget_value(control)
+    print_("on_control_change: {}: {}".format(name, value))
+    csound.setControlChannel(control.get_name(), value)
+    # setStringChannel
     
 def on_destroy(source):
-    print("on_destroy: source:", source)
+    print_("on_destroy: source: {}".format(source))
     csound.stop()
     csound.cleanup()
     csound.reset()

@@ -1,10 +1,10 @@
 <CsoundSynthesizer>
 <CsOptions>
--RWdf --sample-accurate -odac
+-RWdf --sample-accurate -odac:plughw:2,0
 </CsOptions>
 <CsInstruments>
 sr          =           96000
-ksmps       =           1
+ksmps       =           100
 nchnls      =           2
 ;--------------------------------------------------------
 ;Instrument 1 : plucked strings chorused left/right and
