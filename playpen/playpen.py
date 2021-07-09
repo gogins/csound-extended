@@ -49,9 +49,6 @@ metadata_license=settings.get_value("metadata", "license")
 global csound_audio_output
 csound_audio_output=settings.get_value("csound", "audio-output")
 print("csound_audio_output: " + csound_audio_output)
-csound_audio_input=settings.get_value("csound", "audio-input")
-csound_midi_output=settings.get_value("csound", "midi-output")
-csound_midi_input=settings.get_value("csound", "midi-input")
 soundfile_editor=settings.get_value("playpen", "soundfile-editor")
 gnome_theme=settings.get_value("playpen", "gnome-theme")
 
@@ -308,16 +305,17 @@ def post_process():
 
         directory, basename = os.path.split(filename)
         rootname = os.path.splitext(basename)[0].split('.')[0]
+        soundfile_name = rootname + ".wav"
         title = rootname.replace("-", " ").replace("_", " ")
-        label = '%s -- %s' % (author, title)
-        master_filename = '%s.normalized.wav' % label
+        label = '{} -- {}'.format(author, title).replace(" ", "_")
+        master_filename = '{}.normalized.wav'.format(label)
         spectrogram_filename = '%s.png' % label
         cd_quality_filename = '%s.cd.wav' % label
         mp3_filename = '%s.mp3' % label
         mp4_filename = '%s.mp4' % label
         flac_filename = '%s.flac' % label
-        print_('Original file:          ' + filename)
         print_('Basename:               ' + basename)
+        print_('Original soundfile:     ' + soundfile_name)
         print_('Author:                 ' + author)
         print_('Title:                  ' + title)
         print_('Year:                   ' + year)
@@ -345,26 +343,26 @@ def post_process():
         str_artist             = author
         str_date               = year
         str_license            = license
-        sox_normalize_command = '''sox -S "%s" "%s" gain -n -3''' % (filepath, master_filename + 'untagged.wav')
+        sox_normalize_command = '''sox -S "%s" "%s" gain -n -3''' % (soundfile_name, master_filename + 'untagged.wav')
         print_('sox_normalize command:  ' + sox_normalize_command)
         os.system(sox_normalize_command)
         tag_wav_command = '''sndfile-metadata-set "%s" --bext-description "%s" --bext-originator "%s" --bext-orig-ref "%s" --str-comment "%s" --str-title "%s" --str-copyright "%s" --str-artist  "%s" --str-date "%s" --str-license "%s" "%s"''' % (master_filename + 'untagged.wav', bext_description, bext_originator, bext_orig_ref, str_comment, str_title, str_copyright, str_artist, str_date, str_license, master_filename)
-        print_('tag_wav_command:        ', tag_wav_command)
+        print_('tag_wav_command:        ' + tag_wav_command)
         os.system(tag_wav_command)
         sox_spectrogram_command = '''sox -S "%s" -n spectrogram -o "%s" -t"%s" -c"%s"''' % (master_filename, spectrogram_filename, label, str_copyright + ' (%s' % publisher)
-        print_('sox_spectrogram_command:', sox_spectrogram_command)
+        print_('sox_spectrogram_command:' + sox_spectrogram_command)
         os.system(sox_spectrogram_command)
         sox_cd_command = '''sox -S "%s" -b 16 -r 44100 "%s"''' % (master_filename, cd_quality_filename + 'untagged.wav')
-        print_('sox_cd_command:         ', sox_cd_command)
+        print_('sox_cd_command:         ' + sox_cd_command)
         os.system(sox_cd_command)
         tag_wav_command = '''sndfile-metadata-set "%s" --bext-description "%s" --bext-originator "%s" --bext-orig-ref "%s" --str-comment "%s" --str-title "%s" --str-copyright "%s" --str-artist  "%s" --str-date "%s" --str-license "%s" "%s"''' % (cd_quality_filename + 'untagged.wav', bext_description, bext_originator, bext_orig_ref, str_comment, str_title, str_copyright, str_artist, str_date, str_license, cd_quality_filename)
-        print_('tag_wav_command:        ', tag_wav_command)
+        print_('tag_wav_command:        ' + tag_wav_command)
         os.system(tag_wav_command)
         mp3_command = '''lame --add-id3v2 --tt "%s" --ta "%s" --ty "%s" --tn "%s" --tg "%s"  "%s" "%s"''' % (title, "Michael Gogins", year, notes, "Electroacoustic", master_filename, mp3_filename)
-        print_('mp3_command:            ', mp3_command)
+        print_('mp3_command:            ' + mp3_command)
         os.system(mp3_command)
         sox_flac_command = '''sox -S "%s" "%s"''' % (master_filename, flac_filename)
-        print_('sox_flac_command:       ', sox_flac_command)
+        print_('sox_flac_command:       ' + sox_flac_command)
         os.system(sox_flac_command)
         mp4_command = '''%s -r 1 -i "%s" -i "%s" -codec:a aac -strict -2 -b:a 384k -c:v libx264 -b:v 500k "%s"''' % ('ffmpeg', os.path.join(cwd, spectrogram_filename), os.path.join(cwd, master_filename), os.path.join(cwd, mp4_filename))
         mp4_metadata =  '-metadata title="%s" ' % title
@@ -376,10 +374,10 @@ def post_process():
         mp4_metadata += '-metadata publisher="%s" ' % publisher
         mp4_command = '''"%s" -y -loop 1 -framerate 2 -i "%s" -i "%s" -c:v libx264 -preset medium -tune stillimage -crf 18 -codec:a aac -strict -2 -b:a 384k -r:a 48000 -shortest -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" %s "%s"''' % ('ffmpeg', os.path.join(cwd, spectrogram_filename), os.path.join(cwd, master_filename), mp4_metadata, os.path.join(cwd, mp4_filename))
         mp4_command = mp4_command.replace('\\', '/')
-        print_('mp4_command:            ', mp4_command)
+        print_('mp4_command:            ' + mp4_command)
         os.system(mp4_command)
         os.system('del *wavuntagged.wav')
-        os.system('audacity "%s"' % master_filename)
+        os.system('{} {}'.format(soundfile_editor, master_filename))
         print_()
     except:
         print_(traceback.format_exc())
@@ -401,10 +399,6 @@ def patch_csound_options(csd, output="soundfile"):
     csd_options = csd[options_start_index:options_end_index]
     csd_options = csd_options.replace(" -o ", " -o")
     csd_options = csd_options.replace(" --output ", " -output")
-    csd_options = csd_options.replace(" -i ", " -i")
-    csd_options = csd_options.replace(" -M ", " -M")
-    csd_options = csd_options.replace(" --midi-device ", " --midi-device")
-    csd_options = csd_options.replace(" -Q ", " -Q")
     print("csound_options: {}".format(csd_options))
     csd_bottom = csd[options_end_index:-1]
     csd_options_tokens = csd_options.split()
@@ -429,7 +423,6 @@ def patch_csound_options(csd, output="soundfile"):
                 csd_options_tokens[i] = token
     csd_options = " ".join(csd_options_tokens)
     csd = "".join([csd_top, "\n", csd_options, "\n", csd_bottom])
-    print(csd)
     return csd
     
 def on_render_soundfile_button_clicked(button):
@@ -440,9 +433,7 @@ def on_render_soundfile_button_clicked(button):
         save_piece()
         load_glade(filename)
         if piece_is_csound():
-            # Change output target here.
             csound.createMessageBuffer(False)
-            # Patch the csound options.
             csd = patch_csound_options(piece, output="soundfile")
             csound.compileCsdText(csd)
             csound.start()

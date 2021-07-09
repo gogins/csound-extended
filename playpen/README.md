@@ -69,6 +69,9 @@ operating systems.
    your local filesystem. Change to the `csound-extended/playpen` directory. 
    Execute `python3 playpen.py` and then open and run the `drone.py` example 
    to check that everything is working.
+9. sox
+10.sndfile-programs
+
 
 ## User's Guide
 

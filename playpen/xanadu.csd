@@ -1,6 +1,6 @@
 <CsoundSynthesizer>
 <CsOptions>
--RWdf --sample-accurate -o dac:plughw:2,0
+-RWdf --sample-accurate -o dac:xxx:2,0
 </CsOptions>
 <CsInstruments>
 sr          =           96000
