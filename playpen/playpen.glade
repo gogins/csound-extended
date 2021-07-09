@@ -79,6 +79,18 @@
               </packing>
             </child>
             <child>
+              <object class="GtkToolButton" id="edit_gui_button">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Edit GUI...</property>
+                <property name="use_underline">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkToolButton" id="play_audio_button">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>

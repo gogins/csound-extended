@@ -3,6 +3,7 @@
 import math
 import os.path
 import random
+import subprocess
 import sys
 import time
 import traceback
@@ -120,6 +121,11 @@ def connect_controls(container, handler):
     for child in children:
         print(child)
         try:
+            child.connect("changed", handler)
+            print("Connected {} changed to {}.".format(child, handler))
+        except:
+            pass
+        try:
             child.connect("value-changed", handler)
             print("Connected {} value-changed to {}.".format(child, handler))
         except:
@@ -130,7 +136,7 @@ def connect_controls(container, handler):
         except:
             pass
         try:
-            child.connect("edit-done", handler)
+            child.connect("activate", handler)
             print("Connected {} clicked to {}.".format(child, handler))
         except:
             pass
@@ -281,6 +287,20 @@ def on_render_soundfile_button_clicked(button):
             # Post-process and edit here.
     except:
         print_(traceback.format_exc())
+        
+def on_edit_gui_button_clicked(button):
+    try:
+        print_(button.get_label())
+        basename = os.path.basename(filename)
+        filename_ = os.path.splitext(basename)[0]
+        glade_file = filename_ + ".glade"
+        print_("glade_file: {}".format(glade_file))    
+        subprocess.run("glade {}".format(glade_file), shell=True)
+        print_("Finished editing {}.".format(glade_file))
+        load_glade(glade_file)
+    except:
+        print_(traceback.format_exc())
+    
      
 def on_stop_button_clicked(button):
     try:
@@ -348,6 +368,8 @@ save_button = builder.get_object("save_button")
 save_button.connect("clicked", on_save_button_clicked)
 save_as_button = builder.get_object("save_as_button")
 save_as_button.connect("clicked", on_save_as_button_clicked)
+edit_gui_button = builder.get_object("edit_gui_button")
+edit_gui_button.connect("clicked", on_edit_gui_button_clicked)
 play_audio_button = builder.get_object("play_audio_button")
 play_audio_button.connect("clicked", on_play_audio_button_clicked)
 render_soundfile_button = builder.get_object("render_soundfile_button")
