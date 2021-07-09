@@ -197,6 +197,8 @@
                     <property name="can_focus">False</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
+                    <property name="hscroll_policy">natural</property>
+                    <property name="vscroll_policy">natural</property>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -300,6 +302,9 @@
                     <property name="vscroll_policy">natural</property>
                     <property name="accepts_tab">False</property>
                     <property name="monospace">True</property>
+                    <style>
+                      <class name="color=green;"/>
+                    </style>
                   </object>
                 </child>
               </object>

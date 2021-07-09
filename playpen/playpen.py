@@ -59,6 +59,9 @@ builder.add_from_file("playpen.glade")
 filename = ""
 piece = ""
 
+controls_template = '''
+'''
+
 def print_(text):
     print(text)
     messages_text_buffer.insert(messages_text_buffer.get_end_iter(), text + "\n", -1)
@@ -98,6 +101,7 @@ def on_new_button_clicked(button):
         file_chooser_dialog.run()
         filename = file_chooser_dialog.get_filename()
         print_(filename)
+        # TODO: Create template glade file.
     except:
         print_(traceback.format_exc())
     
@@ -107,7 +111,7 @@ def load(filename):
         with open(filename, "r") as file:
             text = file.read()
             code_editor.get_buffer().set_text(text)
-        load_glade("xanadu.glade")
+        load_glade(filename)
     except:
         print_(traceback.format_exc())
     
@@ -121,19 +125,23 @@ def connect_controls(container, handler):
         except:
             pass
         try:
-            child.connect("changed", handler)
-            print("Connected {} changed to {}.".format(child, handler))
+            child.connect("clicked", handler)
+            print("Connected {} clicked to {}.".format(child, handler))
         except:
             pass
         try:
-            child.connect("clicked", handler)
+            child.connect("edit-done", handler)
             print("Connected {} clicked to {}.".format(child, handler))
         except:
             pass
         if issubclass(type(child), Gtk.Container):
             connect_controls(child, handler)
             
-def load_glade(glade_file):
+def load_glade(filename):
+    basename = os.path.basename(filename)
+    filename_ = os.path.splitext(basename)[0]
+    glade_file = filename_ + ".glade"
+    print_("glade_file: {}".format(glade_file))
     if os.path.exists(glade_file) == True:
         try:
             with open(glade_file, "r") as file:
@@ -211,7 +219,7 @@ def on_play_audio_button_clicked(button):
         piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
         print("piece:")
         print(piece)
-        load_glade("xanadu.glade")
+        load_glade(filename)
         if piece_is_csound():
             # Change output target here.
             csound.createMessageBuffer(False)
@@ -249,7 +257,7 @@ def on_render_soundfile_button_clicked(button):
         piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
         print("piece:")
         print(piece)
-        load_glade("xanadu.glade")
+        load_glade(filename)
         if piece_is_csound():
             # Change output target here.
             csound.createMessageBuffer(False)
@@ -287,6 +295,7 @@ def on_stop_button_clicked(button):
         print_(traceback.format_exc())
         
 def get_widget_value(widget):
+    print(type(widget))
     try:
         widget.get_value
         return widget.get_value()
@@ -303,7 +312,10 @@ def on_control_change(control):
     name = control.get_name()
     value = get_widget_value(control)
     print_("on_control_change: {}: {}".format(name, value))
-    csound.setControlChannel(control.get_name(), value)
+    if type(value) != str:
+        csound.setControlChannel(control.get_name(), value)
+    else:
+        csound.setStringChannel(control.get_name(), value)
     # setStringChannel
     
 def on_destroy(source):
