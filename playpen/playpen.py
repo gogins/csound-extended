@@ -272,6 +272,7 @@ def on_play_audio_button_clicked(button):
             print("Patched piece:")
             print(csd)
             csound.compileCsdText(csd)
+            print("Starting csound...")
             csound.start()
             # Try to keep the UI responsive during performance.
             while csound.performBuffer() == 0:
@@ -427,7 +428,7 @@ def patch_csound_options(csd, output="soundfile"):
                 print("new token: " + token)
                 csd_options_tokens[i] = token
     csd_options = " ".join(csd_options_tokens)
-    csd = "".join([csd_top, csd_options, csd_bottom])
+    csd = "".join([csd_top, "\n", csd_options, "\n", csd_bottom])
     print(csd)
     return csd
     
