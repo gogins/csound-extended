@@ -33,14 +33,35 @@ name as the widget.
 '''
 
 import gi
+gi.require_version('Gdk', '3.0')
 from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import GLib
+
+# Obtain user settings.
+settings = GLib.KeyFile.new()
+GLib.KeyFile.load_from_file(settings, "playpen.ini", GLib.KeyFileFlags.NONE)
+metadata_author=settings.get_value("metadata", "author")
+metadata_publisher=settings.get_value("metadata", "publisher")
+metadata_copyright=settings.get_value("metadata", "copyright")
+metadata_notes=settings.get_value("metadata", "notes")
+metadata_license=settings.get_value("metadata", "license")
+global csound_audio_output
+csound_audio_output=settings.get_value("csound", "audio-output")
+print("csound_audio_output: " + csound_audio_output)
+csound_audio_input=settings.get_value("csound", "audio-input")
+csound_midi_output=settings.get_value("csound", "midi-output")
+csound_midi_input=settings.get_value("csound", "midi-input")
+soundfile_editor=settings.get_value("playpen", "soundfile-editor")
+gnome_theme=settings.get_value("playpen", "gnome-theme")
+
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk 
-settings = Gtk.Settings.get_default()
-settings.set_property("gtk-theme-name", "Yaru")
-settings.set_property("gtk-application-prefer-dark-theme", True)
+
+# Override global Gnome settings with playpen.ini values.
+gnome_settings = Gtk.Settings.get_default()
+gnome_settings.set_property("gtk-theme-name", gnome_theme)
+
 ## gi.require_version("Gst", "1.0")
 ## from gi.repository import Gst 
 gi.require_version("WebKit2", "4.0")
@@ -59,7 +80,9 @@ print("title:", title)
 builder = Gtk.Builder()
 builder.add_from_file("playpen.glade")
 
+global filename
 filename = ""
+global piece
 piece = ""
 
 glade_controls_template = '''
@@ -118,8 +141,8 @@ def load(filename):
     try:
         print_("loading:" + filename)
         with open(filename, "r") as file:
-            text = file.read()
-            code_editor.get_buffer().set_text(text)
+            piece = file.read()
+            code_editor.get_buffer().set_text(piece)
         load_glade(filename)
     except:
         print_(traceback.format_exc())
@@ -164,7 +187,7 @@ def load_glade(filename):
         try:
             with open(glade_file, "r") as file:
                 glade_xml = file.read()
-                print("glade:", glade_xml)
+                # print("glade:", glade_xml)
                 result = builder.add_from_string(glade_xml)
                 if result == 0:
                     print_("Failed to parse {} file.".format(glade_file))
@@ -196,19 +219,26 @@ def on_open_button_clicked(button):
     except:
         print_(traceback.format_exc())
         
-def on_save_button_clicked(button):
+def save_piece():
+    global filename
+    global piece
     try:
-        print_(button.get_label())
         buffer = code_editor.get_buffer()
         piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
-        print("piece:")
-        print(piece)
         with open(filename, "w") as file:
             file.write(piece)
     except:
         print_(traceback.format_exc())
+        
+def on_save_button_clicked(button):
+    try:
+        print_(button.get_label())
+        save_piece()
+    except:
+        print_(traceback.format_exc())
     
 def on_save_as_button_clicked(button):
+    global filename
     try:
         print_(button.get_label())
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
@@ -220,28 +250,28 @@ def on_save_as_button_clicked(button):
         Gtk.STOCK_SAVE,
         Gtk.ResponseType.OK)
         file_chooser_dialog.run()
-        print_(file_chooser_dialog.get_filename())
-        buffer = code_editor.get_buffer()
-        piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
-        print("piece:")
-        print(piece)
-        with open(filename, "w") as file:
-            file.write(piece)
+        filename = file_chooser_dialog.get_filename()
+        save_piece()
     except:
         print_(traceback.format_exc())
 
 def on_play_audio_button_clicked(button):
+    global filename
+    global piece
     try:
         print_(button.get_label())
-        buffer = code_editor.get_buffer()
-        piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
-        print("piece:")
-        print(piece)
+        save_piece()
         load_glade(filename)
         if piece_is_csound():
             # Change output target here.
             csound.createMessageBuffer(False)
-            csound.compileCsdText(piece)
+            # Patch the csound options.
+            print("Piece:")
+            print(piece)
+            csd = patch_csound_options(piece, output="realtime")
+            print("Patched piece:")
+            print(csd)
+            csound.compileCsdText(csd)
             csound.start()
             # Try to keep the UI responsive during performance.
             while csound.performBuffer() == 0:
@@ -258,7 +288,6 @@ def on_play_audio_button_clicked(button):
             csound.stop()
             csound.cleanup()
             csound.reset()
-            post_process()
     except:
         print_(traceback.format_exc())
         
@@ -269,15 +298,14 @@ def post_process():
     try:
         print_("Post-processing...")
         cwd = os.getcwd()
-        print_('cwd:                    ', cwd)
-        filepath = sys.argv[1]
+        print_('cwd:                    ' + cwd)
         author = 'Michael Gogins'
         year = '2019'
         license = 'ASCAP'
         publisher = 'Irreducible Productions, ASCAP'
         notes = 'Electroacoustic Music'
 
-        directory, basename = os.path.split(filepath)
+        directory, basename = os.path.split(filename)
         rootname = os.path.splitext(basename)[0].split('.')[0]
         title = rootname.replace("-", " ").replace("_", " ")
         label = '%s -- %s' % (author, title)
@@ -287,22 +315,22 @@ def post_process():
         mp3_filename = '%s.mp3' % label
         mp4_filename = '%s.mp4' % label
         flac_filename = '%s.flac' % label
-        print_('Original file:          ', filepath)
-        print_('Basename:               ', basename)
-        print_('Author:                 ', author)
-        print_('Title:                  ', title)
-        print_('Year:                   ', year)
+        print_('Original file:          ' + filename)
+        print_('Basename:               ' + basename)
+        print_('Author:                 ' + author)
+        print_('Title:                  ' + title)
+        print_('Year:                   ' + year)
         str_copyright          = 'Copyright %s by %s' % (year, author)
-        print_('Copyright:              ', str_copyright)
-        print_('Licence:                ', license)
-        print_('Publisher:              ', publisher)
-        print_('Notes:                  ', notes)
-        print_('Master filename:        ', master_filename)
-        print_('Spectrogram filename:   ', spectrogram_filename)
-        print_('CD quality filename:    ', cd_quality_filename)
-        print_('MP3 filename:           ', mp3_filename)
-        print_('MP4 filename:           ', mp4_filename)
-        print_('FLAC filename:          ', flac_filename)
+        print_('Copyright:              ' + str_copyright)
+        print_('Licence:                ' + license)
+        print_('Publisher:              ' + publisher)
+        print_('Notes:                  ' + notes)
+        print_('Master filename:        ' + master_filename)
+        print_('Spectrogram filename:   ' + spectrogram_filename)
+        print_('CD quality filename:    ' + cd_quality_filename)
+        print_('MP3 filename:           ' + mp3_filename)
+        print_('MP4 filename:           ' + mp4_filename)
+        print_('FLAC filename:          ' + flac_filename)
         bext_description       = notes
         bext_originator        = author
         bext_orig_ref          = basename
@@ -317,7 +345,7 @@ def post_process():
         str_date               = year
         str_license            = license
         sox_normalize_command = '''sox -S "%s" "%s" gain -n -3''' % (filepath, master_filename + 'untagged.wav')
-        print_('sox_normalize command:  ', sox_normalize_command)
+        print_('sox_normalize command:  ' + sox_normalize_command)
         os.system(sox_normalize_command)
         tag_wav_command = '''sndfile-metadata-set "%s" --bext-description "%s" --bext-originator "%s" --bext-orig-ref "%s" --str-comment "%s" --str-title "%s" --str-copyright "%s" --str-artist  "%s" --str-date "%s" --str-license "%s" "%s"''' % (master_filename + 'untagged.wav', bext_description, bext_originator, bext_orig_ref, str_comment, str_title, str_copyright, str_artist, str_date, str_license, master_filename)
         print_('tag_wav_command:        ', tag_wav_command)
@@ -354,19 +382,68 @@ def post_process():
         print_()
     except:
         print_(traceback.format_exc())
+        
+def patch_csound_options(csd, output="soundfile"):
+    global filename
+    global csound_audio_output
+    '''
+    -odac --output
+    -iadc --input
+    -M --midi-device
+    -Q
+    '''
+    print("output: " + output)
+    options_start_index = csd.find("<CsOptions>") + len("<CsOptions>")
+    options_end_index =  csd.find("</CsOptions>") 
+    csd_top = csd[0:options_start_index]
+    # Remove spaces between flags and values, so that flag and value are one token.
+    csd_options = csd[options_start_index:options_end_index]
+    csd_options = csd_options.replace(" -o ", " -o")
+    csd_options = csd_options.replace(" --output ", " -output")
+    csd_options = csd_options.replace(" -i ", " -i")
+    csd_options = csd_options.replace(" -M ", " -M")
+    csd_options = csd_options.replace(" --midi-device ", " --midi-device")
+    csd_options = csd_options.replace(" -Q ", " -Q")
+    print("csound_options: {}".format(csd_options))
+    csd_bottom = csd[options_end_index:-1]
+    csd_options_tokens = csd_options.split()
+    for i in range(len(csd_options_tokens)):
+        token = csd_options_tokens[i]
+        print("token: {}".format(token))
+        if token.startswith("-o"):
+            if output == "soundfile":
+                directory, basename = os.path.split(filename)
+                rootname = os.path.splitext(basename)[0].split('.')[0]
+                output_soundfile = rootname + ".wav"
+                print("output_soundfile: " + output_soundfile)
+                token = "-o" + output_soundfile
+                print(type(token))
+                print("new token: " + token)
+                print("boo")
+                csd_options_tokens[i] = token
+            else:
+                print("csound_audio_output: " + csound_audio_output)
+                token = "-o" + csound_audio_output
+                print("new token: " + token)
+                csd_options_tokens[i] = token
+    csd_options = " ".join(csd_options_tokens)
+    csd = "".join([csd_top, csd_options, csd_bottom])
+    print(csd)
+    return csd
     
 def on_render_soundfile_button_clicked(button):
+    global filename
+    global piece
     try:
         print_(button.get_label())
-        buffer = code_editor.get_buffer()
-        piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
-        print("piece:")
-        print(piece)
+        save_piece()
         load_glade(filename)
         if piece_is_csound():
             # Change output target here.
             csound.createMessageBuffer(False)
-            csound.compileCsdText(piece)
+            # Patch the csound options.
+            csd = patch_csound_options(piece, output="soundfile")
+            csound.compileCsdText(csd)
             csound.start()
             # Try to keep the UI responsive during performance.
             while csound.performBuffer() == 0:
@@ -383,7 +460,7 @@ def on_render_soundfile_button_clicked(button):
             csound.stop()
             csound.cleanup()
             csound.reset()
-            # Post-process and edit here.
+            post_process()
     except:
         print_(traceback.format_exc())
         
