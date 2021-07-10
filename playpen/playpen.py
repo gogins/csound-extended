@@ -168,6 +168,16 @@ def connect_controls(container, handler):
             print("Connected {} clicked to {}.".format(child, handler))
         except:
             pass
+        try:
+            child.connect("pressed", handler)
+            print("Connected {} pressed to {}.".format(child, handler))
+        except:
+            pass
+        try:
+            child.connect("released", handler)
+            print("Connected {} released to {}.".format(child, handler))
+        except:
+            pass
         if issubclass(type(child), Gtk.Container):
             connect_controls(child, handler)
 
@@ -482,13 +492,6 @@ def on_stop_button_clicked(button):
     except:
         print_(traceback.format_exc())
         
-'''
-Widget classes for Csound channel messages:
-- Button
-- Range
-- Entry
-'''
-        
 def get_widget_value(widget):
     print(type(widget))
     try:
@@ -506,7 +509,7 @@ def get_widget_value(widget):
 def on_control_change(control):
     name = control.get_name()
     value = get_widget_value(control)
-    print_("on_control_change: {}: {} {}".format(name, value))
+    print_("on_control_change: {}: {}".format(control, value))
     if type(value) != str:
         csound.setControlChannel(control.get_name(), value)
     else:
