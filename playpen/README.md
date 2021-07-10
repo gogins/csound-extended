@@ -13,7 +13,7 @@ render, listen; edit, render, listen;..." cycle of this style of composition
 without, however, compromising in _any_ way the musical possibilities of the 
 software.
 
-Python and the GTK framework are "glue" that binds everything together. The 
+Python and the GTK framework are the "glue" that binds everything together. The 
 playpen provides a simple code editor, an interactive form builder for 
 creating graphical user interfaces to control performances, an HTML window for 
 presenting visual music, and online help.
@@ -47,37 +47,37 @@ instructions. There are some specific instructions for Ubuntu Linux. However,
 to the best of my knowledge, all dependencies are available on Linux, MacOS, 
 and Windows.
 
-1. [Python 3.9](https://www.python.org/downloads/). For Ubuntu Linux, 
-   follow [these instructions](https://linuxize.com/post/how-to-install-python-3-9-on-ubuntu-20-04/).
-2. [GTK 3](https://www.gtk.org/docs/installations/), note that GTK 4 is now 
-   the current version but it is the previous version, GTK 3, that is used here.
-3. [GStreamer 3](https://gstreamer.freedesktop.org/documentation/installing/index.html?gi-language=c).
-4. _WebKit2 4.0 development libraries_; on Ubuntu Linux this is done by 
-   executing `sudo apt install libwebkit2gtk-4.0-37` or a compatible version.
-5. _WebKit2 GNU introspection libraries_; on Ubuntu Linux this 
-   is done by executing `sudo apt install gir1.2-webkit2-4.0`.
-6. [Glade](https://wiki.gnome.org/Apps/Glade). For Ubuntu Linux, execute 
-   `sudo apt install glade`.
-7. [PyGObject](https://pygobject.readthedocs.io/en/latest/getting_started.html) 
-   which automatically generates Python bindings for GTK, GStreamer, and WebKit 
-   based on their introspection libraries.
-8. [Csound](https://csound.com/download.html). For Linux, it is best to build 
-   from source code. `Copy the ctcsound.py` file that comes with your version 
-   of Csound to a directory where it can be loaded by Python.
-9. [sox](http://sox.sourceforge.net/). For Ubuntu Linux, execute 
-   `sudo apt install sox` and `sudo apt install libsox-fmt-all`.
-10.[libsndfile](http://www.mega-nerd.com/libsndfile/). For Ubuntu Linux, all 
-   you need is to execute `sudo apt install sndfile-programs`. For other 
-   operating systems, you may need to install libsndfile itself which should 
-   come with these utilities.
-11.[Audacity](https://www.audacityteam.org/). Please note, for Ubuntu Linux, 
-   install the regular Unbutu Packages Search result for Audacity, currently 
-   `sudo apt install audacity`.
-12.The playpen itself is part of my csound-extended repository. Clone the 
-   [csound-extended](https://github.com/gogins/csound-extended) repository to 
-   your local filesystem. Change to the `csound-extended/playpen` directory. 
-   Execute `python3 playpen.py` and then open and run the `drone.py` example 
-   to check that everything is working.
+1.  [Python 3.9](https://www.python.org/downloads/). For Ubuntu Linux, 
+    follow [these instructions](https://linuxize.com/post/how-to-install-python-3-9-on-ubuntu-20-04/).
+2.  [GTK 3](https://www.gtk.org/docs/installations/), note that GTK 4 is now 
+    the current version but it is the previous version, GTK 3, that is used here.
+3.  [GStreamer 3](https://gstreamer.freedesktop.org/documentation/installing/index.html?gi-language=c).
+4.  _WebKit2 4.0 development libraries_; on Ubuntu Linux this is done by 
+    executing `sudo apt install libwebkit2gtk-4.0-37` or a compatible version.
+5.  _WebKit2 GNU introspection libraries_; on Ubuntu Linux this 
+    is done by executing `sudo apt install gir1.2-webkit2-4.0`.
+6.  [Glade](https://wiki.gnome.org/Apps/Glade). For Ubuntu Linux, execute 
+    `sudo apt install glade`.
+7.  [PyGObject](https://pygobject.readthedocs.io/en/latest/getting_started.html) 
+    which automatically generates Python bindings for GTK, GStreamer, and WebKit 
+    based on their introspection libraries.
+8.  [Csound](https://csound.com/download.html). For Linux, it is best to build 
+    from source code. `Copy the ctcsound.py` file that comes with your version 
+    of Csound to a directory where it can be loaded by Python.
+9.  [sox](http://sox.sourceforge.net/). For Ubuntu Linux, execute 
+    `sudo apt install sox` and `sudo apt install libsox-fmt-all`.
+10. [libsndfile](http://www.mega-nerd.com/libsndfile/). For Ubuntu Linux, all 
+    you need is to execute `sudo apt install sndfile-programs`. For other 
+    operating systems, you may need to install libsndfile itself which should 
+    come with these utilities.
+11. [Audacity](https://www.audacityteam.org/). Please note, for Ubuntu Linux, 
+    install the regular Unbutu Packages Search result for Audacity, currently 
+    `sudo apt install audacity`.
+12. The playpen itself is part of my csound-extended repository. Clone the 
+    [csound-extended](https://github.com/gogins/csound-extended) repository to 
+    your local filesystem. Change to the `csound-extended/playpen` directory. 
+    Execute `python3 playpen.py` and then open and run the `drone.py` example 
+    to check that everything is working.
 
 ## User's Guide
 
