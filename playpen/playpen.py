@@ -143,43 +143,63 @@ def load(filename):
         load_glade(filename)
     except:
         print_(traceback.format_exc())
-    
-def connect_controls(container, handler):
+        
+'''
+For only those widgets and those signals that are used here to control Csound 
+performances using the Csound control channels, connect the on_control_changed 
+callbackget_name.
+'''
+def connect_controls(container, on_control_changed_):
     children = container.get_children()
     for child in children:
-        print(child)
-        try:
-            child.connect("changed", handler)
-            print("Connected {} changed to {}.".format(child, handler))
-        except:
-            pass
-        try:
-            child.connect("value-changed", handler)
-            print("Connected {} value-changed to {}.".format(child, handler))
-        except:
-            pass
-        try:
-            child.connect("clicked", handler)
-            print("Connected {} clicked to {}.".format(child, handler))
-        except:
-            pass
-        try:
-            child.connect("activate", handler)
-            print("Connected {} clicked to {}.".format(child, handler))
-        except:
-            pass
-        try:
-            child.connect("pressed", handler)
-            print("Connected {} pressed to {}.".format(child, handler))
-        except:
-            pass
-        try:
-            child.connect("released", handler)
-            print("Connected {} released to {}.".format(child, handler))
-        except:
-            pass
-        if issubclass(type(child), Gtk.Container):
-            connect_controls(child, handler)
+        if isinstance(child, Gtk.Button):
+            print(child.get_name())
+            child.connect("pressed", on_control_changed_, 1.)
+            child.connect("released", on_control_changed_, 0.)
+        if isinstance(child, Gtk.MenuItem):
+            print(child.get_name())
+            child.connect("select", on_control_changed_, 1.)
+            child.connect("deselect", on_control_changed_, 0.)
+        if isinstance(child, Gtk.Scale):
+            print(child.get_name())
+            child.connect("value-changed", on_control_changed_, -1.)
+        if isinstance(child, Gtk.Editable):
+            print(child.get_name())
+            child.connect("activate", on_control_changed_, -1.)
+        if isinstance(child, Gtk.SpinButton):
+            print(child.get_name())
+            child.connect("value-changed", on_control_changed_, -1)
+        if isinstance(child, Gtk.Container):
+            connect_controls(child, on_control_changed_)
+
+# Please note, the order of conditions matters; some subclasses do 
+# not handle superclass signals.
+
+def on_control_change(control, data):
+    try:
+        channel_name = control.get_name()
+        channel_value = ""
+        if isinstance(control, Gtk.ToggleButton):
+            channel_value = control.get_active()
+            csound.setControlChannel(channel_name, channel_value)
+        elif isinstance(control, Gtk.Button):
+            channel_value = data
+            csound.setControlChannel(channel_name, channel_value)
+        elif isinstance(control, Gtk.MenuItem):
+            channel_value = data
+            csound.setControlChannel(channel_name, channel_value)
+        elif isinstance(control, Gtk.Scale):
+            channel_value = control.get_value()
+            csound.setControlChannel(channel_name, channel_value)
+        #~ elif isinstance(control, Gtk.SpinButton):
+            #~ channel_value = control.get_value()
+            #~ csound.setControlChannel(channel_name, channel_value)
+        elif isinstance(control, Gtk.Editable):
+            channel_value = control.get_text()
+            csound.setStringChannel(channel_name, channel_value)
+        print_("on_control_change: {}: {}".format(channel_name, channel_value))
+    except:
+        print_(traceback.format_exc())
 
 def glade_filename_(filename):            
     basename = os.path.basename(filename)
@@ -492,30 +512,6 @@ def on_stop_button_clicked(button):
     except:
         print_(traceback.format_exc())
         
-def get_widget_value(widget):
-    print(type(widget))
-    try:
-        widget.get_value
-        return widget.get_value()
-    except:
-        pass
-    try:
-        widget.get_text
-        return widget.get_text()
-    except:
-        pass
-    return None
-        
-def on_control_change(control):
-    name = control.get_name()
-    value = get_widget_value(control)
-    print_("on_control_change: {}: {}".format(control, value))
-    if type(value) != str:
-        csound.setControlChannel(control.get_name(), value)
-    else:
-        csound.setStringChannel(control.get_name(), value)
-    # setStringChannel
-    
 def on_destroy(source):
     print_("on_destroy: source: {}".format(source))
     csound.stop()

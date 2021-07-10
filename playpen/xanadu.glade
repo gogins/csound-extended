@@ -7,6 +7,11 @@
     <property name="upper">50</property>
     <property name="step_increment">1</property>
   </object>
+  <object class="GtkAdjustment" id="adjustment2">
+    <property name="upper">100</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkListStore" id="liststore1">
     <columns>
       <!-- column-name test -->
@@ -106,7 +111,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="shadow_type">etched-out</property>
-        <property name="adjustment">adjustment1</property>
+        <property name="adjustment">adjustment2</property>
       </object>
       <packing>
         <property name="left_attach">0</property>
@@ -133,42 +138,6 @@
         <property name="left_attach">1</property>
         <property name="top_attach">3</property>
       </packing>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
     </child>
     <child>
       <placeholder/>
