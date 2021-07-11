@@ -508,7 +508,6 @@ def on_edit_gui_button_clicked(button):
     except:
         print_(traceback.format_exc())
     
-     
 def on_stop_button_clicked(button):
     try:
         print_(button.get_label())
@@ -537,33 +536,6 @@ search_context = None
 Activating the search entry (i.e. pressing [Enter]) always
 begins a new search based on current settings. Subsequent 
 searches and replacements continue to use these settings.
-
-   def _find_text(self, start_offset=1, backwards=False):
-        if not self.textview or not self.search_context:
-            return
-
-        buf = self.textview.get_buffer()
-        insert = buf.get_iter_at_mark(buf.get_insert())
-
-        start, end = buf.get_bounds()
-        self.wrap_box.set_visible(False)
-        if not backwards:
-            insert.forward_chars(start_offset)
-            match, start, end, wrapped = self.search_context.forward(insert)
-        else:
-            match, start, end, wrapped = self.search_context.backward(insert)
-
-        if match:
-            self.wrap_box.set_visible(wrapped)
-            buf.place_cursor(start)
-            buf.move_mark(buf.get_selection_bound(), end)
-            self.textview.scroll_to_mark(
-                buf.get_insert(), 0.25, True, 0.5, 0.5)
-            return True
-        else:
-            buf.place_cursor(buf.get_iter_at_mark(buf.get_insert()))
-            self.wrap_box.set_visible(False)
-
 '''
 def on_search_entry_activate(widget):
     global search_settings
@@ -580,7 +552,7 @@ def on_search_entry_activate(widget):
         search_settings.set_search_text(search_text)
         search_context = GtkSource.SearchContext.new(buffer, search_settings)
         match, start, end = search_context.forward(search_insert)
-        print("match: {} start: {} end: {}".format(match, start.get_offset(), end.get_offset()))
+        # print("match: {} start: {} end: {}".format(match, start.get_offset(), end.get_offset()))
         if match:
             buffer.place_cursor(start)
             buffer.move_mark(buffer.get_selection_bound(), end)
@@ -592,25 +564,87 @@ def on_search_button_clicked(widget):
     global search_settings
     global search_context
     try:
-        print_(widget.get_label())
         buffer = code_editor.get_buffer()
         search_insert = buffer.get_iter_at_mark(buffer.get_insert())
         search_insert.forward_chars(1)
         match, start, end = search_context.forward(search_insert)
-        print("match: {} start: {} end: {}".format(match, start.get_offset(), end.get_offset()))
+        # print("match: {} start: {} end: {}".format(match, start.get_offset(), end.get_offset()))
         if match:
             buffer.place_cursor(start)
             buffer.move_mark(buffer.get_selection_bound(), end)
             code_editor.scroll_to_mark(buffer.get_insert(), 0.25, True, 0.5, 0.5)
     except:
         print_(traceback.format_exc())
+        
+'''
+   def on_replace_button_clicked(self, entry):
+        buf = self.textview.get_buffer()
+        oldsel = buf.get_selection_bounds()
+        match = self._find_text(0)
+        newsel = buf.get_selection_bounds()
+        # Only replace if there is an already-selected match at the cursor
+        if (match and oldsel and oldsel[0].equal(newsel[0]) and
+                oldsel[1].equal(newsel[1])):
+            self.search_context.replace(
+                newsel[0], newsel[1], self.replacement_entry.get_text(), -1)
+            self._find_text(0)
+
+    @Gtk.Template.Callback()
+    def on_replace_all_button_clicked(self, entry):
+        buf = self.textview.get_buffer()
+        saved_insert = buf.create_mark(
+            None, buf.get_iter_at_mark(buf.get_insert()), True)
+        self.search_context.replace_all(self.replacement_entry.get_text(), -1)
+        if not saved_insert.get_deleted():
+            buf.place_cursor(buf.get_iter_at_mark(saved_insert))
+            self.textview.scroll_to_mark(
+                buf.get_insert(), 0.25, True, 0.5, 0.5)
+'''
     
 def on_replace_button_clicked(widget):
+    global search_settings
+    global search_context
     try:
-        print_(widget.get_label())
+        buffer = code_editor.get_buffer()
+        oldsel = buffer.get_selection_bounds()
+        search_insert = buffer.get_iter_at_mark(buffer.get_insert())
+        search_insert.forward_chars(1)
+        match, start, end = search_context.forward(search_insert)
+        # print("match: {} start: {} end: {}".format(match, start.get_offset(), end.get_offset()))
+        if match:
+            buffer.place_cursor(start)
+            buffer.move_mark(buffer.get_selection_bound(), end)
+            code_editor.scroll_to_mark(buffer.get_insert(), 0.25, True, 0.5, 0.5)
+        newsel = buffer.get_selection_bounds()
+        # Only replace if there is an already-selected match at the cursor
+        if (match and oldsel and oldsel[0].equal(newsel[0]) and
+                oldsel[1].equal(newsel[1])):
+            search_context.replace(newsel[0], newsel[1], replacement_entry.get_text(), -1)
+            search_insert = buffer.get_iter_at_mark(buffer.get_insert())
+            search_insert.forward_chars(1)
+            match, start, end = search_context.forward(search_insert)
+            # print("match: {} start: {} end: {}".format(match, start.get_offset(), end.get_offset()))
+            if match:
+                buffer.place_cursor(start)
+                buffer.move_mark(buffer.get_selection_bound(), end)
+                code_editor.scroll_to_mark(buffer.get_insert(), 0.25, True, 0.5, 0.5)
     except:
         print_(traceback.format_exc())
-    pass
+
+def on_replace_all_button_clicked(widget):
+    global search_settings
+    global search_context
+    try:
+        buffer = code_editor.get_buffer()
+        saved_insert = buffer.create_mark(
+            None, buffer.get_iter_at_mark(buffer.get_insert()), True)
+        search_context.replace_all(replacement_entry.get_text(), -1)
+        if not saved_insert.get_deleted():
+            buffer.place_cursor(buffer.get_iter_at_mark(saved_insert))
+            code_editor.scroll_to_mark(
+                buffer.get_insert(), 0.25, True, 0.5, 0.5)
+    except:
+        print_(traceback.format_exc())
 
 def on_apply_scheme_button(widget):
     scheme = style_scheme.get_style_scheme()
@@ -652,6 +686,7 @@ stop_button = builder.get_object("stop_button")
 stop_button.connect("clicked", on_stop_button_clicked)
 search_entry = builder.get_object("search_entry")
 search_entry.connect("activate", on_search_entry_activate)
+replacement_entry = builder.get_object("replacement_entry")
 style_scheme = builder.get_object("style_scheme")
 apply_scheme_button = builder.get_object("apply_scheme_button")
 apply_scheme_button.connect("activate", on_apply_scheme_button)
@@ -663,6 +698,8 @@ search_button = builder.get_object("search_button")
 search_button.connect("clicked", on_search_button_clicked)
 replace_button = builder.get_object("replace_button")
 replace_button.connect("clicked", on_replace_button_clicked)
+replace_all_button = builder.get_object("replace_all_button")
+replace_all_button.connect("clicked", on_replace_all_button_clicked)
 check_button_case_sensitive = builder.get_object("check_button_case_sensitive")
 check_button_whole_word = builder.get_object("check_button_whole_word")
 
