@@ -9,6 +9,11 @@ import subprocess
 import sys
 import time
 import traceback
+import warnings
+
+# Comment this out during development?
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 '''
 A few strict conventions greatly simplify the code.
@@ -27,9 +32,6 @@ user need write no code for handling UI events; the convention is that all UI
 events from the user-defined controls are handled in a single function that 
 dispatches all widget event values to a Csound control channel with the same 
 name as the widget. 
-
-
-
 '''
 
 import gi
@@ -57,7 +59,6 @@ from gi.repository import Gtk
 gi.require_version("GtkSource", "3.0")
 from gi.repository import GtkSource
 code_editor = GtkSource.View()
-print(help(code_editor))
 
 # Override global Gnome settings with playpen.ini values.
 gnome_settings = Gtk.Settings.get_default()
@@ -143,6 +144,10 @@ def load(filename):
         print_("loading:" + filename)
         with open(filename, "r") as file:
             piece = file.read()
+            language = language_manager.guess_language(filename)
+            if language is not None:
+                code_editor.get_buffer().set_language(language)
+            print(language)
             code_editor.get_buffer().set_text(piece)
         load_glade(filename)
     except:
@@ -258,6 +263,9 @@ def save_piece():
         piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
         with open(filename, "w") as file:
             file.write(piece)
+            language = language_manager.guess_language(filename)
+            if language is not None:
+                code_editor.get_buffer().set_language(language)
     except:
         print_(traceback.format_exc())
         
@@ -323,9 +331,6 @@ def on_play_audio_button_clicked(button):
     except:
         print_(traceback.format_exc())
         
-def render():
-    pass
-    
 def post_process():
     try:
         print_("Post-processing...")
@@ -412,7 +417,7 @@ def post_process():
         os.system(mp4_command)
         os.system('del *wavuntagged.wav')
         os.system('{} {}'.format(soundfile_editor, master_filename))
-        print_()
+        print_("")
     except:
         print_(traceback.format_exc())
         
@@ -523,6 +528,94 @@ def on_destroy(source):
     csound.reset()
     Gtk.main_quit()
     
+global search_settings
+search_settings = GtkSource.SearchSettings()
+global search_context
+search_context = None
+    
+'''
+Activating the search entry (i.e. pressing [Enter]) always
+begins a new search based on current settings. Subsequent 
+searches and replacements continue to use these settings.
+
+   def _find_text(self, start_offset=1, backwards=False):
+        if not self.textview or not self.search_context:
+            return
+
+        buf = self.textview.get_buffer()
+        insert = buf.get_iter_at_mark(buf.get_insert())
+
+        start, end = buf.get_bounds()
+        self.wrap_box.set_visible(False)
+        if not backwards:
+            insert.forward_chars(start_offset)
+            match, start, end, wrapped = self.search_context.forward(insert)
+        else:
+            match, start, end, wrapped = self.search_context.backward(insert)
+
+        if match:
+            self.wrap_box.set_visible(wrapped)
+            buf.place_cursor(start)
+            buf.move_mark(buf.get_selection_bound(), end)
+            self.textview.scroll_to_mark(
+                buf.get_insert(), 0.25, True, 0.5, 0.5)
+            return True
+        else:
+            buf.place_cursor(buf.get_iter_at_mark(buf.get_insert()))
+            self.wrap_box.set_visible(False)
+
+'''
+def on_search_entry_activate(widget):
+    global search_settings
+    global search_context
+    try:
+        print(widget)
+        search_text = widget.get_text()
+        print("Search for: {}".format(widget.get_text()))
+        buffer = code_editor.get_buffer()
+        search_insert = buffer.get_iter_at_mark(buffer.get_insert())
+        search_settings.set_wrap_around(True)
+        search_settings.set_case_sensitive(check_button_case_sensitive.get_active())
+        search_settings.set_at_word_boundaries(check_button_whole_word.get_active())
+        search_settings.set_search_text(search_text)
+        search_context = GtkSource.SearchContext.new(buffer, search_settings)
+        match, start, end = search_context.forward(search_insert)
+        print("match: {} start: {} end: {}".format(match, start.get_offset(), end.get_offset()))
+        if match:
+            buffer.place_cursor(start)
+            buffer.move_mark(buffer.get_selection_bound(), end)
+            code_editor.scroll_to_mark(buffer.get_insert(), 0.25, True, 0.5, 0.5)
+    except:
+        print_(traceback.format_exc())
+    
+def on_search_button_clicked(widget):
+    global search_settings
+    global search_context
+    try:
+        print_(widget.get_label())
+        buffer = code_editor.get_buffer()
+        search_insert = buffer.get_iter_at_mark(buffer.get_insert())
+        search_insert.forward_chars(1)
+        match, start, end = search_context.forward(search_insert)
+        print("match: {} start: {} end: {}".format(match, start.get_offset(), end.get_offset()))
+        if match:
+            buffer.place_cursor(start)
+            buffer.move_mark(buffer.get_selection_bound(), end)
+            code_editor.scroll_to_mark(buffer.get_insert(), 0.25, True, 0.5, 0.5)
+    except:
+        print_(traceback.format_exc())
+    
+def on_replace_button_clicked(widget):
+    try:
+        print_(widget.get_label())
+    except:
+        print_(traceback.format_exc())
+    pass
+
+def on_apply_scheme_button(widget):
+    scheme = style_scheme.get_style_scheme()
+    code_editor.get_buffer().set_style_scheme(scheme)
+    
 main_window = builder.get_object("main_window")
 main_window.connect("destroy", on_destroy)
 html_window = builder.get_object("html_window")
@@ -557,6 +650,22 @@ render_soundfile_button = builder.get_object("render_soundfile_button")
 render_soundfile_button.connect("clicked", on_render_soundfile_button_clicked)
 stop_button = builder.get_object("stop_button")
 stop_button.connect("clicked", on_stop_button_clicked)
+search_entry = builder.get_object("search_entry")
+search_entry.connect("activate", on_search_entry_activate)
+style_scheme = builder.get_object("style_scheme")
+apply_scheme_button = builder.get_object("apply_scheme_button")
+apply_scheme_button.connect("activate", on_apply_scheme_button)
+apply_scheme_button.connect("clicked", on_apply_scheme_button)
+language_manager = GtkSource.LanguageManager()
+search_context = GtkSource.SearchContext()
+search_settings = GtkSource.SearchSettings()
+search_button = builder.get_object("search_button")
+search_button.connect("clicked", on_search_button_clicked)
+replace_button = builder.get_object("replace_button")
+replace_button.connect("clicked", on_replace_button_clicked)
+check_button_case_sensitive = builder.get_object("check_button_case_sensitive")
+check_button_whole_word = builder.get_object("check_button_whole_word")
+
 main_window.show_all() 
 
 if len(sys.argv) > 1:
