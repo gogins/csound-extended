@@ -1,10 +1,10 @@
 <CsoundSynthesizer>
 <CsOptions>
--RWdf --sample-accurate -o dac:xxx:2,0
+-RWdf --sample-accurate -o dac
 </CsOptions>
 <CsInstruments>
-sr          =           96000
-ksmps       =           100
+sr          =           48000
+ksmps       =           128
 nchnls      =           2
 ;--------------------------------------------------------
 ;Instrument 1 : plucked strings chorused left/right and

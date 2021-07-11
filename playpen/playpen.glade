@@ -2,6 +2,7 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <requires lib="gtksourceview" version="4.0"/>
   <object class="GtkApplicationWindow" id="main_window">
     <property name="can_focus">False</property>
     <property name="window_position">center</property>
@@ -145,7 +146,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkPaned" id="main_paned">
+          <object class="GtkPaned" id="main_pane">
             <property name="name">main_paned</property>
             <property name="width_request">-1</property>
             <property name="height_request">-1</property>
@@ -164,31 +165,59 @@
                 <property name="hexpand">False</property>
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkScrolledWindow">
-                    <property name="width_request">-1</property>
-                    <property name="height_request">-1</property>
+                  <object class="GtkBox">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="vexpand">True</property>
-                    <property name="shadow_type">in</property>
-                    <property name="propagate_natural_width">True</property>
-                    <property name="propagate_natural_height">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkTextView" id="code_editor">
-                        <property name="width_request">-1</property>
-                        <property name="height_request">-1</property>
+                      <object class="GtkSearchBar" id="search_bar">
+                        <property name="name">search_bar</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="search_mode_enabled">True</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkScrolledWindow">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="hexpand">True</property>
                         <property name="vexpand">True</property>
-                        <property name="monospace">True</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkSourceView" id="code_editor">
+                            <property name="name">code_editor</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="wrap_mode">word</property>
+                            <property name="left_margin">2</property>
+                            <property name="right_margin">2</property>
+                            <property name="input_purpose">alpha</property>
+                            <property name="monospace">True</property>
+                            <property name="show_line_numbers">True</property>
+                            <property name="show_line_marks">True</property>
+                            <property name="tab_width">4</property>
+                            <property name="insert_spaces_instead_of_tabs">True</property>
+                            <property name="show_right_margin">True</property>
+                            <property name="right_margin_position">79</property>
+                          </object>
+                        </child>
                       </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
                     </child>
                   </object>
-                  <packing>
-                    <property name="tab_expand">True</property>
-                  </packing>
                 </child>
                 <child type="tab">
                   <object class="GtkLabel">

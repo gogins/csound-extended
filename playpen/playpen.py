@@ -54,6 +54,10 @@ gnome_theme=settings.get_value("playpen", "gnome-theme")
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk 
+gi.require_version("GtkSource", "3.0")
+from gi.repository import GtkSource
+code_editor = GtkSource.View()
+print(help(code_editor))
 
 # Override global Gnome settings with playpen.ini values.
 gnome_settings = Gtk.Settings.get_default()
