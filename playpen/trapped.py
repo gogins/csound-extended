@@ -3,14 +3,18 @@
 # Note the use of Python's triple quotes to embed literal text within the script.
 # Author: Michael Gogins
 import ctcsound
-# Create an instance of Csound (actually, CppSound).
-csound = ctcsound.Csound()
+global csound
+global print_
+if csound:
+    print_("Using existing instance of csound...")
+else:
+    print_("Creating new instance of Csound...")
+    csound = ctcsound.Csound()
 # Set the Csound file.
-print(help(csound))
 csound.compileCsdText('''
 <CsoundSynthesizer>
 <CsOptions>
--odac:plughw:1,0
+-odac:plughw:2,0
 </CsOptions>
 <CsInstruments>
 ;============================================================================;
@@ -688,7 +692,12 @@ e
 </CsScore>
 </CsoundSynthesizer>
 ''')
-# Perform the exported orchestra and score.
 csound.start()
-csound.perform()
+# Try to keep the UI responsive during performance.
+while csound.performBuffer() == 0:
+    Gtk.main_iteration_do(False)
+csound.stop()
+csound.cleanup()
+csound.reset()
 
+    

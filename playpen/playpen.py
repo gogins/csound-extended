@@ -141,7 +141,6 @@ def on_new_button_clicked(button):
     
 def load(filename):
     try:
-        print_("loading:" + filename)
         with open(filename, "r") as file:
             piece = file.read()
             language = language_manager.guess_language(filename)
@@ -150,6 +149,7 @@ def load(filename):
             print(language)
             code_editor.get_buffer().set_text(piece)
         load_glade(filename)
+        main_window.set_title(filename)
     except:
         print_(traceback.format_exc())
         
@@ -214,7 +214,7 @@ def glade_filename_(filename):
     basename = os.path.basename(filename)
     filename_ = os.path.splitext(basename)[0]
     glade_file = filename_ + ".glade"
-    print_("glade_file: {}".format(glade_file))
+    # print_("glade_file: {}".format(glade_file))
     return glade_file
 
 def load_glade(filename):
@@ -228,7 +228,7 @@ def load_glade(filename):
                 if result == 0:
                     print_("Failed to parse {} file.".format(glade_file))
                 user_controls_layout = builder.get_object("user_controls_layout")
-                print_("user_controls_layout: {}".format(user_controls_layout))
+                # print_("user_controls_layout: {}".format(user_controls_layout))
                 controls_layout.add(user_controls_layout)
                 connect_controls(controls_layout, on_control_change)
         except:
@@ -301,6 +301,8 @@ def on_play_audio_button_clicked(button):
         print_(button.get_label())
         save_piece()
         load_glade(filename)
+        if piece_is_python():
+            exec(piece, globals(), locals())
         if piece_is_csound():
             # Change output target here.
             csound.createMessageBuffer(False)
@@ -557,6 +559,9 @@ def on_search_entry_activate(widget):
             buffer.place_cursor(start)
             buffer.move_mark(buffer.get_selection_bound(), end)
             code_editor.scroll_to_mark(buffer.get_insert(), 0.25, True, 0.5, 0.5)
+        else:
+            print_("search: {} not found.".format(search_settings.get_search_text()))
+            
     except:
         print_(traceback.format_exc())
     
@@ -573,34 +578,11 @@ def on_search_button_clicked(widget):
             buffer.place_cursor(start)
             buffer.move_mark(buffer.get_selection_bound(), end)
             code_editor.scroll_to_mark(buffer.get_insert(), 0.25, True, 0.5, 0.5)
+        else:
+            print_("search: {} not found.".format(search_settings.get_search_text()))
     except:
         print_(traceback.format_exc())
         
-'''
-   def on_replace_button_clicked(self, entry):
-        buf = self.textview.get_buffer()
-        oldsel = buf.get_selection_bounds()
-        match = self._find_text(0)
-        newsel = buf.get_selection_bounds()
-        # Only replace if there is an already-selected match at the cursor
-        if (match and oldsel and oldsel[0].equal(newsel[0]) and
-                oldsel[1].equal(newsel[1])):
-            self.search_context.replace(
-                newsel[0], newsel[1], self.replacement_entry.get_text(), -1)
-            self._find_text(0)
-
-    @Gtk.Template.Callback()
-    def on_replace_all_button_clicked(self, entry):
-        buf = self.textview.get_buffer()
-        saved_insert = buf.create_mark(
-            None, buf.get_iter_at_mark(buf.get_insert()), True)
-        self.search_context.replace_all(self.replacement_entry.get_text(), -1)
-        if not saved_insert.get_deleted():
-            buf.place_cursor(buf.get_iter_at_mark(saved_insert))
-            self.textview.scroll_to_mark(
-                buf.get_insert(), 0.25, True, 0.5, 0.5)
-'''
-    
 def on_replace_button_clicked(widget):
     global search_settings
     global search_context
@@ -608,7 +590,7 @@ def on_replace_button_clicked(widget):
         buffer = code_editor.get_buffer()
         oldsel = buffer.get_selection_bounds()
         search_insert = buffer.get_iter_at_mark(buffer.get_insert())
-        search_insert.forward_chars(1)
+        #search_insert.forward_chars(1)
         match, start, end = search_context.forward(search_insert)
         # print("match: {} start: {} end: {}".format(match, start.get_offset(), end.get_offset()))
         if match:
@@ -628,6 +610,9 @@ def on_replace_button_clicked(widget):
                 buffer.place_cursor(start)
                 buffer.move_mark(buffer.get_selection_bound(), end)
                 code_editor.scroll_to_mark(buffer.get_insert(), 0.25, True, 0.5, 0.5)
+            else:
+                print_("replace: {} not found.".format(search_settings.get_search_text()))
+                
     except:
         print_(traceback.format_exc())
 
