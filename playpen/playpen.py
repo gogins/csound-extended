@@ -649,6 +649,15 @@ def on_apply_scheme_button(widget):
     scheme = style_scheme.get_style_scheme()
     code_editor.get_buffer().set_style_scheme(scheme)
     
+def on_initialize_web_extensions(web_context):
+    print("on_initialize_web_extensions: {}".format(web_context))
+    web_context.set_web_extensions_directory("/home/mkg/csound-extended/playpen/")
+    # We inject the actual C object for Csound into the WebExtension.
+    print("on_initialize_web_extensions: csound: {} {} {}".format(type(csound), type(csound.cs), csound.cs))
+    g_variant = GLib.Variant.new_int64(csound.cs)
+    print("on_initialize_web_extensions: g_variant: {}".format(g_variant))
+    web_context.set_web_extensions_initialization_user_data(g_variant)
+    
 main_window = builder.get_object("main_window")
 main_window.connect("destroy", on_destroy)
 html_window = builder.get_object("html_window")
@@ -660,8 +669,11 @@ messages_text_view.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0.0, 0.8, 0.0,
 messages_text_view.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0.1, 0.1, 0.1, 1.0))
 messages_text_buffer = messages_text_view.get_buffer()
 webview = WebKit2.WebView() 
+# Set the directory from which to load extensions.
+web_context = webview.get_context()
+web_context.connect("initialize-web-extensions", on_initialize_web_extensions)
 webview.load_uri("http://csound.com") 
-html_window.add(webview);
+html_window.add(webview)
 help_window = builder.get_object("help_window")
 helpview = WebKit2.WebView() 
 helpview.load_uri("https://github.com/gogins/csound-extended/tree/develop/playpen") 
