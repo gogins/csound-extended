@@ -72,8 +72,40 @@ gi.require_version("GtkSource", "3.0")
 from gi.repository import GtkSource
 import ctcsound
 
-csound = ctcsound.Csound()
-
+'''
+Specialize Csound to perform with co-operative multiprocessing in this 
+program.
+'''
+class GtkCsound(ctcsound.Csound):
+    def __init__(self):
+        super().__init__()
+    def perform(self):
+        try:
+            print_("GtkCsound starting...")
+            self.start()
+            # Try to keep the UI responsive during performance 
+            # by handling Gtk events between Csound buffers.
+            print_("GtkCsound performing...")
+            while self.performBuffer() == 0:
+                Gtk.main_iteration_do(False)
+                message_count = self.messageCnt()
+                for message_index in range(message_count):
+                    message = self.firstMessage()
+                    self.popFirstMessage()
+                    sys.stdout.write(message)
+                    messages_text_buffer.insert(messages_text_buffer.get_end_iter(), message, -1)
+                    end_iter = messages_text_buffer.get_end_iter()
+                    messages_text_view.scroll_to_iter(end_iter, 0, False, .5, .5)
+                    Gtk.main_iteration_do(False)
+            self.stop()
+            self.cleanup()
+            self.reset()
+            print_("GtkCsound has stopped.")
+        except:
+            print_(traceback.format_exc())
+            
+csound = GtkCsound()
+        
 ## Gst.init(sys.argv)
 
 title = "Playpen"
@@ -293,7 +325,7 @@ def on_save_as_button_clicked(button):
         save_piece()
     except:
         print_(traceback.format_exc())
-
+        
 def on_play_audio_button_clicked(button):
     global filename
     global piece
@@ -301,11 +333,11 @@ def on_play_audio_button_clicked(button):
         print_(button.get_label())
         save_piece()
         load_glade(filename)
+        csound.createMessageBuffer(False)
         if piece_is_python():
             exec(piece, globals(), locals())
         if piece_is_csound():
             # Change output target here.
-            csound.createMessageBuffer(False)
             # Patch the csound options.
             print("Piece:")
             print(piece)
@@ -313,23 +345,7 @@ def on_play_audio_button_clicked(button):
             print("Patched piece:")
             print(csd)
             csound.compileCsdText(csd)
-            print("Starting csound...")
-            csound.start()
-            # Try to keep the UI responsive during performance.
-            while csound.performBuffer() == 0:
-                Gtk.main_iteration_do(False)
-                message_count = csound.messageCnt()
-                for message_index in range(message_count):
-                    message = csound.firstMessage()
-                    csound.popFirstMessage()
-                    sys.stdout.write(message)
-                    messages_text_buffer.insert(messages_text_buffer.get_end_iter(), message, -1)
-                    end_iter = messages_text_buffer.get_end_iter()
-                    messages_text_view.scroll_to_iter(end_iter, 0, False, .5, .5)
-                    Gtk.main_iteration_do(False)
-            csound.stop()
-            csound.cleanup()
-            csound.reset()
+            csound.perform()
     except:
         print_(traceback.format_exc())
         
@@ -512,13 +528,11 @@ def on_edit_gui_button_clicked(button):
     
 def on_stop_button_clicked(button):
     try:
-        print_(button.get_label())
-        if piece_is_csound():
-            print_("Stopping csound...")
-            csound.stop()
-            csound.cleanup()
-            csound.reset()
-            print_("Csound has been stopped and reset.")
+        print_("Stopping csound...")
+        csound.stop()
+        csound.cleanup()
+        csound.reset()
+        print_("Csound has been stopped and reset.")
     except:
         print_(traceback.format_exc())
         
@@ -687,6 +701,9 @@ replace_all_button = builder.get_object("replace_all_button")
 replace_all_button.connect("clicked", on_replace_all_button_clicked)
 check_button_case_sensitive = builder.get_object("check_button_case_sensitive")
 check_button_whole_word = builder.get_object("check_button_whole_word")
+
+def perform():
+    csound.perform()
 
 main_window.show_all() 
 
