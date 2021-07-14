@@ -3,6 +3,7 @@
 import datetime
 import math
 import os.path
+import pathlib
 import random
 import string
 import subprocess
@@ -171,16 +172,23 @@ def on_new_button_clicked(button):
     except:
         print_(traceback.format_exc())
     
-def load(filename):
+def load_piece(filename):
     try:
         with open(filename, "r") as file:
             piece = file.read()
             language = language_manager.guess_language(filename)
             if language is not None:
                 code_editor.get_buffer().set_language(language)
-            print(language)
+            print_("load_piece: language: {}".format(language))
             code_editor.get_buffer().set_text(piece)
-        load_glade(filename)
+        if piece_is_csound():
+            load_glade(filename)
+        if piece_is_python():
+            load_glade(filename)
+        if piece_is_html():
+            piece_uri = pathlib.Path(filename).resolve().parent.as_uri()
+            print_("load_piece: uri: {}".format(piece_uri))
+            webview.load_html(piece, piece_uri)            
         main_window.set_title(filename)
     except:
         print_(traceback.format_exc())
@@ -282,7 +290,7 @@ def on_open_button_clicked(button):
         Gtk.ResponseType.OK)
         file_chooser_dialog.run()
         filename = file_chooser_dialog.get_filename()
-        load(filename)
+        load_piece(filename)
         file_chooser_dialog.close()
     except:
         print_(traceback.format_exc())
@@ -672,6 +680,13 @@ webview = WebKit2.WebView()
 # Set the directory from which to load extensions.
 web_context = webview.get_context()
 web_context.connect("initialize-web-extensions", on_initialize_web_extensions)
+# As this program runs locally, we authorize many things.
+webview_settings = webview.get_settings()
+webview_settings.set_enable_javascript(True)
+webview_settings.set_enable_developer_extras(True)
+webview_settings.set_allow_universal_access_from_file_urls(True)
+webview_settings.set_enable_webgl(True)
+webview_settings.set_enable_webaudio(True)
 webview.load_uri("http://csound.com") 
 html_window.add(webview)
 help_window = builder.get_object("help_window")
@@ -721,5 +736,5 @@ main_window.show_all()
 
 if len(sys.argv) > 1:
     filename = sys.argv[1]
-    load(filename)
+    load_piece(filename)
 Gtk.main()
