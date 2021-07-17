@@ -69,6 +69,8 @@ gnome_settings.set_property("gtk-theme-name", gnome_theme)
 ## from gi.repository import Gst 
 gi.require_version("WebKit2", "4.0")
 from gi.repository import WebKit2
+gi.require_version("JavaScriptCore", "4.0")
+from gi.repository import JavaScriptCore
 gi.require_version("GtkSource", "3.0")
 from gi.repository import GtkSource
 import ctcsound
@@ -179,7 +181,7 @@ def load_piece(filename):
             language = language_manager.guess_language(filename)
             if language is not None:
                 code_editor.get_buffer().set_language(language)
-            print_("load_piece: language: {}".format(language))
+            print_("load_piece: language: {}".format(language.get_name()))
             code_editor.get_buffer().set_text(piece)
         if piece_is_csound():
             load_glade(filename)

@@ -21,7 +21,7 @@
 /**
  *
 Wrap a subset of CsoundThreaded as a JavaScriptCore WebExtension. This should 
-follow the csound.node signature of Csound:
+follow the signature of Csound in csound.node:
 
 int result = csound_.Cleanup();
 int result = csound_.CompileCsd(csd.c_str());
@@ -59,13 +59,22 @@ static CsoundThreaded csound;
 extern "C" {
 
     void destroy_notify_(gpointer data) {
-        printf("destroy_notify: %p\n", data);
+        std::printf("destroy_notify: %p\n", data);
     }
 
     void on_gjs_csound_hello() {
         std::printf("Hello from Csound!\n");
     }
+    
+    void csound_constructor_callback(gpointer data) {
+       std::printf("csound_constructor_callback: %p\n", data);
+        
+    }
 
+    /**
+     * Apparently, only at this time is it possible for WebExtensions to 
+     * inject native code into the JavaScript context.
+     */
     void
     window_object_cleared_callback (WebKitScriptWorld *world,
                                     WebKitWebPage     *web_page,
@@ -74,8 +83,9 @@ extern "C" {
     {
         JSCContext *js_context = webkit_frame_get_js_context_for_script_world(frame, world);
         JSCValue *js_global_object = jsc_context_get_global_object(js_context);
-        printf("window_object_cleared_callback: page %ld created for %s\n", webkit_web_page_get_id(web_page),
+        std::printf("window_object_cleared_callback: page %ld created for %s\n", webkit_web_page_get_id(web_page),
                webkit_web_page_get_uri(web_page));
+        std::printf("window_object_cleared_callback: user_data (should be the address of a Csound instance): %p\n", user_data);
         // Now we add the Csound API to the context.
         printf("window_object_cleared_callback: defining gjs_csound_hello...\n");
         // Corresponds to the JavaScript "function" function; defines an 
@@ -88,11 +98,27 @@ extern "C" {
                                      NULL,
                                      G_TYPE_NONE,
                                      0);
-        printf("window_object_cleared_callback: defined gjs_csound_hello: %p\n%s\n", gjs_csound_hello, jsc_value_to_json(gjs_csound_hello, 4));
-        //auto result = jsc_value_function_call(hello, G_TYPE_NONE);
+        printf("window_object_cleared_callback: defined gjs_csound_hello: %p\n%s\n", 
+                gjs_csound_hello, jsc_value_to_json(gjs_csound_hello, 4));
         jsc_context_set_value (js_context,
                                "gjs_csound_hello",
                                gjs_csound_hello);
+        // First the class must be registered. 
+        JSCClass *csound_class = jsc_context_register_class(js_context, "Csound", NULL, NULL, NULL);
+        printf("window_object_cleared_callback: defined Csound class: %p name: %s\n", 
+                csound_class, jsc_class_get_name(csound_class));
+        // Then its constructor must be defined.
+        JSCValue *csound_constructor = jsc_class_add_constructor (csound_class,
+                                   "Csound",
+                                   GCallback(csound_constructor_callback),
+                                   user_data,
+                                   destroy_notify_,
+                                   G_TYPE_INTERFACE,
+                                   0);        
+        // Then the constructor must be added to the window object.
+        jsc_context_set_value (js_context,
+                               "Csound",
+                               csound_constructor);
     }
 
     /**

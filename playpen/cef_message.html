@@ -75,16 +75,14 @@
         font-family: 'Orienta', sans-serif;
     }    
     </style>
-    <script>
-        function csound_message_callback(message) {
-            var messages_textarea = document.getElementById("csound_console");
-            var existing = messages_textarea.value;
-            messages_textarea.value = existing + message;
-            messages_textarea.scrollTop = messages_textarea.scrollHeight;   
-        };
-    </script>
- </head>
+</head>
 <body style="background-color:CadetBlue">
+    <script src="csound_loader.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous">
+    </script>
     <h1>Message from Another Planet, version 3</h1>
     <h3>Adapted for Csound with HTML5 by Michael Gogins, from "Message from Another Planet" by Jacob Joaquin</h3>
     <form id='persist'>
@@ -209,6 +207,7 @@ chnset i(gk_master_level), "gk_master_level"
 aL, aR          reverbsc    gasendL,gasendR,gk_reverb_delay,gk_reverb_hipass
 kgain           =           ampdb(gk_master_level)
                 outs        aL * kgain, aR * kgain
+                printks2    "kgain: %f\n", kgain 
                 clear       gasendL, gasendR
                 endin
 
@@ -247,34 +246,49 @@ i 2    0    .      500     .       16         1.00
 </CsScore>
 </CsoundSynthesizer>
 </textarea>
-<script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous">
-</script>
 <script> 
+function csound_message_callback(message) {
+    var messages_textarea = document.getElementById("csound_console");
+    var existing = messages_textarea.value;
+    messages_textarea.value = existing + message;
+    messages_textarea.scrollTop = messages_textarea.scrollHeight;   
+}
+
+
+
 $(document).ready(function() {
     $('input').on('input', async function(event) {
-        //et csound_ = await get_csound(csound_message_callback);
+        let csound_ = await get_csound(csound_message_callback);
         var slider_value = parseFloat(event.target.value);
-        //csound_.SetControlChannel(event.target.id, slider_value);
+        csound_.SetControlChannel(event.target.id, slider_value);
         var output_selector = '#' + event.target.id + '_output';
         $(output_selector).val(slider_value);
     });
     $('#play').on('click', async function() {
-        //let csound_ = await get_csound(csound_message_callback);
+        let csound_ = await get_csound(csound_message_callback);
+        await csound_.CreateMessageBuffer(0);
         document.getElementById("csound_console").value = "";
         var csd = document.getElementById('csd').value;
-        //await csound_.CompileCsdText(csd);
+        let interval_callback = function() {
+            let n = csound_.GetMessageCnt();
+            console.log("n: " + n + "\n");
+            for (let i = 0; i < n; i++) {
+                let message = csound_.GetFirstMessage();
+                csound_message_callback(message);
+                csound_.PopFirstMessage();
+            }
+        };
+        setInterval(interval_callback, 250);
+        await csound_.CompileCsdText(csd);
         $('#restore').trigger('click');
-        //await csound_.Start();
-        //await csound_.Perform();
+        await csound_.Start();
+        csound_.Perform();        
     });
     $('#stop').on('click', async function() {
-        //let csound_ = await get_csound(csound_message_callback);
-        //await csound_.Stop();
-        //await csound_.Cleanup();
-        //csound_.Reset();
+        let csound_ = await get_csound(csound_message_callback);
+        await csound_.Stop();
+        await csound_.Cleanup();
+        csound_.Reset();
     });
     $('#save').on('click', function() {
         $('.persistent-element').each(function() {
@@ -282,10 +296,10 @@ $(document).ready(function() {
         });
     });
     $('#restore').on('click', async function() {
-        //let csound_ = await get_csound(csound_message_callback);
+        let csound_ = await get_csound(csound_message_callback);
         $('.persistent-element').each(function() {
             this.value = localStorage.getItem(this.id);
-            //csound_.SetControlChannel(this.id, parseFloat(this.value));
+            csound_.SetControlChannel(this.id, parseFloat(this.value));
             var output_selector = '#' + this.id + '_output';
             $(output_selector).val(this.value);
         });
