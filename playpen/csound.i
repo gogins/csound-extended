@@ -33,6 +33,7 @@
 %}
 
 %apply int { size_t };
+%include "typemaps.i"
 
 %typemap(in) char ** {
   /* Check if is a list */
@@ -99,6 +100,12 @@ public:
     virtual int CompileCsdText(const char *csd_text) {
         return csound_.CompileCsdText(csd_text);
     }
+    virtual int CompileCsdTextAndPerform(const char *csd_text) {
+        int result = csound_.CompileCsdText(csd_text);
+        result = result + csound_.Start();
+        result = result + csound_.Perform();
+        return result;
+    }
     virtual int CompileOrc(const char *orc_text) {
         return csound_.CompileOrc(orc_text);
     }
@@ -111,14 +118,17 @@ public:
     virtual double GetControlChannel(const char *name) {
         return csound_.GetControlChannel(name);
     }
-    virtual std::string GetFirstMessage() {
+    virtual const char* GetFirstMessage() {
         return csound_.GetFirstMessage();
     }
     virtual int GetKsmps() {
         return csound_.GetKsmps();
     }
     virtual int GetMessageCnt() {
-        return csound_.GetMessageCnt();
+        //std::printf("GetMessageCnt: ");
+        int count = csound_.GetMessageCnt();
+        //std::printf("%d\n", count);
+        return count;
     }
     virtual double GetScoreTime() {
         return csound_.GetScoreTime();
@@ -146,6 +156,12 @@ public:
     }
     virtual int Perform() {
         return csound_.Perform();
+    }
+    virtual int PerformBuffer() {
+        return csound_.PerformBuffer();
+    }
+    virtual int PerformKsmps() {
+        return csound_.PerformKsmps();
     }
     virtual void PopFirstMessage() {
         csound_.PopFirstMessage();

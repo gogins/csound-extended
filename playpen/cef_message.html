@@ -266,11 +266,11 @@ $(document).ready(function() {
     });
     $('#play').on('click', async function() {
         let csound_ = await get_csound(csound_message_callback);
-        await csound_.CreateMessageBuffer(0);
+        await csound_.CreateMessageBuffer(1);
         document.getElementById("csound_console").value = "";
         var csd = document.getElementById('csd').value;
         let interval_callback = function() {
-            let n = csound_.GetMessageCnt();
+            let n = 80; //csound_.GetMessageCnt();
             console.log("n: " + n + "\n");
             for (let i = 0; i < n; i++) {
                 let message = csound_.GetFirstMessage();
@@ -279,10 +279,8 @@ $(document).ready(function() {
             }
         };
         setInterval(interval_callback, 250);
-        await csound_.CompileCsdText(csd);
+        csound_.CompileCsdTextAndPerform(csd);
         $('#restore').trigger('click');
-        await csound_.Start();
-        csound_.Perform();        
     });
     $('#stop').on('click', async function() {
         let csound_ = await get_csound(csound_message_callback);
