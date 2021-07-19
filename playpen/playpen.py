@@ -108,6 +108,7 @@ class GtkCsound(CsoundThreaded.CsoundThread):
             print_(traceback.format_exc())
             
 csound = GtkCsound()
+print("Global Csound instance: {} CSOUND *: 0x{:x}.".format(csound, int(csound.GetCsound())))
         
 ## Gst.init(sys.argv)
 
@@ -663,12 +664,12 @@ def on_initialize_web_extensions(web_context):
     print("on_initialize_web_extensions: {}".format(web_context))
     web_context.set_web_extensions_directory("/home/mkg/csound-extended/playpen/")
     # We inject the actual C object for Csound into the WebExtension.
-    print("on_initialize_web_extensions: csound: {} {} {}".format(type(csound), type(csound.cs), csound.cs))
-    g_variant = GLib.Variant.new_int64(csound.cs)
-    print("on_initialize_web_extensions: g_variant: {}".format(g_variant))
-    web_context.set_web_extensions_initialization_user_data(g_variant)
+    print("on_initialize_web_extensions: global Csound instance: {} CSOUND *: 0x{:x}.".format(csound, int(csound.GetCsound())))
+    user_data_ = GLib.Variant.new_uint64(int(csound.GetCsound()))
+    user_data_.ref_sink()
+    print("on_initialize_web_extensions: g_variant: {} (0x{:x})".format(user_data_.print_(True), user_data_.get_uint64()))
+    web_context.set_web_extensions_initialization_user_data(user_data_)
 
-        
 main_window = builder.get_object("main_window")
 main_window.connect("destroy", on_destroy)
 html_window = builder.get_object("html_window")

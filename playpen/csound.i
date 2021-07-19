@@ -34,6 +34,7 @@
 
 %apply int { size_t };
 %include "typemaps.i"
+%include "stdint.i"
 
 %typemap(in) char ** {
   /* Check if is a list */
@@ -92,8 +93,8 @@ protected:
     CsoundThreaded csound_;
 public:
     CsoundThread() {};
-    CsoundThread(void *csound_ptr) {
-        csound_.SetCsound((CSOUND *)csound_ptr);
+    CsoundThread(CSOUND *csound_ptr) {
+        csound_.SetCsound(csound_ptr);
     };
     virtual ~CsoundThread() {};
     virtual int Cleanup() {
@@ -113,6 +114,11 @@ public:
     }
     virtual double EvalCode(const char *orc_text) {
         return csound_.EvalCode(orc_text);
+    }
+    virtual CSOUND *GetCsound() {
+        CSOUND *result = csound_.GetCsound();
+        printf("GetCsound: %p\n", result);
+        return result;
     }
     virtual double GetControlChannel(const char *name) {
         return csound_.GetControlChannel(name);
@@ -210,6 +216,10 @@ public:
     }
     virtual void SetControlChannel(const char *name, double value) {
         csound_.SetChannel(name, value);
+    }
+    virtual void SetCsound(CSOUND *csound_ptr) {
+        printf("SetCsound: %p\n", csound_ptr);
+        csound_.SetCsound(csound_ptr);
     }
     virtual void SetStringChannel(const char *name, char *value) {
         csound_.SetStringChannel(name, value);
