@@ -14,16 +14,17 @@ import platform
 import sys
 import CsoundThreaded
 import traceback
-from ctypes import *
 
 csound = CsoundThreaded.CsoundThread()
 print(csound)
 
 def main():
-    cef.Initialize()
+    app_settings = {}
+    command_line_switches = {"file-access-from-file-urls-allowed": "True", "universal-access-from-file-urls-allowed": "True", "disable-web-security": "True",}
+    cef.Initialize(app_settings, command_line_switches)
     check_versions()
     sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
-    browser = cef.CreateBrowserSync(url="file:///home/mkg/csound-extended/playpen/cef_message.html",
+    browser = cef.CreateBrowserSync(url="file:///home/mkg/csound-extended/playpen/cef-message.html", 
                           window_title="Message from Another Planet")
     bindings = cef.JavascriptBindings(bindToFrames=True, bindToPopups=True)   
     bindings.SetObject("csound", csound)

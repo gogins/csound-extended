@@ -77,10 +77,15 @@
 %{
 
 /** 
- * This is a clean, simple interface to all parts of the Csound API that I 
- * actually find useful. All types exposed here are elementary C or C++ types.
+ * This is a clean, simple interface to all the parts of the Csound API that I 
+ * actually find useful. All types exposed here are elementary C types.
  * This interface does not use varargs or callbacks. Thus, this interface 
  * should work for any language supported by SWIG.
+ *
+ * The Csound performance loop always runs in a separate thread. This enables 
+ * event-driven applications to continue running without being blocked by the 
+ * Csound performance. Clients of this class can use its Join method to wait 
+ * for the performance thread to end.
  */
 class CsoundThread {
 protected:
@@ -99,12 +104,6 @@ public:
     }
     virtual int CompileCsdText(const char *csd_text) {
         return csound_.CompileCsdText(csd_text);
-    }
-    virtual int CompileCsdTextAndPerform(const char *csd_text) {
-        int result = csound_.CompileCsdText(csd_text);
-        result = result + csound_.Start();
-        result = result + csound_.Perform();
-        return result;
     }
     virtual int CompileOrc(const char *orc_text) {
         return csound_.CompileOrc(orc_text);
@@ -136,6 +135,11 @@ public:
     virtual int GetSr() {
         return csound_.GetSr();
     }
+    // Probably does not work in Python; the channel value is copied into the 
+    // value string, which must be pre-allocated.
+    virtual void GetStringChannel(const char *name, char *value) {
+        csound_.GetStringChannel(name, value);
+    }
     virtual int GetVersion() {
         return csound_.GetVersion();
     }
@@ -154,12 +158,24 @@ public:
     virtual void Message(const char *text) {
         return csound_.Message(text);
     }
+    /**
+     * Always runs in a separate thread. To wait for it to end,
+     * call the Join method.
+     */
     virtual int Perform() {
         return csound_.Perform();
     }
+    /**
+     * Does not run in a separate thread; performs one buffer's worth of audio 
+     * output.
+     */
     virtual int PerformBuffer() {
         return csound_.PerformBuffer();
     }
+    /**
+     * Does not run in a separate thread; performs one kperiod's worth of 
+     * audio output.
+     */
     virtual int PerformKsmps() {
         return csound_.PerformKsmps();
     }
@@ -168,6 +184,17 @@ public:
     }
     virtual int ReadScore(const char *score_text) {
         return csound_.ReadScore(score_text);
+    }
+    /**
+     * Compiles the CSD text, starts Csound, 
+     * and performs in a separate thread. To wait for it to end, 
+     * call the Join method.
+     */
+    virtual int Render(const char *csd_text) {
+        int result = csound_.CompileCsdText(csd_text);
+        result = result + csound_.Start();
+        result = result + csound_.Perform();
+        return result;
     }
     virtual void Reset() {
         csound_.Reset();
@@ -183,6 +210,9 @@ public:
     }
     virtual void SetControlChannel(const char *name, double value) {
         csound_.SetChannel(name, value);
+    }
+    virtual void SetStringChannel(const char *name, char *value) {
+        csound_.SetStringChannel(name, value);
     }
     virtual void SetOption(const char *option) {
         csound_.SetOption(option);

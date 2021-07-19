@@ -19,40 +19,10 @@
 #include <webkit2/webkit-web-extension.h>
 
 /**
- *
-Wrap a subset of CsoundThreaded as a JavaScriptCore WebExtension. This should 
-follow the signature of Csound in csound.node:
-
-int result = csound_.Cleanup();
-int result = csound_.CompileCsd(csd.c_str());
-int result = csound_.CompileCsdText(csd.c_str());
-int result = csound_.CompileOrc(csd.c_str());
-double value = csound_.EvalCode(code.c_str());
-double value = csound_.GetControlChannel(name.c_str(), &result);
-int value = csound_.GetKsmps();
-std::string value = csound_.GetMetadata(tag.c_str());
-int value = csound_.GetNchnls();
-int value = csound_.GetScoreTime();
-int value = csound_.GetSr();
-int value = csound_.GetVersion();
-csound_.InputMessage(text.c_str());
-bool value = csound_.IsPlaying();
-bool value = csound_.IsScorePending();
-csound_.Message(text.c_str());
-int result = csound_.Perform();
-int result = csound_.PerformAndPostProcess();
-int result = csound_.ReadScore(sco.c_str());
-csound_.Reset();
-csound_.RewindScore();
-int result = csound_.ScoreEvent(opcode[0], pfields.data(), pfields.size());
-csound_.SetChannel(name.c_str(), value);
-csound_.SetMetadata(tag.c_str(), value.c_str());
-csound_.SetOption(value.c_str());
-csound_.SetOutput(filename.c_str(), type.c_str(), format.c_str());
-csound_.SetScorePending(value);
-int result = csound_.Start();
-csound_.Stop();
-*/
+ * Wrap a subset of CsoundThreaded as a JavaScriptCore WebExtension. That 
+ * should be the same as the interface of CsoundThread in csound.i here, 
+ * wrapped by SWIG and working fine in Python.
+ */
 
 static CsoundThreaded csound;
 
@@ -66,9 +36,18 @@ extern "C" {
         std::printf("Hello from Csound!\n");
     }
     
-    void csound_constructor_callback(gpointer data) {
-       std::printf("csound_constructor_callback: %p\n", data);
-        
+    // TODO: Create some kind of wrapper context class.
+    
+    static JSCContext *js_context = nullptr;
+    static JSCClass *csound_class = nullptr;
+    static JSCValue *csound_constructor = nullptr;
+    
+    JSCValue *csound_constructor_callback(gpointer data) {
+        std::printf("csound_constructor_callback: data: %p\n", data);
+        // Here create an instance of the Csound class and 
+        // return it.
+        JSCValue *new_instance = jsc_value_new_object(js_context, NULL, csound_class);
+        return new_instance;
     }
 
     /**
@@ -81,7 +60,7 @@ extern "C" {
                                     WebKitFrame       *frame,
                                     gpointer           user_data)
     {
-        JSCContext *js_context = webkit_frame_get_js_context_for_script_world(frame, world);
+        js_context = webkit_frame_get_js_context_for_script_world(frame, world);
         JSCValue *js_global_object = jsc_context_get_global_object(js_context);
         std::printf("window_object_cleared_callback: page %ld created for %s\n", webkit_web_page_get_id(web_page),
                webkit_web_page_get_uri(web_page));
@@ -104,16 +83,16 @@ extern "C" {
                                "gjs_csound_hello",
                                gjs_csound_hello);
         // First the class must be registered. 
-        JSCClass *csound_class = jsc_context_register_class(js_context, "Csound", NULL, NULL, NULL);
+        csound_class = jsc_context_register_class(js_context, "Csound", NULL, NULL, NULL);
         printf("window_object_cleared_callback: defined Csound class: %p name: %s\n", 
                 csound_class, jsc_class_get_name(csound_class));
         // Then its constructor must be defined.
-        JSCValue *csound_constructor = jsc_class_add_constructor (csound_class,
+        csound_constructor = jsc_class_add_constructor (csound_class,
                                    "Csound",
                                    GCallback(csound_constructor_callback),
                                    user_data,
                                    destroy_notify_,
-                                   G_TYPE_INTERFACE,
+                                   G_TYPE_OBJECT,
                                    0);        
         // Then the constructor must be added to the window object.
         jsc_context_set_value (js_context,
