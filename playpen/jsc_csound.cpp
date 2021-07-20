@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <string>
+#include <cstring>
 #include <csound/csound.h>
 #include <csound/csound.hpp>
 #include <csound/csound_threaded.hpp>
@@ -45,16 +46,26 @@ extern "C" {
     static JSCClass *csound_class = nullptr;
     static JSCValue *csound_constructor = nullptr;
     static JSCValue *csound_message_callback = nullptr;
+    static char browser_csound_callback_name[] = "csound_message_callback";
 
     static void native_csound_message_callback(CSOUND *, int attr, const char *format, va_list valist) {
-        char buffer[0x2000];
-        std::vsprintf(buffer, format, valist);
-        if (csound_message_callback != nullptr) {
-            JSCValue *result = jsc_value_function_call(csound_message_callback,
-                               G_TYPE_STRING,
-                               buffer,
-                               G_TYPE_NONE);
-        }
+        char message_buffer[0x2000];
+        std::vsprintf(message_buffer, format, valist);
+        //~ // Try invoking the actual callable. This doesn't currently work.
+        //~ if (csound_message_callback != nullptr) {
+            //~ JSCValue *jsc_message_buffer = jsc_value_new_string(js_context, message_buffer);
+            //~ g_object_ref(jsc_message_buffer);
+            //~ JSCValue *result = jsc_value_function_call(csound_message_callback,
+                               //~ JSC_TYPE_VALUE,
+                               //~ jsc_message_buffer,
+                               //~ G_TYPE_NONE);
+        //~ }
+        //~ // Try just invoking JavaScript. This doesn't currently work.
+        //~ char javascript_code[0x2100];
+        //~ std::sprintf(javascript_code, "%s(\"%s\");", browser_csound_callback_name, message_buffer);
+        //~ std::printf("native_csound_message_callback: invoking: %s\n", javascript_code);
+        //~ JSCValue *result = jsc_context_evaluate(js_context, javascript_code, -1);        
+        //~ std::printf("native_csound_message_callback: result: %s\n", jsc_value_to_string(result));
     }
 
     static JSCValue *csound_constructor_callback(gpointer data) {
@@ -72,14 +83,14 @@ extern "C" {
     static int Csound_CompileCsd(JSCValue *instance, char *csd_filepath, gpointer user_data) {
         std::printf("Csound_CompileCsd: csd_filepath: %s\n", csd_filepath);
         int result = csound_->CompileCsd(csd_filepath);
-        std::printf("Csound_CompileCsd: result: %d\n", result);
+        // std::printf("Csound_CompileCsd: result: %d\n", result);
         return result;
     }
 
     static int Csound_CompileCsdText(JSCValue *instance, char *csd_text, gpointer user_data) {
         std::printf("Csound_CompileCsdText: csd_text: %s\n", csd_text);
         int result = csound_->CompileCsdText(csd_text);
-        std::printf("Csound_CompileCsdText: result: %d\n", result);
+        // std::printf("Csound_CompileCsdText: result: %d\n", result);
         return result;
     }
 
@@ -100,10 +111,17 @@ extern "C" {
         return result;
     }
 
-    static const char *Csound_GetFirstMessage(JSCValue *instance, gpointer user_data) {
-        const char *result = csound_->GetFirstMessage();
-        std::printf("Csound_GetFirstMessage: result: %s\n", result);
-        return result;
+    static JSCValue *Csound_GetFirstMessage(JSCValue *instance, gpointer user_data) {
+        const char *message = csound_->GetFirstMessage();
+        std::printf("Csound_GetFirstMessage: message: %s\n", message);
+        JSCValue *jsc_message = jsc_value_new_string(js_context, message);
+        g_object_ref_sink(jsc_message);
+        return jsc_message;
+    }
+
+    static void Csound_Perform(JSCValue *instance, gpointer user_data) {
+        std::printf("Csound_Perform\n");
+        csound_->Perform();
     }
 
     static void Csound_PopFirstMessage(JSCValue *instance, gpointer user_data) {
@@ -113,12 +131,10 @@ extern "C" {
 
     static int Csound_Render(JSCValue *instance, char *csd_text, gpointer user_data) {
         std::printf("Csound_Render: csd_text: %s\n", csd_text);
-        csound_->Stop();
-        csound_->Reset();
         int result = csound_->CompileCsdText(csd_text);
         result = result + csound_->Start();
-        result = result + csound_->PerformAndReset();
-        std::printf("Csound_Render: result: %d\n", result);
+        result = result + csound_->Perform();
+        // std::printf("Csound_Render: result: %d\n", result);
         return result;
     }
 
@@ -128,21 +144,28 @@ extern "C" {
     }
 
     static void Csound_SetControlChannel(JSCValue *instance, char *name, double value, gpointer user_data) {
-        std::printf("Csound_SetControlChannel: name: %s value: %f\n", name, value);
+        // std::printf("Csound_SetControlChannel: name: %s value: %f\n", name, value);
         csound_->SetControlChannel(name, value);
     }
 
     static void Csound_SetMessageCallback(JSCValue *instance, JSCValue *csound_message_callback_, gpointer user_data) {
+        std::printf("Csound_SetMessageCallback: csound_message_callback: %p\n", csound_message_callback_);
         csound_message_callback = csound_message_callback_;
-        std::printf("Csound_SetMessageCallback: csound_message_callback_: %s\n", jsc_value_to_json(csound_message_callback_, 4));
+        g_object_ref(csound_message_callback);
+        std::printf("Csound_SetMessageCallback: csound_message_callback type: %s %s\n", G_OBJECT_TYPE_NAME(csound_message_callback), jsc_value_to_string(csound_message_callback));
         csound_->SetMessageCallback(native_csound_message_callback);
-        std::printf("Csound_SetMessageCallback: csound_message_callback: %p\n", csound_message_callback);
+    }
+
+    static void Csound_Start(JSCValue *instance, gpointer user_data) {
+        std::printf("Csound_Start\n");
+        csound_->Start();
     }
 
     static void Csound_Stop(JSCValue *instance, gpointer user_data) {
-        csound_->Stop();
         std::printf("Csound_Stop");
-    }
+        csound_->Stop();
+        csound_->Join();
+     }
 
     /**
      * Apparently, only at this time is it possible for WebExtensions to
@@ -160,10 +183,10 @@ extern "C" {
                     webkit_web_page_get_uri(web_page));
         //GVariant *user_data_ = (GVariant *)user_data;
         g_variant_ref_sink(user_data);
-        std::printf("window_object_cleared_callback:user_data_: %p\n", user_data);
+        std::printf("window_object_cleared_callback: user_data_: %p\n", user_data);
         std::printf("window_object_cleared_callback: %s\n", g_variant_print(user_data, TRUE));
         CSOUND *csound_ptr = (CSOUND *)g_variant_get_uint64(user_data);
-        std::printf("window_object_cleared_callback: csound_ptr: 0x%p\n", csound_ptr);
+        std::printf("window_object_cleared_callback: csound_ptr: %p\n", csound_ptr);
         if (csound_ptr != nullptr) {
             std::printf("Setting csound from user_data.\n");
             csound_.reset(new CsoundThreaded());
@@ -173,7 +196,7 @@ extern "C" {
         }
         std::printf("Csound version: %d\n", csound_->GetVersion());
         // Now we add the Csound API to the context.
-        std::printf("window_object_cleared_callback: defining gjs_csound_hello...\n");
+        // std::printf("window_object_cleared_callback: defining gjs_csound_hello...\n");
         // Corresponds to the JavaScript "function" function; defines an
         // anonymous function that must be assigned to a variable in the
         // JavaScript context.
@@ -184,8 +207,8 @@ extern "C" {
                                      NULL,
                                      G_TYPE_NONE,
                                      0);
-        std::printf("window_object_cleared_callback: defined gjs_csound_hello: %p\n%s\n",
-                    gjs_csound_hello, jsc_value_to_json(gjs_csound_hello, 4));
+        // std::printf("window_object_cleared_callback: defined gjs_csound_hello: %p\n%s\n",
+        //            gjs_csound_hello, jsc_value_to_json(gjs_csound_hello, 4));
         jsc_context_set_value (js_context,
                                "gjs_csound_hello",
                                gjs_csound_hello);
@@ -253,7 +276,7 @@ extern "C" {
                              G_CALLBACK(Csound_GetFirstMessage),
                              user_data,
                              NULL,
-                             G_TYPE_STRING,
+                             JSC_TYPE_VALUE,
                              0);
         jsc_class_add_method(csound_class,
                              "GetMessageCnt",
@@ -261,6 +284,13 @@ extern "C" {
                              user_data,
                              NULL,
                              G_TYPE_INT,
+                             0);
+        jsc_class_add_method(csound_class,
+                             "Perform",
+                             G_CALLBACK(Csound_Perform),
+                             user_data,
+                             NULL,
+                             G_TYPE_NONE,
                              0);
         jsc_class_add_method(csound_class,
                              "PopFirstMessage",
@@ -300,7 +330,14 @@ extern "C" {
                              NULL,
                              G_TYPE_NONE,
                              1,
-                             G_TYPE_VARIANT);
+                             JSC_TYPE_VALUE);
+        jsc_class_add_method(csound_class,
+                             "Start",
+                             G_CALLBACK(Csound_Start),
+                             user_data,
+                             NULL,
+                             G_TYPE_INT,
+                             0);
         jsc_class_add_method(csound_class,
                              "Stop",
                              G_CALLBACK(Csound_Stop),

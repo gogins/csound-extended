@@ -80,7 +80,7 @@
 /** 
  * This is a clean, simple interface to all the parts of the Csound API that I 
  * actually find useful. All types exposed here are elementary C types.
- * This interface does not use varargs or callbacks. Thus, this interface 
+ * This interface does not use varargs. Thus, this interface 
  * should work for any language supported by SWIG.
  *
  * The Csound performance loop always runs in a separate thread. This enables 

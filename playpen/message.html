@@ -248,19 +248,20 @@ i 2    0    .      500     .       16         1.00
 </textarea>
 <script> 
 function csound_message_callback(message) {
+    console.log(message);
     var messages_textarea = document.getElementById("csound_console");
     var existing = messages_textarea.value;
     messages_textarea.value = existing + message;
     messages_textarea.scrollTop = messages_textarea.scrollHeight;   
 }
 
-
-
 $(document).ready(function() {
     $('input').on('input', async function(event) {
         let csound_ = await get_csound(csound_message_callback);
         var slider_value = parseFloat(event.target.value);
-        csound_.SetControlChannel(event.target.id, slider_value);
+        if (typeof csound_ !== 'undefined') {
+            await csound_.SetControlChannel(event.target.id, slider_value);
+        }
         var output_selector = '#' + event.target.id + '_output';
         $(output_selector).val(slider_value);
     });
@@ -268,17 +269,17 @@ $(document).ready(function() {
         let csound_ = await get_csound(csound_message_callback);
         document.getElementById("csound_console").value = "";
         var csd = document.getElementById('csd').value;
-        console.log("GetMessageCnt: " + csound.GetMessageCnt());
-        csound_.Render(csd);
+        await csound_.CompileCsdText(csd);
         $('#restore').trigger('click');
+        await csound_.Start();
+        await csound_.Perform();
     });
     $('#stop').on('click', async function() {
         let csound_ = await get_csound(csound_message_callback);
         await csound_.Stop();
         await csound_.Cleanup();
-        csound_.Reset();
-        clearInterval(window.timer);
-    });
+        await csound_.Reset();
+     });
     $('#save').on('click', function() {
         $('.persistent-element').each(function() {
             localStorage.setItem(this.id, this.value);
@@ -286,12 +287,14 @@ $(document).ready(function() {
     });
     $('#restore').on('click', async function() {
         let csound_ = await get_csound(csound_message_callback);
-        $('.persistent-element').each(function() {
-            this.value = localStorage.getItem(this.id);
-            csound_.SetControlChannel(this.id, parseFloat(this.value));
-            var output_selector = '#' + this.id + '_output';
-            $(output_selector).val(this.value);
-        });
+        if (typeof csound_ !== 'undefined') {
+            $('.persistent-element').each(function() {
+                this.value = localStorage.getItem(this.id);
+                csound_.SetControlChannel(this.id, parseFloat(this.value));
+                var output_selector = '#' + this.id + '_output';
+                $(output_selector).val(this.value);
+            });
+        }
     });
 });
 </script>

@@ -82,6 +82,16 @@ var load_csound = async function(csound_message_callback_) {
     }
     csound = null;
     try {
+        csound_message_callback_("Trying to load CsoundThread...\n");
+        csound_jsc = new Csound();
+        csound_jsc.SetMessageCallback(csound_message_callback_);
+        csound_is_loaded = true;
+        csound_message_callback_("CsoundThread for JavaScriptCore is available in this JavaScript context.\n");
+        return;
+    } catch (e) {
+        csound_message_callback_(e + '\n');
+    }
+    try {
         csound_message_callback_("Trying to load csound.node...\n");
         csound_node = await require('csound.node');
         var nwgui = await require('nw.gui');
@@ -108,14 +118,6 @@ var load_csound = async function(csound_message_callback_) {
         }, function(error) {
            csound_message_callback_(error + '\n');
         });
-    } catch (e) {
-        csound_message_callback_(e + '\n');
-    }
-    try {
-        csound_message_callback_("Trying to load CsoundThread...\n");
-        csound_jsc = new Csound();
-        csound_is_loaded = true;
-        csound_message_callback_("CsoundThread for JavaScriptCore is available in this JavaScript context.\n");
         return;
     } catch (e) {
         csound_message_callback_(e + '\n');
@@ -135,6 +137,10 @@ var get_csound = async function(csound_message_callback_) {
     if (csound_injected != null) {
         csound = csound_injected;
         return csound_injected;
+    } else if (csound_jsc != null) {
+        csound = csound_jsc;
+        //await csound.SetMessageCallback(csound_message_callback_);
+        return csound_jsc;
     } else if (csound_node != null) {
         csound = csound_node;
         csound.SetMessageCallback(csound_message_callback_);
@@ -143,10 +149,6 @@ var get_csound = async function(csound_message_callback_) {
         csound = csound_audio_node;
         csound.SetMessageCallback(csound_message_callback_);
         return csound_audio_node;
-    } else if (csound_jsc != null) {
-        csound = csound_jsc;
-        csound.SetMessageCallback(csound_message_callback_);
-        return csound_jsc;
     } else {
         csound_message_callback_("Csound is still loading, wait a bit...\n");
     }
