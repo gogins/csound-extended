@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import datetime
+import markdown
 import math
 import os.path
 import pathlib
@@ -548,7 +549,6 @@ def on_stop_button_clicked(button):
         print_(traceback.format_exc())
         
 def on_destroy(source):
-    print_("on_destroy: source: {}".format(source))
     csound.Stop()
     csound.Cleanup()
     csound.Reset()
@@ -663,11 +663,8 @@ def on_apply_scheme_button(widget):
 def on_initialize_web_extensions(web_context):
     print("on_initialize_web_extensions: {}".format(web_context))
     web_context.set_web_extensions_directory("/home/mkg/csound-extended/playpen/")
-    # We inject the actual C object for Csound into the WebExtension.
-    print("on_initialize_web_extensions: global Csound instance: {} CSOUND *: 0x{:x}.".format(csound, int(csound.GetCsound())))
     user_data_ = GLib.Variant.new_uint64(int(csound.GetCsound()))
     user_data_.ref_sink()
-    print("on_initialize_web_extensions: g_variant: {} (0x{:x})".format(user_data_.print_(True), user_data_.get_uint64()))
     web_context.set_web_extensions_initialization_user_data(user_data_)
 
 main_window = builder.get_object("main_window")
@@ -686,18 +683,24 @@ web_context = webview.get_context()
 web_context.connect("initialize-web-extensions", on_initialize_web_extensions)
 # As this program runs locally, we authorize many things.
 webview_settings = webview.get_settings()
-webview_settings.set_enable_javascript(True)
-webview_settings.set_enable_developer_extras(True)
-webview_settings.set_allow_universal_access_from_file_urls(True)
 webview_settings.set_allow_file_access_from_file_urls(True)
-webview_settings.set_media_playback_requires_user_gesture(False)
-webview_settings.set_enable_webgl(True)
+webview_settings.set_allow_universal_access_from_file_urls(True)
+webview_settings.set_enable_developer_extras(True)
+webview_settings.set_enable_javascript(True)
 webview_settings.set_enable_webaudio(True)
+webview_settings.set_enable_webgl(True)
+webview_settings.set_media_playback_requires_user_gesture(False)
 webview.load_uri("http://csound.com") 
 html_window.add(webview)
 help_window = builder.get_object("help_window")
 helpview = WebKit2.WebView() 
-helpview.load_uri("https://github.com/gogins/csound-extended/tree/develop/playpen") 
+try:
+    with open("README.md", 'r') as file:
+        readme_md = file.read()
+        readme_html = markdown.markdown(readme_md)
+        helpview.load_html(readme_html)
+except:
+    traceback.print_exc()
 help_window.add(helpview)
 main_window.resize(1200, 800)
 new_button = builder.get_object("new_button")

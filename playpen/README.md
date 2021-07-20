@@ -73,6 +73,8 @@ and Windows.
 11. [Audacity](https://www.audacityteam.org/). Please note, for Ubuntu Linux, 
     install the regular Unbutu Packages Search result for Audacity, currently 
     `sudo apt install audacity`.
+12. [markdown](https://pypi.org/project/Markdown/) to make the `README.md` file 
+    more readable.
 12. The playpen itself is part of my csound-extended repository. Clone the 
     [csound-extended](https://github.com/gogins/csound-extended) repository to 
     your local filesystem. Change to the `csound-extended/playpen` directory. 

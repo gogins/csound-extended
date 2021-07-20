@@ -21,15 +21,15 @@
 #include <webkit2/webkit-web-extension.h>
 
 /**
- * Wrap a subset of CsoundThreaded as a JavaScriptCore WebExtension. That
- * should be the same as the interface of CsoundThread in csound.i here,
- * wrapped by SWIG and working fine in Python.
- */
+* Wrap a subset of CsoundThreaded as a JavaScriptCore WebExtension. That
+* should be the same as the interface of CsoundThread in csound.i here,
+* wrapped by SWIG and working fine in Python.
+*/
 
 /**
- * The Csound object in this JavaScript context is a singleton object, that
- * if possible wraps a pointer to the playpen's global Csound instance.
- */
+* The Csound object in this JavaScript context is a singleton object, that
+* if possible wraps a pointer to the playpen's global Csound instance.
+*/
 static std::unique_ptr<CsoundThreaded> csound_;
 
 extern "C" {
@@ -49,23 +49,24 @@ extern "C" {
     static char browser_csound_callback_name[] = "csound_message_callback";
 
     static void native_csound_message_callback(CSOUND *, int attr, const char *format, va_list valist) {
-        char message_buffer[0x2000];
-        std::vsprintf(message_buffer, format, valist);
+        //~ char message_buffer[0x2000];
+        //~ std::vsprintf(message_buffer, format, valist);
         //~ // Try invoking the actual callable. This doesn't currently work.
         //~ if (csound_message_callback != nullptr) {
-            //~ JSCValue *jsc_message_buffer = jsc_value_new_string(js_context, message_buffer);
-            //~ g_object_ref(jsc_message_buffer);
-            //~ JSCValue *result = jsc_value_function_call(csound_message_callback,
-                               //~ JSC_TYPE_VALUE,
-                               //~ jsc_message_buffer,
-                               //~ G_TYPE_NONE);
+        //~ JSCValue *jsc_message_buffer = jsc_value_new_string(js_context, message_buffer);
+        //~ g_object_ref(jsc_message_buffer);
+        //~ JSCValue *result = jsc_value_function_call(csound_message_callback,
+        //~ JSC_TYPE_VALUE,
+        //~ jsc_message_buffer,
+        //~ G_TYPE_NONE);
         //~ }
         //~ // Try just invoking JavaScript. This doesn't currently work.
         //~ char javascript_code[0x2100];
         //~ std::sprintf(javascript_code, "%s(\"%s\");", browser_csound_callback_name, message_buffer);
         //~ std::printf("native_csound_message_callback: invoking: %s\n", javascript_code);
-        //~ JSCValue *result = jsc_context_evaluate(js_context, javascript_code, -1);        
+        //~ JSCValue *result = jsc_context_evaluate(js_context, javascript_code, -1);
         //~ std::printf("native_csound_message_callback: result: %s\n", jsc_value_to_string(result));
+        std::vfprintf(stderr, format, valist);
     }
 
     static JSCValue *csound_constructor_callback(gpointer data) {
@@ -81,16 +82,16 @@ extern "C" {
     }
 
     static int Csound_CompileCsd(JSCValue *instance, char *csd_filepath, gpointer user_data) {
-        std::printf("Csound_CompileCsd: csd_filepath: %s\n", csd_filepath);
+        // std::printf("Csound_CompileCsd: csd_filepath: %s\n", csd_filepath);
         int result = csound_->CompileCsd(csd_filepath);
-        // std::printf("Csound_CompileCsd: result: %d\n", result);
+        std::printf("Csound_CompileCsd: result: %d\n", result);
         return result;
     }
 
     static int Csound_CompileCsdText(JSCValue *instance, char *csd_text, gpointer user_data) {
-        std::printf("Csound_CompileCsdText: csd_text: %s\n", csd_text);
+        // std::printf("Csound_CompileCsdText: csd_text: %s\n", csd_text);
         int result = csound_->CompileCsdText(csd_text);
-        // std::printf("Csound_CompileCsdText: result: %d\n", result);
+        std::printf("Csound_CompileCsdText: result: %d\n", result);
         return result;
     }
 
@@ -130,11 +131,11 @@ extern "C" {
     }
 
     static int Csound_Render(JSCValue *instance, char *csd_text, gpointer user_data) {
-        std::printf("Csound_Render: csd_text: %s\n", csd_text);
+        // std::printf("Csound_Render: csd_text: %s\n", csd_text);
         int result = csound_->CompileCsdText(csd_text);
         result = result + csound_->Start();
         result = result + csound_->Perform();
-        // std::printf("Csound_Render: result: %d\n", result);
+        std::printf("Csound_Render: result: %d\n", result);
         return result;
     }
 
@@ -165,12 +166,12 @@ extern "C" {
         std::printf("Csound_Stop");
         csound_->Stop();
         csound_->Join();
-     }
+    }
 
     /**
-     * Apparently, only at this time is it possible for WebExtensions to
-     * inject native code into the JavaScript context.
-     */
+    * Apparently, only at this time is it possible for WebExtensions to
+    * inject native code into WebKit's JavaScript context.
+    */
     static void
     window_object_cleared_callback (WebKitScriptWorld *world,
                                     WebKitWebPage     *web_page,
@@ -179,27 +180,7 @@ extern "C" {
     {
         js_context = webkit_frame_get_js_context_for_script_world(frame, world);
         JSCValue *js_global_object = jsc_context_get_global_object(js_context);
-        std::printf("window_object_cleared_callback: page %ld created for %s\n", webkit_web_page_get_id(web_page),
-                    webkit_web_page_get_uri(web_page));
-        //GVariant *user_data_ = (GVariant *)user_data;
-        g_variant_ref_sink(user_data);
-        std::printf("window_object_cleared_callback: user_data_: %p\n", user_data);
-        std::printf("window_object_cleared_callback: %s\n", g_variant_print(user_data, TRUE));
-        CSOUND *csound_ptr = (CSOUND *)g_variant_get_uint64(user_data);
-        std::printf("window_object_cleared_callback: csound_ptr: %p\n", csound_ptr);
-        if (csound_ptr != nullptr) {
-            std::printf("Setting csound from user_data.\n");
-            csound_.reset(new CsoundThreaded());
-        } else {
-            std::printf("Setting csound as a new instance.\n");
-            csound_.reset(new CsoundThreaded());
-        }
-        std::printf("Csound version: %d\n", csound_->GetVersion());
-        // Now we add the Csound API to the context.
-        // std::printf("window_object_cleared_callback: defining gjs_csound_hello...\n");
-        // Corresponds to the JavaScript "function" function; defines an
-        // anonymous function that must be assigned to a variable in the
-        // JavaScript context.
+        csound_.reset(new CsoundThreaded());
         JSCValue *gjs_csound_hello = jsc_value_new_function(js_context,
                                      NULL,
                                      G_CALLBACK(on_gjs_csound_hello),
@@ -207,8 +188,6 @@ extern "C" {
                                      NULL,
                                      G_TYPE_NONE,
                                      0);
-        // std::printf("window_object_cleared_callback: defined gjs_csound_hello: %p\n%s\n",
-        //            gjs_csound_hello, jsc_value_to_json(gjs_csound_hello, 4));
         jsc_context_set_value (js_context,
                                "gjs_csound_hello",
                                gjs_csound_hello);
@@ -224,15 +203,15 @@ extern "C" {
                              destroy_notify_,
                              G_TYPE_OBJECT,
                              0);
-        //~ jsc_class_add_method (JSCClass *jsc_class,
-        //~ const char *name,
-        //~ GCallback callback,
-        //~ gpointer user_data,
-        //~ GDestroyNotify destroy_notify,
-        //~ GType return_type,
-        //~ guint n_params,
-        //~ ...);
-        // NOTE: Elementary types are returned as such.
+        // jsc_class_add_method (JSCClass *jsc_class,
+        // const char *name,
+        // GCallback callback,
+        // gpointer user_data,
+        // GDestroyNotify destroy_notify,
+        // GType return_type,
+        // guint n_params,
+        // ...);
+        // NOTE: Elementary types can be returned as such.
         jsc_class_add_method(csound_class,
                              "GetVersion",
                              G_CALLBACK(Csound_GetVersion),
@@ -354,8 +333,8 @@ extern "C" {
     }
 
     /**
-     * Loads this extension when the page is created.
-     */
+    * Loads this extension when the page is created.
+    */
     void SILENCE_PUBLIC
     webkit_web_extension_initialize_with_user_data(WebKitWebExtension *extension,
             GVariant *user_data)
