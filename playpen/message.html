@@ -77,7 +77,7 @@
     </style>
 </head>
 <body style="background-color:CadetBlue">
-    <script src="csound_loader.js"></script>
+    <script src="playpen/csound_loader.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.6.0.min.js"
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
@@ -266,20 +266,9 @@ $(document).ready(function() {
     });
     $('#play').on('click', async function() {
         let csound_ = await get_csound(csound_message_callback);
-        await csound_.CreateMessageBuffer(0);
         document.getElementById("csound_console").value = "";
         var csd = document.getElementById('csd').value;
-        let interval_callback = async function() {
-            let n = await csound_.GetMessageCnt();
-            console.log("n: " + n + "\n");
-            for (let i = 0; i < n; i++) {
-                let message = await csound_.GetFirstMessage();
-                csound_message_callback(message);
-                await csound_.PopFirstMessage();
-            }
-        };
         console.log("GetMessageCnt: " + csound.GetMessageCnt());
-        window.timer = setInterval(interval_callback, 250);
         csound_.Render(csd);
         $('#restore').trigger('click');
     });

@@ -32,6 +32,7 @@
 csound_injected = null;
 csound_node = null;
 csound_audio_node = null;
+csound_jsc = null;
 csound_is_loaded = false;
 
 var get_operating_system = function() {
@@ -110,6 +111,15 @@ var load_csound = async function(csound_message_callback_) {
     } catch (e) {
         csound_message_callback_(e + '\n');
     }
+    try {
+        csound_message_callback_("Trying to load CsoundThread...\n");
+        csound_jsc = new Csound();
+        csound_is_loaded = true;
+        csound_message_callback_("CsoundThread for JavaScriptCore is available in this JavaScript context.\n");
+        return;
+    } catch (e) {
+        csound_message_callback_(e + '\n');
+    }
 }
 
 /**
@@ -133,7 +143,11 @@ var get_csound = async function(csound_message_callback_) {
         csound = csound_audio_node;
         csound.SetMessageCallback(csound_message_callback_);
         return csound_audio_node;
-     } else {
+    } else if (csound_jsc != null) {
+        csound = csound_jsc;
+        csound.SetMessageCallback(csound_message_callback_);
+        return csound_jsc;
+    } else {
         csound_message_callback_("Csound is still loading, wait a bit...\n");
     }
 }       

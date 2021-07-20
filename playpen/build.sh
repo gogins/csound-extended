@@ -1,2 +1,2 @@
 bash build-csound-threaded.sh
-bash build-gjs-csound.sh
+bash build-jsc-csound.sh

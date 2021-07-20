@@ -221,6 +221,10 @@ public:
         printf("SetCsound: %p\n", csound_ptr);
         csound_.SetCsound(csound_ptr);
     }
+    virtual void SetMessageCallback(void (*csoundMessageCallback_)(CSOUND *, int attr,
+                                     const char *format, va_list valist)) {
+        csound_.SetMessageCallback(csoundMessageCallback_);
+    }
     virtual void SetStringChannel(const char *name, char *value) {
         csound_.SetStringChannel(name, value);
     }
