@@ -163,7 +163,7 @@
                 <property name="height_request">-1</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="hexpand">False</property>
+                <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <child>
                   <object class="GtkBox">
@@ -239,6 +239,17 @@
                           </packing>
                         </child>
                         <child>
+                          <object class="GtkButton" id="replace_all_button">
+                            <property name="label" translatable="yes">Replace all</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                          </object>
+                          <packing>
+                            <property name="position">5</property>
+                          </packing>
+                        </child>
+                        <child>
                           <object class="GtkEntry" id="replacement_entry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -271,17 +282,6 @@
                           </object>
                           <packing>
                             <property name="position">7</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="replace_all_button">
-                            <property name="label" translatable="yes">Replace all</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                          </object>
-                          <packing>
-                            <property name="position">5</property>
                           </packing>
                         </child>
                       </object>
@@ -331,7 +331,6 @@
                     <property name="tooltip_text" translatable="yes">Edit this piece</property>
                     <property name="halign">start</property>
                     <property name="valign">start</property>
-                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Code</property>
                   </object>
                   <packing>
@@ -359,7 +358,6 @@
                     <property name="tooltip_text" translatable="yes">Custom controls for performing</property>
                     <property name="halign">start</property>
                     <property name="valign">start</property>
-                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Controls</property>
                   </object>
                   <packing>
@@ -388,7 +386,6 @@
                     <property name="tooltip_text" translatable="yes">HTML5 browser for visual music and such</property>
                     <property name="halign">start</property>
                     <property name="valign">start</property>
-                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">HTML</property>
                   </object>
                   <packing>
@@ -415,7 +412,6 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="tooltip_text" translatable="yes">Online help</property>
-                    <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Help</property>
                   </object>
                   <packing>
