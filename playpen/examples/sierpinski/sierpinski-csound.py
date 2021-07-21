@@ -13,9 +13,8 @@ which will cause the recursive process to stop when the value reaches 0.
 
 """
 import musx
-import CsoundThreaded
-
 from musx import Score, Note, Seq, MidiFile, keynum
+import CsoundThreaded
 
 def sierpinski(score, tone, shape, trans, levels, dur, amp):
     """
@@ -48,37 +47,36 @@ def sierpinski(score, tone, shape, trans, levels, dur, amp):
             score.compose(sierpinski(score, (k + trans), shape,
                         trans, levels - 1, dur / num,  amp))
         yield dur
-    
 
-if __name__ == "__main__":
-    # It's good practice to add any metadata such as tempo, midi instrument
-    # assignments, micro tuning, etc. to track 0 in your midi file.
-    track0 = MidiFile.metatrack()
-    # Track 1 will hold the composition.
-    track1 = Seq()
-    # Create a scheduler and give it t1 as its output object.
-    score = Score(out=track1)
+# It's good practice to add any metadata such as tempo, midi instrument
+# assignments, micro tuning, etc. to track 0 in your midi file.
+track0 = MidiFile.metatrack()
+# Track 1 will hold the composition.
+track1 = Seq()
+# Create a scheduler and give it t1 as its output object.
+score = Score(out=track1)
 
-    # Create the composition. Specify levels and melody length with care!
-    # The number of events that are generateed is exponentially related to
-    # the length of the melody and the number of levels. For example the
-    # first compose() generates 120 events, the second 726, and the third 2728!
-    #score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 12, 4, 3, .5))
-    #score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 8, 5, 7, .5))
-    score.compose(sierpinski(score, keynum('a0'), [0, -1, 2, 13], 12, 5, 24, .5))
- 
-    # Write the tracks to a midi file in the current directory.
-    file = MidiFile("sierpinski.mid", [track0, track1]).write()
-    print(f"Wrote '{file.pathname}'.")
-    
-    # To automatially play demos use setmidiplayer() and playfile().
-    # Example:
-    #     setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
-    #     playfile(file.pathname)  
-    
-    # Now the Csound stuff.
-    
-    orc  = '''
+# Create the composition. Specify levels and melody length with care!
+# The number of events that are generateed is exponentially related to
+# the length of the melody and the number of levels. For example the
+# first compose() generates 120 events, the second 726, and the third 2728!
+#score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 12, 4, 3, .5))
+#score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 8, 5, 7, .5))
+#score.compose(sierpinski(score, musx.keynum('a0'), [0, -1, 2, 13], 12, 5, 24, .5))
+score.compose(sierpinski(score, 24., [0, -1, 2, 13], 12, 5, 24, .5))
+
+# Write the tracks to a midi file in the current directory.
+file = MidiFile("sierpinski.mid", [track0, track1]).write()
+print(f"Wrote '{file.pathname}'.")
+
+# To automatially play demos use setmidiplayer() and playfile().
+# Example:
+#     setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
+#     playfile(file.pathname)  
+
+# Now the Csound stuff.
+
+orc  = '''
 
 sr = 48000
 ksmps = 128
@@ -210,24 +208,23 @@ kstatus, kchan, kdata1, kdata2 midiin
 ;printf "          midi in s %4d c %4d %4d %4d\\n", kdata2, kstatus, kchan, kdata1, kdata2
 endin
 
-    
-    '''    
-    
-    # The "f 0" statement prevents an abrupt cutoff.
-    sco = "f 0 105\n" + musx.to_csound_score(file)
-    print(sco)
-    
-    csound.SetOption("-+msg_color=0")
-    csound.SetOption("-d")
-    csound.SetOption("-m195")
-    csound.SetOption("-f")
-    # Change this for your actual audio configuration, try "aplay -l" to see what they are.
-    # csound.setOption("-odac:plughw:2,0")
-    csound.SetOption("-odac")
-    # Can also be a soundfile.
-    # csound.setOption("-otest.wav")
-    csound.CompileOrc(orc)
-    csound.ReadScore(sco)
-    csound.Start()
-    csound.Perform()
+'''    
+
+# The "f 0" statement prevents an abrupt cutoff.
+sco = "f 0 105\n" + musx.to_csound_score(file)
+print(sco)
+
+csound.SetOption("-+msg_color=0")
+csound.SetOption("-d")
+csound.SetOption("-m195")
+csound.SetOption("-f")
+# Change this for your actual audio configuration, try "aplay -l" to see what they are.
+csound.SetOption("-odac:plughw:2,0")
+# Can also be a soundfile.
+# csound.setOption("-otest.wav")
+csound.CompileOrc(orc)
+csound.Start()
+csound.ReadScore(sco)
+csound.Perform()
+
 

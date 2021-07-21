@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+import concurrent.futures
 import contextlib
 import datetime
 import markdown
@@ -16,10 +17,10 @@ import warnings
 
 # Comment this out during development?
 
-warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore")
 
 '''
-A few strict conventions greatly simplify the code.
+A few strict naming conventions greatly simplify the code.
 
 Each piece is always a single text file of code; it could be piece.csd, 
 piece.py, or piece.html. The piece should specify a real-time audio output 
@@ -35,6 +36,13 @@ user need write no code for handling UI events; the convention is that all UI
 events from the user-defined controls are handled in a single function that 
 dispatches all widget event values to a Csound control channel with the same 
 name as the widget. 
+
+If you want to write a piece that combines different languages, e.g. a Csound 
+orchestra with a Python score generator with HTML for display or control, then 
+write a Python piece that embeds the Csound code and the HTML code as variables 
+containing multiple line strings, and then call functions in the playpen 
+program to set up the GUI and control the piece. All functions defined in the 
+code below are in the scope of a Python piece.
 '''
 
 import gi
@@ -63,27 +71,23 @@ gi.require_version("GtkSource", "3.0")
 from gi.repository import GtkSource
 code_editor = GtkSource.View()
 
-# Override global Gnome settings with playpen.ini values.
+# Override some global Gnome settings with playpen.ini values.
 gnome_settings = Gtk.Settings.get_default()
 gnome_settings.set_property("gtk-theme-name", gnome_theme)
 
-## gi.require_version("Gst", "1.0")
-## from gi.repository import Gst 
 gi.require_version("WebKit2", "4.0")
 from gi.repository import WebKit2
 gi.require_version("JavaScriptCore", "4.0")
 from gi.repository import JavaScriptCore
 gi.require_version("GtkSource", "3.0")
 from gi.repository import GtkSource
-import CsoundThreaded
-import musx
-from musx import *
 
+# Create a global instance of native Csound. For pure Csound and Python 
+# pieces, this instance is a singleton.
+import CsoundThreaded
 csound = CsoundThreaded.CsoundThread()
 print("Global Csound instance: {} CSOUND *: 0x{:x}.".format(csound, int(csound.GetCsound())))
         
-## Gst.init(sys.argv)
-
 title = "Playpen"
 print("title:", title)
 
@@ -95,20 +99,22 @@ filename = ""
 global piece
 piece = ""
 
-glade_controls_template = '''
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.2 -->
+# An empty, version-free Glade template string.
+# In Glade, the GtkGrid can be replaced by any other container, 
+# but it must have the id "user_controls_layout".
+
+glade_controls_template = '''<?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk+" version="3.20"/>
+  <object class="GtkGrid">
+    <property id="name">user_controls_layout</property>
+    <property name="name">user_controls_layout</property>
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+  </object>
 </interface>
 '''
 
-def print_(text):
-    print(text)
-    messages_text_buffer.insert(messages_text_buffer.get_end_iter(), text + "\n", -1)
-    end_iter = messages_text_buffer.get_end_iter()
-    messages_text_view.scroll_to_iter(end_iter, 0, False, .5, .5)
-    Gtk.main_iteration_do(False)
-    
 def piece_is_csound():
     if filename.lower().endswith('.csd'):
         return True
@@ -129,7 +135,7 @@ def piece_is_html():
     
 def on_new_button_clicked(button):
     try:
-        print_(button.get_label())
+        print(button.get_label())
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
             parent=None, 
             action=Gtk.FileChooserAction.SAVE)
@@ -143,9 +149,9 @@ def on_new_button_clicked(button):
         glade_file = glade_filename_(filename)
         with open(glade_file, 'w') as file:
             file.write(glade_controls_template)
-        print_(filename)
+        print(filename)
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
     
 def load_piece(filename):
     try:
@@ -154,7 +160,7 @@ def load_piece(filename):
             language = language_manager.guess_language(filename)
             if language is not None:
                 code_editor.get_buffer().set_language(language)
-            #print_("load_piece: language: {}".format(language.get_name()))
+            #print("load_piece: language: {}".format(language.get_name()))
             code_editor.get_buffer().set_text(piece)
         if piece_is_csound():
             load_glade(filename)
@@ -162,16 +168,16 @@ def load_piece(filename):
             load_glade(filename)
         if piece_is_html():
             piece_uri = pathlib.Path(filename).resolve().parent.as_uri()
-            print_("load_piece: uri: {}".format(piece_uri))
+            print("load_piece: uri: {}".format(piece_uri))
             webview.load_html(piece, piece_uri)            
         main_window.set_title(filename)
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
         
 '''
 For only those widgets and those signals that are used here to control Csound 
 performances using the Csound control channels, connect the on_control_changed 
-callbackget_name.
+signal to its callback.
 '''
 def connect_controls(container, on_control_changed_):
     children = container.get_children()
@@ -214,22 +220,21 @@ def on_control_change(control, data):
             csound.SetControlChannel(channel_name, channel_value)
         elif isinstance(control, Gtk.Scale):
             channel_value = control.get_value()
-            csound.etControlChannel(channel_name, channel_value)
+            csound.SetControlChannel(channel_name, channel_value)
         #~ elif isinstance(control, Gtk.SpinButton):
             #~ channel_value = control.get_value()
             #~ csound.SetControlChannel(channel_name, channel_value)
         elif isinstance(control, Gtk.Editable):
             channel_value = control.get_text()
             csound.SetStringChannel(channel_name, channel_value)
-        print_("on_control_change: {}: {}".format(channel_name, channel_value))
+        print("on_control_change: {}: {}".format(channel_name, channel_value))
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
 
 def glade_filename_(filename):            
-    basename = os.path.basename(filename)
-    filename_ = os.path.splitext(basename)[0]
-    glade_file = filename_ + ".glade"
-    # print_("glade_file: {}".format(glade_file))
+    pathlib_ = pathlib.PurePath(filename)
+    glade_file = str(pathlib_.with_suffix(".glade"))
+    # print("glade_file: {}".format(glade_file))
     return glade_file
 
 def load_glade(filename):
@@ -238,23 +243,27 @@ def load_glade(filename):
         try:
             with open(glade_file, "r") as file:
                 glade_xml = file.read()
-                # print("glade:", glade_xml)
+                print("glade:", glade_xml)
                 result = builder.add_from_string(glade_xml)
                 if result == 0:
-                    print_("Failed to parse {} file.".format(glade_file))
+                    print("Failed to parse {} file.".format(glade_file))
                 user_controls_layout = builder.get_object("user_controls_layout")
-                # print_("user_controls_layout: {}".format(user_controls_layout))
+                print("user_controls_layout: {}".format(user_controls_layout))
+                children = controls_layout.get_children()
+                for child in children:
+                    if child.get_name() == "user_controls_layout":
+                        controls_layout.remove(child)
                 controls_layout.add(user_controls_layout)
                 connect_controls(controls_layout, on_control_change)
         except:
-            print_("Error: failed to load user-defined controls layout.")
-            print_(traceback.format_exc())
+            print("Error: failed to load user-defined controls layout.")
+            print(traceback.format_exc())
     else:
-        print_("Glade file not found, not defining controls.")
+        print("Glade file not found, not defining controls.")
 
 def on_open_button_clicked(button):
     try:
-        print_(button.get_label())
+        print(button.get_label())
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
             parent=None, 
             action=Gtk.FileChooserAction.OPEN)
@@ -268,7 +277,7 @@ def on_open_button_clicked(button):
         load_piece(filename)
         file_chooser_dialog.close()
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
         
 def save_piece():
     global filename
@@ -282,19 +291,19 @@ def save_piece():
             if language is not None:
                 code_editor.get_buffer().set_language(language)
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
         
 def on_save_button_clicked(button):
     try:
-        print_(button.get_label())
+        print(button.get_label())
         save_piece()
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
     
 def on_save_as_button_clicked(button):
     global filename
     try:
-        print_(button.get_label())
+        print(button.get_label())
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
             parent=None, 
             action=Gtk.FileChooserAction.SAVE)
@@ -307,16 +316,15 @@ def on_save_as_button_clicked(button):
         filename = file_chooser_dialog.get_filename()
         save_piece()
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
         
 def on_play_audio_button_clicked(button):
     global filename
     global piece
     try:
-        print_(button.get_label())
+        print(button.get_label())
         save_piece()
         load_glade(filename)
-        csound.CreateMessageBuffer(False)
         if piece_is_python():
             # Only globals are passed, because otherwise recursive functions 
             # defined and invoked in the piece will not work. See:
@@ -334,13 +342,13 @@ def on_play_audio_button_clicked(button):
             csound.Start()
             csound.Perform()
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
         
 def on_render_soundfile_button_clicked(button):
     global filename
     global piece
     try:
-        print_(button.get_label())
+        print(button.get_label())
         save_piece()
         load_glade(filename)
         if piece_is_csound():
@@ -356,22 +364,18 @@ def on_render_soundfile_button_clicked(button):
                     message = csound.GetFirstMessage()
                     csound.PopFirstMessage()
                     sys.stdout.write(message)
-                    messages_text_buffer.insert(messages_text_buffer.get_end_iter(), message, -1)
-                    end_iter = messages_text_buffer.get_end_iter()
-                    messages_text_view.scroll_to_iter(end_iter, 0, False, .5, .5)
-                    Gtk.main_iteration_do(False)
             csound.Stop()
             csound.Cleanup()
             csound.Reset()
             post_process()
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
         
 def post_process():
     try:
-        print_("Post-processing...")
+        print("Post-processing...")
         cwd = os.getcwd()
-        print_('cwd:                    ' + cwd)
+        print('cwd:                    ' + cwd)
         author = 'Michael Gogins'
         year = '2019'
         license = 'ASCAP'
@@ -389,22 +393,22 @@ def post_process():
         mp3_filename = '%s.mp3' % label
         mp4_filename = '%s.mp4' % label
         flac_filename = '%s.flac' % label
-        print_('Basename:               ' + basename)
-        print_('Original soundfile:     ' + soundfile_name)
-        print_('Author:                 ' + author)
-        print_('Title:                  ' + title)
-        print_('Year:                   ' + year)
+        print('Basename:               ' + basename)
+        print('Original soundfile:     ' + soundfile_name)
+        print('Author:                 ' + author)
+        print('Title:                  ' + title)
+        print('Year:                   ' + year)
         str_copyright          = 'Copyright %s by %s' % (year, author)
-        print_('Copyright:              ' + str_copyright)
-        print_('Licence:                ' + license)
-        print_('Publisher:              ' + publisher)
-        print_('Notes:                  ' + notes)
-        print_('Master filename:        ' + master_filename)
-        print_('Spectrogram filename:   ' + spectrogram_filename)
-        print_('CD quality filename:    ' + cd_quality_filename)
-        print_('MP3 filename:           ' + mp3_filename)
-        print_('MP4 filename:           ' + mp4_filename)
-        print_('FLAC filename:          ' + flac_filename)
+        print('Copyright:              ' + str_copyright)
+        print('Licence:                ' + license)
+        print('Publisher:              ' + publisher)
+        print('Notes:                  ' + notes)
+        print('Master filename:        ' + master_filename)
+        print('Spectrogram filename:   ' + spectrogram_filename)
+        print('CD quality filename:    ' + cd_quality_filename)
+        print('MP3 filename:           ' + mp3_filename)
+        print('MP4 filename:           ' + mp4_filename)
+        print('FLAC filename:          ' + flac_filename)
         bext_description       = notes
         bext_originator        = author
         bext_orig_ref          = basename
@@ -419,25 +423,25 @@ def post_process():
         str_date               = year
         str_license            = license
         sox_normalize_command = '''sox -S "%s" "%s" gain -n -3''' % (soundfile_name, master_filename + 'untagged.wav')
-        print_('sox_normalize command:  ' + sox_normalize_command)
+        print('sox_normalize command:  ' + sox_normalize_command)
         os.system(sox_normalize_command)
         tag_wav_command = '''sndfile-metadata-set "%s" --bext-description "%s" --bext-originator "%s" --bext-orig-ref "%s" --str-comment "%s" --str-title "%s" --str-copyright "%s" --str-artist  "%s" --str-date "%s" --str-license "%s" "%s"''' % (master_filename + 'untagged.wav', bext_description, bext_originator, bext_orig_ref, str_comment, str_title, str_copyright, str_artist, str_date, str_license, master_filename)
-        print_('tag_wav_command:        ' + tag_wav_command)
+        print('tag_wav_command:        ' + tag_wav_command)
         os.system(tag_wav_command)
         sox_spectrogram_command = '''sox -S "%s" -n spectrogram -o "%s" -t"%s" -c"%s"''' % (master_filename, spectrogram_filename, label, str_copyright + ' (%s' % publisher)
-        print_('sox_spectrogram_command:' + sox_spectrogram_command)
+        print('sox_spectrogram_command:' + sox_spectrogram_command)
         os.system(sox_spectrogram_command)
         sox_cd_command = '''sox -S "%s" -b 16 -r 44100 "%s"''' % (master_filename, cd_quality_filename + 'untagged.wav')
-        print_('sox_cd_command:         ' + sox_cd_command)
+        print('sox_cd_command:         ' + sox_cd_command)
         os.system(sox_cd_command)
         tag_wav_command = '''sndfile-metadata-set "%s" --bext-description "%s" --bext-originator "%s" --bext-orig-ref "%s" --str-comment "%s" --str-title "%s" --str-copyright "%s" --str-artist  "%s" --str-date "%s" --str-license "%s" "%s"''' % (cd_quality_filename + 'untagged.wav', bext_description, bext_originator, bext_orig_ref, str_comment, str_title, str_copyright, str_artist, str_date, str_license, cd_quality_filename)
-        print_('tag_wav_command:        ' + tag_wav_command)
+        print('tag_wav_command:        ' + tag_wav_command)
         os.system(tag_wav_command)
         mp3_command = '''lame --add-id3v2 --tt "%s" --ta "%s" --ty "%s" --tn "%s" --tg "%s"  "%s" "%s"''' % (title, "Michael Gogins", year, notes, "Electroacoustic", master_filename, mp3_filename)
-        print_('mp3_command:            ' + mp3_command)
+        print('mp3_command:            ' + mp3_command)
         os.system(mp3_command)
         sox_flac_command = '''sox -S "%s" "%s"''' % (master_filename, flac_filename)
-        print_('sox_flac_command:       ' + sox_flac_command)
+        print('sox_flac_command:       ' + sox_flac_command)
         os.system(sox_flac_command)
         mp4_command = '''%s -r 1 -i "%s" -i "%s" -codec:a aac -strict -2 -b:a 384k -c:v libx264 -b:v 500k "%s"''' % ('ffmpeg', os.path.join(cwd, spectrogram_filename), os.path.join(cwd, master_filename), os.path.join(cwd, mp4_filename))
         mp4_metadata =  '-metadata title="%s" ' % title
@@ -449,13 +453,13 @@ def post_process():
         mp4_metadata += '-metadata publisher="%s" ' % publisher
         mp4_command = '''"%s" -y -loop 1 -framerate 2 -i "%s" -i "%s" -c:v libx264 -preset medium -tune stillimage -crf 18 -codec:a aac -strict -2 -b:a 384k -r:a 48000 -shortest -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" %s "%s"''' % ('ffmpeg', os.path.join(cwd, spectrogram_filename), os.path.join(cwd, master_filename), mp4_metadata, os.path.join(cwd, mp4_filename))
         mp4_command = mp4_command.replace('\\', '/')
-        print_('mp4_command:            ' + mp4_command)
+        print('mp4_command:            ' + mp4_command)
         os.system(mp4_command)
         os.system('del *wavuntagged.wav')
         os.system('{} {}'.format(soundfile_editor, master_filename))
-        print_("")
+        print("")
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
         
 def patch_csound_options(csd, output="soundfile"):
     global filename
@@ -499,29 +503,36 @@ def patch_csound_options(csd, output="soundfile"):
     csd_options = " ".join(csd_options_tokens)
     csd = "".join([csd_top, "\n", csd_options, "\n", csd_bottom])
     return csd
+        
+def glade_exit_callback(future):
+    glade_file = glade_filename_(filename)
+    print("Finished editing {}.".format(glade_file))
+    load_glade(glade_file)
     
 def on_edit_gui_button_clicked(button):
     try:
-        print_(button.get_label())
-        basename = os.path.basename(filename)
-        filename_ = os.path.splitext(basename)[0]
+        print(button.get_label())
         glade_file = glade_filename_(filename)
-        print_("glade_file: {}".format(glade_file))    
-        subprocess.run("glade {}".format(glade_file), shell=True)
-        print_("Finished editing {}.".format(glade_file))
-        load_glade(glade_file)
+        if os.path.exists(glade_file) == False:
+            with open(glade_file, "wt") as file:
+                print("Writing {} to {}.".format(glade_file, glade_controls_template))
+                file.write(glade_controls_template)
+        print("glade_file: {}".format(glade_file))    
+        pool = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+        future_ = pool.submit(subprocess.call, "glade {}".format(glade_file), shell=True)
+        future_.add_done_callback(glade_exit_callback)
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
     
 def on_stop_button_clicked(button):
     try:
-        print_("Stopping csound...")
+        print("Stopping csound...")
         csound.Stop()
         csound.Cleanup()
         csound.Reset()
-        print_("Csound has been stopped and reset.")
+        print("Csound has been stopped and reset.")
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
         
 def on_destroy(source):
     csound.Stop()
@@ -560,10 +571,10 @@ def on_search_entry_activate(widget):
             buffer.move_mark(buffer.get_selection_bound(), end)
             code_editor.scroll_to_mark(buffer.get_insert(), 0.25, True, 0.5, 0.5)
         else:
-            print_("search: {} not found.".format(search_settings.get_search_text()))
+            print("search: {} not found.".format(search_settings.get_search_text()))
             
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
     
 def on_search_button_clicked(widget):
     global search_settings
@@ -579,9 +590,9 @@ def on_search_button_clicked(widget):
             buffer.move_mark(buffer.get_selection_bound(), end)
             code_editor.scroll_to_mark(buffer.get_insert(), 0.25, True, 0.5, 0.5)
         else:
-            print_("search: {} not found.".format(search_settings.get_search_text()))
+            print("search: {} not found.".format(search_settings.get_search_text()))
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
         
 def on_replace_button_clicked(widget):
     global search_settings
@@ -611,10 +622,9 @@ def on_replace_button_clicked(widget):
                 buffer.move_mark(buffer.get_selection_bound(), end)
                 code_editor.scroll_to_mark(buffer.get_insert(), 0.25, True, 0.5, 0.5)
             else:
-                print_("replace: {} not found.".format(search_settings.get_search_text()))
-                
+                print("replace: {} not found.".format(search_settings.get_search_text()))
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
 
 def on_replace_all_button_clicked(widget):
     global search_settings
@@ -629,7 +639,7 @@ def on_replace_all_button_clicked(widget):
             code_editor.scroll_to_mark(
                 buffer.get_insert(), 0.25, True, 0.5, 0.5)
     except:
-        print_(traceback.format_exc())
+        print(traceback.format_exc())
 
 def on_apply_scheme_button(widget):
     scheme = style_scheme.get_style_scheme()
@@ -648,21 +658,6 @@ html_window = builder.get_object("html_window")
 code_editor = builder.get_object("code_editor")
 code_editor.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(255/255, 160/255, 122/255, 1.0))
 controls_layout = builder.get_object("controls_layout")
-messages_text_view = builder.get_object("messages_text_view")
-messages_text_view.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0.0, 0.8, 0.0, 1.0))
-messages_text_view.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0.1, 0.1, 0.1, 1.0))
-messages_text_buffer = messages_text_view.get_buffer()
-# https://pygabriel.wordpress.com/2009/07/27/redirecting-the-stdout-on-a-gtk-textview/
-def message_callback(self, fd, condition):
-    print("message_callback: self: {} fd: {} condition: {}".format(self, fd, condition))
-    if condition == Glib.IO_IN:
-        line = fd.readline()
-        messages_text_buffer.insert(messages_text_buffer.get_end_iter(), message, -1)
-        end_iter = messages_text_buffer.get_end_iter()
-        messages_text_view.scroll_to_iter(end_iter, 0, False, .5, .5)
-    return True
-#GLib.io_add_watch(sys.stdout, GLib.IO_IN, message_callback, None)
-GLib.io_add_watch(sys.stderr, GLib.IO_IN, message_callback, None)
 webview = WebKit2.WebView() 
 # Set the directory from which to load extensions.
 web_context = webview.get_context()
@@ -686,7 +681,7 @@ try:
         readme_html = markdown.markdown(readme_md)
         helpview.load_html(readme_html)
 except:
-    traceback.print_exc()
+    traceback.print(exc())
 help_window.add(helpview)
 main_window.resize(1200, 800)
 new_button = builder.get_object("new_button")
@@ -713,6 +708,7 @@ apply_scheme_button = builder.get_object("apply_scheme_button")
 apply_scheme_button.connect("activate", on_apply_scheme_button)
 apply_scheme_button.connect("clicked", on_apply_scheme_button)
 language_manager = GtkSource.LanguageManager()
+
 search_context = GtkSource.SearchContext()
 search_settings = GtkSource.SearchSettings()
 search_button = builder.get_object("search_button")

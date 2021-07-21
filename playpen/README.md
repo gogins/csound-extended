@@ -49,11 +49,14 @@ and Windows.
 
 Everything should be installed for the same version of Python.
 
-1.  [Python 3.9](https://www.python.org/downloads/). For Ubuntu Linux, 
+1.  _An up to date C/C++ compiler_; on Ubuntu, execute 
+    `sudo apt install build-essentials`.
+1.  [SWIG wrapper and Interface Generator](http://swig.org/); on Ubuntu execute 
+    `sudo apt install swig`.
+2.  [Python 3.7](https://www.python.org/downloads/) or higher. For Ubuntu Linux, 
     follow [these instructions](https://linuxize.com/post/how-to-install-python-3-9-on-ubuntu-20-04/).
 2.  [GTK 3](https://www.gtk.org/docs/installations/), note that GTK 4 is now 
     the current version but it is the previous version, GTK 3, that is used here.
-3.  [GStreamer 3](https://gstreamer.freedesktop.org/documentation/installing/index.html?gi-language=c).
 4.  _WebKit2 4.0 development libraries_; on Ubuntu Linux this is done by 
     executing `sudo apt install libwebkit2gtk-4.0-37` or a compatible version.
 5.  _WebKit2 GNU introspection libraries_; on Ubuntu Linux this 
@@ -80,15 +83,31 @@ Everything should be installed for the same version of Python.
 12. The playpen itself is part of my csound-extended repository. Clone the 
     [csound-extended](https://github.com/gogins/csound-extended) repository to 
     your local filesystem. Change to the `csound-extended/playpen` directory. 
-    Execute `python3 playpen.py` and then open and run the `drone.py` example 
+    Execute `python3 playpen.py` and then open and run the `xanadu.csd` example 
     to check that everything is working.
+    
+You must download or build two shared libraries in this repository. On Linux, 
+running `build.sh` should do the job. These shared libraries are:
+
+1.  `CsoundThreaded`, a native Python module generated from `csound.i` by 
+    the SWIG program. This provides a simplified implementation of the Csound 
+    API that can be used from Python.
+2.  `libjsc_csound.so`, a native loadable module (providing the same 
+    simplified Csound API) that can be used by the JavaScriptCore engine in 
+    the embedded WebKit2 browser.
 
 ## A Few Examples
 
-### sierpinski-csound
+### sierpinski-csound.py
 
 For this example, install Rick Taube's Python port of the Common Music 
 algorithmic composition system, [musx](https://github.com/musx-admin/musx).
 
 ## User Guide
+
+The philosophy of the playpen is to keep it simple, stupid and yet to have 
+access to all the power of Csound, Python, and HTML5 in one editor, along 
+with a built-in visual user interface designer.
+
+
 

@@ -1,0 +1,2270 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Unperformed experiments have no results</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+        <style>
+            body {
+                background-color: #000000;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+            button, select, a, a:visited {
+                padding: 8px 12px 8px 12px;
+                border: none;
+                border-radius: 5px;
+                margin-right: 5px;
+                color: #ffffff;
+                background-color: #000000;
+                opacity: 0.5;
+                font-family: Monospace;
+                font-size: 12px;
+                font-weight: bold;
+                cursor: pointer;
+                text-decoration: none;
+            }
+            button:hover, select:hover, a:hover {
+                opacity: 1;
+                box-shadow: 0 0 4px #FFF;
+            }
+            option {
+                color: #ffffff;
+                background-color: #000000;
+            }
+            ::-webkit-scrollbar
+            {
+                width:10px;
+            }
+            ::-webkit-scrollbar-track-piece
+            {
+                background-color:transparent;
+            }
+            ::-webkit-scrollbar-corner
+            {
+                background-color:transparent;
+            }
+        .dg {
+                font-family: Monaco, sans-serif;
+                font-size:8pt;
+            }
+        </style>
+        <script src="silencio/js/dat.gui.js"></script>
+        <script src='silencio/js/jquery.js'></script>
+        <script src='silencio/js/helpers.js'></script>
+        <script src="silencio/js/codemirror.js"></script>
+        <script src="silencio/js/glsl.js"></script>
+        <script src="silencio/js/tinycolor.js"></script>
+        <script src="silencio/js/Silencio.js"></script>
+        <script src="silencio/js/ChordSpace.js"></script>
+        <script src="silencio/js/sprintf.js"></script>
+    </head>
+    <body>
+        <script src="CsoundAudioNode.js"></script>
+        <script src="csound_loader.js"></script>
+        <table id = 'statistics' style="table-layout:fixed;position:absolute;left:1vw;color:#eee;top:1vw;font-family:Monaco, sans-serif;font-size:8pt;cursor:none;">
+            <col width=400px>
+            <col width=250px>
+            <th style="color:gold;text-align:left">Unperformed experiments have no results, by Michael Gogins.</th>
+            <!-- Copyright (C) 2017 by Michael Gogins -->
+            <tr>
+                <td>Time: </td><td id="Time_cell" style="color:LawnGreen;text-align:right;"></td>
+            </tr>
+            <tr>
+                <td>X: </td><td id="X_cell" style="color:SkyBlue;text-align:right;"></td>
+            </tr>
+            <tr>
+                <td>Y: </td><td id="Y_cell" style="color:SkyBlue;text-align:right;"></td>
+            </tr>
+             <tr>
+                <td>Chord: </td><td id="Chord_cell" style="color:SkyBlue;text-align:right;"></td>
+            </tr>
+            <tr>
+                <!-- or: http://stackoverflow.com/questions/35509360/how-to-make-the-content-of-the-following-table-cell-scrollable -->
+                <td colspan=2><textarea id="console" style="width:100%;color:SkyBlue;background-color:transparent;border:none;text-align:left;font-size:10px;height:200px;overflow:auto;cursor:none;"></textarea></td>
+            </tr>
+        </table>
+        <textarea class="code" id="csd" hidden rows=24 cols=80>
+<CsoundSynthesizer>
+<CsOptions>
+-d -f -m0 -+rtaudio=alsa -odac:plughw:1,0
+</CsOptions>
+<CsInstruments>
+
+sr = 48000
+ksmps = 128
+nchnls = 2
+nchnls_i = 1
+0dbfs = .01
+
+connect "Blower", "outleft", "Reverb", "inleft"
+connect "Blower", "outright", "Reverb", "inright"
+connect "Bower", "outleft", "Reverb", "inleft"
+connect "Bower", "outright", "Reverb", "inright"
+connect "Buzzer", "outleft", "Reverb", "inleft"
+connect "Buzzer", "outright", "Reverb", "inright"
+connect "Droner", "outleft", "Reverb", "inleft"
+connect "Droner", "outright", "Reverb", "inright"
+connect "FMModerate2", "outleft", "Reverb", "inleft"
+connect "FMModerate2", "outright", "Reverb", "inright"
+connect "Harpsichord", "outleft", "Reverb", "inleft"
+connect "Harpsichord", "outright", "Reverb", "inright"
+connect "Phaser", "outleft", "Reverb", "inleft"
+connect "Phaser", "outleft", "Reverb", "inright"
+connect "Plucked", "outright", "Reverb", "inleft"
+connect "Plucked", "outleft", "Reverb", "inright"
+connect "Rhodes", "outleft", "Reverb", "inleft"
+connect "Rhodes", "outright", "Reverb", "inright"
+connect "Sweeper", "outleft", "Reverb", "inleft"
+connect "Sweeper", "outright", "Reverb", "inright"
+connect "Shiner", "outleft", "Reverb", "inleft"
+connect "Shiner", "outright", "Reverb", "inright"
+connect "Xing", "outleft", "Reverb", "inleft"
+connect "Xing", "outright", "Reverb", "inright"
+connect "YiString", "outleft", "Reverb", "inleft"
+connect "YiString", "outright", "Reverb", "inright"
+connect "YiString", "chorusleft", "SolinaChorus", "inleft"
+connect "YiString", "chorusright", "SolinaChorus", "inright"
+connect "SolinaChorus", "outleft", "Reverb", "inleft"
+connect "SolinaChorus", "outright", "Reverb", "inright"
+connect "Reverb", "outleft", "MasterOutput", "inleft"
+connect "Reverb", "outright", "MasterOutput", "inright"
+
+gk_FMModerate2_level init 0
+gi_FMModerate2_carrier init 1
+gi_FMModerate2_modulator init 4
+gi_FMModerate2_fmamplitude init 9
+gi_FMModerate2_index init 2
+instr FMModerate2
+; Author: Michael Gogins
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_overall_amps = 85
+i_normalization = ampdb(-i_overall_amps) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+i_frequency = cpsmidinn(i_midi_key)
+k_gain = ampdb(gk_FMModerate2_level)
+iattack = 0.002
+isustain = p3
+idecay = 1.5
+irelease = 0.05
+xtratim iattack + irelease
+icarrier = gi_FMModerate2_carrier
+imodulator = gi_FMModerate2_modulator
+ifmamplitude = gi_FMModerate2_fmamplitude
+index = gi_FMModerate2_index
+ifrequencyb = i_frequency * 1.003
+icarrierb = icarrier * 1.004
+aindenv transegr 0.0, iattack, -8.0, 1.0, idecay, -8.0, 0.025, isustain, 0.0, 0.025, irelease, 7.0, 0.0
+aindex = aindenv * index * ifmamplitude
+icosine ftgenonce 0, 0, 65537, 11, 1
+aouta foscili 1.0, i_frequency, icarrier, imodulator, index, icosine
+aoutb foscili 1.0, ifrequencyb, icarrierb, imodulator, index, icosine; Plus amplitude correction.
+a_signal = (aouta + aoutb) * aindenv
+i_attack = .002
+i_sustain = p3
+i_release = 0.01
+xtratim i_attack + i_sustain + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Plucked_level init 0
+instr Plucked
+; Author: Michael Gogins
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_overall_amps = 101
+i_normalization = ampdb(-i_overall_amps) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Plucked_level)
+isine ftgenonce 0, 0, 65537, 10, 1
+aenvelope transeg 1.0, 20, -12.0, 0.05
+aexcite poscil 1.0, 1, isine
+asignal1 wgpluck2 0.1, 1.0, i_frequency, 0.25, 0.22
+asignal2 wgpluck2 0.1, 1.0, i_frequency * 1.003, 0.20, 0.223
+asignal3 wgpluck2 0.1, 11, i_frequency * 0.997, 0.23, 0.224
+a_signal = (asignal1 + asignal2 + asignal3) * aenvelope
+i_attack = .002
+i_sustain = p3
+i_release = 0.01
+xtratim i_attack + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Rhodes_level init 0
+gi_Rhodes_sine ftgen 0, 0, 65537, 10, 1
+gi_Rhodes_cosine ftgen 0, 0, 65537, 11, 1
+gi_Rhodes_blank ftgen 0, 0, 65537, 10, 0 ; Blank wavetable for some Cook FM opcodes.
+instr Rhodes
+; Authors: Perry Cook, John ffitch, Michael Gogins
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+k_space_front_to_back = p6
+k_space_left_to_right = .5
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_overall_amps = 82
+i_normalization = ampdb(-i_overall_amps) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Rhodes_level)
+iindex = 4
+icrossfade = 3
+ivibedepth = 0.2
+iviberate = 6
+ifn1 = gi_Rhodes_sine
+ifn2 = gi_Rhodes_cosine
+ifn3 = gi_Rhodes_sine
+ifn4 = gi_Rhodes_blank
+ivibefn = gi_Rhodes_sine
+a_signal fmrhode i_amplitude, i_frequency, iindex, icrossfade, ivibedepth, iviberate, ifn1, ifn2, ifn3, ifn4, ivibefn
+i_attack = .002
+i_sustain = p3
+i_release = 0.01
+xtratim i_attack + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Buzzer_attack init .125
+gk_Buzzer_release init .25
+gk_Buzzer_harmonics init 8
+gk_Buzzer_level init 0
+gk_Buzzer_midi_dynamic_range init 127
+gi_Buzzer_sine ftgen 0, 0, 65537, 10, 1
+instr Buzzer
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Buzzer_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 79.5
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Buzzer_level)
+i_attack = i(gk_Buzzer_attack)
+i_release = i(gk_Buzzer_release)
+i_sustain = p3
+xtratim i_attack + i_release
+a_envelope transegr 0.0, i_attack / 2.0, 1.5, i_amplitude / 2.0, i_attack / 2.0, -1.5, i_amplitude, i_sustain, 0.0, i_amplitude, i_release / 2.0, 1.5, i_amplitude / 2.0, i_release / 2.0, -1.5, 0
+a_signal buzz a_envelope, i_frequency, gk_Buzzer_harmonics, gi_Buzzer_sine
+
+a_signal = a_signal * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+;printks "Buzzer         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(a_out_left)), dbamp(rms(a_out_right))
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Xing_level init 0
+instr Xing
+; Author: Andrew Horner
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_overall_amps = 75
+i_normalization = ampdb(-i_overall_amps) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+i_frequency = cpsmidinn(i_midi_key)
+k_gain = ampdb(gk_Xing_level  )
+isine ftgenonce 0, 0, 65537, 10, 1
+iinstrument = p1
+istarttime = p2
+ioctave = p4
+idur = p3
+kfreq = k(i_frequency)
+iamp = 1
+inorm = 32310
+aamp1 linseg 0,.001,5200,.001,800,.001,3000,.0025,1100,.002,2800,.0015,1500,.001,2100,.011,1600,.03,1400,.95,700,1,320,1,180,1,90,1,40,1,20,1,12,1,6,1,3,1,0,1,0
+adevamp1 linseg 0, .05, .3, idur - .05, 0
+adev1 poscil adevamp1, 6.7, isine, .8
+amp1 = aamp1 * (1 + adev1)
+aamp2 linseg 0,.0009,22000,.0005,7300,.0009,11000,.0004,5500,.0006,15000,.0004,5500,.0008,2200,.055,7300,.02,8500,.38,5000,.5,300,.5,73,.5,5.,5,0,1,1
+adevamp2 linseg 0,.12,.5,idur-.12,0
+adev2 poscil adevamp2, 10.5, isine, 0
+amp2 = aamp2 * (1 + adev2)
+aamp3 linseg 0,.001,3000,.001,1000,.0017,12000,.0013,3700,.001,12500,.0018,3000,.0012,1200,.001,1400,.0017,6000,.0023,200,.001,3000,.001,1200,.0015,8000,.001,1800,.0015,6000,.08,1200,.2,200,.2,40,.2,10,.4,0,1,0
+adevamp3 linseg 0, .02, .8, idur - .02, 0
+adev3 poscil adevamp3, 70, isine ,0
+amp3 = aamp3 * (1 + adev3)
+awt1 poscil amp1, i_frequency, isine
+awt2 poscil amp2, 2.7 * i_frequency, isine
+awt3 poscil amp3, 4.95 * i_frequency, isine
+asig = awt1 + awt2 + awt3
+arel linenr 1,0, idur, .06
+a_signal = asig * arel * (iamp / inorm)
+i_attack = .002
+i_sustain = p3
+i_release = 0.01
+xtratim i_attack + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Harpsichord_midi_dynamic_range init 127
+gk_Harpsichord_level init 0
+gk_Harpsichord_pick init .075
+gk_Harpsichord_reflection init .5
+gk_Harpsichord_pluck init .75
+instr Harpsichord
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Harpsichord_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 82.4
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Harpsichord_level)
+iHz = cpsmidinn(i_midi_key)
+kHz = k(iHz)
+aenvelope transeg 1.0, 20.0, -10.0, 0.05
+k_amplitude = 1
+apluck pluck 1, kHz, iHz, 0, 1
+iharptable ftgenonce 0, 0, 65536, 7, -1, 1024, 1, 1024, -1
+aharp poscil 1, kHz, iharptable
+aharp2 balance apluck, aharp
+a_signal	= (apluck + aharp2)
+i_attack = .002
+i_sustain = p3
+i_release = 0.01
+xtratim i_attack + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+;printks "Harpsichord      %9.4f   %9.4f\n", 0.5, a_out_left, a_out_right
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Droner_partial1 init .5
+gk_Droner_partial2 init .05
+gk_Droner_partial3 init .1
+gk_Droner_partial4 init .2
+gk_Droner_partial5 init .1
+gk_Droner_partial6 init 0
+gk_Droner_partial7 init 0
+gk_Droner_partial8 init 0
+gk_Droner_partial9 init 0
+gk_Droner_partial10 init 0
+gk_Droner_level init 0
+gi_Droner_waveform init 0
+instr Droner
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_overall_amps = -20 + 98 + 4
+i_normalization = ampdb(-i_overall_amps) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Droner_level)
+k1 = gk_Droner_partial1
+k2 = gk_Droner_partial2
+k3 = gk_Droner_partial3
+k4 = gk_Droner_partial4
+k5 = gk_Droner_partial5
+k6 = gk_Droner_partial6
+k7 = gk_Droner_partial7
+k8 = gk_Droner_partial8
+k9 = gk_Droner_partial9
+k10 = gk_Droner_partial10
+iwaveform = gi_Droner_waveform
+iattack = .5
+idecay = .5
+xtratim iattack + idecay
+isustain = p3
+aenvelope transegr 0.0, iattack / 2.0, 1.5, 1 / 2.0, iattack / 2.0, -1.5, 1, isustain, 0.0, 1, idecay / 2.0, 1.5, 1 / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(i_midi_key)
+isine ftgenonce 0, 0, 65537, 10, 1, 0, .02
+if iwaveform == 0 goto i_waveform_0
+if iwaveform == 1 goto i_waveform_1
+if iwaveform == 2 goto i_waveform_2
+i_waveform_0:
+asignal poscil3 1, ihertz, isine
+goto i_waveform_endif
+i_waveform_1:
+asignal vco2 1, ihertz, 8 ; integrated saw
+goto i_waveform_endif
+i_waveform_2:
+asignal vco2 1, ihertz, 12 ; triangle
+i_waveform_endif:
+asignal chebyshevpoly asignal, 0, k1, k2, k3, k4, k5, k6, k7, k8, k9, k10
+adeclicking linsegr 0, .004, 1, p3 - .014, 1, .1, 0
+a_signal = asignal * adeclicking
+a_signal = a_signal * i_amplitude * k_gain * 1.4
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_YiString_midi_dynamic_range init 127
+gk_YiString_level init 0
+gk_YiString_reverb_send init .5
+gk_YiString_chorus_send init .5
+gi_YiString_overlap init .1
+instr YiString
+//////////////////////////////////////////////
+// Original by Steven Yi.
+// Adapted by Michael Gogins.
+//////////////////////////////////////////////
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_YiString_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 71.5
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_YiString_level)
+iattack = gi_YiString_overlap
+isustain = p3
+idecay = gi_YiString_overlap
+xtratim iattack + idecay
+aenvelope transeg 0.0, iattack / 2.0, 1.5, i_amplitude / 2.0, iattack / 2.0, -1.5, i_amplitude, isustain, 0.0, i_amplitude, idecay / 2.0, 1.5, i_amplitude / 2.0, idecay / 2.0, -1.5, 0
+;ampenv = madsr:a(1, 0.1, 0.95, 0.5)
+asignal = vco2(1, i_frequency)
+asignal = moogladder(asignal, 6000, 0.1)
+a_signal = asignal * aenvelope
+i_attack = .002
+i_release = 0.01
+i_sustain = p3 - (i_attack + i_release)
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain 
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_signal_reverb = a_signal * gk_YiString_reverb_send
+a_signal_chorus = a_signal * gk_YiString_chorus_send
+a_out_left, a_out_right pan2 a_signal_reverb, p7
+outleta "outleft", a_out_left
+outleta "outright",  a_out_right
+a_out_left, a_out_right pan2 a_signal_chorus, p7
+outleta "chorusleft", a_out_left 
+outleta "chorusright", a_out_right 
+;printks "YiString         %9.4f  %9.4f\n", 0.5, a_out_left, a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Phaser_attack init .125
+gk_Phaser_release init .125
+gk_Phaser_ratio1 init 1
+gk_Phaser_ratio2 init 1/3
+gk_Phaser_index1 init 2
+gk_Phaser_index2 init 0.0125
+gk_Phaser_level init 0.5
+gk_Phaser_midi_dynamic_range init 127
+gi_Phaser_sine ftgen 0,0,65537,10,1
+instr Phaser
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Phaser_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 85.5
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Phaser_level)
+i_attack = i(gk_Phaser_attack)
+i_release = i(gk_Phaser_release)
+i_sustain = 1000
+xtratim i_attack + i_release
+a_envelope transegr 0.0, i_attack / 2.0, 1.5, i_amplitude / 2.0, i_attack / 2.0, -1.5, i_amplitude, i_sustain, 0.0, i_amplitude, i_release / 2.0, 1.5, i_amplitude / 2.0, i_release / 2.0, -1.5, 0
+a1,a2 crosspm gk_Phaser_ratio1, gk_Phaser_ratio2, gk_Phaser_index1, gk_Phaser_index2, i_frequency, gi_Phaser_sine, gi_Phaser_sine
+a_signal = (a1 + a2) * k_gain * a_envelope
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+;printks "Phaser         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(aleft)), dbamp(rms(aright))
+endin
+
+gk_Bower_midi_dynamic_range init 127
+gk_Bower_attack init .125
+gk_Bower_release init .125
+gk_Bower_level init 0
+gk_Bower_pressure init 0.25
+gi_Bower_sine ftgen 0,0,65537,10,1
+instr Bower
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Bower_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 80
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Bower_level)
+iattack = i(gk_Bower_attack)
+idecay = i(gk_Bower_release)
+isustain = p3
+iamp = i_amplitude
+xtratim iattack + idecay
+kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(i_midi_key)
+kamp = kenvelope
+kfreq = ihertz
+kpres = 0.25
+krat rspline 0.006,0.988,1,4
+kvibf = 4.5
+kvibamp = 0
+iminfreq = i(kfreq) / 2
+aSig wgbow kamp,kfreq,gk_Bower_pressure,krat,kvibf,kvibamp,gi_Bower_sine,iminfreq
+a_signal = aSig * kenvelope * k_gain
+aleft, aright pan2 a_signal, k_space_left_to_right
+outleta "outleft", aleft
+outleta "outright", aright
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Blower_grainDensity init 40
+gk_Blower_grainDuration init 0.2
+gk_Blower_grainAmplitudeRange init 100
+gk_Blower_grainFrequencyRange init 3
+gk_Blower_level init 0
+gk_Blower_midi_dynamic_range init 127
+gi_Blower_grtab ftgen 0, 0, 65537, 10, 1, .3, .1, 0, .2, .02, 0, .1, .04
+gi_Blower_wintab ftgen 0, 0, 65537, 10, 1, 0, .5, 0, .33, 0, .25, 0, .2, 0, .167
+instr Blower
+//////////////////////////////////////////////
+// Original by Hans Mikelson.
+// Adapted by Michael Gogins.
+//////////////////////////////////////////////
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Blower_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 132
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Blower_level)
+iHz = i_frequency
+ihertz = iHz
+ip4 = i_amplitude
+ip5 = iHz
+ip6 = gi_Blower_grtab
+ip7 = gi_Blower_wintab
+ip8 = 0.033
+ip8 = .002
+ip9 = 150
+ip9 = 100
+ip10 = 1.6
+ip10 = 3
+idur = p3
+iamp = i_amplitude ; p4
+ifqc = iHz ; cpspch(p5)
+igrtab = ip6
+iwintab = ip7
+ifrng = ip8
+idens = ip9
+ifade = ip10
+igdur = 0.2
+iattack = 0.5
+i_sustain = p3
+idecay = 1.5
+xtratim iattack + idecay
+kenvelope transegr 0.0, iattack / 2.0, 1.5, .5, iattack / 2.0, -1.5, 1, i_sustain, 0.0, 1, idecay / 2.0, 1.5, .5, idecay / 2.0, -1.5, 0
+; kamp linseg 0, ifade, 1, idur - 2 * ifade, 1, ifade, 0
+kamp = kenvelope
+; Amp Fqc Dense AmpOff PitchOff GrDur GrTable WinTable MaxGrDur
+aoutl grain ip4, ifqc, gk_Blower_grainDensity, gk_Blower_grainAmplitudeRange, gk_Blower_grainFrequencyRange, gk_Blower_grainDuration, igrtab, iwintab, 5
+aoutr grain ip4, ifqc, gk_Blower_grainDensity, gk_Blower_grainAmplitudeRange, gk_Blower_grainFrequencyRange, gk_Blower_grainDuration, igrtab, iwintab, 5
+a_signal = aoutl + aoutr
+i_attack = .002
+i_release = 0.01
+xtratim i_attack + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+;printks "Blower         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(a_out_left)), dbamp(rms(a_out_right))
+endin
+
+gk_Bower_midi_dynamic_range init 127
+gk_Bower_attack init .125
+gk_Bower_release init .125
+gk_Bower_level init 0
+gk_Bower_pressure init 0.25
+gi_Bower_sine ftgen 0,0,65537,10,1
+instr Bower
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Bower_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 80
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Bower_level)
+iattack = i(gk_Bower_attack)
+idecay = i(gk_Bower_release)
+isustain = p3
+iamp = i_amplitude
+xtratim iattack + idecay
+kenvelope transegr 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(i_midi_key)
+kamp = kenvelope
+kfreq = ihertz
+kpres = 0.25
+krat rspline 0.006,0.988,1,4
+kvibf = 4.5
+kvibamp = 0
+iminfreq = i(kfreq) / 2
+aSig wgbow kamp,kfreq,gk_Bower_pressure,krat,kvibf,kvibamp,gi_Bower_sine,iminfreq
+a_signal = aSig * kenvelope * k_gain
+aleft, aright pan2 a_signal, k_space_left_to_right
+outleta "outleft", aleft
+outleta "outright", aright
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Sweeper_midi_dynamic_range init 127
+gk_Sweeper_attack init .125
+gk_Sweeper_release init .25
+gk_Sweeper_britel init 0.1
+gk_Sweeper_briteh init 2.9
+gk_Sweeper_britels init 2
+gk_Sweeper_britehs init 1
+gk_Sweeper_level init 0
+gi_Sweeper_sine ftgen 0, 0, 65537, 10, 1
+gi_Sweeper_octfn ftgen 0, 0, 65537, -19, 1, 0.5, 270, 0.5
+instr Sweeper
+//////////////////////////////////////////////
+// Original by Iain McCurdy.
+// Adapted by Michael Gogins.
+//////////////////////////////////////////////
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Sweeper_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 78.3
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Sweeper_level)
+
+iattack = i(gk_Sweeper_attack)
+irelease = i(gk_Sweeper_release)
+isustain = p3
+xtratim iattack + irelease
+kenvelope transegr 0.0, iattack / 2.0, 1.5, i_amplitude / 2.0, iattack / 2.0, -1.5, i_amplitude, isustain, 0.0, i_amplitude, irelease / 2.0, 1.5, i_amplitude / 2.0, irelease / 2.0, -1.5, 0
+ihertz = i_frequency
+icps = ihertz
+kamp expseg 0.001,0.02,0.2,p3-0.01,0.001
+ktonemoddep jspline 0.01,0.05,0.2
+ktonemodrte jspline 6,0.1,0.2
+ktone poscil3 ktonemoddep, ktonemodrte, gi_Sweeper_sine
+kbrite rspline gk_Sweeper_britel, gk_Sweeper_briteh, gk_Sweeper_britels, gk_Sweeper_britehs
+ibasfreq init icps
+ioctcnt init 3
+iphs init 0
+a1 hsboscil kenvelope, ktone, kbrite, ibasfreq, gi_Sweeper_sine, gi_Sweeper_octfn, ioctcnt, iphs
+amod poscil3 0.25, ibasfreq*(1/3), gi_Sweeper_sine
+arm = a1*amod
+kmix expseg 0.001, 0.01, rnd(1), rnd(3)+0.3, 0.001
+kmix=.25
+a1 ntrpol a1, arm, kmix
+kpanrte jspline 5, 0.05, 0.1
+kpandep jspline 0.9, 0.2, 0.4
+kpan poscil3 kpandep, kpanrte, gi_Sweeper_sine
+;a1,a2 pan2 a1, kpan
+a1,a2 pan2 a1, k_space_left_to_right
+aleft delay a1, rnd(0.1)
+aright delay a2, rnd(0.11)
+a_signal = (aleft + aright) * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Shiner_midi_dynamic_range init 127
+gk_Shiner_attack init .0125
+gk_Shiner_release init .0125
+gk_Shiner_level init 0.5
+instr Shiner
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_Shiner_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.5 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_phase = p9
+i_frequency = cpsmidinn(i_midi_key)
+; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 92
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_Shiner_level)
+
+iattack = i(gk_Shiner_attack)
+idecay = i(gk_Shiner_release)
+isustain = p3 - i(gk_Shiner_attack)
+xtratim iattack + idecay
+kenvelope transeg 0.0, iattack / 2.0, 1.5, i_amplitude / 2.0, iattack / 2.0, -1.5, i_amplitude, isustain, 0.0, i_amplitude, idecay / 2.0, 1.5, i_amplitude / 2.0, idecay / 2.0, -1.5, 0
+ihertz = cpsmidinn(i_midi_key)
+gk_Harmonics = 1 * 20
+asignal vco2 kenvelope * 4, ihertz, 12
+kgain = ampdb(gk_Shiner_level) * .5
+adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
+a_signal = asignal * kgain * adamping
+aleft, aright pan2 asignal, k_space_left_to_right
+;printks2 "master gain:", kgain
+outleta "outleft", aleft
+outleta "outright", aright
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+instr Controls
+    gk_Bower_attack chnget "gk_Bower_attack"
+    gk_Bower_release chnget "gk_Bower_release"
+    gk_Bower_level chnget "gk_Bower_level"
+    gk_Bower_pressure chnget "gk_Bower_pressure"
+    gk_Blower_grainDensity chnget "gk_Blower_grainDensity"
+    gk_Blower_grainDuration chnget "gk_Blower_grainDuration"
+    gk_Blower_grainAmplitudeRange chnget "gk_Blower_grainAmplitudeRange"
+    gk_Blower_grainFrequencyRange chnget "gk_Blower_grainFrequencyRange"
+    gk_Blower_level chnget "gk_Blower_level"
+    gk_Buzzer_attack chnget "gk_Buzzer_attack"
+    gk_Buzzer_release chnget "gk_Buzzer_release"
+    gk_Buzzer_harmonics chnget "gk_Buzzer_harmonics"
+    gk_Buzzer_level chnget "gk_Buzzer_level"
+    gk_Droner_partial1 chnget "gk_Droner_partial1"
+    gk_Droner_partial2 chnget "gk_Droner_partial2"
+    gk_Droner_partial3 chnget "gk_Droner_partial3"
+    gk_Droner_partial4 chnget "gk_Droner_partial4"
+    gk_Droner_partial5 chnget "gk_Droner_partial5"
+    gk_Droner_partial6 chnget "gk_Droner_partial6"
+    gk_Droner_partial7 chnget "gk_Droner_partial7"
+    gk_Droner_partial8 chnget "gk_Droner_partial8"
+    gk_Droner_partial9 chnget "gk_Droner_partial9"
+    gk_Droner_partial10 chnget "gk_Droner_partial10"
+    gi_Droner_waveform chnget "gi_Droner_waveform"
+    gk_Droner_level chnget "gk_Droner_level"
+    gk_FMModerate2_level chnget "gk_FMModerate2_level"
+    gi_FMModerate2_carrier chnget "gi_FMModerate2_carrier"
+    gi_FMModerate2_modulator chnget "gi_FMModerate2_modulator"
+    gi_FMModerate2_fmamplitude chnget "gi_FMModerate2_fmamplitude"
+    gi_FMModerate2_index chnget "gi_FMModerate2_index"
+    gk_Harpsichord_level chnget "gk_Harpsichord_level"
+    gk_Harpsichord_pick chnget "gk_Harpsichord_pick"
+    gk_Harpsichord_reflection chnget "gk_Harpsichord_reflection"
+    gk_Harpsichord_pluck chnget "gk_Harpsichord_pluck"
+    gk_MasterOutput_level chnget "gk_MasterOutput_level"
+    gk_Phaser_release chnget "gk_Phaser_release"
+    gk_Phaser_attack chnget "gk_Phaser_attack"
+    gk_Phaser_ratio1 chnget "gk_Phaser_ratio1"
+    gk_Phaser_ratio2 chnget "gk_Phaser_ratio2"
+    gk_Phaser_index1 chnget "gk_Phaser_index1"
+    gk_Phaser_index2 chnget "gk_Phaser_index2"
+    gk_Phaser_level chnget "gk_Phaser_level"
+    gk_Reverb_feedback chnget "gk_Reverb_feedback"
+    gi_Reverb_delay_modulation chnget "gi_Reverb_delay_modulation"
+    gk_Reverb_frequency_cutoff chnget "gk_Reverb_frequency_cutoff"
+    gk_Shiner_level chnget "gk_Shiner_level"
+    gk_Shiner_attack chnget "gk_Shiner_attack"
+    gk_Shiner_release chnget "gk_Shiner_release"
+    gk_Sweeper_attack chnget "gk_Sweeper_attack"
+    gk_Sweeper_release chnget "gk_Sweeper_release"
+    gk_Sweeper_britel chnget "gk_Sweeper_britel"
+    gk_Sweeper_briteh chnget "gk_Sweeper_briteh"
+    gk_Sweeper_britels chnget "gk_Sweeper_britels"
+    gk_Sweeper_britehs chnget "gk_Sweeper_britehs"
+    gk_Sweeper_level chnget "gk_Sweeper_level"
+    gk_Sweeper_level chnget "gk_Sweeper_level"
+    gk_Xing_level chnget "gk_Xing_level"
+    gk_YiString_reverb_send chnget "gk_YiString_reverb_send"
+    gk_YiString_cbhorus_send chnget "gk_YiString_cbhorus_send"
+    gk_YiString_level chnget "gk_YiString_level"
+prints "Controls       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f\\n", p1, p2, p3, p4, p5, p7
+endin
+
+/**
+ * Solina Chorus, based on Solina String Ensemble Chorus Module
+
+   J. Haible: Triple Chorus
+   http://jhaible.com/legacy/triple_chorus/triple_chorus.html
+
+   Hugo Portillo: Solina-V String Ensemble
+   http://www.native-instruments.com/en/reaktor-community/reaktor-user-library/entry/show/4525/
+
+   Parabola tabled shape borrowed from Iain McCurdy delayStereoChorus.csd:
+   http://iainmccurdy.org/CsoundRealtimeExamples/Delays/delayStereoChorus.csd
+
+   Author: Steven Yi
+   Date: 2016.05.22
+   Adapted by Michael Gogins
+*/
+gi_solina_parabola ftgen 0, 0, 65537, 19, 0.5, 1, 180, 1
+; 3 sine wave LFOs, 120 degrees out of phase
+opcode sol_lfo_3, aaa, kk
+kfreq, kamp xin
+aphs phasor kfreq
+; Funny: Function syntax does not work in this context.
+a0   tablei aphs, gi_solina_parabola, 1, 0, 1
+a120 tablei aphs, gi_solina_parabola, 1, 0.333, 1
+a240 tablei aphs, gi_solina_parabola, 1, -0.333, 1
+xout (a0 * kamp), (a120 * kamp), (a240 * kamp)
+endop
+
+opcode solina_chorus, a, akkkk
+aLeft, klfo_freq1, klfo_amp1, klfo_freq2, klfo_amp2 xin
+imax = 100
+;; slow lfo
+as1, as2, as3 sol_lfo_3 klfo_freq1, klfo_amp1
+;; fast lfo
+af1, af2, af3  sol_lfo_3 klfo_freq2, klfo_amp2
+at1 = limit(as1 + af1 + 5, 0.0, imax)
+at2 = limit(as2 + af2 + 5, 0.0, imax)
+at3 = limit(as3 + af3 + 5, 0.0, imax)
+a1 vdelay3 aLeft, at1, imax
+a2 vdelay3 aLeft, at2, imax
+a3 vdelay3 aLeft, at2, imax
+xout (a1 + a2 + a3) / 3
+endop
+
+gk_SolinaChorus_chorus_lfo1_hz init .18
+gk_SolinaChorus_chorus_lfo1_amp init .6
+gk_SolinaChorus_chorus_lfo2_hz init 6
+gk_SolinaChorus_chorus_lfo2_amp init .2
+instr SolinaChorus
+aleft inleta "inleft"
+aright inleta "inright"
+aleft solina_chorus aleft, gk_SolinaChorus_chorus_lfo1_hz, gk_SolinaChorus_chorus_lfo1_amp, gk_SolinaChorus_chorus_lfo2_hz, gk_SolinaChorus_chorus_lfo2_amp
+aright solina_chorus aright, gk_SolinaChorus_chorus_lfo1_hz, gk_SolinaChorus_chorus_lfo1_amp, gk_SolinaChorus_chorus_lfo2_hz, gk_SolinaChorus_chorus_lfo2_amp
+outleta "outleft", aleft
+outleta "outright", aright
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_Reverb_feedback init 0.975
+gi_Reverb_delay_modulation init 0.875
+gk_Reverb_frequency_cutoff init 15000
+instr Reverb
+ainL inleta "inleft"
+ainR inleta "inright"
+aoutL init 0
+aoutR init 0
+; aoutL, aoutR Reverb ainL, ainR, kfblvl, kfco[, israte[, ipitchm[, iskip]]]
+
+;; MUST BE POKING CODE MEMORY, Reverb doesn't work in this piece AT ALL!!!
+
+; aleftout, arightout Reverb aleftin, arightin, gk_Reverb_feedback, gk_Reverb_frequency_cutoff, 48000, gi_Reverb_delay_modulation
+
+aoutL, aoutR freeverb ainL, ainR, gi_Reverb_delay_modulation, gk_Reverb_frequency_cutoff ;[, iSRate[, iSkip]]
+outleta "outleft", aoutL
+outleta "outright", aoutR
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+gk_MasterOutput_level init 0
+gS_MasterOutput_filename init ""
+
+instr MasterOutput
+aleft inleta "inleft"
+aright inleta "inright"
+k_gain = ampdb(gk_MasterOutput_level)
+printks2 "Master gain: %f\n", k_gain
+iamp init 1
+aleft butterlp aleft, 18000
+aright butterlp aright, 18000
+outs aleft * k_gain, aright * k_gain
+; We want something that will play on my phone.
+i_amplitude_adjustment = ampdbfs(-3) / 32767
+i_filename_length strlen gS_MasterOutput_filename
+if i_filename_length > 0 goto filename_exists
+goto filename_endif
+filename_exists:
+prints sprintf("Output filename: %s\n", gS_MasterOutput_filename)
+fout gS_MasterOutput_filename, 18, aleft * i_amplitude_adjustment, aright * i_amplitude_adjustment
+filename_endif:
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+;printks "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", 1, nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+
+</CsInstruments>
+<CsScore>
+f 0 3600
+i "Controls" 0 3600
+i "SolinaChorus" 0 3600
+i "Reverb" 0 3600
+i "MasterOutput" 0 3600
+</CsScore>
+</CsoundSynthesizer>
+        </textarea>
+        <script id="example" type="x-shader/x-fragment">
+            precision mediump float;
+            uniform float time;
+            uniform float tempo;
+            uniform float zoom;
+            uniform float stride;
+            uniform vec2 mouse;
+            uniform vec2 resolution;
+            vec3 pal(float t, vec3 a, vec3 b, vec3 c, vec3 d)
+            {
+                return a + b * cos(6.28318 * (c * t + d));
+            }
+            void main(){
+                vec2 uv = gl_FragCoord.xy / resolution.xy;
+                uv = uv * 2. - 1.;
+                uv.x *= resolution.x / resolution.y;
+                float e = time * tempo;
+                float d = 128. * mouse.x / resolution.x + 8.5;
+                vec2 g = uv * zoom;
+                uv = d * (floor(g) + .5) / zoom;
+                g = fract(g) * 2. - 1.;
+                float f = dot(uv, uv) - e;
+                vec4 c = vec4(
+                    pal(f *.5 + e,
+                        vec3(0.5, 0.5, 0.5),
+                        vec3(0.5, 0.5, 0.5),
+                        vec3(1.0, 1.0, 1.0),
+                        vec3(0.0, 0.10, 0.20)), 1.);
+                gl_FragColor = c * (1. - dot(g, g)) * .2 / abs((fract(f) - .5) * 8.);
+            }
+        </script>
+        <script id="fragmentShader" type="x-shader/x-fragment">
+            precision mediump float;
+            uniform vec2 resolution;
+            uniform sampler2D texture;
+            void main(){
+                vec2 uv = gl_FragCoord.xy / resolution.xy;
+                gl_FragColor = texture2D(texture, uv);
+            }
+
+        </script>
+        <script id="vertexShader" type="x-shader/x-vertex">
+            precision mediump float;
+            attribute vec3 position;
+            void main(){
+                gl_Position = vec4(position, 1.0);
+            }
+        </script>
+        <script id="surfaceVertexShader" type="x-shader/x-vertex">
+            precision mediump float;
+            attribute vec3 position;
+            attribute vec2 surfacePosAttrib;
+            varying vec2 surfacePosition;
+            void main(){
+                surfacePosition = surfacePosAttrib;
+                gl_Position = vec4(position, 1.0);
+            }
+        </script>
+        <script>
+            /* jshint bitwise: true, strict:false */
+            "use strict";
+            var is_playing = false;
+            try {
+                try {
+                var fs = require('fs');
+                var nwgui = require('nw.gui');
+                var nw_window = nwgui.Window.get();
+                nw_window.on('close', function() {
+                    console.log('Closing down...');
+                    this.close(true);
+                    });
+                } catch (e) {
+                    console.log(e);
+                }
+                var FM9 = ChordSpace.chordForName('FM9');
+                var Bb7 = ChordSpace.chordForName('Bb7');
+                var CM = ChordSpace.chordForName('CM');
+                var chord = FM9.clone();
+                var modality = chord.clone();
+                initialize_helper();
+                var compressor=initialize_compressor();
+                if (!window.requestAnimationFrame){
+                    window.requestAnimationFrame = (function(){
+                    return window.webkitRequestAnimationFrame ||
+                        window.mozRequestAnimationFrame ||
+                        window.oRequestAnimationFrame ||
+                        window.msRequestAnimationFrame ||
+                        function (callback, element){
+                            window.setTimeout(callback, 1000 / parameters.frames_per_second);
+                        };
+                })();
+            }
+            // Get older browsers safely through init code, so users can read the
+            // message about how to download newer browsers.
+            if (!Date.now){
+                Date.now = function(){
+                    return +new Date();
+                };
+            }
+            var quality = 2, quality_levels = [0.5, 1, 2, 4, 8];
+            var toolbar, compileButton, fullscreenButton, compileTimer, errorLines = [];
+            var code, canvas, gl, buffer, currentProgram, vertexPosition, screenVertexPosition, panButton;
+            var parameters = {
+                frames_per_second: 30,
+                startTime: Date.now(),
+                time: 0,
+                tempo: 0.0875,
+                zoom: 10,
+                stride: 80,
+                mouseX: 0.5,
+                mouseY: 0.5,
+                screenWidth: 0,
+                screenHeight: 0,
+                duration: -1,
+                gk_Blower_grainDensity: 0.15,
+                gk_Blower_grainDuration: 0.2,
+                gk_Blower_grainAmplitudeRange: 0.1,
+                gk_Blower_grainFrequencyRange: 0.033,
+                gk_Blower_level: 0,
+                gk_Bower_attack: 0.0125,
+                gk_Bower_release: 0.25,
+                gk_Bower_pressure: 0.25,
+                gk_Bower_level: 0,
+                gk_Buzzer_attack: 0.125,
+                gk_Buzzer_release: 0.25,
+                gk_Buzzer_harmonics: 15,
+                gk_Buzzer_level: 0,
+                gk_Droner_partial1: 0.1,
+                gk_Droner_partial2: 0.1,
+                gk_Droner_partial3: 0.1,
+                gk_Droner_partial4: 0.1,
+                gk_Droner_partial5: 0.1,
+                gk_Droner_partial6: 0.1,
+                gk_Droner_partial7: 0.1,
+                gk_Droner_partial8: 0.1,
+                gk_Droner_partial9: 0.1,
+                gk_Droner_partial10: 0.1,
+                gk_Droner_waveform: 0,
+                gk_Droner_level: 0,
+                gi_FMModerate2_index: 2,
+                gi_FMModerate2_carrier: 1,
+                gi_FMModerate2_modulator: 4,
+                gi_FMModerate2_fmamplitude: 9,
+                gk_FMModerate2_level: 0,
+                gk_Harpsichord_level: 0,
+                gk_MasterOutput_level: 22.181464499096847,
+                gk_Phaser_attack: 0.125,
+                gk_Phaser_release: 0.125,
+                gk_Phaser_ratio1: 1,
+                gk_Phaser_ratio2: 0.3333334,
+                gk_Phaser_index1: 1,
+                gk_Phaser_index2: 0.0125,
+                gk_Phaser_level: 0,
+                gk_Rhodes_level: 0,
+                gk_Reverb_feedback: 0.9106572182853967,
+                gi_Reverb_delay_modulation: 0.27761567319716546,
+                gk_Reverb_frequency_cutoff: 15000,
+                gk_Sweeper_attack: 0.125,
+                gk_Sweeper_release: 0.25,
+                gk_Sweeper_britel: 0,
+                gk_Sweeper_briteh: 2.9,
+                gk_Sweeper_britels: 0.06666666666666667,
+                gk_Sweeper_britehs: 1.25,
+                gk_Sweeper_level: 0,
+                gk_Xing_level: 0,
+                gk_YiString_reverb_send: 1,
+                gk_YiString_chorus_send: 0,
+                gk_YiString_level: 0,
+                gk_Shiner_attack: 0.0125,
+                gk_Shiner_release: 0.0125,
+                gk_Shiner_level: 0.5,
+                Play: function() {
+                        (async () => {
+                            let csound = get_csound(csound_message_callback);
+                            Silencio.saveDatGuiJson(gui);
+                            var csd = document.getElementById('csd').value;
+                            await csound.CompileCsdText(csd);
+                            await csound.Start();
+                            is_playing = true;
+                            gui.revert();
+                            start_time_seconds = new Date().getTime() / 1000.0;
+                            await csound.Perform();
+                        })();
+                },
+                Stop: function() {
+                    (async () => {
+                        is_playing = false;
+                        Silencio.saveDatGuiJson(gui);
+                        await csound.Stop();
+                        await csound.Cleanup();
+                        await csound.Reset();
+                    })();
+                },
+                Close: function() {
+                    (async () => {
+                        try {
+                            is_playing = false;
+                            await csound.Stop();
+                            await csound.Cleanup();
+                            await csound.Reset();
+                            Silencio.saveDatGuiJson(gui);
+                            window.close();
+                        } catch (e) {
+                            console.log(e);
+                        }
+                    })();
+                },
+                CM: function() {
+                    chord = CM.clone();
+                    modality = chord.clone();
+                    csound_message_callback('CM:\n' + chord.information());
+                },
+                FM9: function() {
+                    chord = FM9.clone();
+                    modality = chord.clone();
+                    csound_message_callback('FM9:\n' + chord.information());
+                },
+                Bb7: function() {
+                    chord = Bb7.clone();
+                    modality = chord.clone();
+                    csound_message_callback('Bb7:\n' + chord.information());
+                },
+                K: function() {
+                    chord = chord.K();
+                    csound_message_callback('K():\n' + chord.information());
+                },
+                T1: function() {
+                    chord = chord.T(1);
+                    csound_message_callback('T(1):\n' + chord.information());
+                },
+                T2: function() {
+                    chord = chord.T(2);
+                    csound_message_callback('T(2):\n' + chord.information());
+                },
+                T3: function() {
+                    chord = chord.T(3);
+                    csound_message_callback('T(3):\n' + chord.information());
+                },
+                T4: function() {
+                    chord = chord.T(4);
+                    csound_message_callback('T(4):\n' + chord.information());
+                },
+                T5: function() {
+                    chord = chord.T(5);
+                    csound_message_callback('T(5):\n' + chord.information());
+                },
+                T6: function() {
+                    chord = chord.T(6);
+                    csound_message_callback('T(6):\n' + chord.information());
+                },
+                T7: function() {
+                    chord = chord.T(7);
+                    csound_message_callback('T(7):\n' + chord.information());
+                },
+                T8: function() {
+                    chord = chord.T(8);
+                    csound_message_callback('T(8):\n' + chord.information());
+                },
+                T9: function() {
+                    chord = chord.T(9);
+                    csound_message_callback('T(9):\n' + chord.information());
+                },
+                T10: function() {
+                    chord = chord.T(10);
+                    csound_message_callback('T(10):\n' + chord.information());
+                },
+                T11: function() {
+                    chord = chord.T(11);
+                    csound_message_callback('T(11):\n' + chord.information());
+                },
+                J2_2: function() {
+                    var chords = chord.J(2);
+                    if (chords.length > 1) {
+                        chord = chords[1];
+                        csound_message_callback('J(2,2):\n' + chord.information());
+                    }
+                },
+                J2_3: function() {
+                    var chords = chord.J(2);
+                    if (chords.length > 2) {
+                        chord = chords[2];
+                        csound_message_callback('J(2,3):\n' + chord.information());
+                    }
+                },
+                J3_1: function() {
+                   var chords = chord.J(3);
+                    if (chords.length > 0) {
+                        chord = chords[0];
+                        csound_message_callback('J(3,1):\n' + chord.information());
+                    }
+                },
+                T5: function() {
+                    chord = chord.T(5);
+                    csound_message_callback('D():\n' + chord.information());
+                },
+            };
+            var surface = { centerX: 0, centerY: 0, width: 1, height: 1, isPanning: false, isZooming: false, lastX: 0, lastY: 0 },
+            frontTarget, backTarget, screenProgram, getWebGL, resizer = {}, compileOnChangeCode = true;
+            function csound_message_callback(message) {
+                //console.log(message);
+                var messages_textarea = document.getElementById("console");
+                var existing = messages_textarea.value;
+                messages_textarea.value = existing + message;
+                messages_textarea.scrollTop = messages_textarea.scrollHeight;
+            }
+            var init = function(){
+                canvas = document.createElement('canvas');
+                canvas.style.display = 'block';
+                //canvas.style.cursor = 'none';
+                document.body.appendChild(canvas);
+                toolbar = document.createElement('div');
+                toolbar.style.position = 'absolute';
+                toolbar.style.bottom = '25px';
+                toolbar.style.left = '25px';
+                // Hide this... document.body.appendChild(toolbar);
+                var rightside = document.createElement('div');
+                rightside.style.cssFloat = 'right';
+                toolbar.appendChild(rightside);
+                panButton = document.createElement('button');
+                panButton.textContent = 'pan/zoom';
+                panButton.style.cursor = 'move';
+                panButton.style.display = 'none';
+                panButton.title = "Pan: left-drag, Zoom: right-drag. Use 'hide code' for a large pan/zoom area.";
+                rightside.appendChild(panButton);
+                fullscreenButton = document.createElement('button');
+                fullscreenButton.textContent = 'fullscreen';
+                fullscreenButton.title = 'Press F11 to enter or leave fullscreen mode';
+                fullscreenButton.addEventListener('click', function (event){
+                    if (document.body.requestFullScreen){
+                        document.body.requestFullScreen();
+                    } else if (document.body.mozRequestFullScreen){
+                        document.body.mozRequestFullScreen();
+                    } else if (document.body.webkitRequestFullScreen){
+                        document.body.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+                    }
+                }, false);
+                rightside.appendChild(fullscreenButton);
+                var button = document.createElement('a');
+                button.textContent = 'gallery';
+                button.href = '/';
+                rightside.appendChild(button);
+                var button = document.createElement('button');
+                button.textContent = 'show fragment';
+                button.addEventListener('click', function (event){
+                    if (isCodeVisible()){
+                        button.textContent = 'show fragment';
+                        code.getWrapperElement().style.display = 'none';
+                        compileButton.style.visibility = 'hidden';
+                        set_save_button('hidden');
+                        set_parent_button('hidden');
+                        ///stopHideUI();
+                    } else {
+                        button.textContent = 'hide fragment';
+                        code.getWrapperElement().style.display = '';
+                        compileButton.style.visibility = 'visible';
+                        set_save_button('visible');
+                        set_parent_button('visible');
+                    }
+                }, false);
+                toolbar.appendChild(button);
+                var select = document.createElement('select');
+                for (var i = 0; i < quality_levels.length; i ++){
+                    var option = document.createElement('option');
+                    option.textContent = quality_levels[i];
+                    if (quality_levels[i] == quality)option.selected = true;
+                    select.appendChild(option);
+                }
+                select.addEventListener('change', function (event){
+                    quality = quality_levels[event.target.selectedIndex];
+                    onWindowResize();
+                }, false);
+                toolbar.appendChild(select);
+                compileButton = document.createElement('button');
+                compileButton.textContent = 'compile';
+                compileButton.addEventListener('click', function (event){
+                    compile();
+                }, false);
+                toolbar.appendChild(compileButton);
+                // from helper.js
+                add_server_buttons();
+                gl = canvas.getContext('experimental-webgl', { preserveDrawingBuffer: true });
+                // enable dFdx, dFdy, fwidth
+                gl.getExtension('OES_standard_derivatives');
+                // Create vertex buffer (2 triangles)
+                buffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([- 1.0, - 1.0, 1.0, - 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0]), gl.STATIC_DRAW);
+                // Create surface buffer (coordinates at screen corners)
+                surface.buffer = gl.createBuffer();
+                code = CodeMirror(document.body, {
+                    lineNumbers: true,
+                    matchBrackets: true,
+                    indentWithTabs: false,
+                    tabSize: 4,
+                    indentUnit: 4,
+                    mode: "text/x-glsl",
+                    onChange: function (){
+                        if (compileOnChangeCode){
+                            clearTimeout(compileTimer);
+                            compileTimer = setTimeout(compile, 500);
+                        }
+                    }
+                });
+                code.getWrapperElement().style.display = '';
+                resizer.offsetMouseX = 0;
+                resizer.offsetMouseY = 0;
+                resizer.isResizing = false;
+                var size_ = 100;
+                resizer.currentWidth = size_;
+                resizer.currentHeight = size_;
+                resizer.minWidth = size_;
+                resizer.minHeight = size_;
+                resizer.maxWidth = size_;
+                resizer.maxHeight = size_;
+                resizer.element = document.createElement('div');
+                resizer.element.className = 'resizer';
+                code.getWrapperElement().appendChild(resizer.element);
+                resizer.element.addEventListener('mousedown', function (event){
+                    if (event.button !== 2){
+                        resizer.offsetMouseX = event.clientX - resizer.currentWidth;
+                        resizer.offsetMouseY = event.clientY - resizer.currentHeight;
+                        resizer.isResizing = true;
+                        event.preventDefault();
+                    }
+                }, false);
+
+                var surfaceMouseDown = function (event){
+                    if (event.shiftKey){
+                        resetSurface();
+                    }
+                    if (event.button === 0){
+                        surface.isPanning = true;
+                        document.body.style.cursor = 'move';
+                    } else {
+                        surface.isZooming = true;
+                        document.body.style.cursor = 'se-resize';
+                        panButton.style.cursor = 'se-resize';
+                    }
+                    surface.lastX = event.clientX;
+                    surface.lastY = event.clientY;
+                    event.preventDefault();
+                };
+
+                var noContextMenu = function (event){
+                    event.preventDefault();
+                };
+
+                canvas.addEventListener('mousedown', surfaceMouseDown, false);
+                panButton.addEventListener('mousedown', surfaceMouseDown, false);
+                canvas.addEventListener('contextmenu', noContextMenu, false);
+                panButton.addEventListener('contextmenu', noContextMenu, false);
+                var clientXLast, clientYLast;
+
+                document.addEventListener('mousemove', function (event){
+                    var clientX = event.clientX;
+                    var clientY = event.clientY;
+                    if (clientXLast == clientX && clientYLast == clientY)
+                        return;
+                    clientXLast = clientX;
+                    clientYLast = clientY;
+                    ///stopHideUI();
+                    var codeElement, dx, dy;
+                    parameters.mouseX = clientX / window.innerWidth;
+                    parameters.mouseY = 1 - clientY / window.innerHeight;
+                    if (resizer.isResizing){
+                        resizer.currentWidth = Math.max(Math.min(clientX - resizer.offsetMouseX, resizer.maxWidth), resizer.minWidth);
+                        resizer.currentHeight = Math.max(Math.min(clientY - resizer.offsetMouseY, resizer.maxHeight), resizer.minWidth);
+                        codeElement = code.getWrapperElement();
+                        codeElement.style.width = resizer.currentWidth + 'px';
+                        codeElement.style.height = resizer.currentHeight + 'px';
+                        code.refresh();
+                        event.preventDefault();
+                    } else if (surface.isPanning){
+                        dx = clientX - surface.lastX;
+                        dy = clientY - surface.lastY;
+                        surface.centerX -= dx * surface.width / window.innerWidth;
+                        surface.centerY += dy * surface.height / window.innerHeight;
+                        surface.lastX = clientX;
+                        surface.lastY = clientY;
+                        computeSurfaceCorners();
+                        event.preventDefault();
+                    } else if (surface.isZooming){
+                        dx = clientX - surface.lastX;
+                        dy = clientY - surface.lastY;
+                        surface.height *= Math.pow(0.997, dx + dy);
+                        surface.lastX = clientX;
+                        surface.lastY = clientY;
+                        computeSurfaceCorners();
+                        event.preventDefault();
+                    }
+                }, false);
+                function settleDown (event){
+                    resizer.isResizing = surface.isPanning = surface.isZooming = false;
+                    document.body.style.cursor = 'default';
+                    panButton.style.cursor = 'move';
+                }
+                function mouseLeave(event){
+                    settleDown(event);
+                }
+                document.addEventListener('mouseup', settleDown, false);
+                document.addEventListener('mouseleave', mouseLeave, false);
+                onWindowResize();
+                window.addEventListener('resize', onWindowResize, false);
+                load_url_code();
+                compileScreenProgram();
+            }
+
+            init();
+            animate();
+
+            function computeSurfaceCorners(){
+                if (gl) {
+                    surface.width = surface.height * parameters.screenWidth / parameters.screenHeight;
+                    var halfWidth = surface.width * 0.5, halfHeight = surface.height * 0.5;
+                    gl.bindBuffer(gl.ARRAY_BUFFER, surface.buffer);
+                    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+                        surface.centerX - halfWidth, surface.centerY - halfHeight,
+                        surface.centerX + halfWidth, surface.centerY - halfHeight,
+                        surface.centerX - halfWidth, surface.centerY + halfHeight,
+                        surface.centerX + halfWidth, surface.centerY - halfHeight,
+                        surface.centerX + halfWidth, surface.centerY + halfHeight,
+                        surface.centerX - halfWidth, surface.centerY + halfHeight]), gl.STATIC_DRAW);
+                }
+            }
+
+            function resetSurface(){
+                surface.centerX = surface.centerY = 0;
+                surface.height = 1;
+                computeSurfaceCorners();
+            }
+
+            function compile(){
+                var program = gl.createProgram();
+                var fragment = code.getValue();
+                var vertex = document.getElementById('surfaceVertexShader').textContent;
+                var vs = createShader(vertex, gl.VERTEX_SHADER);
+                var fs = createShader(fragment, gl.FRAGMENT_SHADER);
+                if (vs === null || fs === null)return null;
+                gl.attachShader(program, vs);
+                gl.attachShader(program, fs);
+                gl.deleteShader(vs);
+                gl.deleteShader(fs);
+                gl.linkProgram(program);
+                if (!gl.getProgramParameter(program, gl.LINK_STATUS)){
+                    var error = gl.getProgramInfoLog(program);
+                    compileButton.title = error;
+                    console.error(error);
+                    console.error('VALIDATE_STATUS: ' + gl.getProgramParameter(program, gl.VALIDATE_STATUS), 'ERROR: ' + gl.getError());
+                    compileButton.style.color = '#ff0000';
+                    compileButton.textContent = 'compiled with errors';
+                    set_save_button('hidden');
+                    return;
+                }
+                if (currentProgram){
+                    gl.deleteProgram(currentProgram);
+                    setURL(fragment);
+                }
+                currentProgram = program;
+                compileButton.style.color = '#00ff00';
+                compileButton.textContent = 'compiled successfully';
+                set_save_button('visible');
+                panButton.style.display = (fragment.indexOf('varying vec2 surfacePosition;')>= 0)? 'inline' : 'none';
+                cacheUniformLocation(program, 'time');
+                cacheUniformLocation(program, 'tempo');
+                cacheUniformLocation(program, 'zoom');
+                cacheUniformLocation(program, 'stride');
+                cacheUniformLocation(program, 'mouse');
+                cacheUniformLocation(program, 'resolution');
+                cacheUniformLocation(program, 'backbuffer');
+                cacheUniformLocation(program, 'surfaceSize');
+                gl.useProgram(currentProgram);
+                surface.positionAttribute = gl.getAttribLocation(currentProgram, "surfacePosAttrib");
+                gl.enableVertexAttribArray(surface.positionAttribute);
+                vertexPosition = gl.getAttribLocation(currentProgram, "position");
+                gl.enableVertexAttribArray(vertexPosition);
+            }
+
+            function compileScreenProgram(){
+                var program = gl.createProgram();
+                var fragment = document.getElementById('fragmentShader').textContent;
+                var vertex = document.getElementById('vertexShader').textContent;
+                var vs = createShader(vertex, gl.VERTEX_SHADER);
+                var fs = createShader(fragment, gl.FRAGMENT_SHADER);
+                gl.attachShader(program, vs);
+                gl.attachShader(program, fs);
+                gl.deleteShader(vs);
+                gl.deleteShader(fs);
+                gl.linkProgram(program);
+                if (!gl.getProgramParameter(program, gl.LINK_STATUS)){
+                    console.error('VALIDATE_STATUS: ' + gl.getProgramParameter(program, gl.VALIDATE_STATUS), 'ERROR: ' + gl.getError());
+                    return;
+                }
+                screenProgram = program;
+                gl.useProgram(screenProgram);
+                cacheUniformLocation(program, 'resolution');
+                cacheUniformLocation(program, 'texture');
+                cacheUniformLocation(program, 'time');
+                cacheUniformLocation(program, 'tempo');
+                cacheUniformLocation(program, 'zoom');
+                cacheUniformLocation(program, 'stride');
+                cacheUniformLocation(program, 'mouse');
+                cacheUniformLocation(program, 'resolution');
+                cacheUniformLocation(program, 'backbuffer');
+                cacheUniformLocation(program, 'surfaceSize');
+                screenVertexPosition = gl.getAttribLocation(screenProgram, "position");
+                gl.enableVertexAttribArray(screenVertexPosition);
+            }
+
+            function cacheUniformLocation(program, label){
+                if (program.uniformsCache === undefined){
+                    program.uniformsCache = {};
+                }
+                program.uniformsCache[label] = gl.getUniformLocation(program, label);
+            }
+
+            function createTarget(width, height){
+                var target = {};
+                target.framebuffer = gl.createFramebuffer();
+                target.renderbuffer = gl.createRenderbuffer();
+                target.texture = gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, target.texture);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+                gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
+                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, target.texture, 0);
+                gl.bindRenderbuffer(gl.RENDERBUFFER, target.renderbuffer);
+                gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, width, height);
+                gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, target.renderbuffer);
+                gl.bindTexture(gl.TEXTURE_2D, null);
+                gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                return target;
+            }
+
+            function createRenderTargets(){
+                frontTarget = createTarget(parameters.screenWidth, parameters.screenHeight);
+                backTarget = createTarget(parameters.screenWidth, parameters.screenHeight);
+            }
+
+            function htmlEncode(str){
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+            }
+
+            function createShader(src, type){
+                var shader = gl.createShader(type);
+                var line, lineNum, lineError, index = 0, indexEnd;
+                while (errorLines.length > 0){
+                    line = errorLines.pop();
+                    code.setLineClass(line, null);
+                    code.clearMarker(line);
+                }
+                gl.shaderSource(shader, src);
+                gl.compileShader(shader);
+                compileButton.title = '';
+                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)){
+                    var error = gl.getShaderInfoLog(shader);
+                    // Remove trailing linefeed, for FireFox's benefit.
+                    while ((error.length > 1)&& (error.charCodeAt(error.length - 1)< 32)){
+                        error = error.substring(0, error.length - 1);
+                    }
+                    compileButton.title = error;
+                    console.error(error);
+                    compileButton.style.color = '#ff0000';
+                    compileButton.textContent = 'compiled with errors';
+                    set_save_button('hidden');
+                    while (index >= 0){
+                        index = error.indexOf("ERROR: 0:", index);
+                        if (index < 0){ break; }
+                        index += 9;
+                        indexEnd = error.indexOf(':', index);
+                        if (indexEnd > index){
+                            lineNum = parseInt(error.substring(index, indexEnd));
+                            if ((!isNaN(lineNum))&& (lineNum > 0)){
+                                index = indexEnd + 1;
+                                indexEnd = error.indexOf("ERROR: 0:", index);
+                                lineError = htmlEncode((indexEnd > index)? error.substring(index, indexEnd): error.substring(index));
+                                line = code.setMarker(lineNum - 1, '<abbr title="' + lineError + '">' + lineNum + '</abbr>', "errorMarker");
+                                code.setLineClass(line, "errorLine");
+                                errorLines.push(line);
+                            }
+                        }
+                    }
+                    return null;
+                }
+                return shader;
+            }
+
+            function onWindowResize(event){
+                var isMaxWidth = ((resizer.currentWidth === resizer.maxWidth)|| (resizer.currentWidth === resizer.minWidth)),
+                    isMaxHeight = ((resizer.currentHeight === resizer.maxHeight)|| (resizer.currentHeight === resizer.minHeight));
+                toolbar.style.width = window.innerWidth - 47 + 'px';
+                resizer.isResizing = false;
+                resizer.maxWidth = window.innerWidth - 75;
+                resizer.maxHeight = window.innerHeight - 125;
+                if (isMaxWidth || (resizer.currentWidth > resizer.maxWidth)){
+                    resizer.currentWidth = resizer.maxWidth;
+                }
+                if (isMaxHeight || (resizer.currentHeight > resizer.maxHeight)){
+                    resizer.currentHeight = resizer.maxHeight;
+                }
+                if (resizer.currentWidth < resizer.minWidth){ resizer.currentWidth = resizer.minWidth; }
+                if (resizer.currentHeight < resizer.minHeight){ resizer.currentHeight = resizer.minHeight; }
+                code.getWrapperElement().style.top = '75px';
+                code.getWrapperElement().style.left = '25px';
+                code.getWrapperElement().style.width = resizer.currentWidth + 'px';
+                code.getWrapperElement().style.height = resizer.currentHeight + 'px';
+                canvas.width = window.innerWidth / quality;
+                canvas.height = window.innerHeight / quality;
+                canvas.style.width = window.innerWidth + 'px';
+                canvas.style.height = window.innerHeight + 'px';
+                parameters.screenWidth = canvas.width;
+                parameters.screenHeight = canvas.height;
+                computeSurfaceCorners();
+                gl.viewport(0, 0, canvas.width, canvas.height);
+                createRenderTargets();
+            }
+
+            var old_pixels = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4);
+            var new_pixels = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4);
+
+            // https://www.opengl.org/sdk/docs/man/html/glReadPixels.xhtml
+            // glReadPixels and glReadnPixels return values from each pixel
+            // with lower left corner at (x+i,y+j) for 0<=i<width and
+            // 0<=j<height. This pixel is said to be the ith column in the
+            // jth row. Pixels are returned in row order from the lowest to
+            // the highest row, left to right in each row.
+
+            var value_threshold = .95;
+            var instrument_count = 12.9;
+            var instances_per_instrument = 3.;
+            var range = 72;
+            var bass = 28;
+            var dynamic_range = 6.0;
+            var softest = 40;
+            var maximum_value = 0;
+            var start_time_seconds = new Date().getTime() / 1000.0;
+
+            /**
+             * Converts an RGB color value to HSV. Conversion formula
+             * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+             * Assumes r, g, and b are contained in the set [0, 255] and
+             * returns h, s, and v in the set [0, 1].
+             *
+             * @param   Number  r       The red color value
+             * @param   Number  g       The green color value
+             * @param   Number  b       The blue color value
+             * @return  Array           The HSV representation
+             */
+            var rgb_to_hsv = function(r, g, b){
+                r = r / 255;
+                g = g / 255;
+                b = b / 255;
+                var max = Math.max(r, g, b);
+                var min = Math.min(r, g, b);
+                var h, s, v = max;
+                var d = max - min;
+                s = max === 0 ? 0 : d / max;
+                if (max == min){
+                    h = 0;
+                } else {
+                    // More efficient than switch?
+                    if        (max == r) {
+                        h = (g - b) / d + (g < b ? 6 : 0);
+                    } else if (max == g) {
+                        h = (b - r) / d + 2;
+                    } else if (max == b) {
+                        h = (r - g) / d + 4;
+                    }
+                    h /= 6;
+                }
+                return [h, s, v];
+            }
+            
+            // Stores a note off event for every note on event.
+            // The key to the map is the _unconformed_ MIDI key and instrument 
+            // number. But the note off event is the same pitch as the 
+            // original note, conformed or not. Note: turnoff only works 
+            // for negative durations. With positive durations, notes can 
+            // really pile up.
+            
+            var turnoff_map = new Map();
+            
+            var make_insno = function(x) {
+                let insno = ((x / gl.drawingBufferWidth) * instrument_count) + 1;
+                let insbase = Math.floor(insno);
+                let instag = insno - insbase;
+                instag = instag * instances_per_instrument;
+                instag = Math.floor(instag);
+                instag = instag / instances_per_instrument;
+                insno = insbase + instag;
+                return insno;
+           }
+           
+           var make_key = function(y) {
+               let key = Math.floor((y / gl.drawingBufferHeight) * range + bass);
+               return key;
+           }
+
+            var create_on_event = function(x, y, h, v) {
+                let insno = make_insno(x);
+                let tyme = 0.;
+                let duration = parameters.duration; 
+                let key = make_key(y);
+                let chord_key = ChordSpace.conformPitchToChord(key, chord, false);
+                let velocity = Math.floor(v * dynamic_range + softest);
+                let ypan = 0.;
+                let xpan = Math.random();
+                let turnoff_key = [insno, key];
+                let istatement = sprintf("i %9.4f %9.4f %9.4f %9.4f %9.4f %9.4f\n", insno, tyme, duration, chord_key, ypan, xpan);
+                let dstatement = sprintf("d %9.4f %9.4f %9.4f %9.4f %9.4f %9.4f\n", insno, tyme, 0,        chord_key, ypan, xpan);
+                csound.InputMessage(istatement);
+                turnoff_map.set(turnoff_key, dstatement);
+            }
+
+            var create_off_event = function(x, y, h, v) {
+                let insno = make_insno(x);
+                let key = make_key(y);
+                let turnoff_key = [insno, key];
+                if (turnoff_map.has(turnoff_key)) {
+                    let dstatement = map.get(turnoff_key);
+                    csound.InputMessage(dstatement);
+                    map.delete(turnoff_key);
+                }
+             }
+
+            var send_events = function() {
+               if (is_playing === false) {
+                    return;
+               }
+               maximum_value = 0;
+               var old_hsv;
+               var new_hsv;
+               // By row from bottom (0) to top (height - 1).
+               var stride = Math.floor(parameters.stride);
+               var offset = Math.floor(stride / 2);
+               for (var row_index = offset; row_index < gl.drawingBufferHeight; row_index += stride) {
+                  // By column from left (0) to right (width - 1).
+                  for (var column_index = offset; column_index < gl.drawingBufferWidth; column_index += stride) {
+                     var i = 4 * (row_index * gl.drawingBufferHeight + column_index);
+                     old_hsv = rgb_to_hsv(old_pixels[i + 0], old_pixels[i + 1], old_pixels[i + 2], old_pixels[i + 3]);
+                     new_hsv = rgb_to_hsv(new_pixels[i + 0], new_pixels[i + 1], new_pixels[i + 2], new_pixels[i + 3]);
+                     if (new_hsv[2] > maximum_value) {
+                        maximum_value = new_hsv[2];
+                     }
+                     if (isNaN(new_hsv[2]) || isNaN(old_hsv[2])) {
+                        console.warn(sprintf("Index out of range at row %d column %d.", row_index, column_index));
+                     }
+                     // On event.
+                     if ((old_hsv[2] < value_threshold) && (new_hsv[2] >= value_threshold)) {
+                        create_on_event(column_index, row_index, new_hsv[0], new_hsv[2]);
+                     }
+                     // Off event.
+                     if ((old_hsv[2] >= value_threshold) && (new_hsv[2] < value_threshold)) {
+                        create_off_event(column_index, row_index, new_hsv[0], new_hsv[2]);
+                     }
+                  }
+               }
+            }
+
+            var score_time_cell = document.getElementById('Time_cell');
+            var X_cell = document.getElementById("X_cell");
+            var Y_cell = document.getElementById("Y_cell");
+            var Chord_cell = document.getElementById("Chord_cell");
+            var Notes_cell = document.getElementById("Notes_cell");
+
+            function render() {
+                if (!currentProgram) return;
+                parameters.time = Date.now() - parameters.startTime;
+                // Set uniforms for custom shader.
+                gl.useProgram(currentProgram);
+                gl.uniform1f(currentProgram.uniformsCache.time, parameters.time / 1000);
+                gl.uniform1f(currentProgram.uniformsCache.tempo, parameters.tempo);
+                gl.uniform1f(currentProgram.uniformsCache.zoom, parameters.zoom);
+                gl.uniform2f(currentProgram.uniformsCache.mouse, surface.lastX, surface.lastY);
+                gl.uniform1f(currentProgram.uniformsCache.stride, parameters.stride);
+                gl.uniform2f(currentProgram.uniformsCache.resolution, parameters.screenWidth, parameters.screenHeight);
+                gl.uniform1i(currentProgram.uniformsCache.backbuffer, 0);
+                gl.uniform2f(currentProgram.uniformsCache.surfaceSize, surface.width, surface.height);
+                gl.bindBuffer(gl.ARRAY_BUFFER, surface.buffer);
+                gl.vertexAttribPointer(surface.positionAttribute, 2, gl.FLOAT, false, 0, 0);
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+                gl.vertexAttribPointer(vertexPosition, 2, gl.FLOAT, false, 0, 0);
+                gl.activeTexture(gl.TEXTURE0);
+                gl.bindTexture(gl.TEXTURE_2D, backTarget.texture);
+                // Render custom shader to front buffer
+                gl.bindFramebuffer(gl.FRAMEBUFFER, frontTarget.framebuffer);
+                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+                // Set uniforms for screen shader
+                gl.useProgram(screenProgram);
+                gl.uniform2f(screenProgram.uniformsCache.resolution, parameters.screenWidth, parameters.screenHeight);
+                gl.uniform1i(screenProgram.uniformsCache.texture, 1);
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+                gl.vertexAttribPointer(screenVertexPosition, 2, gl.FLOAT, false, 0, 0);
+                gl.activeTexture(gl.TEXTURE1);
+                gl.bindTexture(gl.TEXTURE_2D, frontTarget.texture);
+                // Render front buffer to screen
+                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+                // Just keep swapping the pixel arrays.
+                    let temp_pixels = old_pixels;
+                old_pixels = new_pixels;
+                new_pixels = temp_pixels;
+                gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, new_pixels);
+                send_events();
+                
+                var current_time_seconds = new Date().getTime() / 1000.0;
+                var score_time = current_time_seconds - start_time_seconds;
+                score_time_cell.innerHTML = score_time.toFixed(3);
+                X_cell.innerHTML = parameters.mouseX.toFixed(3);
+                Y_cell.innerHTML = parameters.mouseY.toFixed(3);
+                Chord_cell.innerHTML = chord.name();
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+                render();
+            }
+
+            var gui = null;
+             window.onload = function() {
+//~                 try {
+//~                     var temporary_json = Silencio.restoreDatGuiJson(default_json);
+//~                     default_json = temporary_json;
+//~                 } catch(e) {
+//~                     console.warn(e);
+//~                 }
+                gui = new dat.GUI({load: parameters, width: 300});
+                gui.remember(parameters);
+                gui.add(parameters, 'Play').name('Play [Ctrl-P]');
+                gui.add(parameters, 'Stop').name('Stop [Ctrl-S]');
+                gui.add(parameters, 'Close').name('Close').name('Exit [Ctrl-X]');
+                var Master = gui.addFolder('Master effects');
+                add_slider(Master, 'duration', -1, 8  ).name('Duration [Alt-D]').listen();
+                add_slider(Master, 'tempo', 0, .333334).name('Tempo    [Alt-T]').listen();
+                add_slider(Master, 'zoom', 0, 128     ).name('Zoom     [Alt-Z]').listen();
+                add_slider(Master, 'stride', 1, 100   ).name('Stride   [Alt-S]').listen();
+                add_slider(Master, 'gk_Reverb_feedback', 0, 1);
+                //add_slider(Master, 'gk_Reverb2_Feedback', 0, 1);
+                add_slider(Master, 'gk_MasterOutput_level', -40, 40);
+            let instruments = gui.addFolder('Instruments');
+            let Blower = instruments.addFolder('Blower');
+            add_slider(Blower, 'gk_Blower_grainDensity', 0, 400);
+            add_slider(Blower, 'gk_Blower_grainDuration', 0, .5);
+            add_slider(Blower, 'gk_Blower_grainAmplitudeRange', 0, 400);
+            add_slider(Blower, 'gk_Blower_grainFrequencyRange', 0, 100);
+            add_slider(Blower, 'gk_Blower_level', -80, 80);
+            let Bower = instruments.addFolder('Bower');
+            add_slider(Bower, 'gk_Bower_attack', 0, .25);
+            add_slider(Bower, 'gk_Bower_release', 0, .5);
+            add_slider(Bower, 'gk_Bower_pressure', 0, 1);
+            add_slider(Bower, 'gk_Bower_level', -80, 80);
+            let Buzzer = instruments.addFolder('Buzzer');
+            add_slider(Buzzer, 'gk_Buzzer_attack', 0, .25);
+            add_slider(Buzzer, 'gk_Buzzer_release', 0, .5);
+            add_slider(Buzzer, 'gk_Buzzer_harmonics', 0, 20);
+            add_slider(Buzzer, 'gk_Buzzer_level', -80, 80);
+            let Droner = instruments.addFolder('Droner');
+            add_slider(Droner, 'gk_Droner_partial1', 0, 1);
+            add_slider(Droner, 'gk_Droner_partial2', 0, 1);
+            add_slider(Droner, 'gk_Droner_partial3', 0, 1);
+            add_slider(Droner, 'gk_Droner_partial4', 0, 1);
+            add_slider(Droner, 'gk_Droner_partial5', 0, 1);
+            add_slider(Droner, 'gk_Droner_partial6', 0, 1);
+            add_slider(Droner, 'gk_Droner_partial7', 0, 1);
+            add_slider(Droner, 'gk_Droner_partial8', 0, 1);
+            add_slider(Droner, 'gk_Droner_partial9', 0, 1);
+            add_slider(Droner, 'gk_Droner_partial10', 0, 1);
+            add_slider(Droner, 'gk_Droner_waveform', 0, 1);
+            add_slider(Droner, 'gk_Droner_level', -80, 80);
+            let FMModerate2 = instruments.addFolder('FMModerate2');
+            add_slider(FMModerate2, 'gi_FMModerate2_carrier', .1, 10);
+            add_slider(FMModerate2, 'gi_FMModerate2_modulator', .1, 10);
+            add_slider(FMModerate2, 'gi_FMModerate2_fmamplitude', 1, 10);
+            add_slider(FMModerate2, 'gi_FMModerate2_index', 1, 20);
+            add_slider(FMModerate2, 'gk_FMModerate2_level', -80, 80);
+            let Harpsichord = instruments.addFolder('Harpsichord');
+            add_slider(Harpsichord, 'gk_Harpsichord_level', -80, 80);
+            let Rhodes = instruments.addFolder('Rhodes');
+            add_slider(Rhodes, 'gk_Rhodes_level', -80, 80);
+            let Phaser = instruments.addFolder('Phaser');
+            add_slider(Phaser, 'gk_Phaser_attack', 0, .25);
+            add_slider(Phaser, 'gk_Phaser_release', 0, .5);
+            add_slider(Phaser, 'gk_Phaser_ratio1', 0, 2);
+            add_slider(Phaser, 'gk_Phaser_ratio2', 0, 2);
+            add_slider(Phaser, 'gk_Phaser_index1', 0, 1);
+            add_slider(Phaser, 'gk_Phaser_index2', 0, 1);
+            add_slider(Phaser, 'gk_Phaser_level', -80, 80);
+            let Shiner = instruments.addFolder('Shiner');
+            add_slider(Shiner, 'gk_Shiner_level', -80, 80);
+            let Sweeper = instruments.addFolder('Sweeper');
+            add_slider(Sweeper, 'gk_Sweeper_attack', 0, .5);
+            add_slider(Sweeper, 'gk_Sweeper_release', 0, .25);
+            add_slider(Sweeper, 'gk_Sweeper_britel', 0, 4);
+            add_slider(Sweeper, 'gk_Sweeper_briteh', 0, 4);
+            add_slider(Sweeper, 'gk_Sweeper_britels', 0, 4);
+            add_slider(Sweeper, 'gk_Sweeper_britehs', 0, 4);
+            add_slider(Sweeper, 'gk_Sweeper_level', -80, 80);
+            let Xing = instruments.addFolder('Xing');
+            add_slider(Xing, 'gk_Xing_level', -80, 80);
+            let YiString = instruments.addFolder('YiString');
+            add_slider(YiString, 'gk_YiString_reverb_send', 0, 1);
+            add_slider(YiString, 'gk_YiString_chorus_send', 0, 1);
+            add_slider(YiString, 'gk_YiString_level', -80, 80);
+                var Chords = gui.addFolder('Chords and transformations');
+                Chords.add(parameters, 'CM');
+                Chords.add(parameters, 'Bb7');
+                Chords.add(parameters, 'FM9');
+                Chords.add(parameters, 'K'   ).name('K()   [Ctrl-K]');
+                Chords.add(parameters, 'T1'  ).name('T(1)  [Ctrl-1]');
+                Chords.add(parameters, 'T2'  ).name('T(2)  [Ctrl-2]');
+                Chords.add(parameters, 'T3'  ).name('T(3)  [Ctrl-3]');
+                Chords.add(parameters, 'T4'  ).name('T(4)  [Ctrl-4]');
+                Chords.add(parameters, 'T5'  ).name('T(5)  [Ctrl-5]');
+                Chords.add(parameters, 'T6'  ).name('T(6)  [Ctrl-6]');
+                Chords.add(parameters, 'T7'  ).name('T(7)  [Ctrl-7]');
+                Chords.add(parameters, 'T8'  ).name('T(8)  [Ctrl-8]');
+                Chords.add(parameters, 'T9'  ).name('T(9)  [Ctrl-9]');
+                Chords.add(parameters, 'T10' ).name('T(10) [Ctrl-A]');
+                Chords.add(parameters, 'T11' ).name('T(11) [Ctrl-B]');
+                Chords.add(parameters, 'J2_2').name('J(2,2)');
+                Chords.add(parameters, 'J2_3').name('J(2,3)');
+                Chords.add(parameters, 'J3_1').name('J(3,1)');
+                Chords.add(parameters, 'T5'  ).name('D()   [Ctrl-D]');
+                gui.revert();
+            };
+            function gk_update(name, value) {
+                if (is_playing == true) {
+                    let numberValue = parseFloat(value);
+                    csound.SetControlChannel(name, numberValue);
+                    csound_message_callback(name + ': ' + numberValue + '\n');
+                }
+            }
+            function add_slider(gui_folder, token, minimum, maximum) {
+                var on_parameter_change = function(value) {
+                    if (token.startsWith('gk_')) {
+                        gk_update(token, value);
+                    }
+                    if (token.startsWith('gi_')) {
+                        gk_update(token, value);
+                    }
+                    if (token == 'duration') {
+                        parameters.duration = parseFloat(value);
+                    }
+                    if (token == 'zoom') {
+                        parameters.zoom = parseFloat(value);
+                    }
+                    if (token == 'stride') {
+                        parameters.stride = parseFloat(value);
+                    }
+                    if (token == 'tempo') {
+                        parameters.tempo = parseFloat(value);
+                    }
+                };
+                var slider = gui_folder.add(parameters, token, minimum, maximum);
+                slider.onChange(on_parameter_change);
+                return slider;
+            };
+            // Used to find out what actually happens when a key is pressed.
+            function printKey(e) {
+              e = e || event;
+              //if (document.forms.keyform[e.type + 'Ignore'].checked) return
+              var evt = e.type;
+              while (evt.length < 10) evt += ' ';
+              var data = evt +
+                ' keyCode=' + e.keyCode +
+                ' which=' + e.which +
+                ' charCode=' + e.charCode +
+                ' char=' + String.fromCharCode(e.keyCode || e.charCode) +
+                (e.shiftKey ? ' +shift' : '') +
+                (e.ctrlKey ? ' +ctrl' : '') +
+                (e.altKey ? ' +alt' : '') +
+                (e.metaKey ? ' +meta' : '') + '\n';
+              logMessage(data);
+            }
+            function toggle_controls() {
+                $("#statistics").toggle();
+                gui.toggle();
+                gui.closed = true;
+                gui.closed = false;
+            }
+            $(document).on("keydown", function (e) {
+                //printKey(e);
+                var e_char = String.fromCharCode(e.keyCode || e.charCode);
+                if (e.ctrlKey === true) {
+                    if        (e_char === 'H') {
+                        toggle_controls();
+                    } else if (e_char === 'K') {
+                        parameters.K();
+                    } else if (e_char === '1') {
+                        parameters.T1();
+                    } else if (e_char === '2') {
+                        parameters.T2();
+                    } else if (e_char === '3') {
+                        parameters.T3();
+                    } else if (e_char === '4') {
+                        parameters.T4();
+                    } else if (e_char === '5') {
+                        parameters.T5();
+                    } else if (e_char === '6') {
+                        parameters.T6();
+                    } else if (e_char === '7') {
+                        parameters.T7();
+                    } else if (e_char === '8') {
+                        parameters.T8();
+                    } else if (e_char === '9') {
+                        parameters.T9();
+                    } else if (e_char === 'A') {
+                        parameters.T10();
+                    } else if (e_char === 'B') {
+                        parameters.T11();
+                    } else if (e_char === 'D') {
+                        parameters.T5();
+                     } else if (e_char === 'P') {
+                        parameters.Play();
+                    } else if (e_char === 'S') {
+                        parameters.Stop();
+                    } else if (e_char === 'X') {
+                        parameters.Close();
+                    }
+                } else if (e.altKey === true) {
+                    var factor = 1.05;
+                    if (e.shiftKey === true) {
+                        factor = 1 / 1.05;
+                    }
+                    if        (e_char === 'Z') {
+                        parameters.zoom *= factor;
+                        if (parameters.zoom < 0) {
+                            parameters.zoom = 0;
+                        } else if (parameters.zoom > 128) {
+                            parameters.zoom = 128;
+                        }
+                    } else if (e_char === 'T') {
+                        parameters.tempo *= factor;
+                        if (parameters.tempo < 0) {
+                            parameters.tempo = 0;
+                        } else if (parameters.tempo > .333334) {
+                            parameters.tempo = .333334;
+                        }
+                    } else if (e_char === 'S') {
+                        parameters.stride *= factor;
+                        if (parameters.stride < 1) {
+                            parameters.stride = 1;
+                        } else if (parameters.stride > 100) {
+                            parameters.stride = 100;
+                        }
+                    } else if (e_char === 'D') {
+                        parameters.duration *= factor;
+                        if (parameters.duration < 0) {
+                            parameters.duration = 0;
+                        } else if (parameters.duration > 8) {
+                            parameters.duration = 8;
+                        }
+                    }
+                }
+                return false;
+             });
+                compile();
+             } catch (err) {
+                alert(err);
+                console.log(err.message);
+                console.log(err.stack);
+            }
+        </script>
+    </body>
+</html>
