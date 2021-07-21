@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+import contextlib
 import datetime
 import markdown
 import math
@@ -75,40 +76,10 @@ from gi.repository import JavaScriptCore
 gi.require_version("GtkSource", "3.0")
 from gi.repository import GtkSource
 import CsoundThreaded
+import musx
+from musx import *
 
-'''
-Specialize Csound to perform with co-operative multiprocessing in this 
-program.
-'''
-class GtkCsound(CsoundThreaded.CsoundThread):
-    def __init__(self):
-        super().__init__()
-    def PerformPolling(self):
-        try:
-            print_("GtkCsound starting...")
-            self.Start()
-            # Try to keep the UI responsive during performance 
-            # by handling Gtk events between Csound buffers.
-            print_("GtkCsound performing...")
-            while self.PerformBuffer() == 0:
-                Gtk.main_iteration_do(False)
-                message_count = self.GetMessageCnt()
-                for message_index in range(message_count):
-                    message = self.GetFirstMessage()
-                    self.PopFirstMessage()
-                    sys.stdout.write(message)
-                    messages_text_buffer.insert(messages_text_buffer.get_end_iter(), message, -1)
-                    end_iter = messages_text_buffer.get_end_iter()
-                    messages_text_view.scroll_to_iter(end_iter, 0, False, .5, .5)
-                    Gtk.main_iteration_do(False)
-            self.Stop()
-            self.Cleanup()
-            self.Reset()
-            print_("GtkCsound has stopped.")
-        except:
-            print_(traceback.format_exc())
-            
-csound = GtkCsound()
+csound = CsoundThreaded.CsoundThread()
 print("Global Csound instance: {} CSOUND *: 0x{:x}.".format(csound, int(csound.GetCsound())))
         
 ## Gst.init(sys.argv)
@@ -347,7 +318,10 @@ def on_play_audio_button_clicked(button):
         load_glade(filename)
         csound.CreateMessageBuffer(False)
         if piece_is_python():
-            exec(piece, globals(), locals())
+            # Only globals are passed, because otherwise recursive functions 
+            # defined and invoked in the piece will not work. See:
+            # https://stackoverflow.com/questions/871887/using-exec-with-recursive-functions
+            exec(piece, globals())
         if piece_is_csound():
             # Change output target here.
             # Patch the csound options.
@@ -357,7 +331,39 @@ def on_play_audio_button_clicked(button):
             print("Patched piece:")
             print(csd)
             csound.CompileCsdText(csd)
-            csound.PerformPolling()
+            csound.Start()
+            csound.Perform()
+    except:
+        print_(traceback.format_exc())
+        
+def on_render_soundfile_button_clicked(button):
+    global filename
+    global piece
+    try:
+        print_(button.get_label())
+        save_piece()
+        load_glade(filename)
+        if piece_is_csound():
+            csound.CreateMessageBuffer(False)
+            csd = patch_csound_options(piece, output="soundfile")
+            csound.CompileCsdText(csd)
+            csound.Start()
+            # Try to keep the UI responsive during performance.
+            while csound.PerformBuffer() == 0:
+                Gtk.main_iteration_do(False)
+                message_count = csound.GetMessageCnt()
+                for message_index in range(message_count):
+                    message = csound.GetFirstMessage()
+                    csound.PopFirstMessage()
+                    sys.stdout.write(message)
+                    messages_text_buffer.insert(messages_text_buffer.get_end_iter(), message, -1)
+                    end_iter = messages_text_buffer.get_end_iter()
+                    messages_text_view.scroll_to_iter(end_iter, 0, False, .5, .5)
+                    Gtk.main_iteration_do(False)
+            csound.Stop()
+            csound.Cleanup()
+            csound.Reset()
+            post_process()
     except:
         print_(traceback.format_exc())
         
@@ -494,37 +500,6 @@ def patch_csound_options(csd, output="soundfile"):
     csd = "".join([csd_top, "\n", csd_options, "\n", csd_bottom])
     return csd
     
-def on_render_soundfile_button_clicked(button):
-    global filename
-    global piece
-    try:
-        print_(button.get_label())
-        save_piece()
-        load_glade(filename)
-        if piece_is_csound():
-            csound.CreateMessageBuffer(False)
-            csd = patch_csound_options(piece, output="soundfile")
-            csound.CompileCsdText(csd)
-            csound.Start()
-            # Try to keep the UI responsive during performance.
-            while csound.PerformBuffer() == 0:
-                Gtk.main_iteration_do(False)
-                message_count = csound.GetMessageCnt()
-                for message_index in range(message_count):
-                    message = csound.GetFirstMessage()
-                    csound.PopFirstMessage()
-                    sys.stdout.write(message)
-                    messages_text_buffer.insert(messages_text_buffer.get_end_iter(), message, -1)
-                    end_iter = messages_text_buffer.get_end_iter()
-                    messages_text_view.scroll_to_iter(end_iter, 0, False, .5, .5)
-                    Gtk.main_iteration_do(False)
-            csound.Stop()
-            csound.Cleanup()
-            csound.Reset()
-            post_process()
-    except:
-        print_(traceback.format_exc())
-        
 def on_edit_gui_button_clicked(button):
     try:
         print_(button.get_label())
@@ -677,6 +652,17 @@ messages_text_view = builder.get_object("messages_text_view")
 messages_text_view.override_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0.0, 0.8, 0.0, 1.0))
 messages_text_view.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0.1, 0.1, 0.1, 1.0))
 messages_text_buffer = messages_text_view.get_buffer()
+# https://pygabriel.wordpress.com/2009/07/27/redirecting-the-stdout-on-a-gtk-textview/
+def message_callback(self, fd, condition):
+    print("message_callback: self: {} fd: {} condition: {}".format(self, fd, condition))
+    if condition == Glib.IO_IN:
+        line = fd.readline()
+        messages_text_buffer.insert(messages_text_buffer.get_end_iter(), message, -1)
+        end_iter = messages_text_buffer.get_end_iter()
+        messages_text_view.scroll_to_iter(end_iter, 0, False, .5, .5)
+    return True
+#GLib.io_add_watch(sys.stdout, GLib.IO_IN, message_callback, None)
+GLib.io_add_watch(sys.stderr, GLib.IO_IN, message_callback, None)
 webview = WebKit2.WebView() 
 # Set the directory from which to load extensions.
 web_context = webview.get_context()

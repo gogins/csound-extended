@@ -47,6 +47,8 @@ instructions. There are some specific instructions for Ubuntu Linux. However,
 to the best of my knowledge, all dependencies are available on Linux, MacOS, 
 and Windows.
 
+Everything should be installed for the same version of Python.
+
 1.  [Python 3.9](https://www.python.org/downloads/). For Ubuntu Linux, 
     follow [these instructions](https://linuxize.com/post/how-to-install-python-3-9-on-ubuntu-20-04/).
 2.  [GTK 3](https://www.gtk.org/docs/installations/), note that GTK 4 is now 
@@ -81,6 +83,12 @@ and Windows.
     Execute `python3 playpen.py` and then open and run the `drone.py` example 
     to check that everything is working.
 
-## User's Guide
-
 ## A Few Examples
+
+### sierpinski-csound
+
+For this example, install Rick Taube's Python port of the Common Music 
+algorithmic composition system, [musx](https://github.com/musx-admin/musx).
+
+## User Guide
+
