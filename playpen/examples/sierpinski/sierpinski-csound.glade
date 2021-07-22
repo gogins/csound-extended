@@ -63,6 +63,9 @@
     <property name="margin_bottom">10</property>
     <property name="hexpand">True</property>
     <property name="vexpand">True</property>
+    <property name="border_width">10</property>
+    <property name="row_spacing">10</property>
+    <property name="column_spacing">10</property>
     <child>
       <object class="GtkLabel">
         <property name="name">gk_MasterOutput_level</property>
@@ -197,7 +200,7 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
-        <property name="label" translatable="yes">gk_Harpsichord_pluck</property>
+        <property name="label" translatable="yes">gi_Harpsichord_pluck</property>
       </object>
       <packing>
         <property name="left_attach">0</property>
@@ -282,8 +285,8 @@
       </packing>
     </child>
     <child>
-      <object class="GtkScale" id="gk_Harpsichord_pluck">
-        <property name="name">gk_Harpsichord_pluck</property>
+      <object class="GtkScale" id="gi_Harpsichord_pluck">
+        <property name="name">gi_Harpsichord_pluck</property>
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="hexpand">True</property>

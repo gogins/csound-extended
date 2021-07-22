@@ -56,7 +56,7 @@ settings = GLib.KeyFile.new()
 GLib.KeyFile.load_from_file(settings, "playpen.ini", GLib.KeyFileFlags.NONE)
 metadata_author=settings.get_value("metadata", "author")
 metadata_publisher=settings.get_value("metadata", "publisher")
-metadata_copyright=settings.get_value("metadata", "copyright")
+metadata_year=settings.get_value("metadata", "year")
 metadata_notes=settings.get_value("metadata", "notes")
 metadata_license=settings.get_value("metadata", "license")
 global csound_audio_output
@@ -64,6 +64,7 @@ csound_audio_output=settings.get_value("csound", "audio-output")
 print("csound_audio_output: " + csound_audio_output)
 soundfile_editor=settings.get_value("playpen", "soundfile-editor")
 gnome_theme=settings.get_value("playpen", "gnome-theme")
+editor_scheme = settings.get_value("playpen", "editor-scheme")
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk 
@@ -243,12 +244,12 @@ def load_glade(filename):
         try:
             with open(glade_file, "r") as file:
                 glade_xml = file.read()
-                print("glade:", glade_xml)
+                # print("glade:", glade_xml)
                 result = builder.add_from_string(glade_xml)
                 if result == 0:
                     print("Failed to parse {} file.".format(glade_file))
                 user_controls_layout = builder.get_object("user_controls_layout")
-                print("user_controls_layout: {}".format(user_controls_layout))
+                # print("user_controls_layout: {}".format(user_controls_layout))
                 children = controls_layout.get_children()
                 for child in children:
                     if child.get_name() == "user_controls_layout":
@@ -355,7 +356,7 @@ def on_render_soundfile_button_clicked(button):
             csd = patch_csound_options(piece, output="soundfile")
             csound.CompileCsdText(csd)
             csound.Start()
-            # Try to keep the UI responsive during performance.
+            # Keep the UI responsive during performance.
             while csound.PerformBuffer() == 0:
                 Gtk.main_iteration_do(False)
             csound.Stop()
@@ -382,11 +383,11 @@ def post_process():
         print("Post-processing...")
         cwd = os.getcwd()
         print('cwd:                    ' + cwd)
-        author = 'Michael Gogins'
-        year = '2019'
-        license = 'ASCAP'
-        publisher = 'Irreducible Productions, ASCAP'
-        notes = 'Electroacoustic Music'
+        author = metadata_author #'Michael Gogins'
+        year = metadata_year #'2021'
+        license = metadata_license #'ASCAP'
+        publisher = metadata_publisher #'Irreducible Productions, ASCAP'
+        notes = metadata_notes #'Electroacoustic Music'
 
         directory, basename = os.path.split(filename)
         rootname = os.path.splitext(basename)[0].split('.')[0]
@@ -680,7 +681,7 @@ try:
 except:
     traceback.print(exc())
 help_window.add(helpview)
-main_window.resize(1200, 800)
+main_window.resize(4 * 800, 3 * 800)
 new_button = builder.get_object("new_button")
 new_button.connect("clicked", on_new_button_clicked)
 open_button = builder.get_object("open_button")
@@ -700,12 +701,18 @@ stop_button.connect("clicked", on_stop_button_clicked)
 search_entry = builder.get_object("search_entry")
 search_entry.connect("activate", on_search_entry_activate)
 replacement_entry = builder.get_object("replacement_entry")
-style_scheme = builder.get_object("style_scheme")
 apply_scheme_button = builder.get_object("apply_scheme_button")
 apply_scheme_button.connect("activate", on_apply_scheme_button)
 apply_scheme_button.connect("clicked", on_apply_scheme_button)
+style_scheme = builder.get_object("style_scheme")
+style_scheme_manager = GtkSource.StyleSchemeManager().get_default()
+code_editor_scheme = style_scheme_manager.get_scheme(editor_scheme)
+scheme_ids = style_scheme_manager.get_scheme_ids()
+for scheme_id in scheme_ids:
+    print("scheme_id: {}".format(scheme_id))
+print("code_editor_scheme: {}".format(code_editor_scheme))
+code_editor.get_buffer().set_style_scheme(code_editor_scheme)
 language_manager = GtkSource.LanguageManager()
-
 search_context = GtkSource.SearchContext()
 search_settings = GtkSource.SearchSettings()
 search_button = builder.get_object("search_button")
