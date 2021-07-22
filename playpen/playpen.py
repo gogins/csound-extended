@@ -359,9 +359,21 @@ def on_render_soundfile_button_clicked(button):
             while csound.PerformBuffer() == 0:
                 Gtk.main_iteration_do(False)
             csound.Stop()
+            csound.Join()
             csound.Cleanup()
             csound.Reset()
             post_process()
+    except:
+        print(traceback.format_exc())
+        
+def on_stop_button_clicked(button):
+    try:
+        print("Stopping csound...")
+        csound.Stop()
+        csound.Join()
+        csound.Cleanup()
+        csound.Reset()
+        print("Csound has been stopped and reset.")
     except:
         print(traceback.format_exc())
         
@@ -517,19 +529,10 @@ def on_edit_gui_button_clicked(button):
         future_.add_done_callback(glade_exit_callback)
     except:
         print(traceback.format_exc())
-    
-def on_stop_button_clicked(button):
-    try:
-        print("Stopping csound...")
-        csound.Stop()
-        csound.Cleanup()
-        csound.Reset()
-        print("Csound has been stopped and reset.")
-    except:
-        print(traceback.format_exc())
-        
+            
 def on_destroy(source):
     csound.Stop()
+    csound.Join()
     csound.Cleanup()
     csound.Reset()
     Gtk.main_quit()
