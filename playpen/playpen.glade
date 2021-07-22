@@ -239,6 +239,17 @@
                           </packing>
                         </child>
                         <child>
+                          <object class="GtkButton" id="replace_all_button">
+                            <property name="label" translatable="yes">Replace all</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                          </object>
+                          <packing>
+                            <property name="position">5</property>
+                          </packing>
+                        </child>
+                        <child>
                           <object class="GtkEntry" id="replacement_entry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -271,17 +282,6 @@
                           </object>
                           <packing>
                             <property name="position">7</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="replace_all_button">
-                            <property name="label" translatable="yes">Replace all</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                          </object>
-                          <packing>
-                            <property name="position">5</property>
                           </packing>
                         </child>
                       </object>

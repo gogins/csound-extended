@@ -111,17 +111,11 @@ gk_Harpsichord_pick init .275
 gk_Harpsichord_reflection init .75
 gi_Harpsichord_pluck init .5
 gk_Harpsichord_level chnexport "gk_Harpsichord_level", 3
-// chnset 0, "gk_Harpsichord_level"
 gk_Harpsichord_pan chnexport "gk_Harpsichord_pan", 3
-// chnset .3, "gk_Harpsichord_pan"
 gi_Harpsichord_release chnexport "gi_Harpsichord_release", 3
-// chnset .3, "gi_Harpsichord_release"
 gk_Harpsichord_pick chnexport "gk_Harpsichord_pick", 3
-// chnset .275, "gk_Harpsichord_pick"
 gk_Harpsichord_reflection chnexport "gk_Harpsichord_reflection", 3
-// chnset .75, "gk_Harpsichord_reflection"
 gk_Harpsichord_pluck chnexport "gi_Harpsichord_pluck", 3
-// chnset .5, "gk_Harpsichord_pluck"
 giharptable ftgen 0, 0, 65536, 7, -1, 1024, 1, 1024, -1
 instr Harpsichord
 if p3 == -1 goto indefinite
