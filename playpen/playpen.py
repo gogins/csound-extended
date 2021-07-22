@@ -211,23 +211,23 @@ def on_control_change(control, data):
         channel_value = ""
         if isinstance(control, Gtk.ToggleButton):
             channel_value = control.get_active()
-            csound.SetControlChannel(channel_name, channel_value)
+            csound.SetControlChannel(channel_name, float(channel_value))
         elif isinstance(control, Gtk.Button):
             channel_value = data
-            csound.SetControlChannel(channel_name, channel_value)
+            csound.SetControlChannel(channel_name, float(channel_value))
         elif isinstance(control, Gtk.MenuItem):
             channel_value = data
-            csound.SetControlChannel(channel_name, channel_value)
+            csound.SetControlChannel(channel_name, float(channel_value))
         elif isinstance(control, Gtk.Scale):
             channel_value = control.get_value()
-            csound.SetControlChannel(channel_name, channel_value)
+            csound.SetControlChannel(channel_name, float(channel_value))
         #~ elif isinstance(control, Gtk.SpinButton):
             #~ channel_value = control.get_value()
             #~ csound.SetControlChannel(channel_name, channel_value)
         elif isinstance(control, Gtk.Editable):
             channel_value = control.get_text()
             csound.SetStringChannel(channel_name, channel_value)
-        print("on_control_change: {}: {}".format(channel_name, channel_value))
+        print("on_control_change: {}: {} {}".format(channel_name, type(channel_value), channel_value))
     except:
         print(traceback.format_exc())
 
@@ -352,18 +352,12 @@ def on_render_soundfile_button_clicked(button):
         save_piece()
         load_glade(filename)
         if piece_is_csound():
-            csound.CreateMessageBuffer(False)
             csd = patch_csound_options(piece, output="soundfile")
             csound.CompileCsdText(csd)
             csound.Start()
             # Try to keep the UI responsive during performance.
             while csound.PerformBuffer() == 0:
                 Gtk.main_iteration_do(False)
-                message_count = csound.GetMessageCnt()
-                for message_index in range(message_count):
-                    message = csound.GetFirstMessage()
-                    csound.PopFirstMessage()
-                    sys.stdout.write(message)
             csound.Stop()
             csound.Cleanup()
             csound.Reset()

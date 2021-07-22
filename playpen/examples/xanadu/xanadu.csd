@@ -1,240 +1,243 @@
-<CsoundSynthesizer>
-<CsOptions>
--RWdf --sample-accurate -o dac:plughw:2,0
-</CsOptions>
-<CsInstruments>
-sr          =           48000
-ksmps       =           128
-nchnls      =           2
-;--------------------------------------------------------
-;Instrument 1 : plucked strings chorused left/right and
-;       pitch-shifted and delayed taps thru exponential
-;       functions, and delayed.
-;--------------------------------------------------------
+###############################################################################
+"""
+A musical hommage to the Sierpinski triangle using a recursive process to
+generate a self-similar melodies based on a set of tones representing the
+"sides" of a triangle.  The duration of each note is the process duration
+divided by the number of intervals in the melody. Thus, the entire melody
+in the next level will occupy the same mount of time as one tone in the
+current level. When the process starts running it outputs each note in the
+melody transposed to the current tone. If levels is greater then 1 then the
+process sprouts recursive copies of itself for each note in the melody
+transposed up trans intervals. The value for levels is decremented by 1,
+which will cause the recursive process to stop when the value reaches 0.
 
-            instr       1
-ishift      =           .00666667               ;shift it 8/1200.
-ipch        =           cpspch(p5)              ;convert parameter 5 to cps.
-ioct        =           octpch(p5)              ;convert parameter 5 to oct.
-kvib        poscil3      1/120, ipch/50, 1      ;vibrato
-ag          pluck       2000, cpsoct(ioct+kvib), 1000, 1, 1
-agleft      pluck       2000, cpsoct(ioct+ishift), 1000, 1, 1
-agright     pluck       2000, cpsoct(ioct-ishift), 1000, 1, 1
-adamping    linsegr     0.0, 0.006, 1.0, p3 - 0.066, 1.0, 0.06, 0.0
-ag          =           adamping * ag
-agleft      =           adamping * agleft
-agright     =           adamping * agright
-af1         expon       .1, p3, 1.0             ;exponential from 0.1 to 1.0
-af2         expon       1.0, p3, .1             ;exponential from 1.0 to 0.1
-adump       delayr      2.0                     ;set delay line of 2.0 sec
-atap1       deltap3     af1                     ;tap delay line with kf1 func.
-atap2       deltap3     af2                     ;tap delay line with kf2 func.
-ad1         deltap3     2.0                     ;delay 2 sec.
-ad2         deltap3     1.1                     ;delay 1.1 sec.
-            delayw      ag                      ;put ag signal into delay line.
-            outs        agleft+atap1+ad1, agright+atap2+ad2
-            endin
-;-------------------------------------------------------------
-;Instrument 2 : plucked strings chorused left/right and
-;       pitch-shifted with fixed delayed taps.
-;------------------------------------------------------------
+"""
+import musx
+from musx import Score, Note, Seq, MidiFile, keynum
+import CsoundThreaded
 
-            instr       2
-ishift      =           .00666667               ;shift it 8/1200.
-ipch        =           cpspch(p5)              ;convert parameter 5 to cps.
-ioct        =           octpch(p5)              ;convert parameter 5 to oct.
-kvib        poscil3      1/120, ipch/50, 1       ;vibrato
-ag          pluck       1000, cpsoct(ioct+kvib), 1000, 1, 1
-agleft      pluck       1000, cpsoct(ioct+ishift), 1000, 1, 1
-agright     pluck       1000, cpsoct(ioct-ishift), 1000, 1, 1
-adamping    linsegr     0.0, 0.006, 1.0, p3 - 0.066, 1.0, 0.06, 0.0
-ag          =           adamping * ag
-agleft      =           adamping * agleft
-agright     =           adamping * agright
-adump       delayr      0.3                     ;set delay line of 0.3 sec
-ad1         deltap3     0.1                     ;delay 100 msec.
-ad2         deltap3     0.2                     ;delay 200 msec.
-            delayw      ag                      ;put ag sign into del line.
-            outs        agleft+ad1, agright+ad2
-            endin
-;-----------------------------------------------------------
-;Instrument 3 : New FM algorithm, modified to produce large timbre
-;               shifts using modulation of I and r. Detuned chorusing employed.
-;-----------------------------------------------------------
-            instr       3
-ishift      =           .00666667               ;shift it 8/1200.
-ipch        =           cpspch(p5)              ;convert parameter 5 to cps.
-ioct        =           octpch(p5)              ;convert parameter 5 to oct.
-aadsr       linsegr     0, p3/3, 1.0, p3/3, 1.0, p3/3, 0 ;ADSR envelope
-amodi       linseg      0, p3/3, 5, p3/3, 3, p3/3, 0 ;ADSR envelope for I
-amodr       linseg      p6, p3, p7              ;r moves from p6->p7 in p3 sec.
-a1          =           amodi*(amodr-1/amodr)/2
-a1ndx       =           abs(a1*2/20)            ;a1*2 is normalized from 0-1.
-a2          =           amodi*(amodr+1/amodr)/2
-a3          tablei      a1ndx, 3, 1             ;lookup tbl in f3, normal index
-ao1         poscil3      a1, ipch, 2             ;cosine
-a4          =           exp(-0.5*a3+ao1)
-ao2         poscil3      a2*ipch, ipch, 2        ;cosine
-aoutl       poscil3      1000*aadsr*a4, ao2+cpsoct(ioct+ishift), 1 ;fnl outleft
-aoutr       poscil3      1000*aadsr*a4, ao2+cpsoct(ioct-ishift), 1 ;fnl outright
-            outs        aoutl, aoutr
-            endin
+sierpinski2 = None
 
-</CsInstruments>
-<CsScore>
-;       Score for final project in Digital Audio Processing
-;       ---------------------------------------------------
+def sierpinski(score, tone, shape, trans, levels, dur, amp):
+    """
+    Generates a melodic shape based on successive transpositions (levels) of
+    itself. 
+    
+    Parameters
+    ----------
+    score : Score
+        The musical score to add events to.
+    tone : keynum
+        The melodic tone on which to base the melody for the current level.
+    shape : list
+        A list of intervals defining the melodic shape. 
+    levels : int
+        The number of levels the melody should be reproduced on. 
+    dur : int | float
+        The duration of the process.
+    amp : float
+        The amplitude of the process.
+    """
+    num = len(shape)
+    for i in shape:
+        k = tone + i
+        # play current tone in melody
+        n = Note(time=score.now, duration=dur, pitch=min(k,127), amplitude=amp, instrument=0)
+        score.add(n)
+        if (levels > 1):
+            # sprout melody on tone at next level
+            score.compose(sierpinski(score, (k + trans), shape,
+                        trans, levels - 1, dur / num,  amp))
+        yield dur
 
-;           Piece entitled :  X A N A D U (short version)
-;                           Joseph T. Kung, 12/12/88
-;            Instruments modified for higher precision
-;                         Michael Gogins, 07/22/2006
+# It's good practice to add any metadata such as tempo, midi instrument
+# assignments, micro tuning, etc. to track 0 in your midi file.
+track0 = MidiFile.metatrack()
+# Track 1 will hold the composition.
+track1 = Seq()
+# Create a scheduler and give it t1 as its output object.
+score = Score(out=track1)
 
-;           The first part of the score will specify all function
-;       tables used in the piece. The second part specifies
-;       the instruments and notes. The latter is divided into
-;       7 sections, each playing a chord on a different
-;                 instrument.
-;       The chords are uncommon guitar chords that use the open
-;       B and E strings often. These will be transposed by
-;       octaves on some chords.
+# Create the composition. Specify levels and melody length with care!
+# The number of events that are generateed is exponentially related to
+# the length of the melody and the number of levels. For example the
+# first compose() generates 120 events, the second 726, and the third 2728!
+#score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 12, 4, 3, .5))
+#score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 8, 5, 7, .5))
+#score.compose(sierpinski(score, musx.keynum('a0'), [0, -1, 2, 13], 12, 5, 24, .5))
+score.compose(sierpinski(score, 24., [0, -1, 2, 13], 12, 5, 24, .5))
 
-;       Each instrument will play a chord for 15 seconds. The
-;                 timbre
-;       of the instrument will change in that interval and join
-;       with the next instrument/chord sequence. Instrument 3
-;       uses a modified FM synthesis technique. This is joined
-;       by an additional plucked-string instrument
-;       (instruments 1 and 2).
+# Write the tracks to a midi file in the current directory.
+file = MidiFile("sierpinski.mid", [track0, track1]).write()
+print(f"Wrote '{file.pathname}'.")
 
-;   The Function Tables
-;   -------------------
-;All functions are post-normalized (max value is 1) if p4 is
-;POSITIVE.
+# To automatially play demos use setmidiplayer() and playfile().
+# Example:
+#     setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
+#     playfile(file.pathname)  
 
-f1 0 [65536 * 4 + 1]  10 1      ;sine wave
-f2 0 [65536 * 4 + 1]  11 1      ;cosine wave
-f3 0 [65536 * 4 + 1] -12 20.0   ;unscaled ln(I(x)) from 0 to 20.0
+# Now the Csound stuff.
 
-;-----------------------------------------------------------
+orc  = '''
 
-;----- This section comprises all the new FM sounds -----------
+sr = 48000
+ksmps = 128
+nchnls = 2
+0dbfs = 1
 
-;F#7addB chord on a guitar
-i3 0 15 0 7.06 2.0 0.2  ;F#
-i3 . . . 8.01 . .   ;C# above
-i3 . . . 8.06 . .   ;F# octave above 1st one
-i3 . . . 8.10 . .   ;Bb next one up
-i3 . . . 8.11 . .   ;B
-i3 . . . 9.04 . .   ;E
+gi_ampmidicurve_dynamic_range init .375
+gi_ampmidicurve_exponent init 5
 
-;D6add9 chord on a guitar
-i3 7.5 15 0 6.02 1.7 0.5    ;D
-i3 . . . 6.09 . .   ;A above
-i3 . . . 7.02 . .   ;D octave above 1st one
-i3 . . . 7.06 . .   ;F# next one up
-i3 . . . 6.11 . .   ;B
-i3 . . . 7.04 . .   ;E
+prealloc "Harpsichord", 20
 
-;Bmajadd11 chord on a guitar
-i3 15 15 0 7.11 1.4 0.8 ;B
-i3 . . . 8.06 . .   ;F# above
-i3 . . . 8.11 . .   ;B octave above 1st one
-i3 . . . 9.03 . .   ;D# next one up
-i3 . . . 8.11 . .   ;B
-i3 . . . 9.04 . .   ;E;
+connect "Harpsichord", "outleft", "ReverbSC", "inleft"
+connect "Harpsichord", "outright", "ReverbSC", "inright"
+connect "ReverbSC", "outleft", "MasterOutput", "inleft"
+connect "ReverbSC", "outright", "MasterOutput", "inright"
 
-;Amajadd9 chord on a guitar
-i3 22.5 15 0 6.09 1.1 1.1   ;A
-i3 . . . 7.04 . .   ;E above
-i3 . . . 8.09 . .   ;A octave above 1st one
-i3 . . . 8.01 . .   ;C# next one up
-i3 . . . 7.11 . .   ;B
-i3 . . . 8.04 . .   ;E
+alwayson "ReverbSC"
+alwayson "MasterOutput"
 
-;Bmajadd11 chord on a guitar
-i3 30 15 0 6.11 0.8 1.4 ;B
-i3 . . . 7.06 . .   ;F# above
-i3 . . . 7.11 . .   ;B octave above 1st one
-i3 . . . 8.03 . .   ;D# next one up
-i3 . . . 7.11 . .   ;B
-i3 . . . 8.04 . .   ;E;
+gk_overlap init .0125
 
-;Gmaj6 chord on a guitar
-i3 37.5 15 0 5.07 0.5 1.7   ;G
-i3 . . . 6.02 . .   ;D above
-i3 . . . 6.07 . .   ;G octave above 1st one
-i3 . . . 6.11 . .   ;B on G string
-i3 . . . 6.11 . .   ;B
-i3 . . . 7.04 . .   ;E
+gk_Harpsichord_level chnexport "gk_Harpsichord_level", 3
+gk_Harpsichord_level = 0
+gk_Harpsichord_pan chnexport "gk_Harpsichord_pan", 3
+gk_Harpsichord_pan = .3
+gi_Harpsichord_release chnexport "gi_Harpsichord_release", 3
+gi_Harpsichord_release = .3
+gk_Harpsichord_pick chnexport "gk_Harpsichord_pick", 3
+gk_Harpsichord_pick = .275
+gk_Harpsichord_reflection chnexport "gk_Harpsichord_reflection", 3
+gk_Harpsichord_reflection = .75
+gk_Harpsichord_pluck chnexport "gk_Harpsichord_pluck", 3
+gk_Harpsichord_pluck = .5
+giharptable ftgen 0, 0, 65536, 7, -1, 1024, 1, 1024, -1
+instr Harpsichord
+if p3 == -1 goto indefinite
+goto non_indefinite
+indefinite:
+  p3 = 1000000
+non_indefinite:
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+k_space_front_to_back = p6
+i_space_left_to_right rnd .7
+i_space_left_to_right += .3
+k_space_bottom_to_top = p8
+i_phase = p9
+i_amplitude ampmidicurve i_midi_velocity, gi_ampmidicurve_dynamic_range, gi_ampmidicurve_exponent
+k_gain = ampdb(gk_Harpsichord_level)
+iHz = cpsmidinn(i_midi_key)
+kHz = k(iHz)
+aenvelope transeg 1.0, 20.0, -10.0, 0.05
+k_amplitude = 1
+apluck pluck 1, kHz, iHz, 0, 1
+aharp poscil 1, kHz, giharptable
+aharp2 balance apluck, aharp
+a_signal	= (apluck + aharp2)
+i_attack = .002
+i_sustain = p3
+i_release = gi_Harpsichord_release
+p3 = i_attack + i_sustain + i_release
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, i_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+; printks "Harpsichord      %9.4f   %9.4f\\n", 0.5, a_out_left, a_out_right
+prints "Harpsichord    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
+kpbend    pchbend   2
+printks2 "pchbend %9.4f\\n", kpbend
+kmodw     midictrl  1
+printks2 "kmodw   %9.4f\\n", kmodw
+kctl6     midictrl  6
+printks2 "kctl6   %9.4f\\n", kctl6
+kctl4     midictrl  4
+printks2 "kctl4   %9.4f\\n", kctl4
+kctl5     midictrl  5
+printks2 "kctl5   %9.4f\\n", kctl5
+kafter    aftouch   1
+printks2 "kafter  %9.4f\\n", kafter
+endin
 
-;F#7addB chord on a guitar
-i3 45 15 0 7.06 0.2 2.0 ;F#
-i3 . . . 8.01 . .   ;C# above
-i3 . . . 8.06 . .   ;F# octave above 1st one
-i3 . . . 8.10 . .   ;Bb next one up
-i3 . . . 8.11 . .   ;B
-i3 . . . 9.04 . .   ;E
+gk_Reverb_feedback chnexport "gk_Reverb_feedback", 1
+gk_Reverb_feedback = 0.75
+gi_Reverb_delay_modulation chnexport "gi_Reverb_delay_modulation", 3
+gi_Reverb_delay_modulation = 0.05
+// gk_Reverb_frequency_cutoff chnexport "gk_Reverb_frequency_cutoff", 3
+gk_Reverb_frequency_cutoff = 15000
+instr ReverbSC
+printks2 "ReverbSC: gk_Reverb_feedback: %f\\n", gk_Reverb_feedback
+aleftout init 0
+arightout init 0
+aleft inleta "inleft"
+aright inleta "inright"
+; aoutL, aoutR reverbsc ainL, ainR, kfblvl, kfco[, israte[, ipitchm[, iskip]]]
+aleftout, arightout reverbsc aleft, aright, gk_Reverb_feedback, gk_Reverb_frequency_cutoff, sr, gi_Reverb_delay_modulation
+outleta "outleft", aleftout
+outleta "outright", arightout
+prints "ReverbSC       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
+endin
 
-; This section adds the plucked chords to the beginning of each
-; section.
+gk_MasterOutput_level chnexport "gk_MasterOutput_level", 3
+gk_MasterOutput_level init -15
+gS_MasterOutput_filename init ""
+instr MasterOutput
+aleft inleta "inleft"
+aright inleta "inright"
+k_gain = ampdb(gk_MasterOutput_level)
+printks2 "Master gain: %f\\n", k_gain
+iamp init 1
+iattack init .01
+idecay init 10
+isustain = 2400 - (iattack + idecay)
+aenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
+aleft butterlp aleft, 18000
+aright butterlp aright, 18000
+outs aleft * k_gain * aenvelope, aright * k_gain * aenvelope
+; We want something that will play on my phone.
+i_amplitude_adjustment = ampdbfs(-3) / 32767
+i_filename_length strlen gS_MasterOutput_filename
+if i_filename_length > 0 goto has_filename
+goto non_has_filename
+has_filename:
+prints sprintf("Output filename: %s\\n", gS_MasterOutput_filename)
+fout gS_MasterOutput_filename, 18, aleft * i_amplitude_adjustment, aright * i_amplitude_adjustment
+non_has_filename:
+prints "MasterOutput   i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
+kstatus, kchan, kdata1, kdata2 midiin
+;printf "          midi in s %4d c %4d %4d %4d\\n", kdata2, kstatus, kchan, kdata1, kdata2
+endin
 
-;F#7addB chord on a guitar
-i1 0 10 0 8.06  ;F#
-i1 0.1 . . 9.01 ;C# above
-i1 0.2 . . 9.06 ;F# octave above 1st one
-i1 0.3 . . 9.10 ;Bb next one up
-i1 0.4 . . 9.11 ;B
-i1 0.5 . . 10.04    ;E
+'''    
 
-;D6add9 chord on a guitar
-i2 7.5 10 0 8.02    ;D
-i2 7.6 . . 8.09     ;A above
-i2 7.7 . . 9.02     ;D octave above 1st one
-i2 7.8 . . 9.06     ;F# next one up
-i2 7.9 . . 9.11     ;B
-i2 8.0 . . 10.04    ;E
+# The "f 0" statement prevents an abrupt cutoff.
+sco = "f 0 105\n" + musx.to_csound_score(file)
+print(sco)
 
-;Bmajadd11 chord on a guitar
-i2 15 10 0 8.11     ;B
-i2 15.1 . . 9.06    ;F# above
-i2 15.2 . . 9.11    ;B octave above 1st one
-i2 15.3 . . 10.03   ;D# next one up
-i2 15.4 . . 9.11    ;B
-i2 15.5 . . 10.04   ;E;
+csound.SetOption("-+msg_color=0")
+csound.SetOption("-d")
+csound.SetOption("-m195")
+csound.SetOption("-f")
+# Change this for your actual audio configuration, try "aplay -l" to see what they are.
+csound.SetOption("-odac:plughw:2,0")
+# Can also be a soundfile.
+# csound.setOption("-otest.wav")
+csound.CompileOrc(orc)
+csound.Start()
+csound.ReadScore(sco)
+csound.Perform()
 
-;Amajadd9 chord on a guitar
-i2 22.5 10 0 8.09   ;A
-i2 22.6 . . 9.04    ;E above
-i2 22.7 . . 10.09   ;A octave above 1st one
-i2 22.8 . . 10.01   ;C# next one up
-i2 22.9 . . 9.11    ;B
-i2 23.0 . . 10.04   ;E
 
-;Bmajadd11 chord on a guitar
-i2 30 10 0 8.11     ;B
-i2 30.1 . . 9.06    ;F# above
-i2 30.2 . . 9.11    ;B octave above 1st one
-i2 30.3 . . 10.03   ;D# next one up
-i2 30.4 . . 9.11    ;B
-i2 30.5 . . 10.04   ;E;
-
-;Gmaj6 chord on a guitar
-i2 37.5 10 0 8.07   ;G
-i2 37.6 . . 9.02    ;D above
-i2 37.7 . . 9.07    ;G octave above 1st one
-i2 37.8 . . 9.11    ;B on G string
-i2 37.9 . . 9.11    ;B
-i2 38.0 . . 10.04   ;E
-
-;F#7addB chord on a guitar
-i1 45 10 0 9.06     ;F#
-i1 45.1 . . 10.01   ;C# above
-i1 45.2 . . 10.06   ;F# octave above 1st one
-i1 45.3 . . 10.10   ;Bb next one up
-i1 45.4 . . 10.11   ;B
-i1 45.5 . . 11.04   ;E
-e
-
-</CsScore>
-</CsoundSynthesizer>

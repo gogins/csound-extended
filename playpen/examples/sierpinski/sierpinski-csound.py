@@ -16,6 +16,12 @@ import musx
 from musx import Score, Note, Seq, MidiFile, keynum
 import CsoundThreaded
 
+try:
+    csound
+except:
+    csound = CsoundThreaded.CsoundThread()
+print("Csound address: {}".format(csound.GetCsound()))
+
 def sierpinski(score, tone, shape, trans, levels, dur, amp):
     """
     Generates a melodic shape based on successive transpositions (levels) of
@@ -104,8 +110,26 @@ gi_Harpsichord_release init .3
 gk_Harpsichord_pick init .275
 gk_Harpsichord_reflection init .75
 gk_Harpsichord_pluck init .5
+// gk_Harpsichord_level chnexport "gk_Harpsichord_level", 3
+// chnset 0, "gk_Harpsichord_level"
+// gk_Harpsichord_pan chnexport "gk_Harpsichord_pan", 3
+// chnset .3, "gk_Harpsichord_pan"
+// gi_Harpsichord_release chnexport "gi_Harpsichord_release", 3
+// chnset .3, "gi_Harpsichord_release"
+gk_Harpsichord_pick chnexport "gk_Harpsichord_pick", 3
+// chnset .275, "gk_Harpsichord_pick"
+gk_Harpsichord_reflection chnexport "gk_Harpsichord_reflection", 3
+// chnset .75, "gk_Harpsichord_reflection"
+gk_Harpsichord_pluck chnexport "gk_Harpsichord_pluck", 3
+// chnset .5, "gk_Harpsichord_pluck"
 giharptable ftgen 0, 0, 65536, 7, -1, 1024, 1, 1024, -1
 instr Harpsichord
+printks2 "Harpsichord: gk_Harpsichord_level:      %9.4f\\n", gk_Harpsichord_level
+printks2 "Harpsichord: gk_Harpsichord_pan:        %9.4f\\n", gk_Harpsichord_pan
+printks2 "Harpsichord: gi_Harpsichord_release:    %9.4f\\n", gi_Harpsichord_release
+printks2 "Harpsichord: gk_Harpsichord_pick:       %9.4f\\n", gk_Harpsichord_pick
+printks2 "Harpsichord: gk_Harpsichord_reflection: %9.4f\\n", gk_Harpsichord_reflection
+printks2 "Harpsichord: gk_Harpsichord_pluck:      %9.4f\\n", gk_Harpsichord_pluck
 if p3 == -1 goto indefinite
 goto non_indefinite
 indefinite:
@@ -167,7 +191,14 @@ endin
 gk_Reverb_feedback init 0.75
 gi_Reverb_delay_modulation init 0.05
 gk_Reverb_frequency_cutoff init 15000
+gk_Reverb_feedback chnexport "gk_Reverb_feedback", 3
+// chnset 0.75, "gk_Reverb_feedback"
+// // gi_Reverb_delay_modulation chnexport "gi_Reverb_delay_modulation", 3
+// gi_Reverb_delay_modulation init 0.05
+// // gk_Reverb_frequency_cutoff chnexport "gk_Reverb_frequency_cutoff", 3
+// gk_Reverb_frequency_cutoff = 15000
 instr ReverbSC
+printks2 "ReverbSC: gk_Reverb_feedback: %f\\n", gk_Reverb_feedback
 aleftout init 0
 arightout init 0
 aleft inleta "inleft"
@@ -181,7 +212,11 @@ endin
 
 gk_MasterOutput_level init -15
 gS_MasterOutput_filename init ""
+gk_MasterOutput_level chnexport "gk_MasterOutput_level", 3
+// chnset -15, "gk_MasterOutput_level init"
+// gS_MasterOutput_filename init ""
 instr MasterOutput
+printks2 "MasterOutput: gk_MasterOutput_level: %f\\n", gk_MasterOutput_level
 aleft inleta "inleft"
 aright inleta "inright"
 k_gain = ampdb(gk_MasterOutput_level)
@@ -226,5 +261,6 @@ csound.CompileOrc(orc)
 csound.Start()
 csound.ReadScore(sco)
 csound.Perform()
+# Scsound.Join()
 
 
