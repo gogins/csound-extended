@@ -84,9 +84,9 @@ Everything should be installed for the same version of Python.
 You must download or build two shared libraries in this repository. These 
 shared libraries are:
 
-1.  `CsoundThreaded`, a native Python module generated from `csound.i` by 
-    the SWIG program. This provides a simplified implementation of the native 
-    Csound API that can be used from Python.
+1.  `CsoundThreaded`, a native Python module that is generated from `csound.i` 
+    by the SWIG program. This provides a simplified implementation of the 
+    native Csound API that can be used from Python.
 2.  `libjsc_csound.so`, a native loadable module (providing the same 
     simplified Csound API) that can be used by the JavaScriptCore engine in 
     the playpen's embedded WebKit2 browser.
@@ -99,13 +99,21 @@ make
 sudo make install
 ```
 
+If you have missed any dependencies, CMake will probably let you know.
+
+If later you need to uninstall, in the repository root directory, execute:
+```
+sudo xargs rm < install_manifest.txt
+```
+
 ## A Few Examples
 
 ### xanadu.csd
 
-This is a high-resolution version of Kung's "Xanadu" piece often used as an 
-introduction to Csound. It's the simplest possible test that your installation 
-of the playpen is working. Just load the file and click on the __Play__ button.
+This is a high-resolution version of Joseph Kung's "Xanadu" piece, often used 
+as an introduction to Csound. It's the simplest possible test that your 
+installation of the playpen is working. Just load the file and click on the 
+__Play__ button.
 
 ### sierpinski-csound.py
 
@@ -164,12 +172,16 @@ right:
     for designing Gtk user interfaces. Remember to save your work before 
     exiting Glade. The changes you have saved will immediately show up in 
     the Controls pane of the playpen.
-6.  Play the piece to real-time audio
+6.  Play the piece to real-time audio (applies only to CSD and Python pieces,
+    HTML pieces must supply their own play button or buttons).
 7.  Render the piece to a soundfile (applies only to CSD pieces). 
     When the rendering is complete, the soundfile will be normalized, 
     tagged with metadata from `setting.ini`, translated to MP3, FLAC, and MP4 
     (suitable for YouTube) formats; finally the normalized soundfile will be 
     opened in a soundfile editor.
+8.  Stop the Csound performance (applies to CSD and Python pieces, not to 
+    HTML pieces, which must provide their stop button or other means of 
+    stopping the performance).
 
 When using the user interface builder, there are some things that must be 
 understood:

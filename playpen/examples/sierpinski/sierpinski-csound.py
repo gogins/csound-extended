@@ -68,7 +68,7 @@ score = Score(out=track1)
 # first compose() generates 120 events, the second 726, and the third 2728!
 #score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 12, 4, 3, .5))
 #score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 8, 5, 7, .5))
-score.compose(sierpinski(score, musx.keynum('a0'), [0, -1, 2, 7], 12, 5, 24, .5))
+score.compose(sierpinski(score, musx.keynum('a0'), [0, -1, 2, 17], 12, 5, 24, .5))
 #score.compose(sierpinski(score, 24., [0, -1, 2, 13], 12, 5, 24, .5))
 
 # Write the tracks to a midi file in the current directory.
@@ -158,7 +158,7 @@ a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_s
 outletv "outbformat", a_bsignal
 outleta "out", a_spatial_reverb_send
 #else
-a_out_left, a_out_right pan2 a_signal, i_space_left_to_right
+a_out_left, a_out_right pan2 a_signal, gk_Harpsichord_pan
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
