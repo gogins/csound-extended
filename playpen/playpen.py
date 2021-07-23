@@ -183,7 +183,7 @@ def on_new_button_clicked(button):
         Gtk.ResponseType.OK)
         file_chooser_dialog.run()
         piece_filepath = file_chooser_dialog.get_filename()
-        ui_filepath = ui_filepath_(piece_filepath)
+        ui_filepath = get_ui_filepath()
         with open(ui_filepath, 'w') as file:
             file.write(ui_controls_template)
         autolog(piece_filepath)
@@ -278,15 +278,17 @@ def on_control_change(control, data):
     except:
         print(traceback.format_exc())
 
-def ui_filepath_(piece_filepath):            
+def get_ui_filepath():   
+    global piece_filepath
     pathlib_ = pathlib.PurePath(piece_filepath)
     ui_filepath = str(pathlib_.with_suffix(".ui"))
     # print("ui_filepath: {}".format(ui_filepath))
     return ui_filepath
 
 def load_ui():
+    global piece_filepath
     autolog(piece_filepath)
-    ui_filepath = ui_filepath_(piece_filepath)
+    ui_filepath = get_ui_filepath()
     if os.path.exists(ui_filepath) == True:
         try:
             with open(ui_filepath, "r") as file:
@@ -313,6 +315,7 @@ def load_ui():
         autolog("ui file not found, not defining controls.")
 
 def on_open_button_clicked(button):
+    global piece_filepath
     autolog("Opening a file...")
     try:
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
@@ -336,6 +339,7 @@ def get_piece_code():
     return piece_code
    
 def save_piece():
+    global piece_filepath
     autolog(piece_filepath)
     try:
         with open(piece_filepath, "w") as file:
@@ -346,6 +350,7 @@ def save_piece():
         print(traceback.format_exc())
         
 def on_save_button_clicked(button):
+    global piece_filepath
     autolog(piece_filepath)
     try:
         save_piece()
@@ -353,6 +358,7 @@ def on_save_button_clicked(button):
         print(traceback.format_exc())
     
 def on_save_as_button_clicked(button):
+    global piece_filepath
     autolog("saving %s as...".format(piece_fileplath))
     try:
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
@@ -370,6 +376,7 @@ def on_save_as_button_clicked(button):
         print(traceback.format_exc())
         
 def on_play_audio_button_clicked(button):
+    global piece_filepath
     autolog(piece_filepath)
     try:
         save_piece()
@@ -389,6 +396,7 @@ def on_play_audio_button_clicked(button):
         autoexception("")
         
 def on_render_soundfile_button_clicked(button):
+    global piece_filepath
     autolog(piece_filepath)
     try:
         save_piece()
@@ -409,6 +417,7 @@ def on_render_soundfile_button_clicked(button):
         print(traceback.format_exc())
         
 def on_stop_button_clicked(button):
+    global piece_filepath
     autolog(piece_filepath)
     try:
         csound.Stop()
@@ -420,6 +429,7 @@ def on_stop_button_clicked(button):
         print(traceback.format_exc())
         
 def post_process():
+    global piece_filepath
     autolog(piece_filepath)
     try:
         cwd = os.getcwd()
@@ -553,21 +563,23 @@ def patch_csound_options(csd, output="soundfile"):
     return patched_csd
         
 def ui_exit_callback(future):
-    ui_filepath = ui_filepath_(piece_filepath)
-    autlog("Finished editing {}.".format(ui_filepath))
+    global piece_filepath
+    ui_filepath = get_ui_filepath()
+    autolog("Finished editing {}.".format(ui_filepath))
     load_ui()
     
 def on_edit_gui_button_clicked(button):
+    global piece_filepath
     autolog(piece_filepath)
     try:
-        ui_filepath = ui_filepath_(piece_filepath)
+        ui_filepath = get_ui_filepath()
         if os.path.exists(ui_filepath) == False:
             with open(ui_filepath, "wt") as file:
                 print("Writing {} to {}.".format(ui_filepath, ui_controls_template))
                 file.write(ui_controls_template)
         print("ui_filepath: {}".format(ui_filepath))    
         pool = concurrent.futures.ThreadPoolExecutor(max_workers=1)
-        future_ = pool.submit(subprocess.call, "ui {}".format(ui_filepath), shell=True)
+        future_ = pool.submit(subprocess.call, "glade {}".format(ui_filepath), shell=True)
         future_.add_done_callback(ui_exit_callback)
     except:
         print(traceback.format_exc())
