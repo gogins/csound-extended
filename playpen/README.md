@@ -36,10 +36,6 @@ an external score-generating program directly from Csound using the <CsScore>
 other composition software is needed to generate a score that is then sent to 
 Csound or some other synthesizer for rendering.
 
-The playpen can edit and automatically render pieces written in Python, Csound, 
-HTML5, or Javascript. By writing a little extra Python code, pieces can be 
-written in any programming language.
-
 ## Getting Started
 
 Install the following software requirements, each according to its own 
@@ -85,15 +81,23 @@ Everything should be installed for the same version of Python.
     Execute `python3 playpen.py` and then open and run the `xanadu.csd` example 
     to check that everything is working.
     
-You must download or build two shared libraries in this repository. On Linux, 
-running `build.sh` should do the job. These shared libraries are:
+You must download or build two shared libraries in this repository. These 
+shared libraries are:
 
 1.  `CsoundThreaded`, a native Python module generated from `csound.i` by 
-    the SWIG program. This provides a simplified implementation of the Csound 
-    API that can be used from Python.
+    the SWIG program. This provides a simplified implementation of the native 
+    Csound API that can be used from Python.
 2.  `libjsc_csound.so`, a native loadable module (providing the same 
     simplified Csound API) that can be used by the JavaScriptCore engine in 
-    the embedded WebKit2 browser.
+    the playpen's embedded WebKit2 browser.
+    
+To build and install these shared libraries, in the repository root directory,
+execute:
+```
+cmake .
+make
+sudo make install
+```
 
 ## A Few Examples
 
@@ -101,12 +105,18 @@ running `build.sh` should do the job. These shared libraries are:
 
 This is a high-resolution version of Kung's "Xanadu" piece often used as an 
 introduction to Csound. It's the simplest possible test that your installation 
-of the playpen is working.
+of the playpen is working. Just load the file and click on the __Play__ button.
 
 ### sierpinski-csound.py
 
 For this example, install Rick Taube's Python port of the Common Music 
 algorithmic composition system, [musx](https://github.com/musx-admin/musx).
+
+### message.html
+
+This is a basic HTML5 example that runs native Csound using JavaScript and 
+has a custom user interface implemented with JQuery. In this case, the __Play__
+button is part of the HTML5 user interface.
 
 ## User Guide
 
@@ -155,10 +165,11 @@ right:
     exiting Glade. The changes you have saved will immediately show up in 
     the Controls pane of the playpen.
 6.  Play the piece to real-time audio
-7.  Render the piece to a soundfile. When the rendering is complete, the 
-    soundfile will be normalized, tagged with metadata from `setting.ini`,
-    translated to MP3, FLAC, and MP4 (suitable for YouTube) formats; 
-    finally the normalized soundfile will be opened in a soundfile editor.
+7.  Render the piece to a soundfile (applies only to CSD pieces). 
+    When the rendering is complete, the soundfile will be normalized, 
+    tagged with metadata from `setting.ini`, translated to MP3, FLAC, and MP4 
+    (suitable for YouTube) formats; finally the normalized soundfile will be 
+    opened in a soundfile editor.
 
 When using the user interface builder, there are some things that must be 
 understood:
@@ -168,15 +179,15 @@ understood:
     other layout, but you must give it the id "user_controls_layout."
 2.  The Scale widget is the usual choice for controlling variables in Csound.
     Each Scale widget must have its own associated Adjustment. The Adjustment 
-    can be given a minimum and maximum value that match the range needed 
+    can be given minimum and maximum values to match the range needed 
     in Csound. Both the name, and the id, of the Scale must be set to the same 
     value as the name of the global Csound variable that will be controlled by 
     that Scale.
 3.  In the header of your Csound orchestra, create global variables with the 
     same names and types as the Gtk widgets you have created to control them. 
-    Then use the `chnexport` opcode to create the global variables and 
+    Then just use the `chnexport` opcode to create the global variables and 
     associate them with control channels having the same names. This greatly 
-    simplifies writing Csound orchestras. Example:
+    simplifies writing controllable Csound orchestras. Example:
     <pre>
     gk_Harpsichord_level init 0
     gk_Harpsichord_pan init .3
