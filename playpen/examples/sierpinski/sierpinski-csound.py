@@ -68,7 +68,7 @@ score = Score(out=track1)
 # first compose() generates 120 events, the second 726, and the third 2728!
 #score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 12, 4, 3, .5))
 #score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 8, 5, 7, .5))
-score.compose(sierpinski(score, musx.keynum('a0'), [0, -1, 2, 17], 12, 5, 24, .5))
+score.compose(sierpinski(score, musx.keynum('a0'), [0, -1, 3, 11], 12, 5, 24, .5))
 #score.compose(sierpinski(score, 24., [0, -1, 2, 13], 12, 5, 24, .5))
 
 # Write the tracks to a midi file in the current directory.

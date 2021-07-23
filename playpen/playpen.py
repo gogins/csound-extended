@@ -151,6 +151,7 @@ def on_new_button_clicked(button):
         with open(glade_file, 'w') as file:
             file.write(glade_controls_template)
         print(filename)
+        code_editor.get_buffer().set_text("")
     except:
         print(traceback.format_exc())
     
