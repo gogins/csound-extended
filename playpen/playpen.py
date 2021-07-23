@@ -3,10 +3,13 @@
 import concurrent.futures
 import contextlib
 import datetime
+import inspect
+import logging
 import markdown
 import math
 import os.path
 import pathlib
+import pdb
 import random
 import string
 import subprocess
@@ -14,10 +17,37 @@ import sys
 import time
 import traceback
 import warnings
+import xml.etree.ElementTree as ElementTree
 
 # Comment this out during development?
 
 warnings.filterwarnings("ignore")
+logging.getLogger().setLevel(logging.DEBUG)
+
+def autolog(message):
+    # Get the previous frame in the stack, otherwise it would
+    # be this function!!!
+    caller = inspect.currentframe().f_back.f_code
+    # Dump the message + the name of this function to the log.
+    logging.debug("%s in %s:%i %s" % (
+        caller.co_name, 
+        caller.co_filename, 
+        caller.co_firstlineno,
+        message, 
+    ))
+    
+def autoexception(message):
+    # Get the previous frame in the stack, otherwise it would
+    # be this function!!!
+    caller = inspect.currentframe().f_back.f_code
+    # Dump the message + the name of this function to the log.
+    logging.exception("%s in %s:%i %s" % (
+        caller.co_name, 
+        caller.co_filename, 
+        caller.co_firstlineno,
+        message, 
+    ))
+
 
 '''
 A few strict naming conventions greatly simplify the code.
@@ -29,8 +59,8 @@ to a soundfile, the playpen program will write to piece.wav and post-process
 that file to produce piece.normalized.wav, piece.mp3, piece.flac, and piece.mp4;
 piece.normalized.wav will then be opened for inspection in Audacity.
 
-All user-defined Python graphical user interfaces are stored in a glade file 
-with the same filename, i.e. my_piece.py goes with my_piece.glade, and the 
+All user-defined Python graphical user interfaces are stored in a ui file 
+with the same filename, i.e. my_piece.py goes with my_piece.ui, and the 
 widget tree thus defined is re-parented to the controls_layout widget. The 
 user need write no code for handling UI events; the convention is that all UI 
 events from the user-defined controls are handled in a single function that 
@@ -54,13 +84,12 @@ from gi.repository import GLib
 # Obtain user settings.
 settings = GLib.KeyFile.new()
 GLib.KeyFile.load_from_file(settings, "playpen.ini", GLib.KeyFileFlags.NONE)
-metadata_author=settings.get_value("metadata", "author")
-metadata_publisher=settings.get_value("metadata", "publisher")
-metadata_year=settings.get_value("metadata", "year")
-metadata_notes=settings.get_value("metadata", "notes")
+metadata_author = settings.get_value("metadata", "author")
+metadata_publisher = settings.get_value("metadata", "publisher")
+metadata_year = settings.get_value("metadata", "year")
+metadata_notes = settings.get_value("metadata", "notes")
 metadata_license=settings.get_value("metadata", "license")
-global csound_audio_output
-csound_audio_output=settings.get_value("csound", "audio-output")
+csound_audio_output = settings.get_value("csound", "audio-output")
 print("csound_audio_output: " + csound_audio_output)
 soundfile_editor=settings.get_value("playpen", "soundfile-editor")
 gnome_theme=settings.get_value("playpen", "gnome-theme")
@@ -85,26 +114,32 @@ from gi.repository import GtkSource
 
 # Create a global instance of native Csound. For pure Csound and Python 
 # pieces, this instance is a singleton.
+
 import CsoundThreaded
 csound = CsoundThreaded.CsoundThread()
-print("Global Csound instance: {} CSOUND *: 0x{:x}.".format(csound, int(csound.GetCsound())))
+autolog("Global Csound instance: {} CSOUND *: 0x{:x}.".format(csound, int(csound.GetCsound())))
         
 title = "Playpen"
-print("title:", title)
+autolog("title: {}".format(title))
 
 builder = Gtk.Builder()
-builder.add_from_file("playpen.glade")
+builder.add_from_file("playpen.ui")
 
-global filename
-filename = ""
-global piece
-piece = ""
+# These are the only global variables. As for the actual piece, it is always 
+# read from the editor, which is effectively global. Note to maintainers:
+# always declare these global in functions that use them.
 
-# An empty, version-free Glade template string.
-# In Glade, the GtkGrid can be replaced by any other container, 
+global piece_filepath
+global piece_ui_dom
+
+piece_filepath = ""
+piece_ui_dom = None
+
+# An empty, version-free ui template string.
+# In ui, the GtkGrid can be replaced by any other container, 
 # but it must have the id "user_controls_layout".
 
-glade_controls_template = '''<?xml version="1.0" encoding="UTF-8"?>
+ui_controls_template = '''<?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkGrid">
@@ -117,26 +152,27 @@ glade_controls_template = '''<?xml version="1.0" encoding="UTF-8"?>
 '''
 
 def piece_is_csound():
-    if filename.lower().endswith('.csd'):
+    if piece_filepath.lower().endswith('.csd'):
         return True
     else:
         return False
 
 def piece_is_python():
-    if filename.lower().endswith('.py'):
+    if piece_filepath.lower().endswith('.py'):
         return True
     else:
         return False
     
 def piece_is_html():
-    if filename.lower().endswith('.html'):
+    if piece_filepath.lower().endswith('.html'):
         return True
     else:
         return False
     
 def on_new_button_clicked(button):
+    global piece_filepath
+    autolog("Creating new piece...")
     try:
-        print(button.get_label())
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
             parent=None, 
             action=Gtk.FileChooserAction.SAVE)
@@ -146,35 +182,44 @@ def on_new_button_clicked(button):
         Gtk.STOCK_SAVE,
         Gtk.ResponseType.OK)
         file_chooser_dialog.run()
-        filename = file_chooser_dialog.get_filename()
-        glade_file = glade_filename_(filename)
-        with open(glade_file, 'w') as file:
-            file.write(glade_controls_template)
-        print(filename)
+        piece_filepath = file_chooser_dialog.get_filename()
+        ui_filepath = ui_filepath_(piece_filepath)
+        with open(ui_filepath, 'w') as file:
+            file.write(ui_controls_template)
+        autolog(piece_filepath)
         code_editor.get_buffer().set_text("")
     except:
         print(traceback.format_exc())
     
-def load_piece(filename):
+def load_piece():
+    global piece_filepath
+    autolog(piece_filepath)
     try:
-        with open(filename, "r") as file:
-            piece = file.read()
-            language = language_manager.guess_language(filename)
+        with open(piece_filepath, "r") as file:
+            piece_code = file.read()
+            language = language_manager.guess_language(piece_filepath)
             if language is not None:
                 code_editor.get_buffer().set_language(language)
-            #print("load_piece: language: {}".format(language.get_name()))
-            code_editor.get_buffer().set_text(piece)
+            code_editor.get_buffer().set_text(piece_code)
         if piece_is_csound():
-            load_glade(filename)
+            load_ui()
         if piece_is_python():
-            load_glade(filename)
+            load_ui()
         if piece_is_html():
-            piece_uri = pathlib.Path(filename).resolve().parent.as_uri()
-            print("load_piece: uri: {}".format(piece_uri))
-            webview.load_html(piece, piece_uri)            
-        main_window.set_title(filename)
+            piece_uri = pathlib.Path(piece_filepath).resolve().parent.as_uri()
+            autolog("load_piece: uri: {}".format(piece_uri))
+            webview.load_html(get_piece_code(), piece_uri)            
+        main_window.set_title(piece_filepath)
     except:
         print(traceback.format_exc())
+        
+def save_ui():
+    global piece_filepath
+    autolog(piece_filepath)
+    
+def update_piece_ui_dom():
+    global piece_filepath
+    autolog(piece_filepath)
         
 '''
 For only those widgets and those signals that are used here to control Csound 
@@ -185,21 +230,21 @@ def connect_controls(container, on_control_changed_):
     children = container.get_children()
     for child in children:
         if isinstance(child, Gtk.Button):
-            print(child.get_name())
+            autolog(child.get_name())
             child.connect("pressed", on_control_changed_, 1.)
             child.connect("released", on_control_changed_, 0.)
         if isinstance(child, Gtk.MenuItem):
-            print(child.get_name())
+            autolog(child.get_name())
             child.connect("select", on_control_changed_, 1.)
             child.connect("deselect", on_control_changed_, 0.)
         if isinstance(child, Gtk.Scale):
-            print(child.get_name())
+            autolog(child.get_name())
             child.connect("value-changed", on_control_changed_, -1.)
         if isinstance(child, Gtk.Editable):
-            print(child.get_name())
+            autolog(child.get_name())
             child.connect("activate", on_control_changed_, -1.)
         if isinstance(child, Gtk.SpinButton):
-            print(child.get_name())
+            autolog(child.get_name())
             child.connect("value-changed", on_control_changed_, -1)
         if isinstance(child, Gtk.Container):
             connect_controls(child, on_control_changed_)
@@ -229,26 +274,30 @@ def on_control_change(control, data):
         elif isinstance(control, Gtk.Editable):
             channel_value = control.get_text()
             csound.SetStringChannel(channel_name, channel_value)
-        print("on_control_change: {}: {} {}".format(channel_name, type(channel_value), channel_value))
+        autolog("on_control_change: {}: {} {}".format(channel_name, type(channel_value), channel_value))
     except:
         print(traceback.format_exc())
 
-def glade_filename_(filename):            
-    pathlib_ = pathlib.PurePath(filename)
-    glade_file = str(pathlib_.with_suffix(".glade"))
-    # print("glade_file: {}".format(glade_file))
-    return glade_file
+def ui_filepath_(piece_filepath):            
+    pathlib_ = pathlib.PurePath(piece_filepath)
+    ui_filepath = str(pathlib_.with_suffix(".ui"))
+    # print("ui_filepath: {}".format(ui_filepath))
+    return ui_filepath
 
-def load_glade(filename):
-    glade_file = glade_filename_(filename)
-    if os.path.exists(glade_file) == True:
+def load_ui():
+    autolog(piece_filepath)
+    ui_filepath = ui_filepath_(piece_filepath)
+    if os.path.exists(ui_filepath) == True:
         try:
-            with open(glade_file, "r") as file:
-                glade_xml = file.read()
-                # print("glade:", glade_xml)
-                result = builder.add_from_string(glade_xml)
+            with open(ui_filepath, "r") as file:
+                ui_xml = file.read()
+                piece_ui_dom = ElementTree.parse(ui_filepath)
+                autolog(piece_ui_dom)
+                piece_ui_dom.write(ui_filepath + ".xml")
+                # print("ui:", ui_xml)
+                result = builder.add_from_string(ui_xml)
                 if result == 0:
-                    print("Failed to parse {} file.".format(glade_file))
+                    print("Failed to parse {} file.".format(ui_filepath))
                 user_controls_layout = builder.get_object("user_controls_layout")
                 # print("user_controls_layout: {}".format(user_controls_layout))
                 children = controls_layout.get_children()
@@ -258,54 +307,54 @@ def load_glade(filename):
                 controls_layout.add(user_controls_layout)
                 connect_controls(controls_layout, on_control_change)
         except:
-            print("Error: failed to load user-defined controls layout.")
+            autolog("Error: failed to load user-defined controls layout.")
             print(traceback.format_exc())
     else:
-        print("Glade file not found, not defining controls.")
+        autolog("ui file not found, not defining controls.")
 
 def on_open_button_clicked(button):
+    autolog("Opening a file...")
     try:
-        print(button.get_label())
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
             parent=None, 
             action=Gtk.FileChooserAction.OPEN)
         file_chooser_dialog.add_buttons(
         Gtk.STOCK_CANCEL,
         Gtk.ResponseType.CANCEL,
-        Gtk.STOCK_SAVE,
+        Gtk.STOCK_OPEN,
         Gtk.ResponseType.OK)
         file_chooser_dialog.run()
-        filename = file_chooser_dialog.get_filename()
-        load_piece(filename)
+        piece_filepath = file_chooser_dialog.get_filename()
+        load_piece()
         file_chooser_dialog.close()
     except:
         print(traceback.format_exc())
         
+def get_piece_code():
+    buffer = code_editor.get_buffer()
+    piece_code = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
+    return piece_code
+   
 def save_piece():
-    global filename
-    global piece
+    autolog(piece_filepath)
     try:
-        buffer = code_editor.get_buffer()
-        piece = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
-        with open(filename, "w") as file:
-            file.write(piece)
-            language = language_manager.guess_language(filename)
-            if language is not None:
-                code_editor.get_buffer().set_language(language)
+        with open(piece_filepath, "w") as file:
+            file.write(get_piece_code())
+        update_piece_ui_dom()
+        save_ui()
     except:
         print(traceback.format_exc())
         
 def on_save_button_clicked(button):
+    autolog(piece_filepath)
     try:
-        print(button.get_label())
         save_piece()
     except:
         print(traceback.format_exc())
     
 def on_save_as_button_clicked(button):
-    global filename
+    autolog("saving %s as...".format(piece_fileplath))
     try:
-        print(button.get_label())
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
             parent=None, 
             action=Gtk.FileChooserAction.SAVE)
@@ -315,46 +364,37 @@ def on_save_as_button_clicked(button):
         Gtk.STOCK_SAVE,
         Gtk.ResponseType.OK)
         file_chooser_dialog.run()
-        filename = file_chooser_dialog.get_filename()
+        piece_filepath = file_chooser_dialog.get_filename()
         save_piece()
     except:
         print(traceback.format_exc())
         
 def on_play_audio_button_clicked(button):
-    global filename
-    global piece
+    autolog(piece_filepath)
     try:
-        print(button.get_label())
         save_piece()
-        load_glade(filename)
+        load_ui()
         if piece_is_python():
             # Only globals are passed, because otherwise recursive functions 
             # defined and invoked in the piece will not work. See:
             # https://stackoverflow.com/questions/871887/using-exec-with-recursive-functions
-            exec(piece, globals())
+            exec(get_piece_code(), globals())
         if piece_is_csound():
-            # Change output target here.
-            # Patch the csound options.
-            print("Piece:")
-            print(piece)
-            csd = patch_csound_options(piece, output="realtime")
-            print("Patched piece:")
-            print(csd)
+            # Change output target here by patching the csound options.
+            csd = patch_csound_options(get_piece_code(), output="realtime")
             csound.CompileCsdText(csd)
             csound.Start()
             csound.Perform()
     except:
-        print(traceback.format_exc())
+        autoexception("")
         
 def on_render_soundfile_button_clicked(button):
-    global filename
-    global piece
+    autolog(piece_filepath)
     try:
-        print(button.get_label())
         save_piece()
-        load_glade(filename)
+        load_ui()
         if piece_is_csound():
-            csd = patch_csound_options(piece, output="soundfile")
+            csd = patch_csound_options(get_piece_code(), output="soundfile")
             csound.CompileCsdText(csd)
             csound.Start()
             # Keep the UI responsive during performance.
@@ -369,8 +409,8 @@ def on_render_soundfile_button_clicked(button):
         print(traceback.format_exc())
         
 def on_stop_button_clicked(button):
+    autolog(piece_filepath)
     try:
-        print("Stopping csound...")
         csound.Stop()
         csound.Join()
         csound.Cleanup()
@@ -380,8 +420,8 @@ def on_stop_button_clicked(button):
         print(traceback.format_exc())
         
 def post_process():
+    autolog(piece_filepath)
     try:
-        print("Post-processing...")
         cwd = os.getcwd()
         print('cwd:                    ' + cwd)
         author = metadata_author #'Michael Gogins'
@@ -390,7 +430,7 @@ def post_process():
         publisher = metadata_publisher #'Irreducible Productions, ASCAP'
         notes = metadata_notes #'Electroacoustic Music'
 
-        directory, basename = os.path.split(filename)
+        directory, basename = os.path.split(piece_filepath)
         rootname = os.path.splitext(basename)[0].split('.')[0]
         soundfile_name = rootname + ".wav"
         title = rootname.replace("-", " ").replace("_", " ")
@@ -470,15 +510,13 @@ def post_process():
         print(traceback.format_exc())
         
 def patch_csound_options(csd, output="soundfile"):
-    global filename
-    global csound_audio_output
     '''
     -odac --output
     -iadc --input
     -M --midi-device
     -Q
     '''
-    print("output: " + output)
+    autolog("output: " + output)
     options_start_index = csd.find("<CsOptions>") + len("<CsOptions>")
     options_end_index =  csd.find("</CsOptions>") 
     csd_top = csd[0:options_start_index]
@@ -486,15 +524,15 @@ def patch_csound_options(csd, output="soundfile"):
     csd_options = csd[options_start_index:options_end_index]
     csd_options = csd_options.replace(" -o ", " -o")
     csd_options = csd_options.replace(" --output ", " -output")
-    print("csound_options: {}".format(csd_options))
+    autolog("csound_options: {}".format(csd_options))
     csd_bottom = csd[options_end_index:-1]
     csd_options_tokens = csd_options.split()
     for i in range(len(csd_options_tokens)):
         token = csd_options_tokens[i]
-        print("token: {}".format(token))
+        autolog("token: {}".format(token))
         if token.startswith("-o"):
             if output == "soundfile":
-                directory, basename = os.path.split(filename)
+                directory, basename = os.path.split(piece_filepath)
                 rootname = os.path.splitext(basename)[0].split('.')[0]
                 output_soundfile = rootname + ".wav"
                 print("output_soundfile: " + output_soundfile)
@@ -509,39 +547,41 @@ def patch_csound_options(csd, output="soundfile"):
                 print("new token: " + token)
                 csd_options_tokens[i] = token
     csd_options = " ".join(csd_options_tokens)
-    csd = "".join([csd_top, "\n", csd_options, "\n", csd_bottom])
-    return csd
+    patched_csd = "".join([csd_top, "\n", csd_options, "\n", csd_bottom])
+    autolog("Original csd: {}".format(csd))
+    autolog("Patched csd: {}".format(csd))
+    return patched_csd
         
-def glade_exit_callback(future):
-    glade_file = glade_filename_(filename)
-    print("Finished editing {}.".format(glade_file))
-    load_glade(glade_file)
+def ui_exit_callback(future):
+    ui_filepath = ui_filepath_(piece_filepath)
+    autlog("Finished editing {}.".format(ui_filepath))
+    load_ui()
     
 def on_edit_gui_button_clicked(button):
+    autolog(piece_filepath)
     try:
-        print(button.get_label())
-        glade_file = glade_filename_(filename)
-        if os.path.exists(glade_file) == False:
-            with open(glade_file, "wt") as file:
-                print("Writing {} to {}.".format(glade_file, glade_controls_template))
-                file.write(glade_controls_template)
-        print("glade_file: {}".format(glade_file))    
+        ui_filepath = ui_filepath_(piece_filepath)
+        if os.path.exists(ui_filepath) == False:
+            with open(ui_filepath, "wt") as file:
+                print("Writing {} to {}.".format(ui_filepath, ui_controls_template))
+                file.write(ui_controls_template)
+        print("ui_filepath: {}".format(ui_filepath))    
         pool = concurrent.futures.ThreadPoolExecutor(max_workers=1)
-        future_ = pool.submit(subprocess.call, "glade {}".format(glade_file), shell=True)
-        future_.add_done_callback(glade_exit_callback)
+        future_ = pool.submit(subprocess.call, "ui {}".format(ui_filepath), shell=True)
+        future_.add_done_callback(ui_exit_callback)
     except:
         print(traceback.format_exc())
             
 def on_destroy(source):
+    global piece_filepath
+    autolog(piece_filepath)
     csound.Stop()
     csound.Join()
     csound.Cleanup()
     csound.Reset()
     Gtk.main_quit()
     
-global search_settings
 search_settings = GtkSource.SearchSettings()
-global search_context
 search_context = None
     
 '''
@@ -550,8 +590,6 @@ begins a new search based on current settings. Subsequent
 searches and replacements continue to use these settings.
 '''
 def on_search_entry_activate(widget):
-    global search_settings
-    global search_context
     try:
         print(widget)
         search_text = widget.get_text()
@@ -576,8 +614,6 @@ def on_search_entry_activate(widget):
         print(traceback.format_exc())
     
 def on_search_button_clicked(widget):
-    global search_settings
-    global search_context
     try:
         buffer = code_editor.get_buffer()
         search_insert = buffer.get_iter_at_mark(buffer.get_insert())
@@ -594,8 +630,6 @@ def on_search_button_clicked(widget):
         print(traceback.format_exc())
         
 def on_replace_button_clicked(widget):
-    global search_settings
-    global search_context
     try:
         buffer = code_editor.get_buffer()
         oldsel = buffer.get_selection_bounds()
@@ -626,8 +660,6 @@ def on_replace_button_clicked(widget):
         print(traceback.format_exc())
 
 def on_replace_all_button_clicked(widget):
-    global search_settings
-    global search_context
     try:
         buffer = code_editor.get_buffer()
         saved_insert = buffer.create_mark(
@@ -645,7 +677,7 @@ def on_apply_scheme_button(widget):
     code_editor.get_buffer().set_style_scheme(scheme)
     
 def on_initialize_web_extensions(web_context):
-    print("on_initialize_web_extensions: {}".format(web_context))
+    autolog("on_initialize_web_extensions: {}".format(web_context))
     web_context.set_web_extensions_directory("/home/mkg/csound-extended/playpen/")
     user_data_ = GLib.Variant.new_uint64(int(csound.GetCsound()))
     user_data_.ref_sink()
@@ -726,11 +758,13 @@ check_button_case_sensitive = builder.get_object("check_button_case_sensitive")
 check_button_whole_word = builder.get_object("check_button_whole_word")
 
 def perform():
+    global piece_filepath
+    autolog(piece_filepath)
     csound.Perform()
 
 main_window.show_all() 
 
 if len(sys.argv) > 1:
-    filename = sys.argv[1]
-    load_piece(filename)
+    piece_filepath = sys.argv[1]
+    load_piece()
 Gtk.main()
