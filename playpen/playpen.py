@@ -144,7 +144,7 @@ widgets_for_channel_names = dict()
 ui_controls_template = '''<?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkGrid">
+  <object class="GtkGrid" id="user_controls_layout">
     <property id="name">user_controls_layout</property>
     <property name="name">user_controls_layout</property>
     <property name="visible">True</property>
@@ -217,21 +217,26 @@ def load_piece():
 
 """
 Saves the ui for the piece, not from the ui text, but from the ui controls, 
-updating the ui DOM with the current values of the user controls. The ids of the 
-controls should be unique.
+updating the ui DOM with the _current_ values of the user controls. Each 
+control's name must be the same as its id, and each control must have a 
+unique id.
 """
 def save_ui():
     global piece_ui_dom
     global widgets_for_channel_names
     autolog(piece_filepath)
-    autolog(ElementTree.dump(piece_ui_dom))
+    autolog("piece_ui_dom dump:\n{}".format(ElementTree.dump(piece_ui_dom)))
     try:
         ui_filepath = get_ui_filepath()
+        autolog("ui_filepath: {}".format(ui_filepath))
         for channel, value in widgets_for_channel_names.items():
             autolog("channel: {} value: {}".format(channel, value))
             # xpath = "//property"
             xpath_id = "//object[@id='{}']".format(channel)
-            autolog("  widget value: {}".format(value[1].get_value()))
+            try:
+                autolog("  widget value: {}".format(value[1].get_value()))
+            except:
+                autoexception("widget.get_value?")
             autolog("  xpath: {}".format(xpath_id))
             dom_elements = piece_ui_dom.findall(xpath_id)
             # autolog(dom_elements)
@@ -283,9 +288,12 @@ def connect_controls(container, on_control_changed_):
             autolog(child.get_name())
             child.connect("value-changed", on_control_changed_, -1.)
             widgets_for_channel_names[channel_name] = (get_control_value(child), child)
+        if isinstance(child, Gtk.Switch):
+            autolog(child.get_name())
+            child.connect("state-set", on_control_changed_, -1.)
+            widgets_for_channel_names[channel_name] = (get_control_value(child), child)
         if isinstance(child, Gtk.Editable):
             autolog(child.get_name())
-            controls_for_ids[child.get_name()] = child
             child.connect("activate", on_control_changed_, -1.)
             widgets_for_channel_names[channel_name] = (get_control_value(child), child)
         if isinstance(child, Gtk.SpinButton):
@@ -298,7 +306,7 @@ def connect_controls(container, on_control_changed_):
 # Please note, the order of conditions matters; some subclasses do 
 # not handle superclass signals.
 
-def on_control_change(control, data):
+def on_control_change(control, data, user=None):
     try:
         channel_name = control.get_name()
         channel_value = get_control_value(control)
@@ -319,7 +327,7 @@ def on_control_change(control, data):
             channel_value = control.get_text()
             csound.SetStringChannel(channel_name, channel_value)
         widgets_for_channel_names[channel_name] = (channel_value, control)
-        autolog("on_control_change: channel: {} type: {} (widget: {} data: {} value: {})".format(channel_name, type(channel_value), control, data, channel_value))
+        autolog("on_control_change:\n\tchannel: {}\n\ttype: {} (widget: {} data: {} value: {})".format(channel_name, type(channel_value), control, data, channel_value))
     except:
         print(traceback.format_exc())
 
@@ -337,23 +345,18 @@ def load_ui():
     ui_filepath = get_ui_filepath()
     if os.path.exists(ui_filepath) == True:
         try:
-            with open(ui_filepath, "r") as file:
-                ui_xml = file.read()
-                piece_ui_dom = ElementTree.parse(ui_filepath)
-                autolog(piece_ui_dom)
-                piece_ui_dom.write(ui_filepath + ".xml")
-                # print("ui:", ui_xml)
-                result = builder.add_from_string(ui_xml)
-                if result == 0:
-                    print("Failed to parse {} file.".format(ui_filepath))
-                user_controls_layout = builder.get_object("user_controls_layout")
-                # print("user_controls_layout: {}".format(user_controls_layout))
-                children = controls_layout.get_children()
-                for child in children:
-                    if child.get_name() == "user_controls_layout":
-                        controls_layout.remove(child)
-                controls_layout.add(user_controls_layout)
-                connect_controls(controls_layout, on_control_change)
+            piece_ui_dom = ElementTree.parse(ui_filepath)
+            piece_ui_dom.write(ui_filepath + ".xml")
+            ui_text = ElementTree.tostring(piece_ui_dom.getroot(), encoding="unicode")
+            result = builder.add_from_string(ui_text)
+            user_controls_layout = builder.get_object("user_controls_layout")
+            autolog("user_controls_layout: {}".format(user_controls_layout))
+            children = controls_layout.get_children()
+            for child in children:
+                if child.get_name() == "user_controls_layout":
+                    controls_layout.remove(child)
+            controls_layout.add(user_controls_layout)
+            connect_controls(controls_layout, on_control_change)
         except:
             autolog("Error: failed to load user-defined controls layout.")
             print(traceback.format_exc())
