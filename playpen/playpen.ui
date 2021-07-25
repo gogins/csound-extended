@@ -95,6 +95,21 @@
               </packing>
             </child>
             <child>
+              <object class="GtkToolButton" id="save_gui_button">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Save values of user-defined controls</property>
+                <property name="label" translatable="yes">Save GUI and control values...</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-go-down</property>
+                <signal name="clicked" handler="on_save_gui_button_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkToolButton" id="play_audio_button">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>

@@ -77,9 +77,10 @@ Everything should be installed for the same version of Python.
     more readable.
 12. The playpen itself is part of my csound-extended repository. Clone the 
     [csound-extended](https://github.com/gogins/csound-extended) repository to 
-    your local filesystem. Change to the `csound-extended/playpen` directory. 
-    Execute `python3 playpen.py` and then open and run the `xanadu.csd` example 
-    to check that everything is working.
+    your local filesystem. Build the shared libraries (see just below). Change 
+    to the `csound-extended/playpen` directory. Execute `python3 playpen.py` 
+    and then open and run the `xanadu.csd` example to check that everything is 
+    working.
     
 You must download or build two shared libraries in this repository. These 
 shared libraries are:
@@ -87,9 +88,9 @@ shared libraries are:
 1.  `CsoundThreaded`, a native Python module that is generated from `csound.i` 
     by the SWIG program. This provides a simplified implementation of the 
     native Csound API that can be used from Python.
-2.  `libjsc_csound.so`, a native loadable module (providing the same 
-    simplified Csound API) that can be used by the JavaScriptCore engine in 
-    the playpen's embedded WebKit2 browser.
+2.  `libjsc_csound.so`, a native loadable module. This provides the same 
+    simplified Csound API, in a form that can be used by the JavaScriptCore 
+    engine in the playpen's embedded WebKit2 browser.
     
 To build and install these shared libraries, in the repository root directory,
 execute:
@@ -147,6 +148,8 @@ file. This can be a Csound CSD file, a Python file, or an HTML file.
     file in a multi-line string or in an invisible TextView. HTML pieces 
     also have direct access to native Csound (not the WebAssembly build of 
     Csound) through the Csound class.
+    
+### Panes
 
 The playpen has the following panes or tabs:
 
@@ -159,6 +162,8 @@ The playpen has the following panes or tabs:
     can also contain user-defined controls for controlling Csound.
 4.  __Help__, displaying this README file.
 
+### Toolbar
+
 The buttons on the top toolbar have the following functions, from left to 
 right:
 
@@ -168,26 +173,29 @@ right:
     with their last saved values.
 3.  Save the piece to its file. The current control widget *values* will also  
     be saved in the piece's ui file.
-4.  Save the piece to a new file, you will be prompted for the new file 
+4.  Save the _current state_ of any user-defined controls to the ui file.
+5.  Save the piece to a new file, you will be prompted for the new file 
     location and name. The current control widget *values* will also be 
     saved in the new piece's ui file.
-5.  Open the user interface designer, which is actually the Glade program 
+6.  Open the user interface designer, which is actually the Glade program 
     for designing Gtk user interfaces. Remember to save your work before 
     exiting Glade. The changes you have saved will immediately show up in 
-    the Controls pane of the playpen.
-6.  Play the piece to real-time audio (applies only to CSD and Python pieces,
+    the __**Controls**__ pane of the playpen.
+7.  Play the piece to real-time audio (applies only to CSD and Python pieces,
     HTML pieces must supply their own play button or buttons).
-7.  Render the piece to a soundfile (applies only to CSD pieces). 
+8.  Render the piece to a soundfile (applies only to CSD pieces). 
     When the rendering is complete, the soundfile will be normalized, 
     tagged with metadata from `setting.ini`, translated to MP3, FLAC, and MP4 
     (suitable for YouTube) formats; finally the normalized soundfile will be 
     opened in a soundfile editor.
-8.  Stop the Csound performance (applies to CSD and Python pieces, not to 
+9.  Stop the Csound performance (applies to CSD and Python pieces, not to 
     HTML pieces, which must provide their stop button or other means of 
     stopping the performance).
+    
+### User Interface Builder
 
-When using the user interface builder, there are some things that must be 
-understood:
+When using the user interface builder (which is actually the Glade 
+application), there are some things that must be understood:
 
 1.  The user interface shown in Glade must have a top widget that is a layout.
     The default is a Grid layout. You can delete this and replace it with any 
@@ -217,6 +225,33 @@ understood:
     gk_Harpsichord_reflection chnexport "gk_Harpsichord_reflection", 3
     gk_Harpsichord_pluck chnexport "gi_Harpsichord_pluck", 3
     </pre>
+    
+### User-Defined Controls
+    
+The playpen can automatically connect and update the following types of 
+user-defined controls:
+
+1.  GtkScale
+2.  GtkSpinButton
+3.  GtkMenuItem
+4.  GtkButton
+5.  GtkToggleButton
+3.  GtkEditable
+
+The current values of these widgets will also be saved in the ui file for a 
+piece when the user clicks on the "Save control values" button in the toolbar, 
+and these values will be restored when the piece is reopened.
+
+How this works is that signals on these wigets are automatically connected to 
+a handler that sends an appropriate control channel value update to Csound, 
+as long as the user-defined name of that widget is the same as the name of a 
+global variable that is defined by and exported from the Csound orchestra 
+using the `chnexport` opcode.
+
+This is not a limitation. Any _other_ widgets and signals can also be used to 
+control the Csound performance, but the user must supply custom code for 
+handling these widgets and signals.
+
 
 
 

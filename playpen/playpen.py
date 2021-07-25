@@ -390,7 +390,9 @@ def save_piece():
     try:
         with open(piece_filepath, "w") as file:
             file.write(get_piece_code())
-        save_ui()
+        # Don't do this by default, require the user to save the ui;
+        # guards against unintential erasure of custom values.
+        # save_ui()
     except:
         print(traceback.format_exc())
         
@@ -417,6 +419,7 @@ def on_save_as_button_clicked(button):
         file_chooser_dialog.run()
         piece_filepath = file_chooser_dialog.get_filename()
         save_piece()
+        save_ui()
     except:
         print(traceback.format_exc())
         
@@ -628,6 +631,14 @@ def on_edit_gui_button_clicked(button):
         future_.add_done_callback(ui_exit_callback)
     except:
         print(traceback.format_exc())
+
+def on_save_gui_button_clicked(button):
+    global piece_filepath
+    autolog(piece_filepath)
+    try:
+        save_ui()
+    except:
+        print(traceback.format_exc())
             
 def on_destroy(source):
     global piece_filepath
@@ -782,6 +793,8 @@ save_as_button = builder.get_object("save_as_button")
 save_as_button.connect("clicked", on_save_as_button_clicked)
 edit_gui_button = builder.get_object("edit_gui_button")
 edit_gui_button.connect("clicked", on_edit_gui_button_clicked)
+save_gui_button = builder.get_object("save_gui_button")
+save_gui_button.connect("clicked", on_save_gui_button_clicked)
 play_audio_button = builder.get_object("play_audio_button")
 play_audio_button.connect("clicked", on_play_audio_button_clicked)
 render_soundfile_button = builder.get_object("render_soundfile_button")
