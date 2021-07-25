@@ -164,10 +164,13 @@ right:
 
 1.  Create a new piece, you will be prompted for the file location and name.
 2.  Open an existing piece, any associated user interface definition will 
-    be opened along with the piece.
-3.  Save the piece to its file.
+    be opened along with the piece. Any control widgets will be restored 
+    with their last saved values.
+3.  Save the piece to its file. The current control widget *values* will also  
+    be saved in the piece's ui file.
 4.  Save the piece to a new file, you will be prompted for the new file 
-    location and name.
+    location and name. The current control widget *values* will also be 
+    saved in the new piece's ui file.
 5.  Open the user interface designer, which is actually the Glade program 
     for designing Gtk user interfaces. Remember to save your work before 
     exiting Glade. The changes you have saved will immediately show up in 

@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.2 -->
 <interface>
-  <requires lib="gtk+" version="3.20"/>
+  <requires lib="gtk+" version="3.20" />
   <object class="GtkAdjustment" id="adjustment1">
     <property name="lower">-50</property>
     <property name="upper">50</property>
@@ -102,7 +100,7 @@
         <property name="halign">start</property>
         <property name="label" translatable="yes">Output</property>
         <attributes>
-          <attribute name="weight" value="semibold"/>
+          <attribute name="weight" value="semibold" />
         </attributes>
       </object>
       <packing>
@@ -147,7 +145,7 @@
         <property name="halign">start</property>
         <property name="label" translatable="yes">Waveguide harpsichord</property>
         <attributes>
-          <attribute name="weight" value="semibold"/>
+          <attribute name="weight" value="semibold" />
         </attributes>
       </object>
       <packing>
@@ -335,10 +333,10 @@
       </packing>
     </child>
     <child>
-      <placeholder/>
+      <placeholder />
     </child>
     <child>
-      <placeholder/>
+      <placeholder />
     </child>
   </object>
 </interface>
