@@ -19,6 +19,34 @@ import time
 import traceback
 import warnings
 
+'''
+A few strict naming conventions greatly simplify the code.
+
+Each piece is always a single text file of code; it could be piece.csd, 
+piece.py, or piece.html. The piece should specify a real-time audio output 
+device and, if needed, an audio input and MIDI input and output. For rendering 
+to a soundfile, the playpen program will write to piece.wav and post-process 
+that file to produce piece.normalized.wav, piece.mp3, piece.flac, and 
+piece.mp4; piece.normalized.wav will then be opened for inspection in a 
+soundfile editor.
+
+All user-defined Python graphical user interfaces are stored in a UI file 
+with the same filename, i.e. my_piece.py goes with my_piece.ui, and the 
+widget tree thus defined is re-parented to the controls_layout widget. The 
+user need write no code for handling most UI events; the convention is that 
+all UI events from the user-defined controls are handled in a single function 
+that dispatches all widget event values to a Csound control channel with the 
+same name as the widget. Current values of control channel widgets are saved 
+in a my_piece.ui.channels file.
+
+If you want to write a piece that combines different languages, e.g. a Csound 
+orchestra with a Python score generator with HTML for display or control, then 
+write a Python piece that embeds the Csound code and the HTML code as 
+variables containing multiple line strings, and then call functions in the 
+playpen program to set up the GUI and control the piece. All functions defined 
+in the playpen (below) are in the scope of a Python piece.
+'''
+
 # Comment this out during development?
 
 warnings.filterwarnings("ignore")
@@ -47,34 +75,6 @@ def autoexception(message):
         caller.co_firstlineno,
         message, 
     ))
-
-
-'''
-A few strict naming conventions greatly simplify the code.
-
-Each piece is always a single text file of code; it could be piece.csd, 
-piece.py, or piece.html. The piece should specify a real-time audio output 
-device and, if needed, an audio input and MIDI input and output. For rendering 
-to a soundfile, the playpen program will write to piece.wav and post-process 
-that file to produce piece.normalized.wav, piece.mp3, piece.flac, and 
-piece.mp4; piece.normalized.wav will then be opened for inspection in a 
-soundfile editor.
-
-All user-defined Python graphical user interfaces are stored in a UI file 
-with the same filename, i.e. my_piece.py goes with my_piece.ui, and the 
-widget tree thus defined is re-parented to the controls_layout widget. The 
-user need write no code for handling most UI events; the convention is that 
-all UI events from the user-defined controls are handled in a single function 
-that dispatches all widget event values to a Csound control channel with the 
-same name as the widget. 
-
-If you want to write a piece that combines different languages, e.g. a Csound 
-orchestra with a Python score generator with HTML for display or control, then 
-write a Python piece that embeds the Csound code and the HTML code as 
-variables containing multiple line strings, and then call functions in the 
-playpen program to set up the GUI and control the piece. All functions defined 
-in the playpen (below) are in the scope of a Python piece.
-'''
 
 import gi
 gi.require_version('Gdk', '3.0')
