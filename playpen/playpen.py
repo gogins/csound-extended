@@ -824,6 +824,10 @@ try:
 except:
     traceback.print(exc())
 help_window.add(helpview)
+csound_help_window = builder.get_object("csound_help_window")
+csound_helpview = WebKit2.WebView() 
+csound_helpview.load_uri("https://csound.com/docs/manual/indexframes.html")
+csound_help_window.add(csound_helpview)
 main_window.resize(4 * 800, 3 * 800)
 new_button = builder.get_object("new_button")
 new_button.connect("clicked", on_new_button_clicked)
