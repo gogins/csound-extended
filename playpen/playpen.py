@@ -225,27 +225,22 @@ def save_ui():
     global piece_ui_dom
     global widgets_for_channel_names
     autolog(piece_filepath)
-    autolog("piece_ui_dom dump:\n{}".format(ElementTree.dump(piece_ui_dom)))
+    autolog("piece_ui_dom:\n{}".format(ElementTree.tostring(piece_ui_dom.getroot(), encoding="unicode")))
     try:
         ui_filepath = get_ui_filepath()
         autolog("ui_filepath: {}".format(ui_filepath))
         for channel, value in widgets_for_channel_names.items():
             autolog("channel: {} value: {}".format(channel, value))
-            # xpath = "//property"
-            xpath_id = "//object[@id='{}']".format(channel)
-            try:
-                autolog("  widget value: {}".format(value[1].get_value()))
-            except:
-                autoexception("widget.get_value?")
-            autolog("  xpath: {}".format(xpath_id))
-            dom_elements = piece_ui_dom.findall(xpath_id)
-            # autolog(dom_elements)
-            for dom_element in dom_elements:
-                autolog("  element: {}".format(dom_element))
-                adjustment_xpath = "property[@name='adjustment']"
-                adjustment_elements = dom_element.findall(adjustment_xpath)
-                for adjustment_element in adjustment_elements:
-                    autolog("  adjustment element: {} value: {}".format(adjustment_element, adjustment_element.text))
+            id_xpath = "//object[@id='{}']".format(channel)
+            autolog("id_xpath: {}:".format(id_xpath))
+            elements = piece_ui_dom.findall(id_xpath)
+            for element in elements:
+                autolog("  id element: {}".format(element))
+            name_xpath = "//property[@name='{}']".format(channel)
+            autolog("name_xpath: {}:".format(name_xpath))
+            elements = piece_ui_dom.findall(name_xpath)
+            for element in elements:
+                autolog("  name element: {}".format(element))
         piece_ui_dom.write(ui_filepath)
     except:
         autoexception("Failed to save ui.")
@@ -307,6 +302,7 @@ def connect_controls(container, on_control_changed_):
 # not handle superclass signals.
 
 def on_control_change(control, data, user=None):
+    global widgets_for_channel_names
     try:
         channel_name = control.get_name()
         channel_value = get_control_value(control)
