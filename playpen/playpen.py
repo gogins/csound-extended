@@ -4,6 +4,7 @@ import concurrent.futures
 import contextlib
 import datetime
 import inspect
+import json
 import logging
 import markdown
 import math
@@ -17,7 +18,6 @@ import sys
 import time
 import traceback
 import warnings
-import xml.etree.ElementTree as ElementTree
 
 # Comment this out during development?
 
@@ -56,23 +56,24 @@ Each piece is always a single text file of code; it could be piece.csd,
 piece.py, or piece.html. The piece should specify a real-time audio output 
 device and, if needed, an audio input and MIDI input and output. For rendering 
 to a soundfile, the playpen program will write to piece.wav and post-process 
-that file to produce piece.normalized.wav, piece.mp3, piece.flac, and piece.mp4;
-piece.normalized.wav will then be opened for inspection in Audacity.
+that file to produce piece.normalized.wav, piece.mp3, piece.flac, and 
+piece.mp4; piece.normalized.wav will then be opened for inspection in a 
+soundfile editor.
 
-All user-defined Python graphical user interfaces are stored in a ui file 
+All user-defined Python graphical user interfaces are stored in a UI file 
 with the same filename, i.e. my_piece.py goes with my_piece.ui, and the 
 widget tree thus defined is re-parented to the controls_layout widget. The 
-user need write no code for handling UI events; the convention is that all UI 
-events from the user-defined controls are handled in a single function that 
-dispatches all widget event values to a Csound control channel with the same 
-name as the widget. 
+user need write no code for handling most UI events; the convention is that 
+all UI events from the user-defined controls are handled in a single function 
+that dispatches all widget event values to a Csound control channel with the 
+same name as the widget. 
 
 If you want to write a piece that combines different languages, e.g. a Csound 
 orchestra with a Python score generator with HTML for display or control, then 
-write a Python piece that embeds the Csound code and the HTML code as variables 
-containing multiple line strings, and then call functions in the playpen 
-program to set up the GUI and control the piece. All functions defined in the 
-code below are in the scope of a Python piece.
+write a Python piece that embeds the Csound code and the HTML code as 
+variables containing multiple line strings, and then call functions in the 
+playpen program to set up the GUI and control the piece. All functions defined 
+in the playpen (below) are in the scope of a Python piece.
 '''
 
 import gi
@@ -130,16 +131,16 @@ builder.add_from_file("playpen.ui")
 # always declare these global in functions that use them.
 
 global piece_filepath
-global piece_ui_dom
-global widgets_for_channel_names
+global widgets_for_channels
+global values_for_channels
 
 piece_filepath = ""
-piece_ui_dom = None
-widgets_for_channel_names = dict()
+widgets_for_channels = dict()
+values_for_channels = dict()
 
-# An empty, version-free ui template string.
-# In ui, the GtkGrid can be replaced by any other container, 
-# but it must have the id "user_controls_layout".
+# An empty, version-free UI template string.
+# In UI, the GtkGrid can be replaced by any other container, 
+# but it must have the ID "user_controls_layout".
 
 ui_controls_template = '''<?xml version="1.0" encoding="UTF-8"?>
 <interface>
@@ -215,39 +216,11 @@ def load_piece():
     except:
         print(traceback.format_exc())
 
-"""
-Saves the ui for the piece, not from the ui text, but from the ui controls, 
-updating the ui DOM with the _current_ values of the user controls. Each 
-control's name must be the same as its id, and each control must have a 
-unique id.
-"""
-def save_ui():
-    global piece_ui_dom
-    global widgets_for_channel_names
-    autolog(piece_filepath)
-    autolog("piece_ui_dom:\n{}".format(ElementTree.tostring(piece_ui_dom.getroot(), encoding="unicode")))
-    try:
-        ui_filepath = get_ui_filepath()
-        autolog("ui_filepath: {}".format(ui_filepath))
-        for channel, value in widgets_for_channel_names.items():
-            autolog("channel: {} value: {}".format(channel, value))
-            id_xpath = "//object[@id='{}']".format(channel)
-            autolog("id_xpath: {}:".format(id_xpath))
-            elements = piece_ui_dom.findall(id_xpath)
-            for element in elements:
-                autolog("  id element: {}".format(element))
-            name_xpath = "//property[@name='{}']".format(channel)
-            autolog("name_xpath: {}:".format(name_xpath))
-            elements = piece_ui_dom.findall(name_xpath)
-            for element in elements:
-                autolog("  name element: {}".format(element))
-        piece_ui_dom.write(ui_filepath)
-    except:
-        autoexception("Failed to save ui.")
-        
 def get_control_value(control):
     channel_value = 0
-    if isinstance(control, Gtk.ToggleButton):
+    if isinstance(control, Gtk.Switch):
+        channel_value = control.get_state()
+    elif isinstance(control, Gtk.ToggleButton):
         channel_value = control.get_active()
     elif isinstance(control, Gtk.Scale):
         channel_value = control.get_value()
@@ -256,7 +229,43 @@ def get_control_value(control):
     elif isinstance(control, Gtk.Editable):
         channel_value = control.get_text()
     return channel_value
+    
+def set_control_value(control, value):
+    autolog("control: {} value: {}".format(control, value))
+    if isinstance(control, Gtk.Switch):
+        control.set_state(value)
+    elif isinstance(control, Gtk.ToggleButton):
+        control.set_active(value)
+    elif isinstance(control, Gtk.Scale):
+        control.set_value(value)
+    #~ elif isinstance(control, Gtk.SpinButton):
+        #~ channel_value = control.get_value()
+    elif isinstance(control, Gtk.Editable):
+        control.set_text(value)
          
+"""
+Saves the UI for the piece, including the current values of all Csound control 
+channel widgets. The UI layout is saved in piece.ui, and the channel values 
+are saved in piece.ui.channels.
+"""
+def save_ui():
+    global widgets_for_channels
+    global values_for_channels
+    autolog(piece_filepath)
+    try:
+        ui_filepath = get_ui_filepath()
+        autolog("ui_filepath: {}".format(ui_filepath))
+        autolog("widgets_for_channels size: {}".format(len(widgets_for_channels)))
+        for channel, widget in widgets_for_channels.items():
+            channel_value = get_control_value(widget)
+            values_for_channels[channel] = channel_value
+            autolog("channel: {} value: {}".format(widget, channel_value))
+        ui_channels_filepath_ = get_ui_channels_filepath()
+        with open(ui_channels_filepath_, "w") as file:
+            file.write(json.dumps(values_for_channels))
+    except:
+        autoexception("Failed to save UI.")
+        
 '''
 For only those widgets and those signals that are used here to control Csound 
 performances using the Csound control channels, connect the on_control_changed 
@@ -264,37 +273,43 @@ signal to its callback. Also, associate the actual widget with its name and
 its current value.
 '''
 def connect_controls(container, on_control_changed_):
-    global widgets_for_channel_names
-    widgets_for_channel_names.clear()
+    global widgets_for_channels
+    global values_for_channels
     children = container.get_children()
     for child in children:
         channel_name = child.get_name()
+        channel_value = get_control_value(child)
+        autolog("Connecting GTK widget '{}' to Csound control channel '{}'".format(type(child).__name__, channel_name))
         if isinstance(child, Gtk.Button):
-            autolog(child.get_name())
             child.connect("pressed", on_control_changed_, 1.)
             child.connect("released", on_control_changed_, 0.)            
-            widgets_for_channel_names[channel_name] = (get_control_value(child), child)
+            widgets_for_channels[channel_name] = child
+            values_for_channels[channel_name] = channel_value
         if isinstance(child, Gtk.MenuItem):
-            autolog(child.get_name())
             child.connect("select", on_control_changed_, 1.)
             child.connect("deselect", on_control_changed_, 0.)
-            widgets_for_channel_names[channel_name] = (get_control_value(child), child)
+            widgets_for_channels[channel_name] = child
+            values_for_channels[channel_name] = channel_value
         if isinstance(child, Gtk.Scale):
-            autolog(child.get_name())
             child.connect("value-changed", on_control_changed_, -1.)
-            widgets_for_channel_names[channel_name] = (get_control_value(child), child)
+            widgets_for_channels[channel_name] = child
+            values_for_channels[channel_name] = channel_value
+        if isinstance(child, Gtk.ScaleButton):
+            child.connect("value-changed", on_control_changed_, -1.)
+            widgets_for_channels[channel_name] = child
+            values_for_channels[channel_name] = channel_value
         if isinstance(child, Gtk.Switch):
-            autolog(child.get_name())
             child.connect("state-set", on_control_changed_, -1.)
-            widgets_for_channel_names[channel_name] = (get_control_value(child), child)
+            widgets_for_channels[channel_name] = child
+            values_for_channels[channel_name] = channel_value
         if isinstance(child, Gtk.Editable):
-            autolog(child.get_name())
             child.connect("activate", on_control_changed_, -1.)
-            widgets_for_channel_names[channel_name] = (get_control_value(child), child)
+            widgets_for_channels[channel_name] = child
+            values_for_channels[channel_name] = channel_value
         if isinstance(child, Gtk.SpinButton):
-            autolog(child.get_name())
             child.connect("value-changed", on_control_changed_, -1)
-            widgets_for_channel_names[channel_name] = (get_control_value(child), child)
+            widgets_for_channels[channel_name] = child
+            values_for_channels[channel_name] = channel_value
         if isinstance(child, Gtk.Container):
             connect_controls(child, on_control_changed_)
 
@@ -302,7 +317,7 @@ def connect_controls(container, on_control_changed_):
 # not handle superclass signals.
 
 def on_control_change(control, data, user=None):
-    global widgets_for_channel_names
+    global values_for_channels
     try:
         channel_name = control.get_name()
         channel_value = get_control_value(control)
@@ -322,7 +337,7 @@ def on_control_change(control, data, user=None):
         elif isinstance(control, Gtk.Editable):
             channel_value = control.get_text()
             csound.SetStringChannel(channel_name, channel_value)
-        widgets_for_channel_names[channel_name] = (channel_value, control)
+        values_for_channels[channel_name] = channel_value
         autolog("on_control_change:\n\tchannel: {}\n\ttype: {} (widget: {} data: {} value: {})".format(channel_name, type(channel_value), control, data, channel_value))
     except:
         print(traceback.format_exc())
@@ -331,19 +346,24 @@ def get_ui_filepath():
     global piece_filepath
     pathlib_ = pathlib.PurePath(piece_filepath)
     ui_filepath = str(pathlib_.with_suffix(".ui"))
-    # print("ui_filepath: {}".format(ui_filepath))
     return ui_filepath
+    
+def get_ui_channels_filepath():
+    global piece_filepath
+    ui_filepath = get_ui_filepath()
+    ui_channels_filepath = ui_filepath + ".channels"
+    return ui_channels_filepath
 
 def load_ui():
     global piece_filepath
-    global piece_ui_dom
+    global widgets_for_channels
+    global values_for_channels
     autolog(piece_filepath)
     ui_filepath = get_ui_filepath()
     if os.path.exists(ui_filepath) == True:
         try:
-            piece_ui_dom = ElementTree.parse(ui_filepath)
-            piece_ui_dom.write(ui_filepath + ".xml")
-            ui_text = ElementTree.tostring(piece_ui_dom.getroot(), encoding="unicode")
+            with open(ui_filepath, "r") as file:
+                ui_text = file.read()
             result = builder.add_from_string(ui_text)
             user_controls_layout = builder.get_object("user_controls_layout")
             autolog("user_controls_layout: {}".format(user_controls_layout))
@@ -352,12 +372,23 @@ def load_ui():
                 if child.get_name() == "user_controls_layout":
                     controls_layout.remove(child)
             controls_layout.add(user_controls_layout)
+            widgets_for_channels.clear()
             connect_controls(controls_layout, on_control_change)
+            autolog("widgets_for_channels size: {}".format(len(widgets_for_channels)))
+            ui_channels_filepath = get_ui_channels_filepath()
+            if os.path.exists(ui_channels_filepath) == True:
+                with open(ui_channels_filepath, "r") as file:
+                    text = file.read()
+                    values_for_channels = json.loads(text)
+                    for channel, value in values_for_channels.items():
+                        widget = widgets_for_channels[channel]
+                        if widget:
+                            set_control_value(widget, value)
         except:
             autolog("Error: failed to load user-defined controls layout.")
             print(traceback.format_exc())
     else:
-        autolog("ui file not found, not defining controls.")
+        autolog("UI file not found, not defining controls.")
 
 def on_open_button_clicked(button):
     global piece_filepath
@@ -389,7 +420,7 @@ def save_piece():
     try:
         with open(piece_filepath, "w") as file:
             file.write(get_piece_code())
-        # Don't do this by default, require the user to save the ui;
+        # Don't do this by default, require the user to save the UI;
         # guards against unintential erasure of custom values.
         # save_ui()
     except:
