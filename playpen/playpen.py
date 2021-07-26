@@ -244,9 +244,8 @@ def set_control_value(control, value):
         control.set_text(value)
          
 """
-Saves the UI for the piece, including the current values of all Csound control 
-channel widgets. The UI layout is saved in piece.ui, and the channel values 
-are saved in piece.ui.channels.
+Saves the current values of all Csound control channel widgets in 
+piece.ui.channels.
 """
 def save_ui():
     global widgets_for_channels
@@ -319,6 +318,9 @@ def connect_controls(container, on_control_changed_):
 def on_control_change(control, data, user=None):
     global values_for_channels
     try:
+        # Prevent premature definition of control channels.
+        if csound.IsPlaying() == 0:
+            return
         channel_name = control.get_name()
         channel_value = get_control_value(control)
         if isinstance(control, Gtk.ToggleButton):
@@ -455,10 +457,10 @@ def on_save_as_button_clicked(button):
         
 def on_play_audio_button_clicked(button):
     global piece_filepath
+    global values_for_channels
     autolog(piece_filepath)
     try:
         save_piece()
-        load_ui()
         if piece_is_python():
             # Only globals are passed, because otherwise recursive functions 
             # defined and invoked in the piece will not work. See:
@@ -469,20 +471,30 @@ def on_play_audio_button_clicked(button):
             csd = patch_csound_options(get_piece_code(), output="realtime")
             csound.CompileCsdText(csd)
             csound.Start()
+            load_ui()
+            autolog("Restoring {} channels...".format(len(values_for_channels)))
+            for name, value in values_for_channels.items():
+                autolog("initialize channel: {} name: {} {}".format(name, value, type(value)))
+                csound.SetControlChannel(name, value)
             csound.Perform()
     except:
         autoexception("")
         
 def on_render_soundfile_button_clicked(button):
     global piece_filepath
+    global values_for_channels
     autolog(piece_filepath)
     try:
         save_piece()
-        load_ui()
         if piece_is_csound():
             csd = patch_csound_options(get_piece_code(), output="soundfile")
             csound.CompileCsdText(csd)
             csound.Start()
+            load_ui()
+            autolog("Restoring {} channels...".format(len(values_for_channels)))
+            for name, value in values_for_channels.items():
+                autolog("initialize channel: {} name: {} {}".format(name, value, type(value)))
+                csound.SetControlChannel(name, value)
             # Keep the UI responsive during performance.
             while csound.PerformBuffer() == 0:
                 Gtk.main_iteration_do(False)

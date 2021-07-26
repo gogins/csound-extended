@@ -16,6 +16,8 @@ import musx
 from musx import Score, Note, Seq, MidiFile, keynum
 import CsoundThreaded
 
+global values_for_channels
+
 try:
     csound
 except:
@@ -239,6 +241,9 @@ csound.SetOption("-odac:plughw:2,0")
 # csound.setOption("-otest.wav")
 csound.CompileOrc(orc)
 csound.Start()
+for channel, value in values_for_channels.items():
+    print(channel, value)
+    csound.SetControlChannel(channel, value)
 csound.ReadScore(sco)
 csound.Perform()
 # Scsound.Join()

@@ -89,7 +89,7 @@ shared libraries are:
     by the SWIG program. This provides a simplified implementation of the 
     native Csound API that can be used from Python.
 2.  `libjsc_csound.so`, a native loadable module. This provides the same 
-    simplified Csound API, in a form that can be used by the JavaScriptCore 
+    simplified Csound API in a form that can be used by the JavaScriptCore 
     engine in the playpen's embedded WebKit2 browser.
     
 To build and install these shared libraries, in the repository root directory,
@@ -134,7 +134,10 @@ access to all the power of Csound, Python, and HTML5 in one editor, along
 with a built-in visual user interface designer.
 
 The playpen expects each computer music piece to be one single source code 
-file. This can be a Csound CSD file, a Python file, or an HTML file.
+file. This can be a Csound CSD file, a Python file, or an HTML file. If the 
+user defines a user interface for the piece, that is stored in a `piece.ui` 
+file, and the values of the widgets for Csound control channels are stored 
+in a `piece.ui.channels` file.
 
 1.  __CSD__ pieces can have an associated user interface definition (.glade 
     file).
@@ -181,14 +184,16 @@ right:
     for designing Gtk user interfaces. Remember to save your work before 
     exiting Glade. The changes you have saved will immediately show up in 
     the __**Controls**__ pane of the playpen.
-7.  Play the piece to real-time audio (applies only to CSD and Python pieces,
+7.  Save the current values of all widgets associated with Csound control 
+    channels.
+8.  Play the piece to real-time audio (applies only to CSD and Python pieces,
     HTML pieces must supply their own play button or buttons).
-8.  Render the piece to a soundfile (applies only to CSD pieces). 
+9.  Render the piece to a soundfile (applies only to CSD pieces). 
     When the rendering is complete, the soundfile will be normalized, 
     tagged with metadata from `setting.ini`, translated to MP3, FLAC, and MP4 
     (suitable for YouTube) formats; finally the normalized soundfile will be 
     opened in a soundfile editor.
-9.  Stop the Csound performance (applies to CSD and Python pieces, not to 
+10. Stop the Csound performance (applies to CSD and Python pieces, not to 
     HTML pieces, which must provide their stop button or other means of 
     stopping the performance).
     
@@ -228,29 +233,48 @@ application), there are some things that must be understood:
     
 ### User-Defined Controls
     
-The playpen can automatically connect and update the following types of 
-user-defined controls:
+The playpen can automatically connect, update, save, and restore the following 
+types of user-defined controls:
 
-1.  GtkScale
-2.  GtkSpinButton
-3.  GtkMenuItem
-4.  GtkButton
-5.  GtkToggleButton
-3.  GtkEditable
+1.  `GtkButton`
+2.  `GtkCheckButton`
+3.  `GtkEditable`
+4.  `GtkRadioButton`
+5.  `GtkScale`
+6.  `GtkScaleButton`
+7.  `GtkSpinButton`
+8.  `GtkSwitch`
+9.  `GtkToggleButton`
+10. `GtkVolumeButton`
 
-The current values of these widgets will also be saved in the ui file for a 
-piece when the user clicks on the "Save control values" button in the toolbar, 
-and these values will be restored when the piece is reopened.
+The current values of these widgets will also be saved in a 
+`piece.ui.channels` file for the piece when the user clicks on the "Save 
+control values" button in the toolbar, and those values will be restored 
+when the piece is reopened.
 
-How this works is that signals on these wigets are automatically connected to 
-a handler that sends an appropriate control channel value update to Csound, 
-as long as the user-defined name of that widget is the same as the name of a 
-global variable that is defined by and exported from the Csound orchestra 
-using the `chnexport` opcode.
+How this works is that signals from these wigets are automatically connected 
+to a handler that sends an appropriate control channel value update to 
+Csound, as long as the user-defined name of that widget is the same as the 
+name of a global variable that is defined by and exported from the Csound 
+orchestra using the `chnexport` opcode.
 
 This is not a limitation. Any _other_ widgets and signals can also be used to 
-control the Csound performance, but the user must supply custom code for 
+control the Csound performance, but the user must then define custom code for 
 handling these widgets and signals.
+
+For a Python piece, the user must write a little code to restore the Csound 
+control channels from the saved values, after starting Csound but before 
+actually performing, like this:
+
+<pre>
+global values_for_channels
+
+csound.Start()
+for channel, value in values_for_channels.items():
+    csound.SetControlChannel(channel, value)
+csound.Perform()
+</pre>
+
 
 
 
