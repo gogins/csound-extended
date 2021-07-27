@@ -320,25 +320,29 @@ def on_control_change(control, data, user=None):
     try:
         channel_name = control.get_name()
         channel_value = get_control_value(control)
-        autolog("on_control_change:\n\tchannel: {} value: {}\n\ttype: {} (widget: {} data: {})".format(channel_name, channel_value, type(channel_value), control, data))
         # Prevent premature definition of control channels.
         if csound.IsPlaying() == False:
             return
         if isinstance(control, Gtk.ToggleButton):
-             csound.SetControlChannel(channel_name, float(channel_value))
+            autolog("ToggleButton:  setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+            csound.SetControlChannel(channel_name, channel_value)
         elif isinstance(control, Gtk.Button):
-            channel_value = data
-            csound.SetControlChannel(channel_name, float(data))
+            channel_value = float(data)
+            autolog("Button:        setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+            csound.SetControlChannel(channel_name, channel_value)
         elif isinstance(control, Gtk.MenuItem):
             channel_value = data
-            csound.SetControlChannel(channel_name, float(channel_value))
+            autolog("MenuItem:      setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+            csound.SetControlChannel(channel_name, channel_value)
         elif isinstance(control, Gtk.Scale):
+            autolog("Scale:         setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
             csound.SetControlChannel(channel_name, channel_value)
         #~ elif isinstance(control, Gtk.SpinButton):
             #~ channel_value = control.get_value()
             #~ csound.SetControlChannel(channel_name, channel_value)
         elif isinstance(control, Gtk.Editable):
             channel_value = control.get_text()
+            autolog("Editable:      SetStringChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
             csound.SetStringChannel(channel_name, channel_value)
         values_for_channels[channel_name] = channel_value
     except:
@@ -477,13 +481,7 @@ def on_play_audio_button_clicked(button):
             for name, value in values_for_channels.items():
                 autolog("initialize channel: {} name: {} {}".format(name, value, type(value)))
                 csound.SetControlChannel(name, value)
-            #~ csound.Perform()
-            while csound.PerformBuffer() == 0:
-                Gtk.main_iteration_do(False)
-            csound.Stop()
-            csound.Join()
-            csound.Cleanup()
-            csound.Reset()
+            csound.Perform()
     except:
         autoexception("")
         
