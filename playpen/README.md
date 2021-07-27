@@ -56,7 +56,7 @@ Everything should be installed for the same version of Python.
 4.  _WebKit2 4.0 development libraries_; on Ubuntu Linux this is done by 
     executing `sudo apt install libwebkit2gtk-4.0-37` and `libwebkit2gtk-4.0-dev` 
     or compatible versions.
-4   _Gtk SourceView_; on Ubuntu Linux this is done by executing `sudo apt install 
+4.  _Gtk SourceView_; on Ubuntu Linux this is done by executing `sudo apt install 
     libgtksourceview-4-dev`.
 5.  _WebKit2 GNU introspection libraries_; on Ubuntu Linux this 
     is done by executing `sudo apt install gir1.2-webkit2-4.0`.
