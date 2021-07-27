@@ -19,8 +19,10 @@ import CsoundThreaded
 global values_for_channels
 
 try:
+    print("Csound was found.")
     csound
 except:
+    print("Csound was not found, creating new Csound.")
     csound = CsoundThreaded.CsoundThread()
 print("Csound address: {}".format(csound.GetCsound()))
 

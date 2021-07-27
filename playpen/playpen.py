@@ -258,7 +258,7 @@ def save_ui():
         for channel, widget in widgets_for_channels.items():
             channel_value = get_control_value(widget)
             values_for_channels[channel] = channel_value
-            autolog("channel: {} value: {}".format(widget, channel_value))
+            autolog("channel: {} value: {}".format(widget.get_name(), channel_value))
         ui_channels_filepath_ = get_ui_channels_filepath()
         with open(ui_channels_filepath_, "w") as file:
             file.write(json.dumps(values_for_channels))
@@ -318,11 +318,12 @@ def connect_controls(container, on_control_changed_):
 def on_control_change(control, data, user=None):
     global values_for_channels
     try:
-        # Prevent premature definition of control channels.
-        if csound.IsPlaying() == 0:
-            return
         channel_name = control.get_name()
         channel_value = get_control_value(control)
+        autolog("on_control_change:\n\tchannel: {} value: {}\n\ttype: {} (widget: {} data: {})".format(channel_name, channel_value, type(channel_value), control, data))
+        # Prevent premature definition of control channels.
+        if csound.IsPlaying() == False:
+            return
         if isinstance(control, Gtk.ToggleButton):
              csound.SetControlChannel(channel_name, float(channel_value))
         elif isinstance(control, Gtk.Button):
@@ -332,7 +333,7 @@ def on_control_change(control, data, user=None):
             channel_value = data
             csound.SetControlChannel(channel_name, float(channel_value))
         elif isinstance(control, Gtk.Scale):
-            csound.SetControlChannel(channel_name, float(channel_value))
+            csound.SetControlChannel(channel_name, channel_value)
         #~ elif isinstance(control, Gtk.SpinButton):
             #~ channel_value = control.get_value()
             #~ csound.SetControlChannel(channel_name, channel_value)
@@ -340,7 +341,6 @@ def on_control_change(control, data, user=None):
             channel_value = control.get_text()
             csound.SetStringChannel(channel_name, channel_value)
         values_for_channels[channel_name] = channel_value
-        autolog("on_control_change:\n\tchannel: {}\n\ttype: {} (widget: {} data: {} value: {})".format(channel_name, type(channel_value), control, data, channel_value))
     except:
         print(traceback.format_exc())
 
@@ -383,9 +383,10 @@ def load_ui():
                     text = file.read()
                     values_for_channels = json.loads(text)
                     for channel, value in values_for_channels.items():
-                        widget = widgets_for_channels[channel]
-                        if widget:
-                            set_control_value(widget, value)
+                        if channel in widgets_for_channels:
+                            widget = widgets_for_channels[channel]
+                            if widget:
+                                set_control_value(widget, value)
         except:
             autolog("Error: failed to load user-defined controls layout.")
             print(traceback.format_exc())
@@ -476,7 +477,13 @@ def on_play_audio_button_clicked(button):
             for name, value in values_for_channels.items():
                 autolog("initialize channel: {} name: {} {}".format(name, value, type(value)))
                 csound.SetControlChannel(name, value)
-            csound.Perform()
+            #~ csound.Perform()
+            while csound.PerformBuffer() == 0:
+                Gtk.main_iteration_do(False)
+            csound.Stop()
+            csound.Join()
+            csound.Cleanup()
+            csound.Reset()
     except:
         autoexception("")
         
@@ -637,9 +644,7 @@ def patch_csound_options(csd, output="soundfile"):
                 output_soundfile = rootname + ".wav"
                 print("output_soundfile: " + output_soundfile)
                 token = "-o" + output_soundfile
-                print(type(token))
                 print("new token: " + token)
-                print("boo")
                 csd_options_tokens[i] = token
             else:
                 print("csound_audio_output: " + csound_audio_output)
