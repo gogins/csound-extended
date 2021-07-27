@@ -54,7 +54,10 @@ Everything should be installed for the same version of Python.
 2.  [GTK 3](https://www.gtk.org/docs/installations/), note that GTK 4 is now 
     the current version but it is the previous version, GTK 3, that is used here.
 4.  _WebKit2 4.0 development libraries_; on Ubuntu Linux this is done by 
-    executing `sudo apt install libwebkit2gtk-4.0-37` or a compatible version.
+    executing `sudo apt install libwebkit2gtk-4.0-37` and `libwebkit2gtk-4.0-dev` 
+    or compatible versions.
+4   _Gtk SourceView_; on Ubuntu Linux this is done by executing `sudo apt install 
+    libgtksourceview-4-dev`.
 5.  _WebKit2 GNU introspection libraries_; on Ubuntu Linux this 
     is done by executing `sudo apt install gir1.2-webkit2-4.0`.
 6.  [Glade](https://wiki.gnome.org/Apps/Glade). For Ubuntu Linux, execute 
