@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.2 -->
+<!-- Generated with glade 3.39.0 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <requires lib="gtksourceview" version="4.0"/>
   <object class="GtkEntryBuffer" id="entrybuffer1"/>
   <object class="GtkApplicationWindow" id="main_window">
-    <property name="can_focus">False</property>
-    <property name="window_position">center</property>
-    <property name="show_menubar">False</property>
-    <child type="titlebar">
-      <placeholder/>
-    </child>
+    <property name="can-focus">False</property>
+    <property name="window-position">center</property>
+    <property name="show-menubar">False</property>
     <child>
       <object class="GtkBox" id="main_box">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkToolbar" id="main_toolbar">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <child>
               <object class="GtkToolButton" id="new_button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Start a new piece...</property>
+                <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">Start a new piece...</property>
                 <property name="label" translatable="yes">New</property>
-                <property name="stock_id">gtk-new</property>
+                <property name="stock-id">gtk-new</property>
                 <signal name="clicked" handler="on_new_button_clicked" swapped="no"/>
               </object>
               <packing>
@@ -38,11 +35,11 @@
             <child>
               <object class="GtkToolButton" id="open_button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Open a piece...</property>
+                <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">Open a piece...</property>
                 <property name="label" translatable="yes">Open...</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-open</property>
+                <property name="use-underline">True</property>
+                <property name="stock-id">gtk-open</property>
                 <signal name="clicked" handler="on_open_button_clicked" swapped="no"/>
               </object>
               <packing>
@@ -53,11 +50,11 @@
             <child>
               <object class="GtkToolButton" id="save_button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Save this piece</property>
+                <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">Save this piece</property>
                 <property name="label" translatable="yes">Save</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-save</property>
+                <property name="use-underline">True</property>
+                <property name="stock-id">gtk-save</property>
                 <signal name="clicked" handler="on_save_button_clicked" swapped="no"/>
               </object>
               <packing>
@@ -68,11 +65,11 @@
             <child>
               <object class="GtkToolButton" id="save_as_button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Save the piece as a new file...</property>
+                <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">Save the piece as a new file...</property>
                 <property name="label" translatable="yes">Save as...</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-save-as</property>
+                <property name="use-underline">True</property>
+                <property name="stock-id">gtk-save-as</property>
                 <signal name="clicked" handler="on_save_as_button_clicked" swapped="no"/>
               </object>
               <packing>
@@ -83,11 +80,11 @@
             <child>
               <object class="GtkToolButton" id="edit_gui_button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Edit user-defined controls with Glade...</property>
+                <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">Edit user-defined controls with Glade...</property>
                 <property name="label" translatable="yes">Edit GUI...</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-edit</property>
+                <property name="use-underline">True</property>
+                <property name="stock-id">gtk-edit</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -97,11 +94,11 @@
             <child>
               <object class="GtkToolButton" id="save_gui_button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Save values of user-defined controls</property>
+                <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">Save values of user-defined controls</property>
                 <property name="label" translatable="yes">Save GUI and control values...</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-go-down</property>
+                <property name="use-underline">True</property>
+                <property name="stock-id">gtk-go-down</property>
                 <signal name="clicked" handler="on_save_gui_button_clicked" swapped="no"/>
               </object>
               <packing>
@@ -112,11 +109,11 @@
             <child>
               <object class="GtkToolButton" id="play_audio_button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Play real-time audio</property>
+                <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">Play real-time audio</property>
                 <property name="label" translatable="yes">Play</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-media-play</property>
+                <property name="use-underline">True</property>
+                <property name="stock-id">gtk-media-play</property>
                 <signal name="clicked" handler="on_play_audio_button_clicked" swapped="no"/>
               </object>
               <packing>
@@ -127,11 +124,11 @@
             <child>
               <object class="GtkToolButton" id="render_soundfile_button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Render to soundfile, post-process, and open in editor...</property>
+                <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">Render to soundfile, post-process, and open in editor...</property>
                 <property name="label" translatable="yes">Render</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-go-forward</property>
+                <property name="use-underline">True</property>
+                <property name="stock-id">gtk-go-forward</property>
                 <signal name="clicked" handler="on_render_soundfile_button_clicked" swapped="no"/>
               </object>
               <packing>
@@ -142,11 +139,11 @@
             <child>
               <object class="GtkToolButton" id="stop_button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Stop playing or rendering</property>
+                <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">Stop playing or rendering</property>
                 <property name="label" translatable="yes">Stop</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-stop</property>
+                <property name="use-underline">True</property>
+                <property name="stock-id">gtk-stop</property>
                 <signal name="clicked" handler="on_stop_button_clicked" swapped="no"/>
               </object>
               <packing>
@@ -164,38 +161,38 @@
         <child>
           <object class="GtkPaned" id="main_pane">
             <property name="name">main_paned</property>
-            <property name="width_request">-1</property>
-            <property name="height_request">-1</property>
+            <property name="width-request">-1</property>
+            <property name="height-request">-1</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="can-focus">True</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <property name="orientation">vertical</property>
-            <property name="wide_handle">True</property>
+            <property name="wide-handle">True</property>
             <child>
               <object class="GtkNotebook" id="main_notebook">
-                <property name="width_request">-1</property>
-                <property name="height_request">-1</property>
+                <property name="width-request">-1</property>
+                <property name="height-request">-1</property>
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="can-focus">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkActionBar">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <child>
                           <object class="GtkButton" id="apply_scheme_button">
                             <property name="label" translatable="yes">Apply scheme</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="tooltip_text" translatable="yes">Apply selected style scheme to code editor</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
+                            <property name="tooltip-text" translatable="yes">Apply selected style scheme to code editor</property>
                           </object>
                           <packing>
                             <property name="position">0</property>
@@ -205,10 +202,10 @@
                           <object class="GtkSourceStyleSchemeChooserButton" id="style_scheme">
                             <property name="label" translatable="yes">Classic</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
                             <property name="events">GDK_STRUCTURE_MASK | GDK_PROPERTY_CHANGE_MASK</property>
-                            <property name="tooltip_text" translatable="yes">Select style scheme for code editor</property>
+                            <property name="tooltip-text" translatable="yes">Select style scheme for code editor</property>
                           </object>
                           <packing>
                             <property name="position">1</property>
@@ -218,9 +215,9 @@
                           <object class="GtkButton" id="search_button">
                             <property name="label" translatable="yes">Search again</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="tooltip_text" translatable="yes">Search in code editor</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
+                            <property name="tooltip-text" translatable="yes">Search in code editor</property>
                           </object>
                           <packing>
                             <property name="position">2</property>
@@ -229,13 +226,13 @@
                         <child>
                           <object class="GtkSearchEntry" id="search_entry">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="tooltip_text" translatable="yes">Search text, press enter to start searching</property>
+                            <property name="can-focus">True</property>
+                            <property name="tooltip-text" translatable="yes">Search text, press enter to start searching</property>
                             <property name="hexpand">True</property>
                             <property name="buffer">entrybuffer1</property>
-                            <property name="primary_icon_name">edit-find-symbolic</property>
-                            <property name="primary_icon_activatable">False</property>
-                            <property name="primary_icon_sensitive">False</property>
+                            <property name="primary-icon-name">edit-find-symbolic</property>
+                            <property name="primary-icon-activatable">False</property>
+                            <property name="primary-icon-sensitive">False</property>
                           </object>
                           <packing>
                             <property name="position">3</property>
@@ -245,19 +242,30 @@
                           <object class="GtkButton" id="replace_button">
                             <property name="label" translatable="yes">Replace</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="tooltip_text" translatable="yes">Search and replace in code editor</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
+                            <property name="tooltip-text" translatable="yes">Search and replace in code editor</property>
                           </object>
                           <packing>
                             <property name="position">4</property>
                           </packing>
                         </child>
                         <child>
+                          <object class="GtkButton" id="replace_all_button">
+                            <property name="label" translatable="yes">Replace all</property>
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
+                          </object>
+                          <packing>
+                            <property name="position">5</property>
+                          </packing>
+                        </child>
+                        <child>
                           <object class="GtkEntry" id="replacement_entry">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="tooltip_text" translatable="yes">Replacement for search text</property>
+                            <property name="can-focus">True</property>
+                            <property name="tooltip-text" translatable="yes">Replacement for search text</property>
                             <property name="hexpand">True</property>
                           </object>
                           <packing>
@@ -268,9 +276,9 @@
                           <object class="GtkCheckButton" id="check_button_case_sensitive">
                             <property name="label" translatable="yes">Case sensitive</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="draw_indicator">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">False</property>
+                            <property name="draw-indicator">True</property>
                           </object>
                           <packing>
                             <property name="position">6</property>
@@ -280,23 +288,12 @@
                           <object class="GtkCheckButton" id="check_button_whole_word">
                             <property name="label" translatable="yes">Whole word</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="draw_indicator">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">False</property>
+                            <property name="draw-indicator">True</property>
                           </object>
                           <packing>
                             <property name="position">7</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="replace_all_button">
-                            <property name="label" translatable="yes">Replace all</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                          </object>
-                          <packing>
-                            <property name="position">5</property>
                           </packing>
                         </child>
                       </object>
@@ -309,25 +306,25 @@
                     <child>
                       <object class="GtkScrolledWindow">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
+                        <property name="can-focus">True</property>
                         <property name="hexpand">True</property>
                         <property name="vexpand">True</property>
-                        <property name="shadow_type">in</property>
+                        <property name="shadow-type">in</property>
                         <child>
                           <object class="GtkSourceView" id="code_editor">
                             <property name="name">code_editor</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="wrap_mode">word</property>
-                            <property name="left_margin">2</property>
-                            <property name="right_margin">2</property>
+                            <property name="can-focus">True</property>
+                            <property name="wrap-mode">word</property>
+                            <property name="left-margin">2</property>
+                            <property name="right-margin">2</property>
                             <property name="monospace">True</property>
-                            <property name="show_line_numbers">True</property>
-                            <property name="show_line_marks">True</property>
-                            <property name="tab_width">4</property>
-                            <property name="insert_spaces_instead_of_tabs">True</property>
-                            <property name="show_right_margin">True</property>
-                            <property name="right_margin_position">79</property>
+                            <property name="show-line-numbers">True</property>
+                            <property name="show-line-marks">True</property>
+                            <property name="tab-width">4</property>
+                            <property name="insert-spaces-instead-of-tabs">True</property>
+                            <property name="show-right-margin">True</property>
+                            <property name="right-margin-position">79</property>
                           </object>
                         </child>
                       </object>
@@ -342,25 +339,25 @@
                 <child type="tab">
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">Edit this piece</property>
+                    <property name="can-focus">False</property>
+                    <property name="tooltip-text" translatable="yes">Edit this piece</property>
                     <property name="halign">start</property>
                     <property name="valign">start</property>
                     <property name="label" translatable="yes">Code</property>
                   </object>
                   <packing>
-                    <property name="tab_expand">True</property>
-                    <property name="tab_fill">False</property>
+                    <property name="tab-expand">True</property>
+                    <property name="tab-fill">False</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLayout" id="controls_layout">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="hscroll_policy">natural</property>
-                    <property name="vscroll_policy">natural</property>
+                    <property name="hscroll-policy">natural</property>
+                    <property name="vscroll-policy">natural</property>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -369,23 +366,23 @@
                 <child type="tab">
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">Custom controls for performing</property>
+                    <property name="can-focus">False</property>
+                    <property name="tooltip-text" translatable="yes">Custom controls for performing</property>
                     <property name="halign">start</property>
                     <property name="valign">start</property>
                     <property name="label" translatable="yes">Controls</property>
                   </object>
                   <packing>
                     <property name="position">1</property>
-                    <property name="tab_expand">True</property>
-                    <property name="tab_fill">False</property>
+                    <property name="tab-expand">True</property>
+                    <property name="tab-fill">False</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkScrolledWindow" id="html_window">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="shadow_type">in</property>
+                    <property name="can-focus">True</property>
+                    <property name="shadow-type">in</property>
                     <child>
                       <placeholder/>
                     </child>
@@ -397,23 +394,23 @@
                 <child type="tab">
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">HTML5 browser for visual music and such</property>
+                    <property name="can-focus">False</property>
+                    <property name="tooltip-text" translatable="yes">HTML5 browser for visual music and such</property>
                     <property name="halign">start</property>
                     <property name="valign">start</property>
                     <property name="label" translatable="yes">HTML</property>
                   </object>
                   <packing>
                     <property name="position">2</property>
-                    <property name="tab_expand">True</property>
-                    <property name="tab_fill">False</property>
+                    <property name="tab-expand">True</property>
+                    <property name="tab-fill">False</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkScrolledWindow" id="help_window">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="shadow_type">in</property>
+                    <property name="can-focus">True</property>
+                    <property name="shadow-type">in</property>
                     <child>
                       <placeholder/>
                     </child>
@@ -425,21 +422,23 @@
                 <child type="tab">
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">Online help</property>
+                    <property name="can-focus">False</property>
+                    <property name="tooltip-text" translatable="yes">Online help</property>
+                    <property name="halign">start</property>
+                    <property name="valign">start</property>
                     <property name="label" translatable="yes">Help</property>
                   </object>
                   <packing>
                     <property name="position">3</property>
-                    <property name="tab_expand">True</property>
-                    <property name="tab_fill">False</property>
+                    <property name="tab-expand">True</property>
+                    <property name="tab-fill">False</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkScrolledWindow" id="csound_help_window">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="shadow_type">in</property>
+                    <property name="can-focus">True</property>
+                    <property name="shadow-type">in</property>
                     <child>
                       <placeholder/>
                     </child>
@@ -451,12 +450,13 @@
                 <child type="tab">
                   <object class="GtkLabel" id="csound_help_tab">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
+                    <property name="valign">start</property>
                     <property name="label" translatable="yes">Csound help</property>
                   </object>
                   <packing>
                     <property name="position">4</property>
-                    <property name="tab_fill">False</property>
+                    <property name="tab-fill">False</property>
                   </packing>
                 </child>
               </object>
@@ -466,7 +466,26 @@
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkScrolledWindow">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="shadow-type">in</property>
+                <child>
+                  <object class="GtkTextView" id="messages_text_view">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                    <property name="editable">False</property>
+                    <property name="accepts-tab">False</property>
+                    <property name="monospace">True</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">True</property>
+              </packing>
             </child>
           </object>
           <packing>

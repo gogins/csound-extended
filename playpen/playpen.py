@@ -220,6 +220,8 @@ def get_control_value(control):
     channel_value = 0
     if isinstance(control, Gtk.Switch):
         channel_value = control.get_state()
+    elif isinstance(control, Gtk.ComboBox):
+        channel_value = control.get_active_id()
     elif isinstance(control, Gtk.ToggleButton):
         channel_value = control.get_active()
     elif isinstance(control, Gtk.Scale):
@@ -234,6 +236,8 @@ def set_control_value(control, value):
     autolog("control: {} value: {}".format(control, value))
     if isinstance(control, Gtk.Switch):
         control.set_state(value)
+    elif isinstance(control, Gtk.ComboBox):
+        control.set_active_id(value)
     elif isinstance(control, Gtk.ToggleButton):
         control.set_active(value)
     elif isinstance(control, Gtk.Scale):
@@ -279,6 +283,10 @@ def connect_controls(container, on_control_changed_):
         channel_name = child.get_name()
         channel_value = get_control_value(child)
         autolog("Connecting GTK widget '{}' to Csound control channel '{}'".format(type(child).__name__, channel_name))
+        if isinstance(child, Gtk.ComboBox):
+            child.connect("changed", on_control_changed_, 1.)
+            widgets_for_channels[channel_name] = child
+            values_for_channels[channel_name] = channel_value
         if isinstance(child, Gtk.Button):
             child.connect("pressed", on_control_changed_, 1.)
             child.connect("released", on_control_changed_, 0.)            
@@ -322,29 +330,34 @@ def on_control_change(control, data, user=None):
         channel_value = get_control_value(control)
         # Prevent premature definition of control channels.
         if csound.IsPlaying() == False:
-            return
-        if isinstance(control, Gtk.ToggleButton):
-            autolog("ToggleButton:  setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
-            csound.SetControlChannel(channel_name, channel_value)
-        elif isinstance(control, Gtk.Button):
-            channel_value = float(data)
-            autolog("Button:        setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
-            csound.SetControlChannel(channel_name, channel_value)
-        elif isinstance(control, Gtk.MenuItem):
-            channel_value = data
-            autolog("MenuItem:      setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
-            csound.SetControlChannel(channel_name, channel_value)
-        elif isinstance(control, Gtk.Scale):
-            autolog("Scale:         setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
-            csound.SetControlChannel(channel_name, channel_value)
-        #~ elif isinstance(control, Gtk.SpinButton):
-            #~ channel_value = control.get_value()
-            #~ csound.SetControlChannel(channel_name, channel_value)
-        elif isinstance(control, Gtk.Editable):
-            channel_value = control.get_text()
-            autolog("Editable:      SetStringChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
-            csound.SetStringChannel(channel_name, channel_value)
-        values_for_channels[channel_name] = channel_value
+            autolog("channel: {} value: {}".format(channel_name, channel_value))
+        else:
+            if isinstance(control, Gtk.ToggleButton):
+                autolog("ToggleButton:  setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                csound.SetControlChannel(channel_name, channel_value)
+            elif isinstance(control, Gtk.ComboBox):
+                channel_value = control.get_active_id()
+                autolog("Combo box:     SetStringChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                csound.SetStringChannel(channel_name, channel_value)
+            elif isinstance(control, Gtk.Button):
+                channel_value = float(data)
+                autolog("Button:        setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                csound.SetControlChannel(channel_name, channel_value)
+            elif isinstance(control, Gtk.MenuItem):
+                channel_value = data
+                autolog("MenuItem:      setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                csound.SetControlChannel(channel_name, channel_value)
+            elif isinstance(control, Gtk.Scale):
+                autolog("Scale:         setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                csound.SetControlChannel(channel_name, channel_value)
+            #~ elif isinstance(control, Gtk.SpinButton):
+                #~ channel_value = control.get_value()
+                #~ csound.SetControlChannel(channel_name, channel_value)
+            elif isinstance(control, Gtk.Editable):
+                channel_value = control.get_text()
+                autolog("Editable:      SetStringChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                csound.SetStringChannel(channel_name, channel_value)
+            values_for_channels[channel_name] = channel_value
     except:
         print(traceback.format_exc())
 
@@ -479,8 +492,11 @@ def on_play_audio_button_clicked(button):
             load_ui()
             autolog("Restoring {} channels...".format(len(values_for_channels)))
             for name, value in values_for_channels.items():
-                autolog("initialize channel: {} name: {} {}".format(name, value, type(value)))
-                csound.SetControlChannel(name, value)
+                autolog("initialize channel: {} value {} {}".format(name, value, type(value)))
+                if isinstance(value, str):
+                    csound.SetStringChannel(name, value)
+                else:
+                    csound.SetControlChannel(name, value)
             csound.Perform()
     except:
         autoexception("")
@@ -498,7 +514,7 @@ def on_render_soundfile_button_clicked(button):
             load_ui()
             autolog("Restoring {} channels...".format(len(values_for_channels)))
             for name, value in values_for_channels.items():
-                autolog("initialize channel: {} name: {} {}".format(name, value, type(value)))
+                autolog("initialize channel: {} value {} {}".format(name, value, type(value)))
                 csound.SetControlChannel(name, value)
             # Keep the UI responsive during performance.
             while csound.PerformBuffer() == 0:
@@ -875,11 +891,29 @@ replace_all_button = builder.get_object("replace_all_button")
 replace_all_button.connect("clicked", on_replace_all_button_clicked)
 check_button_case_sensitive = builder.get_object("check_button_case_sensitive")
 check_button_whole_word = builder.get_object("check_button_whole_word")
+messages_text_view = builder.get_object("messages_text_view")
+messages_text_view_buffer = messages_text_view.get_buffer()
 
-def perform():
-    global piece_filepath
-    autolog(piece_filepath)
-    csound.Perform()
+#~ def on_sys_write(channel, condition, data=None):
+    #~ sys.stderr.write("channel: {}\n".format(channel))
+    #~ chars = channel.read(1)
+    #~ sys.stderr.write("chars: {}".format(chars))
+    #~ messages_text_view_buffer.insert_at_cursor(chars)
+    #~ return True
+    
+#~ stdout_io_channel = GLib.IOChannel.unix_new(sys.stdout.fileno())
+#~ stdout_io_channel.ref()
+#~ print("stdout_io_channel: {}".format(stdout_io_channel))
+#~ result = GLib.io_add_watch(stdout_io_channel, GLib.IO_IN | GLib.IO_ERR | GLib.IO_HUP, on_sys_write)
+#~ print("result: {}".format(result))
+
+#~ stderr_io_channel = GLib.IOChannel.unix_new(sys.stderr.fileno())
+#~ stderr_io_channel.ref()
+#~ print("stderr_io_channel: {}".format(stderr_io_channel))
+#~ result = GLib.io_add_watch(stderr_io_channel, GLib.IO_IN | GLib.IO_ERR | GLib.IO_HUP, on_sys_write)
+#~ print("result: {}".format(result))
+
+contextlib.redirect_stdout(messages_text_view_buffer)
 
 main_window.show_all() 
 
