@@ -12,6 +12,7 @@ import os.path
 import pathlib
 import pdb
 import random
+import shutil
 import string
 import subprocess
 import sys
@@ -456,7 +457,9 @@ def on_save_button_clicked(button):
     
 def on_save_as_button_clicked(button):
     global piece_filepath
-    autolog("saving %s as...".format(piece_fileplath))
+    autolog("saving %s as...".format(piece_filepath))
+    old_ui_filepath = get_ui_filepath()
+
     try:
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
             parent=None, 
@@ -469,7 +472,9 @@ def on_save_as_button_clicked(button):
         file_chooser_dialog.run()
         piece_filepath = file_chooser_dialog.get_filename()
         save_piece()
+        shutil.copy2(old_ui_filepath, get_ui_filepath())
         save_ui()
+        file_choose_dialog.close()
     except:
         print(traceback.format_exc())
         

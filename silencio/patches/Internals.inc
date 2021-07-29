@@ -68,7 +68,7 @@ gk_Internals_delay_modulation_level init 0
 gk_Internals_delay_modulation_hz init .3
 gk_Internals_wet init .5
 instr Internals
-printks2 "gk_Internals_delay_level: %9.4f\n", gk_Internals_delay_level
+printks2 "Csound: gk_Internals_delay_level: %9.4f\n", gk_Internals_delay_level
 i_instrument = p1
 i_time = p2
 i_sustain = p3
