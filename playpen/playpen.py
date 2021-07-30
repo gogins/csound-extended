@@ -948,6 +948,8 @@ class NonBlockingStreamReader:
             return self._q.get_nowait()
         except queue.Empty:
             return None
+    def stop(self):
+        self._t.stop()
             
 class UnexpectedEndOfStream(Exception): print("UnexpectedEndOfStream")
 
@@ -999,6 +1001,7 @@ class Captor():
     def close(self):
         sys.stdout = self.stdout
         sys.stderr = self.stderr
+        self.non_blocking_stream_reader.stop()
         
 captor = Captor(messages_text_view)
 
