@@ -1,27 +1,20 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import concurrent.futures
-import contextlib
-import datetime
-import inspect
-import json
-import logging
-import markdown
-import math
-import os.path
-import pathlib
-import pdb
-import random
-import shutil
-import string
-import subprocess
-import sys
-import time
-import traceback
-import warnings
-
 '''
-A few strict naming conventions greatly simplify the code.
+C S O U N D   P L A Y P E N
+
+Author: Michael Gogins
+michael dot gogins at gmail dot com
+
+This program is the Csound playpen, or computer music playpen. The playpen is 
+an integrated development environment designed to support algorithmic 
+composition. The objective is to minimize time spent in the typical "edit, 
+compile, render, listen; edit again, render again, listen again; und so 
+weiter..." cycle without, however, in any way compromising the musical 
+possibilities of the system. See the README.md in this repository for more 
+specific information.
+
+A few strict naming conventions greatly simplify this code.
 
 Each piece is always a single text file of code; it could be piece.csd, 
 piece.py, or piece.html. The piece should specify a real-time audio output 
@@ -48,6 +41,28 @@ playpen program to set up the GUI and control the piece. All functions defined
 in the playpen (below) are in the scope of a Python piece.
 '''
 
+
+import concurrent.futures
+import contextlib
+import ctypes
+import datetime
+import inspect
+import io
+import json
+import logging
+import markdown
+import math
+import os.path
+import pathlib
+import pdb
+import random
+import shutil
+import string
+import subprocess
+import sys
+import time
+import traceback
+import warnings
 # Comment this out during development?
 
 warnings.filterwarnings("ignore")
@@ -897,28 +912,30 @@ replace_all_button.connect("clicked", on_replace_all_button_clicked)
 check_button_case_sensitive = builder.get_object("check_button_case_sensitive")
 check_button_whole_word = builder.get_object("check_button_whole_word")
 messages_text_view = builder.get_object("messages_text_view")
+messages_text_view.override_color(0, Gdk.RGBA(0, 1, 0, 1))
+messages_text_view.override_background_color(0,  Gdk.RGBA(0.1, 0.1, 0.1, 1))
 messages_text_view_buffer = messages_text_view.get_buffer()
 
-#~ def on_sys_write(channel, condition, data=None):
-    #~ sys.stderr.write("channel: {}\n".format(channel))
-    #~ chars = channel.read(1)
-    #~ sys.stderr.write("chars: {}".format(chars))
-    #~ messages_text_view_buffer.insert_at_cursor(chars)
-    #~ return True
-    
-#~ stdout_io_channel = GLib.IOChannel.unix_new(sys.stdout.fileno())
-#~ stdout_io_channel.ref()
-#~ print("stdout_io_channel: {}".format(stdout_io_channel))
-#~ result = GLib.io_add_watch(stdout_io_channel, GLib.IO_IN | GLib.IO_ERR | GLib.IO_HUP, on_sys_write)
-#~ print("result: {}".format(result))
-
-#~ stderr_io_channel = GLib.IOChannel.unix_new(sys.stderr.fileno())
-#~ stderr_io_channel.ref()
-#~ print("stderr_io_channel: {}".format(stderr_io_channel))
-#~ result = GLib.io_add_watch(stderr_io_channel, GLib.IO_IN | GLib.IO_ERR | GLib.IO_HUP, on_sys_write)
-#~ print("result: {}".format(result))
-
-contextlib.redirect_stdout(messages_text_view_buffer)
+class Captor():
+    def __init__(self, text_view):
+        self.original_stdout = sys.stdout
+        self.original_stderr = sys.stderr
+        self.gtk_text_view = text_view
+        self.gtk_buffer = self.gtk_text_view.get_buffer()
+        sys.stdout = self
+        sys.stderr = self
+        stream_handler = logging.StreamHandler(stream = self)
+        logging.getLogger().addHandler(stream_handler)
+    def write(self, data):
+        self.gtk_buffer.insert(self.gtk_buffer.get_end_iter(), data, -1)
+        messages_text_view.scroll_to_iter(self.gtk_buffer.get_end_iter(), 0, False, .5, .5)
+    def flush(self):
+        pass
+    def close(self):
+        sys.stdout = self.stdout
+        sys.stderr = self.stderr
+        
+captor = Captor(messages_text_view)
 
 main_window.show_all() 
 
