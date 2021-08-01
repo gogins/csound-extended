@@ -41,12 +41,8 @@ playpen program to set up the GUI and control the piece. All functions defined
 in the playpen (below) are in the scope of a Python piece.
 '''
 
-#import asyncio
-#import concurrent.futures
-#import contextlib
 import ctypes
 import datetime
-#import fcntl
 import inspect
 import io
 import json
@@ -60,12 +56,12 @@ import queue
 import random
 import shutil
 import string
-#import subprocess
 import sys
 import threading
 import time
 import traceback
 import warnings
+
 # Comment this out during development?
 
 warnings.filterwarnings("ignore")
@@ -919,46 +915,74 @@ messages_text_view.override_color(0, Gdk.RGBA(0, 1, 0, 1))
 messages_text_view.override_background_color(0,  Gdk.RGBA(0.1, 0.1, 0.1, 1))
 messages_text_view_buffer = messages_text_view.get_buffer()
 
-#~ libc = ctypes.CDLL(None)
-#~ c_stdout = ctypes.c_void_p.in_dll(libc, 'stdout')
-#~ c_stderr = ctypes.c_void_p.in_dll(libc, 'stderr')
-#~ print("c_stderr: {}{}".format(c_stderr, type(0)))
-
-class NonBlockingStreamReader:
+'''
+class NonBlockingPipeReader(threading.Thread):
     def __init__(self, fd):
-        '''
-        stream: the stream to read from.
-                Usually a process' stdout or stderr.
-        '''
-        self._s = fd
-        self._q = queue.Queue()
-        def _populateQueue(fd, queue):
-            while True:
-                line = os.read(fd, 1024)
-                if line:
-                    queue.put(line.decode())
-                else:
-                    raise UnexpectedEndOfStream
-        self._t = threading.Thread(target = _populateQueue,
-                args = (self._s, self._q))
-        self._t.daemon = True
-        self._t.start() #start collecting lines from the stream
+        threading.Thread.__init__(self)
+        self.fd_ = fd
+        self.lines_queue = queue.Queue()
+        self.characters_queue = queue.Queue()
+        self.daemon = True
+        self.start() 
+    def run(self):
+        print("Starting NonBlockingPipeReader thread...")
+        # In this loop, we read characters until we read an end of line, then 
+        # we enqueue the characters as one line; the purpose is to avoid 
+        # starting to print a line from one thread in the middle of a line 
+        # from another thread.
+        while True:
+            bytes_ = os.read(self.fd_, 1024)
+            if bytes_:
+                string_ = bytes_.decode('utf-8')    
+                self.lines_queue.put_nowait(string_)
+            else:
+                raise UnexpectedEndOfStream
     def readline(self):
         try:
-            return self._q.get_nowait()
+            return self.lines_queue.get_nowait()
         except queue.Empty:
             return None
-    def stop(self):
-        self._t.stop()
-            
-class UnexpectedEndOfStream(Exception): print("UnexpectedEndOfStream")
+'''
+class NonBlockingPipeReader(threading.Thread):
+    def __init__(self, fd):
+        threading.Thread.__init__(self)
+        self.fd_ = fd
+        self.lines_queue = queue.Queue()
+        self.characters_queue = queue.Queue()
+        self.daemon = True
+        self.start() 
+    def run(self):
+        print("Starting NonBlockingPipeReader thread...")
+        # In this loop, we read characters until we read an end of line, then 
+        # we enqueue the characters as one line; the purpose is to avoid 
+        # starting to print a line from one thread in the middle of a line 
+        # from another thread.
+        stringio = io.StringIO()
+        while True:
+            bytes_ = os.read(self.fd_, 1)
+            if bytes_:
+                string_ = bytes_.decode('utf-8', errors='ignore')   
+                for i in range(len(string_)):
+                    character = string_[i]
+                    stringio.write(character)
+                    if character == '\n':
+                        self.lines_queue.put_nowait(stringio.getvalue())
+                        stringio = io.StringIO()
+            else:
+                raise UnexpectedEndOfStream
+    def readline(self):
+        try:
+            return self.lines_queue.get_nowait()
+        except queue.Empty:
+            return None
 
 """
 https://stackoverflow.com/questions/24277488/in-python-how-to-capture-the-stdout-from-a-c-shared-library-to-a-variable
 https://medium.com/@denismakogon/python-3-fight-for-nonblocking-pipe-68f92429d18e
 
-Intercepts sys.stdout, sys.stderr, and the C runtime library's stderr (and thus Csound's runtime 
-messages), and sends their streams to the messages TextView in this program.
+Intercepts sys.stdout, sys.stderr, and the C runtime library's stderr (which 
+is used by Csound's runtime messages), and sends their streams to the messages 
+TextView in this program.
 """
 class Captor():
     def __init__(self, text_view):
@@ -968,40 +992,29 @@ class Captor():
         self.gtk_text_view = text_view
         self.gtk_buffer = self.gtk_text_view.get_buffer()
         sys.stdout = self
-        # sys.stderr = self        
+        sys.stderr = self        
         # Create a stream handler to redirect stdout to the textview buffer.
         stream_handler = logging.StreamHandler(stream = self)
         logging.getLogger().addHandler(stream_handler)
-        # Redirect the C runtime stdout and stderr.
-        self.stdout_pipe_read, self.stdout_pipe_write = os.pipe()
+        # Redirect the C runtime stderr.
         self.stderr_pipe_read, self.stderr_pipe_write = os.pipe()
-        self.non_blocking_stream_reader = NonBlockingStreamReader(self.stderr_pipe_read)
-        #~ os.dup2(self.stdout_pipe_write, c_stdout) 
+        self.non_blocking_stream_reader = NonBlockingPipeReader(self.stderr_pipe_read)
         autolog("os.dup2(self.stderr_pipe_write: {}, self.original_stderr_fd: {})".format(self.stderr_pipe_write, self.original_stderr_fd))
         os.dup2(self.stderr_pipe_write, self.original_stderr_fd) 
-        #   os.close(self.original_stderr_fd)
-        #self.thread = threading.Thread(target=self.run)
-        #self.thread.start()
-        time.sleep(.1)
-    def run(self):
-        while True:
-            chars = os.read(self.stderr_pipe_read, 1);
-            if len(chars) > 0:
-                text = chars.decode("utf-8")
-                self.write(text)
     def write(self, data):
         self.gtk_buffer.insert(self.gtk_buffer.get_end_iter(), data, -1)
         self.gtk_text_view.scroll_to_iter(self.gtk_buffer.get_end_iter(), 0, False, .5, .5)
         line = self.non_blocking_stream_reader.readline()
         if line:
             self.gtk_buffer.insert(self.gtk_buffer.get_end_iter(), line, -1)
+            Gtk.main_iteration()
             self.gtk_text_view.scroll_to_iter(self.gtk_buffer.get_end_iter(), 0, False, .5, .5)
+            Gtk.main_iteration()
     def flush(self):
         pass
     def close(self):
         sys.stdout = self.stdout
         sys.stderr = self.stderr
-        self.non_blocking_stream_reader.stop()
         
 captor = Captor(messages_text_view)
 
