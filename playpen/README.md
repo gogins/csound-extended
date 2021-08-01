@@ -4,10 +4,10 @@ Michael Gogins<br>
 https://github.com/gogins<br>
 http://michaelgogins.tumblr.com
 
-This computer music playpen is an integrated development environment for 
-algorithmic music composition. 
+This computer music playpen is an integrated development environment 
+specifically designed for algorithmic music composition. 
 
-The playpen is designed to provide the simplest possible system with the greatest 
+The playpen attempts to provide the simplest possible system with the greatest 
 possible power, and to minimize the time involved in moving through the "edit, 
 render, listen; edit, render, listen;..." cycle of this style of composition 
 without, however, compromising in _any_ way the musical possibilities of the 
@@ -103,7 +103,8 @@ make
 sudo make install
 ```
 
-If you have missed any dependencies, CMake will probably let you know.
+If you have missed any dependencies, CMake and/or Python will probably let you 
+know.
 
 If later you need to uninstall, in the repository root directory, execute:
 ```
@@ -167,6 +168,8 @@ The playpen has the following panes or tabs:
     HTML piece, or programmatically through Python code. The Web page 
     can also contain user-defined controls for controlling Csound.
 4.  __Help__, displaying this README file.
+4.  __Csound help__, displaying the current online version of the **__Csound 
+    Reference Manual.__**
 
 ### Toolbar
 
@@ -199,6 +202,10 @@ right:
 10. Stop the Csound performance (applies to CSD and Python pieces, not to 
     HTML pieces, which must provide their stop button or other means of 
     stopping the performance).
+12. Control the verbosity of the runtime messages printed by Python; enabled 
+    means print all messages, disabled means print only messages at the 
+    Warning or higher levels. Note that the Csound options must be used to 
+    control the verbosity of Csound's runtime messages.
     
 ### User Interface Builder
 

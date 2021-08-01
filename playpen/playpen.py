@@ -7,12 +7,12 @@ Author: Michael Gogins
 michael dot gogins at gmail dot com
 
 This program is the Csound playpen, or computer music playpen. The playpen is 
-an integrated development environment designed to support algorithmic 
-composition. The objective is to minimize time spent in the typical "edit, 
-compile, render, listen; edit again, render again, listen again; und so 
-weiter..." cycle without, however, in any way compromising the musical 
-possibilities of the system. See the README.md in this repository for more 
-specific information.
+an integrated development environment specifically designed to support 
+algorithmic composition. The objective is to minimize time spent in the 
+typical "edit, compile, render, listen; edit again, render again, listen 
+again; und so weiter..." cycle without, however, in any way compromising the 
+musical possibilities of the system. See the README.md and examples in this 
+repository for more specific information.
 
 A few strict naming conventions greatly simplify this code.
 
@@ -65,7 +65,7 @@ import warnings
 # Comment this out during development?
 
 warnings.filterwarnings("ignore")
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
 def log_print(message):
     # Get the previous frame in the stack, otherwise it would
@@ -919,6 +919,10 @@ messages_text_view_buffer = messages_text_view.get_buffer()
 Intercepts sys.stdout, sys.stderr, and the C runtime library's stderr (which 
 is used by Csound's runtime messages), and sends their streams to the messages 
 TextView in this program.
+
+This will also work for any other code or library writing to Python's stdout or 
+stderr, or to the C runtime stderr, and this is done in place of implementing  
+message callbacks for every possible language.
 """
 class ConsoleMessageCaptor():
     def __init__(self, text_view):
@@ -960,6 +964,23 @@ class ConsoleMessageCaptor():
         sys.stderr = self.stderr
         
 captor = ConsoleMessageCaptor(messages_text_view)
+
+def set_verbosity(verbosity):
+    if verbosity == True:
+        logging.getLogger().setLevel(logging.NOTSET)
+    else:
+        logging.getLogger().setLevel(logging.WARNING)
+    
+def on_verbosity_toggled(source):
+    active = source.get_active()
+    log_print("verbose: {}".format(active))
+    set_verbosity(active)
+
+verbosity_toggle = builder.get_object("verbosity_toggle")
+verbosity_toggle.connect("toggled", on_verbosity_toggled)
+
+verbose = settings.get_value("playpen", "verbose")
+verbosity_toggle.set_active(verbose)
 
 main_window.show_all() 
 
