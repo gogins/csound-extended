@@ -915,44 +915,12 @@ messages_text_view.override_color(0, Gdk.RGBA(0, 1, 0, 1))
 messages_text_view.override_background_color(0,  Gdk.RGBA(0.1, 0.1, 0.1, 1))
 messages_text_view_buffer = messages_text_view.get_buffer()
 
-'''
-class NonBlockingPipeReader(threading.Thread):
-    def __init__(self, fd):
-        threading.Thread.__init__(self)
-        self.fd_ = fd
-        self.lines_queue = queue.Queue()
-        self.characters_queue = queue.Queue()
-        self.daemon = True
-        self.start() 
-    def run(self):
-        print("Starting NonBlockingPipeReader thread...")
-        # In this loop, we read characters until we read an end of line, then 
-        # we enqueue the characters as one line; the purpose is to avoid 
-        # starting to print a line from one thread in the middle of a line 
-        # from another thread.
-        while True:
-            bytes_ = os.read(self.fd_, 1024)
-            if bytes_:
-                string_ = bytes_.decode('utf-8')    
-                self.lines_queue.put_nowait(string_)
-            else:
-                raise UnexpectedEndOfStream
-    def readline(self):
-        try:
-            return self.lines_queue.get_nowait()
-        except queue.Empty:
-            return None
-'''
-
 """
-https://stackoverflow.com/questions/24277488/in-python-how-to-capture-the-stdout-from-a-c-shared-library-to-a-variable
-https://medium.com/@denismakogon/python-3-fight-for-nonblocking-pipe-68f92429d18e
-
 Intercepts sys.stdout, sys.stderr, and the C runtime library's stderr (which 
 is used by Csound's runtime messages), and sends their streams to the messages 
 TextView in this program.
 """
-class Captor():
+class ConsoleMessageCaptor():
     def __init__(self, text_view):
         try:
             self.original_stdout = sys.stdout
@@ -960,38 +928,38 @@ class Captor():
             self.original_stderr_fd = self.original_stderr.fileno()
             self.gtk_text_view = text_view
             self.gtk_buffer = self.gtk_text_view.get_buffer()
+            # Redirect Python's stdout and stderr to this object.
             sys.stdout = self
             sys.stderr = self        
-            # Create a stream handler to redirect stdout to the textview buffer.
+            # Create a stream handler so the Logger will use this object.
             stream_handler = logging.StreamHandler(stream = self)
             logging.getLogger().addHandler(stream_handler)
-            # Redirect the C runtime stderr.
+            # Redirect the C runtime stderr to this object by means of a pipe.
             self.stderr_pipe_read, self.stderr_pipe_write = os.pipe()
             autolog("os.dup2(self.stderr_pipe_write: {}, self.original_stderr_fd: {})".format(self.stderr_pipe_write, self.original_stderr_fd))
             os.dup2(self.stderr_pipe_write, self.original_stderr_fd) 
             def message_callback(fd, condition, self):
-                print("message_callback: self: {} fd: {} condition: {}".format(self, fd, condition))
                 if condition == GLib.IO_IN:
                     line = fd.readline()
                     self.write(line)
-                    #~ self.gtk_buffer.insert(self.gtk_buffer.get_end_iter(), line, -1)
-                    #~ end_iter = self.gtk_buffer.get_end_iter()
-                    #~ self.gtk_text_view.scroll_to_iter(end_iter, 0, False, .5, .5)
                 return True        
             self.read_channel = GLib.IOChannel.unix_new(self.stderr_pipe_read)
             self.read_channel.add_watch(GLib.IO_IN, message_callback, self)
         except:
             traceback.print_exc()
+    # Called in place of process stdout or stderr.
     def write(self, data):
         self.gtk_buffer.insert(self.gtk_buffer.get_end_iter(), data, -1)
-        self.gtk_text_view.scroll_to_iter(self.gtk_buffer.get_end_iter(), 0, False, .5, .5)
+        Gtk.main_iteration_do(False)
+        self.gtk_text_view.scroll_to_mark(self.gtk_buffer.get_insert(), 0.0, True, 0.5, 0.5)
+        Gtk.main_iteration_do(False)
     def flush(self):
         pass
     def close(self):
         sys.stdout = self.stdout
         sys.stderr = self.stderr
         
-captor = Captor(messages_text_view)
+captor = ConsoleMessageCaptor(messages_text_view)
 
 main_window.show_all() 
 
