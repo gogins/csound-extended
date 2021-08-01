@@ -943,38 +943,6 @@ class NonBlockingPipeReader(threading.Thread):
         except queue.Empty:
             return None
 '''
-class NonBlockingPipeReader(threading.Thread):
-    def __init__(self, fd):
-        threading.Thread.__init__(self)
-        self.fd_ = fd
-        self.lines_queue = queue.Queue()
-        self.characters_queue = queue.Queue()
-        self.daemon = True
-        self.start() 
-    def run(self):
-        print("Starting NonBlockingPipeReader thread...")
-        # In this loop, we read characters until we read an end of line, then 
-        # we enqueue the characters as one line; the purpose is to avoid 
-        # starting to print a line from one thread in the middle of a line 
-        # from another thread.
-        stringio = io.StringIO()
-        while True:
-            bytes_ = os.read(self.fd_, 1)
-            if bytes_:
-                string_ = bytes_.decode('utf-8', errors='ignore')   
-                for i in range(len(string_)):
-                    character = string_[i]
-                    stringio.write(character)
-                    if character == '\n':
-                        self.lines_queue.put_nowait(stringio.getvalue())
-                        stringio = io.StringIO()
-            else:
-                raise UnexpectedEndOfStream
-    def readline(self):
-        try:
-            return self.lines_queue.get_nowait()
-        except queue.Empty:
-            return None
 
 """
 https://stackoverflow.com/questions/24277488/in-python-how-to-capture-the-stdout-from-a-c-shared-library-to-a-variable
@@ -986,30 +954,37 @@ TextView in this program.
 """
 class Captor():
     def __init__(self, text_view):
-        self.original_stdout = sys.stdout
-        self.original_stderr = sys.stderr
-        self.original_stderr_fd = self.original_stderr.fileno()
-        self.gtk_text_view = text_view
-        self.gtk_buffer = self.gtk_text_view.get_buffer()
-        sys.stdout = self
-        sys.stderr = self        
-        # Create a stream handler to redirect stdout to the textview buffer.
-        stream_handler = logging.StreamHandler(stream = self)
-        logging.getLogger().addHandler(stream_handler)
-        # Redirect the C runtime stderr.
-        self.stderr_pipe_read, self.stderr_pipe_write = os.pipe()
-        self.non_blocking_stream_reader = NonBlockingPipeReader(self.stderr_pipe_read)
-        autolog("os.dup2(self.stderr_pipe_write: {}, self.original_stderr_fd: {})".format(self.stderr_pipe_write, self.original_stderr_fd))
-        os.dup2(self.stderr_pipe_write, self.original_stderr_fd) 
+        try:
+            self.original_stdout = sys.stdout
+            self.original_stderr = sys.stderr
+            self.original_stderr_fd = self.original_stderr.fileno()
+            self.gtk_text_view = text_view
+            self.gtk_buffer = self.gtk_text_view.get_buffer()
+            sys.stdout = self
+            sys.stderr = self        
+            # Create a stream handler to redirect stdout to the textview buffer.
+            stream_handler = logging.StreamHandler(stream = self)
+            logging.getLogger().addHandler(stream_handler)
+            # Redirect the C runtime stderr.
+            self.stderr_pipe_read, self.stderr_pipe_write = os.pipe()
+            autolog("os.dup2(self.stderr_pipe_write: {}, self.original_stderr_fd: {})".format(self.stderr_pipe_write, self.original_stderr_fd))
+            os.dup2(self.stderr_pipe_write, self.original_stderr_fd) 
+            def message_callback(fd, condition, self):
+                print("message_callback: self: {} fd: {} condition: {}".format(self, fd, condition))
+                if condition == GLib.IO_IN:
+                    line = fd.readline()
+                    self.write(line)
+                    #~ self.gtk_buffer.insert(self.gtk_buffer.get_end_iter(), line, -1)
+                    #~ end_iter = self.gtk_buffer.get_end_iter()
+                    #~ self.gtk_text_view.scroll_to_iter(end_iter, 0, False, .5, .5)
+                return True        
+            self.read_channel = GLib.IOChannel.unix_new(self.stderr_pipe_read)
+            self.read_channel.add_watch(GLib.IO_IN, message_callback, self)
+        except:
+            traceback.print_exc()
     def write(self, data):
         self.gtk_buffer.insert(self.gtk_buffer.get_end_iter(), data, -1)
         self.gtk_text_view.scroll_to_iter(self.gtk_buffer.get_end_iter(), 0, False, .5, .5)
-        line = self.non_blocking_stream_reader.readline()
-        if line:
-            self.gtk_buffer.insert(self.gtk_buffer.get_end_iter(), line, -1)
-            Gtk.main_iteration()
-            self.gtk_text_view.scroll_to_iter(self.gtk_buffer.get_end_iter(), 0, False, .5, .5)
-            Gtk.main_iteration()
     def flush(self):
         pass
     def close(self):
