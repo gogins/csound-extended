@@ -67,7 +67,7 @@ import warnings
 warnings.filterwarnings("ignore")
 logging.getLogger().setLevel(logging.DEBUG)
 
-def autolog(message):
+def log_print(message):
     # Get the previous frame in the stack, otherwise it would
     # be this function!!!
     caller = inspect.currentframe().f_back.f_code
@@ -79,7 +79,7 @@ def autolog(message):
         message, 
     ))
     
-def autoexception(message):
+def log_exception(message):
     # Get the previous frame in the stack, otherwise it would
     # be this function!!!
     caller = inspect.currentframe().f_back.f_code
@@ -133,10 +133,10 @@ from gi.repository import GtkSource
 
 import CsoundThreaded
 csound = CsoundThreaded.CsoundThread()
-autolog("Global Csound instance: {} CSOUND *: 0x{:x}.".format(csound, int(csound.GetCsound())))
+log_print("Global Csound instance: {} CSOUND *: 0x{:x}.".format(csound, int(csound.GetCsound())))
         
 title = "Playpen"
-autolog("title: {}".format(title))
+log_print("title: {}".format(title))
 
 builder = Gtk.Builder()
 builder.add_from_file("playpen.ui")
@@ -189,7 +189,7 @@ def piece_is_html():
     
 def on_new_button_clicked(button):
     global piece_filepath
-    autolog("Creating new piece...")
+    log_print("Creating new piece...")
     try:
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
             parent=None, 
@@ -204,14 +204,14 @@ def on_new_button_clicked(button):
         ui_filepath = get_ui_filepath()
         with open(ui_filepath, 'w') as file:
             file.write(ui_controls_template)
-        autolog(piece_filepath)
+        log_print(piece_filepath)
         code_editor.get_buffer().set_text("")
     except:
         print(traceback.format_exc())
     
 def load_piece():
     global piece_filepath
-    autolog(piece_filepath)
+    log_print(piece_filepath)
     try:
         with open(piece_filepath, "r") as file:
             piece_code = file.read()
@@ -225,7 +225,7 @@ def load_piece():
             load_ui()
         if piece_is_html():
             piece_uri = pathlib.Path(piece_filepath).resolve().parent.as_uri()
-            autolog("load_piece: uri: {}".format(piece_uri))
+            log_print("load_piece: uri: {}".format(piece_uri))
             webview.load_html(get_piece_code(), piece_uri)            
         main_window.set_title(piece_filepath)
     except:
@@ -248,7 +248,7 @@ def get_control_value(control):
     return channel_value
     
 def set_control_value(control, value):
-    autolog("control: {} value: {}".format(control, value))
+    log_print("control: {} value: {}".format(control, value))
     if isinstance(control, Gtk.Switch):
         control.set_state(value)
     elif isinstance(control, Gtk.ComboBox):
@@ -269,20 +269,20 @@ piece.ui.channels.
 def save_ui():
     global widgets_for_channels
     global values_for_channels
-    autolog(piece_filepath)
+    log_print(piece_filepath)
     try:
         ui_filepath = get_ui_filepath()
-        autolog("ui_filepath: {}".format(ui_filepath))
-        autolog("widgets_for_channels size: {}".format(len(widgets_for_channels)))
+        log_print("ui_filepath: {}".format(ui_filepath))
+        log_print("widgets_for_channels size: {}".format(len(widgets_for_channels)))
         for channel, widget in widgets_for_channels.items():
             channel_value = get_control_value(widget)
             values_for_channels[channel] = channel_value
-            autolog("channel: {} value: {}".format(widget.get_name(), channel_value))
+            log_print("channel: {} value: {}".format(widget.get_name(), channel_value))
         ui_channels_filepath_ = get_ui_channels_filepath()
         with open(ui_channels_filepath_, "w") as file:
             file.write(json.dumps(values_for_channels))
     except:
-        autoexception("Failed to save UI.")
+        log_exception("Failed to save UI.")
         
 '''
 For only those widgets and those signals that are used here to control Csound 
@@ -297,7 +297,7 @@ def connect_controls(container, on_control_changed_):
     for child in children:
         channel_name = child.get_name()
         channel_value = get_control_value(child)
-        autolog("Connecting GTK widget '{}' to Csound control channel '{}'".format(type(child).__name__, channel_name))
+        log_print("Connecting GTK widget '{}' to Csound control channel '{}'".format(type(child).__name__, channel_name))
         if isinstance(child, Gtk.ComboBox):
             child.connect("changed", on_control_changed_, 1.)
             widgets_for_channels[channel_name] = child
@@ -345,32 +345,32 @@ def on_control_change(control, data, user=None):
         channel_value = get_control_value(control)
         # Prevent premature definition of control channels.
         if csound.IsPlaying() == False:
-            autolog("channel: {} value: {}".format(channel_name, channel_value))
+            log_print("channel: {} value: {}".format(channel_name, channel_value))
         else:
             if isinstance(control, Gtk.ToggleButton):
-                autolog("ToggleButton:  setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                log_print("ToggleButton:  setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
                 csound.SetControlChannel(channel_name, channel_value)
             elif isinstance(control, Gtk.ComboBox):
                 channel_value = control.get_active_id()
-                autolog("Combo box:     SetStringChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                log_print("Combo box:     SetStringChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
                 csound.SetStringChannel(channel_name, channel_value)
             elif isinstance(control, Gtk.Button):
                 channel_value = float(data)
-                autolog("Button:        setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                log_print("Button:        setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
                 csound.SetControlChannel(channel_name, channel_value)
             elif isinstance(control, Gtk.MenuItem):
                 channel_value = data
-                autolog("MenuItem:      setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                log_print("MenuItem:      setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
                 csound.SetControlChannel(channel_name, channel_value)
             elif isinstance(control, Gtk.Scale):
-                autolog("Scale:         setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                log_print("Scale:         setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
                 csound.SetControlChannel(channel_name, channel_value)
             #~ elif isinstance(control, Gtk.SpinButton):
                 #~ channel_value = control.get_value()
                 #~ csound.SetControlChannel(channel_name, channel_value)
             elif isinstance(control, Gtk.Editable):
                 channel_value = control.get_text()
-                autolog("Editable:      SetStringChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                log_print("Editable:      SetStringChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
                 csound.SetStringChannel(channel_name, channel_value)
             values_for_channels[channel_name] = channel_value
     except:
@@ -392,7 +392,7 @@ def load_ui():
     global piece_filepath
     global widgets_for_channels
     global values_for_channels
-    autolog(piece_filepath)
+    log_print(piece_filepath)
     ui_filepath = get_ui_filepath()
     if os.path.exists(ui_filepath) == True:
         try:
@@ -400,7 +400,7 @@ def load_ui():
                 ui_text = file.read()
             result = builder.add_from_string(ui_text)
             user_controls_layout = builder.get_object("user_controls_layout")
-            autolog("user_controls_layout: {}".format(user_controls_layout))
+            log_print("user_controls_layout: {}".format(user_controls_layout))
             children = controls_layout.get_children()
             for child in children:
                 if child.get_name() == "user_controls_layout":
@@ -408,7 +408,7 @@ def load_ui():
             controls_layout.add(user_controls_layout)
             widgets_for_channels.clear()
             connect_controls(controls_layout, on_control_change)
-            autolog("widgets_for_channels size: {}".format(len(widgets_for_channels)))
+            log_print("widgets_for_channels size: {}".format(len(widgets_for_channels)))
             ui_channels_filepath = get_ui_channels_filepath()
             if os.path.exists(ui_channels_filepath) == True:
                 with open(ui_channels_filepath, "r") as file:
@@ -420,14 +420,14 @@ def load_ui():
                             if widget:
                                 set_control_value(widget, value)
         except:
-            autolog("Error: failed to load user-defined controls layout.")
+            log_print("Error: failed to load user-defined controls layout.")
             print(traceback.format_exc())
     else:
-        autolog("UI file not found, not defining controls.")
+        log_print("UI file not found, not defining controls.")
 
 def on_open_button_clicked(button):
     global piece_filepath
-    autolog("Opening a file...")
+    log_print("Opening a file...")
     try:
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
             parent=None, 
@@ -451,7 +451,7 @@ def get_piece_code():
    
 def save_piece():
     global piece_filepath
-    autolog(piece_filepath)
+    log_print(piece_filepath)
     try:
         with open(piece_filepath, "w") as file:
             file.write(get_piece_code())
@@ -463,7 +463,7 @@ def save_piece():
         
 def on_save_button_clicked(button):
     global piece_filepath
-    autolog(piece_filepath)
+    log_print(piece_filepath)
     try:
         save_piece()
     except:
@@ -471,7 +471,7 @@ def on_save_button_clicked(button):
     
 def on_save_as_button_clicked(button):
     global piece_filepath
-    autolog("saving %s as...".format(piece_filepath))
+    log_print("saving %s as...".format(piece_filepath))
     old_ui_filepath = get_ui_filepath()
 
     try:
@@ -495,7 +495,7 @@ def on_save_as_button_clicked(button):
 def on_play_audio_button_clicked(button):
     global piece_filepath
     global values_for_channels
-    autolog(piece_filepath)
+    log_print(piece_filepath)
     try:
         save_piece()
         if piece_is_python():
@@ -509,21 +509,21 @@ def on_play_audio_button_clicked(button):
             csound.CompileCsdText(csd)
             csound.Start()
             load_ui()
-            autolog("Restoring {} channels...".format(len(values_for_channels)))
+            log_print("Restoring {} channels...".format(len(values_for_channels)))
             for name, value in values_for_channels.items():
-                autolog("initialize channel: {} value {} {}".format(name, value, type(value)))
+                log_print("initialize channel: {} value {} {}".format(name, value, type(value)))
                 if isinstance(value, str):
                     csound.SetStringChannel(name, value)
                 else:
                     csound.SetControlChannel(name, value)
             csound.Perform()
     except:
-        autoexception("")
+        log_exception("")
         
 def on_render_soundfile_button_clicked(button):
     global piece_filepath
     global values_for_channels
-    autolog(piece_filepath)
+    log_print(piece_filepath)
     try:
         save_piece()
         if piece_is_csound():
@@ -531,9 +531,9 @@ def on_render_soundfile_button_clicked(button):
             csound.CompileCsdText(csd)
             csound.Start()
             load_ui()
-            autolog("Restoring {} channels...".format(len(values_for_channels)))
+            log_print("Restoring {} channels...".format(len(values_for_channels)))
             for name, value in values_for_channels.items():
-                autolog("initialize channel: {} value {} {}".format(name, value, type(value)))
+                log_print("initialize channel: {} value {} {}".format(name, value, type(value)))
                 csound.SetControlChannel(name, value)
             # Keep the UI responsive during performance.
             while csound.PerformBuffer() == 0:
@@ -548,7 +548,7 @@ def on_render_soundfile_button_clicked(button):
         
 def on_stop_button_clicked(button):
     global piece_filepath
-    autolog(piece_filepath)
+    log_print(piece_filepath)
     try:
         csound.Stop()
         csound.Join()
@@ -560,7 +560,7 @@ def on_stop_button_clicked(button):
         
 def post_process():
     global piece_filepath
-    autolog(piece_filepath)
+    log_print(piece_filepath)
     try:
         cwd = os.getcwd()
         print('cwd:                    ' + cwd)
@@ -656,7 +656,7 @@ def patch_csound_options(csd, output="soundfile"):
     -M --midi-device
     -Q
     '''
-    autolog("output: " + output)
+    log_print("output: " + output)
     options_start_index = csd.find("<CsOptions>") + len("<CsOptions>")
     options_end_index =  csd.find("</CsOptions>") 
     csd_top = csd[0:options_start_index]
@@ -664,12 +664,12 @@ def patch_csound_options(csd, output="soundfile"):
     csd_options = csd[options_start_index:options_end_index]
     csd_options = csd_options.replace(" -o ", " -o")
     csd_options = csd_options.replace(" --output ", " -output")
-    autolog("csound_options: {}".format(csd_options))
+    log_print("csound_options: {}".format(csd_options))
     csd_bottom = csd[options_end_index:-1]
     csd_options_tokens = csd_options.split()
     for i in range(len(csd_options_tokens)):
         token = csd_options_tokens[i]
-        autolog("token: {}".format(token))
+        log_print("token: {}".format(token))
         if token.startswith("-o"):
             if output == "soundfile":
                 directory, basename = os.path.split(piece_filepath)
@@ -686,19 +686,19 @@ def patch_csound_options(csd, output="soundfile"):
                 csd_options_tokens[i] = token
     csd_options = " ".join(csd_options_tokens)
     patched_csd = "".join([csd_top, "\n", csd_options, "\n", csd_bottom])
-    #autolog("Original csd: {}".format(csd))
-    #autolog("Patched csd: {}".format(csd))
+    #log_print("Original csd: {}".format(csd))
+    #log_print("Patched csd: {}".format(csd))
     return patched_csd
         
 def ui_exit_callback(future):
     global piece_filepath
     ui_filepath = get_ui_filepath()
-    autolog("Finished editing {}.".format(ui_filepath))
+    log_print("Finished editing {}.".format(ui_filepath))
     load_ui()
     
 def on_edit_gui_button_clicked(button):
     global piece_filepath
-    autolog(piece_filepath)
+    log_print(piece_filepath)
     try:
         ui_filepath = get_ui_filepath()
         if os.path.exists(ui_filepath) == False:
@@ -714,7 +714,7 @@ def on_edit_gui_button_clicked(button):
 
 def on_save_gui_button_clicked(button):
     global piece_filepath
-    autolog(piece_filepath)
+    log_print(piece_filepath)
     try:
         save_ui()
     except:
@@ -722,7 +722,7 @@ def on_save_gui_button_clicked(button):
             
 def on_destroy(source):
     global piece_filepath
-    autolog(piece_filepath)
+    log_print(piece_filepath)
     csound.Stop()
     csound.Join()
     csound.Cleanup()
@@ -825,7 +825,7 @@ def on_apply_scheme_button(widget):
     code_editor.get_buffer().set_style_scheme(scheme)
     
 def on_initialize_web_extensions(web_context):
-    autolog("on_initialize_web_extensions: {}".format(web_context))
+    log_print("on_initialize_web_extensions: {}".format(web_context))
     web_context.set_web_extensions_directory("/home/mkg/csound-extended/playpen/")
     user_data_ = GLib.Variant.new_uint64(int(csound.GetCsound()))
     user_data_.ref_sink()
@@ -934,9 +934,9 @@ class ConsoleMessageCaptor():
             # Create a stream handler so the Logger will use this object.
             stream_handler = logging.StreamHandler(stream = self)
             logging.getLogger().addHandler(stream_handler)
-            # Redirect the C runtime stderr to this object by means of a pipe.
+            # Also, redirect the C runtime stderr to this object by means of a pipe.
             self.stderr_pipe_read, self.stderr_pipe_write = os.pipe()
-            autolog("os.dup2(self.stderr_pipe_write: {}, self.original_stderr_fd: {})".format(self.stderr_pipe_write, self.original_stderr_fd))
+            log_print("os.dup2(self.stderr_pipe_write: {}, self.original_stderr_fd: {})".format(self.stderr_pipe_write, self.original_stderr_fd))
             os.dup2(self.stderr_pipe_write, self.original_stderr_fd) 
             def message_callback(fd, condition, self):
                 if condition == GLib.IO_IN:
