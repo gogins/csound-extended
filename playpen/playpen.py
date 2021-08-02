@@ -37,10 +37,11 @@ If you want to write a piece that combines different languages, e.g. a Csound
 orchestra with a Python score generator with HTML for display or control, then 
 write a Python piece that embeds the Csound code and the HTML code as 
 variables containing multiple line strings, and then call functions in the 
-playpen program to set up the GUI and control the piece. All functions defined 
+playpen program to set up the GUI and control the piece. All symbols defined 
 in the playpen (below) are in the scope of a Python piece.
 '''
 
+import concurrent.futures
 import ctypes
 import datetime
 import inspect
@@ -55,6 +56,7 @@ import pdb
 import queue
 import random
 import shutil
+import subprocess
 import string
 import sys
 import threading
@@ -71,7 +73,7 @@ def log_print(message):
     # Get the previous frame in the stack, otherwise it would
     # be this function!!!
     caller = inspect.currentframe().f_back.f_code
-    # Dump the message + the name of this function to the log.
+    #~ # Dump the message + the name of this function to the log.
     logging.debug("%s in %s:%i %s" % (
         caller.co_name, 
         caller.co_filename, 
@@ -208,7 +210,7 @@ def on_new_button_clicked(button):
         code_editor.get_buffer().set_text("")
     except:
         print(traceback.format_exc())
-    
+
 def load_piece():
     global piece_filepath
     log_print(piece_filepath)
@@ -495,6 +497,8 @@ def on_save_as_button_clicked(button):
 def on_play_audio_button_clicked(button):
     global piece_filepath
     global values_for_channels
+    #file_handler = logging.FileHandler(piece_filepath + ".log")
+    #logging.getLogger().addHandler(file_handler)
     log_print(piece_filepath)
     try:
         save_piece()
@@ -916,36 +920,42 @@ messages_text_view.override_background_color(0,  Gdk.RGBA(0.1, 0.1, 0.1, 1))
 messages_text_view_buffer = messages_text_view.get_buffer()
 
 """
+NOTE: Currently not working.
+
 Intercepts sys.stdout, sys.stderr, and the C runtime library's stderr (which 
 is used by Csound's runtime messages), and sends their streams to the messages 
 TextView in this program.
 
-This will also work for any other code or library writing to Python's stdout or 
+That also works for any other code or library writing to Python's stdout or 
 stderr, or to the C runtime stderr, and this is done in place of implementing  
 message callbacks for every possible language.
 """
 class ConsoleMessageCaptor():
     def __init__(self, text_view):
+        threading.Thread.__init__(self)
         try:
             self.original_stdout = sys.stdout
             self.original_stderr = sys.stderr
             self.original_stderr_fd = self.original_stderr.fileno()
+            #sys.stdout = self
+            #sys.stderr = self        
             self.gtk_text_view = text_view
             self.gtk_buffer = self.gtk_text_view.get_buffer()
             # Redirect Python's stdout and stderr to this object.
-            sys.stdout = self
-            sys.stderr = self        
             # Create a stream handler so the Logger will use this object.
             stream_handler = logging.StreamHandler(stream = self)
             logging.getLogger().addHandler(stream_handler)
-            # Also, redirect the C runtime stderr to this object by means of a pipe.
+            # Redirect the C runtime stderr to this object by means of a pipe.
             self.stderr_pipe_read, self.stderr_pipe_write = os.pipe()
             log_print("os.dup2(self.stderr_pipe_write: {}, self.original_stderr_fd: {})".format(self.stderr_pipe_write, self.original_stderr_fd))
             os.dup2(self.stderr_pipe_write, self.original_stderr_fd) 
-            def message_callback(fd, condition, self):
+            stringio = io.StringIO()
+            def message_callback(channel, condition, self):
                 if condition == GLib.IO_IN:
-                    line = fd.readline()
-                    self.write(line)
+                    data = channel.readline()
+                    fd = channel.unix_get_fd()
+                    bytes = os.read(fd, 8)   
+                    print("data: {}".format(bytes))
                 return True        
             self.read_channel = GLib.IOChannel.unix_new(self.stderr_pipe_read)
             self.read_channel.add_watch(GLib.IO_IN, message_callback, self)
@@ -954,16 +964,23 @@ class ConsoleMessageCaptor():
     # Called in place of process stdout or stderr.
     def write(self, data):
         self.gtk_buffer.insert(self.gtk_buffer.get_end_iter(), data, -1)
-        Gtk.main_iteration_do(False)
+        # Gtk.main_iteration_do(False)
         self.gtk_text_view.scroll_to_mark(self.gtk_buffer.get_insert(), 0.0, True, 0.5, 0.5)
-        Gtk.main_iteration_do(False)
+        #Gtk.main_iteration_do(False)
     def flush(self):
         pass
     def close(self):
         sys.stdout = self.stdout
         sys.stderr = self.stderr
-        
-captor = ConsoleMessageCaptor(messages_text_view)
+  
+# This currently causes a deadlock if there are very many widgets in the user 
+# controls layout.        
+# captor = ConsoleMessageCaptor(messages_text_view)
+
+# Therefore, we currently hide the messages pane by moving it far below the 
+# viewport.
+main_pane = builder.get_object("main_pane")
+main_pane.set_position(1000000)
 
 def set_verbosity(verbosity):
     if verbosity == True:
