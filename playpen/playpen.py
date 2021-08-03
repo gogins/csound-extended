@@ -213,7 +213,7 @@ def on_new_button_clicked(button):
 
 def load_piece():
     global piece_filepath
-    log_print(piece_filepath)
+    log_print("Loading: {}".format(piece_filepath))
     try:
         with open(piece_filepath, "r") as file:
             piece_code = file.read()
@@ -380,8 +380,7 @@ def on_control_change(control, data, user=None):
 
 def get_ui_filepath():   
     global piece_filepath
-    pathlib_ = pathlib.PurePath(piece_filepath)
-    ui_filepath = str(pathlib_.with_suffix(".ui"))
+    ui_filepath = os.path.splitext(piece_filepath)[0] + ".ui"
     return ui_filepath
     
 def get_ui_channels_filepath():
@@ -396,6 +395,7 @@ def load_ui():
     global values_for_channels
     log_print(piece_filepath)
     ui_filepath = get_ui_filepath()
+    log_print("Loading UI: {}".format(ui_filepath))
     if os.path.exists(ui_filepath) == True:
         try:
             with open(ui_filepath, "r") as file:
@@ -475,7 +475,6 @@ def on_save_as_button_clicked(button):
     global piece_filepath
     log_print("saving %s as...".format(piece_filepath))
     old_ui_filepath = get_ui_filepath()
-
     try:
         file_chooser_dialog = Gtk.FileChooserDialog(title="Please enter a filename", 
             parent=None, 
