@@ -58,8 +58,6 @@ export PATH=/usr/local/lib/nodejs/node-$NODEJS_VERSION-$NODEJS_DISTRO/bin:$PATH
 unset NODE_ADDON_API_INCLUDE
 export NODE_ADDON_API_INCLUDE=/usr/local/lib/nodejs/node-$NODEJS_VERSION-$NODEJS_DISTRO/lib/node_modules/node-addon-api
 
-alias python=python3
-
 unset EMSCRIPTEN_ROOT
 export EMSCRIPTEN_ROOT=/home/mkg/emsdk/upstream/emscripten
 
@@ -80,7 +78,7 @@ export APULSE_PLAYBACK_DEVICE=plughw:1,0
 unset APULSE_CAPTURE_DEVICE
 export APULSE_CAPTURE_DEVICE=plughw:1,0
 
-alias python='/usr/bin/python3.9'
+#alias python='/usr/bin/python3.9'
 
 echo $PATH
 python --version
@@ -93,3 +91,5 @@ env | grep NODE
 env | grep OPCODE
 env | grep PYTHON
 env | grep RAW
+
+gnome-terminal

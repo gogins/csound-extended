@@ -998,7 +998,7 @@ public:
      * NOTE: The code here does NOT remove duplicate pitch-classes.
      * "Normal order" is the most compact ordering to the left of 
      * pitch-classes in a chord, measured by pitch-class interval.
-      */
+     */
     virtual Chord normal_order() const;
     /**
      * Performs the dominant transformation (which is not a neo-Reimannian 
@@ -1026,7 +1026,7 @@ public:
      */
     virtual Chord nrP() const;
     /**
-     * Performs the neo-Riemannian parallel transformation..
+     * Performs the neo-Riemannian parallel transformation.
      */
     virtual Chord nrR() const;
     /**
