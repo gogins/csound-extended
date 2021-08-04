@@ -1026,7 +1026,7 @@ public:
      */
     virtual Chord nrP() const;
     /**
-     * Performs the neo-Riemannian parallel transformation..
+     * Performs the neo-Riemannian parallel transformation.
      */
     virtual Chord nrR() const;
     /**

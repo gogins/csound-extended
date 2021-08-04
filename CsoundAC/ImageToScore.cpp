@@ -27,7 +27,6 @@
 #include <FL/Fl_PNM_Image.H>
 #include <FL/Fl_XPM_Image.H>
 #include <FL/Fl_GIF_Image.H>
-///#include <FL/Fl_BMP_Image.H>
 #include <FL/Fl_PNG_Image.H>
 #include <FL/Fl_JPEG_Image.H>
 #include <cmath>
