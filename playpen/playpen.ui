@@ -264,17 +264,6 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton" id="replace_all_button">
-                            <property name="label" translatable="yes">Replace all</property>
-                            <property name="visible">True</property>
-                            <property name="can-focus">True</property>
-                            <property name="receives-default">True</property>
-                          </object>
-                          <packing>
-                            <property name="position">5</property>
-                          </packing>
-                        </child>
-                        <child>
                           <object class="GtkEntry" id="replacement_entry">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
@@ -307,6 +296,17 @@
                           </object>
                           <packing>
                             <property name="position">7</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="replace_all_button">
+                            <property name="label" translatable="yes">Replace all</property>
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
+                          </object>
+                          <packing>
+                            <property name="position">5</property>
                           </packing>
                         </child>
                       </object>
@@ -469,6 +469,31 @@
                   </object>
                   <packing>
                     <property name="position">4</property>
+                    <property name="tab-fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow" id="csound_ac_help_window">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="shadow-type">in</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">5</property>
+                  </packing>
+                </child>
+                <child type="tab">
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="valign">start</property>
+                    <property name="label" translatable="yes">CsoundAC help</property>
+                  </object>
+                  <packing>
+                    <property name="position">5</property>
                     <property name="tab-fill">False</property>
                   </packing>
                 </child>

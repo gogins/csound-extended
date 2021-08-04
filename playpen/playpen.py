@@ -537,7 +537,10 @@ def on_render_soundfile_button_clicked(button):
             log_print("Restoring {} channels...".format(len(values_for_channels)))
             for name, value in values_for_channels.items():
                 log_print("initialize channel: {} value {} {}".format(name, value, type(value)))
-                csound.SetControlChannel(name, value)
+                if isinstance(value, str):
+                    csound.SetStringChannel(name, value)
+                else:
+                    csound.SetControlChannel(name, value)
             # Keep the UI responsive during performance.
             while csound.PerformBuffer() == 0:
                 Gtk.main_iteration_do(False)
@@ -869,6 +872,12 @@ csound_help_window = builder.get_object("csound_help_window")
 csound_helpview = WebKit2.WebView() 
 csound_helpview.load_uri("https://csound.com/docs/manual/indexframes.html")
 csound_help_window.add(csound_helpview)
+csound_ac_help_window = builder.get_object("csound_ac_help_window")
+csound_ac_helpview = WebKit2.WebView() 
+csound_ac_help_window.add(csound_ac_helpview)
+csound_ac_helpview.load_uri("file:///home/mkg/csound-extended/doc/html/index.html")
+csound_ac_help_window.add(csound_ac_help_window)
+
 main_window.resize(4 * 800, 3 * 800)
 new_button = builder.get_object("new_button")
 new_button.connect("clicked", on_new_button_clicked)
