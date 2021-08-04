@@ -875,7 +875,7 @@ csound_help_window.add(csound_helpview)
 csound_ac_help_window = builder.get_object("csound_ac_help_window")
 csound_ac_helpview = WebKit2.WebView() 
 csound_ac_help_window.add(csound_ac_helpview)
-csound_ac_helpview.load_uri("file:///home/mkg/csound-extended/doc/html/index.html")
+csound_ac_helpview.load_uri("file:///home/mkg/csound-extended/doc/html/inherits.html")
 csound_ac_help_window.add(csound_ac_help_window)
 
 main_window.resize(4 * 800, 3 * 800)
