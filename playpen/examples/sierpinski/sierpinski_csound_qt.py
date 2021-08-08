@@ -37,8 +37,6 @@ from musx import Score, Note, Seq, MidiFile, keynum
 import CsoundThreaded
 import traceback
 
-global values_for_channels
-
 try:
     print("Csound was found.")
     csound
@@ -97,13 +95,13 @@ score.compose(sierpinski(score, musx.keynum('a0'), [0, -1, 3, 11], 12, 5, 24, .5
 #score.compose(sierpinski(score, 24., [0, -1, 2, 13], 12, 5, 24, .5))
 
 # Write the tracks to a midi file in the current directory.
-file = MidiFile("sierpinski.mid", [track0, track1]).write()
-print(f"Wrote '{file.pathname}'.")
+midi_file = MidiFile("sierpinski.mid", [track0, track1]).write()
+print(f"Wrote '{midi_file.pathname}'.")
 
 # To automatially play demos use setmidiplayer() and playfile().
 # Example:
 #     setmidiplayer("fluidsynth -iq -g1 /usr/local/sf/MuseScore_General.sf2")
-#     playfile(file.pathname)  
+#     playfile(midi_file.pathname)  
 
 # Now the Csound stuff.
 
@@ -250,78 +248,173 @@ endin
 
 '''    
 
-def on_play(state):
-    print("Play button was clicked: state: {}...".format(state))
-    # The "f 0" statement prevents an abrupt cutoff.
-    sco = "f 0 105\n" + musx.to_csound_score(file)
-    print(sco)
+# Boilerplate code for generating and running the user interface from a UI
+# file.
 
-    csound.SetOption("-+msg_color=0")
-    csound.SetOption("-d")
-    csound.SetOption("-m195")
-    csound.SetOption("-f")
-    # Change this for your actual audio configuration, try "aplay -l" to see what they are.
-    csound.SetOption("-odac:plughw:2,0")
-    # Can also be a soundfile.
-    # csound.setOption("-otest.wav")
-    csound.CompileOrc(orc)
-    csound.Start()
-    #~ for channel, value in values_for_channels.items():
-        #~ print(channel, value)
-        #~ csound.SetControlChannel(channel, value)
-    csound.ReadScore(sco)
-    csound.Perform()
-    # Scsound.Join()
-    
-def on_stop(state):
-    csound.Stop()
-    csound.Join()
-    
-def on_save(state):
-    pass
-
-def on_restore(state):
-    pass
-    
-def on_controller_changed(value, **kwargs):
-    print(value)
-    print(kwargs)
-    
-
-# Boilerplate code for generating and running the working UI
-"""
-Saves the current values of all Csound control channel widgets in 
-piece.ui.channels.
-"""
-def save_ui():
-    global widgets_for_channels
-    global values_for_channels
-    log_print(piece_filepath)
-    try:
-        ui_filepath = get_ui_filepath()
-        log_print("ui_filepath: {}".format(ui_filepath))
-        log_print("widgets_for_channels size: {}".format(len(widgets_for_channels)))
-        for channel, widget in widgets_for_channels.items():
-            channel_value = get_control_value(widget)
-            values_for_channels[channel] = channel_value
-            log_print("channel: {} value: {}".format(widget.get_name(), channel_value))
-        ui_channels_filepath_ = get_ui_channels_filepath()
-        with open(ui_channels_filepath_, "w") as file:
-            file.write(json.dumps(values_for_channels))
-    except:
-        log_exception("Failed to save UI.")
-        
+import json
 import os
 import sys
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import QObject, QFile, QIODevice, SIGNAL, SLOT
+from PySide6.QtCore import QObject, QFile, QIODevice, QEventLoop
 
 piece_filepath = os.path.splitext(sys.argv[0])[0]
 print("piece_filepath: {}".format(piece_filepath))
 piece_ui_filepath = piece_filepath + ".ui"
 print("piece_ui_filepath: {}".format(piece_ui_filepath))
+piece_ui_channels_filepath = piece_ui_filepath + ".channels"
+print("piece_ui_channels_filepath: {}".format(piece_ui_channels_filepath))
+piece_output_soundfile = piece_filepath + ".wav"
+print("piece_output_soundfile: {}".format(piece_output_soundfile))
+audio_output = "dac:plughw:2,0"
 
+def on_play():
+    print("on_play...")
+    # The "f 0" statement prevents an abrupt cutoff.
+    sco = "f 0 105\n" + musx.to_csound_score(midi_file)
+    csound.SetOption("-+msg_color=0")
+    csound.SetOption("-d")
+    csound.SetOption("-m195")
+    csound.SetOption("-f")
+    csound.SetOption("-o" + audio_output)
+    csound.CompileOrc(orc)
+    csound.Start()
+    for channel, value in values_for_names.items():
+        print(channel, value)
+        csound.SetControlChannel(channel, value)
+    csound.ReadScore(sco)
+    csound.Perform()
+    
+    
+def on_render():
+    print("on_render...")
+    # The "f 0" statement prevents an abrupt cutoff.
+    sco = "f 0 105\n" + musx.to_csound_score(midi_file)
+    csound.SetOption("-+msg_color=0")
+    csound.SetOption("-d")
+    csound.SetOption("-m195")
+    csound.SetOption("-f")
+    csound.SetOption("-o" + piece_output_soundfile)
+    csound.CompileOrc(orc)
+    csound.Start()
+    for channel, value in values_for_names.items():
+        print(channel, value)
+        csound.SetControlChannel(channel, value)
+    csound.ReadScore(sco)
+    while True:
+        result = csound.PerformKsmps()
+        if result == True:
+            break
+        application.processEvents(QEventLoop.AllEvents, 1)
+    csound.Cleanup()
+    csound.Reset()
+    post_process()
+    
+def on_stop():
+    print("on_stop...")
+    csound.Stop()
+    csound.Join()
+    csound.Cleanup()
+    csound.Reset()
+    
+def on_save(state):
+    print("on_save...")      
+    with open(piece_ui_channels_filepath, "w") as file:
+        file.write(json.dumps(values_for_names))
+  
+def on_restore(state):
+    print("on_restore...")
+    
+def post_process():
+    print(piece_filepath)
+    try:
+        cwd = os.getcwd()
+        print('cwd:                    ' + cwd)
+        author = metadata_author #'Michael Gogins'
+        year = metadata_year #'2021'
+        license = metadata_license #'ASCAP'
+        publisher = metadata_publisher #'Irreducible Productions, ASCAP'
+        notes = metadata_notes #'Electroacoustic Music'
+
+        directory, basename = os.path.split(piece_filepath)
+        rootname = os.path.splitext(basename)[0].split('.')[0]
+        soundfile_name = rootname + ".wav"
+        title = rootname.replace("-", " ").replace("_", " ")
+        label = '{} -- {}'.format(author, title).replace(" ", "_")
+        master_filename = '{}.normalized.wav'.format(label)
+        spectrogram_filename = '%s.png' % label
+        cd_quality_filename = '%s.cd.wav' % label
+        mp3_filename = '%s.mp3' % label
+        mp4_filename = '%s.mp4' % label
+        flac_filename = '%s.flac' % label
+        print('Basename:               ' + basename)
+        print('Original soundfile:     ' + soundfile_name)
+        print('Author:                 ' + author)
+        print('Title:                  ' + title)
+        print('Year:                   ' + year)
+        str_copyright          = 'Copyright %s by %s' % (year, author)
+        print('Copyright:              ' + str_copyright)
+        print('Licence:                ' + license)
+        print('Publisher:              ' + publisher)
+        print('Notes:                  ' + notes)
+        print('Master filename:        ' + master_filename)
+        print('Spectrogram filename:   ' + spectrogram_filename)
+        print('CD quality filename:    ' + cd_quality_filename)
+        print('MP3 filename:           ' + mp3_filename)
+        print('MP4 filename:           ' + mp4_filename)
+        print('FLAC filename:          ' + flac_filename)
+        bext_description       = notes
+        bext_originator        = author
+        bext_orig_ref          = basename
+        #bext_umid              = xxx
+        #bext_orig_date         = xxx
+        #bext_orig_time         = xxx
+        #bext_coding_hist       = xxx
+        #bext_time_ref          = xxx
+        str_comment            = notes
+        str_title              = title
+        str_artist             = author
+        str_date               = year
+        str_license            = license
+        sox_normalize_command = '''sox -S "%s" "%s" gain -n -3''' % (soundfile_name, master_filename + 'untagged.wav')
+        print('sox_normalize command:  ' + sox_normalize_command)
+        os.system(sox_normalize_command)
+        tag_wav_command = '''sndfile-metadata-set "%s" --bext-description "%s" --bext-originator "%s" --bext-orig-ref "%s" --str-comment "%s" --str-title "%s" --str-copyright "%s" --str-artist  "%s" --str-date "%s" --str-license "%s" "%s"''' % (master_filename + 'untagged.wav', bext_description, bext_originator, bext_orig_ref, str_comment, str_title, str_copyright, str_artist, str_date, str_license, master_filename)
+        print('tag_wav_command:        ' + tag_wav_command)
+        os.system(tag_wav_command)
+        sox_spectrogram_command = '''sox -S "%s" -n spectrogram -o "%s" -t"%s" -c"%s"''' % (master_filename, spectrogram_filename, label, str_copyright + ' (%s' % publisher)
+        print('sox_spectrogram_command:' + sox_spectrogram_command)
+        os.system(sox_spectrogram_command)
+        sox_cd_command = '''sox -S "%s" -b 16 -r 44100 "%s"''' % (master_filename, cd_quality_filename + 'untagged.wav')
+        print('sox_cd_command:         ' + sox_cd_command)
+        os.system(sox_cd_command)
+        tag_wav_command = '''sndfile-metadata-set "%s" --bext-description "%s" --bext-originator "%s" --bext-orig-ref "%s" --str-comment "%s" --str-title "%s" --str-copyright "%s" --str-artist  "%s" --str-date "%s" --str-license "%s" "%s"''' % (cd_quality_filename + 'untagged.wav', bext_description, bext_originator, bext_orig_ref, str_comment, str_title, str_copyright, str_artist, str_date, str_license, cd_quality_filename)
+        print('tag_wav_command:        ' + tag_wav_command)
+        os.system(tag_wav_command)
+        mp3_command = '''lame --add-id3v2 --tt "%s" --ta "%s" --ty "%s" --tn "%s" --tg "%s"  "%s" "%s"''' % (title, "Michael Gogins", year, notes, "Electroacoustic", master_filename, mp3_filename)
+        print('mp3_command:            ' + mp3_command)
+        os.system(mp3_command)
+        sox_flac_command = '''sox -S "%s" "%s"''' % (master_filename, flac_filename)
+        print('sox_flac_command:       ' + sox_flac_command)
+        os.system(sox_flac_command)
+        mp4_command = '''%s -r 1 -i "%s" -i "%s" -codec:a aac -strict -2 -b:a 384k -c:v libx264 -b:v 500k "%s"''' % ('ffmpeg', os.path.join(cwd, spectrogram_filename), os.path.join(cwd, master_filename), os.path.join(cwd, mp4_filename))
+        mp4_metadata =  '-metadata title="%s" ' % title
+        mp4_metadata += '-metadata date="%s" ' % year
+        mp4_metadata += '-metadata genre="%s" ' % notes
+        mp4_metadata += '-metadata copyright="%s" ' % str_copyright
+        mp4_metadata += '-metadata composer="%s" ' % author
+        mp4_metadata += '-metadata artist="%s" ' % author
+        mp4_metadata += '-metadata publisher="%s" ' % publisher
+        mp4_command = '''"%s" -y -loop 1 -framerate 2 -i "%s" -i "%s" -c:v libx264 -preset medium -tune stillimage -crf 18 -codec:a aac -strict -2 -b:a 384k -r:a 48000 -shortest -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" %s "%s"''' % ('ffmpeg', os.path.join(cwd, spectrogram_filename), os.path.join(cwd, master_filename), mp4_metadata, os.path.join(cwd, mp4_filename))
+        mp4_command = mp4_command.replace('\\', '/')
+        print('mp4_command:            ' + mp4_command)
+        os.system(mp4_command)
+        os.system('del *wavuntagged.wav')
+        os.system('{} {}'.format(soundfile_editor, master_filename))
+        print("")
+    except:
+        traceback.print_exc()
+    
 application = QApplication(sys.argv)
 ui_file = QFile(piece_ui_filepath)
 if not ui_file.open(QIODevice.ReadOnly):
@@ -335,7 +428,7 @@ if not main_window:
     print(loader.errorString())
     sys.exit(-1)
     
-controllers_for_names = {}
+widgets_for_names = {}
 values_for_names = {}
 
 class Controller(QObject):
@@ -344,27 +437,34 @@ class Controller(QObject):
         self.widget = widget
         self.channel_name = channel_name
         self.csound = csound
-        controllers_for_names[self.channel_name] = self
+        widgets_for_names[self.channel_name] = self
     def on_change(self, value):
         value = value / 100.
         self.csound.SetControlChannel(self.channel_name, value)
+        values_for_names[self.channel_name] = value
+        print("on_change: {}: {}".format(self.channel_name, value))
     def get_value(self):
         return self.widget.getValue()
     def set_value(self, value):
         self.widget.setValue(value)
        
 def connect_channel(widget, channel_name, csound):
+    if channel_name.startswith("g") != True:
+        print("Not connecting {} because {} is not a Csound control channel.".format(widget, channel_name))
+        return
     controller = Controller(widget, channel_name, csound)
     widget.valueChanged.connect(controller.on_change)
                       
 main_window.show()
     
-# End of boilerplate code. Signals are connected to slots below.
+main_window.actionPlay.triggered.connect(on_play)
+main_window.actionRender.triggered.connect(on_render)
+main_window.actionStop.triggered.connect(on_stop)
+main_window.actionSave.triggered.connect(on_save)
+main_window.actionRestore.triggered.connect(on_restore)
 
-main_window.play_button.clicked.connect(on_play)
-main_window.stop_button.clicked.connect(on_stop)
-main_window.save_button.clicked.connect(on_stop)
-main_window.restore_button.clicked.connect(on_restore)
+# End of boilerplate code. Each Csound control widget uses one signal/slot.
+
 connect_channel(main_window.gk_Reverb_feedback, "gk_Reverb_feedback", csound)
 
 # Actually run the piece.
