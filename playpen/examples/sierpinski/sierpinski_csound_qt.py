@@ -1,6 +1,17 @@
 '''
 This piece demonstrates the use of PySide6 to create a Csound piece with a 
-graphical user interface created in Qt Designer and implemented with PySide6.
+graphical user interface created in Qt Designer.
+
+There is a strict naming pattern:
+
+1.  piece.py must have a UI defined in piece.ui. This is what the SciTE custom 
+    command creates and edits.
+2.  Some boilerplate code is used to load and realize the UI.
+3.  The user must define Python functions as slots that are connected to 
+    the signal fields of the PySide6 widgets.
+4.  The piece must observe a distinction between performance controls that 
+    must all be handled in a single slot, and the controls that start and 
+    stop the performance, which 
 '''
 
 # The actual piece follows below and is wired into the UI.
@@ -24,6 +35,7 @@ which will cause the recursive process to stop when the value reaches 0.
 import musx
 from musx import Score, Note, Seq, MidiFile, keynum
 import CsoundThreaded
+import traceback
 
 global values_for_channels
 
@@ -238,21 +250,7 @@ endin
 
 '''    
 
-
-# Boilerplate code for generating and running the working UI:
-
-import os
-import sys
-from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import QFile, QIODevice, SIGNAL, SLOT
-
-piece_filepath = os.path.splitext(sys.argv[0])[0]
-print("piece_filepath: {}".format(piece_filepath))
-piece_ui_filepath = piece_filepath + ".ui"
-print("piece_ui_filepath: {}".format(piece_ui_filepath))
-
-def play(state):
+def on_play(state):
     print("Play button was clicked: state: {}...".format(state))
     # The "f 0" statement prevents an abrupt cutoff.
     sco = "f 0 105\n" + musx.to_csound_score(file)
@@ -274,25 +272,105 @@ def play(state):
     csound.ReadScore(sco)
     csound.Perform()
     # Scsound.Join()
+    
+def on_stop(state):
+    csound.Stop()
+    csound.Join()
+    
+def on_save(state):
+    pass
 
+def on_restore(state):
+    pass
+    
+def on_controller_changed(value, **kwargs):
+    print(value)
+    print(kwargs)
+    
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
+# Boilerplate code for generating and running the working UI
+"""
+Saves the current values of all Csound control channel widgets in 
+piece.ui.channels.
+"""
+def save_ui():
+    global widgets_for_channels
+    global values_for_channels
+    log_print(piece_filepath)
+    try:
+        ui_filepath = get_ui_filepath()
+        log_print("ui_filepath: {}".format(ui_filepath))
+        log_print("widgets_for_channels size: {}".format(len(widgets_for_channels)))
+        for channel, widget in widgets_for_channels.items():
+            channel_value = get_control_value(widget)
+            values_for_channels[channel] = channel_value
+            log_print("channel: {} value: {}".format(widget.get_name(), channel_value))
+        ui_channels_filepath_ = get_ui_channels_filepath()
+        with open(ui_channels_filepath_, "w") as file:
+            file.write(json.dumps(values_for_channels))
+    except:
+        log_exception("Failed to save UI.")
+        
+import os
+import sys
+from PySide6.QtUiTools import QUiLoader
+from PySide6.QtWidgets import QApplication
+from PySide6.QtCore import QObject, QFile, QIODevice, SIGNAL, SLOT
 
-    ui_file = QFile(piece_ui_filepath)
-    if not ui_file.open(QIODevice.ReadOnly):
-        print(f"Cannot open {ui_file_name}: {ui_file.errorString()}")
-        sys.exit(-1)
-    loader = QUiLoader()
-    window = loader.load(ui_file)
-    ui_file.close()
-    if not window:
-        print(loader.errorString())
-        sys.exit(-1)
-    window.pushButton.clicked.connect(play)
-    window.show()
+piece_filepath = os.path.splitext(sys.argv[0])[0]
+print("piece_filepath: {}".format(piece_filepath))
+piece_ui_filepath = piece_filepath + ".ui"
+print("piece_ui_filepath: {}".format(piece_ui_filepath))
 
-    sys.exit(app.exec())
+application = QApplication(sys.argv)
+ui_file = QFile(piece_ui_filepath)
+if not ui_file.open(QIODevice.ReadOnly):
+    print(f"Cannot open {ui_file_name}: {ui_file.errorString()}")
+    sys.exit(-1)
+ui_loader = QUiLoader()
+main_window = ui_loader.load(ui_file)
+print("main_window: {} {}".format(main_window, type(main_window)))
+ui_file.close()
+if not main_window:
+    print(loader.errorString())
+    sys.exit(-1)
+    
+controllers_for_names = {}
+values_for_names = {}
+
+class Controller(QObject):
+    def __init__(self, widget, channel_name, csound):
+        QObject.__init__(self)
+        self.widget = widget
+        self.channel_name = channel_name
+        self.csound = csound
+        controllers_for_names[self.channel_name] = self
+    def on_change(self, value):
+        value = value / 100.
+        self.csound.SetControlChannel(self.channel_name, value)
+    def get_value(self):
+        return self.widget.getValue()
+    def set_value(self, value):
+        self.widget.setValue(value)
+       
+def connect_channel(widget, channel_name, csound):
+    controller = Controller(widget, channel_name, csound)
+    widget.valueChanged.connect(controller.on_change)
+                      
+main_window.show()
+    
+# End of boilerplate code. Signals are connected to slots below.
+
+main_window.play_button.clicked.connect(on_play)
+main_window.stop_button.clicked.connect(on_stop)
+main_window.save_button.clicked.connect(on_stop)
+main_window.restore_button.clicked.connect(on_restore)
+connect_channel(main_window.gk_Reverb_feedback, "gk_Reverb_feedback", csound)
+
+# Actually run the piece.
+
+result = application.exec()
+sys.exit(result)
 
 
 
