@@ -7,11 +7,6 @@ There is a strict naming pattern:
 1.  piece.py must have a UI defined in piece.ui. This is what the SciTE custom 
     command creates and edits.
 2.  Some boilerplate code is used to load and realize the UI.
-3.  The user must define Python functions as slots that are connected to 
-    the signal fields of the PySide6 widgets.
-4.  The piece must observe a distinction between performance controls that 
-    must all be handled in a single slot, and the controls that start and 
-    stop the performance, which 
 '''
 
 # The actual piece follows below and is wired into the UI.
@@ -90,8 +85,8 @@ score = Score(out=track1)
 # the length of the melody and the number of levels. For example the
 # first compose() generates 120 events, the second 726, and the third 2728!
 #score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 12, 4, 3, .5))
-#score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 8, 5, 7, .5))
-score.compose(sierpinski(score, musx.keynum('a0'), [0, -1, 3, 11], 12, 5, 24, .5))
+score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 8, 5, 7, .5))
+#score.compose(sierpinski(score, musx.keynum('a0'), [0, -1, 3, 11], 12, 5, 24, .5))
 #score.compose(sierpinski(score, 24., [0, -1, 2, 13], 12, 5, 24, .5))
 
 # Write the tracks to a midi file in the current directory.
@@ -248,15 +243,26 @@ endin
 
 '''    
 
-# Boilerplate code for generating and running the user interface from a UI
-# file.
+# Boilerplate code for generating and running the user interface from a 
+# Qt UI file.
+
+audio_output = "dac:plughw:2,0"
+metadata_author = "Michael Gogins"
+metadata_publisher = "Irreducible Productions"
+metadata_year = "2021"
+metadata_notes = "electroacoustic music"
+metadata_license= "ASCAP"
+soundfile_editor = "audacity"
+channels_for_names = {}
+channel_values_for_names = {}
+
 
 import json
 import os
 import sys
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import QObject, QFile, QIODevice, QEventLoop
+from PySide6.QtWidgets import QApplication, QAbstractSlider, QCheckBox, QAbstractButton, QLineEdit, QComboBox
+from PySide6.QtCore import QObject, QFile, QIODevice, QEventLoop, QCoreApplication, QThread
 
 piece_filepath = os.path.splitext(sys.argv[0])[0]
 print("piece_filepath: {}".format(piece_filepath))
@@ -266,68 +272,93 @@ piece_ui_channels_filepath = piece_ui_filepath + ".channels"
 print("piece_ui_channels_filepath: {}".format(piece_ui_channels_filepath))
 piece_output_soundfile = piece_filepath + ".wav"
 print("piece_output_soundfile: {}".format(piece_output_soundfile))
-audio_output = "dac:plughw:2,0"
+
+def create_csd_text(options, license, orc, sco):
+    csd_text = '''
+<CsoundSynthesizer>
+<CsOptions>
+{}
+</CsOptions>
+<CsLicense>
+{}
+</CsLicense>
+<CsInstruments>
+{}
+</CsInstruments>
+<CsScore>
+{}
+</CsScore>
+</CsoundSynthesizer>
+'''.format(options, license, orc, sco)
+    return csd_text
 
 def on_play():
-    print("on_play...")
-    # The "f 0" statement prevents an abrupt cutoff.
-    sco = "f 0 105\n" + musx.to_csound_score(midi_file)
-    csound.SetOption("-+msg_color=0")
-    csound.SetOption("-d")
-    csound.SetOption("-m195")
-    csound.SetOption("-f")
-    csound.SetOption("-o" + audio_output)
-    csound.CompileOrc(orc)
-    csound.Start()
-    for channel, value in values_for_names.items():
-        print(channel, value)
-        csound.SetControlChannel(channel, value)
-    csound.ReadScore(sco)
-    csound.Perform()
-    
-    
+    try:
+        print("on_play...")
+        sco = musx.to_csound_score(midi_file)
+        csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -o" + audio_output, "", orc, sco)
+        csound.CompileCsdText(csd_text)
+        csound.Start()
+        on_restore()
+        csound.Perform()
+    except:
+        traceback.print_exc()
+        
 def on_render():
-    print("on_render...")
-    # The "f 0" statement prevents an abrupt cutoff.
-    sco = "f 0 105\n" + musx.to_csound_score(midi_file)
-    csound.SetOption("-+msg_color=0")
-    csound.SetOption("-d")
-    csound.SetOption("-m195")
-    csound.SetOption("-f")
-    csound.SetOption("-o" + piece_output_soundfile)
-    csound.CompileOrc(orc)
-    csound.Start()
-    for channel, value in values_for_names.items():
-        print(channel, value)
-        csound.SetControlChannel(channel, value)
-    csound.ReadScore(sco)
-    while True:
-        result = csound.PerformKsmps()
-        if result == True:
-            break
-        application.processEvents(QEventLoop.AllEvents, 1)
-    csound.Cleanup()
-    csound.Reset()
-    post_process()
+    try:
+        print("on_render...")
+        sco = musx.to_csound_score(midi_file)
+        csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -RWo" + piece_output_soundfile, "", orc, sco)
+        csound.CompileCsdText(csd_text)
+        csound.Start()
+        on_restore()
+        while csound.PerformBuffer() == 0:
+            application.processEvents(QEventLoop.AllEvents)
+        csound.Cleanup()
+        csound.Reset()
+        print("Finished cleanup and reset...")
+        post_process()
+        print("Finished post-processing.")
+    except:
+        traceback.print_exc()
     
 def on_stop():
-    print("on_stop...")
-    csound.Stop()
-    csound.Join()
-    csound.Cleanup()
-    csound.Reset()
+    try:
+        print("on_stop...")
+        csound.Stop()
+        csound.Join()
+        csound.Cleanup()
+        csound.Reset()
+    except:
+        traceback.print_exc()
     
-def on_save(state):
-    print("on_save...")      
-    with open(piece_ui_channels_filepath, "w") as file:
-        file.write(json.dumps(values_for_names))
+def on_save():
+    try:
+        print("on_save...")      
+        with open(piece_ui_channels_filepath, "w") as file:
+            file.write(json.dumps(channel_values_for_names))
+    except:
+        traceback.print_exc()
   
-def on_restore(state):
-    print("on_restore...")
+def on_restore():
+    try:
+        print("on_restore...")
+        if os.path.exists(piece_ui_channels_filepath) == True:
+            with open(piece_ui_channels_filepath, "r") as file:
+                text = file.read()
+                channel_values_for_names = json.loads(text)
+                for name, value in channel_values_for_names.items():
+                    if name in channels_for_names:
+                        channel = channels_for_names[name]
+                        if channel:
+                            print("Setting channel: {} to value: {}.".format(name, value))
+                            channel.set_value(value)
+    except:
+        traceback.print_exc()
     
 def post_process():
-    print(piece_filepath)
     try:
+        print(piece_filepath)
         cwd = os.getcwd()
         print('cwd:                    ' + cwd)
         author = metadata_author #'Michael Gogins'
@@ -409,7 +440,7 @@ def post_process():
         mp4_command = mp4_command.replace('\\', '/')
         print('mp4_command:            ' + mp4_command)
         os.system(mp4_command)
-        os.system('del *wavuntagged.wav')
+        os.system('rm *wavuntagged.wav')
         os.system('{} {}'.format(soundfile_editor, master_filename))
         print("")
     except:
@@ -427,34 +458,57 @@ ui_file.close()
 if not main_window:
     print(loader.errorString())
     sys.exit(-1)
-    
-widgets_for_names = {}
-values_for_names = {}
 
-class Controller(QObject):
+'''
+Each instance of this class encapsulates one Csound control channel along with  
+the Qt Widget that manages it. The methods of this class should have cases for 
+handling different types of Csound channels (strings or numbers), and 
+different types of Qt Widgets.
+
+The Qt Widget types and corresponding signals handled here are (from less to 
+more abstract):
+
+1. AbstractSlider and subclasses: valueChanged.
+3. QCheckBox: stateChanged.
+4. QAbstractButton: pressed, released.
+5. QLineEdit: editingFinished.
+6. QComboBox: currentTextChanged.
+
+This list could of course be extended.
+'''
+class Channel(QObject):
     def __init__(self, widget, channel_name, csound):
         QObject.__init__(self)
         self.widget = widget
         self.channel_name = channel_name
         self.csound = csound
-        widgets_for_names[self.channel_name] = self
+        channels_for_names[self.channel_name] = self
     def on_change(self, value):
-        value = value / 100.
-        self.csound.SetControlChannel(self.channel_name, value)
-        values_for_names[self.channel_name] = value
         print("on_change: {}: {}".format(self.channel_name, value))
+        if isinstance(self.widget, QAbstractSlider) == True:
+            value = value / 100.
+            self.csound.SetControlChannel(self.channel_name, value)
+            channel_values_for_names[self.channel_name] = value
+            return;
     def get_value(self):
-        return self.widget.getValue()
+        if isinstance(self.widget, QAbstractSlider) == True:
+            value = self.widget.getValue()
+            value = value * 100.
+            self.csound.SetControlChannel(self.channel_name, value)
+            channel_values_for_names[self.channel_name] = value
+            return;
     def set_value(self, value):
-        self.widget.setValue(value)
+        self.widget.setValue(value * 100)
        
 def connect_channel(widget, channel_name, csound):
     if channel_name.startswith("g") != True:
         print("Not connecting {} because {} is not a Csound control channel.".format(widget, channel_name))
         return
-    controller = Controller(widget, channel_name, csound)
-    widget.valueChanged.connect(controller.on_change)
-                      
+    if isinstance(widget, QAbstractSlider) == True:
+        channel = Channel(widget, channel_name, csound)
+        widget.valueChanged.connect(channel.on_change)
+        return
+        
 main_window.show()
     
 main_window.actionPlay.triggered.connect(on_play)
@@ -463,13 +517,16 @@ main_window.actionStop.triggered.connect(on_stop)
 main_window.actionSave.triggered.connect(on_save)
 main_window.actionRestore.triggered.connect(on_restore)
 
-# End of boilerplate code. Each Csound control widget uses one signal/slot.
+# End of boilerplate code. The following code should configure the Csound 
+# control channels. Each Csound control channel has one widget, one signal, 
+# and one slot.
 
 connect_channel(main_window.gk_Reverb_feedback, "gk_Reverb_feedback", csound)
 
 # Actually run the piece.
 
 result = application.exec()
+on_stop()
 sys.exit(result)
 
 
