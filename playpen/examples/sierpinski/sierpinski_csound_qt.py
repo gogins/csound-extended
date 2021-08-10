@@ -122,18 +122,12 @@ alwayson "MasterOutput"
 
 gk_overlap init .0125
 
-gk_Harpsichord_level init 0
-gk_Harpsichord_pan init .3
-gi_Harpsichord_release init .3
-gk_Harpsichord_pick init .275
-gk_Harpsichord_reflection init .75
-gi_Harpsichord_pluck init .5
 gk_Harpsichord_level chnexport "gk_Harpsichord_level", 3
 gk_Harpsichord_pan chnexport "gk_Harpsichord_pan", 3
 gi_Harpsichord_release chnexport "gi_Harpsichord_release", 3
 gk_Harpsichord_pick chnexport "gk_Harpsichord_pick", 3
 gk_Harpsichord_reflection chnexport "gk_Harpsichord_reflection", 3
-gk_Harpsichord_pluck chnexport "gi_Harpsichord_pluck", 3
+gi_Harpsichord_pluck chnexport "gi_Harpsichord_pluck", 3
 giharptable ftgen 0, 0, 65536, 7, -1, 1024, 1, 1024, -1
 instr Harpsichord
 if p3 == -1 goto indefinite
@@ -196,10 +190,9 @@ kafter    aftouch   1
 printks2 "kafter  %9.4f\\n", kafter
 endin
 
-gk_Reverb_feedback init 0.75
-gi_Reverb_delay_modulation init 0.05
 gk_Reverb_frequency_cutoff init 15000
 gk_Reverb_feedback chnexport "gk_Reverb_feedback", 3
+gi_Reverb_delay_modulation chnexport "gi_Reverb_delay_modulation", 3
 instr ReverbSC
 aleftout init 0
 arightout init 0
@@ -212,7 +205,6 @@ outleta "outright", arightout
 prints "ReverbSC       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
 endin
 
-gk_MasterOutput_level init -15
 gS_MasterOutput_filename init ""
 gk_MasterOutput_level chnexport "gk_MasterOutput_level", 3
 instr MasterOutput
@@ -238,7 +230,7 @@ fout gS_MasterOutput_filename, 18, aleft * i_amplitude_adjustment, aright * i_am
 non_has_filename:
 prints "MasterOutput   i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
 kstatus, kchan, kdata1, kdata2 midiin
-;printf "          midi in s %4d c %4d %4d %4d\\n", kdata2, kstatus, kchan, kdata1, kdata2
+printks2 "MasterOutput: gk_MasterOutput_level %9.4f\\n", gk_MasterOutput_level
 endin
 
 '''    
@@ -247,7 +239,7 @@ endin
 # Qt UI file.
 
 audio_output = "dac:plughw:2,0"
-metadata_author = "Michael Gogins"
+ametadata_author = "Michael Gogins"
 metadata_publisher = "Irreducible Productions"
 metadata_year = "2021"
 metadata_notes = "electroacoustic music"
@@ -255,7 +247,6 @@ metadata_license= "ASCAP"
 soundfile_editor = "audacity"
 channels_for_names = {}
 channel_values_for_names = {}
-
 
 import json
 import os
@@ -292,26 +283,31 @@ def create_csd_text(options, license, orc, sco):
 '''.format(options, license, orc, sco)
     return csd_text
 
-def on_play():
+def csound_play():
     try:
-        print("on_play...")
+        print("csound_play...")
+        csound_stop()
         sco = musx.to_csound_score(midi_file)
         csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -o" + audio_output, "", orc, sco)
+        with open("saved.csd", "w") as file:
+            file.write(csd_text)
         csound.CompileCsdText(csd_text)
         csound.Start()
-        on_restore()
+        csound_restore_channels()
         csound.Perform()
+        print("csound_play.")
     except:
         traceback.print_exc()
         
-def on_render():
+def csound_render():
     try:
-        print("on_render...")
+        print("csound_render...")
+        csound_stop()
         sco = musx.to_csound_score(midi_file)
         csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -RWo" + piece_output_soundfile, "", orc, sco)
         csound.CompileCsdText(csd_text)
         csound.Start()
-        on_restore()
+        csound_restore_channels()
         while csound.PerformBuffer() == 0:
             application.processEvents(QEventLoop.AllEvents)
         csound.Cleanup()
@@ -319,30 +315,32 @@ def on_render():
         print("Finished cleanup and reset...")
         post_process()
         print("Finished post-processing.")
+        print("csound_render.")
     except:
         traceback.print_exc()
     
-def on_stop():
+def csound_stop():
     try:
-        print("on_stop...")
+        print("csound_stop...")
         csound.Stop()
         csound.Join()
         csound.Cleanup()
         csound.Reset()
+        print("csound_stop.")
     except:
         traceback.print_exc()
     
-def on_save():
+def csound_save_channels():
     try:
-        print("on_save...")      
+        print("csound_save_channels...")      
         with open(piece_ui_channels_filepath, "w") as file:
             file.write(json.dumps(channel_values_for_names))
     except:
         traceback.print_exc()
   
-def on_restore():
+def csound_restore_channels():
     try:
-        print("on_restore...")
+        print("csound_restore_channels...")
         if os.path.exists(piece_ui_channels_filepath) == True:
             with open(piece_ui_channels_filepath, "r") as file:
                 text = file.read()
@@ -351,7 +349,7 @@ def on_restore():
                     if name in channels_for_names:
                         channel = channels_for_names[name]
                         if channel:
-                            print("Setting channel: {} to value: {}.".format(name, value))
+                            # print("Setting channel: {} to value: {}.".format(name, value))
                             channel.set_value(value)
     except:
         traceback.print_exc()
@@ -475,6 +473,9 @@ more abstract):
 6. QComboBox: currentTextChanged.
 
 This list could of course be extended.
+
+The Qt Widget values are normalized with a range of 100 and may need to be 
+rescaled in the Csound code.
 '''
 class Channel(QObject):
     def __init__(self, widget, channel_name, csound):
@@ -511,11 +512,11 @@ def connect_channel(widget, channel_name, csound):
         
 main_window.show()
     
-main_window.actionPlay.triggered.connect(on_play)
-main_window.actionRender.triggered.connect(on_render)
-main_window.actionStop.triggered.connect(on_stop)
-main_window.actionSave.triggered.connect(on_save)
-main_window.actionRestore.triggered.connect(on_restore)
+main_window.actionPlay.triggered.connect(csound_play)
+main_window.actionRender.triggered.connect(csound_render)
+main_window.actionStop.triggered.connect(csound_stop)
+main_window.actionSave.triggered.connect(csound_save_channels)
+main_window.actionRestore.triggered.connect(csound_restore_channels)
 
 # End of boilerplate code. The following code should configure the Csound 
 # control channels. Each Csound control channel has one widget, one signal, 
@@ -523,18 +524,18 @@ main_window.actionRestore.triggered.connect(on_restore)
 
 connect_channel(main_window.gk_MasterOutput_level, "gk_MasterOutput_level", csound)
 connect_channel(main_window.gk_Reverb_feedback, "gk_Reverb_feedback", csound)
-connect_channel(main_window.gk_Reverb_delay_modulation, "gk_Reverb_delay_modulation", csound)
+connect_channel(main_window.gi_Reverb_delay_modulation, "gi_Reverb_delay_modulation", csound)
 connect_channel(main_window.gk_Harpsichord_level, "gk_Harpsichord_level", csound)
 connect_channel(main_window.gk_Harpsichord_pan, "gk_Harpsichord_pan", csound)
-connect_channel(main_window.gk_Harpsichord_pluck, "gk_Harpsichord_pluck", csound)
+connect_channel(main_window.gi_Harpsichord_pluck, "gi_Harpsichord_pluck", csound)
 connect_channel(main_window.gk_Harpsichord_pick, "gk_Harpsichord_pick", csound)
 connect_channel(main_window.gk_Harpsichord_reflection, "gk_Harpsichord_reflection", csound)
-connect_channel(main_window.gk_Harpsichord_release, "gk_Harpsichord_release", csound)
+connect_channel(main_window.gi_Harpsichord_release, "gi_Harpsichord_release", csound)
 
 # Actually run the piece.
 
 result = application.exec()
-on_stop()
+csound_stop()
 sys.exit(result)
 
 

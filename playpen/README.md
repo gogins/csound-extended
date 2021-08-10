@@ -5,112 +5,128 @@ https://github.com/gogins<br>
 http://michaelgogins.tumblr.com
 
 This computer music playpen is an integrated development environment 
-specifically designed for algorithmic music composition. 
+__specifically designed to support my particular style of algorithmic music 
+composition__.
 
-The playpen attempts to provide the simplest possible system with the greatest 
-possible power, and to minimize the time involved in moving through the "edit, 
-render, listen; edit, render, listen;..." cycle of this style of composition 
-without, however, compromising in _any_ way the musical possibilities of the 
-software.
+I write music by writing code. I almost always use Csound to render my pieces 
+as fixed media, that is, soundfiles. I may use C++, Python, Common Lisp, or 
+JavaScript in addition to writing Csound code. I sometimes write interactive 
+visual music. I generally find that the Csound instruments that I use need 
+some pretty fine-tuned tweaking while the music is playing. What I need is to 
+minimize the time spent in the "edit code, render piece, listen to piece; edit 
+code again, render piece again, listen to piece again;..." cycle without, 
+however, in any way limiting the power of Csound, the power of Python, or the 
+power of HTML5.
 
-Python and the GTK framework are the "glue" that binds everything together. The 
-playpen provides a simple code editor, an interactive form builder for 
-creating graphical user interfaces to control performances, an HTML window for 
-presenting visual music, and online help.
+In addition, long experience has taught me that keeping a finished piece as 
+one file of source code, with a minimum of external dependencies, and those 
+dependencies as standardized and widely used as possible (such as Csound, 
+Python, and HTML5), is essential to ensure that pieces are maintainable and 
+will play into the indefinite future. After all, I have been making computer 
+music now for 38 years. Of course, this means that I often use a finished 
+piece as a template for a new piece.
 
-It is possible to write a piece in Python using algorithmic composition 
-libraries such as Rick Taube's [musx](https://github.com/musx-admin/musx) 
-or my [CsoundAC](https://github.com/gogins/csound-extended); to write a Csound 
-orchestra to render the piece; to write JavaScript for creating visual music 
-in HTML5; to interactively build a fully-featured graphical user interface for 
-controlling the audio and video of the piece using Glade; to instantly preview 
-the piece in real-time audio and video; and to instantly render the piece to a 
-file, normalize it, tag it, and translate it to final publication formats such 
-as mp3, FLAC, or mp4.
+Experience has also taught me that all-in-one systems such as CsoundQt never 
+actually do everything that I need, and may have bugs that I am unwilling or 
+unable to fix. I find it is better to use a toolkit of widely available and 
+well maintained components that I can tie together with shell scripts or 
+Python code.
 
-In addition to Python and Csound, other programming languages can be used, 
-either as the primary language or as a supplement, for example by running 
-Javascript code in the WebKit browser build into the playpen, or by executing 
-an external score-generating program directly from Csound using the <CsScore> 
-`bin` attribute or, of course, simply by programming in Python to run whatever 
-other composition software is needed to generate a score that is then sent to 
-Csound or some other synthesizer for rendering.
+After exhaustively trying many alternatives I have ended up with the system 
+that I maintain in this repository and, more specifically, in this directory.
+
+1.  SciTE is the source code editor.
+2.  I have added many custom commands for rendering Csound pieces, Python 
+    pieces, Common Lisp pieces, C++ pieces, and HTML pieces.
+3.  I have added custom commands for compiling C++ code.
+4.  I have added custom commands for running a visual form builder for Python 
+    pieces.
+5.  It is easier to add custom commands in SciTE than it is in more widely 
+    used source code editors such as Visual Studio Code.
+
+If you compose in the same way that I do, by writing code for synthesis by 
+Csound, you may well find this system useful. If you do not compose by writing 
+code, you will probably _not_ find this system useful.
 
 ## Getting Started
 
 Install the following software requirements, each according to its own 
-instructions. There are some specific instructions for Ubuntu Linux. However, 
+instructions. I give some some specific instructions for Ubuntu Linux. However, 
 to the best of my knowledge, all dependencies are available on Linux, MacOS, 
 and Windows.
 
-Everything should be installed for the same version of Python.
+Core requirements for composing with Csound, including SciTE extensions for 
+rendering Csound pieces and automatically post-processing them:
 
-1.  _An up to date C/C++ compiler_; on Ubuntu, execute 
-    `sudo apt install build-essentials`.
-1.  [SWIG wrapper and Interface Generator](http://swig.org/); on Ubuntu execute 
-    `sudo apt install swig`.
-2.  [Python 3.7](https://www.python.org/downloads/) or higher. For Ubuntu Linux, 
-    follow [these instructions](https://linuxize.com/post/how-to-install-python-3-9-on-ubuntu-20-04/).
-2.  [GTK 3](https://www.gtk.org/docs/installations/), note that GTK 4 is now 
-    the current version but it is the previous version, GTK 3, that is used here.
-4.  _WebKit2 4.0 development libraries_; on Ubuntu Linux this is done by 
-    executing `sudo apt install libwebkit2gtk-4.0-37` and `libwebkit2gtk-4.0-dev` 
-    or compatible versions.
-4.  _Gtk SourceView_; on Ubuntu Linux this is done by executing `sudo apt install 
-    libgtksourceview-4-dev`.
-5.  _WebKit2 GNU introspection libraries_; on Ubuntu Linux this 
-    is done by executing `sudo apt install gir1.2-webkit2-4.0`.
-6.  [Glade](https://wiki.gnome.org/Apps/Glade). For Ubuntu Linux, execute 
-    `sudo apt install glade`.
-7.  [PyGObject](https://pygobject.readthedocs.io/en/latest/getting_started.html) 
-    which automatically generates Python bindings for GTK, GStreamer, and WebKit 
-    based on their introspection libraries.
-8.  [Csound](https://csound.com/download.html). For Linux, it is best to build 
-    from source code.
-9.  [sox](http://sox.sourceforge.net/). For Ubuntu Linux, execute 
+1.  [Csound](https://csound.com/download.html). For Linux, it is best to build 
+    from source code according to [these instructions](https://github.com/csound/csound/blob/develop/BUILD.md).
+2.  The SciTE text editor. On Ubuntu, execute `sudo apt install scite`.
+3.  The SciTE user properties from this repository from [here]. Download this
+    to your home directory or create in your home directory a symbolic link 
+    to this file.
+4.  [sox](http://sox.sourceforge.net/). For Ubuntu, execute 
     `sudo apt install sox` and `sudo apt install libsox-fmt-all`.
-10. [libsndfile](http://www.mega-nerd.com/libsndfile/). For Ubuntu Linux, all 
+5.  The [libsndfile](http://www.mega-nerd.com/libsndfile/) utilities. For Ubuntu, all 
     you need is to execute `sudo apt install sndfile-programs`. For other 
     operating systems, you may need to install libsndfile itself which should 
     come with these utilities.
-11. [Audacity](https://www.audacityteam.org/). Please note, for Ubuntu Linux, 
+6.  [Audacity](https://www.audacityteam.org/). Please note, for Ubuntu, 
     install the regular Unbutu Packages Search result for Audacity, currently 
     `sudo apt install audacity`.
-12. [markdown](https://pypi.org/project/Markdown/) to make the `README.md` file 
-    more readable.
-12. The playpen itself is part of my csound-extended repository. Clone the 
-    [csound-extended](https://github.com/gogins/csound-extended) repository to 
-    your local filesystem. Build the shared libraries (see just below). Change 
-    to the `csound-extended/playpen` directory. Execute `python3 playpen.py` 
-    and then open and run the `xanadu.csd` example to check that everything is 
-    working.
     
-You must download or build two shared libraries in this repository. These 
-shared libraries are:
+Additional requirements for composing with Python. Pleae note that everything 
+should be installed for the __same version__ of Python. These instructions are for 
+a global installation, but you can also install in your home directory or in a 
+virtual environment.
 
-1.  `CsoundThreaded`, a native Python module that is generated from `csound.i` 
-    by the SWIG program. This provides a simplified implementation of the 
-    native Csound API that can be used from Python.
-2.  `libjsc_csound.so`, a native loadable module. This provides the same 
-    simplified Csound API in a form that can be used by the JavaScriptCore 
-    engine in the playpen's embedded WebKit2 browser.
+
+7.  [Python 3.8](https://www.python.org/downloads/) or higher. For Ubuntu Linux, 
+    follow [these instructions](https://linuxize.com/post/how-to-install-python-3-9-on-ubuntu-20-04/).
+8.  Make sure that the `csound/interfaces/ctcsound.py` file 
+    is the one that comes with your version of Csound and that it can be found 
+    in your Python site-packages directory, e.g. 
+    `/usr/local/lib/python3.9/dist-packages/ctcsound.py`. To use ctcsound you 
+    also need numpy, which can be installed with 
+    `sudo python3.8 -m pip install numpy`.
+9.  [PySide6](https://www.gtk.org/docs/installations/). Execute 
+    `sudo python3.8 -m pip PySide6`.
     
-To build and install these shared libraries, in the repository root directory,
-execute:
-```
-cmake .
-make
-sudo make install
-```
+Additional requirements for composing with CsoundAC (usable from C++, Python, or 
+JavaScript). These requirements also apply to composing with C++:
 
-If you have missed any dependencies, CMake and/or Python will probably let you 
-know.
+10. CsoundAC is part of my [csound-extended](https://github.com/gogins/csound-extended)
+    repository. CsoundAC has advanced features for algorithmic composition, 
+    including support for tonal harmony and counterpoint. Install if you can 
+    or build if you must, according to instructions 
+    [here](https://github.com/gogins/csound-extended).
+    
+Additional requirements for composing with HTML5:
 
-If later you need to uninstall, in the repository root directory, execute:
-```
-sudo xargs rm < install_manifest.txt
-```
+11. Install if you can or build if you must Csound for NW.js according to 
+    instructions [here](https://github.com/gogins/csound-extended-node).
+12. Install the SDK version of [NW.js](https://nwjs.io/).
+13. Add the directory containing the `csound.node` binary to your `NODE_PATH` 
+    environment variable.
+    
+Additional useful things:
 
+14. [csound-examples](https://github.com/gogins/csound-vst3-opcodes) is my 
+    extensive compilation of Csound examples and pieces.
+15. [michael.gogins.studio] contains the source code for my own compositions,
+    and includes Csound instruments that could be used in your own work.
+16. [csound-vst3-opcodes](https://github.com/gogins/csound-vst3-opcodes) 
+    enables Csound to use VST3 plugins.
+17. [csound-extended-nudruz](https://github.com/gogins/csound-extended-nudruz) 
+    provides Csound suppport for composing in 
+    Common Lisp using Drew Krause's extensions to Common Music.
+18. [musx](https://github.com/musx-admin/musx) is Rick Taube's translation of 
+    his original Common Lisp system for algorithmic composition to Python, now 
+    adapted to work seamlessly with Csound.
+19. [MuseScore](https://musescore.org/en) is a open source, cross-platform 
+    score editor.
+20. [lilypond](http://lilypond.org/) is an open source, cross-platform, very 
+    powerful music typesetting system.
+    
 ## A Few Examples
 
 ### xanadu.csd
