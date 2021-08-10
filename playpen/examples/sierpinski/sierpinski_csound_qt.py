@@ -521,7 +521,15 @@ main_window.actionRestore.triggered.connect(on_restore)
 # control channels. Each Csound control channel has one widget, one signal, 
 # and one slot.
 
+connect_channel(main_window.gk_MasterOutput_level, "gk_MasterOutput_level", csound)
 connect_channel(main_window.gk_Reverb_feedback, "gk_Reverb_feedback", csound)
+connect_channel(main_window.gk_Reverb_delay_modulation, "gk_Reverb_delay_modulation", csound)
+connect_channel(main_window.gk_Harpsichord_level, "gk_Harpsichord_level", csound)
+connect_channel(main_window.gk_Harpsichord_pan, "gk_Harpsichord_pan", csound)
+connect_channel(main_window.gk_Harpsichord_pluck, "gk_Harpsichord_pluck", csound)
+connect_channel(main_window.gk_Harpsichord_pick, "gk_Harpsichord_pick", csound)
+connect_channel(main_window.gk_Harpsichord_reflection, "gk_Harpsichord_reflection", csound)
+connect_channel(main_window.gk_Harpsichord_release, "gk_Harpsichord_release", csound)
 
 # Actually run the piece.
 
