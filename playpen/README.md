@@ -135,7 +135,7 @@ Additional useful things:
 This is a high-resolution version of Joseph Kung's "Xanadu" piece, often used 
 as an introduction to Csound. It's the simplest possible test that your 
 installation of the playpen is working. Just load the file and use the 
-_Tools_ menu __Render csd piece to audio_ item.
+_Tools_ menu _Render csd piece to audio_ item.
 
 To produce a soundfile, normalize it, and translate it to different formats, 
 just use the _Tools_ menu _Render csd piece to soundfile and post-process and 
@@ -145,10 +145,10 @@ play_ item.
 
 For this example, install Rick Taube's Python port of the Common Music 
 algorithmic composition system, [musx](https://github.com/musx-admin/musx).
-Just load the file and use the _Tools_ menu_ _go_ item.
+Just load the file and use the _Tools_ menu _go_ item.
 
 ### message.html
 
 This is a basic HTML5 example that runs native Csound using JavaScript and 
 has a custom user interface implemented with JQuery. Just load the file and 
-use the Tools menu _go_ item.
+use the _Tools_ menu _go_ item.
