@@ -145,7 +145,7 @@ play_ item.
 
 For this example, install Rick Taube's Python port of the Common Music 
 algorithmic composition system, [musx](https://github.com/musx-admin/musx).
-Just load the file and use the _Tools menu_ _go_ item.
+Just load the file and use the _Tools_ menu_ _go_ item.
 
 ### message.html
 
