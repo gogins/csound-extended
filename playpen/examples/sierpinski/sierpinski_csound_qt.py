@@ -277,23 +277,29 @@ def create_csd_text(options, license, orc, sco):
 </CsoundSynthesizer>
 '''.format(options, license, orc, sco)
     return csd_text
-
+    
+csound = ctcsound.Csound()
+    
 def csound_play():
     try:
         print("csound_play...")
         global csound
-        csound_stop()
-        del csound
-        csound = ctcsound.Csound()
+        ###csound_stop()
         sco = musx.to_csound_score(midi_file)
-        csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -RWo" + audio_output, "", orc, sco)
+        csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -+rtaudio=alsa -RWo" + audio_output, "", orc, sco)
         with open("saved.csd", "w") as file:
             file.write(csd_text)
         print("Csound address: {}".format(csound.csound()))
         csound.compileCsdText(csd_text)
         csound.start()
         csound_restore_channels()
-        while csound.performBuffer() == False:
+        while True:
+            finished = csound.performKsmps()
+            if finished != 0:
+                print("Stopping performance...")
+                csound.cleanup()
+                csound.reset()
+                break
             application.processEvents(QEventLoop.AllEvents)
         print("Finished performing...")
         print("csound_play.")
@@ -310,7 +316,7 @@ def csound_render():
         csound.compileCsdText(csd_text)
         csound.start()
         csound_restore_channels()
-        while csound.PprformBuffer() == False:
+        while csound.performKsmps() == 0:
             application.processEvents(QEventLoop.AllEvents)
         print("Finished performing...")
         post_process()
@@ -323,10 +329,10 @@ def csound_stop():
         print("csound_stop...")
         global csound
         csound.stop()
-        time.sleep(1)
-        print("Stopped...")
-        csound.reset()
-        time.sleep(1)
+        #~ time.sleep(1)
+        #~ print("Stopped...")
+        #~ csound.reset()
+        #~ time.sleep(1)
         print("Finished reset...")
         print("csound_stop.")
     except:
