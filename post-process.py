@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
 P O S T   P R O C E S S
@@ -8,7 +9,7 @@ Attempts to post-process one master soundfile, which is not part of an album.
 Usage:
 
        0               1           
-python post-process.py filepath 
+python post-process.py source_filepath 
 
 '''
 
@@ -24,14 +25,14 @@ print(sys.argv)
 
 cwd = os.getcwd()
 print('cwd:                    ', cwd)
-filepath = sys.argv[1]
+source_filepath = sys.argv[1]
 author = 'Michael Gogins'
 year = '2019'
 license = 'ASCAP'
 publisher = 'Irreducible Productions, ASCAP'
 notes = 'Electroacoustic Music'
 
-directory, basename = os.path.split(filepath)
+directory, basename = os.path.split(source_filepath)
 rootname = os.path.splitext(basename)[0].split('.')[0]
 title = rootname.replace("-", " ").replace("_", " ")
 label = '%s -- %s' % (author, title)
@@ -41,7 +42,7 @@ cd_quality_filename = '%s.cd.wav' % label
 mp3_filename = '%s.mp3' % label
 mp4_filename = '%s.mp4' % label
 flac_filename = '%s.flac' % label
-print('Original file:          ', filepath)
+print('Source file:            ', source_filepath)
 print('Basename:               ', basename)
 print('Author:                 ', author)
 print('Title:                  ', title)
@@ -70,7 +71,7 @@ str_title              = title
 str_artist             = author
 str_date               = year
 str_license            = license
-sox_normalize_command = '''sox -S "%s" "%s" gain -n -3''' % (filepath, master_filename + 'untagged.wav')
+sox_normalize_command = '''sox -S "%s" "%s" gain -n -3''' % (source_filepath, master_filename + 'untagged.wav')
 print('sox_normalize command:  ', sox_normalize_command)
 os.system(sox_normalize_command)
 tag_wav_command = '''sndfile-metadata-set "%s" --bext-description "%s" --bext-originator "%s" --bext-orig-ref "%s" --str-comment "%s" --str-title "%s" --str-copyright "%s" --str-artist  "%s" --str-date "%s" --str-license "%s" "%s"''' % (master_filename + 'untagged.wav', bext_description, bext_originator, bext_orig_ref, str_comment, str_title, str_copyright, str_artist, str_date, str_license, master_filename)

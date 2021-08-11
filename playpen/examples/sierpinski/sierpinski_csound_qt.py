@@ -29,16 +29,11 @@ which will cause the recursive process to stop when the value reaches 0.
 """
 import musx
 from musx import Score, Note, Seq, MidiFile, keynum
-import CsoundThreaded
+import ctcsound
 import traceback
 
-try:
-    print("Csound was found.")
-    csound
-except:
-    print("Csound was not found, creating new Csound.")
-    csound = CsoundThreaded.CsoundThread()
-print("Csound address: {}".format(csound.GetCsound()))
+csound = ctcsound.Csound()
+print("Csound address: {}".format(csound.csound()))
 
 def sierpinski(score, tone, shape, trans, levels, dur, amp):
     """
@@ -238,8 +233,8 @@ endin
 # Boilerplate code for generating and running the user interface from a 
 # Qt UI file.
 
-audio_output = "dac:plughw:2,0"
-ametadata_author = "Michael Gogins"
+audio_output = "dac:plughw:1,0"
+metadata_author = "Michael Gogins"
 metadata_publisher = "Irreducible Productions"
 metadata_year = "2021"
 metadata_notes = "electroacoustic music"
@@ -251,6 +246,7 @@ channel_values_for_names = {}
 import json
 import os
 import sys
+import time
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QApplication, QAbstractSlider, QCheckBox, QAbstractButton, QLineEdit, QComboBox
 from PySide6.QtCore import QObject, QFile, QIODevice, QEventLoop, QCoreApplication, QThread
@@ -288,13 +284,15 @@ def csound_play():
         print("csound_play...")
         csound_stop()
         sco = musx.to_csound_score(midi_file)
-        csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -o" + audio_output, "", orc, sco)
+        csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -RWo" + audio_output, "", orc, sco)
         with open("saved.csd", "w") as file:
             file.write(csd_text)
-        csound.CompileCsdText(csd_text)
-        csound.Start()
+        csound.compileCsdText(csd_text)
+        csound.start()
         csound_restore_channels()
-        csound.Perform()
+        while csound.performBuffer() == False:
+            application.processEvents(QEventLoop.AllEvents)
+        print("Finished performing...")
         print("csound_play.")
     except:
         traceback.print_exc()
@@ -305,16 +303,13 @@ def csound_render():
         csound_stop()
         sco = musx.to_csound_score(midi_file)
         csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -RWo" + piece_output_soundfile, "", orc, sco)
-        csound.CompileCsdText(csd_text)
-        csound.Start()
+        csound.compileCsdText(csd_text)
+        csound.start()
         csound_restore_channels()
-        while csound.PerformBuffer() == 0:
+        while csound.PprformBuffer() == False:
             application.processEvents(QEventLoop.AllEvents)
-        csound.Cleanup()
-        csound.Reset()
-        print("Finished cleanup and reset...")
+        print("Finished performing...")
         post_process()
-        print("Finished post-processing.")
         print("csound_render.")
     except:
         traceback.print_exc()
@@ -322,10 +317,12 @@ def csound_render():
 def csound_stop():
     try:
         print("csound_stop...")
-        csound.Stop()
-        csound.Join()
-        csound.Cleanup()
-        csound.Reset()
+        csound.stop()
+        time.sleep(1)
+        print("Stopped...")
+        csound.reset()
+        time.sleep(1)
+        print("Finished reset...")
         print("csound_stop.")
     except:
         traceback.print_exc()
@@ -359,7 +356,7 @@ def post_process():
         print(piece_filepath)
         cwd = os.getcwd()
         print('cwd:                    ' + cwd)
-        author = metadata_author #'Michael Gogins'
+        author = metadata_author
         year = metadata_year #'2021'
         license = metadata_license #'ASCAP'
         publisher = metadata_publisher #'Irreducible Productions, ASCAP'
@@ -488,14 +485,14 @@ class Channel(QObject):
         print("on_change: {}: {}".format(self.channel_name, value))
         if isinstance(self.widget, QAbstractSlider) == True:
             value = value / 100.
-            self.csound.SetControlChannel(self.channel_name, value)
+            self.csound.setControlChannel(self.channel_name, value)
             channel_values_for_names[self.channel_name] = value
             return;
     def get_value(self):
         if isinstance(self.widget, QAbstractSlider) == True:
             value = self.widget.getValue()
             value = value * 100.
-            self.csound.SetControlChannel(self.channel_name, value)
+            self.csound.setControlChannel(self.channel_name, value)
             channel_values_for_names[self.channel_name] = value
             return;
     def set_value(self, value):
