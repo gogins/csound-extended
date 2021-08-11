@@ -33,7 +33,6 @@ import ctcsound
 import traceback
 
 csound = ctcsound.Csound()
-print("Csound address: {}".format(csound.csound()))
 
 def sierpinski(score, tone, shape, trans, levels, dur, amp):
     """
@@ -282,11 +281,15 @@ def create_csd_text(options, license, orc, sco):
 def csound_play():
     try:
         print("csound_play...")
+        global csound
         csound_stop()
+        del csound
+        csound = ctcsound.Csound()
         sco = musx.to_csound_score(midi_file)
         csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -RWo" + audio_output, "", orc, sco)
         with open("saved.csd", "w") as file:
             file.write(csd_text)
+        print("Csound address: {}".format(csound.csound()))
         csound.compileCsdText(csd_text)
         csound.start()
         csound_restore_channels()
@@ -300,6 +303,7 @@ def csound_play():
 def csound_render():
     try:
         print("csound_render...")
+        global sound
         csound_stop()
         sco = musx.to_csound_score(midi_file)
         csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -RWo" + piece_output_soundfile, "", orc, sco)
@@ -317,6 +321,7 @@ def csound_render():
 def csound_stop():
     try:
         print("csound_stop...")
+        global csound
         csound.stop()
         time.sleep(1)
         print("Stopped...")
@@ -475,35 +480,36 @@ The Qt Widget values are normalized with a range of 100 and may need to be
 rescaled in the Csound code.
 '''
 class Channel(QObject):
-    def __init__(self, widget, channel_name, csound):
+    def __init__(self, widget, channel_name):
         QObject.__init__(self)
         self.widget = widget
         self.channel_name = channel_name
-        self.csound = csound
         channels_for_names[self.channel_name] = self
     def on_change(self, value):
+        global csound
         print("on_change: {}: {}".format(self.channel_name, value))
         if isinstance(self.widget, QAbstractSlider) == True:
             value = value / 100.
-            self.csound.setControlChannel(self.channel_name, value)
+            csound.setControlChannel(self.channel_name, value)
             channel_values_for_names[self.channel_name] = value
             return;
     def get_value(self):
+        global csound
         if isinstance(self.widget, QAbstractSlider) == True:
             value = self.widget.getValue()
             value = value * 100.
-            self.csound.setControlChannel(self.channel_name, value)
+            csound.setControlChannel(self.channel_name, value)
             channel_values_for_names[self.channel_name] = value
             return;
     def set_value(self, value):
         self.widget.setValue(value * 100)
        
-def connect_channel(widget, channel_name, csound):
+def connect_channel(widget, channel_name):
     if channel_name.startswith("g") != True:
         print("Not connecting {} because {} is not a Csound control channel.".format(widget, channel_name))
         return
     if isinstance(widget, QAbstractSlider) == True:
-        channel = Channel(widget, channel_name, csound)
+        channel = Channel(widget, channel_name)
         widget.valueChanged.connect(channel.on_change)
         return
         
@@ -519,15 +525,15 @@ main_window.actionRestore.triggered.connect(csound_restore_channels)
 # control channels. Each Csound control channel has one widget, one signal, 
 # and one slot.
 
-connect_channel(main_window.gk_MasterOutput_level, "gk_MasterOutput_level", csound)
-connect_channel(main_window.gk_Reverb_feedback, "gk_Reverb_feedback", csound)
-connect_channel(main_window.gi_Reverb_delay_modulation, "gi_Reverb_delay_modulation", csound)
-connect_channel(main_window.gk_Harpsichord_level, "gk_Harpsichord_level", csound)
-connect_channel(main_window.gk_Harpsichord_pan, "gk_Harpsichord_pan", csound)
-connect_channel(main_window.gi_Harpsichord_pluck, "gi_Harpsichord_pluck", csound)
-connect_channel(main_window.gk_Harpsichord_pick, "gk_Harpsichord_pick", csound)
-connect_channel(main_window.gk_Harpsichord_reflection, "gk_Harpsichord_reflection", csound)
-connect_channel(main_window.gi_Harpsichord_release, "gi_Harpsichord_release", csound)
+connect_channel(main_window.gk_MasterOutput_level, "gk_MasterOutput_level")
+connect_channel(main_window.gk_Reverb_feedback, "gk_Reverb_feedback")
+connect_channel(main_window.gi_Reverb_delay_modulation, "gi_Reverb_delay_modulation")
+connect_channel(main_window.gk_Harpsichord_level, "gk_Harpsichord_level")
+connect_channel(main_window.gk_Harpsichord_pan, "gk_Harpsichord_pan")
+connect_channel(main_window.gi_Harpsichord_pluck, "gi_Harpsichord_pluck")
+connect_channel(main_window.gk_Harpsichord_pick, "gk_Harpsichord_pick")
+connect_channel(main_window.gk_Harpsichord_reflection, "gk_Harpsichord_reflection")
+connect_channel(main_window.gi_Harpsichord_release, "gi_Harpsichord_release")
 
 # Actually run the piece.
 
