@@ -36,14 +36,14 @@ Python code.
 After exhaustively trying many alternatives I have ended up with the system 
 that I maintain in this repository and, more specifically, in this directory.
 
-1.  SciTE is the source code editor.
+1.  SciTE is the source code editor, mainly because it is easier to add custom 
+    commands in SciTE than it is in more widely used source code editors such 
+    as Visual Studio Code.
 2.  I have added many custom commands for rendering Csound pieces, Python 
     pieces, Common Lisp pieces, C++ pieces, and HTML pieces.
 3.  I have added custom commands for compiling C++ code.
 4.  I have added custom commands for running a visual form builder for Python 
     pieces.
-5.  It is easier to add custom commands in SciTE than it is in more widely 
-    used source code editors such as Visual Studio Code.
 
 If you compose in the same way that I do, by writing code for synthesis by 
 Csound, you may well find this system useful. If you do not compose by writing 
