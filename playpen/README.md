@@ -23,8 +23,9 @@ one file of source code, with a minimum of external dependencies, and those
 dependencies as standardized and widely used as possible (such as Csound, 
 Python, and HTML5), is essential to ensure that pieces are maintainable and 
 will play into the indefinite future. After all, I have been making computer 
-music now for 38 years. Of course, this means that I often use a finished 
-piece as a template for a new piece.
+music now for 38 years. Of course, this means that I prefer to use a finished 
+piece as a template for a new piece, rather than to create and use a library, 
+because the template approach ensures the self-contained nature of the pieces.
 
 Experience has also taught me that all-in-one systems such as CsoundQt never 
 actually do everything that I need, and may have bugs that I am unwilling or 
@@ -88,13 +89,18 @@ virtual environment.
     `/usr/local/lib/python3.9/dist-packages/ctcsound.py`. To use ctcsound you 
     also need numpy, which can be installed with 
     `sudo python3.8 -m pip install numpy`.
-9.  [PySide6](https://www.gtk.org/docs/installations/). Execute 
-    `sudo python3.8 -m pip PySide6`.
+9.  [GTK 3](https://www.gtk.org/docs/installations/), note that GTK 4 is now 
+    the current version but it is the previous version, GTK 3, that is used here.
+10. [Glade](https://wiki.gnome.org/Apps/Glade). For Ubuntu Linux, execute 
+    `sudo apt install glade`.
+11. [PyGObject](https://pygobject.readthedocs.io/en/latest/getting_started.html) 
+    which automatically generates Python bindings for GTK based on introspection 
+    libraries.
     
 Additional requirements for composing with CsoundAC (usable from C++, Python, or 
 JavaScript). These requirements also apply to composing with C++:
 
-10. CsoundAC is part of my [csound-extended](https://github.com/gogins/csound-extended)
+12. CsoundAC is part of my [csound-extended](https://github.com/gogins/csound-extended)
     repository. CsoundAC has advanced features for algorithmic composition, 
     including support for tonal harmony and counterpoint. Install if you can 
     or build if you must, according to instructions 
@@ -102,30 +108,30 @@ JavaScript). These requirements also apply to composing with C++:
     
 Additional requirements for composing with HTML5:
 
-11. Install if you can or build if you must Csound for NW.js according to 
+13. Install if you can or build if you must Csound for NW.js according to 
     instructions [here](https://github.com/gogins/csound-extended-node).
-12. Install the SDK version of [NW.js](https://nwjs.io/).
-13. Add the directory containing the `csound.node` binary to your `NODE_PATH` 
+14. Install the SDK version of [NW.js](https://nwjs.io/).
+15. Add the directory containing the `csound.node` binary to your `NODE_PATH` 
     environment variable.
     
 Additional useful things:
 
-14. [csound-examples](https://github.com/gogins/csound-vst3-opcodes) is my 
+16. [csound-examples](https://github.com/gogins/csound-vst3-opcodes) is my 
     extensive compilation of Csound examples and pieces.
-15. [michael.gogins.studio](https://github.com/gogins/michael.gogins.studio) 
+17. [michael.gogins.studio](https://github.com/gogins/michael.gogins.studio) 
     contains the source code for my own compositions, and includes Csound 
     instruments that could be used in your own work.
 16. [csound-vst3-opcodes](https://github.com/gogins/csound-vst3-opcodes) 
     enables Csound to use VST3 plugins.
-17. [csound-extended-nudruz](https://github.com/gogins/csound-extended-nudruz) 
+18. [csound-extended-nudruz](https://github.com/gogins/csound-extended-nudruz) 
     provides Csound suppport for composing in 
     Common Lisp using Drew Krause's extensions to Common Music.
-18. [musx](https://github.com/musx-admin/musx) is Rick Taube's translation of 
+19. [musx](https://github.com/musx-admin/musx) is Rick Taube's translation of 
     his original Common Lisp system for algorithmic composition to Python, now 
     adapted to work seamlessly with Csound.
-19. [MuseScore](https://musescore.org/en) is a open source, cross-platform 
+20. [MuseScore](https://musescore.org/en) is a open source, cross-platform 
     score editor.
-20. [lilypond](http://lilypond.org/) is an open source, cross-platform, very 
+21. [lilypond](http://lilypond.org/) is an open source, cross-platform, very 
     powerful music typesetting system.
     
 ## A Few Examples
@@ -134,8 +140,8 @@ Additional useful things:
 
 This is a high-resolution version of Joseph Kung's "Xanadu" piece, often used 
 as an introduction to Csound. It's the simplest possible test that your 
-installation of the playpen is working. Just load the file and use the 
-_Tools_ menu _Render csd piece to audio_ item.
+installation of the playpen is working. Just load the file in SciTE and use 
+the _Tools_ menu _Render csd piece to audio_ item.
 
 To produce a soundfile, normalize it, and translate it to different formats, 
 just use the _Tools_ menu _Render csd piece to soundfile and post-process and 
