@@ -164,10 +164,10 @@ use the _Tools_ menu _go_ item.
 
 These libraries are not needed for the purposes outlined above, but you may 
 find them useful. They provide a simplified version of the native Csound API 
-for GTK. They include the CsoundThreaded Python extension module, which is an 
-alternative to ctcsound, and the libjsc_csound shared library, which provides 
-native Csound to the GTK WebView, which is an alternative to using NW.js. To 
-use these libraries, in the playpen directory, execute:
+for GTK. They include the `CsoundThreaded` Python extension module, which is 
+an alternative to ctcsound, and the `libjsc_csound` shared library, which 
+injects native Csound into the GTK WebView2, which is an alternative to NW.js. 
+To use these libraries, change to the playpen directory and execute:
 ```
 cmake .
 make
