@@ -60,8 +60,8 @@ score = Score(out=track1)
 # the length of the melody and the number of levels. For example the
 # first compose() generates 120 events, the second 726, and the third 2728!
 #score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 12, 4, 3, .5))
-score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 8, 5, 7, .5))
-#score.compose(sierpinski(score, musx.keynum('a0'), [0, -1, 3, 11], 12, 5, 24, .5))
+#score.compose(sierpinski(score, keynum('a0'), [0, 7, 5], 8, 5, 7, .5))
+score.compose(sierpinski(score, musx.keynum('a0'), [0, -1, 3, 11], 12, 5, 24, .5))
 #score.compose(sierpinski(score, 24., [0, -1, 2, 13], 12, 5, 24, .5))
 
 # Write the tracks to a midi file in the current directory.
@@ -220,16 +220,17 @@ endin
 
 sco = musx.to_csound_score(midi_file)
 
-#####################################################################
+##############################################################################
 # TEMPLATE CODE BEGINS
 # Assumptions: 
-# 1. Csound orchestra is in orc string.
-# 2. Csound score is in sco string.
-# 3. All suitable widgets in main_window have exactly the IDs and 
-#    names of Csound control channels, which are chnexport in the 
-#    Csound orchestra. All such nanes and ids begin with 'gk', "gi', 
+# 1. The playpen.ini file in the home directory exists and is correct.
+# 2. A Csound orchestra has been defined in the global orc string.
+# 3. A Csound score has been defined in the global sco string.
+# 4. All suitable widgets in main_window have exactly the IDs and 
+#    names of Csound control channels, which are created using chnexport in 
+#    the Csound orchestra. All such nanes and ids begin with 'gk', "gi', 
 #    or 'gS'.
-#####################################################################
+##############################################################################
 
 import inspect
 import json
