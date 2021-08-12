@@ -14,17 +14,6 @@ which will cause the recursive process to stop when the value reaches 0.
 """
 import musx
 from musx import Score, Note, Seq, MidiFile, keynum
-import CsoundThreaded
-
-global values_for_channels
-
-try:
-    print("Csound was found.")
-    csound
-except:
-    print("Csound was not found, creating new Csound.")
-    csound = CsoundThreaded.CsoundThread()
-print("Csound address: {}".format(csound.GetCsound()))
 
 def sierpinski(score, tone, shape, trans, levels, dur, amp):
     """
@@ -232,16 +221,26 @@ endin
 sco = musx.to_csound_score(midi_file)
 
 #####################################################################
-# BOILERPLATE BELOW THIS
+# TEMPLATE CODE BEGINS
+# Assumptions: 
+# 1. Csound orchestra is in orc string.
+# 2. Csound score is in sco string.
+# 3. All suitable widgets in main_window have exactly the IDs and 
+#    names of Csound control channels, which are chnexport in the 
+#    Csound orchestra. All such nanes and ids begin with 'gk', "gi', 
+#    or 'gS'.
 #####################################################################
 
 import inspect
+import json
 import logging
+import os
 import sys
+import traceback
 import warnings
 
 warnings.filterwarnings("ignore")
-logging.getLogger().setLevel(logging.WARNING)
+logging.getLogger().setLevel(logging.DEBUG)
 
 def log_print(message):
     # Get the previous frame in the stack, otherwise it would
@@ -266,6 +265,11 @@ def log_exception(message):
         caller.co_firstlineno,
         message, 
     ))
+
+import ctcsound
+csound = ctcsound.Csound()
+csound_is_performing = False
+log_print("Global Csound instance: {} CSOUND *: 0x{:x}.".format(csound, int(csound.csound())))
     
 import gi
 gi.require_version('Gdk', '3.0')
@@ -273,9 +277,11 @@ from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import GLib
 
-# Obtain user settings.
+# Read user settings.
 settings = GLib.KeyFile.new()
-GLib.KeyFile.load_from_file(settings, "/home/mkg/csound-extended/playpen/playpen.ini", GLib.KeyFileFlags.NONE)
+home_directory = os.environ["HOME"]
+playpen_ini_filepath = os.path.join(home_directory, "playpen.ini")
+GLib.KeyFile.load_from_file(settings, playpen_ini_filepath, GLib.KeyFileFlags.NONE)
 metadata_author = settings.get_value("metadata", "author")
 metadata_publisher = settings.get_value("metadata", "publisher")
 metadata_year = settings.get_value("metadata", "year")
@@ -289,36 +295,20 @@ editor_scheme = settings.get_value("playpen", "editor-scheme")
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk 
-gi.require_version("GtkSource", "3.0")
-from gi.repository import GtkSource
-code_editor = GtkSource.View()
 
 # Override some global Gnome settings with playpen.ini values.
 gnome_settings = Gtk.Settings.get_default()
 gnome_settings.set_property("gtk-theme-name", gnome_theme)
 
-gi.require_version("WebKit2", "4.0")
-from gi.repository import WebKit2
-gi.require_version("JavaScriptCore", "4.0")
-from gi.repository import JavaScriptCore
-gi.require_version("GtkSource", "3.0")
-from gi.repository import GtkSource
-
-# Create a global instance of native Csound. For pure Csound and Python 
-# pieces, this instance is a singleton.
-
-#~ import CsoundThreaded'
-#~ csound = CsoundThreaded.CsoundThread()
-#~ log_print("Global Csound instance: {} CSOUND *: 0x{:x}.".format(csound, int(csound.GetCsound())))
-
-import ctcsound
-csound = ctcsound.Csound()
-log_print("Global Csound instance: {} CSOUND *: 0x{:x}.".format(csound, int(csound.csound())))
- 
-global piece_filepath
-global widgets_for_channels
-global values_for_channels
-piece_filepath = ""
+piece_filepath = sys.argv[0]
+piece_basename = os.path.splitext(piece_filepath)[0]
+ui_filepath = piece_basename + ".ui"
+ui_channels_filepath = ui_filepath + ".channels"
+output_soundfile_filepath = piece_filepath + ".wav"
+log_print("piece_filepath:            {}".format(piece_filepath))
+log_print("ui_filepath:               {}".format(ui_filepath))
+log_print("ui_channels_filepath:      {}".format(ui_channels_filepath))
+log_print("output_soundfile_filepath: {}".format(output_soundfile_filepath))
 widgets_for_channels = dict()
 values_for_channels = dict()
 
@@ -342,103 +332,372 @@ def create_csd_text(options, license, orc, sco):
     return csd_text
 
 def on_destroy(source):
-    global piece_filepath
-    log_print(piece_filepath)
-    csound.stop()
-    csound.cleanup()
-    csound.reset()
-    Gtk.main_quit()
-    
-def on_save_button_clicked(button):
-    global piece_filepath
-    global widgets_for_channels
-    global values_for_channels
-    log_print(piece_filepath)
     try:
-        ui_filepath = get_ui_filepath()
-        log_print("ui_filepath: {}".format(ui_filepath))
+        csound.stop()
+        csound.cleanup()
+        csound.reset()
+        Gtk.main_quit()
+    except:
+        log_exception("Shutting down.")
+    
+def save_ui(button = None):
+    try:
+        global ui_channels_filepath
+        global widgets_for_channels
+        global values_for_channels
+        log_print("ui_channels_filepath: {}".format(ui_channels_filepath))
         log_print("widgets_for_channels size: {}".format(len(widgets_for_channels)))
         for channel, widget in widgets_for_channels.items():
             channel_value = get_control_value(widget)
             values_for_channels[channel] = channel_value
             log_print("channel: {} value: {}".format(widget.get_name(), channel_value))
-        ui_channels_filepath_ = get_ui_channels_filepath()
-        with open(ui_channels_filepath_, "w") as file:
+        with open(ui_channels_filepath, "w") as file:
             file.write(json.dumps(values_for_channels))
     except:
         log_exception("Failed to save UI.")
     
 def on_play_button_clicked(button):
-    csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -+rtaudio=alsa -RWodac", "", orc, sco)
-    csound.stop()
-    csound.cleanup()
-    csound.reset()
-    csound.compileCsdText(csd_text)
-    csound.start()
-    for channel, value in values_for_channels.items():
-        print(channel, value)
-        csound.setControlChannel(channel, value)
-    while csound.performKsmps() == 0:
-        Gtk.main_iteration_do(False)
+    try:
+        global csound_is_performing
+        csound_is_performing = False
+        csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -RWo" + csound_audio_output, "", orc, sco)
+        csound.stop()
+        csound.cleanup()
+        csound.reset()
+        csound.compileCsdText(csd_text)
+        csound.start()
+        load_ui()
+        log_print("Restoring {} channels...".format(len(values_for_channels)))
+        for name, value in values_for_channels.items():
+            log_print("initialize channel: {} value {} {}".format(name, value, type(value)))
+            if isinstance(value, str):
+                csound.setStringChannel(name, value)
+            else:
+                csound.setControlChannel(name, value)
+        csound_is_performing = True
+        while csound.performKsmps() == 0:
+            # Keep the UI responsive during performance.
+            Gtk.main_iteration_do(False)
+    except:
+        print(traceback.format_exc())
+        
+def post_process():
+    try:
+        global piece_filepath
+        global output_soundfile_filepath
+        cwd = os.getcwd()
+        print('cwd:                    ' + cwd)
+        author = metadata_author #'Michael Gogins'
+        year = metadata_year #'2021'
+        license = metadata_license #'ASCAP'
+        publisher = metadata_publisher #'Irreducible Productions, ASCAP'
+        notes = metadata_notes #'Electroacoustic Music'
+
+        directory, basename = os.path.split(piece_filepath)
+        rootname = os.path.splitext(basename)[0].split('.')[0]
+        soundfile_name = output_soundfile_filepath
+        title = rootname.replace("-", " ").replace("_", " ")
+        label = '{} -- {}'.format(author, title).replace(" ", "_")
+        master_filename = '{}.normalized.wav'.format(label)
+        spectrogram_filename = '%s.png' % label
+        cd_quality_filename = '%s.cd.wav' % label
+        mp3_filename = '%s.mp3' % label
+        mp4_filename = '%s.mp4' % label
+        flac_filename = '%s.flac' % label
+        print('Basename:               ' + basename)
+        print('Original soundfile:     ' + soundfile_name)
+        print('Author:                 ' + author)
+        print('Title:                  ' + title)
+        print('Year:                   ' + year)
+        str_copyright          = 'Copyright %s by %s' % (year, author)
+        print('Copyright:              ' + str_copyright)
+        print('Licence:                ' + license)
+        print('Publisher:              ' + publisher)
+        print('Notes:                  ' + notes)
+        print('Master filename:        ' + master_filename)
+        print('Spectrogram filename:   ' + spectrogram_filename)
+        print('CD quality filename:    ' + cd_quality_filename)
+        print('MP3 filename:           ' + mp3_filename)
+        print('MP4 filename:           ' + mp4_filename)
+        print('FLAC filename:          ' + flac_filename)
+        bext_description       = notes
+        bext_originator        = author
+        bext_orig_ref          = basename
+        #bext_umid              = xxx
+        #bext_orig_date         = xxx
+        #bext_orig_time         = xxx
+        #bext_coding_hist       = xxx
+        #bext_time_ref          = xxx
+        str_comment            = notes
+        str_title              = title
+        str_artist             = author
+        str_date               = year
+        str_license            = license
+        sox_normalize_command = '''sox -S "%s" "%s" gain -n -3''' % (soundfile_name, master_filename + 'untagged.wav')
+        print('sox_normalize command:  ' + sox_normalize_command)
+        os.system(sox_normalize_command)
+        tag_wav_command = '''sndfile-metadata-set "%s" --bext-description "%s" --bext-originator "%s" --bext-orig-ref "%s" --str-comment "%s" --str-title "%s" --str-copyright "%s" --str-artist  "%s" --str-date "%s" --str-license "%s" "%s"''' % (master_filename + 'untagged.wav', bext_description, bext_originator, bext_orig_ref, str_comment, str_title, str_copyright, str_artist, str_date, str_license, master_filename)
+        print('tag_wav_command:        ' + tag_wav_command)
+        os.system(tag_wav_command)
+        sox_spectrogram_command = '''sox -S "%s" -n spectrogram -o "%s" -t"%s" -c"%s"''' % (master_filename, spectrogram_filename, label, str_copyright + ' (%s' % publisher)
+        print('sox_spectrogram_command:' + sox_spectrogram_command)
+        os.system(sox_spectrogram_command)
+        sox_cd_command = '''sox -S "%s" -b 16 -r 44100 "%s"''' % (master_filename, cd_quality_filename + 'untagged.wav')
+        print('sox_cd_command:         ' + sox_cd_command)
+        os.system(sox_cd_command)
+        tag_wav_command = '''sndfile-metadata-set "%s" --bext-description "%s" --bext-originator "%s" --bext-orig-ref "%s" --str-comment "%s" --str-title "%s" --str-copyright "%s" --str-artist  "%s" --str-date "%s" --str-license "%s" "%s"''' % (cd_quality_filename + 'untagged.wav', bext_description, bext_originator, bext_orig_ref, str_comment, str_title, str_copyright, str_artist, str_date, str_license, cd_quality_filename)
+        print('tag_wav_command:        ' + tag_wav_command)
+        os.system(tag_wav_command)
+        mp3_command = '''lame --add-id3v2 --tt "%s" --ta "%s" --ty "%s" --tn "%s" --tg "%s"  "%s" "%s"''' % (title, "Michael Gogins", year, notes, "Electroacoustic", master_filename, mp3_filename)
+        print('mp3_command:            ' + mp3_command)
+        os.system(mp3_command)
+        sox_flac_command = '''sox -S "%s" "%s"''' % (master_filename, flac_filename)
+        print('sox_flac_command:       ' + sox_flac_command)
+        os.system(sox_flac_command)
+        mp4_command = '''%s -r 1 -i "%s" -i "%s" -codec:a aac -strict -2 -b:a 384k -c:v libx264 -b:v 500k "%s"''' % ('ffmpeg', os.path.join(cwd, spectrogram_filename), os.path.join(cwd, master_filename), os.path.join(cwd, mp4_filename))
+        mp4_metadata =  '-metadata title="%s" ' % title
+        mp4_metadata += '-metadata date="%s" ' % year
+        mp4_metadata += '-metadata genre="%s" ' % notes
+        mp4_metadata += '-metadata copyright="%s" ' % str_copyright
+        mp4_metadata += '-metadata composer="%s" ' % author
+        mp4_metadata += '-metadata artist="%s" ' % author
+        mp4_metadata += '-metadata publisher="%s" ' % publisher
+        mp4_command = '''"%s" -y -loop 1 -framerate 2 -i "%s" -i "%s" -c:v libx264 -preset medium -tune stillimage -crf 18 -codec:a aac -strict -2 -b:a 384k -r:a 48000 -shortest -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" %s "%s"''' % ('ffmpeg', os.path.join(cwd, spectrogram_filename), os.path.join(cwd, master_filename), mp4_metadata, os.path.join(cwd, mp4_filename))
+        mp4_command = mp4_command.replace('\\', '/')
+        print('mp4_command:            ' + mp4_command)
+        os.system(mp4_command)
+        os.system('del *wavuntagged.wav')
+        os.system('{} {}'.format(soundfile_editor, master_filename))
+        print("")
+    except:
+        print(traceback.format_exc())
+        
 
 def on_render_button_clicked(button):
-    pass
+    try:
+        global piece_filepath
+        global values_for_channels
+        global csound_is_performing
+        csound_is_performing = False
+        csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -RWo" + output_soundfile_filepath, "", orc, sco)
+        csound.stop()
+        csound.cleanup()
+        csound.reset()
+        csound.compileCsdText(csd_text)
+        csound.start()
+        load_ui()
+        log_print("Restoring {} channels...".format(len(values_for_channels)))
+        for name, value in values_for_channels.items():
+            log_print("initialize channel: {} value {} {}".format(name, value, type(value)))
+            if isinstance(value, str):
+                csound.setStringChannel(name, value)
+            else:
+                csound.setControlChannel(name, value)
+        csound_is_performing = True
+        while csound.performBuffer() == 0:
+            # Keep the UI responsive during performance.
+            Gtk.main_iteration_do(False)
+        csound.stop()
+        csound.cleanup()
+        csound.reset()
+        post_process()
+    except:
+        print(traceback.format_exc())
+        
 
 def on_stop_button_clicked(button):
-    global piece_filepath
-    log_print(piece_filepath)
     try:
+        global csound_is_performing
+        csound_is_performing = False
         csound.stop()
         csound.cleanup()
         csound.reset()
         print("Csound has been stopped and reset.")
     except:
         print(traceback.format_exc())
-'''        
-def on_play_button_clicked(button):
-    #csound.SetOption("-+msg_color=0")
-    # Change this for your actual audio configuration, try "aplay -l" to see what they are.
-    csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -+rtaudio=alsa -RWodac", "", orc, sco)
-    # Can also be a soundfile.
-    # csound.setOption("-otest.wav")
-    csound.CompileCsdText(csd_text)
-    csound.Start()
-    for channel, value in values_for_channels.items():
-        print(channel, value)
-        csound.SetControlChannel(channel, value)
-    csound.Perform()
+        
+def get_control_value(control):
+    channel_value = 0
+    if isinstance(control, Gtk.Switch):
+        channel_value = control.get_state()
+    elif isinstance(control, Gtk.ComboBox):
+        channel_value = control.get_active_id()
+    elif isinstance(control, Gtk.ToggleButton):
+        channel_value = control.get_active()
+    elif isinstance(control, Gtk.Scale):
+        channel_value = control.get_value()
+        log_print("control: {} value: {}".format(control.get_name(), channel_value))
+    #~ elif isinstance(control, Gtk.SpinButton):
+        #~ channel_value = control.get_value()
+    elif isinstance(control, Gtk.Editable):
+        channel_value = control.get_text()
+    return channel_value
+    
+def set_control_value(control, value):
+    log_print("control: {} value: {}".format(control.get_name(), value))
+    if isinstance(control, Gtk.Switch):
+        control.set_state(value)
+    elif isinstance(control, Gtk.ComboBox):
+        control.set_active_id(value)
+    elif isinstance(control, Gtk.ToggleButton):
+        control.set_active(value)
+    elif isinstance(control, Gtk.Scale):
+        control.set_value(value)
+    #~ elif isinstance(control, Gtk.SpinButton):
+        #~ channel_value = control.get_value()
+    elif isinstance(control, Gtk.Editable):
+        control.set_text(value)
+         
+# Please note, the order of conditions matters; some subclasses do 
+# not handle superclass signals.
 
-def on_render_button_clicked(button):
-    pass
-
-def on_stop_button_clicked(button):
-    global piece_filepath
-    log_print(piece_filepath)
+def on_control_change(control, data=-1 ,user_data=None):
     try:
-        csound.Stop()
-        csound.Join()
-        csound.Cleanup()
-        csound.Reset()
-        print("Csound has been stopped and reset.")
+        global values_for_channels
+        global csound_is_performing
+        global csound
+        channel_name = control.get_name()
+        channel_value = get_control_value(control)
+        log_print("channel: {} value: {}".format(channel_name, channel_value))
+        # Prevent premature definition of control channels.
+        if csound_is_performing == False:
+            pass
+        else:
+            if isinstance(control, Gtk.ToggleButton):
+                log_print("ToggleButton:  setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                csound.setControlChannel(channel_name, channel_value)
+            elif isinstance(control, Gtk.ComboBox):
+                channel_value = control.get_active_id()
+                log_print("Combo box:     SetStringChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                csound.setStringChannel(channel_name, channel_value)
+            elif isinstance(control, Gtk.Button):
+                channel_value = float(data)
+                log_print("Button:        setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                csound.setControlChannel(channel_name, channel_value)
+            elif isinstance(control, Gtk.MenuItem):
+                channel_value = data
+                log_print("MenuItem:      setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                csound.setControlChannel(channel_name, channel_value)
+            elif isinstance(control, Gtk.Scale):
+                log_print("Scale:         setControlChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                csound.setControlChannel(channel_name, channel_value)
+            #~ elif isinstance(control, Gtk.SpinButton):
+                #~ channel_value = control.get_value()
+                #~ csound.SetControlChannel(channel_name, channel_value)
+            elif isinstance(control, Gtk.Editable):
+                channel_value = control.get_text()
+                log_print("Editable:      SetStringChannel({}, {}, ({}))".format(channel_name, channel_value, type(channel_value)))
+                csound.setStringChannel(channel_name, channel_value)
+        values_for_channels[channel_name] = channel_value
     except:
         print(traceback.format_exc())
+        
 '''
+For only those widgets and those signals that are used here to control Csound 
+performances using the Csound control channels, connect the on_control_changed 
+signal to its callback. Also, associate the actual widget with its name and 
+its current value.
+'''
+def connect_controls(container):
+    global widgets_for_channels
+    global values_for_channels
+    for child in container.get_children():
+        channel_name = child.get_name()
+        # Valid channels start with gk, gi, or gS.
+        if channel_name[:2] not in ["gk", "gi", "gS"]:
+            pass #log_print("  {} is not a Csound control channel, skipping...".format(channel_name))
+        else:
+            channel_value = get_control_value(child)
+            if isinstance(child, Gtk.ComboBox):
+                child.connect("changed", on_control_change, 1.)
+                widgets_for_channels[channel_name] = child
+                values_for_channels[channel_name] = channel_value
+                log_print("Connected GTK widget '{}' to Csound control channel '{}'".format(type(child).__name__, channel_name))
+            if isinstance(child, Gtk.Button):
+                child.connect("pressed", on_control_change, 1.)
+                child.connect("released", on_control_change, 0.)            
+                widgets_for_channels[channel_name] = child
+                values_for_channels[channel_name] = channel_value
+                log_print("Connected GTK widget '{}' to Csound control channel '{}'".format(type(child).__name__, channel_name))
+            if isinstance(child, Gtk.MenuItem):
+                child.connect("select", on_control_change, 1.)  
+                child.connect("deselect", on_control_change, 0.)
+                widgets_for_channels[channel_name] = child
+                values_for_channels[channel_name] = channel_value
+                log_print("Connected GTK widget '{}' to Csound control channel '{}'".format(type(child).__name__, channel_name))
+            if isinstance(child, Gtk.Scale):
+                handler_id = child.connect("value-changed", on_control_change)
+                widgets_for_channels[channel_name] = child
+                values_for_channels[channel_name] = channel_value
+                log_print("Connected GTK widget '{}' to Csound control channel '{}'".format(type(child).__name__, channel_name))
+            if isinstance(child, Gtk.ScaleButton):
+                child.connect("value-changed", on_control_change, -1.)
+                widgets_for_channels[channel_name] = child
+                values_for_channels[channel_name] = channel_value
+                log_print("Connected GTK widget '{}' to Csound control channel '{}'".format(type(child).__name__, channel_name))
+            if isinstance(child, Gtk.Switch):
+                child.connect("state-set", on_control_change, -1.)
+                widgets_for_channels[channel_name] = child
+                values_for_channels[channel_name] = channel_value
+                log_print("Connected GTK widget '{}' to Csound control channel '{}'".format(type(child).__name__, channel_name))
+            if isinstance(child, Gtk.Editable):
+                child.connect("activate", on_control_change, -1.)
+                widgets_for_channels[channel_name] = child
+                values_for_channels[channel_name] = channel_value
+                log_print("Connected GTK widget '{}' to Csound control channel '{}'".format(type(child).__name__, channel_name))
+            if isinstance(child, Gtk.SpinButton):
+                child.connect("value-changed", on_control_change, -1)
+                widgets_for_channels[channel_name] = child
+                values_for_channels[channel_name] = channel_value
+                log_print("Connected GTK widget '{}' to Csound control channel '{}'".format(type(child).__name__, channel_name))
+            if isinstance(child, Gtk.Container):
+                connect_controls(child)                
 
+def load_ui(source=None):
+    try:
+        global ui_filepath
+        global ui_channels_filepath
+        global widgets_for_channels
+        global values_for_channels
+        log_print("Loading UI: {}".format(ui_filepath))
+        if os.path.exists(ui_filepath) == True:
+            with open(ui_filepath, "r") as file:
+                ui_text = file.read()
+            result = builder.add_from_string(ui_text)
+            main_window = builder.get_object("main_window")
+            log_print("main_window: {}".format(main_window))
+            log_print("widgets_for_channels size: {}".format(len(widgets_for_channels)))
+            if os.path.exists(ui_channels_filepath) == True:
+                with open(ui_channels_filepath, "r") as file:
+                    text = file.read()
+                    values_for_channels = json.loads(text)
+                    for channel, value in values_for_channels.items():
+                        if channel in widgets_for_channels:
+                            widget = widgets_for_channels[channel]
+                            if widget:
+                                set_control_value(widget, value)
+        else:
+            log_print("UI file not found, not defining controls.")
+    except:
+        log_print("Error: failed to load user-defined controls layout.")
+        print(traceback.format_exc())
+  
 builder = Gtk.Builder()
-builder.add_from_file("sierpinski-csound-gtk.ui")
+builder.add_from_file(ui_filepath)
 main_window = builder.get_object("main_window")
 main_window.connect("destroy", on_destroy)
-### main_window.resize(4 * 800, 3 * 800)
 save_button = builder.get_object("save_button")
-save_button.connect("clicked", on_save_button_clicked)
+save_button.connect("clicked", save_ui)
+restore_button = builder.get_object("restore_button")
+restore_button.connect("clicked", load_ui)
 play_button = builder.get_object("play_button")
 play_button.connect("clicked", on_play_button_clicked)
 render_button = builder.get_object("render_button")
 render_button.connect("clicked", on_render_button_clicked)
 stop_button = builder.get_object("stop_button")
 stop_button.connect("clicked", on_stop_button_clicked)
+level_slider = builder.get_object("gk_MasterOutput_level")
+connect_controls(main_window.get_child())
 main_window.show_all() 
-if len(sys.argv) > 1:
-    piece_filepath = sys.argv[1]
-    load_piece()
+load_ui()
 Gtk.main()

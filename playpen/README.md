@@ -65,7 +65,9 @@ rendering Csound pieces and automatically post-processing them:
 3.  The SciTE user properties from this repository from 
     [here](https://github.com/gogins/csound-extended/blob/master/.SciTEUser.properties). 
     Download this to your home directory or create in your home directory a 
-    symbolic link to this file.
+    symbolic link to this file. Similarly create symbolic links to the 
+    `playpen.ini` file, which you should edit to customize for you and your 
+    system.
 4.  [sox](http://sox.sourceforge.net/). For Ubuntu, execute 
     `sudo apt install sox` and `sudo apt install libsox-fmt-all`.
 5.  The [libsndfile](http://www.mega-nerd.com/libsndfile/) utilities. For Ubuntu, all 
@@ -141,14 +143,14 @@ Additional useful things:
 
 This is a high-resolution version of Joseph Kung's "Xanadu" piece, often used 
 as an introduction to Csound. It's the simplest possible test that your 
-installation of the playpen is working. Just load the file in SciTE and use 
+installation of the playpen is working. Just load the piece into SciTE and use 
 the _Tools_ menu _Render csd piece to audio_ item.
 
 To produce a soundfile, normalize it, and translate it to different formats, 
 just use the _Tools_ menu _Render csd piece to soundfile and post-process and 
 play_ item.
 
-### sierpinski-csound.py
+### sierpinski-csound-gtk.py
 
 For this example, install Rick Taube's Python port of the Common Music 
 algorithmic composition system, [musx](https://github.com/musx-admin/musx).
