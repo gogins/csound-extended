@@ -159,3 +159,17 @@ Just load the file and use the _Tools_ menu _go_ item.
 This is a basic HTML5 example that runs native Csound using JavaScript and 
 has a custom user interface implemented with JQuery. Just load the file and 
 use the _Tools_ menu _go_ item.
+
+## Native Csound for GTK
+
+These libraries are not needed for the purposes outlined above, but you may 
+find them useful. They provide a simplified version of the native Csound API 
+for GTK. They include the CsoundThreaded Python extension module, which is an 
+alternative to ctcsound, and the libjsc_csound shared library, which provides 
+native Csound to the GTK WebView, which is an alternative to using NW.js. To 
+use these libraries, in the playpen directory, execute:
+```
+cmake .
+make
+sudo make install
+```
