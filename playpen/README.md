@@ -152,13 +152,13 @@ play_ item.
 
 For this example, install Rick Taube's Python port of the Common Music 
 algorithmic composition system, [musx](https://github.com/musx-admin/musx).
-Just load the file and use the _Tools_ menu _go_ item.
+Just load the piece into SciTE and use the _Tools_ menu _go_ item.
 
 ### message.html
 
 This is a basic HTML5 example that runs native Csound using JavaScript and 
-has a custom user interface implemented with JQuery. Just load the file and 
-use the _Tools_ menu _go_ item.
+has a custom user interface implemented with JQuery. Just load the the piece 
+into SciTE and use the _Tools_ menu _go_ item.
 
 ## Native Csound for GTK
 
