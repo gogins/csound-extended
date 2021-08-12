@@ -62,14 +62,15 @@ rendering Csound pieces and automatically post-processing them:
 1.  [Csound](https://csound.com/download.html). For Linux, it is best to build 
     from source code according to [these instructions](https://github.com/csound/csound/blob/develop/BUILD.md).
 2.  The SciTE text editor. On Ubuntu, execute `sudo apt install scite`.
-3.  The SciTE user properties from this repository from [here]. Download this
-    to your home directory or create in your home directory a symbolic link 
-    to this file.
+3.  The SciTE user properties from this repository from 
+    [here](https://github.com/gogins/csound-extended/blob/master/.SciTEUser.properties). 
+    Download this to your home directory or create in your home directory a 
+    symbolic link to this file.
 4.  [sox](http://sox.sourceforge.net/). For Ubuntu, execute 
     `sudo apt install sox` and `sudo apt install libsox-fmt-all`.
 5.  The [libsndfile](http://www.mega-nerd.com/libsndfile/) utilities. For Ubuntu, all 
     you need is to execute `sudo apt install sndfile-programs`. For other 
-    operating systems, you may need to install libsndfile itself which should 
+    operating systems, you may need to install libsndfile itself, which should 
     come with these utilities.
 6.  [Audacity](https://www.audacityteam.org/). Please note, for Ubuntu, 
     install the regular Unbutu Packages Search result for Audacity, currently 
@@ -91,12 +92,12 @@ virtual environment.
     `sudo python3.8 -m pip install numpy`.
 9.  [GTK 3](https://www.gtk.org/docs/installations/), note that GTK 4 is now 
     the current version but it is the previous version, GTK 3, that is used here.
-10. [Glade](https://wiki.gnome.org/Apps/Glade). For Ubuntu Linux, execute 
-    `sudo apt install glade`.
-11. [PyGObject](https://pygobject.readthedocs.io/en/latest/getting_started.html) 
+10. [PyGObject](https://pygobject.readthedocs.io/en/latest/getting_started.html) 
     which automatically generates Python bindings for GTK based on introspection 
     libraries.
-    
+11. [Glade](https://wiki.gnome.org/Apps/Glade). For Ubuntu Linux, execute 
+    `sudo apt install glade`.
+
 Additional requirements for composing with CsoundAC (usable from C++, Python, or 
 JavaScript). These requirements also apply to composing with C++:
 
