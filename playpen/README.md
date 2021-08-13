@@ -60,14 +60,22 @@ Core requirements for composing with Csound, including SciTE extensions for
 rendering Csound pieces and automatically post-processing them:
 
 1.  [Csound](https://csound.com/download.html). For Linux, it is best to build 
-    from source code according to [these instructions](https://github.com/csound/csound/blob/develop/BUILD.md).
+    from source code according to [these  
+    instructions](https://github.com/csound/csound/blob/develop/BUILD.md).
 2.  The SciTE text editor. On Ubuntu, execute `sudo apt install scite`.
-3.  The SciTE user properties from this repository from 
-    [here](https://github.com/gogins/csound-extended/blob/master/.SciTEUser.properties). 
-    Download this to your home directory or create in your home directory a 
-    symbolic link to this file. Similarly create symbolic links to the 
-    `playpen.ini` file, which you should edit to customize for you and your 
-    system.
+3.  Configuration files and helper scripts for SciTE in the 
+    `csound-extended/playpen` directory. If you have cloned the 
+    csound-extended repository, create symbolic links in your home directory 
+    to the following files in the `csound-extended/playpen` directory. 
+    Alternatively, download the files to your home directory:
+    ```
+    [.SciTEUser.properties](xxx)
+    [patch_calibrator.py](xxx)
+    [playpen.ini](xxx)
+    [post-process.py](xxx)
+    [run_nwjs_application.sh](xxx)
+    ```
+
 4.  [sox](http://sox.sourceforge.net/). For Ubuntu, execute 
     `sudo apt install sox` and `sudo apt install libsox-fmt-all`.
 5.  The [libsndfile](http://www.mega-nerd.com/libsndfile/) utilities. For Ubuntu, all 
@@ -159,7 +167,7 @@ Just load the piece into SciTE and use the _Tools_ menu _go_ item.
 ### message.html
 
 This is a basic HTML5 example that runs native Csound using JavaScript and 
-has a custom user interface implemented with JQuery. Just load the the piece 
+has a custom user interface implemented with JQuery. Just load the piece 
 into SciTE and use the _Tools_ menu _go_ item.
 
 ## Native Csound for GTK

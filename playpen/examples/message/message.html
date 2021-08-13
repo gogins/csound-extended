@@ -75,13 +75,18 @@
         font-family: 'Orienta', sans-serif;
     }    
     </style>
-</head>
-<body style="background-color:CadetBlue">
-    <script
-      src="https://code.jquery.com/jquery-3.6.0.min.js"
-      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-      crossorigin="anonymous">
+    <script>
+        function csound_message_callback(message) {
+            var messages_textarea = document.getElementById("csound_console");
+            var existing = messages_textarea.value;
+            messages_textarea.value = existing + message;
+            messages_textarea.scrollTop = messages_textarea.scrollHeight;   
+        };
     </script>
+ </head>
+<body style="background-color:CadetBlue">
+    <script src="CsoundAudioNode.js"></script>
+    <script src="csound_loader.js"></script>
     <h1>Message from Another Planet, version 3</h1>
     <h3>Adapted for Csound with HTML5 by Michael Gogins, from "Message from Another Planet" by Jacob Joaquin</h3>
     <form id='persist'>
@@ -137,6 +142,8 @@
     <input type="button" id='restore' value="Restore" />
     </form>   
     <p>
+    <textarea id='csound_console' cols=80 rows=25>
+    </textarea>
     <textarea id='csd' cols=80 rows=25 style="visibility:hidden;">
 <CsoundSynthesizer>
 <CsLicense>
@@ -242,45 +249,43 @@ i 2    0    .      500     .       16         1.00
 </CsScore>
 </CsoundSynthesizer>
 </textarea>
-<script> 
-
-csound = new Csound()
-
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script><script>    
 $(document).ready(function() {
     $('input').on('input', async function(event) {
+        let csound_ = await get_csound(csound_message_callback);
         var slider_value = parseFloat(event.target.value);
-        if (typeof csound !== 'undefined') {
-            await csound.SetControlChannel(event.target.id, slider_value);
-        }
+        csound_.SetControlChannel(event.target.id, slider_value);
         var output_selector = '#' + event.target.id + '_output';
         $(output_selector).val(slider_value);
     });
     $('#play').on('click', async function() {
+        let csound_ = await get_csound(csound_message_callback);
+        document.getElementById("csound_console").value = "";
         var csd = document.getElementById('csd').value;
-        await csound.CompileCsdText(csd);
+        await csound_.CompileCsdText(csd);
         $('#restore').trigger('click');
-        await csound.Start();
-        await csound.Perform();
+        await csound_.Start();
+        await csound_.Perform();
     });
     $('#stop').on('click', async function() {
-        await csound.Stop();
-        await csound.Cleanup();
-        await csound.Reset();
-     });
+        let csound_ = await get_csound(csound_message_callback);
+        await csound_.Stop();
+        await csound_.Cleanup();
+        csound_.Reset();
+    });
     $('#save').on('click', function() {
         $('.persistent-element').each(function() {
             localStorage.setItem(this.id, this.value);
         });
     });
     $('#restore').on('click', async function() {
-        if (typeof csound !== 'undefined') {
-            $('.persistent-element').each(function() {
-                this.value = localStorage.getItem(this.id);
-                csound.SetControlChannel(this.id, parseFloat(this.value));
-                var output_selector = '#' + this.id + '_output';
-                $(output_selector).val(this.value);
-            });
-        }
+        let csound_ = await get_csound(csound_message_callback);
+        $('.persistent-element').each(function() {
+            this.value = localStorage.getItem(this.id);
+            csound_.SetControlChannel(this.id, parseFloat(this.value));
+            var output_selector = '#' + this.id + '_output';
+            $(output_selector).val(this.value);
+        });
     });
 });
 </script>
