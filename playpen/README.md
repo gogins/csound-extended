@@ -70,11 +70,11 @@ rendering Csound pieces and automatically post-processing them:
     Alternatively, download the files to your home directory. You need to 
     customize at least `playpen.ini`, and perhaps others, for your system.
     
-    [.SciTEUser.properties](https://github.com/gogins/csound-extended/blob/develop/playpen/.SciTEUser.properties)
-    [patch_calibrator.py](https://github.com/gogins/csound-extended/blob/develop/playpen/patch_calibrator.py)
-    [playpen.ini](https://github.com/gogins/csound-extended/blob/develop/playpen/playpen.ini)
-    [post-process.py](https://github.com/gogins/csound-extended/blob/develop/playpen/post-process.py)
-    [run_nwjs_application.sh](https://github.com/gogins/csound-extended/blob/develop/playpen/run_nwjs_application.sh)
+    -- [.SciTEUser.properties](https://github.com/gogins/csound-extended/blob/develop/playpen/.SciTEUser.properties)
+    -- [3patch_calibrator.py](https://github.com/gogins/csound-extended/blob/develop/playpen/patch_calibrator.py)
+    -- [playpen.ini](https://github.com/gogins/csound-extended/blob/develop/playpen/playpen.ini)
+    -- [post-process.py](https://github.com/gogins/csound-extended/blob/develop/playpen/post-process.py)
+    -- [run_nwjs_application.sh](https://github.com/gogins/csound-extended/blob/develop/playpen/run_nwjs_application.sh)
 
 4.  [sox](http://sox.sourceforge.net/). For Ubuntu, execute 
     `sudo apt install sox` and `sudo apt install libsox-fmt-all`.
