@@ -593,7 +593,7 @@ def on_control_change(control, data=-1 ,user_data=None):
     except:
         print(traceback.format_exc())
         
-'''
+''''
 For only those widgets and those signals that are used here to control Csound 
 performances using the Csound control channels, connect the on_control_changed 
 signal to its callback. Also, associate the actual widget with its name and 
@@ -602,11 +602,23 @@ its current value.
 def connect_controls(container):
     global widgets_for_channels
     global values_for_channels
-    for child in container.get_children():
+    # A rare GTK stupidity, all widgets should have get_children, none should 
+    # have get_child.
+    children = []
+    try:
+        children = container.get_children()
+    except:
+        try:
+            child = container.get_child()
+            children.append(child)
+        except:
+            pass
+    for child in children:
+        log_print("child: {} {}".format(child, child.get_name()))
         channel_name = child.get_name()
         # Valid channels start with gk, gi, or gS.
         if channel_name[:2] not in ["gk", "gi", "gS"]:
-            pass #log_print("  {} is not a Csound control channel, skipping...".format(channel_name))
+            pass # log_print("  {} is not a Csound control channel, skipping...".format(channel_name))
         else:
             channel_value = get_control_value(child)
             if isinstance(child, Gtk.ComboBox):
@@ -651,8 +663,7 @@ def connect_controls(container):
                 widgets_for_channels[channel_name] = child
                 values_for_channels[channel_name] = channel_value
                 log_print("Connected GTK widget '{}' to Csound control channel '{}'".format(type(child).__name__, channel_name))
-            if isinstance(child, Gtk.Container):
-                connect_controls(child)                
+        connect_controls(child)                
 
 def load_ui(source=None):
     try:

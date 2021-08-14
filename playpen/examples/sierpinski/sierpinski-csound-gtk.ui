@@ -1,110 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.2 -->
+<!-- Generated with glade 3.39.0 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkAdjustment" id="adjustment1">
     <property name="lower">-50</property>
     <property name="upper">50</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+    <property name="page-size">10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment2">
     <property name="upper">1</property>
     <property name="value">0.75</property>
-    <property name="step_increment">0.01</property>
+    <property name="step-increment">0.01</property>
   </object>
   <object class="GtkAdjustment" id="adjustment3">
     <property name="upper">10</property>
     <property name="value">0.29999999999999999</property>
-    <property name="step_increment">0.01</property>
-    <property name="page_increment">10</property>
+    <property name="step-increment">0.01</property>
+    <property name="page-increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment4">
     <property name="upper">1</property>
-    <property name="value">0.27000000000000002</property>
-    <property name="step_increment">0.01</property>
-    <property name="page_increment">10</property>
+    <property name="value">0.27</property>
+    <property name="step-increment">0.01</property>
+    <property name="page-increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment5">
     <property name="upper">1</property>
     <property name="value">0.75</property>
-    <property name="step_increment">0.01</property>
-    <property name="page_increment">10</property>
+    <property name="step-increment">0.01</property>
+    <property name="page-increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment6">
     <property name="upper">1</property>
     <property name="value">0.5</property>
-    <property name="step_increment">0.01</property>
-    <property name="page_increment">10</property>
+    <property name="step-increment">0.01</property>
+    <property name="page-increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment7">
     <property name="upper">1</property>
     <property name="value">0.5</property>
-    <property name="step_increment">0.01</property>
-    <property name="page_increment">10</property>
+    <property name="step-increment">0.01</property>
+    <property name="page-increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment8">
     <property name="lower">-50</property>
     <property name="upper">50</property>
-    <property name="step_increment">0.10000000000000001</property>
-    <property name="page_increment">10</property>
+    <property name="step-increment">0.10</property>
+    <property name="page-increment">10</property>
   </object>
   <object class="GtkWindow" id="main_window">
     <property name="name">main_window</property>
-    <property name="can_focus">False</property>
-    <child type="titlebar">
-      <placeholder/>
-    </child>
+    <property name="can-focus">False</property>
     <child>
+      <!-- n-columns=2 n-rows=11 -->
       <object class="GtkGrid" id="main_window_layout">
         <property name="name">main_window_layout</property>
-        <property name="width_request">800</property>
-        <property name="height_request">400</property>
+        <property name="width-request">800</property>
+        <property name="height-request">400</property>
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="margin_left">10</property>
-        <property name="margin_right">10</property>
-        <property name="margin_top">10</property>
-        <property name="margin_bottom">10</property>
+        <property name="can-focus">False</property>
+        <property name="margin-left">10</property>
+        <property name="margin-right">10</property>
+        <property name="margin-top">10</property>
+        <property name="margin-bottom">10</property>
         <property name="hexpand">True</property>
         <property name="vexpand">True</property>
-        <property name="border_width">10</property>
-        <property name="row_spacing">10</property>
-        <property name="column_spacing">10</property>
+        <property name="border-width">10</property>
+        <property name="row-spacing">10</property>
+        <property name="column-spacing">10</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Master output level</property>
           </object>
           <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">9</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">9</property>
           </packing>
         </child>
         <child>
           <object class="GtkScale" id="gk_MasterOutput_level">
             <property name="name">gk_MasterOutput_level</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="can-focus">True</property>
             <property name="hexpand">True</property>
             <property name="adjustment">adjustment1</property>
-            <property name="fill_level">50</property>
-            <property name="round_digits">4</property>
+            <property name="fill-level">50</property>
+            <property name="round-digits">4</property>
             <property name="digits">4</property>
-            <property name="value_pos">right</property>
+            <property name="value-pos">right</property>
           </object>
           <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">9</property>
+            <property name="left-attach">1</property>
+            <property name="top-attach">9</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Output</property>
             <attributes>
@@ -112,43 +110,43 @@
             </attributes>
           </object>
           <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">7</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">7</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Reverb feedback</property>
           </object>
           <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">8</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">8</property>
           </packing>
         </child>
         <child>
           <object class="GtkScale" id="gk_Reverb_feedback">
             <property name="name">gk_Reverb_feedback</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="can-focus">True</property>
             <property name="hexpand">True</property>
             <property name="adjustment">adjustment2</property>
-            <property name="fill_level">1</property>
-            <property name="round_digits">4</property>
+            <property name="fill-level">1</property>
+            <property name="round-digits">4</property>
             <property name="digits">4</property>
-            <property name="value_pos">right</property>
+            <property name="value-pos">right</property>
           </object>
           <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">8</property>
+            <property name="left-attach">1</property>
+            <property name="top-attach">8</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Waveguide harpsichord</property>
             <attributes>
@@ -156,197 +154,197 @@
             </attributes>
           </object>
           <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">0</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Harpsichord release</property>
           </object>
           <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">1</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">1</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Harpsichord pick</property>
           </object>
           <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">2</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">2</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Harpsichord reflection</property>
           </object>
           <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">3</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">3</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Harpsichord pluck</property>
           </object>
           <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">4</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">4</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Harpsichord pan</property>
           </object>
           <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">5</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">5</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Harpsichord  output level</property>
           </object>
           <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">6</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">6</property>
           </packing>
         </child>
         <child>
           <object class="GtkScale" id="gk_Harpsichord_release">
             <property name="name">gk_Harpsichord_release</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="can-focus">True</property>
             <property name="hexpand">True</property>
             <property name="adjustment">adjustment3</property>
-            <property name="fill_level">10</property>
-            <property name="round_digits">4</property>
+            <property name="fill-level">10</property>
+            <property name="round-digits">4</property>
             <property name="digits">4</property>
-            <property name="value_pos">right</property>
+            <property name="value-pos">right</property>
           </object>
           <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">1</property>
+            <property name="left-attach">1</property>
+            <property name="top-attach">1</property>
           </packing>
         </child>
         <child>
           <object class="GtkScale" id="gk_Harpsichord_pick">
             <property name="name">gk_Harpsichord_pick</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="can-focus">True</property>
             <property name="hexpand">True</property>
             <property name="adjustment">adjustment4</property>
-            <property name="fill_level">1</property>
-            <property name="round_digits">4</property>
+            <property name="fill-level">1</property>
+            <property name="round-digits">4</property>
             <property name="digits">4</property>
-            <property name="value_pos">right</property>
+            <property name="value-pos">right</property>
           </object>
           <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">2</property>
+            <property name="left-attach">1</property>
+            <property name="top-attach">2</property>
           </packing>
         </child>
         <child>
           <object class="GtkScale" id="gk_Harpsichord_reflection">
             <property name="name">gk_Harpsichord_reflection</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="can-focus">True</property>
             <property name="hexpand">True</property>
             <property name="adjustment">adjustment5</property>
-            <property name="fill_level">1</property>
-            <property name="round_digits">4</property>
+            <property name="fill-level">1</property>
+            <property name="round-digits">4</property>
             <property name="digits">4</property>
-            <property name="value_pos">right</property>
+            <property name="value-pos">right</property>
           </object>
           <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">3</property>
+            <property name="left-attach">1</property>
+            <property name="top-attach">3</property>
           </packing>
         </child>
         <child>
           <object class="GtkScale" id="gi_Harpsichord_pluck">
             <property name="name">gi_Harpsichord_pluck</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="can-focus">True</property>
             <property name="hexpand">True</property>
             <property name="adjustment">adjustment6</property>
-            <property name="fill_level">1</property>
-            <property name="round_digits">4</property>
+            <property name="fill-level">1</property>
+            <property name="round-digits">4</property>
             <property name="digits">4</property>
-            <property name="value_pos">right</property>
+            <property name="value-pos">right</property>
           </object>
           <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">4</property>
+            <property name="left-attach">1</property>
+            <property name="top-attach">4</property>
           </packing>
         </child>
         <child>
           <object class="GtkScale" id="gk_Harpsichord_pan">
             <property name="name">gk_Harpsichord_pan</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="can-focus">True</property>
             <property name="hexpand">True</property>
             <property name="adjustment">adjustment7</property>
-            <property name="fill_level">1</property>
-            <property name="round_digits">4</property>
+            <property name="fill-level">1</property>
+            <property name="round-digits">4</property>
             <property name="digits">4</property>
-            <property name="value_pos">right</property>
+            <property name="value-pos">right</property>
           </object>
           <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">5</property>
+            <property name="left-attach">1</property>
+            <property name="top-attach">5</property>
           </packing>
         </child>
         <child>
           <object class="GtkScale" id="gk_Harpsichord_level">
             <property name="name">gk_Harpsichord_level</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="can-focus">True</property>
             <property name="hexpand">True</property>
             <property name="adjustment">adjustment8</property>
-            <property name="fill_level">50</property>
-            <property name="round_digits">4</property>
+            <property name="fill-level">50</property>
+            <property name="round-digits">4</property>
             <property name="digits">4</property>
-            <property name="value_pos">right</property>
+            <property name="value-pos">right</property>
           </object>
           <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">6</property>
+            <property name="left-attach">1</property>
+            <property name="top-attach">6</property>
           </packing>
         </child>
         <child>
           <object class="GtkToolbar">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">end</property>
             <child>
               <object class="GtkToolButton" id="play_button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Play audio</property>
+                <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">Play audio</property>
                 <property name="label" translatable="yes">Play</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-media-play</property>
+                <property name="use-underline">True</property>
+                <property name="stock-id">gtk-media-play</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -356,11 +354,11 @@
             <child>
               <object class="GtkToolButton" id="render_button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Render to soundfile </property>
+                <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">Render to soundfile </property>
                 <property name="label" translatable="yes">Render</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-goto-last</property>
+                <property name="use-underline">True</property>
+                <property name="stock-id">gtk-goto-last</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -371,11 +369,11 @@
               <object class="GtkToolButton" id="stop_button">
                 <property name="name">stop_button</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Stop performance</property>
+                <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">Stop performance</property>
                 <property name="label" translatable="yes">Stop</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-media-stop</property>
+                <property name="use-underline">True</property>
+                <property name="stock-id">gtk-media-stop</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -386,11 +384,11 @@
               <object class="GtkToolButton" id="save_button">
                 <property name="name">save_button</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Save channel values</property>
+                <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">Save channel values</property>
                 <property name="label" translatable="yes">Save</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-go-down</property>
+                <property name="use-underline">True</property>
+                <property name="stock-id">gtk-go-down</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -401,11 +399,11 @@
               <object class="GtkToolButton" id="restore_button">
                 <property name="name">restore_button</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Restore channel values</property>
+                <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">Restore channel values</property>
                 <property name="label" translatable="yes">Restore</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-go-up</property>
+                <property name="use-underline">True</property>
+                <property name="stock-id">gtk-go-up</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -414,8 +412,8 @@
             </child>
           </object>
           <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">10</property>
+            <property name="left-attach">1</property>
+            <property name="top-attach">10</property>
           </packing>
         </child>
         <child>
@@ -432,7 +430,7 @@
   </object>
   <object class="GtkAdjustment" id="adjustment9">
     <property name="upper">100</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
   </object>
 </interface>
