@@ -115,6 +115,7 @@ find_package(GMM)
 find_package(Java)
 find_package(JNI)
 find_package(LIBLO)
+find_package(MUSICXML)
 find_package(OpenCV REQUIRED)
 find_package(PORTSMF)
 find_package(PNG)
@@ -127,6 +128,7 @@ find_package(ZLIB)
 
 include_directories("${CSOUND_INCLUDE_DIR}")
 include_directories("${CSOUND_INCLUDE_DIR}/csound")
+include_directories("${MUSICXML_INCLUDE_DIRS}")
 
 # Copied from dependencies/csound/CMakeLists.txt:
 

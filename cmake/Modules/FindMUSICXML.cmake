@@ -17,3 +17,4 @@ find_package_handle_standard_args(MUSICXML DEFAULT_MSG
                                   MUSICXML_LIBRARY MUSICXML_INCLUDE_DIR)
 
 mark_as_advanced(MUSICXML_INCLUDE_DIR MUSICXML_LIBRARY )
+add_compile_definitions(HAVE_MUSICXML2)
