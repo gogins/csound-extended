@@ -128,7 +128,9 @@ find_package(ZLIB)
 
 include_directories("${CSOUND_INCLUDE_DIR}")
 include_directories("${CSOUND_INCLUDE_DIR}/csound")
-include_directories("${MUSICXML_INCLUDE_DIRS}")
+if (MUSICXML_FOUND)
+    include_directories("${MUSICXML_INCLUDE_DIRS}")
+endif()
 
 # Copied from dependencies/csound/CMakeLists.txt:
 

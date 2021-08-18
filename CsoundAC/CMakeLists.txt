@@ -14,6 +14,9 @@ option(BUILD_CSOUND_AC_PYTHON_INTERFACE "Build the Csound AC Python interface" O
 option(USE_SYSTEM_PORTSMF ON)
 
 find_PACKAGE(MUSICXML)
+if (MUSICXML_FOUND)
+    add_compile_definitions(MUSICXML_FOUND)
+endif()
 #find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(FLTK)
 find_package(SWIG)
@@ -80,7 +83,9 @@ if(BUILD_CSOUND_AC)
     target_include_directories(libCsoundAC SYSTEM PRIVATE ${CSOUND_INCLUDE_PATH})
     target_include_directories(libCsoundAC PRIVATE ${EIGEN3_INCLUDE_PATH})
     target_include_directories(libCsoundAC PRIVATE ${FLTK_INCLUDE_DIR})
-    target_include_directories(libCsoundAC PRIVATE ${MUSICXML_INCLUDE_DIRS})
+    if (MUSICXML_FOUND)
+        target_include_directories(libCsoundAC PRIVATE ${MUSICXML_INCLUDE_DIRS})
+    endif()
 
     set_target_properties(libCsoundAC PROPERTIES
         SOVERSION "${APIVERSION}"
@@ -89,7 +94,7 @@ if(BUILD_CSOUND_AC)
         LIBRARY_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}"
         ARCHIVE_OUTPUT_DIRECTORY "${BUILD_LIB_DIR}")
 
-    target_link_libraries(libCsoundAC PRIVATE ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARIES})
+    target_link_libraries(libCsoundAC PRIVATE ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY})
     if(USE_SYSTEM_PORTSMF)
         target_link_libraries(libCsoundAC PRIVATE ${PORTSMF_LIBRARY})
     endif()

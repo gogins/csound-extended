@@ -39,7 +39,7 @@
 #endif
 #define EXP SILENCE_PUBLIC
 
-#if defined(HAVE_MUSICXML2)
+#if defined(MUSICXML_FOUND)
 #include <elements.h>
 #include <factory.h>
 #include <xml.h>
@@ -90,7 +90,7 @@ Score::~Score(void)
 {
 }
 
-#if defined(HAVE_MUSICXML2)
+#if defined(MUSICXML_FOUND)
 
 class ScoreMidiWriter : public midiwriter
 {
@@ -143,7 +143,7 @@ void Score::load(std::string filename)
         load(stream);
         stream.close();
     }
-#if defined(HAVE_MUSICXML2)
+#if defined(MUSICXML_FOUND)
         if (filename.find(".musicxml") != std::string::npos ||
             filename.find(".MUSICXML") != std::string::npos ||
             filename.find(".mxl") != std::string::npos ||
@@ -206,7 +206,7 @@ void Score::load(std::istream &stream)
     // load(midiFile);
 }
 
-#if defined(HAVE_MUSICXML2)
+#if defined(MUSICXML_FOUND)
 static Sxmlattribute newAttribute(const string& name, const string& value)
 {
     Sxmlattribute attribute = xmlattribute::create();
@@ -333,7 +333,7 @@ void Score::save(std::string filename)
         save(stream);
         System::inform("Score::save.\n");
     }
-#if defined(HAVE_MUSICXML2)
+#if defined(MUSICXML_FOUND)
     else if (filename.find(".musicxml") != std::string::npos ||
              filename.find(".xml") != std::string::npos ||
              filename.find(".mxl") != std::string::npos ||

@@ -47,7 +47,7 @@ alwayson "MasterOutput"
 
 gk_overlap init .0125
 
-;gk_ZakianFlute_level init -4
+;gk_ZakianFlute_level init -2
 gk_ZakianFlute_level chnexport "gk_ZakianFlute_level",3
 gk_ZakianFlute_pan init (2 / 7 - .5)
 gi_ZakianFLute_seed init .5
@@ -390,45 +390,57 @@ outleta "chorusright", a_out_right * gk_YiString_chorus_send
 prints  "YiString       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
 endin
 
-gk_Bower_level init 20
-gk_Bower_pressure init 4.2
-gisine ftgen 0,0,65536,10,1
+gk_Bower_level chnexport "gk_Bower_level", 3
+gk_Bower_pan chnexport "gk_Bower_pan", 3
+gi_Bower_minimum_hz chnexport "gi_Bower_minimum_hz", 3
+gk_Bower_bow_pressure chnexport "gk_Bower_bow_pressure", 3
+gk_Bower_bow_position chnexport "gk_Bower_bow_position", 3
+gk_Bower_vibrato_hz chnexport "gk_Bower_vibrato_hz", 3
+gk_Bower_vibrato_amplitude chnexport "gk_Bower_vibrato_amplitude", 3
+gi_Bower_sine ftgen 0,0,65537,10,1
+gk_Bower_level init -30
+gk_Bower_bow_pressure init 4.1
+gk_Bower_bow_position init .148
+gi_Bower_minimum_hz init 30
 instr Bower
-if p3 == -1 goto indefinite
-goto non_indefinite
-indefinite:
-  p3 = 1000000
-non_indefinite:
-insno = p1
-istart = p2
-iduration = p3
-ikey = p4
-ivelocity = p5
-iphase = p6
-ipan = (4 / 7 - .5)
-iamp ampmidicurve ivelocity, gi_ampmidicurve_dynamic_range, gi_ampmidicurve_exponent
-iattack = i(gk_overlap)
-idecay = i(gk_overlap)
-isustain = p3 - i(gk_overlap)
-p3 = iattack + isustain + idecay
-kenvelope transeg 0.0, iattack / 2.0, 1.5, iamp / 2.0, iattack / 2.0, -1.5, iamp, isustain, 0.0, iamp, idecay / 2.0, 1.5, iamp / 2.0, idecay / 2.0, -1.5, 0
-ihertz = cpsmidinn(ikey)
-kamp = kenvelope
-kfreq = ihertz
-kpres = 0.25
-krat rspline 0.006,0.988,1,2
-kvibf = 4.5
-kvibamp = 0
-iminfreq = 30
-aSig wgbow kamp,kfreq,gk_Bower_pressure,krat,kvibf,kvibamp,gisine,iminfreq
-aleft, aright pan2 aSig / 7, p1/6
-adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
-aleft = adamping * aleft
-aright = adamping * aright
-kgain = ampdb(gk_Bower_level)
-outleta "outleft", aleft * kgain
-outleta "outright", aright * kgain
-prints "Bower          i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
+i_instrument = p1
+i_time = p2
+i_duration = p3
+i_midi_key = p4
+i_midi_velocity = p5
+i_phase = p6
+i_pan = p7
+i_amplitude = ampdb(i_midi_velocity) * 500
+i_amplitude ampmidicurve i_midi_velocity, gi_ampmidicurve_dynamic_range, gi_ampmidicurve_exponent
+i_amplitude *= 50000
+
+i_attack =  p3 * (1 / 4) * (4 / 3)
+i_sustain = p3 * (1 / 2) * (4 / 3)
+i_release =   p3 * (1 / 4) * (4 / 3)
+p3 = i_attack + i_sustain + i_release
+k_envelope transeg 0.0, i_attack / 2.0, 1.5, i_amplitude / 2.0, i_attack / 2.0, -1.5, i_amplitude, i_sustain, 0.0, i_amplitude, i_release / 2.0, 1.5, i_amplitude / 2.0, i_release / 2.0, -1.5, 0
+i_frequency = cpsmidinn(i_midi_key)
+kamp = k_envelope
+kfreq = i_frequency
+kpres = gk_Bower_bow_pressure
+; krat rspline 0.006,0.988,0.1,0.4
+krat rspline 0.006,0.988,1,4
+krat = gk_Bower_bow_position
+kvibf = gk_Bower_vibrato_hz
+kvibamp = gk_Bower_vibrato_amplitude
+iminfreq = gi_Bower_minimum_hz
+aSig wgbow kamp,kfreq,kpres,krat,kvibf,kvibamp,gi_Bower_sine,iminfreq
+k_gain = ampdb(gk_Bower_level)
+aSig = aSig * k_gain
+;aSig butlp aSig,2000
+;aSig pareq aSig,80,6,0.707
+a_left, a_right pan2 aSig / 7, i_pan
+a_damping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
+a_left = a_damping * a_left
+a_right = a_damping * a_right
+outleta "outleft", a_left
+outleta "outright", a_right
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
 
 gk_Harpsichord_level init 0
