@@ -1,11 +1,17 @@
+import CsoundAC
+score = CsoundAC.Score()
+score.load("oblivion.xml")
+sco = score.getCsoundScore()
+print(sco)
+
 csd = '''
 <CsoundSynthesizer>
 <CsLicense>
-"Oblivion,"" by Astor Piazzola
+"Oblivion," by Astor Piazzola
 Arranged for Csound by Michael Gogins
 </CsLicense>
 <CsOptions>
--odac:plughw:1,0 -m195 -d
+-odac:plughw:2,0 -m195 -d
 </CsOptions>
 <CsInstruments>
 
@@ -272,7 +278,7 @@ a_out_left, a_out_right pan2 a_signal, p1/6
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
-prints "ZakianFlute    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p1/6, active(p1)
+prints "ZakianFlute    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
 endin
 
 gk_Guitar_level init 8
@@ -324,7 +330,7 @@ a_out_left, a_out_right pan2 a_signal, p1/6
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
-prints "Guitar         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p1/6, active(p1)
+prints "Guitar         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
 endin
 
 gk_YiString_level init 6
@@ -379,9 +385,9 @@ outleta "outleft", a_out_left * gk_YiString_reverb_send
 outleta "outright", a_out_right * gk_YiString_reverb_send
 outleta "chorusleft", a_out_left * gk_YiString_chorus_send
 outleta "chorusright", a_out_right * gk_YiString_chorus_send
-;printks "YiString         %9.4f  %9.4f\n", 0.5, a_out_left, a_out_right
+;printks "YiString         %9.4f  %9.4f\\n", 0.5, a_out_left, a_out_right
 #endif
-prints  "YiString       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p1/6, active(p1)
+prints  "YiString       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
 endin
 
 gk_Bower_level init 20
@@ -422,7 +428,7 @@ aright = adamping * aright
 kgain = ampdb(gk_Bower_level)
 outleta "outleft", aleft * kgain
 outleta "outright", aright * kgain
-prints "Bower          i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p1/6, active(p1)
+prints "Bower          i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
 endin
 
 gk_Harpsichord_level init 0
@@ -472,20 +478,20 @@ a_out_left, a_out_right pan2 a_signal, p1/6
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
-; printks "Harpsichord      %9.4f   %9.4f\n", 0.5, a_out_left, a_out_right
-prints "Harpsichord    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p1/6, active(p1)
+; printks "Harpsichord      %9.4f   %9.4f\\n", 0.5, a_out_left, a_out_right
+prints "Harpsichord    i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
 kpbend    pchbend   2
-printks2 "pchbend %9.4f\n", kpbend
+printks2 "pchbend %9.4f\\n", kpbend
 kmodw     midictrl  1
-printks2 "kmodw   %9.4f\n", kmodw
+printks2 "kmodw   %9.4f\\n", kmodw
 kctl6     midictrl  6
-printks2 "kctl6   %9.4f\n", kctl6
+printks2 "kctl6   %9.4f\\n", kctl6
 kctl4     midictrl  4
-printks2 "kctl4   %9.4f\n", kctl4
+printks2 "kctl4   %9.4f\\n", kctl4
 kctl5     midictrl  5
-printks2 "kctl5   %9.4f\n", kctl5
+printks2 "kctl5   %9.4f\\n", kctl5
 kafter    aftouch   1
-printks2 "kafter  %9.4f\n", kafter
+printks2 "kafter  %9.4f\\n", kafter
 
 endin
 
@@ -501,7 +507,7 @@ aright inleta "inright"
 aleftout, arightout reverbsc aleft, aright, gk_Reverb_feedback, gk_Reverb_frequency_cutoff, sr, gi_Reverb_delay_modulation
 outleta "outleft", aleftout
 outleta "outright", arightout
-prints "ReverbSC       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
+prints "ReverbSC       i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
 endin
 
 gk_MasterOutput_level init -15
@@ -510,7 +516,7 @@ instr MasterOutput
 aleft inleta "inleft"
 aright inleta "inright"
 k_gain = ampdb(gk_MasterOutput_level)
-printks2 "Master gain: %f\n", k_gain
+printks2 "Master gain: %f\\n", k_gain
 iamp init 1
 iattack init .01
 idecay init 10
@@ -525,12 +531,12 @@ i_filename_length strlen gS_MasterOutput_filename
 if i_filename_length > 0 goto has_filename
 goto non_has_filename
 has_filename:
-prints sprintf("Output filename: %s\n", gS_MasterOutput_filename)
+prints sprintf("Output filename: %s\\n", gS_MasterOutput_filename)
 fout gS_MasterOutput_filename, 18, aleft * i_amplitude_adjustment, aright * i_amplitude_adjustment
 non_has_filename:
-prints "MasterOutput   i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", p1, p2, p3, p4, p5, p1/6, active(p1)
+prints "MasterOutput   i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", p1, p2, p3, p4, p5, p1/6, active(p1)
 kstatus, kchan, kdata1, kdata2 midiin
-;printf "          midi in s %4d c %4d %4d %4d\n", kdata2, kstatus, kchan, kdata1, kdata2
+;printf "          midi in s %4d c %4d %4d %4d\\n", kdata2, kstatus, kchan, kdata1, kdata2
 endin
 
 </CsInstruments>
@@ -539,12 +545,13 @@ endin
 e 5
 </CsScore>
 </CsoundSynthesizer>
-'''
-
-import CsoundAC
-score = CsoundAC.Score()
-score.load("oblivion.mxl")
-sco = score.getCsoundScore()
-print(sco)
+'''.format(sco)
+with open("oblivion.csd", "w")  as  file:
+	file.write(csd)
+import ctcsound
+csound = ctcsound.Csound()
+csound.compileCsdText(csd)
+csound.start()
+csound.perform()
 
 
