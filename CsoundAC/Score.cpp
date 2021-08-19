@@ -352,7 +352,11 @@ void Score::save(std::string filename)
         xmlFile->set(documentTypeDeclaration);
         // Create a MusicXML2 document in which first one part is written,
         // then the next part, and so on.
-        xmlFile->set(createScore(*this, filename));
+        auto score = createScore(*this, filename)
+        // There will be one part for each instrument in the CsoundAC score.
+        // The notes for each instrument will be added to the part in order.
+        // The measure numbers will be inferred just before adding the note.
+        xmlFile->set(score);
         // Print the XML document to the output stream.
         xmlFile->print(stream);
     }
