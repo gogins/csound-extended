@@ -142,6 +142,7 @@ void Score::load(std::string filename)
         stream.open(filename.c_str(), std::ifstream::binary);
         load(stream);
         stream.close();
+                return;
     }
 #if defined(MUSICXML_FOUND)
         if (filename.find(".musicxml") != std::string::npos ||
@@ -170,11 +171,10 @@ void Score::load(std::string filename)
             // of the document tree, in the proper order, calling newNote as appropriate.
             xmlTreeBrowser.browse(*sxmlElement);
         }
+        return;
     }
 #endif
-    else {
-        System::error("Unknown file format in Score::load().\n");
-    }
+    System::error("Unknown file format in Score::load().\n");
     System::inform("Score::load.\n");
 }
 
@@ -332,9 +332,10 @@ void Score::save(std::string filename)
             filename.find(".MID") != std::string::npos) {
         save(stream);
         System::inform("Score::save.\n");
+        return;
     }
 #if defined(MUSICXML_FOUND)
-    else if (filename.find(".musicxml") != std::string::npos ||
+    if (filename.find(".musicxml") != std::string::npos ||
              filename.find(".xml") != std::string::npos ||
              filename.find(".mxl") != std::string::npos ||
              filename.find(".MXL") != std::string::npos ||
@@ -352,19 +353,18 @@ void Score::save(std::string filename)
         xmlFile->set(documentTypeDeclaration);
         // Create a MusicXML2 document in which first one part is written,
         // then the next part, and so on.
-        auto score = createScore(*this, filename)
+        auto score = createScore(*this, filename);
         // There will be one part for each instrument in the CsoundAC score.
         // The notes for each instrument will be added to the part in order.
         // The measure numbers will be inferred just before adding the note.
         xmlFile->set(score);
         // Print the XML document to the output stream.
         xmlFile->print(stream);
+        stream.close();
+        return;
     }
 #endif
-    else {
-        System::error("Unknown file format in Score::save().\n");
-    }
-    stream.close();
+    System::error("Unknown file format in Score::save(%s).\n", filename.c_str());
 }
 
 void Score::save_filename(std::string filename)
