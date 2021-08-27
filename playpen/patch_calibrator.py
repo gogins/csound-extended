@@ -31,6 +31,7 @@ alwayson "PianoOutPianoteq"
 #include "PianoOutPianoteq.inc"
 
 #include "MasterOutput.inc"
+#include "FaustGreyholeReverb.inc"
 
 iampdbfs init 1
 prints "Default amplitude at 0 dBFS: %9.4f\\n", iampdbfs
@@ -52,6 +53,7 @@ connect "PianoOutFluidsynth", "outright", "MasterOutput", "inright"
 connect "PianoOutPianoteq", "outleft", "MasterOutput", "inleft"
 connect "PianoOutPianoteq", "outright", "MasterOutput", "inright"
 
+alwayson "FaustGreyholeReverb"
 alwayson "MasterOutput"
 '''
 

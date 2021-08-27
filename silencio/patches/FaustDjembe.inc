@@ -63,7 +63,8 @@ a_signal = a_left + a_right
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking 
 aleft, aright pan2 a_signal, k_space_left_to_right
-outs a_left, a_right
+outleta "outleft", a_left * k_gain
+outleta "outright", a_right * k_gain
 prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, i_midi_key, p5, p7, active(p1)
 endin
 

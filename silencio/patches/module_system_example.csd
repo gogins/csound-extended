@@ -14,52 +14,41 @@ This file demonstrates a module system for Csound.
 
 ; Initialize the global variables.
 
-sr = 44100
+sr = 48000
 ksmps = 100
 nchnls = 2
 0dbfs = 1
 
 ; Connect up instruments and effects to create a signal flow graph.
 
-connect "STKBowed",     "outleft",      "Reverb",     	"inleft"
-connect "STKBowed",     "outright",     "Reverb",     	"inright"
+connect "STKBowed",     "outleft",      "ReverbSC",     "inleft"
+connect "STKBowed",     "outright",     "ReverbSC",     "inright"
 
-connect "Harpsichord",  "outleft",     "Reverb",     	"inleft"
-connect "Harpsichord",  "outright",    "Reverb",     	"inright"
+connect "Harpsichord",  "outleft",     "ReverbSC",     	"inleft"
+connect "Harpsichord",  "outright",    "ReverbSC",     	"inright"
 
-connect "Reverb", 		"outleft",     "Compressor",    "inleft"
-connect "Reverb", 		"outright",    "Compressor",    "inright"
+connect "ReverbSC", 	"outleft",     "Compressor",    "inleft"
+connect "ReverbSC", 	"outright",    "Compressor",    "inright"
 
 connect "Compressor",   "outleft",     "MasterOutput",  "inleft"
 connect "Compressor",   "outright",    "MasterOutput",  "inright"
 
 ; Turn on the "effect" units in the signal flow graph.
 
-alwayson "Controllers"
-alwayson "Reverb"
+alwayson "ReverbSC"
 alwayson "Compressor"
 alwayson "MasterOutput"
 
 #include "Harpsichord.inc"
 #include "STKBowed.inc"
-#include "Reverb.inc"
+#include "ReverbSC.inc"
 #include "Compressor.inc"
 #include "MasterOutput.inc"
 
-; Set default values of control channels,
-; this is necessary in case the user of this orchestra does not
-; otherwise set these values.
+; Override default values of control channels.
 
-chnset .95, "gk_Reverb_feedback"
-
-instr Controllers
-gk_STKBowed_level chnget "gk_STKBowed_level"
-gk_STKBowed_level chnget "gk_STKBowed_bow_pressure"
-gk_STKBowed_level chnget "gk_STKBowed_vibrato_level"
-gk_Harpsichord_level chnget "gk_Harpsichord_level"
-gk_Reverb_feedback chnget "gk_Reverb_feedback"
-gk_MasterOutput_level chnget "gk_MasterOutput_level"
-endin
+gk_Reverb_feedback init .9
+gk_Compressor_threshhold init .6
 
 </CsInstruments>
 <CsScore>

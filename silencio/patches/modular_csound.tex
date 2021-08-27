@@ -82,6 +82,12 @@ modules may be defined in include files (\texttt{.inc} files) and
 a module (with comments added):
 
 \begin{lstlisting}
+; All control channels are exported from global variables using chnexport.
+gk_STKBowed_vibrato_level chnexport "gk_STKBosed_vibrato_level", 3
+gk_STKBowed_bow_pressure chnexport "gk_STKBowed_bow_pressure", 3
+gk_STKBowed_bow_position chnexport "gk_STKBowed_bow_position", 3
+gk_STKBowed_vibrato_frequency chnexport "gk_STKBowed_vibrato_frequency", 3
+gk_STKBowed_level chnexport "gk_STKBowed_level", 3
 gk_STKBowed_vibrato_level init 2.8
 gk_STKBowed_bow_pressure init 110
 gk_STKBowed_bow_position init 20
@@ -110,7 +116,7 @@ i_sustain = p3
 i_release = 0.01
 xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
-a_signal = a_signal * i_amplitude * a_declicking * k_gain
+a_signal = a_signal * i_amplitude * a_declicking * k_gain 
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
@@ -207,14 +213,15 @@ in \url{Spatialize.inc} for documentation of the spatialization system.
 		or directly use input or output channels or zak variables. They use
 global control variables with the following naming convention:
 \texttt{gk\_InstrumentName\_variable\_name}; \texttt{i}-rate variables may also
-be used. These variables must be declared just above the instr or opcode
-definition and initialized there with default values. If the range is not [0,1]
-then comment to document the expected range.
+be used. These variables must first be defined using the \texttt{chnxport} opcode, 
+and then initialized with a default value, just above the instr or opcode
+definition. If the range is not [0,1] then comment to document the expected range.
 
 In addition to using only these standard interfaces, all modules that use
-function tables must define their own tables within themselves using the
-\texttt{ftgenonce} opcode. Then there is no dependence of the module upon the
-external score or orchestra header.
+function tables must define their own tables using the
+\texttt{ftgen} opcode just above the \texttt{instr} block Then there is no dependence 
+of the module upon the external score or orchestra header. The funtion table names 
+must follow the same naming convention.
 
 Usually, a modular Csound piece will generate a score in external code or in
 the orchestra header, \texttt{\#include} a number of instrument and effects
@@ -225,28 +232,9 @@ terminate in a module that will perform Ambisonic decoding to the specified
 speaker rig and/or output soundfile.
 
 Finally, any external controls, such as CsoundQt widgets, OSC signals, MIDI
-controllers, or whatever, will be received in another custom input module and
-mapped to the relevant global control variables.
-
-Because control channels are compute-intensive, it is advisable to receive all
-control value changes in a global, always-on instrument, like this:
-
-\begin{lstlisting}
-; Set default values of control channels,
-; this is necessary in case the user of this orchestra does not
-; otherwise set these values.
-
-chnset .95, "gk_Reverb_feedback"
-
-instr Controllers
-gk_STKBowed_level chnget "gk_STKBowed_level"
-gk_STKBowed_level chnget "gk_STKBowed_bow_pressure"
-gk_STKBowed_level chnget "gk_STKBowed_vibrato_level"
-gk_Harpsichord_level chnget "gk_Harpsichord_level"
-gk_Reverb_feedback chnget "gk_Reverb_feedback"
-gk_MasterOutput_level chnget "gk_MasterOutput_level"
-endin
-\end{lstlisting}
+controllers, or whatever, will use the Csound API to set control channel values 
+and these will automatically and efficiently be mapped to the aforementioned 
+global variables.
 
 \subsection{Real-Time Notes}
 
@@ -300,52 +288,41 @@ This file demonstrates a module system for Csound.
 
 ; Initialize the global variables.
 
-sr = 44100
+sr = 48000
 ksmps = 100
 nchnls = 2
 0dbfs = 1
 
 ; Connect up instruments and effects to create a signal flow graph.
 
-connect "STKBowed",     "outleft",      "Reverb",     	"inleft"
-connect "STKBowed",     "outright",     "Reverb",     	"inright"
+connect "STKBowed",     "outleft",      "ReverbSC",     "inleft"
+connect "STKBowed",     "outright",     "ReverbSC",     "inright"
 
-connect "Harpsichord",  "outleft",     "Reverb",     	"inleft"
-connect "Harpsichord",  "outright",    "Reverb",     	"inright"
+connect "Harpsichord",  "outleft",     "ReverbSC",     	"inleft"
+connect "Harpsichord",  "outright",    "ReverbSC",     	"inright"
 
-connect "Reverb", 		"outleft",     "Compressor",    "inleft"
-connect "Reverb", 		"outright",    "Compressor",    "inright"
+connect "ReverbSC", 	"outleft",     "Compressor",    "inleft"
+connect "ReverbSC", 	"outright",    "Compressor",    "inright"
 
 connect "Compressor",   "outleft",     "MasterOutput",  "inleft"
 connect "Compressor",   "outright",    "MasterOutput",  "inright"
 
 ; Turn on the "effect" units in the signal flow graph.
 
-alwayson "Controllers"
-alwayson "Reverb"
+alwayson "ReverbSC"
 alwayson "Compressor"
 alwayson "MasterOutput"
 
 #include "Harpsichord.inc"
 #include "STKBowed.inc"
-#include "Reverb.inc"
+#include "ReverbSC.inc"
 #include "Compressor.inc"
 #include "MasterOutput.inc"
 
-; Set default values of control channels,
-; this is necessary in case the user of this orchestra does not
-; otherwise set these values.
+; Override default values of control channels.
 
-chnset .95, "gk_Reverb_feedback"
-
-instr Controllers
-gk_STKBowed_level chnget "gk_STKBowed_level"
-gk_STKBowed_level chnget "gk_STKBowed_bow_pressure"
-gk_STKBowed_level chnget "gk_STKBowed_vibrato_level"
-gk_Harpsichord_level chnget "gk_Harpsichord_level"
-gk_Reverb_feedback chnget "gk_Reverb_feedback"
-gk_MasterOutput_level chnget "gk_MasterOutput_level"
-endin
+gk_Reverb_feedback init .9
+gk_Compressor_threshhold init .6
 
 </CsInstruments>
 <CsScore>
@@ -353,10 +330,10 @@ endin
 ; Not necessary to activate "effects" or create f-tables in the score!
 ; Overlapping notes to create new instances of instruments.
 
-i 1 1 5 60 85 0 .25
-i 1 2 5 64 80 0 .25
-i 2 3 5 67 75 0 .75
-i 2 4 5 71 70 0 .75
+i 1 1 5 60 85 .25
+i 1 2 5 64 80 .25
+i 2 3 5 67 75 .75
+i 2 4 5 71 70 .75
 e 10
 </CsScore>
 </CsoundSynthesizer>

@@ -32,6 +32,7 @@ gi_FaustTurenas_compiled faustcompile {{
 declare name "turenas";
 
 import("stdfaust.lib");
+import("demos.lib");
 
 //========================= Smart Keyboard Configuration =================================
 // (10 keyboards with 18 keys each configured as a pitch matrix.
@@ -142,22 +143,25 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 54
+i_level_correction = 90
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_FaustTurenas_level)
 i_faust_dsp faustdsp gi_FaustTurenas_compiled
 k_frequency cpsmidinn i_midi_key
 faustctl i_faust_dsp, "freq", k_frequency
-k_gain = i_midi_velocity
+k_gain = ampdb(i_midi_velocity)
 faustctl i_faust_dsp, "y", gk_FaustTurenas_y
 faustctl i_faust_dsp, "res", gk_FaustTurenas_res
 faustctl i_faust_dsp, "gate", k(1)
 a_signal faustplay i_faust_dsp
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking 
-a_left, a_right pan2 a_signal, k_space_left_to_right
-outs a_left, a_right
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+a_out_left = a_out_left * i_amplitude * a_declicking * k_gain
+a_out_right = a_out_right * i_amplitude * a_declicking * k_gain
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
 prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, i_midi_key, p5, p7, active(p1)
 endin
 

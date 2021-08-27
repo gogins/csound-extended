@@ -1,3 +1,7 @@
+gk_Harpsichord_level chnexport "gk_Harpsichord_level", 3
+gk_Harpsichord_pick chnexport "gk_Harpsichord_pick", 3
+gk_Harpsichord_reflection chnexport "gk_Harpsichord_reflection", 3
+gk_Harpsichord_pluck chnexport "gk_Harpsichord_pluck", 3
 gk_Harpsichord_midi_dynamic_range init 127
 gk_Harpsichord_level init 0
 gk_Harpsichord_pick init .075

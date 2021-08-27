@@ -1,3 +1,8 @@
+gk_STKBowed_vibrato_level chnexport "gk_STKBosed_vibrato_level", 3
+gk_STKBowed_bow_pressure chnexport "gk_STKBowed_bow_pressure", 3
+gk_STKBowed_bow_position chnexport "gk_STKBowed_bow_position", 3
+gk_STKBowed_vibrato_frequency chnexport "gk_STKBowed_vibrato_frequency", 3
+gk_STKBowed_level chnexport "gk_STKBowed_level", 3
 gk_STKBowed_vibrato_level init 2.8
 gk_STKBowed_bow_pressure init 110
 gk_STKBowed_bow_position init 20
