@@ -22,6 +22,7 @@ gk_FaustBrass_mute chnexport "gk_FaustBrass_mute", 3
 gk_FaustBrass_vibratoFreq chnexport "gk_FaustBrass_vibratoFreq", 3
 gk_FaustBrass_vibratoGain chnexport "gk_FaustBrass_vibratoGain", 3
 gk_FaustBrass_outGain chnexport "gk_FaustBrass_outGain", 3
+
 gk_FaustBrass_level init 0
 gk_FaustBrass_gain init .75
 gk_FaustBrass_envAttack init 1
@@ -30,7 +31,8 @@ gk_FaustBrass_mute init .5
 gk_FaustBrass_vibratoFreq init 4
 gk_FaustBrass_vibratoGain init .5
 gk_FaustBrass_outGain init .5
-gk_FaustBrass_midi_dynamic_range init 12
+gk_FaustBrass_midi_dynamic_range init 20
+
 instr FaustBrass
 i_attack = .005
 i_sustain = p3
@@ -54,7 +56,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 60
+i_level_correction = 57
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_FaustBrass_gain)
@@ -74,11 +76,17 @@ a_left, a_right faustplay i_faust_dsp
 a_signal = a_left + a_right
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking 
-aleft, aright pan2 a_signal, k_space_left_to_right
-outleta "outleft", a_left * k_gain
-outleta "outright", a_right * k_gain
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, i_midi_key, p5, p7, active(p1)
+
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
-
-
-

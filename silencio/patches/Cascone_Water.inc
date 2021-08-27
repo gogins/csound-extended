@@ -1,12 +1,21 @@
+gk_Cascone_Water_level chnexport "gk_Cascone_Water_level", 3
+gi_Cascone_Water_attack chnexport "gi_Cascone_Water_attack", 3
+gi_Cascone_Water_release chnexport "gi_Cascone_Water_release", 3
+gk_Cascone_Water_krt chnexport "gk_Cascone_Water_krt", 3
+gi_Cascone_Water_isd chnexport "gi_Cascone_Water_isd", 3
+gk_Cascone_Water_midi_dynamic_range chnexport "gk_Cascone_Water_midi_dynamic_range", 3
+
 gk_Cascone_Water_level init 0
 gi_Cascone_Water_attack init 0.003
 gi_Cascone_Water_release init 0.01
 gk_Cascone_Water_krt init 7
 gi_Cascone_Water_isd init .456
-gk_Cascone_Water_midi_dynamic_range init 127
+gk_Cascone_Water_midi_dynamic_range init 20
+
 gi_Cascone_Water_f10 ftgen 0, 0, 512, 7, 0, 50, 1, 50, .5, 300, .5, 112, 0
 gi_Cascone_Water_f11 ftgen 0, 0, 65537, 10, 1 ;SINE WAVE hi-res
 gi_Cascone_Water_f14 ftgen 0, 0, 512, 7, 1, 17, 1, 0, 0, 495 ;pulse for S&H clk oscinstr Cascone_Water
+
 //////////////////////////////////////////////
 // Author: Kim Cascone
 // Adapted by: Michael Gogins
@@ -27,7 +36,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 135
+i_level_correction = 130
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Cascone_Water_level)
@@ -48,9 +57,9 @@ ksh = ksh*.50
 a4 reson a2,ksh,50 ; FILTER WITH S&H CONTROLING THE Fc
 a3 poscil3 a4,1/p3,gi_Cascone_Water_f10 ; f10=ADSR -- a3 IS THE OUTPUT
 a_signal = a3*.15
-
 a_declicking linsegr 0, gi_Cascone_Water_attack, 1, i_sustain, 1, gi_Cascone_Water_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

@@ -1,12 +1,21 @@
+gk_Cascone_SampleAndHold_level chnexport "gk_Cascone_SampleAndHold_level", 3
+gi_Cascone_SampleAndHold_attack chnexport "gi_Cascone_SampleAndHold_attack", 3
+gi_Cascone_SampleAndHold_release chnexport "gi_Cascone_SampleAndHold_release", 3
+gk_Cascone_SampleAndHold_krt chnexport "gk_Cascone_SampleAndHold_krt", 3
+gi_Cascone_SampleAndHold_isd chnexport "gi_Cascone_SampleAndHold_isd", 3
+gk_Cascone_SampleAndHold_midi_dynamic_range chnexport "gk_Cascone_SampleAndHold_midi_dynamic_range", 3
+
 gk_Cascone_SampleAndHold_level init 0
 gi_Cascone_SampleAndHold_attack init 0.003
 gi_Cascone_SampleAndHold_release init 0.01
 gk_Cascone_SampleAndHold_krt init 7
 gi_Cascone_SampleAndHold_isd init .456
-gk_Cascone_SampleAndHold_midi_dynamic_range init 127
+gk_Cascone_SampleAndHold_midi_dynamic_range init 20
+
 gi_Cascone_SampleAndHold_f10 ftgen 0, 0, 512, 7, 0, 50, 1, 50, .5, 300, .5, 112, 0
 gi_Cascone_SampleAndHold_f11 ftgen 0, 0, 65537, 10, 1 ;SINE WAVE hi-res
 gi_Cascone_SampleAndHold_f14 ftgen 0, 0, 512, 7, 1, 17, 1, 0, 0, 495 ;pulse for S&H clk osc
+
 instr Cascone_SampleAndHold
 //////////////////////////////////////////////
 // Author: Kim Cascone
@@ -28,7 +37,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 135
+i_level_correction = 129
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Cascone_SampleAndHold_level)
@@ -51,9 +60,9 @@ ksh1 mtof kmidi
 a2 poscil3 600, ksh1,gi_Cascone_SampleAndHold_f11 ; SINE OSC CONTROLLED BY S&H;;;amp=600
 a3 poscil3 a2,1/p3,gi_Cascone_SampleAndHold_f10 ; f10=ADSR -- a3 IS THE OUTPUT
 a_signal = a3
-
 a_declicking linsegr 0, gi_Cascone_SampleAndHold_attack, 1, i_sustain, 1, gi_Cascone_SampleAndHold_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

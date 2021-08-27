@@ -1,3 +1,12 @@
+gk_Cascone_ThreeBranch_level chnexport "gk_Cascone_ThreeBranch_level", 3
+gi_Cascone_ThreeBranch_attack chnexport "gi_Cascone_ThreeBranch_attack", 3
+gi_Cascone_ThreeBranch_release chnexport "gi_Cascone_ThreeBranch_release", 3
+gk_Cascone_ThreeBranch_kfreq1 chnexport "gk_Cascone_ThreeBranch_kfreq1", 3
+gk_Cascone_ThreeBranch_kfreq2 chnexport "gk_Cascone_ThreeBranch_kfreq2", 3
+gk_Cascone_ThreeBranch_kamp2 chnexport "gk_Cascone_ThreeBranch_kamp2", 3
+gi_Cascone_ThreeBranch_ifrq chnexport "gi_Cascone_ThreeBranch_ifrq", 3
+gk_Cascone_ThreeBranch_midi_dynamic_range chnexport "gk_Cascone_ThreeBranch_midi_dynamic_range", 3
+
 gk_Cascone_ThreeBranch_level init 0
 gi_Cascone_ThreeBranch_attack init 0.003
 gi_Cascone_ThreeBranch_release init 0.01
@@ -5,13 +14,15 @@ gk_Cascone_ThreeBranch_kfreq1 init 60
 gk_Cascone_ThreeBranch_kfreq2 init 50
 gk_Cascone_ThreeBranch_kamp2 init 34
 gi_Cascone_ThreeBranch_ifrq init 70
-gk_Cascone_ThreeBranch_midi_dynamic_range init 127
+gk_Cascone_ThreeBranch_midi_dynamic_range init 20
+
 gi_Cascone_ThreeBranch_f3  ftgen 0, 0, 65537, 9, 10, 1, 0, 16, 1.5, 0, 22, 2, 0, 23, 1.5, 0 ;inharm wave
 gi_Cascone_ThreeBranch_f4  ftgen 0, 0, 65537, 9, 1, 1, 0 ;sine
 gi_Cascone_ThreeBranch_f8  ftgen 0, 0, 512, 5, 256, 512, 1 ;exp env
 gi_Cascone_ThreeBranch_f10 ftgen 0, 0, 512, 7, 0, 50, 1, 50, .5, 300, .5, 112, 0
 gi_Cascone_ThreeBranch_f11 ftgen 0, 0, 65537, 10, 1 ;SINE WAVE hi-res
 gi_Cascone_ThreeBranch_f17 ftgen 0, 0, 1024, 7, .5, 256, 1, 256, .5, 256, 0, 256, .5 ;triangle with offset
+
 instr Cascone_ThreeBranch
 //////////////////////////////////////////////
 // Author: Kim Cascone
@@ -34,7 +45,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 135
+i_level_correction = 130
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Cascone_ThreeBranch_level)
@@ -85,9 +96,9 @@ alp butterlp aout, kcf ; THREE BRANCHES ARE MIXED & FED THROUGH BUTTERLP
 akenv linen iamp,p3*.8,p3,p3*.2 ; THIS IS THE MAIN ENV ON THE OUTPUT
 alpout = akenv*alp
 a_signal = alpout
-
 a_declicking linsegr 0, gi_Cascone_ThreeBranch_attack, 1, i_sustain, 1, gi_Cascone_ThreeBranch_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

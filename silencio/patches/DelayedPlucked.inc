@@ -1,5 +1,9 @@
-gk_DelayedPlucked_midi_dynamic_range init 127
+gk_DelayedPlucked_midi_dynamic_range chnexport "gk_DelayedPlucked_midi_dynamic_range", 3 ; 127
+gk_DelayedPlucked_level chnexport "gk_DelayedPlucked_level", 3 ; 0
+
+gk_DelayedPlucked_midi_dynamic_range init 20
 gk_DelayedPlucked_level init 0
+
 gi_DelayedPlucked_sine ftgen 0, 0, 65537, 10, 1
 gi_DelayedPlucked_cosine ftgen 0, 0, 65537, 11, 1
 
@@ -17,17 +21,15 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 89
+i_level_correction = 83.5
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_DelayedPlucked_level)
 iattack = 0.006
 idecay = 1.5
-xtratim iattack + idecay
 isustain = p3
 irelease = 0.05
-xtratim iattack + isustain + irelease
-ihertz = i_frequency
+xtratim iattack + idecay + irelease
 ioctave = octcps(i_frequency)
  ; Detuning of strings by 4 cents each way.
 idetune = 4.0 / 1200.0
@@ -54,9 +56,9 @@ a_signal = asignal
 i_attack = .01
 i_sustain = p3
 i_release = 0.1
-xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain * 1.7
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
