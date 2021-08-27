@@ -1,8 +1,17 @@
+gk_FMModerate2_level chnexport "gk_FMModerate2_level", 3
+gi_FMModerate2_carrier chnexport "gi_FMModerate2_carrier", 3
+gi_FMModerate2_modulator chnexport "gi_FMModerate2_modulator", 3
+gi_FMModerate2_fmamplitude chnexport "gi_FMModerate2_fmamplitude", 3
+gi_FMModerate2_index chnexport "gi_FMModerate2_index", 3
+
 gk_FMModerate2_level init 0
 gi_FMModerate2_carrier init 1
 gi_FMModerate2_modulator init 4
 gi_FMModerate2_fmamplitude init 9
 gi_FMModerate2_index init 2
+
+gi_FMModerate2_cosine ftgen 0, 0, 65537, 11, 1
+
 instr FMModerate2
 ; Author: Michael Gogins
 i_instrument = p1
@@ -23,7 +32,6 @@ iattack = 0.002
 isustain = p3
 idecay = 1.5
 irelease = 0.05
-xtratim iattack + irelease
 icarrier = gi_FMModerate2_carrier
 imodulator = gi_FMModerate2_modulator
 ifmamplitude = gi_FMModerate2_fmamplitude
@@ -32,16 +40,16 @@ ifrequencyb = i_frequency * 1.003
 icarrierb = icarrier * 1.004
 aindenv transegr 0.0, iattack, -8.0, 1.0, idecay, -8.0, 0.025, isustain, 0.0, 0.025, irelease, 7.0, 0.0
 aindex = aindenv * index * ifmamplitude
-icosine ftgenonce 0, 0, 65537, 11, 1
-aouta foscili 1.0, i_frequency, icarrier, imodulator, index, icosine
-aoutb foscili 1.0, ifrequencyb, icarrierb, imodulator, index, icosine; Plus amplitude correction.
+aouta foscili 1.0, i_frequency, icarrier, imodulator, index, gi_FMModerate2_cosine
+aoutb foscili 1.0, ifrequencyb, icarrierb, imodulator, index, gi_FMModerate2_cosine; Plus amplitude correction.
 a_signal = (aouta + aoutb) * aindenv
 i_attack = .002
 i_sustain = p3
 i_release = 0.01
-xtratim i_attack + i_sustain + i_release
+xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

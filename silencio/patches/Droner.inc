@@ -1,3 +1,16 @@
+gk_Droner_partial1 chnexport "gk_Droner_partial1", 3
+gk_Droner_partial2 chnexport "gk_Droner_partial2", 3
+gk_Droner_partial3 chnexport "gk_Droner_partial3", 3
+gk_Droner_partial4 chnexport "gk_Droner_partial4", 3
+gk_Droner_partial5 chnexport "gk_Droner_partial5", 3
+gk_Droner_partial6 chnexport "gk_Droner_partial6", 3
+gk_Droner_partial7 chnexport "gk_Droner_partial7", 3
+gk_Droner_partial8 chnexport "gk_Droner_partial8", 3
+gk_Droner_partial9 chnexport "gk_Droner_partial9", 3
+gk_Droner_partial10 chnexport "gk_Droner_partial10", 3
+gk_Droner_level chnexport "gk_Droner_level", 3
+gi_Droner_waveform chnexport "gi_Droner_waveform", 3
+
 gk_Droner_partial1 init .5
 gk_Droner_partial2 init .05
 gk_Droner_partial3 init .1
@@ -10,6 +23,9 @@ gk_Droner_partial9 init 0
 gk_Droner_partial10 init 0
 gk_Droner_level init 0
 gi_Droner_waveform init 0
+
+gi_Droner_sine ftgen 0, 0, 65537, 10, 1, 0, .02
+
 instr Droner
 i_instrument = p1
 i_time = p2
@@ -43,12 +59,11 @@ xtratim iattack + idecay
 isustain = p3
 aenvelope transegr 0.0, iattack / 2.0, 1.5, 1 / 2.0, iattack / 2.0, -1.5, 1, isustain, 0.0, 1, idecay / 2.0, 1.5, 1 / 2.0, idecay / 2.0, -1.5, 0
 ihertz = cpsmidinn(i_midi_key)
-isine ftgenonce 0, 0, 65537, 10, 1, 0, .02
 if iwaveform == 0 goto i_waveform_0
 if iwaveform == 1 goto i_waveform_1
 if iwaveform == 2 goto i_waveform_2
 i_waveform_0:
-asignal poscil3 1, ihertz, isine
+asignal poscil3 1, ihertz, gi_Droner_sine
 goto i_waveform_endif
 i_waveform_1:
 asignal vco2 1, ihertz, 8 ; integrated saw
@@ -60,6 +75,7 @@ asignal chebyshevpoly asignal, 0, k1, k2, k3, k4, k5, k6, k7, k8, k9, k10
 adeclicking linsegr 0, .004, 1, p3 - .014, 1, .1, 0
 a_signal = asignal * adeclicking
 a_signal = a_signal * i_amplitude * k_gain * 1.4
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

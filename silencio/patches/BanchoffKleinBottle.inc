@@ -1,9 +1,16 @@
+gk_BanchoffKleinBottle_level chnexport "gk_BanchoffKleinBottle_level", 3
+gi_BanchoffKleinBottle_attack chnexport "gi_BanchoffKleinBottle_attack", 3
+gi_BanchoffKleinBottle_release chnexport "gi_BanchoffKleinBottle_release", 3
+gk_BanchoffKleinBottle_midi_dynamic_range chnexport "gk_BanchoffKleinBottle_midi_dynamic_range", 3
+
 gk_BanchoffKleinBottle_level init 0
-gi_BanchoffKleinBottle_attack init 0.003
+gi_BanchoffKleinBottle_attack init 0.005
 gi_BanchoffKleinBottle_release init 0.01
 gk_BanchoffKleinBottle_midi_dynamic_range init 127
+
 gi_BanchoffKleinBottle_sine ftgen 0, 0, 65537, 10, 1
 gi_BanchoffKleinBottle_cosine ftgen 0, 0, 65537, 11, 1
+
 instr BanchoffKleinBottle
 //////////////////////////////////////////////
 // Original by Hans Mikelson.
@@ -11,7 +18,6 @@ instr BanchoffKleinBottle
 //////////////////////////////////////////////
 xtratim gi_BanchoffKleinBottle_attack + gi_BanchoffKleinBottle_release
 a_declicking linsegr 0, gi_BanchoffKleinBottle_attack, 1, p3, 1, gi_BanchoffKleinBottle_release, 0
-
 i_instrument = p1
 i_time = p2
 i_duration = p3

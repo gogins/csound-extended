@@ -1,5 +1,8 @@
 gk_DelayedPlucked_midi_dynamic_range init 127
 gk_DelayedPlucked_level init 0
+gi_DelayedPlucked_sine ftgen 0, 0, 65537, 10, 1
+gi_DelayedPlucked_cosine ftgen 0, 0, 65537, 11, 1
+
 instr DelayedPlucked
 ; Author: Michael Gogins
 i_instrument = p1
@@ -30,8 +33,8 @@ ioctave = octcps(i_frequency)
 idetune = 4.0 / 1200.0
 ihertzleft = cpsoct(ioctave + idetune)
 ihertzright = cpsoct(ioctave - idetune)
-isine ftgenonce 0, 0, 65537, 10, 1
-icosine ftgenonce 0, 0, 65537, 11, 1
+isine = gi_DelayedPlucked_sine
+icosine = gi_DelayedPlucked_cosine
 igenleft = isine
 igenright = icosine
 kvibrato poscil 1.0 / 120.0, 7.0, icosine

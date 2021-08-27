@@ -31,7 +31,6 @@ alwayson "PianoOutPianoteq"
 #include "PianoOutPianoteq.inc"
 
 #include "MasterOutput.inc"
-;#include "FaustGreyholeReverb.inc"
 
 iampdbfs init 1
 prints "Default amplitude at 0 dBFS: %9.4f\\n", iampdbfs
@@ -53,7 +52,6 @@ connect "PianoOutFluidsynth", "outright", "MasterOutput", "inright"
 connect "PianoOutPianoteq", "outleft", "MasterOutput", "inleft"
 connect "PianoOutPianoteq", "outright", "MasterOutput", "inright"
 
-;alwayson "FaustGreyholeReverb"
 alwayson "MasterOutput"
 '''
 
@@ -114,8 +112,6 @@ csound = ctcsound.Csound()
 csound.message("Patch file: {} Patch name: {} Output: {}\n".format(patch_filename, patch_name, output))
 csound.setOption("-d")
 csound.setOption("--nchnls=2")
-csound.setOption("--sample-accurate")
-# csound.setOption("--ksmps=1")
 csound.setOption(output)
 csound.setOption("-m%d" % message_level)
 csound.setOption("-+msg_color=0")

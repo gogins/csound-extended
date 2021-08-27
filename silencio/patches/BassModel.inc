@@ -1,8 +1,15 @@
+gk_BassModel_level chnexport "gk_BassModel_level", 3
+gi_BassModel_attack chnexport "gi_BassModel_attack", 3
+gi_BassModel_release chnexport "gi_BassModel_release", 3
+gk_BassModel_midi_dynamic_range chnexport "gk_BassModel_midi_dynamic_range", 3
+
 gk_BassModel_level init 0
 gi_BassModel_attack init 0.003
 gi_BassModel_release init 0.01
-gk_BassModel_midi_dynamic_range init 127
-gi_BassModel_sine ftgen 0, 0, 65536, 10, 1
+gk_BassModel_midi_dynamic_range init 20
+
+gi_BassModel_sine ftgen 0, 0, 65537, 10, 1
+
 instr BassModel
 //////////////////////////////////////////////
 // Original by Hans Mikelson.
@@ -40,7 +47,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 89
+i_level_correction = 77
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_BassModel_level)
@@ -87,6 +94,7 @@ aout = afeedbk
 a_signal = 50 * koutenv * (aout + kfltenv * (abody1 + abody2))
 a_declicking linsegr 0, gi_BassModel_attack, 1, i_sustain, 1, gi_BassModel_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

@@ -1,9 +1,17 @@
+gk_Cascone_RissetCascadeHarmonics_level chnexport "gk_Cascone_RissetCascadeHarmonics_level", 3
+gi_Cascone_RissetCascadeHarmonics_attack chnexport "gi_Cascone_RissetCascadeHarmonics_attack", 3
+gi_Cascone_RissetCascadeHarmonics_release chnexport "gi_Cascone_RissetCascadeHarmonics_release", 3
+gi_Cascone_RissetCascadeHarmonics_offset chnexport "gi_Cascone_RissetCascadeHarmonics_offset", 3
+gk_Cascone_RissetCascadeHarmonics_midi_dynamic_range chnexport "gk_Cascone_RissetCascadeHarmonics_midi_dynamic_range", 3
+
 gk_Cascone_RissetCascadeHarmonics_level init 0
 gi_Cascone_RissetCascadeHarmonics_attack init 0.003
 gi_Cascone_RissetCascadeHarmonics_release init 0.01
 gi_Cascone_RissetCascadeHarmonics_offset init .03
-gk_Cascone_RissetCascadeHarmonics_midi_dynamic_range init 127
+gk_Cascone_RissetCascadeHarmonics_midi_dynamic_range init 20
+
 gi_Cascone_RissetCascadeHarmonics_f20 ftgen 0, 0, 65537, 10, 1, 0, 0, 0, .7, .7, .7, .7, .7, .7 ;approaching square
+
 instr Cascone_RissetCascadeHarmonics
 //////////////////////////////////////////////
 // Author: Kim Cascone
@@ -24,7 +32,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 67.5
+i_level_correction = 61.5
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Cascone_RissetCascadeHarmonics_level)
@@ -55,6 +63,7 @@ a_signal = a1+a2+a3+a4+a5+a6+a7+a8+a9
 
 a_declicking linsegr 0, gi_Cascone_RissetCascadeHarmonics_attack, 1, i_sustain, 1, gi_Cascone_RissetCascadeHarmonics_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

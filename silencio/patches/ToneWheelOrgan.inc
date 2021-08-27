@@ -1,4 +1,19 @@
+gk_ToneWheelOrgan_level chnexport "gk_ToneWheelOrgan_level", 3
+
 gk_ToneWheelOrgan_level init 0
+
+gi_TonewheelOrgan_isine ftgen 0, 0, 65537, 10, 1
+; The lower tone wheels have increased odd harmonic content.
+; Rotor Tables
+gi_TonewheelOrgan_itw1 ftgen 0, 0, 65537, 10, 1, 0.02, .01
+gi_TonewheelOrgan_itw2 ftgen 0, 0, 65537, 10, 1, 0, 0.2, 0, 0.1, 0, .05, 0, .02
+; Rotating Speaker Filter Envelopes
+gi_TonewheelOrgan_itw3 ftgen 0, 0, 65537, 7, 0, 110, 0, 18, 1, 18, 0, 110, 0
+gi_TonewheelOrgan_itw4 ftgen 0, 0, 65537, 7, 0, 80, 0.2, 16, 1, 64, 1, 16, 0.2, 80, 0
+; Distortion Tables
+gi_TonewheelOrgan_itw5 ftgen 0, 0, 65537, 8, -.8, 336, -.78, 800, -.7, 5920, .7, 800, .78, 336, .8
+gi_TonewheelOrgan_itw6 ftgen 0, 0, 65537, 8 -.8, 336, -.76, 3000, -.7, 1520, .7, 3000, .76, 336, .8
+
 instr ToneWheelOrgan
 ; Author: Hans Mikelson
 i_instrument = p1
@@ -24,17 +39,17 @@ kHz = k(iHz)
 iphase = 0.25
 ikey = p4 ;12 * int(p4 - 6) + 100 * (p4 - 6)
 kfqc = kHz
-isine ftgenonce 0, 0, 65537, 10, 1
+isine = gi_TonewheelOrgan_isine
 ; The lower tone wheels have increased odd harmonic content.
 ; Rotor Tables
-itw1 ftgenonce 0, 0, 65537, 10, 1, 0.02, .01
-itw2 ftgenonce 0, 0, 65537, 10, 1, 0, 0.2, 0, 0.1, 0, .05, 0, .02
+itw1 = gi_TonewheelOrgan_itw1
+itw2 = gi_TonewheelOrgan_itw2
 ; Rotating Speaker Filter Envelopes
-itw3 ftgenonce 0, 0, 65537, 7, 0, 110, 0, 18, 1, 18, 0, 110, 0
-itw4 ftgenonce 0, 0, 65537, 7, 0, 80, 0.2, 16, 1, 64, 1, 16, 0.2, 80, 0
+itw3 = gi_TonewheelOrgan_itw3
+itw4 = gi_TonewheelOrgan_itw4
 ; Distortion Tables
-itw5 ftgenonce 0, 0, 65537, 8, -.8, 336, -.78, 800, -.7, 5920, .7, 800, .78, 336, .8
-itw6 ftgenonce 0, 0, 65537, 8 -.8, 336, -.76, 3000, -.7, 1520, .7, 3000, .76, 336, .8
+itw5 = gi_TonewheelOrgan_itw5
+itw6 = gi_TonewheelOrgan_itw6
 ; Table for Reed Physical Model
 iwheel1 = ((ikey - 12) > 12 ? itw1 : itw2)
 iwheel2 = ((ikey + 7) > 12 ? itw1 : itw2)
@@ -55,9 +70,10 @@ a_signal = asubfund + asub3rd + afund + a2nd + a3rd + a4th + a5th + a6th + a8th
 i_attack = .002
 i_sustain = p3
 i_release = 0.01
-xtratim i_attack + i_sustain + i_release
+xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain * 1.46
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
