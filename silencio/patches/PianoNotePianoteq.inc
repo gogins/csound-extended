@@ -1,4 +1,7 @@
-gk_PianoNotePianoteq_midi_dynamic_range init 127
+gk_PianoNotePianoteq_midi_dynamic_range chnexport "gk_PianoNotePianoteq_midi_dynamic_range", 3 ;  20
+
+gk_PianoNotePianoteq_midi_dynamic_range init 20
+
 instr PianoNotePianoteq
 if p3 == -1 then
   p3 = 1000000
