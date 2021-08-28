@@ -1,4 +1,7 @@
-gk_OrganNoteOrganteq_midi_dynamic_range init 127
+gk_OrganNoteOrganteq_midi_dynamic_range chnexport "gk_OrganNoteOrganteq_midi_dynamic_range", 3 ;  20
+
+gk_OrganNoteOrganteq_midi_dynamic_range init 20
+
 ; These are the pedalboard and three manuals.
 instr Pedale, Positif, Grand_Orgue, Recit
 if p3 == -1 then

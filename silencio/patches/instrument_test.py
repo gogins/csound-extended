@@ -12,6 +12,9 @@ nchnls_i = 1
 // These must be initialized here to be in scope for both 
 // the note and the audio patches.
 
+gi_Organteq vstinit "/home/mkg/Organteq\ 1/x86-64bit/Organteq\ 1.so", 0
+vstinfo gi_Organteq 
+
 gi_Fluidsynth fluidEngine 0, 0
 gi_FluidSteinway fluidLoad "/home/mkg/Dropbox/Steinway_C.sf2", gi_Fluidsynth, 1
 fluidProgramSelect gi_Fluidsynth, 0, gi_FluidSteinway, 0, 1
@@ -21,6 +24,7 @@ vstinfo gi_Pianoteq
 
 alwayson "PianoOutFluidsynth"
 alwayson "PianoOutPianoteq"
+alwayson "OrganOutOrganteq"
 
 #includestr "$PATCH_FILENAME"
 
@@ -29,6 +33,9 @@ alwayson "PianoOutPianoteq"
 
 // Comment out if you don't have the Pianoteq and vst4cs.
 #include "PianoOutPianoteq.inc"
+
+// Comment out if you don't have the Organtec and vst4cs.
+#include "OrganOutOrganteq.inc"
 
 #include "MasterOutput.inc"
 
@@ -51,6 +58,8 @@ connect "PianoOutFluidsynth", "outleft", "MasterOutput", "inleft"
 connect "PianoOutFluidsynth", "outright", "MasterOutput", "inright"
 connect "PianoOutPianoteq", "outleft", "MasterOutput", "inleft"
 connect "PianoOutPianoteq", "outright", "MasterOutput", "inright"
+connect "OrganOutOrganteq", "outleft", "MasterOutput", "inleft"
+connect "OrganOutOrganteq", "outright", "MasterOutput", "inright"
 
 alwayson "MasterOutput"
 '''

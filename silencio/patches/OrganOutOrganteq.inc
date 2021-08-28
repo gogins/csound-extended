@@ -1,8 +1,15 @@
+gk_OrganOutOrganteq_level chnexport "gk_OrganOutOrganteq_level", 3 ;  0
+gi_OrganOutOrganteq_print chnexport "gi_OrganOutOrganteq_print", 3 ;  1
+gk_OrganOutOrganteq_front_to_back chnexport "gk_OrganOutOrganteq_front_to_back", 3 ;  0
+gk_OrganOutOrganteq_left_to_right chnexport "gk_OrganOutOrganteq_left_to_right", 3 ;  0.5
+gk_OrganOutOrganteq_bottom_to_top chnexport "gk_OrganOutOrganteq_bottom_to_top", 3 ;  0
+
 gk_OrganOutOrganteq_level init 0
 gi_OrganOutOrganteq_print init 1
 gk_OrganOutOrganteq_front_to_back init 0
 gk_OrganOutOrganteq_left_to_right init 0.5
 gk_OrganOutOrganteq_bottom_to_top init 0
+
 instr OrganOutOrganteq
 ; By default, Organteq .fxp  preset files are saved thus:
 ; /home/mkg/.local/share/Modartt/Organteq/Presets/My Presets/Church (copy).fxp
@@ -93,6 +100,7 @@ a_signal *= k_gain
 a_signal *= i_amplitude
 a_out_left, a_out_right pan2 a_signal, gk_OrganOutOrganteq_left_to_right
 ; printks "vstaudio:       %9.4f   %9.4f\\n", 0.5, aoutleft, aoutright
+
 #ifdef USE_SPATIALIZATION
 a_signal = a_out_left + a_out_right
 a_spatial_reverb_send init 0

@@ -1,5 +1,5 @@
 gS_MVerb_preset chnexport "gS_MVerb_preset", 3 ; "Huge Hall"
-gk_MVerb_FB chnexport "gk_MVerb_FB", 3 ; .975
+gk_MVerb_FB chnexport "gk_MVerb_feedback", 3 ; .975
 gk_MVerb_wet chnexport "gk_MVerb_wet", 3 ; .5
 gk_MVerb_random chnexport "gk_MVerb_random", 3 ; 1
 gk_MVerb_rslow chnexport "gk_MVerb_rslow", 3 ; 1.1
@@ -9,7 +9,7 @@ gk_MVerb_print chnexport "gk_MVerb_print", 3 ; 1
 gk_MVerb_DFact chnexport "gk_MVerb_DFact", 3 ; .75
 
 gS_MVerb_preset init "Huge Hall"
-gk_MVerb_FB init .975
+gk_MVerb_feedback init .975
 gk_MVerb_wet init .5
 gk_MVerb_random init 1
 gk_MVerb_rslow init 1.1
