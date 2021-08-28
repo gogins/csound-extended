@@ -6,7 +6,6 @@ declare author "GRAME";
 declare description "Jprev demo application.";
 
 import("stdfaust.lib");
-import("demos.lib");
 
 process = dm.jprev_demo;	
 
@@ -26,6 +25,7 @@ gk_FaustJPReverb_lowBand chnexport "gk_FaustJPReverb_lowBand", 3
 gk_FaustJPReverb_highBand chnexport "gk_FaustJPReverb_highBand", 3
 gk_FaustJPReverb_mDepth chnexport "gk_FaustJPReverb_mDepth", 3
 gk_FaustJPReverb_mFreq chnexport "gk_FaustJPReverb_mFreq", 3
+
 gk_FaustJPReverb_level init 0
 gk_FaustJPReverb_earlyDiff init .707
 gk_FaustJPReverb_size init .83
@@ -38,7 +38,8 @@ gk_FaustJPReverb_lowBand init 500
 gk_FaustJPReverb_highBand init 2000
 gk_FaustJPReverb_mDepth init .1
 gk_FaustJPReverb_mFreq init 2
-gk_FaustJPReverb_midi_dynamic_range init 12
+gk_FaustJPReverb_midi_dynamic_range init 20
+
 instr FaustJPReverb
 a_inleft inleta "inleft"
 a_inright inleta "inright"

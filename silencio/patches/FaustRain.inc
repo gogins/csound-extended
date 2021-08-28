@@ -37,12 +37,14 @@ gk_FaustRain_pan chnexport "gk_FaustRain_pan", 3
 gk_FaustRain_density chnexport "gk_FaustRain_density", 3
 gk_FaustRain_volume chnexport "gk_FaustRain_volume", 3
 gk_FaustRain_Q chnexport "gk_FaustRain_Q", 3
+
 gk_FaustRain_level init 0
 gk_FaustRain_pan init .5
 gk_FaustRain_density init 300
 gk_FaustRain_volume  init .5
 gk_FaustRain_Q init 5
-gk_FaustRain_midi_dynamic_range init 12
+gk_FaustRain_midi_dynamic_range init 20
+
 instr FaustRain
 i_attack = .005
 i_sustain = p3
@@ -59,7 +61,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 80
+i_level_correction = 87
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_FaustRain_level)
@@ -74,17 +76,24 @@ a_left, a_right faustplay i_faust_dsp
 ; TODO: This scaling should be improved.
 ; alow, ahigh, aband svfilter  asig, kcf, kq [, iscl] [, iskip] 
 i_scale init 2
-alow, ahigh, aband svfilter a_left, k_frequency, gk_FaustRain_Q, i_scale
-a_left = aband
-alow, ahigh, aband svfilter a_right, k_frequency, gk_FaustRain_Q, i_scale
+alow, ahigh, a_out_left svfilter a_left, k_frequency, gk_FaustRain_Q, i_scale
+alow, ahigh, a_out_right svfilter a_right, k_frequency, gk_FaustRain_Q, i_scale
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
-a_right = aband
-a_left = a_left * i_amplitude * a_declicking * k_gain
-a_right = a_right * i_amplitude * a_declicking * k_gain
-outleta "outleft", a_left * k_gain
-outleta "outright", a_right * k_gain
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, i_midi_key, p5, p7, active(p1)
-endin
+a_out_left = a_out_left * i_amplitude * a_declicking * k_gain
+a_out_right = a_out_right * i_amplitude * a_declicking * k_gain
 
+#ifdef USE_SPATIALIZATION
+a_signal = a_out_left + a_out_right
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
 
 

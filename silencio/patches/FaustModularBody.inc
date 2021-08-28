@@ -18,12 +18,16 @@ gk_FaustModularBody_shape chnexport "gk_FaustModularBody_shape", 3
 gk_FaustModularBody_scale chnexport "gk_FaustModularBody_scale", 3
 gk_FaustModularBody_pluck_position chnexport "gk_FaustModularBody_pluck_position", 3
 gk_FaustModularBody_gain chnexport "gk_FaustModularBody_gain", 3
+gk_FaustModularBody_otuGain chnexport "gk_FaustModularBody_outGain", 3
+
 gk_FaustModularBody_level init 0
 gk_FaustModularBody_shape init .95
 gk_FaustModularBody_scale init .25
 gk_FaustModularBody_pluck_position init .95
 gk_FaustModularBody_gain init .75
-gk_FaustModularbody_midi_dynamic_range init 12
+gk_FaustModularBody_outGain init .5
+gk_FaustModularbody_midi_dynamic_range init 20
+
 instr FaustModularBody
 i_attack = .005
 i_sustain = p3
@@ -47,7 +51,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 60
+i_level_correction = 88
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_FaustModularBody_gain)
@@ -59,17 +63,25 @@ faustctl i_faust_dsp, "scale", gk_FaustModularBody_scale
 faustctl i_faust_dsp, "pluckPosition", gk_FaustModularBody_pluck_position
 faustctl i_faust_dsp, "gain", gk_FaustModularBody_gain
 k_gain = i_midi_velocity
-faustctl i_faust_dsp, "outGain", k_gain
+faustctl i_faust_dsp, "outGain", gk_FaustModularBody_outGain
 faustctl i_faust_dsp, "gate", k(1)
 a_left, a_right faustplay i_faust_dsp
 a_signal = a_left + a_right
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
-a_signal = a_signal * i_amplitude * a_declicking 
-aleft, aright pan2 a_signal, k_space_left_to_right
-outleta "outleft", a_left * k_gain
-outleta "outright", a_right * k_gain
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, i_midi_key, p5, p7, active(p1)
-endin
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
 
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
 
 

@@ -3,11 +3,13 @@ gi_Compressor_comp1 chnexport "gi_Compressor_comp1", 3
 gi_Compressor_comp2 chnexport "gi_Compressor_comp2", 3
 gi_Compressor_rtime chnexport "gi_Compressor_rtime", 3
 gi_Compressor_ftime chnexport "gi_Compressor_ftime", 3
+
 gk_Compressor_threshhold init 2500
 gi_Compressor_comp1 init .5
 gi_Compressor_comp2 init .63
 gi_Compressor_rtime init .1
 gi_Compressor_ftime init .1
+
 instr Compressor
 ; Author: Michael Gogins
 aleftin inleta "inleft"

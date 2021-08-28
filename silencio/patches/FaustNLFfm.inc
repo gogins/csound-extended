@@ -92,6 +92,7 @@ gk_FaustNLFfm_reverbGain chnexport "gk_FaustNLFfm_reverbGain", 3
 gk_FaustNLFfm_roomSize chnexport "gk_FaustNLFfm_roomSize", 3
 gk_FaustNLFfm_pan_angle chnexport "gk_FaustNLFfm_pan_angle", 3
 gk_FaustNLFfm_spatial_width chnexport "gk_FaustNLFfm_spatial_width", 3
+
 gk_FaustNLFfm_level init 0
 gk_FaustNLFfm_gain init .8
 gk_FaustNLFfm_Envelope_Attack init .05
@@ -109,7 +110,8 @@ gk_FaustNLFfm_reverbGain init .137
 gk_FaustNLFfm_roomSize init 1.72
 gk_FaustNLFfm_pan_angle init .6
 gk_FaustNLFfm_spatial_width init .5
-gk_FaustNLFfm_midi_dynamic_range init 12
+gk_FaustNLFfm_midi_dynamic_range init 20
+
 instr FaustNLFfm
 i_attack = .005
 i_sustain = p3
@@ -126,7 +128,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 65
+i_level_correction = 69
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_FaustNLFfm_level)
@@ -154,11 +156,19 @@ a_right, a_left faustplay i_faust_dsp
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_right = a_right * i_amplitude * a_declicking * k_gain
 a_left = a_left * i_amplitude * a_declicking * k_gain
-;a_left, a_right pan2 a_signal, k_space_left_to_right
-outleta "outleft", a_left * k_gain
-outleta "outright", a_right * k_gain
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, i_midi_key, p5, p7, active(p1)
-endin
 
+#ifdef USE_SPATIALIZATION
+a_signal = a_left + a_right
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+outleta "outleft", a_left
+outleta "outright", a_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
 
 

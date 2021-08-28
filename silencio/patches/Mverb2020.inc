@@ -1,6 +1,18 @@
 ; Use with, e.g.: gi_Mverb2020 vstinit "/home/mkg/.local/lib/Mverb2020.so", 1
 ; Obtain from: http://socalabs.com/effects/mverb2020/
 
+gk_Mverb2020_level chnexport "gk_Mverb2020_level", 3 ; 0
+gk_Mverb2020_Mix chnexport "gk_Mverb2020_Mix", 3 ; .5
+gk_Mverb2020_Pre_delay chnexport "gk_Mverb2020_Pre_delay", 3 ; 0.5
+gk_Mverb2020_Early_late_mix chnexport "gk_Mverb2020_Early_late_mix", 3 ; 0.5
+gk_Mverb2020_Size chnexport "gk_Mverb2020_Size", 3 ; 0.5
+gk_Mverb2020_Density chnexport "gk_Mverb2020_Density", 3 ; 0.5
+gk_Mverb2020_Bandwith_Frequency chnexport "gk_Mverb2020_Bandwith_Frequency", 3 ; 0.5
+gk_Mverb2020_Decay chnexport "gk_Mverb2020_Decay", 3 ; 0.85
+gk_Mverb2020_Damping_Frequency chnexport "gk_Mverb2020_Damping_Frequency", 3 ; 0.5
+gk_Mverb2020_Gain chnexport "gk_Mverb2020_Gain", 3 ; 1
+gi_Mverb2020_Program chnexport "gi_Mverb2020_Program", 3 ; 4
+
 gk_Mverb2020_level init 0
 gk_Mverb2020_Mix init .5
 gk_Mverb2020_Pre_delay init 0.5
@@ -12,6 +24,7 @@ gk_Mverb2020_Decay init 0.85
 gk_Mverb2020_Damping_Frequency init 0.5
 gk_Mverb2020_Gain init 1
 gi_Mverb2020_Program init 4
+
 instr Mverb2020
 vstprogset gi_Mverb2020, gi_Mverb2020_Program
 vstparamset gi_Mverb2020, 1, gk_Mverb2020_Mix

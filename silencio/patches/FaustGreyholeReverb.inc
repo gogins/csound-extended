@@ -1,43 +1,38 @@
 gi_FaustGreyholeReverb_compiled faustcompile {{
 
-declare name "jprev";
+declare name "greyhole";
 declare version "0.1";
 declare author "GRAME";
-declare description "Jprev demo application.";
+declare description "Greyhole demo application.";
 
 import("stdfaust.lib");
 
-process = dm.jprev_demo;	
+process = dm.greyhole_demo;
 
 }}, "--import-dir \"/home/mkg/faust/libraries\"", 0
 
 print gi_FaustGreyholeReverb_compiled
 
 gk_FaustGreyholeReverb_level chnexport "gk_FaustGreyholeReverb_level", 3
-gk_FaustGreyholeReverb_earlyDiff chnexport "gk_FaustGreyholeReverb_earlyDiff", 3
+gk_FaustGreyholeReverb_delayTime chnexport "gk_FaustGreyholeReverb_delayTime", 3
+gk_FaustGreyholeReverb_damping chnexport "gk_FaustGreyholeReverb_damping", 3
 gk_FaustGreyholeReverb_size chnexport "gk_FaustGreyholeReverb_size", 3
-gk_FaustGreyholeReverb_t60 chnexport "gk_FaustGreyholeReverb_t60", 3
-gk_FaustGreyholeReverb_damp chnexport "gk_FaustGreyholeReverb_damp", 3
-gk_FaustGreyholeReverb_lowX chnexport "gk_FaustGreyholeReverb_lowX", 3
-gk_FaustGreyholeReverb_midX chnexport "gk_FaustGreyholeReverb_midX", 3
-gk_FaustGreyholeReverb_highX chnexport "gk_FaustGreyholeReverb_highX", 3
-gk_FaustGreyholeReverb_lowBand chnexport "gk_FaustGreyholeReverb_lowBand", 3
-gk_FaustGreyholeReverb_highBand chnexport "gk_FaustGreyholeReverb_highBand", 3
-gk_FaustGreyholeReverb_mDepth chnexport "gk_FaustGreyholeReverb_mDepth", 3
-gk_FaustGreyholeReverb_mFreq chnexport "gk_FaustGreyholeReverb_mFreq", 3
+gk_FaustGreyholeReverb_diffusion chnexport "gk_FaustGreyholeReverb_diffusion", 3
+gk_FaustGreyholeReverb_feedback chnexport "gk_FaustGreyholeReverb_feedback", 3
+gk_FaustGreyholeReverb_modDepth chnexport "gk_FaustGreyholeReverb_modDepth", 3
+gk_FaustGreyholeReverb_modFreq chnexport "gk_FaustGreyholeReverb_modFreq", 3
+gk_FaustGreyholeReverb_midi_dynamic_range chnexport "gk_FaustGreyholeReverb_midi_dynamic_range", 3
+
 gk_FaustGreyholeReverb_level init 0
-gk_FaustGreyholeReverb_earlyDiff init .707
-gk_FaustGreyholeReverb_size init .83
-gk_FaustGreyholeReverb_t60 init 8.8
-gk_FaustGreyholeReverb_damp init .699
-gk_FaustGreyholeReverb_lowX init 1
-gk_FaustGreyholeReverb_midX init 1
-gk_FaustGreyholeReverb_highX init 1
-gk_FaustGreyholeReverb_lowBand init 500
-gk_FaustGreyholeReverb_highBand init 2000
-gk_FaustGreyholeReverb_mDepth init .1
-gk_FaustGreyholeReverb_mFreq init 2
+gk_FaustGreyholeReverb_delayTime init .2
+gk_FaustGreyholeReverb_damping init 0
+gk_FaustGreyholeReverb_size init 1
+gk_FaustGreyholeReverb_diffusion init .5
+gk_FaustGreyholeReverb_feedback init .9
+gk_FaustGreyholeReverb_modDepth init .1
+gk_FaustGreyholeReverb_modFreq init 2
 gk_FaustGreyholeReverb_midi_dynamic_range init 12
+
 instr FaustGreyholeReverb
 a_inleft inleta "inleft"
 a_inright inleta "inright"
@@ -59,17 +54,13 @@ k_gain = ampdb(gk_FaustGreyholeReverb_level)
 i_faust_dsp faustdsp gi_FaustGreyholeReverb_compiled
 k_frequency cpsmidinn i_midi_key
 k_gain = i_midi_velocity
-faustctl i_faust_dsp, "earlyDiff", gk_FaustGreyholeReverb_earlyDiff
+faustctl i_faust_dsp, "delayTime", gk_FaustGreyholeReverb_delayTime
+faustctl i_faust_dsp, "damping", gk_FaustGreyholeReverb_damping
 faustctl i_faust_dsp, "size", gk_FaustGreyholeReverb_size
-faustctl i_faust_dsp, "t60", gk_FaustGreyholeReverb_t60
-faustctl i_faust_dsp, "damp", gk_FaustGreyholeReverb_damp
-faustctl i_faust_dsp, "lowX", gk_FaustGreyholeReverb_lowX
-faustctl i_faust_dsp, "midX", gk_FaustGreyholeReverb_midX
-faustctl i_faust_dsp, "highX", gk_FaustGreyholeReverb_highX
-faustctl i_faust_dsp, "lowBand", gk_FaustGreyholeReverb_lowBand
-faustctl i_faust_dsp, "highBand", gk_FaustGreyholeReverb_highBand
-faustctl i_faust_dsp, "mDepth", gk_FaustGreyholeReverb_mDepth
-faustctl i_faust_dsp, "mFreq", gk_FaustGreyholeReverb_mFreq
+faustctl i_faust_dsp, "diffusion", gk_FaustGreyholeReverb_diffusion
+faustctl i_faust_dsp, "feedback", gk_FaustGreyholeReverb_feedback
+faustctl i_faust_dsp, "modDepth", gk_FaustGreyholeReverb_modDepth
+faustctl i_faust_dsp, "modFreq", gk_FaustGreyholeReverb_modFreq
 a_left, a_right faustplay i_faust_dsp, a_inleft, a_inright
 k_gain = ampdb(gk_FaustGreyholeReverb_level)
 outleta "outleft", a_left * k_gain

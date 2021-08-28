@@ -38,7 +38,6 @@ process = pm.modularInterpInstr_ui_MIDI <: _,_;
 
 print gi_faust_compiled1
 
-
 gk_FaustModularBody_shape chnexport "gk_FaustModularBody_shape", 3
 gk_FaustModularBody_scale chnexport "gk_FaustModularBody_scale", 3
 gk_FaustModularBody_pluck_position chnexport "gk_FaustModularBody_pluck_position", 3
@@ -47,6 +46,7 @@ gk_FaustModularBody_shape init .95
 gk_FaustModularBody_scale init .25
 gk_FaustModularBody_pluck_position init .95
 gk_FaustModularBody_gain init .75
+
 instr FaustModularBody
 i_faust_dsp faustdsp gi_faust_compiled
 k_frequency cpsmidinn p4
