@@ -2,6 +2,7 @@ gk_Guitar_midi_dynamic_range chnexport "gk_Guitar_midi_dynamic_range", 3 ; 127
 gk_Guitar_midi_dynamic_range init 127
 gk_Guitar_level chnexport "gk_Guitar_level", 3
 gk_Guitar_level init 0
+
 instr Guitar
 ; Michael Gogins
 i_instrument = p1

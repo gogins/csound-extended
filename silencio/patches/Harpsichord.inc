@@ -2,12 +2,16 @@ gk_Harpsichord_level chnexport "gk_Harpsichord_level", 3
 gk_Harpsichord_pick chnexport "gk_Harpsichord_pick", 3
 gk_Harpsichord_reflection chnexport "gk_Harpsichord_reflection", 3
 gk_Harpsichord_pluck chnexport "gk_Harpsichord_pluck", 3
-gk_Harpsichord_midi_dynamic_range init 127
+gk_Harpsichord_midi_dynamic_range chnexport "gk_Harpsichord_midi_dynamic_range", 3
+
 gk_Harpsichord_level init 0
 gk_Harpsichord_pick init .075
 gk_Harpsichord_reflection init .5
 gk_Harpsichord_pluck init .75
+gk_Harpsichord_midi_dynamic_range init 20
+
 gi_Harpsichord_harptable ftgen 0, 0, 65537, 7, -1, 1024, 1, 1024, -1
+
 instr Harpsichord
 i_instrument = p1
 i_time = p2
@@ -37,7 +41,8 @@ i_sustain = p3
 i_release = 0.01
 xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
-a_signal = a_signal * a_declicking * k_gain
+a_signal = a_signal * a_declicking
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
