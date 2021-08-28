@@ -7,6 +7,7 @@ gk_FluidsynthOut_level init 0
 gk_FluidsynthOut_front_to_back init 0
 gk_FluidsynthOut_left_to_right init 0.5
 gk_FluidsynthOut_bottom_to_top init 0
+
 instr FluidsynthOut
 i_instrument = p1
 i_time = p2
@@ -28,6 +29,7 @@ a_signal = a_out_left + a_out_right
 a_signal *= i_amplitude
 a_signal *= k_gain
 a_out_left, a_out_right pan2 a_signal, gk_FluidsynthOut_left_to_right
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

@@ -1,3 +1,12 @@
+gk_FluidAudio_level chnexport "gk_FluidAudio_level", 3 ; 0
+gi_FluidAudio_attack chnexport "gi_FluidAudio_attack", 3 ; 0.003
+gi_FluidAudio_release chnexport "gi_FluidAudio_release", 3 ; 0.01
+gS_FluidAudio_soundfont_name chnexport "gS_FluidAudio_soundfont_name", 3 ; "sf_GMbank.sf2"
+gi_FluidAudio_channel chnexport "gi_FluidAudio_channel", 3 ; 0
+gi_FluidAudio_bank chnexport "gi_FluidAudio_bank", 3 ; 0
+gi_FluidAudio_preset chnexport "gi_FluidAudio_preset", 3 ;
+gk_FluidAudio_midi_dynamic_range chnexport "gk_FluidAudio_midi_dynamic_range", 3 ; 127
+
 gk_FluidAudio_level init 0
 gi_FluidAudio_attack init 0.003
 gi_FluidAudio_release init 0.01
@@ -9,6 +18,7 @@ gi_FluidAudio_bank init 0
 gi_FluidAudio_preset init 0
 gi_FluidAudio_initialized init 0
 gk_FluidAudio_midi_dynamic_range init 127
+
 instr FluidAudio
 //////////////////////////////////////////////
 // Initialization and audio output for 
@@ -58,12 +68,11 @@ i_level_correction = 81
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_FluidAudio_level)
-
 a_out_left, a_out_right fluidOut gi_FluidAudio_engine
 a_signal = (a_out_left + a_out_right) * .5
-
 a_declicking linsegr 0, gi_FluidAudio_attack, 1, i_sustain, 1, gi_FluidAudio_release, 0
 a_signal = a_signal * a_declicking
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
@@ -76,5 +85,4 @@ outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
 prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
-;printks "FluidAudio      i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(a_out_left)), dbamp(rms(a_out_right))
 endin

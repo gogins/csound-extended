@@ -1,10 +1,17 @@
+gk_FMModulatedChorus_level chnexport "gk_FMModulatedChorus_level", 3 ; 0
+gi_FMModulatedChorus_attack chnexport "gi_FMModulatedChorus_attack", 3 ; 0.003
+gi_FMModulatedChorus_release chnexport "gi_FMModulatedChorus_release", 3 ; 0.01
+gk_FMModulatedChorus_midi_dynamic_range chnexport "gk_FMModulatedChorus_midi_dynamic_range", 3 ; 20
+
 gk_FMModulatedChorus_level init 0
 gi_FMModulatedChorus_attack init 0.003
 gi_FMModulatedChorus_release init 0.01
-gk_FMModulatedChorus_midi_dynamic_range init 127
+gk_FMModulatedChorus_midi_dynamic_range init 20
+
 gi_FMModulatedChorus_ln ftgen 0, 0, 65536, -12, 20.0 ; Unscaled ln(I(x)) from 0 to 20.0.
 gi_FMModulatedChorus_cosine ftgen 0, 0, 65536, 11, 1 ; Cosine wave. Get that noise down on the most widely used table!
 gi_FMModulatedChorus_sine ftgen 0, 0, 65536, 10, 1
+
 instr FMModulatedChorus
 //////////////////////////////////////////////
 // Original by Hans Mikelson.
@@ -24,7 +31,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 85.2
+i_level_correction = 74
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_FMModulatedChorus_level)
@@ -54,9 +61,9 @@ aoutl oscili 1 * akadsr * a4, ao2 + cpsmidinn(ioct + ishift), gi_FMModulatedChor
 aoutr oscili 1 * akadsr * a4, ao2 + cpsmidinn(ioct - ishift), gi_FMModulatedChorus_sine
 asignal = aoutl + aoutr
 a_signal = asignal * i_amplitude
-
 a_declicking linsegr 0, gi_FMModulatedChorus_attack, 1, i_sustain, 1, gi_FMModulatedChorus_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

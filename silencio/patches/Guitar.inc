@@ -1,3 +1,4 @@
+gk_Guitar_midi_dynamic_range chnexport "gk_Guitar_midi_dynamic_range", 3 ; 127
 gk_Guitar_midi_dynamic_range init 127
 gk_Guitar_level chnexport "gk_Guitar_level", 3
 gk_Guitar_level init 0
@@ -37,6 +38,7 @@ aenv = aexp - 1.0
 a_signal = aout * aenv
 a_declicking linsegr 0, iattack, 1, isustain, 1, irelease, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

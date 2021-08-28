@@ -5,6 +5,11 @@
 // fluidProgramSelect gi_Fluidsynth, 0, gi_FluidSteinway, 0, 1
 // fluidInfo gi_Fluidsynth
 
+gk_PianoOutFluidsynth_level chnexport "gk_PianoOutFluidsynth_level", 3 ; 0
+gk_PianoOutFluidsynth_front_to_back chnexport "gk_PianoOutFluidsynth_front_to_back", 3 ; 0
+gk_PianoOutFluidsynth_left_to_right chnexport "gk_PianoOutFluidsynth_left_to_right", 3 ; 0.5
+gk_PianoOutFluidsynth_bottom_to_top chnexport "gk_PianoOutFluidsynth_bottom_to_top", 3 ; 0
+
 gk_PianoOutFluidsynth_level init 0
 gk_PianoOutFluidsynth_front_to_back init 0
 gk_PianoOutFluidsynth_left_to_right init 0.5
@@ -31,6 +36,7 @@ a_signal = a_out_left + a_out_right
 a_signal *= i_amplitude
 a_signal *= k_gain
 a_out_left, a_out_right pan2 a_signal, gk_PianoOutFluidsynth_left_to_right
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

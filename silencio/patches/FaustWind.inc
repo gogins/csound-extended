@@ -31,11 +31,13 @@ gk_FaustWind_level chnexport "gk_FaustWind_level", 3
 gk_FaustWind_pan chnexport "gk_FaustWind_pan", 3
 gk_FaustWind_force chnexport "gk_FaustWind_force", 3
 gk_FaustWind_Q chnexport "gk_FaustWind_Q", 3
+
 gk_FaustWind_level init 0
 gk_FaustWind_pan init .5
 gk_FaustWind_force init .5
 gk_FaustWind_Q init 15
-gk_FaustWind_midi_dynamic_range init 12
+gk_FaustWind_midi_dynamic_range init 20
+
 instr FaustWind
 i_attack = .005
 i_sustain = p3
@@ -52,7 +54,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 70
+i_level_correction = 73
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_FaustWind_level)
@@ -60,21 +62,30 @@ i_faust_dsp faustdsp gi_FaustWind_compiled
 k_frequency cpsmidinn i_midi_key
 k_gain = i_midi_velocity
 faustctl i_faust_dsp, "force", gk_FaustWind_force
-a_left, acank faustplay i_faust_dsp
+a_left, a_right faustplay i_faust_dsp
 ; Filter the dsp output to obtain a pitched sound.
 ; Bandwidth scales with frequency and energy must be inversely scaled.
 ; TODO: This scaling should be improved.
 ; alow, ahigh, aband svfilter  asig, kcf, kq [, iscl] [, iskip] 
 i_scale init 1
 alow, ahigh, a_out_left svfilter a_left, k_frequency, gk_FaustWind_Q, i_scale
-alow, ahigh, a_out_right svfilter a_left, k_frequency, gk_FaustWind_Q, i_scale
+alow, ahigh, a_out_right svfilter a_right, k_frequency, gk_FaustWind_Q, i_scale
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_out_left = a_out_left * i_amplitude * a_declicking * k_gain
 a_out_right = a_out_right * i_amplitude * a_declicking * k_gain
+
+#ifdef USE_SPATIALIZATION
+a_signal = a_out_left + a_out_right
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, i_midi_key, p5, p7, active(p1)
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
-
 
 
