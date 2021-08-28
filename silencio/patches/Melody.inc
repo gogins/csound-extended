@@ -1,5 +1,9 @@
-gk_Melody_midi_dynamic_range init 127
+gk_Melody_midi_dynamic_range chnexport "gk_Melody_midi_dynamic_range", 3 ; 127
+gk_Melody_level chnexport "gk_Melody_level", 3 ; 0
+
+gk_Melody_midi_dynamic_range init 20
 gk_Melody_level init 0
+
 gi_Melody_chebyshev ftgen 0, 0, 65537, -7, -1, 150, 0.1, 110, 0, 252, 0
 gi_Melody_sine ftgen 0, 0, 65537, 10, 1
 gi_Melody_cook3 ftgen 0, 0, 65537, 10, 1, .4, 0.2, 0.1, 0.1, .05
@@ -18,7 +22,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 72
+i_level_correction = 67
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Melody_level)
@@ -58,7 +62,17 @@ a8 = (a6 * .9) + (a7 * .1)
 asignal balance a8, a1
 a_declick linsegr 0, iattack, 1, isustain, 1, irelease, 0
 aleft, aright pan2 asignal * i_amplitude * a_declick * k_gain, k_space_left_to_right
+
+#ifdef USE_SPATIALIZATION
+a_signal = aleft + aright
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
 outleta "outleft", aleft
 outleta "outright", aright
+#endif
 prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
