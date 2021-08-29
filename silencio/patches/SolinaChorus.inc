@@ -42,10 +42,16 @@ a3 vdelay3 aLeft, at2, imax
 xout (a1 + a2 + a3) / 3
 endop
 
+gk_SolinaChorus_chorus_lfo1_hz chnexport "gk_SolinaChorus_chorus_lfo1_hz", 3 ;  .18
+gk_SolinaChorus_chorus_lfo1_amp chnexport "gk_SolinaChorus_chorus_lfo1_amp", 3 ;  .6
+gk_SolinaChorus_chorus_lfo2_hz chnexport "gk_SolinaChorus_chorus_lfo2_hz", 3 ;  6
+gk_SolinaChorus_chorus_lfo2_amp chnexport "gk_SolinaChorus_chorus_lfo2_amp", 3 ;  .2
+
 gk_SolinaChorus_chorus_lfo1_hz init .18
 gk_SolinaChorus_chorus_lfo1_amp init .6
 gk_SolinaChorus_chorus_lfo2_hz init 6
 gk_SolinaChorus_chorus_lfo2_amp init .2
+
 instr SolinaChorus
 aleft inleta "inleft"
 aright inleta "inright"

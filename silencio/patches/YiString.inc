@@ -1,8 +1,15 @@
-gk_YiString_midi_dynamic_range init 127
+gk_YiString_midi_dynamic_range chnexport "gk_YiString_midi_dynamic_range", 3 ;  127
+gk_YiString_level chnexport "gk_YiString_level", 3 ;  0
+gk_YiString_reverb_send chnexport "gk_YiString_reverb_send", 3 ;  .5
+gk_YiString_chorus_send chnexport "gk_YiString_chorus_send", 3 ;  .5
+gi_YiString_overlap chnexport "gi_YiString_overlap", 3 ;  .1
+
+gk_YiString_midi_dynamic_range init 20
 gk_YiString_level init 0
 gk_YiString_reverb_send init .5
 gk_YiString_chorus_send init .5
 gi_YiString_overlap init .1
+
 instr YiString
 //////////////////////////////////////////////
 // Original by Steven Yi.
@@ -20,7 +27,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 71.5
+i_level_correction = 62.25
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_YiString_level)
@@ -38,6 +45,7 @@ i_release = 0.01
 i_sustain = p3 - (i_attack + i_release)
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain 
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

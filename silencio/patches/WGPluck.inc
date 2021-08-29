@@ -1,12 +1,22 @@
-gk_WGPluck_midi_dynamic_range init 127
+gk_WGPluck_midi_dynamic_range chnexport "gk_WGPluck_midi_dynamic_range", 3 ;  127
+gk_WGPluck_level chnexport "gk_WGPluck_level", 3 ;  0
+gk_WGPluck_pick chnexport "gk_WGPluck_pick", 3 ;  .5
+gk_WGPluck_reflection chnexport "gk_WGPluck_reflection", 3 ;  .5
+gi_WGPluck_pluck chnexport "gi_WGPluck_pluck", 3 ;  0
+gi_WGPluck_damping chnexport "gi_WGPluck_damping", 3 ;  10
+gi_WGPluck_filter chnexport "gi_WGPluck_filter", 3 ;  1000
+
+gk_WGPluck_midi_dynamic_range init 20
 gk_WGPluck_level init 0
 gk_WGPluck_pick init .5
 gk_WGPluck_reflection init .5
 gi_WGPluck_pluck init 0
 gi_WGPluck_damping init 10
 gi_WGPluck_filter init 1000
+
 gi_WGPluck_sine ftgen 0, 0, 65536, 10, 1, 0, 1
 instr WGPluck
+
 i_instrument = p1
 i_time = p2
 i_duration = p3
@@ -19,7 +29,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 77
+i_level_correction = 71
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_WGPluck_level)
@@ -35,6 +45,7 @@ i_release = 0.01
 xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

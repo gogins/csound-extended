@@ -94,9 +94,14 @@ prints gShelp
 
 ; Global parameters that can be re-defined in the orchestra header.
 
+gk_Spatialize_Verbose chnexport "gk_Spatialize_Verbose", 3 ;  0
+gk_BformatDecoder_SpeakerRig chnexport "gk_BformatDecoder_SpeakerRig", 3 ;  5
+gk_Spatialize_SpeakerRigRadius chnexport "gk_Spatialize_SpeakerRigRadius", 3 ;  5.
+
 gk_Spatialize_Verbose init 0
 gk_BformatDecoder_SpeakerRig init 5
 gk_Spatialize_SpeakerRigRadius init 5.0
+
 
 opcode CartesianToPolar, kkk, kkk
 kx, ky, kz xin
