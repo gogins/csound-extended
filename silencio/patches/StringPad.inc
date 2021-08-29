@@ -18,6 +18,15 @@ aoutr = (a2+ar1r+ar2r+ar3r+ar4r)*.5
 xout aoutl, aoutr
 endop
 
+gk_StringPad_level chnexport "gk_StringPad_level", 3 ;  0
+gi_StringPad_attack chnexport "gi_StringPad_attack", 3 ;  0.003
+gi_StringPad_release chnexport "gi_StringPad_release", 3 ;  0.01
+// TODO: Randomize this?
+gi_StringPad_position chnexport "gi_StringPad_position", 3 ;  .76
+gi_StringPad_chorus_delay_milliseconds chnexport "gi_StringPad_chorus_delay_milliseconds", 3 ;  10
+gi_StringPad_chorus_frequency chnexport "gi_StringPad_chorus_frequency", 3 ;  30
+gk_StringPad_midi_dynamic_range chnexport "gk_StringPad_midi_dynamic_range", 3 ;  20
+
 gk_StringPad_level init 0
 gi_StringPad_attack init 0.003
 gi_StringPad_release init 0.01
@@ -25,9 +34,11 @@ gi_StringPad_release init 0.01
 gi_StringPad_position init .76
 gi_StringPad_chorus_delay_milliseconds init 10
 gi_StringPad_chorus_frequency init 30
-gk_StringPad_midi_dynamic_range init 127
+gk_StringPad_midi_dynamic_range init 20
+
 gi_StringPad_pad ftgen 0, 0, 65537, 10, 1, .5, .33, .25,  .0, .1,  .1, .1
 gi_StringPad_sine ftgen 0, 0, 65537, 10, 1
+
 instr StringPad
 //////////////////////////////////////////////
 // StringPad originally by Anthony Kozar.
@@ -48,7 +59,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 174
+i_level_correction = 151
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_StringPad_level)
@@ -71,6 +82,7 @@ a_signal = afund + acel1 + acel2
 a_signal butterlp a_signal, (p5-60)*40+900
 a_declicking linsegr 0, gi_StringPad_attack, 1, i_sustain, 1, gi_StringPad_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

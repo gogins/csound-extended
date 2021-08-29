@@ -1,4 +1,13 @@
-gk_Sweeper_midi_dynamic_range init 127
+gk_Sweeper_midi_dynamic_range chnexport "gk_Sweeper_midi_dynamic_range", 3 ;  127
+gk_Sweeper_attack chnexport "gk_Sweeper_attack", 3 ;  .125
+gk_Sweeper_release chnexport "gk_Sweeper_release", 3 ;  .25
+gk_Sweeper_britel chnexport "gk_Sweeper_britel", 3 ;  0.1
+gk_Sweeper_briteh chnexport "gk_Sweeper_briteh", 3 ;  2.9
+gk_Sweeper_britels chnexport "gk_Sweeper_britels", 3 ;  2
+gk_Sweeper_britehs chnexport "gk_Sweeper_britehs", 3 ;  1
+gk_Sweeper_level chnexport "gk_Sweeper_level", 3 ;  0
+
+gk_Sweeper_midi_dynamic_range init 20
 gk_Sweeper_attack init .125
 gk_Sweeper_release init .25
 gk_Sweeper_britel init 0.1
@@ -6,8 +15,10 @@ gk_Sweeper_briteh init 2.9
 gk_Sweeper_britels init 2
 gk_Sweeper_britehs init 1
 gk_Sweeper_level init 0
+
 gi_Sweeper_sine ftgen 0, 0, 65537, 10, 1
 gi_Sweeper_octfn ftgen 0, 0, 65537, -19, 1, 0.5, 270, 0.5
+
 instr Sweeper
 //////////////////////////////////////////////
 // Original by Iain McCurdy.
@@ -25,7 +36,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 78.3
+i_level_correction = 71.5
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Sweeper_level)
@@ -59,6 +70,7 @@ a1,a2 pan2 a1, k_space_left_to_right
 aleft delay a1, rnd(0.1)
 aright delay a2, rnd(0.11)
 a_signal = (aleft + aright) * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

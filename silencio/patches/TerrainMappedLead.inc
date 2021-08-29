@@ -6,13 +6,21 @@ akout = akrad1 + 2 * iamp
 xout akout
 endop
 
+gk_TerrainMappedLead_level chnexport "gk_TerrainMappedLead_level", 3 ;  0
+gi_TerrainMappedLead_attack chnexport "gi_TerrainMappedLead_attack", 3 ;  0.003
+gi_TerrainMappedLead_petals chnexport "gi_TerrainMappedLead_petals", 3 ;  2.99
+gi_TerrainMappedLead_release chnexport "gi_TerrainMappedLead_release", 3 ;  0.01
+gk_TerrainMappedLead_midi_dynamic_range chnexport "gk_TerrainMappedLead_midi_dynamic_range", 3 ;  20
+
 gk_TerrainMappedLead_level init 0
 gi_TerrainMappedLead_attack init 0.003
 gi_TerrainMappedLead_petals init 2.99
 gi_TerrainMappedLead_release init 0.01
+gk_TerrainMappedLead_midi_dynamic_range init 20
+
 gi_TerrainMappedLead_pitch_bend_table ftgen 0, 0, 1024, -7, 1, 1024, 1 
-gk_TerrainMappedLead_midi_dynamic_range init 127
 gi_TerrainMappedLead_sine ftgen 0, 0, 65537, 10, 1
+
 instr TerrainMappedLead
 //////////////////////////////////////////////
 // Author: Hans Mikelson
@@ -33,7 +41,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 79
+i_level_correction = 69
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_TerrainMappedLead_level)
@@ -62,6 +70,7 @@ a_signal = adcblk * akdclick
 
 a_declicking linsegr 0, gi_TerrainMappedLead_attack, 1, i_sustain, 1, gi_TerrainMappedLead_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

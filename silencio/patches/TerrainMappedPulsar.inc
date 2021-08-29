@@ -6,13 +6,21 @@ akout = akrad1 + 2 * iamp
 xout akout
 endop
 
+gk_TerrainMappedPulsar_level chnexport "gk_TerrainMappedPulsar_level", 3 ;  0
+gi_TerrainMappedPulsar_attack chnexport "gi_TerrainMappedPulsar_attack", 3 ;  0.003
+gi_TerrainMappedPulsar_release chnexport "gi_TerrainMappedPulsar_release", 3 ;  0.01
+gi_TerrainMappedPulsar_petals chnexport "gi_TerrainMappedPulsar_petals", 3 ;  2.01
+gi_TerrainMappedPulsar_detune chnexport "gi_TerrainMappedPulsar_detune", 3 ;  0.005
+gk_TerrainMappedPulsar_midi_dynamic_range chnexport "gk_TerrainMappedPulsar_midi_dynamic_range", 3 ;  20
+
 gk_TerrainMappedPulsar_level init 0
 gi_TerrainMappedPulsar_attack init 0.003
 gi_TerrainMappedPulsar_release init 0.01
 gi_TerrainMappedPulsar_petals init 2.01
 gi_TerrainMappedPulsar_detune init 0.005
+gk_TerrainMappedPulsar_midi_dynamic_range init 20
+
 gi_TerrainMappedPulsar_pitch_bend_table ftgen 0, 0, 1024, -7, 1, 1024, 1 
-gk_TerrainMappedPulsar_midi_dynamic_range init 127
 gi_TerrainMappedPulsar_sine ftgen 0, 0, 65537, 10, 1
 gi_TerrainMappedPulsar_amp ftgen 0, 0, 1024, -7, 0, 256, 1, 512, 1, 256, 0
 instr TerrainMappedPulsar
@@ -35,7 +43,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 78.3
+i_level_correction = 66.25
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_TerrainMappedPulsar_level)
@@ -61,10 +69,10 @@ az = sqrt((1-ax*ax)*((1-ay)+ay*cos(1/(ax*ax+.01))))-1 ; Compute the surface
 aout butterhp az, 20 ; Remove DC
 aleft = aout*akamp
 aright = aout*akamp 
-
 a_signal = aleft + aright
 a_declicking linsegr 0, gi_TerrainMappedPulsar_attack, 1, i_sustain, 1, gi_TerrainMappedPulsar_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
