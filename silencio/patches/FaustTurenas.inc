@@ -32,7 +32,6 @@ gi_FaustTurenas_compiled faustcompile {{
 declare name "turenas";
 
 import("stdfaust.lib");
-import("demos.lib");
 
 //========================= Smart Keyboard Configuration =================================
 // (10 keyboards with 18 keys each configured as a pitch matrix.

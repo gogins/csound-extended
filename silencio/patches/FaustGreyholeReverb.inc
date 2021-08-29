@@ -6,6 +6,7 @@ declare author "GRAME";
 declare description "Greyhole demo application.";
 
 import("stdfaust.lib");
+dm = library("demos.lib");
 
 process = dm.greyhole_demo;
 
