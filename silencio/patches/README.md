@@ -36,8 +36,8 @@ You can `#include` any of these patches in a Csound orchestra and expect it to
 render audio from any MIDI or score events. All audio output levels are
 normalized so that MIDI velocity 80 produces about -6 dBFS. Each instrument
 patch uses a releasing envelope. The patches are optimized for audio quality.
-Pitches, amplitudes, or durations that would not render well are reflected
-back into a safe domain before rendering.
+I have tried to reflect pitches, amplitudes, or durations that would not render 
+well back into a safe domain before rendering.
 
 All audio outputs and inputs are performed using the signal flow graph
 opcodes. In the orchestra header, `#define USE_SPATIALIZATION` to output audio 
@@ -47,13 +47,13 @@ output plain stereo to outlets `outleft` and `outright`.
 
 Control parameters are set by global variables using the naming convention
 `gk_InstrumentName_control_variable_name`. Default values are set for all
-control parameters, but in use some most likely would be set by k-rate
-control channels in an "always on" Controller instrument. Each instrument
+control parameters. All control variables are automatically mapped to a Csound 
+control channel of the same name, using`chnexport`. Each instrument
 has a `gk_InstrumentName_level` control parameter calibrated in dB. Sometimes, 
 the parameters to opcodes are the Csound Reference Manual parameter names for 
 that opcode, prefixed by the instrument name.
 
-A Python script, `patch_calibrator.py`, is provided to help with the writing
+A Python script, `test_instrument.py`, is provided to help with the writing
 of new patches. It generates a range of notes for a patch, and prints output
 levels that can be used to derive an audio level normalization factor.
 
