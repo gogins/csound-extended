@@ -1,8 +1,15 @@
+gk_PulseWidthModulation_level chnexport "gk_PulseWidthModulation_level", 3 ;  0
+gi_PulseWidthModulation_attack chnexport "gi_PulseWidthModulation_attack", 3 ;  0.003
+gi_PulseWidthModulation_release chnexport "gi_PulseWidthModulation_release", 3 ;  0.01
+gk_PulseWidthModulation_midi_dynamic_range chnexport "gk_PulseWidthModulation_midi_dynamic_range", 3 ;  20
+
 gk_PulseWidthModulation_level init 0
 gi_PulseWidthModulation_attack init 0.003
 gi_PulseWidthModulation_release init 0.01
-gk_PulseWidthModulation_midi_dynamic_range init 127
+gk_PulseWidthModulation_midi_dynamic_range init 20
+
 gi_PulseWidthModulation_sine ftgen 0, 0, 65537, 10, 1
+
 instr PulseWidthModulation
 //////////////////////////////////////////////
 //  Instrument definition patch template.
@@ -23,7 +30,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 //  Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 221.2
+i_level_correction = 221.2 - 45
 i_normalization = ampdb(-i_level_correction)
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_PulseWidthModulation_level)

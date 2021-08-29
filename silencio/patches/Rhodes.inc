@@ -1,7 +1,10 @@
+gk_Rhodes_level chnexport "gk_Rhodes_level", 3 ;  0
 gk_Rhodes_level init 0
+
 gi_Rhodes_sine ftgen 0, 0, 65537, 10, 1
 gi_Rhodes_cosine ftgen 0, 0, 65537, 11, 1
 gi_Rhodes_blank ftgen 0, 0, 65537, 10, 0 ; Blank wavetable for some Cook FM opcodes.
+
 instr Rhodes
 ; Authors: Perry Cook, John ffitch, Michael Gogins
 i_instrument = p1
@@ -35,6 +38,7 @@ i_release = 0.01
 xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
