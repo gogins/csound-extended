@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.10)
 include(CheckIncludeFiles)
 
 set(CMAKE_CXX_STANDARD 17)
+add_definitions(-fPIC -flto)
+
 
 # TODO: These will need something more sophisticated.
 # For now I am hard-coding them to the Csound Debian control values.
@@ -13,7 +15,12 @@ option(BUILD_CSOUND_AC "Build CsoundAC extension module for Csound with algorith
 option(BUILD_CSOUND_AC_PYTHON_INTERFACE "Build the Csound AC Python interface" ON)
 option(USE_SYSTEM_PORTSMF ON)
 
-find_library(MUSICXML_LIBRARY musicxml2)
+find_PACKAGE(MUSICXML)
+if (MUSICXML_FOUND)
+    add_compile_definitions(MUSICXML_FOUND)
+endif()
+
+
 #find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(FLTK)
 find_package(SWIG)
@@ -23,6 +30,10 @@ find_library(PORTSMF_LIBRARY portSMF)
 find_library(JPEG_LIBRARY jpeg)
 find_library(PNG_LIBRARY NAMES png png16 libpng16)
 find_library(Z_LIBRARY NAMES z zlib)
+
+# Prefer the static MusicXML library as there is no system package for it.
+
+find_library(MUSICXML_LIBRARY_A libmusicxml2.a libmusicxml)
 
 list(APPEND CMAKE_SWIG_FLAGS
 "-I${CMAKE_SOURCE_DIR}/dependencies/csound/interfaces")
@@ -80,6 +91,9 @@ if(BUILD_CSOUND_AC)
     target_include_directories(libCsoundAC SYSTEM PRIVATE ${CSOUND_INCLUDE_PATH})
     target_include_directories(libCsoundAC PRIVATE ${EIGEN3_INCLUDE_PATH})
     target_include_directories(libCsoundAC PRIVATE ${FLTK_INCLUDE_DIR})
+    if (MUSICXML_FOUND)
+        target_include_directories(libCsoundAC PRIVATE ${MUSICXML_INCLUDE_DIRS})
+    endif()
 
     set_target_properties(libCsoundAC PROPERTIES
         SOVERSION "${APIVERSION}"
@@ -102,12 +116,12 @@ if(BUILD_CSOUND_AC)
     endif()
 
     if(HAVE_UNISTD_H)
-      set_target_properties(libCsoundAC PROPERTIES
+        set_target_properties(libCsoundAC PROPERTIES
         COMPILE_FLAGS "-DHAVE_UNISTD_H")
     endif()
 
-    if(MUSICXML_LIBRARY)
-        target_link_libraries(libCsoundAC PRIVATE csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBS} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY})
+    if(MUSICXML_FOUND)
+        target_link_libraries(libCsoundAC PRIVATE csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBS} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY_A})
     endif()
 
     install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIRECTORY}"
@@ -141,8 +155,8 @@ if(BUILD_CSOUND_AC)
             SOURCES CsoundAC.i)
         swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${Python3_LIBRARIES})
 
-        if(MUSICXML_LIBRARY)
-            swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY} ${Python3_LIBRARIES})
+        if(MUSICXML_FOUND)
+            swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY_A} ${Python3_LIBRARIES})
         endif()
 
         if(APPLE)

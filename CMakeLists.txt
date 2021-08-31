@@ -115,6 +115,7 @@ find_package(GMM)
 find_package(Java)
 find_package(JNI)
 find_package(LIBLO)
+find_package(MUSICXML)
 find_package(OpenCV REQUIRED)
 find_package(PORTSMF)
 find_package(PNG)
@@ -127,6 +128,9 @@ find_package(ZLIB)
 
 include_directories("${CSOUND_INCLUDE_DIR}")
 include_directories("${CSOUND_INCLUDE_DIR}/csound")
+if (MUSICXML_FOUND)
+    include_directories("${MUSICXML_INCLUDE_DIRS}")
+endif()
 
 # Copied from dependencies/csound/CMakeLists.txt:
 
@@ -229,7 +233,7 @@ set(CPACK_GENERATOR TGZ; DEB)
 set(CPACK_PACKAGE_CONTACT "${CPACK_DEBIAN_PACKAGE_MAINTAINER}")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_PACKAGE_NAME "csound-extended-dev")
-set(CPACK_PACKAGE_VERSION "2.1.0")
+set(CPACK_PACKAGE_VERSION "2.2.0")
 # set(CPACK_STRIP_FILES "YES")
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/copyright.txt")

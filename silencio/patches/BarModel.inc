@@ -1,4 +1,15 @@
-gk_BarModel_midi_dynamic_range init 127
+gk_BarModel_level chnexport "gk_BarModel_level", 3
+gk_BarModel_kbcL chnexport "gk_BarModel_kbcL", 3
+gk_BarModel_kbcR chnexport "gk_BarModel_kbcR", 3
+gi_BarModel_iK chnexport "gi_BarModel_iK", 3
+gi_BarModel_ib chnexport "gi_BarModel_ib", 3
+gk_BarModel_kscan chnexport "gk_BarModel_kscan", 3
+gi_BarModel_iT30 chnexport "gi_BarModel_iT30", 3
+gi_BarModel_ipos chnexport "gi_BarModel_ipos", 3 
+gi_BarModel_ivel chnexport "gi_BarModel_ivel", 3 
+gi_BarModel_iwid chnexport "gi_BarModel_iwid", 3
+gk_BarModel_midi_dynamic_range chnexport "gk_BarModel_midi_dynamic_range", 3
+
 gk_BarModel_level init 0
 gk_BarModel_kbcL init 1
 gk_BarModel_kbcR init 1
@@ -9,7 +20,10 @@ gi_BarModel_iT30 init 5
 gi_BarModel_ipos init 0.3 
 gi_BarModel_ivel init 1000 
 gi_BarModel_iwid init 0.05
+gk_BarModel_midi_dynamic_range init 20
+
 gi_BarModel_sine ftgen 0, 0, 65537, 10, 1, 0, 1
+
 instr BarModel
 i_instrument = p1
 i_time = p2
@@ -40,9 +54,10 @@ a_signal barmodel gk_BarModel_kbcL, gk_BarModel_kbcR, gi_BarModel_iK, gi_BarMode
 i_attack = .002
 i_sustain = p3
 i_release = 0.01
-xtratim i_attack + p3 + i_release
+xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

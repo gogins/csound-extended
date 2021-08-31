@@ -1,9 +1,16 @@
+gk_Cascone_Sine_level chnexport "gk_Cascone_Sine_level", 3
+gi_Cascone_Sine_attack chnexport "gi_Cascone_Sine_attack", 3
+gi_Cascone_Sine_release chnexport "gi_Cascone_Sine_release", 3
+gk_Cascone_Sine_midi_dynamic_range chnexport "gk_Cascone_Sine_midi_dynamic_range", 3
+
 gk_Cascone_Sine_level init 0
 gi_Cascone_Sine_attack init 0.003
 gi_Cascone_Sine_release init 0.01
-gk_Cascone_Sine_midi_dynamic_range init 127
+gk_Cascone_Sine_midi_dynamic_range init 20
+
 gi_Cascone_Sine_f10 ftgen 0, 0, 512, 7, 0, 50, 1, 50, .5, 300, .5, 112, 0
 gi_Cascone_Sine_f11 ftgen 0, 0, 65537, 10, 1 ;SINE WAVE hi-res
+
 instr Cascone_Sine
 //////////////////////////////////////////////
 // Author: Kim Cascone
@@ -26,7 +33,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 80
+i_level_correction = 75
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Cascone_Sine_level)
@@ -44,6 +51,7 @@ a_signal poscil3 ak1, i_frequency, gi_Cascone_Sine_f11 ; SINE
 
 a_declicking linsegr 0, gi_Cascone_Sine_attack, 1, i_sustain, 1, gi_Cascone_Sine_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

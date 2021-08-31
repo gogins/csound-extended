@@ -1,7 +1,13 @@
+gk_Reverb_feedback chnexport "gk_Reverb_feedback", 3
+gk_Reverb_wet chnexport "gk_Reverb_wet", 3
+gi_Reverb_delay_modulation chnexport "gi_Reverb_delay_modulation", 3
+gk_Reverb_frequency_cutoff chnexport "gk_Reverb_frequency_cutoff", 3
+
 gk_Reverb_feedback init 0.875
 gk_Reverb_wet init 0.5
 gi_Reverb_delay_modulation init 0.0075
 gk_Reverb_frequency_cutoff init 15000
+
 instr ReverbSC
 gk_Reverb_dry = 1.0 - gk_Reverb_wet
 aleftin init 0

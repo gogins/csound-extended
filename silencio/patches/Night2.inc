@@ -1,10 +1,18 @@
+gk_Night2_level chnexport "gk_Night2_level", 3 ;  0
+gi_Night2_attack chnexport "gi_Night2_attack", 3 ;  0.003
+gi_Night2_release chnexport "gi_Night2_release", 3 ;  0.01
+gi_Night2_balance chnexport "gi_Night2_balance", 3 ;  .6
+gk_Night2_midi_dynamic_range chnexport "gk_Night2_midi_dynamic_range", 3 ;  20
+
 gk_Night2_level init 0
 gi_Night2_attack init 0.003
 gi_Night2_release init 0.01
 gi_Night2_balance init .6
-gk_Night2_midi_dynamic_range init 127
+gk_Night2_midi_dynamic_range init 20
+
 gi_Night2_sine ftgen 0, 0, 65537, 10, 1
 gi_Night2_sigmoid ftgen 0, 0, 65537, 19, .5, 1, 270, 1
+
 instr Night2
 //////////////////////////////////////////////
 // Instrument by Volkov
@@ -25,7 +33,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 81.5
+i_level_correction = 69.5
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Night2_level)
@@ -50,6 +58,7 @@ aplk2 = a5+a6
 a_signal = aplk1+aplk2
 a_declicking linsegr 0, gi_Night2_attack, 1, i_sustain, 1, gi_Night2_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

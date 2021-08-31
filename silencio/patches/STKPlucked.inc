@@ -1,4 +1,7 @@
+gk_STKPlucked_level chnexport "gk_STKPlucked_level", 3 ;  0
+
 gk_STKPlucked_level init 0
+
 instr STKPlucked
 ; Michael Gogins
 i_instrument = p1
@@ -23,6 +26,7 @@ i_release = 0.01
 xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain *.736
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

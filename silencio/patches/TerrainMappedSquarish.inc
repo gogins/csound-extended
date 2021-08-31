@@ -6,14 +6,23 @@ akout = akrad1 + 2 * iamp
 xout akout
 endop
 
+gk_TerrainMappedSquarish_level chnexport "gk_TerrainMappedSquarish_level", 3 ;  0
+gi_TerrainMappedSquarish_attack chnexport "gi_TerrainMappedSquarish_attack", 3 ;  0.003
+gi_TerrainMappedSquarish_release chnexport "gi_TerrainMappedSquarish_release", 3 ;  0.01
+gi_TerrainMappedSquarish_petals chnexport "gi_TerrainMappedSquarish_petals", 3 ;  2.01
+gi_TerrainMappedSquarish_detune chnexport "gi_TerrainMappedSquarish_detune", 3 ;  0.005
+gk_TerrainMappedSquarish_midi_dynamic_range chnexport "gk_TerrainMappedSquarish_midi_dynamic_range", 3 ;  20
+
 gk_TerrainMappedSquarish_level init 0
 gi_TerrainMappedSquarish_attack init 0.003
 gi_TerrainMappedSquarish_release init 0.01
 gi_TerrainMappedSquarish_petals init 2.01
 gi_TerrainMappedSquarish_detune init 0.005
+gk_TerrainMappedSquarish_midi_dynamic_range init 20
+
 gi_TerrainMappedSquarish_pitch_bend_table ftgen 0, 0, 1024, -7, 1, 1024, 1 
-gk_TerrainMappedSquarish_midi_dynamic_range init 127
 gi_TerrainMappedSquarish_sine ftgen 0, 0, 65537, 10, 1
+
 instr TerrainMappedSquarish
 //////////////////////////////////////////////
 // Author: Hans Mikelson
@@ -34,7 +43,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 84
+i_level_correction = 72.5
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_TerrainMappedSquarish_level)
@@ -73,6 +82,7 @@ aright = adcblkr*akdclick
 a_signal = aleft + aright
 a_declicking linsegr 0, gi_TerrainMappedSquarish_attack, 1, i_sustain, 1, gi_TerrainMappedSquarish_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

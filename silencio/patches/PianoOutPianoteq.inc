@@ -3,6 +3,12 @@
 gi_Pianoteq vstinit "/home/mkg/Pianoteq\ 7/x86-64bit/Pianoteq\ 7.so", 0
 vstinfo gi_Pianoteq 
 
+gk_PianoOutPianoteq_level chnexport "gk_PianoOutPianoteq_level", 3 ;  0
+gi_PianoOutPianoteq_print chnexport "gi_PianoOutPianoteq_print", 3 ;  1
+gk_PianoOutPianoteq_front_to_back chnexport "gk_PianoOutPianoteq_front_to_back", 3 ;  0
+gk_PianoOutPianoteq_left_to_right chnexport "gk_PianoOutPianoteq_left_to_right", 3 ;  0.5
+gk_PianoOutPianoteq_bottom_to_top chnexport "gk_PianoOutPianoteq_bottom_to_top", 3 ;  0
+
 gk_PianoOutPianoteq_level init 0
 gi_PianoOutPianoteq_print init 1
 gk_PianoOutPianoteq_front_to_back init 0
@@ -17,7 +23,7 @@ vstparamset gi_Pianoteq, 0, 0
 ; Reverb off.
 vstparamset gi_Pianoteq, 72, 0
 k_gain = ampdb(gk_PianoOutPianoteq_level)
-i_overall_amps = 89
+i_overall_amps = 87
 i_normalization = ampdb(-i_overall_amps) * 2
 i_amplitude = ampdb(80) * i_normalization
 if gi_PianoOutPianoteq_print == 1 then
@@ -36,6 +42,7 @@ a_signal *= k_gain
 a_signal *= i_amplitude
 a_out_left, a_out_right pan2 a_signal, gk_PianoOutPianoteq_left_to_right
 ; printks "vstaudio:       %9.4f   %9.4f\n", 0.5, aoutleft, aoutright
+
 #ifdef USE_SPATIALIZATION
 a_signal = a_out_left + a_out_right
 a_spatial_reverb_send init 0

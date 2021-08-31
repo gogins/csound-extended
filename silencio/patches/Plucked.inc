@@ -1,4 +1,9 @@
+gk_Plucked_level chnexport "gk_Plucked_level", 3
+
 gk_Plucked_level init 0
+
+gi_Plucked_sine ftgen 0, 0, 65537, 10, 1
+
 instr Plucked
 ; Author: Michael Gogins
 i_instrument = p1
@@ -16,9 +21,8 @@ i_overall_amps = 101
 i_normalization = ampdb(-i_overall_amps) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Plucked_level)
-isine ftgenonce 0, 0, 65537, 10, 1
 aenvelope transeg 1.0, 20, -12.0, 0.05
-aexcite poscil 1.0, 1, isine
+aexcite poscil 1.0, 1, gi_Plucked_sine
 asignal1 wgpluck2 0.1, 1.0, i_frequency, 0.25, 0.22
 asignal2 wgpluck2 0.1, 1.0, i_frequency * 1.003, 0.20, 0.223
 asignal3 wgpluck2 0.1, 11, i_frequency * 0.997, 0.23, 0.224
@@ -29,6 +33,7 @@ i_release = 0.01
 xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

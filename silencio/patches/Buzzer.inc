@@ -1,9 +1,17 @@
+gk_Buzzer_attack chnexport "gk_Buzzer_attack", 3
+gk_Buzzer_release chnexport "gk_Buzzer_release", 3
+gk_Buzzer_harmonics chnexport "gk_Buzzer_harmonics", 3
+gk_Buzzer_level chnexport "gk_Buzzer_level", 3
+gk_Buzzer_midi_dynamic_range chnexport "gk_Buzzer_midi_dynamic_range", 3
+
 gk_Buzzer_attack init .125
 gk_Buzzer_release init .25
 gk_Buzzer_harmonics init 8
 gk_Buzzer_level init 0
-gk_Buzzer_midi_dynamic_range init 127
+gk_Buzzer_midi_dynamic_range init 20
+
 gi_Buzzer_sine ftgen 0, 0, 65537, 10, 1
+
 instr Buzzer
 i_instrument = p1
 i_time = p2
@@ -17,7 +25,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 79.5
+i_level_correction = 75
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Buzzer_level)
@@ -27,8 +35,8 @@ i_sustain = p3
 xtratim i_attack + i_release
 a_envelope transegr 0.0, i_attack / 2.0, 1.5, i_amplitude / 2.0, i_attack / 2.0, -1.5, i_amplitude, i_sustain, 0.0, i_amplitude, i_release / 2.0, 1.5, i_amplitude / 2.0, i_release / 2.0, -1.5, 0
 a_signal buzz a_envelope, i_frequency, gk_Buzzer_harmonics, gi_Buzzer_sine
-
 a_signal = a_signal * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

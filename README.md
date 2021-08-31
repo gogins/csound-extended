@@ -63,20 +63,18 @@ log.
 
 1.  You must first install Csound on your system, e.g. as instructed at 
     `https://github.com/csound/csound`.
+    
+2.  CsoundAC can both import and export MusicXML scores. To enable this,
+    you must be first clone the master branch of libmusicxml from 
+    `https://github.com/grame-cncm/libmusicxml/tree/dev/build` and then 
+    build according to `https://github.com/grame-cncm/libmusicxml/tree/dev/build` 
+    and finally `sudo make install`.
 
-2.  CsoundAC and other Linux binaries and other resources are installed from
+3.  CsoundAC and other Linux binaries and other resources are installed from
     the Debian package released from this repository, e.g.
     `sudo apt install ./csound-extended-dev-version-Linux.deb`.  Please note,
-    this package conflicts with the system packages for CsoundAC. The Lisp
-    systems are installed in /usr/share/common-lisp/csound-extended-dev/
-    but in order to load nudruz.asd you must first install a number of its
-    dependencies, listed in nudruz.asd. Some of these can be installed
-    as Linux packages, some must be installed by cloning Git repositories,
-    some must be installed using Quicklisp, and some must be installed by
-    downloading archives. In all cases except for system packages, you must
-    create a symbolic link to your ~/.local/share/common-lisp/source/
-    directory.
-
+    this package conflicts with the system packages for CsoundAC.
+    
 You may also install locally by first building from sources, as described
 below. You may then install the software by running `sudo make install` in
 the build-linux directory. However, be warned that this installs the
@@ -90,19 +88,19 @@ these files to your home directory or other places.
   build and runtime environment on Linux. You may need to copy and modify this 
   script.
   
-- Create a symbolic link from `csound-extended/.SciTEUser.properties` to your 
+- Create a symbolic link from `csound-extended/playpen/.SciTEUser.properties` to your 
   home directory, to create custom commands and editor features in the SciTE 
   text editor. This makes it possible to run various kinds of Csound pieces, 
   and even to build C++ pieces and plugin opcodes, from the editor. Believe 
   me, I tried all the other editors, and this is the one that is both simple 
-  and useful.
+  and useful. For more information, see `playpen/README.md`.
 
 - `silencio`: Create a symbolic link to this directory in every directory in 
   which you are writing or running a piece that uses the Silencio library.
 
 ## Building
 
-Currently, the supported platforms is Linux. The code is generally 
+Currently, the supported platform is Linux. The code is generally 
 "cross-platform" in nature and this build system could be adapted to build for 
 Windows or OS X.
 
@@ -119,7 +117,7 @@ First clone the Git repository at https://github.com/gogins/csound-extended.
 
 #### Building on Linux
 
-The build is highly automated. Many dependencies are local. All dependencies 
+The build is highly automated. Many dependencies are local. Most dependencies 
 are fetched automatically. Most targets are built for release with debug 
 information. I have tried to keep configuration options, and manual 
 configuration steps, to an absolute minimum, all controlled by environment 
@@ -135,10 +133,15 @@ processing must be cloned from GitHub, built with the addition of the
 `-fPIC` compiler option, and installed (CMake should be able to find it in 
 the `/usr/local` tree).
 
-2. The following environment variables MUST be set before building, perhaps in
-your .profile script. Obviously, modify the paths as required to suit your
+2.  CsoundAC can both import and export MusicXML scores. To enable this,
+    in the `csound-extended/dependencies/libmusicxml` directory,  
+    build according to `https://github.com/grame-cncm/libmusicxml/tree/dev/build` 
+    and finally `sudo make install`.
+
+3. The following environment variables MUST be set before building, perhaps in
+your `.profile` script. Obviously, modify the paths as required to suit your
 home directory and installation details. These are exported in `build-env.sh` 
-which you can source in your .profile script.
+which you can source in your `.profile` script.
 
 ```
 CSOUND_SRC_ROOT=/home/mkg/csound-extended/dependencies/csound

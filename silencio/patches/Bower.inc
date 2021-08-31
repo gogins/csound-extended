@@ -1,9 +1,17 @@
-gk_Bower_midi_dynamic_range init 127
+gk_Bower_midi_dynamic_range chnexport "gk_Bower_midi_dynamic_range", 3
+gk_Bower_attack chnexport "gk_Bower_attack", 3
+gk_Bower_release chnexport "gk_Bower_release", 3
+gk_Bower_level chnexport "gk_Bower_level", 3
+gk_Bower_pressure chnexport "gk_Bower_pressure", 3
+
+gk_Bower_midi_dynamic_range init 20
 gk_Bower_attack init .125
 gk_Bower_release init .125
 gk_Bower_level init 0
 gk_Bower_pressure init 0.25
+
 gi_Bower_sine ftgen 0,0,65537,10,1
+
 instr Bower
 i_instrument = p1
 i_time = p2
@@ -17,7 +25,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 80
+i_level_correction = 66
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Bower_level)
@@ -37,8 +45,18 @@ kvibamp = 0
 iminfreq = i(kfreq) / 2
 aSig wgbow kamp,kfreq,gk_Bower_pressure,krat,kvibf,kvibamp,gi_Bower_sine,iminfreq
 a_signal = aSig * kenvelope * k_gain
-aleft, aright pan2 a_signal, k_space_left_to_right
-outleta "outleft", aleft
-outleta "outright", aright
+
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
 prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+;printks "Blower         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(a_out_left)), dbamp(rms(a_out_right))
 endin

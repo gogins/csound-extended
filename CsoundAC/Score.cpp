@@ -34,18 +34,20 @@
 
 #include "allegro.h"
 
-#if defined(HAVE_MUSICXML2)
 #if defined(EXP)
 #undef EXP
 #endif
-#include "elements.h"
-#include "factory.h"
-#include "xml.h"
-#include "xmlfile.h"
-#include "xml_tree_browser.h"
-#include "xmlreader.h"
-#include "midicontextvisitor.h"
+#define EXP SILENCE_PUBLIC
 
+#if defined(MUSICXML_FOUND)
+#include <elements.h>
+#include <factory.h>
+#include <xml.h>
+#include <xmlfile.h>
+#include <xml_tree_browser.h>
+#include <xmlreader.h>
+#include <midicontextvisitor.h>
+#include <libmusicxml.h>
 using namespace MusicXML2;
 #endif
 
@@ -88,7 +90,7 @@ Score::~Score(void)
 {
 }
 
-#if defined(HAVE_MUSICXML2)
+#if defined(MUSICXML_FOUND)
 
 class ScoreMidiWriter : public midiwriter
 {
@@ -140,10 +142,15 @@ void Score::load(std::string filename)
         stream.open(filename.c_str(), std::ifstream::binary);
         load(stream);
         stream.close();
+                return;
     }
-#if defined(HAVE_MUSICXML2)
-    else if (filename.find(".xml") != std::string::npos ||
-             filename.find(".XML") != std::string::npos) {
+#if defined(MUSICXML_FOUND)
+        if (filename.find(".musicxml") != std::string::npos ||
+            filename.find(".MUSICXML") != std::string::npos ||
+            filename.find(".mxl") != std::string::npos ||
+            filename.find(".MXL") != std::string::npos ||
+            filename.find(".xml") != std::string::npos ||
+            filename.find(".XML") != std::string::npos) {
         xmlreader xmlReader;
         Sxmlelement sxmlElement;
         // Try to read an SXMLFile out of the MusicXML file.
@@ -164,11 +171,10 @@ void Score::load(std::string filename)
             // of the document tree, in the proper order, calling newNote as appropriate.
             xmlTreeBrowser.browse(*sxmlElement);
         }
+        return;
     }
 #endif
-    else {
-        System::error("Unknown file format in Score::load().\n");
-    }
+    System::error("Unknown file format in Score::load().\n");
     System::inform("Score::load.\n");
 }
 
@@ -200,7 +206,7 @@ void Score::load(std::istream &stream)
     // load(midiFile);
 }
 
-#if defined(HAVE_MUSICXML2)
+#if defined(MUSICXML_FOUND)
 static Sxmlattribute newAttribute(const string& name, const string& value)
 {
     Sxmlattribute attribute = xmlattribute::create();
@@ -326,9 +332,14 @@ void Score::save(std::string filename)
             filename.find(".MID") != std::string::npos) {
         save(stream);
         System::inform("Score::save.\n");
+        return;
     }
-#if defined(HAVE_MUSICXML2)
-    else if (filename.find(".xml") != std::string::npos ||
+#if defined(MUSICXML_FOUND)
+    if (filename.find(".musicxml") != std::string::npos ||
+             filename.find(".xml") != std::string::npos ||
+             filename.find(".mxl") != std::string::npos ||
+             filename.find(".MXL") != std::string::npos ||
+             filename.find(".MUSICXML") != std::string::npos ||
              filename.find(".XML") != std::string::npos) {
         // This Score has to be sorted first.
         sort();
@@ -342,15 +353,18 @@ void Score::save(std::string filename)
         xmlFile->set(documentTypeDeclaration);
         // Create a MusicXML2 document in which first one part is written,
         // then the next part, and so on.
-        xmlFile->set(createScore(*this, filename));
+        auto score = createScore(*this, filename);
+        // There will be one part for each instrument in the CsoundAC score.
+        // The notes for each instrument will be added to the part in order.
+        // The measure numbers will be inferred just before adding the note.
+        xmlFile->set(score);
         // Print the XML document to the output stream.
         xmlFile->print(stream);
+        stream.close();
+        return;
     }
 #endif
-    else {
-        System::error("Unknown file format in Score::save().\n");
-    }
-    stream.close();
+    System::error("Unknown file format in Score::save(%s).\n", filename.c_str());
 }
 
 void Score::save_filename(std::string filename)

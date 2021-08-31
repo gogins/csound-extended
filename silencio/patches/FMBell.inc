@@ -1,4 +1,9 @@
+gk_FMBell_level chnexport "gk_FMBell_level", 3
+
 gk_FMBell_level init 0
+
+gi_FMBell_cosine ftgen 0, 0, 65537, 11, 1
+
 instr FMBell
 ; Authors: John ffitch, Michael Gogins
 i_instrument = p1
@@ -19,12 +24,11 @@ kc1 = 5
 kc2 = 5
 kvdepth = 0.025
 kvrate = 5.1
-icosine ftgenonce 0, 0, 65536, 11, 1
-ifn1 = icosine
-ifn2 = icosine
-ifn3 = icosine
-ifn4 = icosine
-ivfn = icosine
+ifn1 = gi_FMBell_cosine
+ifn2 = gi_FMBell_cosine
+ifn3 = gi_FMBell_cosine
+ifn4 = gi_FMBell_cosine
+ivfn = gi_FMBell_cosine
 aout fmbell 1, i_frequency, kc1, kc2, kvdepth, kvrate, ifn1, ifn2, ifn3, ifn4, ivfn
 aenv transegr 0.0, .003, -6, 1.0, 9, -16, 0
 a_signal = aout * aenv
@@ -34,6 +38,7 @@ i_release = 0.01
 xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain * 1.2
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

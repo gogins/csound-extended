@@ -1,8 +1,15 @@
+gk_Template_level chnexport "gi_Template_attack", 3 ;  0
+gi_Template_attack chnexport "gi_Template_attack", 3 ;  0.003
+gi_Template_release chnexport "gi_Template_release", 3 ;  0.01
+gk_Template_midi_dynamic_range chnexport "gk_Template_midi_dynamic_range", 3 ;  20
+
 gk_Template_level init 0
 gi_Template_attack init 0.003
 gi_Template_release init 0.01
-gk_Template_midi_dynamic_range init 127
+gk_Template_midi_dynamic_range init 20
+
 gi_Template_sine ftgen 0, 0, 65537, 10, 1
+
 instr Template
 //////////////////////////////////////////////
 //  Instrument definition patch template.

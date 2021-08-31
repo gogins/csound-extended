@@ -1,9 +1,13 @@
+gk_BandedWG_level chnexport "gk_BandedWG_level", 3
+gi_BandedWG_attack chnexport "gi_BandedWG_attack", 3
+gi_BandedWG_release chnexport "gi_BandedWG_release", 3
+gk_BandedWG_midi_dynamic_range chnexport "gk_BandedWG_midi_dynamic_range", 3
+
 gk_BandedWG_level init 0
-gi_BandedWG_attack init 0.003
+gi_BandedWG_attack init 0.005
 gi_BandedWG_release init 0.01
-gk_BandedWG_midi_dynamic_range init 127
-gi_BandedWG_sine ftgen 0, 0, 65537, 10, 1
-gi_BandedWG_cosine ftgen 0, 0, 65537, 11, 1
+gk_BandedWG_midi_dynamic_range init 20
+
 instr BandedWG
 //////////////////////////////////////////////
 // Original by Hans Mikelson.
@@ -17,6 +21,9 @@ i_time = p2
 i_sustain = p3
 i_duration = p3
 i_midi_key = p4
+while i_midi_key > 90 do
+  i_midi_key = i_midi_key - 12
+od
 i_midi_dynamic_range = i(gk_BandedWG_midi_dynamic_range)
 i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
 k_space_front_to_back = p6
@@ -25,12 +32,13 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 49.6
+i_level_correction = 41
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_BandedWG_level)
-a_signal STKBandedWG i_frequency, 1
+a_signal STKBandedWG i_frequency, 1.
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

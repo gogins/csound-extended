@@ -1,11 +1,17 @@
+gk_ChebyshevMelody_level chnexport "gk_ChebyshevMelody_level", 3
+gi_ChebyshevMelody_attack chnexport "gi_ChebyshevMelody_attack", 3
+gi_ChebyshevMelody_release chnexport "gi_ChebyshevMelody_release", 3
+gk_ChebyshevMelody_midi_dynamic_range chnexport "gk_ChebyshevMelody_midi_dynamic_range", 3
+
 gk_ChebyshevMelody_level init 0
 gi_ChebyshevMelody_attack init 0.003
 gi_ChebyshevMelody_release init 0.01
 gk_ChebyshevMelody_midi_dynamic_range init 127
-gk_ChebyshevMelody_level init 0
+
 gi_ChebyshevMelody_chebyshev ftgen 0, 0, 65537, -7, -1, 150, 0.1, 110, 0, 252, 0
 gi_ChebyshevMelody_sine ftgen 0, 0, 65537, 10, 1
 gi_ChebyshevMelody_cook3 ftgen 0, 0, 65537, 10, 1, .4, 0.2, 0.1, 0.1, .05
+
 instr ChebyshevMelody
 ///////////////////////////////////////////////////////
 // Original by Jon Nelson.
@@ -34,7 +40,6 @@ k_gain = ampdb(gk_ChebyshevMelody_level)
 iattack = .01
 isustain = p3
 irelease = .01
-p3 = iattack + isustain + irelease
 iHz = cpsmidinn(i_midi_key)
 iamplitude = ampdb(i_midi_velocity) * 7.
 ip6 = gi_ChebyshevMelody_chebyshev
@@ -71,6 +76,7 @@ a8 = (a6 * .9) + (a7 * .1)
 asignal balance a8, a1
 a_declicking linsegr 0, gi_ChebyshevMelody_attack, 1, i_sustain, 1, gi_ChebyshevMelody_release, 0
 a_signal = asignal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

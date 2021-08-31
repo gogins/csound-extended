@@ -273,6 +273,7 @@ bool parseVector(std::vector<double> &elements, std::string text) {
             continue;
         } else if (c == ',' || c == '}') {
             elements.push_back(real(token));
+            token = "";
         } else {
             token.push_back(c);
         }

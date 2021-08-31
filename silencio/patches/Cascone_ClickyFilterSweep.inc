@@ -1,10 +1,17 @@
+gk_Cascone_ClickyFilterSweep_level chnexport "gk_Cascone_ClickyFilterSweep_level", 3
+gi_Cascone_ClickyFilterSweep_attack chnexport "gi_Cascone_ClickyFilterSweep_attack", 3
+gi_Cascone_ClickyFilterSweep_release chnexport "gi_Cascone_ClickyFilterSweep_release", 3
+gk_Cascone_ClickyFilterSweep_midi_dynamic_range chnexport "gk_Cascone_ClickyFilterSweep_midi_dynamic_range", 3
+
 gk_Cascone_ClickyFilterSweep_level init 0
 gi_Cascone_ClickyFilterSweep_attack init 0.003
 gi_Cascone_ClickyFilterSweep_release init 0.01
-gk_Cascone_ClickyFilterSweep_midi_dynamic_range init 127
+gk_Cascone_ClickyFilterSweep_midi_dynamic_range init 20
+
 gi_Cascone_ClickyFilterSweep_f2 ftgen 0, 0, 512, 5, 4096, 512, 1 ;exp env
 gi_Cascone_ClickyFilterSweep_f8 ftgen 0, 0, 512, 5, 256, 512, 1 ;exp env
 gi_Cascone_ClickyFilterSweep_f10 ftgen 0, 0, 512, 7, 0, 50, 1, 50, .5, 300, .5, 112, 0 ;ADSR
+
 instr Cascone_ClickyFilterSweep
 //////////////////////////////////////////////
 // Author: Kim Cascone
@@ -26,7 +33,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 150.5
+i_level_correction = 146
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Cascone_ClickyFilterSweep_level)
@@ -56,6 +63,7 @@ a_signal = afilt2
 
 a_declicking linsegr 0, gi_Cascone_ClickyFilterSweep_attack, 1, i_sustain, 1, gi_Cascone_ClickyFilterSweep_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

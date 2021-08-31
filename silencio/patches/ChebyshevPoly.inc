@@ -1,3 +1,18 @@
+gk_ChebyshevPoly_level chnexport "gk_ChebyshevPoly_level", 3 ; 0
+gk_ChebyshevPoly_Coefficient1 chnexport "gk_ChebyshevPoly_Coefficient1", 3 ; .5
+gk_ChebyshevPoly_Coefficient2 chnexport "gk_ChebyshevPoly_Coefficient2", 3 ; 1
+gk_ChebyshevPoly_Coefficient3 chnexport "gk_ChebyshevPoly_Coefficient3", 3 ; 0
+gk_ChebyshevPoly_Coefficient4 chnexport "gk_ChebyshevPoly_Coefficient4", 3 ; .1
+gk_ChebyshevPoly_Coefficient5 chnexport "gk_ChebyshevPoly_Coefficient5", 3 ; .01
+gk_ChebyshevPoly_Coefficient6 chnexport "gk_ChebyshevPoly_Coefficient6", 3 ; .01
+gk_ChebyshevPoly_Coefficient7 chnexport "gk_ChebyshevPoly_Coefficient7", 3 ; .01
+gk_ChebyshevPoly_Coefficient8 chnexport "gk_ChebyshevPoly_Coefficient8", 3 ; .1
+gk_ChebyshevPoly_Coefficient9 chnexport "gk_ChebyshevPoly_Coefficient9", 3 ; .01
+gk_ChebyshevPoly_Coefficient10 chnexport "gk_ChebyshevPoly_Coefficient10", 3 ; .05
+gi_ChebyshevPoly_attack chnexport "gi_ChebyshevPoly_attack", 3 ; 0.003
+gi_ChebyshevPoly_release chnexport "gi_ChebyshevPoly_release", 3 ; 0.01
+gk_ChebyshevPoly_midi_dynamic_range chnexport "gk_ChebyshevPoly_midi_dynamic_range", 3 ; 20
+
 gk_ChebyshevPoly_level init 0
 gk_ChebyshevPoly_Coefficient1 init .5
 gk_ChebyshevPoly_Coefficient2 init 1
@@ -11,8 +26,10 @@ gk_ChebyshevPoly_Coefficient9 init .01
 gk_ChebyshevPoly_Coefficient10 init .05
 gi_ChebyshevPoly_attack init 0.003
 gi_ChebyshevPoly_release init 0.01
-gk_ChebyshevPoly_midi_dynamic_range init 127
-gi_ChebyshevPoly_sine ftgen 0, 0, 65536, 10, 1
+gk_ChebyshevPoly_midi_dynamic_range init 20
+
+gi_ChebyshevPoly_sine ftgen 0, 0, 65537, 10, 1
+
 instr ChebyshevPoly
 //////////////////////////////////////////////
 // Original by Hans Mikelson.
@@ -32,7 +49,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 78.3
+i_level_correction = 68
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_ChebyshevPoly_level)
@@ -49,6 +66,7 @@ a_signal chebyshevpoly a_signal, 0, gk_ChebyshevPoly_Coefficient1, gk_ChebyshevP
 a_signal *= aenvelope
 a_declicking linsegr 0, gi_ChebyshevPoly_attack, 1, i_sustain, 1, gi_ChebyshevPoly_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

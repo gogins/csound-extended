@@ -1,4 +1,9 @@
+gk_FMModerate_level chnexport "gk_FMModerate_level", 3
+
 gk_FMModerate_level init 0
+
+gi_FMModerate_cosine ftgen 0, 0, 65537, 11, 1
+
 instr FMModerate
 ; Authors: Michael Gogins
 i_instrument = p1
@@ -28,9 +33,8 @@ ifrequencyb = i_frequency * 1.003
 icarrierb = icarrier * 1.004
 aindenv transegr 0.0, iattack, -7.0, 1.0, idecay, -10.0, 0.025, isustain, 0.0, 0.025, irelease, -7.0, 0.0
 aindex = aindenv * index * ifmamplitude
-icosine ftgenonce 0, 0, 65537, 11, 1
-aouta foscili 1.0, i_frequency, icarrier, imodulator, index, icosine
-aoutb foscili 1.0, ifrequencyb, icarrierb, imodulator, index, icosine
+aouta foscili 1.0, i_frequency, icarrier, imodulator, index, gi_FMModerate_cosine
+aoutb foscili 1.0, ifrequencyb, icarrierb, imodulator, index, gi_FMModerate_cosine
 a_signal = (aouta + aoutb) * aindenv
 i_attack = .002
 i_sustain = p3
@@ -38,6 +42,7 @@ i_release = 0.01
 xtratim i_attack + i_sustain + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

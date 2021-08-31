@@ -1,5 +1,9 @@
+gk_MasterOutput_level chnexport "gk_MasterOutput_level", 3 ; 0
+gS_MasterOutput_filename chnexport "gS_MasterOutput_filename", 3 ; ""
+
 gk_MasterOutput_level init 0
 gS_MasterOutput_filename init ""
+
 instr MasterOutput
 aleft inleta "inleft"
 aright inleta "inright"

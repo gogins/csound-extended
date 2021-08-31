@@ -1,7 +1,17 @@
+gk_TubularBell_level chnexport "gk_TubularBell_level", 3
+gi_TubularBell_crossfade chnexport "gi_TubularBell_crossfade", 3
+gi_TubularBell_vibrato_depth chnexport "gi_TubularBell_vibrato_depth", 3
+gi_TubularBell_vibrato_rate chnexport "gi_TubularBell_vibrato_rate", 3
+
 gk_TubularBell_level init 0
 gi_TubularBell_crossfade init 2
 gi_TubularBell_vibrato_depth init .1
 gi_TubularBell_vibrato_rate init 5
+
+gi_TubularBell_isine ftgen 0, 0, 65537, 10, 1
+gi_TubularBell_icosine ftgen 0, 0, 65537, 11, 1
+gi_TubularBell_icook3 ftgen 0, 0, 65537, 10, 1, .4, 0.2, 0.1, 0.1, .05
+
 instr TubularBell
 ; Authors: Perry Cook, John ffitch, Michael Gogins
 i_instrument = p1
@@ -23,14 +33,11 @@ iattack = 0.002
 isustain = p3
 irelease = 0.05
 iindex = 1
-isine ftgenonce 0, 0, 65537, 10, 1
-icosine ftgenonce 0, 0, 65537, 11, 1
-icook3 ftgenonce 0, 0, 65537, 10, 1, .4, 0.2, 0.1, 0.1, .05
-ifn1 = isine
-ifn2 = icook3
-ifn3 = isine
-ifn4 = isine
-ivibefn = icosine
+ifn1 = gi_TubularBell_isine
+ifn2 = gi_TubularBell_icook3
+ifn3 = gi_TubularBell_isine
+ifn4 = gi_TubularBell_isine
+ivibefn = gi_TubularBell_icosine
 a_signal fmbell 1, i_frequency, iindex, gi_TubularBell_crossfade, gi_TubularBell_vibrato_depth, gi_TubularBell_vibrato_rate, ifn1, ifn2, ifn3, ifn4, ivibefn
 i_attack = .002
 i_sustain = p3
@@ -38,6 +45,7 @@ i_release = 0.01
 xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain * .48
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

@@ -26,6 +26,33 @@ gi_FM_Clang_Imp ftgen 0,0,4097,9,0.5,1,0 ; shape for the hammer inpulse
 gi_FM_Clang_stereo ftgen 0,0,256,21,1,1 ; random array used for fixing unique stereo values for each note
 gi_FM_Clang_detune ftgen 0,0,256,21,1,1 ; random array used for fixing unique detune values for each note
 gi_FM_Clang_scale ftgen 0,0,128,-7,-1,128,1
+
+gk_FM_Clang_Amp chnexport "gk_FM_Clang_Amp", 3 ; 1
+gk_FM_Clang_AttTim chnexport "gk_FM_Clang_AttTim", 3 ; 0
+gk_FM_Clang_AttVel chnexport "gk_FM_Clang_AttVel", 3 ; 0
+gk_FM_Clang_Dur chnexport "gk_FM_Clang_Dur", 3 ; 1.7
+gk_FM_Clang_Sustain chnexport "gk_FM_Clang_Sustain", 3 ; 1
+gk_FM_Clang_mod chnexport "gk_FM_Clang_mod", 3 ; 1.2
+gk_FM_Clang_NdxVel chnexport "gk_FM_Clang_NdxVel", 3 ; .55
+gk_FM_Clang_NdxCurve chnexport "gk_FM_Clang_NdxCurve", 3 ; 100
+gk_FM_Clang_CarKyb chnexport "gk_FM_Clang_CarKyb", 3 ; 0
+gk_FM_Clang_DtnMix chnexport "gk_FM_Clang_DtnMix", 3 ; 0
+gk_FM_Clang_Detune chnexport "gk_FM_Clang_Detune", 3 ; 0
+gk_FM_Clang_LPF chnexport "gk_FM_Clang_LPF", 3 ; 3.
+gk_FM_Clang_NseAmp chnexport "gk_FM_Clang_NseAmp", 3 ; 0
+gk_FM_Clang_NseBW chnexport "gk_FM_Clang_NseBW", 3 ; .001
+gk_FM_Clang_NseFllw chnexport "gk_FM_Clang_NseFllw", 3 ; 0
+gk_FM_Clang_ModMix chnexport "gk_FM_Clang_ModMix", 3 ; 0
+gk_FM_Clang_ModDep chnexport "gk_FM_Clang_ModDep", 3 ; .1
+gk_FM_Clang_ModRte chnexport "gk_FM_Clang_ModRte", 3 ; .3
+gk_FM_Clang_ModRteKyb chnexport "gk_FM_Clang_ModRteKyb", 3 ; 0
+gk_FM_Clang_StMix chnexport "gk_FM_Clang_StMix", 3 ; .5
+gk_FM_Clang_StWidth chnexport "gk_FM_Clang_StWidth", 3 ; 0.01
+gk_FM_Clang_DryWet chnexport "gk_FM_Clang_DryWet", 3 ; .01
+gk_FM_Clang_RvbSize chnexport "gk_FM_Clang_RvbSize", 3 ; .55
+gk_FM_Clang_FiltFund chnexport "gk_FM_Clang_FiltFund", 3 ; 0
+gk_FM_Clang_level chnexport "gk_FM_Clang_level", 3 ; 0
+
 gk_FM_Clang_Amp init 1
 gk_FM_Clang_AttTim init 0
 gk_FM_Clang_AttVel init 0
@@ -51,6 +78,7 @@ gk_FM_Clang_DryWet init .01
 gk_FM_Clang_RvbSize init .55
 gk_FM_Clang_FiltFund init 0
 gk_FM_Clang_level init 0
+
 instr FM_Clang ; Sound producing instrument. Triggered by MIDI notes or score notes.
 //////////////////////////////////////////////
 // Original by Iain McCurdy.
@@ -170,6 +198,7 @@ i_release = 0.01
 xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain * 2.18
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

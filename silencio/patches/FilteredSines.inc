@@ -1,6 +1,13 @@
+gk_FilteredSines_level chnexport "gk_FilteredSines_level", 3
+gi_FilteredSines_attack chnexport "gi_FilteredSines_attack", 3
+gi_FilteredSines_release chnexport "gi_FilteredSines_release", 3
+
 gk_FilteredSines_level init 0
 gi_FilteredSines_attack init 1
 gi_FilteredSines_release init 1
+
+gi_FilteredSines_bergeman ftgen 0, 0, 65537, 10, .28, 1, .74, .66, .78, .48, .05, .33, 0.12, .08, .01, .54, 0.19, .08, .05, 0.16, .01, 0.11, .3, .02, 0.2 ; Bergeman f1
+
 instr FilteredSines
 ; Author: Michael Bergeman
 ; Modified by: Michael Gogins
@@ -25,8 +32,7 @@ iattack init gi_FilteredSines_attack
 isustain init p3
 irelease init gi_FilteredSines_release
 idb = 1.5
-ibergeman ftgenonce 0, 0, 65537, 10, .28, 1, .74, .66, .78, .48, .05, .33, 0.12, .08, .01, .54, 0.19, .08, .05, 0.16, .01, 0.11, .3, .02, 0.2 ; Bergeman f1
-ip5 = ibergeman
+ip5 = gi_FilteredSines_bergeman
 ip3 = 5.0
 ip6 = 0.9
 ip7 = 1.4
@@ -62,8 +68,10 @@ a_signal = (a17 + a18)
 i_attack = .002
 i_sustain = p3
 i_release = 0.01
+xtratim (i_attack + i_release)
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain * 1.88
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

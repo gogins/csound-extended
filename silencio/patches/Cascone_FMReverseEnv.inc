@@ -1,12 +1,22 @@
+gk_Cascone_FMReverseEnv_level chnexport "gk_Cascone_FMReverseEnv_level", 3
+gi_Cascone_FMReverseEnv_attack chnexport "gi_Cascone_FMReverseEnv_attack", 3
+gi_Cascone_FMReverseEnv_release chnexport "gi_Cascone_FMReverseEnv_release", 3
+gk_Cascone_FMReverseEnv_kcar chnexport "gk_Cascone_FMReverseEnv_kcar", 3
+gk_Cascone_FMReverseEnv_kmod chnexport "gk_Cascone_FMReverseEnv_kmod", 3
+gk_Cascone_FMReverseEnv_kndx chnexport "gk_Cascone_FMReverseEnv_kndx", 3
+gk_Cascone_FMReverseEnv_midi_dynamic_range chnexport "gk_Cascone_FMReverseEnv_midi_dynamic_range", 3
+
 gk_Cascone_FMReverseEnv_level init 0
-gi_Cascone_FMReverseEnv_attack init 0.003
+gi_Cascone_FMReverseEnv_attack init 0.004
 gi_Cascone_FMReverseEnv_release init 0.01
 gk_Cascone_FMReverseEnv_kcar init .25
 gk_Cascone_FMReverseEnv_kmod init 1.33
 gk_Cascone_FMReverseEnv_kndx init 9.7
-gk_Cascone_FMReverseEnv_midi_dynamic_range init 127
+gk_Cascone_FMReverseEnv_midi_dynamic_range init 20
+
 gi_Cascone_FMReverseEnv_f11 ftgen 0, 0, 65537, 10, 1 ;SINE WAVE hi-res
 gi_Cascone_FMReverseEnv_f18 ftgen 0, 0, 512, 5, 1, 512, 256 ;reverse exp env
+
 instr Cascone_FMReverseEnv
 //////////////////////////////////////////////
 // Author: Kim Cascone
@@ -28,7 +38,7 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 103.2
+i_level_correction = 93
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_Cascone_FMReverseEnv_level)
@@ -59,9 +69,9 @@ afm foscili kamp,kcps,kcar,kmod,kndx,gi_Cascone_FMReverseEnv_f11 ; f11 = HIRES S
 afm1 poscil3 afm,1/p3,gi_Cascone_FMReverseEnv_f18
 afm2 = afm1*400 ; THIS INCERASES THE GAIN OF THE FOSCILI OUTx400
 a_signal = afm2
-
 a_declicking linsegr 0, gi_Cascone_FMReverseEnv_attack, 1, i_sustain, 1, gi_Cascone_FMReverseEnv_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

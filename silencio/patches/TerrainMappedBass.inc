@@ -6,12 +6,19 @@ akout = akrad1 + 2 * iamp
 xout akout
 endop
 
+gk_TerrainMappedBass_level chnexport "gk_TerrainMappedBass_level", 3 ;  0
+gi_TerrainMappedBass_attack chnexport "gi_TerrainMappedBass_attack", 3 ;  0.003
+gi_TerrainMappedBass_release chnexport "gi_TerrainMappedBass_release", 3 ;  0.01
+gk_TerrainMappedBass_midi_dynamic_range chnexport "gk_TerrainMappedBass_midi_dynamic_range", 3 ;  20
+
 gk_TerrainMappedBass_level init 0
 gi_TerrainMappedBass_attack init 0.003
 gi_TerrainMappedBass_release init 0.01
+gk_TerrainMappedBass_midi_dynamic_range init 20
+
 gi_TerrainMappedBass_pitch_bend_table ftgen 0, 0, 1024, -7, 1, 1024, 1 
-gk_TerrainMappedBass_midi_dynamic_range init 127
 gi_TerrainMappedBass_sine ftgen 0, 0, 65537, 10, 1
+
 instr TerrainMappedBass
 //////////////////////////////////////////////
 // Author: Hans Mikelson
@@ -36,11 +43,11 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 // Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 80.5
+i_level_correction = 70.5
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_TerrainMappedBass_level)
-;-----------------------------------------------------------
+
 ; Terrain Mapped Bass
 ; z=sqrt(x^4+y^4-x^2-y^2-x^2Y^2+1)
 ;-----------------------------------------------------------
@@ -79,6 +86,7 @@ aright = aout2 * kamp
 a_signal = aleft + aright
 a_declicking linsegr 0, gi_TerrainMappedBass_attack, 1, i_sustain, 1, gi_TerrainMappedBass_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

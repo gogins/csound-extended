@@ -229,24 +229,38 @@ endin
 
 '''    
 
+def create_csd_text(options, license, orc, sco):
+    csd_text = '''
+<CsoundSynthesizer>
+<CsOptions>
+{}
+</CsOptions>
+<CsLicense>
+{}
+</CsLicense>
+<CsInstruments>
+{}
+</CsInstruments>
+<CsScore>
+{}
+</CsScore>
+</CsoundSynthesizer>
+'''.format(options, license, orc, sco)
+    return csd_text
+
 # The "f 0" statement prevents an abrupt cutoff.
 sco = "f 0 105\n" + musx.to_csound_score(file)
 print(sco)
 
-csound.SetOption("-+msg_color=0")
-csound.SetOption("-d")
-csound.SetOption("-m195")
-csound.SetOption("-f")
 # Change this for your actual audio configuration, try "aplay -l" to see what they are.
-csound.SetOption("-odac:plughw:2,0")
+csd_text = create_csd_text("-+msg_color=0 -d -m195 -f -+rtaudio=alsa -RWodac", "", orc, sco)
 # Can also be a soundfile.
 # csound.setOption("-otest.wav")
-csound.CompileOrc(orc)
+csound.CompileCsdText(csd_text)
 csound.Start()
 for channel, value in values_for_channels.items():
     print(channel, value)
     csound.SetControlChannel(channel, value)
-csound.ReadScore(sco)
 csound.Perform()
 # Scsound.Join()
 

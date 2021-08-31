@@ -1,3 +1,22 @@
+gk_FMDroner_partial1 chnexport "gk_FMDroner_partial1", 3 ; .5
+gk_FMDroner_partial2 chnexport "gk_FMDroner_partial2", 3 ; .05
+gk_FMDroner_partial3 chnexport "gk_FMDroner_partial3", 3 ; .1
+gk_FMDroner_partial4 chnexport "gk_FMDroner_partial4", 3 ; .2
+gk_FMDroner_partial5 chnexport "gk_FMDroner_partial5", 3 ; .1
+gk_FMDroner_partial6 chnexport "gk_FMDroner_partial6", 3 ; 0
+gk_FMDroner_partial7 chnexport "gk_FMDroner_partial7", 3 ; 0
+gk_FMDroner_partial8 chnexport "gk_FMDroner_partial8", 3 ; 0
+gk_FMDroner_partial9 chnexport "gk_FMDroner_partial9", 3 ; 0
+gk_FMDroner_partial10 chnexport "gk_FMDroner_partial10", 3 ; 0
+gk_FMDroner_index chnexport "gk_FMDroner_index", 3 ; 3
+gk_FMDroner_carrier chnexport "gk_FMDroner_carrier", 3 ; 1
+gk_FMDroner_modulator chnexport "gk_FMDroner_modulator", 3 ; 3
+gk_FMDroner_transeg_exponent chnexport "gk_FMDroner_transeg_exponent", 3 ; -20
+gk_FMDroner_x chnexport "gk_FMDroner_x", 3 ; 6
+gk_FMDroner_y chnexport "gk_FMDroner_y", 3 ; 0
+gk_FMDroner_z chnexport "gk_FMDroner_z", 3 ; 0
+gk_FMDroner_level chnexport "gk_FMDroner_level", 3 ; 0
+
 gk_FMDroner_partial1 init .5
 gk_FMDroner_partial2 init .05
 gk_FMDroner_partial3 init .1
@@ -16,7 +35,9 @@ gk_FMDroner_x init 6
 gk_FMDroner_y init 0
 gk_FMDroner_z init 0
 gk_FMDroner_level init 0
-gi_FMDroner_sine ftgen 0, 0, 65536, 10, 1, 0, .02
+
+gi_FMDroner_sine ftgen 0, 0, 65537, 10, 1, 0, .02
+
 instr FMDroner
 i_instrument = p1
 i_time = p2
@@ -60,6 +81,7 @@ i_release = 0.01
 xtratim i_attack + i_sustain + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain * 2.1
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16

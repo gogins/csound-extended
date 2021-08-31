@@ -1,8 +1,12 @@
+gk_HeavyMetal_level chnexport "gk_HeavyMetal_level", 3
+
 gk_HeavyMetal_level init 0
+
 gi_HeavyMetal_sine ftgen 0, 0, 65537, 10, 1
 gi_HeavyMetal_cosine ftgen 0, 0, 65537, 11, 1
 gi_HeavyMetal_exponentialrise ftgen 0, 0, 65536, 5, .001, 65536, 1 , 0; Exponential rise.
-gi_HeavyMetal_thirteen ftgenonce 0, 0, 65537, 9, 1, .3, 0
+gi_HeavyMetal_thirteen ftgen 0, 0, 65537, 9, 1, .3, 0
+
 instr HeavyMetal
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Author: Perry Cook and John ffitch
@@ -45,6 +49,7 @@ i_release = 0.01
 xtratim i_attack + i_sustain + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
