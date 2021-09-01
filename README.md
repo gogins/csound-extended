@@ -68,6 +68,7 @@ log.
     you must be first clone the master branch of libmusicxml from 
     `https://github.com/grame-cncm/libmusicxml/tree/dev/build` and then 
     build according to `https://github.com/grame-cncm/libmusicxml/tree/dev/build` 
+    but with this command `cmake -DCMAKE_C_FLAGS="-fPIC -flto" -DCMAKE_CXX_FLAGS="-fPIC -flto"`, 
     and finally `sudo make install`.
 
 3.  CsoundAC and other Linux binaries and other resources are installed from
