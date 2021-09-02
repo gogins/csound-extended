@@ -23,10 +23,8 @@ The commands for cspm are:
 *contribute* package_directory [repository_url] - upload a contributed package 
 to the contributor's account in a package repository. The contribution must be 
 staged as a directory in a standard format containing a package manifest and 
-pre-built package contents (see below).
-
-The contributor must have a GitHub account. If the package already exists, 
-its contents are updated.
+pre-built package contents (see below). The contributor must have a GitHub 
+account. If the package already exists, its contents are replaced.
 
 *list* [repositories...] - list packages in the package repository(s).
 
@@ -47,7 +45,7 @@ The package manager reads a list of package repository URLs from ~/.cspm.ini.
 These are in addition to the default package repository, which is hard-coded.
 
 This configuration file may also contain a list of package architectures to be 
-installed, specified as VCPKG triple names, e.g. `x64-linux`. These are in 
+installed, specified as VCPKG triplet names, e.g. `x64-linux`. These are in 
 addition to the default package architecture, which is inferred from the 
 system.
 
@@ -66,7 +64,8 @@ In the root directory, there must be a `manifest.json` file that contains
 metadata for the package (format specified below). There must also be a 
 README.md file that provides Csound-style help for the package, and a 
 LICENSE.md file that contains a software license which is compatible with 
-Csound's license (LGPLv2.1). NOTE WELL: Binaries must be pre-built.
+[Csound's license (LGPLv2.1)](https://github.com/csound/csound/blob/develop/COPYING). 
+NOTE WELL: Binaries must be pre-built.
 
 The package directory then contains subdirectories structured by installation 
 target and, where necessary, qualified by target runtime architecture 
