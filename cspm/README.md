@@ -47,13 +47,28 @@ These are in addition to the default package repository, which is hard-coded.
 This configuration file may also contain a list of package architectures to be 
 installed, specified as VCPKG triplet names, e.g. `x64-linux`. These are in 
 addition to the default package architecture, which is inferred from the 
-system.
+system. Csound's major platforms include but are not limited to the following
+triplets:
+```
+arm-ios
+arm64-android
+arm64-osx-dynamic
+armv6-android
+x64-android
+x64-freebsd
+x64-ios
+x64-linux
+x64-mingw-dynamic
+x64-openbsd
+x64-osx
+x64-windows
+```
 
 ## Package Specification
 
 ### Package Names
 
-Package names must be UTF-encoded without spaces. Underlines should be used 
+Package names must be UTF-8 encoded without spaces. Underlines should be used 
 to demarcate words. Package names must not identify the target architecture; 
 different architectures are all stored in the same package file.
 
