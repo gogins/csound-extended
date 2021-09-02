@@ -26,18 +26,18 @@ staged as a directory in a standard format containing a package manifest and
 pre-built package contents (see below). The contributor must have a GitHub 
 account. If the package already exists, its contents are replaced.
 
-*list* [repositories...] - list packages in the package repository(s).
+`*list* [repositories...]` - list packages in the package repository(s).
 
-*search* "text..." [repositories...] - search for the quoted text in the 
+`*search* "text..." [repositories...]` - search for the quoted text in the 
 package repository(s) manifests, and print matching packages/repositories.
 
-*information* package [repositories...] - print the package's manifest.
+`*information* package [repositories...]` - print the package's manifest.
 
-*install* package [repository] - install a package.
+`*install* package [repository]` - install a package.
 
-*dependencies* package - list dependencies of a package.
+`*dependencies* package` - list dependencies of a package.
 
-*remove* package - remove a package.
+`*remove* package`- remove a package.
 
 ## Configuration
 
@@ -71,7 +71,11 @@ The package directory then contains subdirectories structured by installation
 target and, where necessary, qualified by target runtime architecture 
 specified by triplet name. Some installation targets are standard Csound 
 directories, and some identify "inner packages" such as Debian packages 
-or Windows installers. 
+or Windows installers. If the target is a Csound directory, the contents 
+are installed in the directory specified by the corresponding Csound 
+environment variable, or in the default location. 
+
+Loadable modules go into the *user-local* plugins directory.
 ```
 manifest.json - Metadata in JSON format (required).
 README.md - Csound-style manual page in markdown format (required).
