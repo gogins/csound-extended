@@ -42,8 +42,11 @@ igenright = icosine
 kvibrato poscil 1.0 / 120.0, 7.0, icosine
 a_envelope transegr 0.0, iattack, -7.0, 1.0, idecay, -7.0, 0.5, isustain, 0.0, 0.125, irelease, -7.0, 0.0
 ag pluck 1, cpsoct(ioctave + kvibrato), i_frequency, igenleft, 1
+ag *= a_envelope
 agleft pluck 1, ihertzleft, i_frequency, igenleft, 1
+agleft *= a_envelope
 agright pluck 1, ihertzright, i_frequency, igenright, 1
+agright *= a_envelope
 imsleft = 0.2 * 1000
 imsright = 0.21 * 1000
 adelayleft vdelay ag, imsleft, imsleft + 100
@@ -57,7 +60,8 @@ i_attack = .01
 i_sustain = p3
 i_release = 0.1
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
-a_signal = a_signal * i_amplitude * a_declicking * k_gain * 1.7
+; a_signal = a_signal * i_amplitude * a_declicking * k_gain * 1.7
+a_signal = a_signal * i_amplitude * k_gain * 1.7
 
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0

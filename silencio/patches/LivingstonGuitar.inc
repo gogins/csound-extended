@@ -83,11 +83,6 @@ ip11 init 0
 ip12 init 0
 ip13 init 0
 ip14 init 0
-isustain_ = p3
-iattack_ = .001
-irelease_ = .01
-xtratim iattack_ + irelease_
-adeclick linsegr 0, iattack_, 1, isustain_, 1, irelease_, 0
 iEstr = 1/cpspch(6.04)
 ifqc = cpspch(ip5)
 idlt = 1/(ifqc) ;note:delay time=2x length of string (time to traverse it)

@@ -4,8 +4,8 @@ gi_BandedWG_release chnexport "gi_BandedWG_release", 3
 gk_BandedWG_midi_dynamic_range chnexport "gk_BandedWG_midi_dynamic_range", 3
 
 gk_BandedWG_level init 0
-gi_BandedWG_attack init 0.005
-gi_BandedWG_release init 0.01
+gi_BandedWG_attack init 0.01
+gi_BandedWG_release init 0.05
 gk_BandedWG_midi_dynamic_range init 20
 
 instr BandedWG
