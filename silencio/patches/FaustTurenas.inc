@@ -123,7 +123,7 @@ gk_FaustTurenas_level chnexport "gk_FaustTurenas_level", 3
 gk_FaustTurenas_y chnexport "gk_FaustTurenas_y", 3
 gk_FaustTurenas_res chnexport "gk_FaustTurenas_res", 3
 
-gk_FaustTurenas_level init 0
+gk_FaustTurenas_level init 0.
 gk_FaustTurenas_y init .22
 gk_FaustTurenas_res init 3.93
 gk_FaustTurenas_midi_dynamic_range init 20
@@ -144,14 +144,13 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 125
+i_level_correction = 60
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_FaustTurenas_level)
 i_faust_dsp faustdsp gi_FaustTurenas_compiled
 k_frequency cpsmidinn i_midi_key
 faustctl i_faust_dsp, "freq", k_frequency
-k_gain = ampdb(i_midi_velocity)
 faustctl i_faust_dsp, "y", gk_FaustTurenas_y
 faustctl i_faust_dsp, "res", gk_FaustTurenas_res
 faustctl i_faust_dsp, "gate", k(1)
@@ -172,6 +171,5 @@ outleta "outright", a_out_right
 #endif
 prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
-
 
 

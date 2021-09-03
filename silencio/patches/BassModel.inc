@@ -32,7 +32,6 @@ endif
 if p3 < 0 then
  i_sustain = 1000
 endif
-p3 = gi_BassModel_attack + i_sustain + gi_BassModel_release
 i_midi_key = p4
 while i_midi_key > 100 do
   i_midi_key -= 12
