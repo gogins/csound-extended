@@ -21,6 +21,9 @@ i_time = p2
 i_sustain = p3
 i_duration = p3
 i_midi_key = p4
+while i_midi_key < 44 do
+  i_midi_key = i_midi_key + 12
+od
 while i_midi_key > 90 do
   i_midi_key = i_midi_key - 12
 od
