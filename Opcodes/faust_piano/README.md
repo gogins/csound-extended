@@ -13,14 +13,14 @@ Currently, on Ubuntu 20.04, Faust 2.2.0 is available as a system package. The
 faust2csound tool from this version does not generate C++ code compatible with 
 the current version of Csound. On Ubuntu, up to date versions of Faust are 
 available only by building from source code. Unfortunately I have not been 
-able to build on Linux because `make all;sudo make install" fails with many 
+able to build on Linux because `make all;sudo make install` fails with many 
 errors that I have not been able to fix.
 
 It is fortunately *very* easy to patch version 2.2.0 of Faust to generate the 
 correct C++ code for current versions of Csound.
 
-In the `/usr/lib/faust/csound.cpp` file, near the bottom, change the opcode 
-registration code from:
+In the "architecture" file for Csound, `/usr/lib/faust/csound.cpp`, near the 
+bottom, change the opcode registration code from:
 ```
 extern "C" {
     static OENTRY localops[] = {
