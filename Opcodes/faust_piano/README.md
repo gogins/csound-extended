@@ -43,12 +43,13 @@ extern "C" {
 
 Faust will then generate correct C++ code for the current version of Csound.
 
-Here is an example of how to generate a usable Csound plugin opcode from the 
-Faust piano.dsp example on Ubuntu Linux.
+Here is an example of how to generate a Csound plugin opcode from the Faust 
+`piano.dsp` example on Ubuntu Linux.
 
 Create a working directory.
 
-Copy the `piano.dsp` source code file into the working directory.
+Copy the `piano.dsp` source code file from the Faust distribution into the 
+working directory.
 
 Generate C++ source code for a Csound opcode plugin:
 ```
