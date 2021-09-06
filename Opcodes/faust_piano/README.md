@@ -4,17 +4,17 @@ Michael Gogins<br>
 https://github.com/gogins<br>
 http://michaelgogins.tumblr.com
 
-Faust is a sophisticated language and toolchain for writing digital signal 
-processing code, then compiling the Faust source code to other languages. 
-Faust maintains a clean separation between the "user" layer for DSP and 
-the "architecture" layer that runs the DSP algorithm.
+[Faust](https://faust.grame.fr/) is a sophisticated language and toolchain for 
+writing digital signal processing code, then compiling Faust source code to 
+other languages. Faust maintains a clean separation between the "user" layer 
+for DSP and the "architecture" layer that runs the DSP code.
 
 Currently, on Ubuntu 20.04, Faust 2.2.0 is available as a system package. The 
-faust2csound tool from this version does not generate C++ code compatible with 
-the current version of Csound. On Ubuntu, up to date versions of Faust are 
-available only by building from source code. Unfortunately I have not been 
-able to build on Linux because `make all;sudo make install` fails with many 
-errors that I have not been able to fix.
+`faust2csound` tool from this version does not generate C++ code compatible 
+with the current version of Csound. On Ubuntu, up to date versions of Faust 
+are available, but only by building from source code. Unfortunately I have 
+not been able to build Faust on Linux because `make all;sudo make install` 
+fails with many errors that I do not have time fix.
 
 It is fortunately *very* easy to patch version 2.2.0 of Faust to generate the 
 correct C++ code for current versions of Csound.
