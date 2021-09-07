@@ -41,6 +41,8 @@ extern "C" {
 }
 ```
 
+Also, change `#include "csdl.h"` to `#include <csound/csdl.h>`.
+
 Faust will then generate correct C++ code for the current version of Csound.
 
 Here is an example of how to generate a Csound plugin opcode from the Faust 
@@ -56,11 +58,13 @@ Generate C++ source code for a Csound opcode plugin:
 faust2csound piano.dsp
 ```
 
-Compile the generated piano.dsp.cpp file:
+If this command succeeds, it will compile a Csound plugin opcode. If this 
+command fails, it may still produce a usable .cpp file, in which case you may compile the generated piano.dsp.cpp file:
 ```
 g++ piano.dsp.cpp -DOPCODE_NAME=faust_piano -DUSE_DOUBLE -Dlinux --std=gnu++17 -lstdc++fs -Wno-write-strings -O3 -g -fPIC -shared -I. -iquote /usr/local/include/csound -I$HOME/faust/examples/physicalModeling/faust-stk -I/usr/local/include -I/usr/local/include/csound -I/usr/include/csound -lm -olibfaust_piano.so
 ```
-Copy the plugin to Csound's plugin directory:
+
+In either case, copy the compiled plugin to Csound's plugin directory:
 ```
 sudo cp libfaust_piano.so /usr/local/lib/csound/plugins64-6.0/
 ```
