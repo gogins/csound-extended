@@ -37,15 +37,16 @@ permit. The protocol is:
     is created. To facilitate this, the InstrumentOpcodeBase class provides:
     ```   
     MYFLT CsoundInstrumentBase::receiveK(const char *name);
-    CsoundInstrumentBase::sendK(const char *name, MYFLT value) const;
+    CsoundInstrumentBase::sendK(const char *name, MYFLT k_value) const;
     CsoundInstrumentBase::receiveS(const char *name, char *buffer);
     CsoundInstrumentBase::sendS(const char *name, const char *value) const;
     MYFLT *CsoundInstrumentBase::receiveA(const char *name);
-    CsoundInstrumentBase::sendA(const char *name, MYFLT *value) const;
+    CsoundInstrumentBase::sendA(const char *name, MYFLT *a_value) const;
     PVSDAT *CsoundInstrumentBase::receivePVS(const char *name);
     CsoundInstrumentBase::sendPVS(const char *name, PVSDAT *value) const;
     ```   
-    
+Audio values here have the shape `a_value[nchnls][ksmps]`.
+
 To create a Csound instrument in C++:
 
 1.  Derive a new plugin opcode class from `InstrumentPluginBase`. 
@@ -57,7 +58,18 @@ To create a Csound instrument in C++:
     `a_output`. Your instrument must assume that `a_output` has as many samples 
     as Csound's ksmps, and as many channels as Csound's nchnls.
 5.  Your instrument module must register all plugins that it defines using 
-    `csoundOpcodeAppend` in an exported `csoundModuleInit` function.
+    `csoundOpcodeAppend` in an exported `csoundModuleInit` function, in the form 
+    ```
+    csound->AppendOpcode(CSOUND *csound, const char *opcode_name,
+        size_t opcode_size, 
+        int flags = 0,
+        int thread = 3, 
+        const char *outypes, 
+        const char *&intypes,
+        int (ioppadr*)(CSOUND *, void *),
+        int (kopadr*)(CSOUND *, void *),
+                                nullptr);
+    ```
 7.  If your instrument module uses any global variables, they must be allocated 
     in the `csoundModuleInit` function.
 8.  If your instrument module uses any global variables, they must be deallocated 
