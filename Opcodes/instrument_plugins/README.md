@@ -12,12 +12,10 @@ but this facility gets as close to that as the current Csound internals
 permit. The protocol is:
 
 1.  Your instrument opcode must output all audio in `a_output[]`.
-
 2.  Your instrument opcode must read any required pfield data from these 
     member functions, which directly read the `opds->insds` pfields. And 
     your Csound score must define these pfields in the same order and using 
     the same units:
-    
   2.1  p1_instrument() - Instrument number, may have a fractional part.
   2.1  p2_time() - Onset time in beats, usually seconds.
   2.1  p3_duration() - Duration in beats, usually seconds.
@@ -31,20 +29,19 @@ permit. The protocol is:
   2.1  p8_space_bottom_to_top() - Spatial location in Ambisonic coordinates.
   2.1  p9_phase() - Audio phase in radians, may be used e.g. for 
         phase-sychronous overlapped granular synthesis.
-    
 3.  Your instrument may send and receive Csound channel messages at any rate 
     and of any type through global variables. These should follow the naming 
     convention `gT_InstrumentName_channel_name`. If a variable of this type 
     already exists at run time, it is used. If it does not already exist, it 
     is created. To facilitate this, the InstrumentOpcodeBase class provides:
-    
-    MYFLT CsoundInstrumentBase::receiveK(const char *name);
-    CsoundInstrumentBase::sendK(const char *name, MYFLT value) const;
-    CsoundInstrumentBase::receiveS(const char *name, char *buffer, int buffer_size);
-    CsoundInstrumentBase::sendS(const char *name, const char *value) const;
-    MYFLT *CsoundInstrumentBase::receiveA(const char *name);
-    CsoundInstrumentBase::sendA(const char *name, MYFLT *value) const;
-    
+    ```   
+        MYFLT CsoundInstrumentBase::receiveK(const char *name);
+        CsoundInstrumentBase::sendK(const char *name, MYFLT value) const;
+        CsoundInstrumentBase::receiveS(const char *name, char *buffer, int buffer_size);
+        CsoundInstrumentBase::sendS(const char *name, const char *value) const;
+        MYFLT *CsoundInstrumentBase::receiveA(const char *name);
+        CsoundInstrumentBase::sendA(const char *name, MYFLT *value) const;
+    ```   
 To create a Csound instrument in C++:
 
 1.  Derive a new plugin opcode class from `InstrumentPluginBase`. 
@@ -59,3 +56,12 @@ To create a Csound instrument in C++:
     `a_output`. Your instrument must assume that `a_output` has as many samples 
     as Csound's ksmps, and as many channels as Csound's nchnls.
     
+Once you have compiled your plugin instrument and installed it in your 
+${OPCODE6DIR64} directory, using it is as simple as this:
+```
+instr MyKlanger
+a_out[] init nchnls
+a_out my_klanger
+outletv "output", a_out
+endin
+```
