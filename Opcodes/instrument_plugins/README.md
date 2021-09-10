@@ -39,6 +39,8 @@ must define these pfields in the same order and using the same units:
     CsoundInstrumentBase::sendS(const char *name, const char *value) const;
     MYFLT *CsoundInstrumentBase::receiveA(const char *name);
     CsoundInstrumentBase::sendA(const char *name, MYFLT *value) const;
+    PVSDAT *CsoundInstrumentBase::receivePVS(const char *name);
+    CsoundInstrumentBase::sendPVS(const char *name, PVSDAT *value) const;
     ```   
 To create a Csound instrument in C++:
 
