@@ -6,16 +6,15 @@ http://michaelgogins.tumblr.com
 
 This directory defines a C++ base class that facilitates creating complete Csound 
 instruments as opcodes written in C++, for example using some efficient and 
-user-friendly digital signal processing library such as the [STK](https://ccrma.stanford.edu/software/stk/).
+user-friendly digital signal processing library such as the [STK](https://ccrma.stanford.edu/software/stk/),
+[AuLib](https://github.com/AuLib/AuLib), or [Gamma](https://github.com/LancePutnam/Gamma).
 
-It is not possible (yet?) to directly hook in to the instrument template list, 
-but this facility gets as close to that as the current Csound internals 
-permit. The protocol is:
+## Protocol
 
 1. Your instrument opcode must output all audio in `a_output[]`. Its shape is 
    `a_output[nchnls][ksmps]`.
-3. Your instrument opcode must read any required pfield data from these member 
-   functions, which directly read the `opds->insds` pfields. And your Csound score 
+3. Your instrument opcode must read any required pfield data from the `pfield` 
+   member function, which directly read the `opds->insds` pfields. And your Csound score 
    should perhaps define these pfields in the same order and using the same units:
 
    1.  `pfield(1)` - Instrument number, may have a fractional part.
@@ -23,10 +22,10 @@ permit. The protocol is:
    2.  `pfield(3)` - Duration in beats, usually seconds.
    2.  `pfield(4)` - Pitch as MIDI key, middle C = 60, may have a fractional part.
    2.  `pfield(5)` - Loudness as MIDI velocity, mezzo-forte = 80, may have a fractional part.
-   2.  `pfield(6)` - Spatial location in Ambisonic coordinates.
-   2.  `pfield(7)` - Spatial location in Ambisonic coordinates, same 
+   2.  `pfield(6)` - Spatial location from back to front in Ambisonic coordinates.
+   2.  `pfield(7)` - Spatial location from left to right in Ambisonic coordinates, same 
        as stereo pan.
-   2.  `pfield(8)` - Spatial location in Ambisonic coordinates.
+   2.  `pfield(8)` - Spatial location from bottom to top in Ambisonic coordinates.
    2.  `pfield(9)` - Audio phase in radians, may be used e.g. for 
         phase-sychronous overlapped granular synthesis.
         
@@ -34,18 +33,22 @@ permit. The protocol is:
     and of any type through global variables. These should follow the naming 
     convention `gT_InstrumentName_channel_name`. If a variable of this type 
     already exists at run time, it is used. If it does not already exist, it 
-    is created. To facilitate this, the InstrumentOpcodeBase class provides:
+    is created as a global variable and exported as a control channel. To 
+    facilitate this, the InstrumentPluginBase class provides the following 
+    member functions:
     ```   
-    MYFLT CsoundInstrumentBase::receiveK(const char *name);
-    CsoundInstrumentBase::sendK(const char *name, MYFLT k_value) const;
-    CsoundInstrumentBase::receiveS(const char *name, char *buffer);
-    CsoundInstrumentBase::sendS(const char *name, const char *value) const;
-    MYFLT *CsoundInstrumentBase::receiveA(const char *name);
-    CsoundInstrumentBase::sendA(const char *name, MYFLT *a_value) const;
-    PVSDAT *CsoundInstrumentBase::receivePVS(const char *name);
-    CsoundInstrumentBase::sendPVS(const char *name, PVSDAT *value) const;
+    MYFLT InstrumentPluginBase::receiveK(CSOUND *csound, const char *name);
+    void InstrumentPluginBase::sendK(CSOUND *csound, const char *name, MYFLT k_value) const;
+    int InstrumentPluginBase::receiveS(CSOUND *csound, const char *name, char *buffer);
+    void InstrumentPluginBase::sendS(CSOUND *csound, const char *name, const char *value) const;
+    void InstrumentPluginBase::receiveA(CSOUND *csound, const char *name, MYFLT *a_value);
+    void InstrumentPluginBase::sendA(CSOUND *csound, const char *name, MYFLT *a_value) const;
+    int InstrumentPluginBase::receivePVS(CSOUND *csound, const char *name, PVSDATEXT *value);
+    int InstrumentPluginBase::sendPVS(CSOUND *csound, const char *name, PVSDATEXT *value) const;
     ```   
 Audio values here have the shape `a_value[nchnls][ksmps]`.
+
+## Creation
 
 To create a Csound instrument in C++:
 
@@ -58,7 +61,7 @@ To create a Csound instrument in C++:
     `a_output`. Your instrument must assume that `a_output` has as many samples 
     as Csound's ksmps, and as many channels as Csound's nchnls.
 5.  Your instrument module must register all plugins that it defines using 
-    `csoundOpcodeAppend` in an exported `int csoundModuleInit(CSOUND *csound)` 
+    `csoundOpcodeAppend` in the module's exported `int csoundModuleInit(CSOUND *csound)` 
     function, in the form 
     ```
     csound->AppendOpcode(CSOUND *csound, const char *opcode_name,
@@ -72,20 +75,25 @@ To create a Csound instrument in C++:
         nullptr);
     ```
 7.  If your instrument module uses any global variables, they must be allocated 
-    in the `int csoundModuleInit(CSOUND *csound)` function.
+    in the module's `int csoundModuleInit(CSOUND *csound)` function.
 8.  If your instrument module uses any global variables, they must be deallocated 
-    in a `int csoundModuleDestroy(CSOUND *csound)` function.
+    in the module's `int csoundModuleDestroy(CSOUND *csound)` function.
     
+## Usage
+
 Once you have compiled your plugin instrument and installed it in your 
-`${OPCODE6DIR64}` directory, using it can be as simple as this:
+`${OPCODE6DIR64}` directory, use the plugin as an opcode, but in the 
+Csound orchestra header. Each plugin will create an instrument with the same 
+name as the plugin, and the instruments will be numbered in the same way as 
+regular Csound `instr` templates, that is, in the order that they are 
+declared, starting with instrument number 1. 
+
+To configure the instrument with non-default control values, simply assign 
+new values to its control channels in the orchestra header. Here is an example:
 ```
-instr MyKlanger
-a_out[] init nchnls
-a_out my_klanger
-outletv "output", a_out
-endin
+i_instrument_1 MyPlugin1
+i_instrument 2 MyPlugin2
+gk_MyPlugin2_level init 5
+gk_MyPlugin2_fm_index init 3
 ```
 
-There is another plugin instrument class which not only creates a plugin instrument as 
-described above, but also automatically creates an `instr` definition using it, and 
-compiles that into the existing Csound orchestra using the `compilestr` opcode.
