@@ -50,10 +50,10 @@ Audio values here have the shape `a_value[nchnls][ksmps]`.
 To create a Csound instrument in C++:
 
 1.  Derive a new plugin opcode class from `InstrumentPluginBase`. 
-2.  Your instrument must initialize itself and perform all i-rate computation  
-    in an overridden `int CsoundInstrumentBase::init(CSOUND *)` member function.
+2.  Your instrument must initialize itself and perform all i-rate computation 
+    in an overridden `int CsoundInstrumentBase::init(CSOUND *csound)` member function.
 3.  Your instrument must perform all k-rate and a-rate computation in an overridden 
-    `int CsoundInstrumentBase::kontrol(CSOUND *)` member function.
+    `int CsoundInstrumentBase::kontrol(CSOUND *csound)` member function.
 5.  Your instrument must output any audio to the builtin a-rate array variable 
     `a_output`. Your instrument must assume that `a_output` has as many samples 
     as Csound's ksmps, and as many channels as Csound's nchnls.
