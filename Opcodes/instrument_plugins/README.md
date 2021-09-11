@@ -52,28 +52,29 @@ To create a Csound instrument in C++:
 1.  Derive a new plugin opcode class from `InstrumentPluginBase`. 
 2.  Your instrument must initialize itself and perform all i-rate computation  
     in an overridden `int CsoundInstrumentBase::init(CSOUND *)` member function.
-3.  Your must perform all k-rate and a-rate computation in its overridden 
+3.  Your instrument must perform all k-rate and a-rate computation in an overridden 
     `int CsoundInstrumentBase::kontrol(CSOUND *)` member function.
 5.  Your instrument must output any audio to the builtin a-rate array variable 
     `a_output`. Your instrument must assume that `a_output` has as many samples 
     as Csound's ksmps, and as many channels as Csound's nchnls.
 5.  Your instrument module must register all plugins that it defines using 
-    `csoundOpcodeAppend` in an exported `csoundModuleInit` function, in the form 
+    `csoundOpcodeAppend` in an exported `int csoundModuleInit(CSOUND *csound)` 
+    function, in the form 
     ```
     csound->AppendOpcode(CSOUND *csound, const char *opcode_name,
         size_t opcode_size, 
         int flags = 0,
         int thread = 3, 
         const char *outypes, 
-        const char *&intypes,
-        int (ioppadr*)(CSOUND *, void *),
+        const char *intypes,
+        int (iopadr*)(CSOUND *, void *),
         int (kopadr*)(CSOUND *, void *),
-                                nullptr);
+        nullptr);
     ```
 7.  If your instrument module uses any global variables, they must be allocated 
-    in the `csoundModuleInit` function.
+    in the `int csoundModuleInit(CSOUND *csound)` function.
 8.  If your instrument module uses any global variables, they must be deallocated 
-    in a `csoundModuleDestroy` function.
+    in a `int csoundModuleDestroy(CSOUND *csound)` function.
     
 Once you have compiled your plugin instrument and installed it in your 
 `${OPCODE6DIR64}` directory, using it can be as simple as this:
