@@ -31,11 +31,11 @@ user-friendly digital signal processing library such as the [STK](https://ccrma.
         
 3.  Your instrument may send and receive Csound channel messages at any rate 
     and of any type through global variables. These should follow the naming 
-    convention `gT_InstrumentName_channel_name`. If a variable of this type 
-    already exists at run time, it is used. If it does not already exist, it 
-    is created as a global variable and exported as a control channel. To 
-    facilitate this, the InstrumentPluginBase class provides the following 
-    member functions:
+    convention `gT_InstrumentName_channel_name`, where `T` is a Csound type code such as 
+    `i`, `k`, `S`, or `f`. If a variable of this type already exists at run time, 
+    it is used. If it does not already exist, it is created as a global variable and 
+    exported as a control channel. To facilitate this, the InstrumentPluginBase class 
+    provides the following member functions:
     ```   
     MYFLT InstrumentPluginBase::receiveK(CSOUND *csound, const char *name);
     void InstrumentPluginBase::sendK(CSOUND *csound, const char *name, MYFLT k_value) const;
