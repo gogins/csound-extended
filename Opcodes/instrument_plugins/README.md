@@ -85,3 +85,7 @@ a_out my_klanger
 outletv "output", a_out
 endin
 ```
+
+There is another plugin instrument class which not only creates a plugin instrument as 
+described above, but also automatically creates an `instr` definition using it, and 
+compiles that into the existing Csound orchestra using the `compilestr` opcode.
