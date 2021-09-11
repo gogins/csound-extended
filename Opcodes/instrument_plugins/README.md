@@ -16,7 +16,7 @@ permit. The protocol is:
    `a_output[nchnls][ksmps]`.
 3. Your instrument opcode must read any required pfield data from these member 
    functions, which directly read the `opds->insds` pfields. And your Csound score 
-   must define these pfields in the same order and using the same units:
+   should perhaps define these pfields in the same order and using the same units:
 
    1.  `pfield(1)` - Instrument number, may have a fractional part.
    2.  `pfield(2)` - Onset time in beats, usually seconds.
