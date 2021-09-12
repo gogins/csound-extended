@@ -11,23 +11,25 @@ user-friendly digital signal processing library such as the [STK](https://ccrma.
 
 ## Protocol
 
-1. Your instrument opcode must output all audio in `a_output[]`. Its shape is 
-   `a_output[nchnls][ksmps]`.
-3. Your instrument opcode must read any required pfield data from the `pfield` 
-   member function, which directly read the `opds->insds` pfields. And your Csound score 
-   should perhaps define these pfields in the same order and using the same units:
+1. Your instrument opcode must output all audio in the `a_output[]` member variable. 
+   Its type and shape is `MYFLT a_output[nchnls][ksmps]`.
+3. Your instrument opcode must read any required pfield data from the `p` 
+   (for "pfield") member function, which directly read the `opds->insds` pfields. And your Csound score 
+   should perhaps define these pfields in the following order and units:
 
-   1.  `pfield(1)` - Instrument number, may have a fractional part.
-   2.  `pfield(2)` - Onset time in beats, usually seconds.
-   2.  `pfield(3)` - Duration in beats, usually seconds.
-   2.  `pfield(4)` - Pitch as MIDI key, middle C = 60, may have a fractional part.
-   2.  `pfield(5)` - Loudness as MIDI velocity, mezzo-forte = 80, may have a fractional part.
-   2.  `pfield(6)` - Spatial location from back to front in Ambisonic coordinates.
-   2.  `pfield(7)` - Spatial location from left to right in Ambisonic coordinates, same 
-       as stereo pan.
-   2.  `pfield(8)` - Spatial location from bottom to top in Ambisonic coordinates.
-   2.  `pfield(9)` - Audio phase in radians, may be used e.g. for 
-        phase-sychronous overlapped granular synthesis.
+   1.  `p(1)` - Instrument number, may have a fractional part.
+   2.  `p(2)` - Onset time in beats, usually seconds.
+   2.  `p(3)` - Duration in beats, usually seconds.
+   2.  `p(4)` - Pitch as MIDI key, middle C = 60, may have a fractional part.
+   2.  `p(5)` - Loudness as MIDI velocity, mezzo-forte = 80, may have a fractional part.
+   2.  `p(6)` - Spatial _x_ coordinate from behind the listener to in front of the listener, 
+       (Ambisonic coordinate).
+   4.  `p(7)` - Spatial _y_ coordinate from the left of the listener to the right of the 
+       listener (Ambisonic coordinate), same as stereo pan.
+   2.  `p(8)` - Spatial _z_ coordinate from below the listener to above the listener 
+       (Ambisonic coordinate).
+   4.  `p(9)` - Audio phase in radians, may be used e.g. for 
+       phase-sychronous overlapped granular synthesis.
         
 3.  Your instrument may send and receive Csound channel messages at any rate 
     and of any type through global variables. These should follow the naming 
@@ -46,7 +48,7 @@ user-friendly digital signal processing library such as the [STK](https://ccrma.
     int InstrumentPluginBase::receivePVS(CSOUND *csound, const char *name, PVSDATEXT *value);
     int InstrumentPluginBase::sendPVS(CSOUND *csound, const char *name, PVSDATEXT *value) const;
     ```   
-Audio values here have the shape `a_value[nchnls][ksmps]`.
+Audio channel values here have the shape `a_value[ksmps]`.
 
 ## Creation
 
@@ -83,8 +85,8 @@ To create a Csound instrument in C++:
 
 Once you have compiled your plugin instrument and installed it in your 
 `${OPCODE6DIR64}` directory, use the plugin as an opcode, but in the 
-Csound orchestra header. Each plugin will create an instrument with the same 
-name as the plugin, and the instruments will be numbered in the same way as 
+Csound orchestra header. Each plugin will create an instrument template with the 
+same name as the plugin, and the instruments will be numbered in the same way as 
 regular Csound `instr` templates, that is, in the order that they are 
 declared, starting with instrument number 1. 
 
