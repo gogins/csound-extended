@@ -15,7 +15,7 @@ user-friendly digital signal processing library such as the [STK](https://ccrma.
    `a_output[nchnls][ksmps]`.
 3. Your instrument opcode must read any required pfield data from the `pfield` 
    member function, which directly read the `opds->insds` pfields. And your Csound score 
-   should perhaps define these pfields in the same order and using the same units:
+   should perhaps define these pfields in the following order and using units:
 
    1.  `pfield(1)` - Instrument number, may have a fractional part.
    2.  `pfield(2)` - Onset time in beats, usually seconds.
@@ -46,7 +46,7 @@ user-friendly digital signal processing library such as the [STK](https://ccrma.
     int InstrumentPluginBase::receivePVS(CSOUND *csound, const char *name, PVSDATEXT *value);
     int InstrumentPluginBase::sendPVS(CSOUND *csound, const char *name, PVSDATEXT *value) const;
     ```   
-Audio values here have the shape `a_value[nchnls][ksmps]`.
+Audio values here have the shape `a_value[ksmps]`.
 
 ## Creation
 
@@ -83,8 +83,8 @@ To create a Csound instrument in C++:
 
 Once you have compiled your plugin instrument and installed it in your 
 `${OPCODE6DIR64}` directory, use the plugin as an opcode, but in the 
-Csound orchestra header. Each plugin will create an instrument with the same 
-name as the plugin, and the instruments will be numbered in the same way as 
+Csound orchestra header. Each plugin will create an instrument template with the 
+same name as the plugin, and the instruments will be numbered in the same way as 
 regular Csound `instr` templates, that is, in the order that they are 
 declared, starting with instrument number 1. 
 
