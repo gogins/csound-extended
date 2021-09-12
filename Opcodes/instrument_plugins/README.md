@@ -11,8 +11,7 @@ user-friendly digital signal processing library such as the [STK](https://ccrma.
 
 ## Protocol
 
-1. Your instrument opcode must output all audio in the `a_output[]` member variable. 
-   Its type and shape is `MYFLT a_output[nchnls][ksmps]`.
+1. Your instrument opcode must output all audio in the `MYFLT a_output[nchnls][ksmps]` member variable.
 3. Your instrument opcode must read any required pfield data from the `p` 
    (for "pfield") member function, which directly read the `opds->insds` pfields. And your Csound score 
    should perhaps define these pfields in the following order and units:
@@ -48,7 +47,7 @@ user-friendly digital signal processing library such as the [STK](https://ccrma.
     int InstrumentPluginBase::receivePVS(CSOUND *csound, const char *name, PVSDATEXT *value);
     int InstrumentPluginBase::sendPVS(CSOUND *csound, const char *name, PVSDATEXT *value) const;
     ```   
-Audio channel values here have the shape `a_value[ksmps]`.
+Audio channel values here have the type and shape `MYFLT a_value[ksmps]`.
 
 ## Creation
 
