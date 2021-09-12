@@ -21,7 +21,7 @@ user-friendly digital signal processing library such as the [STK](https://ccrma.
    2.  `p(3)` - Duration in beats, usually seconds.
    2.  `p(4)` - Pitch as MIDI key, middle C = 60, may have a fractional part.
    2.  `p(5)` - Loudness as MIDI velocity, mezzo-forte = 80, may have a fractional part.
-   2.  `p(6)` - Spatial _x_ coordinate from behind the listener to in front of the listener, 
+   2.  `p(6)` - Spatial _x_ coordinate from behind the listener to in front of the listener 
        (Ambisonic coordinate).
    4.  `p(7)` - Spatial _y_ coordinate from the left of the listener to the right of the 
        listener (Ambisonic coordinate), same as stereo pan.
