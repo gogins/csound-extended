@@ -15,7 +15,7 @@ user-friendly digital signal processing library such as the [STK](https://ccrma.
    `a_output[nchnls][ksmps]`.
 3. Your instrument opcode must read any required pfield data from the `pfield` 
    member function, which directly read the `opds->insds` pfields. And your Csound score 
-   should perhaps define these pfields in the following order and using units:
+   should perhaps define these pfields in the following order and units:
 
    1.  `pfield(1)` - Instrument number, may have a fractional part.
    2.  `pfield(2)` - Onset time in beats, usually seconds.
@@ -46,7 +46,7 @@ user-friendly digital signal processing library such as the [STK](https://ccrma.
     int InstrumentPluginBase::receivePVS(CSOUND *csound, const char *name, PVSDATEXT *value);
     int InstrumentPluginBase::sendPVS(CSOUND *csound, const char *name, PVSDATEXT *value) const;
     ```   
-Audio values here have the shape `a_value[ksmps]`.
+Audio channel values here have the shape `a_value[ksmps]`.
 
 ## Creation
 
