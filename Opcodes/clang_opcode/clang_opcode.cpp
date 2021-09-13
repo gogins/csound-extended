@@ -1,18 +1,17 @@
 /**
- * clang_gen opcodes
+ * clang 
  *
  * Michael Gogins<br>
  * https://github.com/gogins<br>
  * http://michaelgogins.tumblr.com
  *
- * This file defines Csound opcodes that compile C/C++ source code, embedded
- * in tne Csound orcnhestra, to either opcodes or live instrument templates.
+ * This file defines a Csound opcode that compile C /C++ source code, embedded
+ * in tne Csound orcnhestra, for any purpose.
  *
  * This code is based on the "Clang C Interpreter Example:"
  * examples/clang-interpreter/main.cpp.
  *
- * i_result clang_opcode S_source_code
- * i_result clang_instrument S_source_code
+ * i_result clang S_source_code [, S_compiler_options]
  */
 
 #include "clang/Basic/DiagnosticOptions.h"

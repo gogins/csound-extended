@@ -12,9 +12,10 @@ compile C or C++ source code, embedded in the Csound orchestra, to an object
 module; link that module; load that module; and call the Csound API from 
 that module.
 
-The `clang` opcode usea the [Clang library and LLVM](https://llvm.org/), and 
+The `clang` opcode uses the [Clang library and LLVM](https://llvm.org/), and 
 is based on the ["Clang C Interpreter Example"](https://github.com/llvm/llvm-project/tree/main/clang/examples/clang-interpreter). 
-This opcode was inspired by the [`faustgen`](https://csound.com/docs/manual/faustgen.html) opcode.
+The `clang` opcode was inspired by the [`faustgen`](https://csound.com/docs/manual/faustgen.html) 
+opcode.
 
 ## Syntax
 ```
@@ -22,13 +23,13 @@ i_result clang S_source_code [, S_compiler_options]
 ```
 ## Initialization
 
-S_source_code - C or C++ source code, usually a multi-line string literal 
+*S_source_code* - C or C++ source code, usually a multi-line string literal 
 enclosed in `{{` and `}}`.
 
-S_compiler_options - Standard gcc/clang compiler options, usually a multi-line 
+*S_compiler_options* - Standard gcc/clang compiler options, usually a multi-line 
 string literal enclosed in `{{` and `}}`.
 
-i_result - 0 if the code has been compiled, linked, loaded, and registered; 
+*i_result* - 0 if the code has been compiled, linked, loaded, and registered; 
 non-0 if there is an error. Diagnostics are printed as Csound messages.
 
 ## Performance
@@ -41,9 +42,9 @@ used, but must be defined in `S_compiler_options`.
 PLEASE NOTE: Only link libraries that are compatible with both gcc and Clang 
 may be used. For example, use `-stdlib=libstdc++`.
 
-The compiled module must define and export the following C function:
+The compiled module must define the following C function:
 ```
-extern "C" int csound_main(CSOUND *csound);
+int csound_main(CSOUND *csound);
 ```
 Once the `clang` opcode has compiled, linked, and loaded an object module, 
 Csound will call the `csound_main` function in that module. The `csound_main` 
@@ -62,6 +63,28 @@ the order in which those instruments are defined.
 
 ## Example
 
+The `csound clang_opcode_test.csd` file uses the `clang` opcode to compile a piano 
+opcode and instrument, a reverb opcode and instrument, and a score generating 
+instrument, which then algorithmically generate and render a piece. For the sake 
+of clarity, although all of the code could be implemented in one module, the 
+following separate modules are defined:
+
+1. A physically modelled piano instrument opcode, written in C++, which is then 
+    wrapped in a Csound instrument definition.
+   
+2. A reverb opcode, written in C++, which is then wrapped in a Csound instrument 
+   definition.
+
+3. A score generating opcode, written in C++, which is then wrapped in a Csound 
+   instrument definition.
+   
+The Csound orchestra in this piece uses the signal flow graph opcodes to connect 
+the piano instrument to the reverb instrument, and to connect the reverb 
+instrument to an output instrument.
+
+The Csound score in this piece invokes the score generating instrument twice at 
+an offset in time and pitch, to create a canon at the sixth.
+
 ## Installation
 
 1. Install Clang and LLVM from the stable branch, see https://apt.llvm.org/.
@@ -69,9 +92,7 @@ the order in which those instruments are defined.
 2. Compile the `clang_opcode.cpp` file using `build.sh`, which you may have to 
    modify for your system.
    
-3. Test by executing `csound clang_opcode_test.csd`. This should compile a piano 
-   opcode and instrument, a reverb opcode and instrument, and a score generating 
-   instrument, which will algorithmically generate and render a piece.
+3. Test by executing `csound clang_opcode_test.csd`. 
 
 # Credits
 
