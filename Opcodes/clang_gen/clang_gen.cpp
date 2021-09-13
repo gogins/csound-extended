@@ -8,8 +8,11 @@
  * This file defines Csound opcodes that compile C/C++ source code, embedded
  * in tne Csound orcnhestra, to either opcodes or live instrument templates.
  *
- * This code is based on the Clang C Interpreter Example:
+ * This code is based on the "Clang C Interpreter Example:"
  * examples/clang-interpreter/main.cpp.
+ *
+ * i_result clang_opcode S_source_code
+ * i_result clang_instrument S_source_code
  */
 
 #include "clang/Basic/DiagnosticOptions.h"
@@ -39,8 +42,6 @@
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Target/TargetMachine.h"
 
-#include <csound/interlocks.h>
-#include <csound/csdl.h>
 #include <csound/OpcodeBase.hpp>
 
 using namespace clang;
@@ -155,7 +156,7 @@ public:
  * in the to be compiled opcode module. This function should call 
  * csound->AppendOpcode for each opcode defined in the module.
  */
-int (opcode_registration *)(CSOUND *csound);
+extern "C" int (*opcode_registration)(CSOUND *csound);
 
 class clang_opcode_t : public csound::OpcodeNoteoffBase<clang_opcode_t>
 {
