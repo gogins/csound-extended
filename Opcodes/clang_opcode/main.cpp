@@ -41,94 +41,112 @@ using namespace clang::driver;
 // GetMainExecutable (since some platforms don't support taking the
 // address of main, and some platforms can't implement GetMainExecutable
 // without being given the address of a function in the main executable).
-std::string GetExecutablePath(const char *Argv0, void *MainAddr) {
+std::string GetExecutablePath(const char *Argv0, void *MainAddr)
+{
     return llvm::sys::fs::getMainExecutable(Argv0, MainAddr);
 }
 
-namespace llvm {
-namespace orc {
+namespace llvm
+{
+    namespace orc
+    {
 
-class SimpleJIT {
-private:
-    ExecutionSession ES;
-    std::unique_ptr<TargetMachine> TM;
-    const DataLayout DL;
-    MangleAndInterner Mangle{ES, DL};
-    JITDylib &MainJD{ES.createBareJITDylib("<main>")};
-    RTDyldObjectLinkingLayer ObjectLayer{ES, createMemMgr};
-    IRCompileLayer CompileLayer{ES, ObjectLayer,
-                       std::make_unique<SimpleCompiler>(*TM)};
+        class SimpleJIT
+        {
+            private:
+                ExecutionSession ES;
+                std::unique_ptr<TargetMachine> TM;
+                const DataLayout DL;
+                MangleAndInterner Mangle{ES, DL};
+                JITDylib &MainJD{ES.createBareJITDylib("<main>")};
+                RTDyldObjectLinkingLayer ObjectLayer{ES, createMemMgr};
+                IRCompileLayer CompileLayer{ES, ObjectLayer,
+                                   std::make_unique<SimpleCompiler>(*TM)};
 
-    static std::unique_ptr<SectionMemoryManager> createMemMgr() {
-        return std::make_unique<SectionMemoryManager>();
-    }
+                static std::unique_ptr<SectionMemoryManager> createMemMgr()
+                {
+                    return std::make_unique<SectionMemoryManager>();
+                }
 
-    SimpleJIT(
-        std::unique_ptr<TargetMachine> TM, DataLayout DL,
-        std::unique_ptr<DynamicLibrarySearchGenerator> ProcessSymbolsGenerator)
-        : ES(cantFail(SelfExecutorProcessControl::Create())), TM(std::move(TM)),
-          DL(std::move(DL)) {
-        llvm::sys::DynamicLibrary::LoadLibraryPermanently(nullptr);
-        MainJD.addGenerator(std::move(ProcessSymbolsGenerator));
-    }
+                SimpleJIT(
+                    std::unique_ptr<TargetMachine> TM, DataLayout DL,
+                    std::unique_ptr<DynamicLibrarySearchGenerator> ProcessSymbolsGenerator)
+                    : ES(cantFail(SelfExecutorProcessControl::Create())), TM(std::move(TM)),
+                      DL(std::move(DL))
+                {
+                    llvm::sys::DynamicLibrary::LoadLibraryPermanently(nullptr);
+                    MainJD.addGenerator(std::move(ProcessSymbolsGenerator));
+                }
 
-public:
-    ~SimpleJIT() {
-        if (auto Err = ES.endSession())
-            ES.reportError(std::move(Err));
-    }
+            public:
+                ~SimpleJIT()
+                {
+                    if(auto Err = ES.endSession()) {
+                        ES.reportError(std::move(Err));
+                    }
+                }
 
-    static Expected<std::unique_ptr<SimpleJIT>> Create() {
-        auto JTMB = JITTargetMachineBuilder::detectHost();
-        if (!JTMB)
-            return JTMB.takeError();
+                static Expected<std::unique_ptr<SimpleJIT>> Create()
+                {
+                    auto JTMB = JITTargetMachineBuilder::detectHost();
+                    if(!JTMB) {
+                        return JTMB.takeError();
+                    }
 
-        auto TM = JTMB->createTargetMachine();
-        if (!TM)
-            return TM.takeError();
+                    auto TM = JTMB->createTargetMachine();
+                    if(!TM) {
+                        return TM.takeError();
+                    }
 
-        auto DL = (*TM)->createDataLayout();
+                    auto DL = (*TM)->createDataLayout();
 
-        auto ProcessSymbolsGenerator =
-            DynamicLibrarySearchGenerator::GetForCurrentProcess(
-                DL.getGlobalPrefix());
+                    auto ProcessSymbolsGenerator =
+                        DynamicLibrarySearchGenerator::GetForCurrentProcess(
+                            DL.getGlobalPrefix());
 
-        if (!ProcessSymbolsGenerator)
-            return ProcessSymbolsGenerator.takeError();
+                    if(!ProcessSymbolsGenerator) {
+                        return ProcessSymbolsGenerator.takeError();
+                    }
 
-        return std::unique_ptr<SimpleJIT>(new SimpleJIT(
-                                              std::move(*TM), std::move(DL), std::move(*ProcessSymbolsGenerator)));
-    }
+                    return std::unique_ptr<SimpleJIT>(new SimpleJIT(
+                                                          std::move(*TM), std::move(DL), std::move(*ProcessSymbolsGenerator)));
+                }
 
-    const TargetMachine &getTargetMachine() const {
-        return *TM;
-    }
+                const TargetMachine &getTargetMachine() const
+                {
+                    return *TM;
+                }
 
-    Error addModule(ThreadSafeModule M) {
-        return CompileLayer.add(MainJD, std::move(M));
-    }
+                Error addModule(ThreadSafeModule M)
+                {
+                    return CompileLayer.add(MainJD, std::move(M));
+                }
 
-    Expected<JITEvaluatedSymbol> findSymbol(const StringRef &Name) {
-        return ES.lookup({&MainJD}, Mangle(Name));
-    }
+                Expected<JITEvaluatedSymbol> findSymbol(const StringRef &Name)
+                {
+                    return ES.lookup({&MainJD}, Mangle(Name));
+                }
 
-    Expected<JITTargetAddress> getSymbolAddress(const StringRef &Name) {
-        auto Sym = findSymbol(Name);
-        if (!Sym)
-            return Sym.takeError();
-        return Sym->getAddress();
-    }
-};
+                Expected<JITTargetAddress> getSymbolAddress(const StringRef &Name)
+                {
+                    auto Sym = findSymbol(Name);
+                    if(!Sym) {
+                        return Sym.takeError();
+                    }
+                    return Sym->getAddress();
+                }
+        };
 
-} // end namespace orc
+    } // end namespace orc
 } // end namespace llvm
 
 llvm::ExitOnError ExitOnErr;
 
-int main(int argc, const char **argv) {
+int main(int argc, const char **argv)
+{
     // This just needs to be some symbol in the binary; C++ doesn't
     // allow taking the address of ::main however.
-    void *MainAddr = (void*) (intptr_t) GetExecutablePath;
+    void *MainAddr = (void*)(intptr_t) GetExecutablePath;
     std::string Path = GetExecutablePath(argv[0], MainAddr);
     IntrusiveRefCntPtr<DiagnosticOptions> DiagOpts = new DiagnosticOptions();
     TextDiagnosticPrinter *DiagClient =
@@ -142,8 +160,9 @@ int main(int argc, const char **argv) {
 
     // Use ELF on Windows-32 and MingW for now.
 #ifndef CLANG_INTERPRETER_COFF_FORMAT
-    if (T.isOSBinFormatCOFF())
+    if(T.isOSBinFormatCOFF()) {
         T.setObjectFormat(llvm::Triple::ELF);
+    }
 #endif
 
     ExitOnErr.setBanner("clang interpreter");
@@ -158,15 +177,16 @@ int main(int argc, const char **argv) {
     SmallVector<const char *, 16> Args(argv, argv + argc);
     Args.push_back("-fsyntax-only");
     std::unique_ptr<Compilation> C(TheDriver.BuildCompilation(Args));
-    if (!C)
+    if(!C) {
         return 0;
+    }
 
     // FIXME: This is copied from ASTUnit.cpp; simplify and eliminate.
 
     // We expect to get back exactly one command job, if we didn't something
     // failed. Extract that job from the compilation.
     const driver::JobList &Jobs = C->getJobs();
-    if (Jobs.size() != 1 || !isa<driver::Command>(*Jobs.begin())) {
+    if(Jobs.size() != 1 || !isa<driver::Command>(*Jobs.begin())) {
         SmallString<256> Msg;
         llvm::raw_svector_ostream OS(Msg);
         Jobs.Print(OS, "; ", true);
@@ -175,7 +195,7 @@ int main(int argc, const char **argv) {
     }
 
     const driver::Command &Cmd = cast<driver::Command>(*Jobs.begin());
-    if (llvm::StringRef(Cmd.getCreator().getName()) != "clang") {
+    if(llvm::StringRef(Cmd.getCreator().getName()) != "clang") {
         Diags.Report(diag::err_fe_expected_clang_command);
         return 1;
     }
@@ -186,7 +206,7 @@ int main(int argc, const char **argv) {
     CompilerInvocation::CreateFromArgs(*CI, CCArgs, Diags);
 
     // Show the invocation, with -v.
-    if (CI->getHeaderSearchOpts().Verbose) {
+    if(CI->getHeaderSearchOpts().Verbose) {
         llvm::errs() << "clang invocation:\n";
         Jobs.Print(llvm::errs(), "\n", true);
         llvm::errs() << "\n";
@@ -200,19 +220,21 @@ int main(int argc, const char **argv) {
 
     // Create the compilers actual diagnostics engine.
     Clang.createDiagnostics();
-    if (!Clang.hasDiagnostics())
+    if(!Clang.hasDiagnostics()) {
         return 1;
+    }
 
     // Infer the builtin include path if unspecified.
-    if (Clang.getHeaderSearchOpts().UseBuiltinIncludes &&
+    if(Clang.getHeaderSearchOpts().UseBuiltinIncludes &&
             Clang.getHeaderSearchOpts().ResourceDir.empty())
         Clang.getHeaderSearchOpts().ResourceDir =
             CompilerInvocation::GetResourcesPath(argv[0], MainAddr);
 
     // Create and execute the frontend to generate an LLVM bitcode module.
     std::unique_ptr<CodeGenAction> Act(new EmitLLVMOnlyAction());
-    if (!Clang.ExecuteAction(*Act))
+    if(!Clang.ExecuteAction(*Act)) {
         return 1;
+    }
 
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
@@ -221,7 +243,7 @@ int main(int argc, const char **argv) {
     std::unique_ptr<llvm::LLVMContext> Ctx(Act->takeLLVMContext());
     std::unique_ptr<llvm::Module> Module = Act->takeModule();
 
-    if (Module) {
+    if(Module) {
         auto J = ExitOnErr(llvm::orc::SimpleJIT::Create());
 
         ExitOnErr(J->addModule(
