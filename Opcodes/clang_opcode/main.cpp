@@ -142,7 +142,7 @@ namespace llvm
 
 llvm::ExitOnError ExitOnErr;
 
-int main(int argc, const char **argv)
+extern "C" int main(int argc, const char **argv)
 {
     // This just needs to be some symbol in the binary; C++ doesn't
     // allow taking the address of ::main however.
@@ -176,6 +176,9 @@ int main(int argc, const char **argv)
     // (basically, exactly one input, and the operation mode is hard wired).
     SmallVector<const char *, 16> Args(argv, argv + argc);
     Args.push_back("-fsyntax-only");
+    for (auto arg : Args) {
+        std::fprintf(stderr, "arg: %s\n", arg);
+    }
     std::unique_ptr<Compilation> C(TheDriver.BuildCompilation(Args));
     if(!C) {
         return 0;

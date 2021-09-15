@@ -1,18 +1,17 @@
 cmake_minimum_required(VERSION 3.16)
-project(clang_gen)
-
-set(CMAKE_C_COMPILER clang)
-set(CMAKE_CXX_COMPILER clang++)
+project(clang_opcode)
 
 set(LLVM_DIR "/usr/lib/llvm-13/lib/cmake/llvm")
 set(Clang_DIR "/usr/lib/llvm-13/lib/cmake/clang")
+find_package(LLVM REQUIRED CONFIG HINTS "${LLVM_DIR}")
+find_package(Clang REQUIRED CONFIG HINTS "${Clang_DIR}")
+list(APPEND CMAKE_MODULE_PATH ${LLVM_DIR})
+include(AddLLVM)
+include(HandleLLVMOptions)
 
-find_package(LLVM REQUIRED CONFIG HINTS "${LLVM_DIR}" NO_CMAKE_FIND_ROOT_PATH)
-find_package(Clang REQUIRED CONFIG HINTS "${Clang_DIR}" NO_CMAKE_FIND_ROOT_PATH)
+add_library(clang_opcode clang_opcode.cpp)
 
-add_executable(clang-interpreter main.cpp)
-
-target_include_directories(clang-interpreter
+target_include_directories(clang_opcode
     PUBLIC 
     ${CLANG_INCLUDE_DIRS}
     )
@@ -20,15 +19,15 @@ target_include_directories(clang-interpreter
 message("${CLANG_EXPORTED_TARGETS}")
 
   
-#~ add_clang_executable(clang-interpreter
+#~ add_clang_executable(clang_opcode
   #~ main.cpp
   #~ )
 
-#~ add_dependencies(clang-interpreter
+#~ add_dependencies(clang_opcode
   #~ clang-resource-headers
   #~ )
 
-#~ clang_target_link_libraries(clang-interpreter
+#~ clang_target_link_libraries(clang_opcode
   #~ PRIVATE
   #~ clangBasic
   #~ clangCodeGen
@@ -37,12 +36,12 @@ message("${CLANG_EXPORTED_TARGETS}")
   #~ clangSerialization
   #~ )
 
-#~ export_executable_symbols(clang-interpreter)
+#~ export_executable_symbols(clang_opcode)
 
 #~ if (MSVC)
   #~ # Is this a CMake bug that even with export_executable_symbols, Windows
   #~ # needs to explictly export the type_info vtable
-  #~ set_property(TARGET clang-interpreter
+  #~ set_property(TARGET clang_opcode
                #~ APPEND_STRING PROPERTY LINK_FLAGS " /EXPORT:??_7type_info@@6B@")
 #~ endif()
 
@@ -99,4 +98,4 @@ message("${CLANG_EXPORTED_TARGETS}")
   #~ endif()
 #~ endfunction(clang_enable_exceptions)
 
-#~ clang_enable_exceptions(clang-interpreter)
+#~ clang_enable_exceptions(clang_opcode)
