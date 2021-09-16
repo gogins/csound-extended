@@ -6,9 +6,10 @@
  * http://michaelgogins.tumblr.com
  *
  * This file implements a Csound opcode that compiles C or C++ source code,
- * embedded in tne Csound orchestra, for any purpose.
+ * embedded in tne Csound orchestra, for any purpose. The compiler is a 
+ * simplified, embedded instance of the clang/llvm compiler.
  *
- * The code is based on the "compiler_instance C Interpreter Example:"
+ * This code is based on the "compiler_instance C Interpreter Example:"
  * examples/clang-interpreter/main.cpp.
  *
  * ## Syntax
@@ -73,12 +74,22 @@ namespace llvm
         class JITCompiler
         {
             private:
+                std::string dylib_name() const {
+                    static int dylib_count = 0;
+                    dylib_count++;
+                    char dylib_name_[200];
+                    std::sprintf(dylib_name_, "<main-%d>", dylib_count);
+                    return dylib_name_;
+                }
                 ExecutionSession execution_session;
                 std::unique_ptr<TargetMachine> target_machine;
                 const DataLayout data_layout;
                 MangleAndInterner Mangle{execution_session, data_layout};
-                JITDylib &main_jit_dylib{execution_session.createBareJITDylib("<main>")};
+                std::string name = dylib_name();
+                JITDylib &main_jit_dylib{execution_session.createBareJITDylib(name)};
                 RTDyldObjectLinkingLayer object_linking_layer{execution_session, create_memory_manager};
+                // llvm::orc::SimpleCompiler is the simplest JIT compiler in 
+                // the orc namespace, but it does seem to suit our use case.
                 IRCompileLayer intermediate_representation_compiler_layer{execution_session, object_linking_layer, std::make_unique<SimpleCompiler>(*target_machine)};
                 static std::unique_ptr<SectionMemoryManager> create_memory_manager()
                 {
@@ -91,6 +102,7 @@ namespace llvm
                 {
                     llvm::sys::DynamicLibrary::LoadLibraryPermanently(nullptr);
                     main_jit_dylib.addGenerator(std::move(process_symbols_generator));
+                    std::fprintf(stderr, "clang: main_jit_dylib: name: %s\n", main_jit_dylib.getName().c_str());
                 }
             public:
                 ~JITCompiler()
@@ -130,11 +142,11 @@ namespace llvm
                 }
                 Expected<JITTargetAddress> getSymbolAddress(const StringRef &name)
                 {
-                    auto Sym = findSymbol(name);
-                    if(!Sym) {
-                        return Sym.takeError();
+                    auto symbol = findSymbol(name);
+                    if(!symbol) {
+                        return symbol.takeError();
                     }
-                    return Sym->getAddress();
+                    return symbol->getAddress();
                 }
         };
     } // end namespace orc
@@ -152,15 +164,13 @@ void tokenize(std::string const &string_, const char delimiter, std::vector<std:
 }
 
 /**
- * The clang opcode will call the following function that must be defined
- * in the to be compiled module. The csound_main function should call
- * csound->AppendOpcode for each opcode defined in the module, and do any
- * other work, if necessary calling the Csound API members of the CSOUND
- * object.
+ * The `clang` opcode will call the following function that must be defined
+ * in the compiled module. This function serves as the entry point to the 
+ * module, similar to 'main' in a C or C++ program.
  *
- * When this function is called, csoundStart has already been called, and 
- * Csound is performing its init pass by calling all i-rate opcodes in the 
- * orchestra header ("instr 0").
+ * When `csound_main` is called, `csoundStart` has _already_ been called, and 
+ * Csound is performing its first init pass by calling all the i-rate opcodes 
+ * in the orchestra header (which is "instr 0").
  */
 extern "C" {
     typedef int (*csound_main)(CSOUND *csound);
@@ -204,7 +214,7 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
         STRINGDAT *S_compiler_options;
         // STATE
         char *source_code;
-        char *compiler_options;
+         char *compiler_options;
         /**
          * This is an i-time only opcode. Everything happens in init.
          */
@@ -233,18 +243,18 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
                 args.push_back(tokens[i].c_str());
             }
             // Compile the source code to an object module, and call its 
-            // csound_main entry point.
-            // This just needs to be some symbol in the binary; C++ doesn't
-            // allow taking the address of ::main.
+            // csound_main entry point. This just needs to be some symbol in 
+            // the process; C++ doesn't allow taking the address of ::main.
             void *main_address = (void*)(intptr_t) GetExecutablePath;
             std::string executable_path = GetExecutablePath(args[0], main_address);
-            std::fprintf(stderr, "executable_path: %s\n", executable_path.c_str());
+            std::fprintf(stderr, "clang: executable_path: %s\n", executable_path.c_str());
             IntrusiveRefCntPtr<DiagnosticOptions> diagnostic_options = new DiagnosticOptions();
             TextDiagnosticPrinter *diagnostic_client = new TextDiagnosticPrinter(llvm::errs(), &*diagnostic_options);
             IntrusiveRefCntPtr<DiagnosticIDs> diagnostic_ids(new DiagnosticIDs());
             DiagnosticsEngine diagnostics_engine(diagnostic_ids, &*diagnostic_options, diagnostic_client);
+            // Infer Csound's runtime architecture, its "triple."
             const std::string process_triple = llvm::sys::getProcessTriple();
-            std::fprintf(stderr, "process_triple: %s\n", process_triple.c_str());
+            std::fprintf(stderr, "clang: process_triple: %s\n", process_triple.c_str());
             llvm::Triple triple(process_triple);
             // Use ELF on Windows-32 and MingW for now.
         #ifndef CLANG_INTERPRETER_COFF_FORMAT
@@ -308,7 +318,6 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
             if(compiler_instance.getHeaderSearchOpts().UseBuiltinIncludes && compiler_instance.getHeaderSearchOpts().ResourceDir.empty()) {
                 compiler_instance.getHeaderSearchOpts().ResourceDir = CompilerInvocation::GetResourcesPath(args[0], main_address);
             }
-            // Create and execute the frontend to generate an LLVM bitcode module.
             std::unique_ptr<CodeGenAction> emit_llvm_action(new EmitLLVMOnlyAction());
             if(!compiler_instance.ExecuteAction(*emit_llvm_action)) {
                 return 1;
@@ -318,22 +327,25 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
             int result = 255;
             std::unique_ptr<llvm::LLVMContext> llvm_context(emit_llvm_action->takeLLVMContext());
             std::unique_ptr<llvm::Module> module = emit_llvm_action->takeModule();
-            // Now generate the native code from the bitcode.
             if(module) {
                 auto jit_compiler = exit_on_error(llvm::orc::JITCompiler::Create());
                 exit_on_error(jit_compiler->addModule(llvm::orc::ThreadSafeModule(std::move(module), std::move(llvm_context))));
-                // Call the module's "csound_main" so it can register opcodes, or do anything else.
-                auto csound_main = (int (*)(...)) exit_on_error(jit_compiler->getSymbolAddress("csound_main"));
+                // Call the module's entry point so it can register opcodes -- 
+                // or do anything else. All entry points are C functions 
+                // `int csound_main(CSOUND *)`. It seems the actual 
+                // compilation to machine language happens just when a symbol 
+                // is accessed for the first time.
+                auto csound_main = (int (*)(CSOUND *)) exit_on_error(jit_compiler->getSymbolAddress("csound_main"));
                 result = csound_main(csound);
-                printf("result: %d\n", result);
-                // On success, store the module until Csound exits.
+                printf("clang: csound_main returned: %d\n", result);
+                // On success, store the compiled object module until Csound exits.
+                // TODO: Should we be storing the JITCompiler instead, or also?
                 std::shared_ptr<llvm::Module> object_module = std::move(module);
                 if (object_module) {
                     clang_modules_for_csounds().add(csound, object_module);
                 }
             }
-            llvm::llvm_shutdown();
-             return OK;
+            return OK;
         };
 };
 
@@ -347,7 +359,7 @@ extern "C" {
                                           0,
                                           1,
                                           (char *)"i",
-                                          (char *)"SS",
+                                          (char *)"SW",
                                           (int (*)(CSOUND*,void*)) clang_opcode_t::init_,
                                           (int (*)(CSOUND*,void*)) 0,
                                           (int (*)(CSOUND*,void*)) 0);
@@ -357,6 +369,7 @@ extern "C" {
     PUBLIC int csoundModuleDestroy_clang_opcode(CSOUND *csound)
     {
         clang_modules_for_csounds().del(csound);
+        llvm::llvm_shutdown();
         return 0;
     }
 
