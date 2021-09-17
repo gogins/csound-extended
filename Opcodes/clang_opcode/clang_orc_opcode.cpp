@@ -369,7 +369,7 @@ extern "C" {
     PUBLIC int csoundModuleInit_clang_opcode(CSOUND *csound)
     {
         int status = csound->AppendOpcode(csound,
-                                          (char *)"clang",
+                                          (char *)"clang_orc",
                                           sizeof(clang_opcode_t),
                                           0,
                                           1,
