@@ -1,64 +1,80 @@
 # clang
 
-clang - Compiles C/C++ source code at Csound performance time to a loaded 
-object module. This object modulle is callable in the running Csound process, 
-and can call into the running Csound process using the Csound API. The module 
-new Csound opcodes, or call the Csound API to execute arbitrary Csound code.
+clang_orc - Compiles C/C++ source code into a module, and executes it at Csound performance time.
+The compiled module is callable in the running Csound performance, 
+and can call into the running Csound performance using the Csound API. The module 
+may define new Csound opcodes, or call the Csound API to execute arbitrary 
+Csound code, or do anything that is doable using C or C++.
 
 ## Description
 
-The `clang` opcode provides a just-in-time compiler that enables Csound to 
-compile C or C++ source code, embedded in the Csound orchestra, to an object 
-module; link that module; load that module; and call the Csound API from 
+The `clang_orc` opcode provides a just-in-time compiler (JIT) that enables Csound to 
+compile C or C++ source code, embedded in the Csound orchestra, to a module; 
+load and link that module; and call the Csound API from 
 that module.
 
-The `clang` opcode uses the [Clang library and LLVM](https://llvm.org/), and 
+The `clang_orc` opcode uses the [Clang library and LLVM](https://llvm.org/), and 
 is based on the ["Clang C Interpreter Example"](https://github.com/llvm/llvm-project/tree/main/clang/examples/clang-interpreter). 
 The `clang` opcode was inspired by the [`faustgen`](https://csound.com/docs/manual/faustgen.html) 
 opcode.
 
+The name `clang_orc` alludes both to the Csound orchestra, and to LLVM's 
+On-Request Compiler (ORC) (i.e., the Clang JIT compiler).
+
 ## Syntax
 ```
-i_result clang S_source_code, S_compiler_options [, S_link_libraries]
+i_result clang_orc S_source_code, S_compiler_options [, S_link_libraries]
 ```
 ## Initialization
 
-*S_source_code* - C or C++ source code, usually a multi-line string literal 
-enclosed in `{{` and `}}`.
+*S_source_code* - C or C++ source code. Can be a 
+multi-line string literal enclosed in `{{` and `}}`. Please note, this string is a 
+"heredoc" and, thus, any `\` characters in it must be escaped, e.g. 
+one must write `\\n` not '\n' for a newline character. 
 
 *S_compiler_options* - Standard gcc/clang compiler options, as would be passed 
-on the compiler command line; can be a multi-line string literal enclosed in 
+on the compiler command line. Can be a multi-line string literal enclosed in 
 `{{` and `}}`.
 
 *S_link_libraries* - Optional space-delimited list of link libraries, serving 
 the same function as the `-l` option for a standalone compiler. Here, however, 
 each link library must be its fully qualified filepath. Each library will be 
-loaded and linked by llvm before the user's code is JIT compiled.
+loaded and linked by LLVM before the user's code is JIT compiled. Can be a 
+multi-line string literal enclosed in `{{` and `}}`. 
 
-*i_result* - 0 if the code has been compiled, linked, loaded, and registered; 
-non-0 if there is an error. Diagnostics are printed as Csound messages.
+*i_result* - 0 if the code has been compiled and executes succesfully; 
+non-0 if there is an error. Clang and LLVM diagnostics are printed to stderr.
 
 ## Performance
 
-The `clang` opcode must be invoked in the orchestra header, and is i-time only. 
+The `clang_orc` opcode must be invoked in the orchestra header, and is i-time only. 
 The opcode is called after `csoundStart` has been called, and at the time that 
-Csound is beginning performance by running the init pass in the orchestra 
+Csound is beginning its performance by running the init pass in the orchestra 
 header (i.e., the init pass for `instr 0`).
 
-Non-standard include directories, link libraries, and compiler options may be 
-used, but must be defined in `S_compiler_options` and `S_link_libraries`.
+Non-standard include directories and compiler options may be 
+used, but must be defined in `S_compiler_options`.
 
-PLEASE NOTE: Only link libraries that are compatible with both gcc and Clang 
-may be used. For example, use `-stdlib=libstdc++`. The `<iostream>` header may 
-not be used.
+Libraries on which the module depends may be used, but must be specified as fully qualified 
+filepaths in `S_link_libraries`. The usual compiler option `-l` does not work 
+in this context.
 
-The compiled module must define the following C function:
+PLEASE NOTE: Many shared libraries use the symbol `__dso_handle`, but this is 
+not defined in the ORC compiler's startup code. To work around this, manually 
+define it in your C/C++ code:
+```
+void* __dso_handle = (void *)&__dso_handle;
+```
+The module _must_ define the following C function, which is the entry point to 
+the module, in the same way that the `main` function is the entry point to a C program.
 ```
 int csound_main(CSOUND *csound);
 ```
-Once the `clang` opcode has compiled, linked, and loaded as an object module, 
-Csound will call the `csound_main` function in that module. The `csound_main` 
-function may then register any opcodes defined in the module using 
+Once the `clang_orc` opcode has compiled the module, 
+Csound will call the `csound_main` function in that module. At that time, 
+the LLVM JIT compiler will compile the source code and link it into the 
+running Csound process. The `csound_main` 
+function may register any opcodes defined in the module using 
 `csound->AppendOpcode`, or create new instruments in the Csound orchestra using 
 `csound->CompileText`, or indeed do anything that can be done in C, C++, or using 
 the Csound API, or using Csound score or orchestra code.
@@ -71,9 +87,14 @@ instrument may be performed by the Csound score just like any other
 instrument. Note that instruments get numbers strictly according to 
 the order in which those instruments are defined.
 
+The module may do anything else that is doable in C or C++. For example,
+the module may use an external shared library to assist with algorithmic 
+composition, then translate the generated score to a Csound score, then 
+call `csound->ReadScore` to schedule the score for immediate performance.
+
 ## Example
 
-The `csound clang_opcode_test.csd` file uses the `clang` opcode to compile a piano 
+The `csound clang_opcode_test.csd` file uses the `clang_orc` opcode to compile a piano 
 opcode and instrument, a reverb opcode and instrument, and a score generating 
 instrument, which then algorithmically generate and render a piece. For the sake 
 of clarity, although all of the code could be implemented in one module, the 
