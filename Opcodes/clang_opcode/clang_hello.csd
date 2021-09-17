@@ -13,42 +13,27 @@ gS_source_code = {{
 #include <csound/csdl.h>
 #include <cstdio>
 #include <cstdlib>
-//#include <iostream>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
 
+void*   __dso_handle = (void*) &__dso_handle;
+
 extern "C" int csound_main(CSOUND *csound) {
-    csound->Message(csound, "Hello, world! This is csound_main with csound: %p.\\n", csound);
-    //std::cerr << "And now I'm calling std::cerr!" << std::endl;
+    csound->Message(csound, "\\n********\\nHello, world! This is csound_main with csound: %p.\\n********\\n\\n", csound);
+    std::vector<std::string> strings;
+    strings.push_back("A test string...");
+    csound->Message(csound, "\\nProof that a lot of stdc++ stuff works: strings.size(): %ldd strings[0]: %s\\n", strings.size(), strings[0].c_str());
+    std::cerr << "Now that we have defined our own __dso_handle, std:cerr works as well!" << std::endl;
+
     return 0;
 };
 
 }}
 
 ;gi_result clang gS_source_code, "-v -lgcc -lgcc_s -stdlib=libstdc++ -fno-use-cxa-atexit"
-gi_result clang gS_source_code, "-v"
-
-gS_source_code_2 = {{
-
-#include <csound/csdl.h>
-#include <cstdio>
-#include <cstdlib>
-//#include <iostream>
-#include <sstream>
-#include <string>
-#include <vector>
-
-extern "C" int csound_main(CSOUND *csound) {
-    csound->Message(csound, "Hello, world #2! This is csound_main #2 with csound: %p.\\n", csound);
-    //std::cerr << "And now I'm calling std::cerr!" << std::endl;
-    return 0;
-};
-
-}}
-
-;gi_result clang gS_source_code_2, "-v -lgcc -lgcc_s -stdlib=libstdc++ -fno-use-cxa-atexit"
-gi_result clang gS_source_code_2, "-v"
+gi_result clang gS_source_code, "-v -fPIC -std=c++14", "/usr/lib/gcc/x86_64-linux-gnu/9/libstdc++.so"
 
 </CsInstruments>
 <CsScore>

@@ -14,7 +14,13 @@
  *
  * ## Syntax
  *```
- * i_result clang S_source_code [, S_compiler_options]
+ * i_result clang S_source_code, S_compiler_options [, link_libraries]
+ * 
+ * The link_libraries parameter is a space-delimited list of zero or more 
+ * libraries that llvm will load and that will be callable by the compiled 
+ * module. This list plays the part of the `-l` options for a standalone 
+ * compiler/linker. Each library must be specified by its fully qualified 
+ * filepath.
  * ```
  */
 
@@ -212,9 +218,11 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
         // INPUTS
         STRINGDAT *S_source_code;
         STRINGDAT *S_compiler_options;
+        STRINGDAT *S_link_libraries;
         // STATE
         char *source_code;
-         char *compiler_options;
+        char *compiler_options;
+        char *link_libraries;
         /**
          * This is an i-time only opcode. Everything happens in init.
          */
@@ -329,6 +337,13 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
             std::unique_ptr<llvm::Module> module = emit_llvm_action->takeModule();
             if(module) {
                 auto jit_compiler = exit_on_error(llvm::orc::JITCompiler::Create());
+                // Load and link all libraries required.
+                link_libraries = csound->strarg2name(csound, (char *)0, S_link_libraries->data, (char *)"", 1);
+                std::vector<std::string> link_libraries_list;
+                tokenize(link_libraries, ' ', link_libraries_list);
+                for (auto link_library : link_libraries_list) {
+                    llvm::sys::DynamicLibrary::LoadLibraryPermanently(link_library.c_str());
+                }
                 exit_on_error(jit_compiler->addModule(llvm::orc::ThreadSafeModule(std::move(module), std::move(llvm_context))));
                 // Call the module's entry point so it can register opcodes -- 
                 // or do anything else. All entry points are C functions 
@@ -359,7 +374,7 @@ extern "C" {
                                           0,
                                           1,
                                           (char *)"i",
-                                          (char *)"SW",
+                                          (char *)"SSW",
                                           (int (*)(CSOUND*,void*)) clang_opcode_t::init_,
                                           (int (*)(CSOUND*,void*)) 0,
                                           (int (*)(CSOUND*,void*)) 0);

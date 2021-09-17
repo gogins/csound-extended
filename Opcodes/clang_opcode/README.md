@@ -19,7 +19,7 @@ opcode.
 
 ## Syntax
 ```
-i_result clang S_source_code [, S_compiler_options]
+i_result clang S_source_code, S_compiler_options [, S_link_libraries]
 ```
 ## Initialization
 
@@ -29,6 +29,11 @@ enclosed in `{{` and `}}`.
 *S_compiler_options* - Standard gcc/clang compiler options, as would be passed 
 on the compiler command line; can be a multi-line string literal enclosed in 
 `{{` and `}}`.
+
+*S_link_libraries* - Optional space-delimited list of link libraries, serving 
+the same function as the `-l` option for a standalone compiler. Here, however, 
+each link library must be its fully qualified filepath. Each library will be 
+loaded and linked by llvm before the user's code is JIT compiled.
 
 *i_result* - 0 if the code has been compiled, linked, loaded, and registered; 
 non-0 if there is an error. Diagnostics are printed as Csound messages.
@@ -41,7 +46,7 @@ Csound is beginning performance by running the init pass in the orchestra
 header (i.e., the init pass for `instr 0`).
 
 Non-standard include directories, link libraries, and compiler options may be 
-used, but must be defined in `S_compiler_options`.
+used, but must be defined in `S_compiler_options` and `S_link_libraries`.
 
 PLEASE NOTE: Only link libraries that are compatible with both gcc and Clang 
 may be used. For example, use `-stdlib=libstdc++`. The `<iostream>` header may 
