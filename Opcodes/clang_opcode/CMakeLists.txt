@@ -9,7 +9,7 @@ list(APPEND CMAKE_MODULE_PATH ${LLVM_DIR})
 include(AddLLVM)
 include(HandleLLVMOptions)
 
-add_library(clang_opcode clang_opcode.cpp)
+add_library(clang_orc_opcode clang_orc_opcode.cpp)
 
 target_include_directories(clang_opcode
     PUBLIC 

@@ -7,9 +7,44 @@ This .csd file tests the new JIT compiler opcode for Csound.
 </CsOptions>
 <CsInstruments>
 
+sr = 48000
+ksmps = 100
+nchnls = 2
+0dbfs = 2
+
+#include "FMWaterBell.inc"
+
+connect "FMWaterBell",       "outleft",  "MasterOutput",        "inleft"
+connect "FMWaterBell",       "outright", "MasterOutput",        "inright"
+
+alwayson "MasterOutput"
+
 prints "I'm about to try compiling a simple test C++ module.\n"
 
+gS_opcode_lister_code init {{
+
+#include <csound/csdl.h>
+#include <cstdio>
+
+extern "C" int csoundNewOpcodeList(CSOUND *csound, opcodeListEntry **opcodelist);
+extern "C" int csoundDisposeOpcodeList(CSOUND *csound, opcodeListEntry *opcodelist);
+
+extern "C" int csound_main(CSOUND *csound) {
+    csound->Message(csound, "Listing opcodes from C++...\\n");
+    opcodeListEntry *opcodeList;
+    int count = csoundNewOpcodeList(csound, &opcodeList);
+    csound->Message(csound, "Found %d opcode entries.\\n", count);
+    csoundDisposeOpcodeList(csound, opcodeList);
+    return 0;
+}
+
+}}
+
+gi_result clang_orc gS_opcode_lister_code, "-v -O3 -std=c++14 -I/usr/local/include/csound -stdlib=libstdc++", "/usr/lib/gcc/x86_64-linux-gnu/9/libstdc++.so /usr/lib/gcc/x86_64-linux-gnu/9/libgcc_s.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libpthread.so"
+
 gS_guitar_source_code = {{
+
+#include <csound/csdl.h>
 
 /* ------------------------------------------------------------
 copyright: "(c)Romain Michon & John Granzow, CCRMA (Stanford University), GRAME, University of Michigan"
@@ -155,6 +190,8 @@ public:
 /********************END ARCHITECTURE SECTION (part 1/2)****************/
 
 /**************************BEGIN USER SECTION **************************/
+
+#define OPCODE_NAME "guitar"
 
 #ifndef FAUSTFLOAT
 #define FAUSTFLOAT float
@@ -1415,7 +1452,7 @@ static char* makeDescription(int numa, int numk = 0)
 
 /**
  * CSOUND callback that allocates and initializes
- * the FAUST generated DSP object and it's CSound interface
+ * the FAUST generated DSP object and its CSound interface
  */
 static int init(CSOUND* csound, dataspace* p)
 {
@@ -1457,7 +1494,6 @@ extern "C" {
         {(char*)sym(OPCODE_NAME), sizeof(dataspace), 0, 3, makeDescription(FAUST_OUTPUTS), makeDescription(FAUST_INPUTS, FAUST_ACTIVES),
             (SUBR)init, (SUBR)process32bits, NULL }
     };
-    LINKAGE
 }
 
 /********************END ARCHITECTURE SECTION (part 2/2)****************/
@@ -1465,16 +1501,145 @@ extern "C" {
 #endif
 
 extern "C" int csound_main(CSOUND *csound) {
+
         csound->Message(csound, "Hello, World! This is csound_main with csound: %p.\\n", csound);
-        //std::cerr << "And this is std::cerr!" << std::endl;
+        
+        int result = csound->AppendOpcode(csound, "guitar", sizeof(dataspace), 0, 3, makeDescription(FAUST_OUTPUTS), makeDescription(FAUST_INPUTS, FAUST_ACTIVES), (SUBR)init, (SUBR)process32bits, NULL );
+        csound->Message(csound, "AppendOpcode for %s returned: %d\\n", (char*)sym(OPCODE_NAME), result);
+        
         return 0;
 };
 
 }}
 
 gi_result clang_orc gS_guitar_source_code, "-v -O0 -std=c++14 -I/usr/local/include/csound -stdlib=libstdc++", "/usr/lib/gcc/x86_64-linux-gnu/9/libstdc++.so /usr/lib/gcc/x86_64-linux-gnu/9/libgcc_s.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libpthread.so"
+
+i_result compilestr {{
+
+gk_ClangGuitar_level chnexport "gk_ClangGuitar_level", 3 ;  0
+gk_ClangGuitar_midi_dynamic_range chnexport "gk_ClangGuitar_midi_dynamic_range", 3 ;  20
+gk_ClangGuitar_bend chnexport "gk_ClangGuitar_bend", 3 ;  20
+gk_ClangGuitar_gain chnexport "gk_ClangGuitar_gain", 3 ;  20
+gk_ClangGuitar_sustain chnexport "gk_ClangGuitar_sustain", 3 ;  20
+gk_ClangGuitar_shape chnexport "gk_ClangGuitar_shape", 3 ;  20
+gk_ClangGuitar_scale chnexport "gk_ClangGuitar_scale", 3 ;  20
+gk_ClangGuitar_tapBody chnexport "gk_ClangGuitar_tapBody", 3 ;  20
+gk_ClangGuitar_pluckPosition chnexport "gk_ClangGuitar_pluckPosition", 3 ;  20
+gk_ClangGuitar_outGain chnexport "gk_ClangGuitar_outGain", 3 ;  20
+
+gk_ClangGuitar_level init -10
+gk_ClangGuitar_midi_dynamic_range init 60
+gk_ClangGuitar_bend init 0
+gk_ClangGuitar_gain init .5
+gk_ClangGuitar_sustain init 1
+gk_ClangGuitar_shape init .57
+gk_ClangGuitar_scale init .517
+gk_ClangGuitar_tapBody init 0
+gk_ClangGuitar_pluckPosition init .09
+gk_ClangGuitar_outGain init 1
+
+instr ClangGuitar
+//////////////////////////////////////////////
+//  Instrument definition patch ClangGuitar.
+//  Author: Michael Gogins
+//////////////////////////////////////////////
+i_instrument = p1
+i_time = p2
+i_sustain = p3
+i_midi_key = p4
+i_midi_dynamic_range = i(gk_ClangGuitar_midi_dynamic_range)
+i_midi_velocity = p5 * i_midi_dynamic_range / 127 + (63.6 - i_midi_dynamic_range / 2)
+k_space_front_to_back = p6
+k_space_left_to_right = p7
+k_space_bottom_to_top = p8
+i_frequency = cpsmidinn(i_midi_key)
+//  Adjust the following value until "overall amps" at the end of performance is about -6 dB.
+i_level_correction = 53.5 + 12
+i_normalization = ampdb(-i_level_correction) / 2
+i_amplitude = ampdb(i_midi_velocity) * i_normalization
+k_gain = ampdb(gk_ClangGuitar_level)
+i_attack = .005
+i_sustain = p3
+i_release = .1
+xtratim i_attack + i_release
+
+ip01_freq init i_frequency
+kp02_bend init i(gk_ClangGuitar_bend)
+ip03_gain init i(gk_ClangGuitar_gain)
+ip04_sustain init i(gk_ClangGuitar_sustain)
+ip05_shape init i(gk_ClangGuitar_shape)
+ip06_scale init i(gk_ClangGuitar_scale)
+ip07_tapBody init i(gk_ClangGuitar_tapBody)
+kp08_pluckPosition init i(gk_ClangGuitar_pluckPosition)
+ip09_outGain init i(gk_ClangGuitar_outGain)
+ip10_gate init 1
+
+a_left, a_right guitar ip01_freq, kp02_bend, ip03_gain, ip04_sustain, ip05_shape, ip06_scale, ip07_tapBody, kp08_pluckPosition, ip09_outGain, ip10_gate
+a_signal = a_left + a_right
+a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
+a_signal = a_signal * i_amplitude * a_declicking * k_gain
+
+#ifdef USE_SPATIALIZATION
+a_spatial_reverb_send init 0
+a_bsignal[] init 16
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, k_space_front_to_back, k_space_left_to_right, k_space_bottom_to_top
+outletv "outbformat", a_bsignal
+outleta "out", a_spatial_reverb_send
+#else
+a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
+outleta "outleft", a_out_left
+outleta "outright", a_out_right
+#endif
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
+}}
+
+#include "MasterOutput.inc"
+
+gS_score_generator_code init {{
+
+#include <csound/csdl.h>
+#include <cstdio>
+
+extern "C" int csound_main(CSOUND *csound) {
+
+    csound->Message(csound, "Generating score from C++...\\n");
+
+    for (int i = 0; i < 100; ++i) {
+        char buffer[0x100];
+        std::sprintf(buffer, "i 1 %d 2 %d 70 0 .5\\n", i + 4, 40 + (i % 73));
+        csound->InputMessage(csound, buffer);
+    }
+    return 0;
+}
+
+}}
+
+gi_result clang_orc gS_score_generator_code, "-v -O3 -std=c++14 -I/usr/local/include/csound -stdlib=libstdc++", "/usr/lib/gcc/x86_64-linux-gnu/9/libstdc++.so /usr/lib/gcc/x86_64-linux-gnu/9/libgcc_s.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libpthread.so"
+
+gS_opcode_lister_code init {{
+
+#include <csound/csdl.h>
+#include <cstdio>
+
+extern "C" int csoundNewOpcodeList(CSOUND *csound, opcodeListEntry **opcodelist);
+
+extern "C" int csound_main(CSOUND *csound) {
+    csound->Message(csound, "Listing opcodes from C++...\\n");
+    opcodeListEntry *opcodeList;
+    int count = csoundNewOpcodeList(csound, &opcodeList);
+    csound->Message(csound, "Found %d opcode entries.\\n", count);
+    return 0;
+}
+
+}}
+
+gi_result clang_orc gS_opcode_lister_code, "-v -O3 -std=c++14 -I/usr/local/include/csound -stdlib=libstdc++", "/usr/lib/gcc/x86_64-linux-gnu/9/libstdc++.so /usr/lib/gcc/x86_64-linux-gnu/9/libgcc_s.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libpthread.so"
+
 </CsInstruments>
 <CsScore>
 f 0 30
+i 1 1 3 72 70 0 .5
+i 1 2 2 76 70 0 .5
 </CsScore>
 </CsoundSynthesizer>

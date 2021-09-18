@@ -108,7 +108,7 @@ namespace llvm
                 {
                     llvm::sys::DynamicLibrary::LoadLibraryPermanently(nullptr);
                     main_jit_dylib.addGenerator(std::move(process_symbols_generator));
-                    std::fprintf(stderr, "clang: main_jit_dylib: name: %s\n", main_jit_dylib.getName().c_str());
+                    std::fprintf(stderr, "clang_orc: main_jit_dylib: name: %s\n", main_jit_dylib.getName().c_str());
                 }
             public:
                 ~JITCompiler()
@@ -250,19 +250,19 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
             for (int i = 0; i < tokens.size(); ++i) {
                 args.push_back(tokens[i].c_str());
             }
-            // Compile the source code to an object module, and call its 
+            // Compile the source code to a module, and call its 
             // csound_main entry point. This just needs to be some symbol in 
             // the process; C++ doesn't allow taking the address of ::main.
             void *main_address = (void*)(intptr_t) GetExecutablePath;
             std::string executable_path = GetExecutablePath(args[0], main_address);
-            std::fprintf(stderr, "clang: executable_path: %s\n", executable_path.c_str());
+            std::fprintf(stderr, "clang_orc: executable_path: %s\n", executable_path.c_str());
             IntrusiveRefCntPtr<DiagnosticOptions> diagnostic_options = new DiagnosticOptions();
             TextDiagnosticPrinter *diagnostic_client = new TextDiagnosticPrinter(llvm::errs(), &*diagnostic_options);
             IntrusiveRefCntPtr<DiagnosticIDs> diagnostic_ids(new DiagnosticIDs());
             DiagnosticsEngine diagnostics_engine(diagnostic_ids, &*diagnostic_options, diagnostic_client);
             // Infer Csound's runtime architecture, its "triple."
             const std::string process_triple = llvm::sys::getProcessTriple();
-            std::fprintf(stderr, "clang: process_triple: %s\n", process_triple.c_str());
+            std::fprintf(stderr, "clang_orc: process_triple: %s\n", process_triple.c_str());
             llvm::Triple triple(process_triple);
             // Use ELF on Windows-32 and MingW for now.
         #ifndef CLANG_INTERPRETER_COFF_FORMAT
@@ -352,7 +352,7 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
                 // is accessed for the first time.
                 auto csound_main = (int (*)(CSOUND *)) exit_on_error(jit_compiler->getSymbolAddress("csound_main"));
                 result = csound_main(csound);
-                printf("clang: csound_main returned: %d\n", result);
+                printf("clang_orc: csound_main returned: %d\n", result);
                 // On success, store the compiled object module until Csound exits.
                 // TODO: Should we be storing the JITCompiler instead, or also?
                 std::shared_ptr<llvm::Module> object_module = std::move(module);
