@@ -14,7 +14,7 @@
  *
  * ## Syntax
  *```
- * i_result clang S_source_code, S_compiler_options [, link_libraries]
+ * i_result clang S_unique_entry_point, S_source_code, S_compiler_options [, link_libraries]
  * 
  * The link_libraries parameter is a space-delimited list of zero or more 
  * libraries that llvm will load and that will be callable by the compiled 
@@ -63,6 +63,8 @@
 using namespace clang;
 using namespace clang::driver;
 
+llvm::ExitOnError exit_on_error;
+
 // This function isn't referenced outside its translation unit, but it
 // can't use the "static" keyword because its address is used for
 // GetMainExecutable (since some platforms don't support taking the
@@ -73,6 +75,14 @@ std::string GetExecutablePath(const char *argv_0, void *main_address)
     return llvm::sys::fs::getMainExecutable(argv_0, main_address);
 }
 
+std::string dylib_name() {
+    static int dylib_count = 0;
+    dylib_count++;
+    char dylib_name_[200];
+    std::snprintf(dylib_name_, 100, "<main-%d>", dylib_count);
+    return dylib_name_;
+}
+
 namespace llvm
 {
     namespace orc
@@ -80,13 +90,6 @@ namespace llvm
         class JITCompiler
         {
             private:
-                std::string dylib_name() const {
-                    static int dylib_count = 0;
-                    dylib_count++;
-                    char dylib_name_[200];
-                    std::sprintf(dylib_name_, "<main-%d>", dylib_count);
-                    return dylib_name_;
-                }
                 ExecutionSession execution_session;
                 std::unique_ptr<TargetMachine> target_machine;
                 const DataLayout data_layout;
@@ -108,7 +111,7 @@ namespace llvm
                 {
                     llvm::sys::DynamicLibrary::LoadLibraryPermanently(nullptr);
                     main_jit_dylib.addGenerator(std::move(process_symbols_generator));
-                    std::fprintf(stderr, "clang_orc: main_jit_dylib: name: %s\n", main_jit_dylib.getName().c_str());
+                    std::fprintf(stderr, "####### clang_orc: main_jit_dylib: name: %s\n", main_jit_dylib.getName().c_str());
                 }
             public:
                 ~JITCompiler()
@@ -158,6 +161,7 @@ namespace llvm
     } // end namespace orc
 } // end namespace llvm
 
+
 void tokenize(std::string const &string_, const char delimiter, std::vector<std::string> &tokens)
 {
     size_t start;
@@ -170,16 +174,17 @@ void tokenize(std::string const &string_, const char delimiter, std::vector<std:
 }
 
 /**
- * The `clang` opcode will call the following function that must be defined
- * in the compiled module. This function serves as the entry point to the 
+ * The `clang_orc` opcode will call a uniquely named function that must be 
+ * defined in the module. The type of this function must be
+ * `int (*)(CSOUND *csound)`. This function serves as the entry point to the 
  * module, similar to 'main' in a C or C++ program.
  *
- * When `csound_main` is called, `csoundStart` has _already_ been called, and 
+ * When the entry point is called, `csoundStart` has _already_ been called, and 
  * Csound is performing its first init pass by calling all the i-rate opcodes 
  * in the orchestra header (which is "instr 0").
  */
 extern "C" {
-    typedef int (*csound_main)(CSOUND *csound);
+    typedef int (*module_entry_point_t)(CSOUND *csound);
 };
 
 class clang_modules_for_csounds_t;
@@ -208,18 +213,18 @@ static clang_modules_for_csounds_t &clang_modules_for_csounds() {
     return clang_modules_for_csounds_;
 };
 
-llvm::ExitOnError exit_on_error;
-
 class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
 {
     public:
         // OUTPUTS
         MYFLT *i_result;
         // INPUTS
+        STRINGDAT *S_entry_point;
         STRINGDAT *S_source_code;
         STRINGDAT *S_compiler_options;
         STRINGDAT *S_link_libraries;
         // STATE
+        char *entry_point;
         char *source_code;
         char *compiler_options;
         char *link_libraries;
@@ -228,6 +233,8 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
          */
         int init(CSOUND *csound)
         {
+            entry_point = csound->strarg2name(csound, (char *)0, S_entry_point->data, (char *)"", 1);
+            std::fprintf(stderr, "####### clang_orc: entry_point: %s\n", entry_point);
             // Create a temporary file containing the source code.
             source_code = csound->strarg2name(csound, (char *)0, S_source_code->data, (char *)"", 1);
             const char *temp_directory = std::getenv("TMPDIR");
@@ -255,14 +262,14 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
             // the process; C++ doesn't allow taking the address of ::main.
             void *main_address = (void*)(intptr_t) GetExecutablePath;
             std::string executable_path = GetExecutablePath(args[0], main_address);
-            std::fprintf(stderr, "clang_orc: executable_path: %s\n", executable_path.c_str());
+            std::fprintf(stderr, "####### clang_orc: executable_path: %s\n", executable_path.c_str());
             IntrusiveRefCntPtr<DiagnosticOptions> diagnostic_options = new DiagnosticOptions();
             TextDiagnosticPrinter *diagnostic_client = new TextDiagnosticPrinter(llvm::errs(), &*diagnostic_options);
             IntrusiveRefCntPtr<DiagnosticIDs> diagnostic_ids(new DiagnosticIDs());
             DiagnosticsEngine diagnostics_engine(diagnostic_ids, &*diagnostic_options, diagnostic_client);
             // Infer Csound's runtime architecture, its "triple."
             const std::string process_triple = llvm::sys::getProcessTriple();
-            std::fprintf(stderr, "clang_orc: process_triple: %s\n", process_triple.c_str());
+            std::fprintf(stderr, "####### clang_orc: process_triple: %s\n", process_triple.c_str());
             llvm::Triple triple(process_triple);
             // Use ELF on Windows-32 and MingW for now.
         #ifndef CLANG_INTERPRETER_COFF_FORMAT
@@ -336,7 +343,8 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
             std::unique_ptr<llvm::LLVMContext> llvm_context(emit_llvm_action->takeLLVMContext());
             std::unique_ptr<llvm::Module> module = emit_llvm_action->takeModule();
             if(module) {
-                auto jit_compiler = exit_on_error(llvm::orc::JITCompiler::Create());
+                //auto jit_compiler = exit_on_error(llvm::orc::JITCompiler::Create());
+                static auto jit_compiler = exit_on_error(llvm::orc::JITCompiler::Create());
                 // Load and link all libraries required.
                 link_libraries = csound->strarg2name(csound, (char *)0, S_link_libraries->data, (char *)"", 1);
                 std::vector<std::string> link_libraries_list;
@@ -350,9 +358,9 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
                 // `int csound_main(CSOUND *)`. It seems the actual 
                 // compilation to machine language happens just when a symbol 
                 // is accessed for the first time.
-                auto csound_main = (int (*)(CSOUND *)) exit_on_error(jit_compiler->getSymbolAddress("csound_main"));
+                auto csound_main = (int (*)(CSOUND *)) exit_on_error(jit_compiler->getSymbolAddress(entry_point));
                 result = csound_main(csound);
-                printf("clang_orc: csound_main returned: %d\n", result);
+                printf("####### clang_orc: \"%s\": returned: %d\n", entry_point, result);
                 // On success, store the compiled object module until Csound exits.
                 // TODO: Should we be storing the JITCompiler instead, or also?
                 std::shared_ptr<llvm::Module> object_module = std::move(module);

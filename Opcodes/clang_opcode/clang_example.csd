@@ -26,23 +26,33 @@ gS_opcode_lister_code init {{
 #include <csound/csdl.h>
 #include <cstdio>
 
+// Tests whether a function defined in one module by one JITCompiler can be 
+// Called in another module by another JITCompiler."
+
+extern "C" void boo() {
+    printf("####### boo!\\n");
+}
+
 extern "C" int csoundNewOpcodeList(CSOUND *csound, opcodeListEntry **opcodelist);
 extern "C" int csoundDisposeOpcodeList(CSOUND *csound, opcodeListEntry *opcodelist);
 
-extern "C" int csound_main(CSOUND *csound) {
+extern "C" int opcode_lister(CSOUND *csound) {
     csound->Message(csound, "Listing opcodes from C++...\\n");
     opcodeListEntry *opcodeList;
     int count = csoundNewOpcodeList(csound, &opcodeList);
     csound->Message(csound, "Found %d opcode entries.\\n", count);
     csoundDisposeOpcodeList(csound, opcodeList);
+    boo();
     return 0;
 }
 
 }}
 
-gi_result clang_orc gS_opcode_lister_code, "-v -O3 -std=c++14 -I/usr/local/include/csound -stdlib=libstdc++", "/usr/lib/gcc/x86_64-linux-gnu/9/libstdc++.so /usr/lib/gcc/x86_64-linux-gnu/9/libgcc_s.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libpthread.so"
+gi_result clang_orc "opcode_lister", gS_opcode_lister_code, "-v -O3 -std=c++14 -I/usr/local/include/csound -stdlib=libstdc++", "/usr/lib/gcc/x86_64-linux-gnu/9/libstdc++.so /usr/lib/gcc/x86_64-linux-gnu/9/libgcc_s.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libpthread.so"
 
 gS_guitar_source_code = {{
+
+void* __dso_handle = (void *)&__dso_handle;
 
 #include <csound/csdl.h>
 
@@ -1500,19 +1510,19 @@ extern "C" {
 
 #endif
 
-extern "C" int csound_main(CSOUND *csound) {
+extern "C" int guitar_main(CSOUND *csound) {
 
         csound->Message(csound, "Hello, World! This is csound_main with csound: %p.\\n", csound);
         
         int result = csound->AppendOpcode(csound, "guitar", sizeof(dataspace), 0, 3, makeDescription(FAUST_OUTPUTS), makeDescription(FAUST_INPUTS, FAUST_ACTIVES), (SUBR)init, (SUBR)process32bits, NULL );
         csound->Message(csound, "AppendOpcode for %s returned: %d\\n", (char*)sym(OPCODE_NAME), result);
         
-        return 0;
+        return result;
 };
 
 }}
 
-gi_result clang_orc gS_guitar_source_code, "-v -O0 -std=c++14 -I/usr/local/include/csound -stdlib=libstdc++", "/usr/lib/gcc/x86_64-linux-gnu/9/libstdc++.so /usr/lib/gcc/x86_64-linux-gnu/9/libgcc_s.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libpthread.so"
+gi_result clang_orc "guitar_main", gS_guitar_source_code, "-v -O0 -std=c++14 -I/usr/local/include/csound -stdlib=libstdc++", "/usr/lib/gcc/x86_64-linux-gnu/9/libstdc++.so /usr/lib/gcc/x86_64-linux-gnu/9/libgcc_s.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libpthread.so"
 
 i_result compilestr {{
 
@@ -1601,7 +1611,7 @@ gS_score_generator_code init {{
 #include <csound/csdl.h>
 #include <cstdio>
 
-extern "C" int csound_main(CSOUND *csound) {
+extern "C" int score_generator(CSOUND *csound) {
 
     csound->Message(csound, "Generating score from C++...\\n");
 
@@ -1615,26 +1625,34 @@ extern "C" int csound_main(CSOUND *csound) {
 
 }}
 
-gi_result clang_orc gS_score_generator_code, "-v -O3 -std=c++14 -I/usr/local/include/csound -stdlib=libstdc++", "/usr/lib/gcc/x86_64-linux-gnu/9/libstdc++.so /usr/lib/gcc/x86_64-linux-gnu/9/libgcc_s.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libpthread.so"
+gi_result clang_orc "score_generator", gS_score_generator_code, "-v -O3 -std=c++14 -I/usr/local/include/csound -stdlib=libstdc++", "/usr/lib/gcc/x86_64-linux-gnu/9/libstdc++.so /usr/lib/gcc/x86_64-linux-gnu/9/libgcc_s.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libpthread.so"
 
-gS_opcode_lister_code init {{
+gS_opcode_lister_code_2 init {{
 
 #include <csound/csdl.h>
 #include <cstdio>
 
 extern "C" int csoundNewOpcodeList(CSOUND *csound, opcodeListEntry **opcodelist);
+extern "C" void boo();
 
-extern "C" int csound_main(CSOUND *csound) {
+extern "C" int opcode_lister_2(CSOUND *csound) {
+    csound->Message(csound, "Calling previously compiled `boo`:\\n");
+    boo();
     csound->Message(csound, "Listing opcodes from C++...\\n");
-    opcodeListEntry *opcodeList;
-    int count = csoundNewOpcodeList(csound, &opcodeList);
+    opcodeListEntry *opcodes;
+    int count = csoundNewOpcodeList(csound, &opcodes);
     csound->Message(csound, "Found %d opcode entries.\\n", count);
+    if (false) {
+        for (auto i = 0; i < count; ++i) {
+            csound->Message(csound, "opcode %4d: %-20s outypes: %20s intypes: %20s s\\n", (i + 1), opcodes[i].opname, opcodes[i].outypes, opcodes[i].intypes);
+        }
+    }
     return 0;
 }
 
 }}
 
-gi_result clang_orc gS_opcode_lister_code, "-v -O3 -std=c++14 -I/usr/local/include/csound -stdlib=libstdc++", "/usr/lib/gcc/x86_64-linux-gnu/9/libstdc++.so /usr/lib/gcc/x86_64-linux-gnu/9/libgcc_s.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libpthread.so"
+gi_result clang_orc "opcode_lister_2", gS_opcode_lister_code_2, "-v -O3 -std=c++14 -I/usr/local/include/csound -stdlib=libstdc++", "/usr/lib/gcc/x86_64-linux-gnu/9/libstdc++.so /usr/lib/gcc/x86_64-linux-gnu/9/libgcc_s.so /usr/lib/x86_64-linux-gnu/libm.so /usr/lib/x86_64-linux-gnu/libpthread.so"
 
 </CsInstruments>
 <CsScore>

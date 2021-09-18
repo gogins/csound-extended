@@ -18,13 +18,19 @@ The `clang` opcode was inspired by the
 [`faustgen`](https://csound.com/docs/manual/faustgen.html) opcode.
 
 The name `clang_orc` alludes both to the Csound orchestra, and to LLVM's 
-On-Request Compiler (ORC) (i.e., the Clang JIT compiler).
+On-Request Compiler (ORC), that is, the Clang JIT compiler.
 
 ## Syntax
 ```
-i_result clang_orc S_source_code, S_compiler_options [, S_link_libraries]
+i_result clang_orc S_entry_point, S_source_code, S_compiler_options [, S_link_libraries]
 ```
 ## Initialization
+
+*S_entry_point* - A valid C identifier, unique in the Csound performance, 
+for an entry point function that must be defined in the module. This function  
+must have the signature `extern "C" int (*)(CSOUND *csound)`. This function has 
+full access to any loaded link libraries, as well as to the running instance 
+of Csound.
 
 *S_source_code* - C or C++ source code. Can be a multi-line string literal 
 enclosed in `{{` and `}}`. Please note, this string is a "heredoc" and, thus, 
@@ -46,10 +52,9 @@ non-0 if there is an error. Clang and LLVM diagnostics are printed to stderr.
 
 ## Performance
 
-The `clang_orc` opcode must be invoked in the orchestra header, and is i-time 
-only. The opcode is called after `csoundStart` has been called, and at the 
-time that Csound is beginning its performance by running the init pass in the 
-orchestra header (i.e., the init pass for `instr 0`).
+The `clang_orc` opcode is i-time only, and is often invoked in the orchestra 
+header. Therefore, the opcode entry point is only called after `csoundStart` 
+has been called.
 
 Non-standard include directories and compiler options may be used, but must be 
 defined in `S_compiler_options`.
@@ -64,14 +69,14 @@ define it in your C/C++ code like this:
 ```
 void* __dso_handle = (void *)&__dso_handle;
 ```
-The module _must_ define the following C function, which is the entry point to 
+The module _must_ define a uniquely named C function, which is the entry point to 
 the module, in the same way that the `main` function is the entry point to a C 
-program:
+program, with the following signature:
 ```
-int csound_main(CSOUND *csound);
+extern "C" int(*)(CSOUND *csound);
 ```
-Once the `clang_orc` opcode has compiled the module, Csound will call the 
-`csound_main` function in that module. At that very time, the LLVM JIT 
+Once the `clang_orc` opcode has compiled the module, Csound will immediately 
+call the entry point function in that module. At that very time, the LLVM JIT 
 compiler will compile the source code and link it into the running Csound 
 process. The `csound_main` function may register any opcodes defined in the 
 module by calling `csound->AppendOpcode`, or create new instruments in the 
