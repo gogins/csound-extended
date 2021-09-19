@@ -1510,13 +1510,14 @@ extern "C" {
 
 #endif
 
+
+
 extern "C" int guitar_main(CSOUND *csound) {
 
         csound->Message(csound, "Hello, World! This is csound_main with csound: %p.\\n", csound);
         
         int result = csound->AppendOpcode(csound, "guitar", sizeof(dataspace), 0, 3, makeDescription(FAUST_OUTPUTS), makeDescription(FAUST_INPUTS, FAUST_ACTIVES), (SUBR)init, (SUBR)process32bits, NULL );
         csound->Message(csound, "AppendOpcode for %s returned: %d\\n", (char*)sym(OPCODE_NAME), result);
-        
         return result;
 };
 
@@ -1642,7 +1643,7 @@ extern "C" int opcode_lister_2(CSOUND *csound) {
     opcodeListEntry *opcodes;
     int count = csoundNewOpcodeList(csound, &opcodes);
     csound->Message(csound, "Found %d opcode entries.\\n", count);
-    if (false) {
+    if (true) {
         for (auto i = 0; i < count; ++i) {
             csound->Message(csound, "opcode %4d: %-20s outypes: %20s intypes: %20s s\\n", (i + 1), opcodes[i].opname, opcodes[i].outypes, opcodes[i].intypes);
         }

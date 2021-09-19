@@ -39,7 +39,8 @@ for a newline character.
 
 *S_compiler_options* - Standard gcc/clang compiler options, as would be passed 
 on the compiler command line. Can be a multi-line string literal enclosed in 
-`{{` and `}}`.
+`{{` and `}}`. If the `-v` option is present, additional diagnostics are 
+enabled for the `clang_orc` opcode itself.
 
 *S_link_libraries* - Optional space-delimited list of link libraries, serving 
 the same function as the `-l` option for a standalone compiler. Here, however, 

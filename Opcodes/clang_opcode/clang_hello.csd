@@ -6,6 +6,7 @@ This .csd file tests the new Clang JIT compiler opcode for Csound.
 -m195 -otest.wav
 </CsOptions>
 <CsInstruments>
+
 prints "I'm about to try compiling a simple test C++ module....\n"
 
 gS_source_code = {{
@@ -26,7 +27,6 @@ extern "C" int csound_main(CSOUND *csound) {
     strings.push_back("A test string...");
     csound->Message(csound, "\\nProof that a lot of libstdc++ stuff works: strings.size(): %ld strings[0]: %s\\n", strings.size(), strings[0].c_str());
     std::cerr << "Now that we have manually defined our own __dso_handle, this proves std::cerr works as well!\\n********\\n" << std::endl;
-
     return 0;
 };
 

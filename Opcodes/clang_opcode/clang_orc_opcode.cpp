@@ -111,7 +111,7 @@ namespace llvm
                 {
                     llvm::sys::DynamicLibrary::LoadLibraryPermanently(nullptr);
                     main_jit_dylib.addGenerator(std::move(process_symbols_generator));
-                    std::fprintf(stderr, "####### clang_orc: main_jit_dylib: name: %s\n", main_jit_dylib.getName().c_str());
+                    //std::fprintf(stderr, "####### clang_orc: main_jit_dylib: name: %s\n", main_jit_dylib.getName().c_str());
                 }
             public:
                 ~JITCompiler()
@@ -179,9 +179,10 @@ void tokenize(std::string const &string_, const char delimiter, std::vector<std:
  * `int (*)(CSOUND *csound)`. This function serves as the entry point to the 
  * module, similar to 'main' in a C or C++ program.
  *
- * When the entry point is called, `csoundStart` has _already_ been called, and 
- * Csound is performing its first init pass by calling all the i-rate opcodes 
- * in the orchestra header (which is "instr 0").
+ * When the entry point is called, `csoundStart` has _already_ been called, 
+ * and Csound is performing an init pass, which for `clang_orc` used in the 
+ * orchestra header will be the first init pass in the orchestra header 
+ * (which is "instr 0").
  */
 extern "C" {
     typedef int (*module_entry_point_t)(CSOUND *csound);
@@ -208,6 +209,50 @@ struct clang_modules_for_csounds_t
     }
 };
 
+//~ extern "C" {
+    
+    //~ ORCTOKEN *add_token(CSOUND *csound, char *s, int type);
+    
+    //~ /**
+     //~ * This function must be used in place of `csoundAppendOpcode` to add a 
+     //~ * new opcode compiled with `clang_orc` to Csound's symbol table.
+     //~ */
+    //~ ORCTOKEN *register_opcode(CSOUND *csound,
+                              //~ const char *opname, int dsblksiz, int flags,
+                              //~ int thread, const char *outypes,
+                                          //~ const char *intypes,
+                              //~ int (*iopadr)(CSOUND *, void *),
+                              //~ int (*kopadr)(CSOUND *, void *),
+                              //~ int (*aopadr)(CSOUND *, void *))
+    //~ {
+        //~ int status = csound->AppendOpcode(csound,
+                                          //~ opname,
+                                          //~ dsblksiz,
+                                          //~ flags,
+                                          //~ thread,
+                                          //~ outypes,
+                                          //~ intypes,
+                                          //~ iopadr,
+                                          //~ kopadr,
+                                          //~ aopadr);
+        //~ ORCTOKEN *token = nullptr;
+        //~ token = add_token(csound, (char *)opname, 1);
+        
+        //~ return token;
+    //~ }
+    
+//~ };
+
+/**
+ * Appends an opcode to the OENTRY list, and adds its name to the 
+ * Csound compiler's symbol table.
+ */
+//~ extern "C" ORCTOKEN *register_opcode(CSOUND *csound, OENTRY *oentry) {
+    //~ int result = csoundAppendOpcodes(csound, oentry, 1);
+    //~ //ORCTOKEN *token = add_token(csound, get_opcode_short_name(csound, oentry->opname), get_opcode_type(oentry));
+    //~ //return token;
+//~ };
+
 static clang_modules_for_csounds_t &clang_modules_for_csounds() {
     static clang_modules_for_csounds_t clang_modules_for_csounds_;
     return clang_modules_for_csounds_;
@@ -228,13 +273,14 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
         char *source_code;
         char *compiler_options;
         char *link_libraries;
+        bool diagnostics_enabled = false;
         /**
          * This is an i-time only opcode. Everything happens in init.
          */
         int init(CSOUND *csound)
         {
             entry_point = csound->strarg2name(csound, (char *)0, S_entry_point->data, (char *)"", 1);
-            std::fprintf(stderr, "####### clang_orc: entry_point: %s\n", entry_point);
+            if (diagnostics_enabled) csound->Message(csound, "####### clang_orc: entry_point: %s\n", entry_point);
             // Create a temporary file containing the source code.
             source_code = csound->strarg2name(csound, (char *)0, S_source_code->data, (char *)"", 1);
             const char *temp_directory = std::getenv("TMPDIR");
@@ -255,6 +301,9 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
             std::vector<std::string> tokens;
             tokenize(compiler_options, ' ', tokens);
             for (int i = 0; i < tokens.size(); ++i) {
+                if (tokens[i] == "-v") {
+                    diagnostics_enabled = true;
+                }
                 args.push_back(tokens[i].c_str());
             }
             // Compile the source code to a module, and call its 
@@ -262,14 +311,14 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
             // the process; C++ doesn't allow taking the address of ::main.
             void *main_address = (void*)(intptr_t) GetExecutablePath;
             std::string executable_path = GetExecutablePath(args[0], main_address);
-            std::fprintf(stderr, "####### clang_orc: executable_path: %s\n", executable_path.c_str());
+            if (diagnostics_enabled) csound->Message(csound, "####### clang_orc: executable_path: %s\n", executable_path.c_str());
             IntrusiveRefCntPtr<DiagnosticOptions> diagnostic_options = new DiagnosticOptions();
             TextDiagnosticPrinter *diagnostic_client = new TextDiagnosticPrinter(llvm::errs(), &*diagnostic_options);
             IntrusiveRefCntPtr<DiagnosticIDs> diagnostic_ids(new DiagnosticIDs());
             DiagnosticsEngine diagnostics_engine(diagnostic_ids, &*diagnostic_options, diagnostic_client);
             // Infer Csound's runtime architecture, its "triple."
             const std::string process_triple = llvm::sys::getProcessTriple();
-            std::fprintf(stderr, "####### clang_orc: process_triple: %s\n", process_triple.c_str());
+            if (diagnostics_enabled) csound->Message(csound, "####### clang_orc: process_triple: %s\n", process_triple.c_str());
             llvm::Triple triple(process_triple);
             // Use ELF on Windows-32 and MingW for now.
         #ifndef CLANG_INTERPRETER_COFF_FORMAT
@@ -288,7 +337,7 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
             args.push_back("-fsyntax-only");
             // TODO: Change this to in-memory?
             for (auto arg : args) {
-                std::fprintf(stderr, "arg: %s\n", arg);
+                if (diagnostics_enabled) csound->Message(csound, "arg: %s\n", arg);
             }
             std::unique_ptr<Compilation> compilation(clang_driver.BuildCompilation(args));
             if(!compilation) {
