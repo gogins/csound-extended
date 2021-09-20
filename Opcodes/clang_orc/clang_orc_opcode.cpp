@@ -161,6 +161,12 @@ namespace llvm
     } // end namespace orc
 } // end namespace llvm
 
+/**
+ * This refers to the singleton JIT compiler that can link modules and 
+ * be called from different opcodes.
+ */
+static std::shared_ptr<llvm::orc::JITCompiler> jit_compiler;
+
 static void tokenize(std::string const &string_, const char delimiter, std::vector<std::string> &tokens)
 {
     size_t start;
@@ -186,9 +192,6 @@ static void tokenize(std::string const &string_, const char delimiter, std::vect
 extern "C" {
     typedef int (*csound_main_t)(CSOUND *csound);
 };
-
-class clang_modules_for_csounds_t;
-static clang_modules_for_csounds_t &clang_modules_for_csounds();
 
 /**
  * Thread-safe facility for storing and removing modules that have been 
@@ -268,7 +271,7 @@ class ClangOrc : public csound::OpcodeBase<ClangOrc>
             TextDiagnosticPrinter *diagnostic_client = new TextDiagnosticPrinter(llvm::errs(), &*diagnostic_options);
             IntrusiveRefCntPtr<DiagnosticIDs> diagnostic_ids(new DiagnosticIDs());
             DiagnosticsEngine diagnostics_engine(diagnostic_ids, &*diagnostic_options, diagnostic_client);
-            // Infer Csound's runtime architecture, its "triple."
+            // Infer Csound's runtime architecture.
             const std::string process_triple = llvm::sys::getProcessTriple();
             if (diagnostics_enabled) csound->Message(csound, "####### clang_orc: triple: %s\n", process_triple.c_str());
             llvm::Triple triple(process_triple);
@@ -352,8 +355,10 @@ class ClangOrc : public csound::OpcodeBase<ClangOrc>
                 for (auto link_library : link_libraries_list) {
                     llvm::sys::DynamicLibrary::LoadLibraryPermanently(link_library.c_str());
                 }
-                // The JIT compiler is global for the Csound performance.
-                static auto jit_compiler = exit_on_error(llvm::orc::JITCompiler::Create());
+                // The JIT compiler is global for the Csound performance and for all opcodes.
+                if (!jit_compiler) then {
+                    jit_compiler = exit_on_error(llvm::orc::JITCompiler::Create());
+                }
                 exit_on_error(jit_compiler->addModule(llvm::orc::ThreadSafeModule(std::move(module), std::move(llvm_context))));
                 // It seems the actual compilation to machine language happens 
                 // just when a symbol is accessed for the first time.
@@ -370,7 +375,35 @@ class ClangOrc : public csound::OpcodeBase<ClangOrc>
             //std::fprintf(stderr, "ClangOrc::init ended at: line %d\n", __LINE__);
             return OK;
         };
-};
+        
+        /** 
+         * Given that `clang_orc` has already compiled an opcode and 
+         * added it to Csound, invokes that opcode.
+         */
+        class ClangOpcall : public csound::OpcodeBase<ClangOpcall>
+        {
+            public:
+                // OUTPUTS
+                
+                // INPUTS
+                STRINGDAT *S_opcode_name;
+            
+            int init(CSOUND *csound)
+            {
+                int result = OK;
+                return result;        
+                // Look up constructor.
+                // Create instance.
+                // Assign inputs from this to opcode.
+                // Assign outputs from this to opcode.
+                // invoke init.
+            };
+            int kontrol(CSOUND *csound)
+            {
+                // Invoke kontrol.
+                
+             
+            };
 
 extern "C" {
 
