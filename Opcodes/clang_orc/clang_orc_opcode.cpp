@@ -51,6 +51,7 @@
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Target/TargetMachine.h"
 
+#include <csound/OpcodeBase.hpp>
 #include <cstdio>
 #include <cstdlib>
 #include <map>
@@ -58,7 +59,6 @@
 #include <mutex>
 #include <stdlib.h>
 #include <string>
-#include <csound/OpcodeBase.hpp>
 
 using namespace clang;
 using namespace clang::driver;
@@ -78,8 +78,8 @@ std::string GetExecutablePath(const char *argv_0, void *main_address)
 std::string dylib_name() {
     static int dylib_count = 0;
     dylib_count++;
-    char dylib_name_[200];
-    std::snprintf(dylib_name_, 100, "<main-%d>", dylib_count);
+    char dylib_name_[0x100];
+    std::snprintf(dylib_name_, 0x100, "<main-%d>", dylib_count);
     return dylib_name_;
 }
 
@@ -100,8 +100,7 @@ namespace llvm
                 // llvm::orc::SimpleCompiler is the simplest JIT compiler in 
                 // the orc namespace, but it does seem to suit our use case.
                 IRCompileLayer intermediate_representation_compiler_layer{execution_session, object_linking_layer, std::make_unique<SimpleCompiler>(*target_machine)};
-                static std::unique_ptr<SectionMemoryManager> create_memory_manager()
-                {
+                static std::unique_ptr<SectionMemoryManager> create_memory_manager(){
                     return std::make_unique<SectionMemoryManager>();
                 }
                 JITCompiler(
@@ -111,11 +110,12 @@ namespace llvm
                 {
                     llvm::sys::DynamicLibrary::LoadLibraryPermanently(nullptr);
                     main_jit_dylib.addGenerator(std::move(process_symbols_generator));
-                    //std::fprintf(stderr, "####### clang_orc: main_jit_dylib: name: %s\n", main_jit_dylib.getName().c_str());
+                    std::fprintf(stderr, "####### clang_orc: main_jit_dylib: name: %s\n", main_jit_dylib.getName().c_str());
                 }
             public:
                 ~JITCompiler()
                 {
+                    std::fprintf(stderr, "####### clang_orc: deleting JITCompiler %p and ending execution session.\n", this);
                     if(auto error = execution_session.endSession()) {
                         execution_session.reportError(std::move(error));
                     }
@@ -161,8 +161,7 @@ namespace llvm
     } // end namespace orc
 } // end namespace llvm
 
-
-void tokenize(std::string const &string_, const char delimiter, std::vector<std::string> &tokens)
+static void tokenize(std::string const &string_, const char delimiter, std::vector<std::string> &tokens)
 {
     size_t start;
     size_t end = 0;
@@ -185,15 +184,15 @@ void tokenize(std::string const &string_, const char delimiter, std::vector<std:
  * (which is "instr 0").
  */
 extern "C" {
-    typedef int (*module_entry_point_t)(CSOUND *csound);
+    typedef int (*csound_main_t)(CSOUND *csound);
 };
 
 class clang_modules_for_csounds_t;
 static clang_modules_for_csounds_t &clang_modules_for_csounds();
 
 /**
- * Thread-safe facility for storing and removing object modules that 
- * have been compiled with clang.
+ * Thread-safe facility for storing and removing modules that have been 
+ * compiled with clang.
  */
 struct clang_modules_for_csounds_t 
 {
@@ -209,56 +208,12 @@ struct clang_modules_for_csounds_t
     }
 };
 
-//~ extern "C" {
-    
-    //~ ORCTOKEN *add_token(CSOUND *csound, char *s, int type);
-    
-    //~ /**
-     //~ * This function must be used in place of `csoundAppendOpcode` to add a 
-     //~ * new opcode compiled with `clang_orc` to Csound's symbol table.
-     //~ */
-    //~ ORCTOKEN *register_opcode(CSOUND *csound,
-                              //~ const char *opname, int dsblksiz, int flags,
-                              //~ int thread, const char *outypes,
-                                          //~ const char *intypes,
-                              //~ int (*iopadr)(CSOUND *, void *),
-                              //~ int (*kopadr)(CSOUND *, void *),
-                              //~ int (*aopadr)(CSOUND *, void *))
-    //~ {
-        //~ int status = csound->AppendOpcode(csound,
-                                          //~ opname,
-                                          //~ dsblksiz,
-                                          //~ flags,
-                                          //~ thread,
-                                          //~ outypes,
-                                          //~ intypes,
-                                          //~ iopadr,
-                                          //~ kopadr,
-                                          //~ aopadr);
-        //~ ORCTOKEN *token = nullptr;
-        //~ token = add_token(csound, (char *)opname, 1);
-        
-        //~ return token;
-    //~ }
-    
-//~ };
-
-/**
- * Appends an opcode to the OENTRY list, and adds its name to the 
- * Csound compiler's symbol table.
- */
-//~ extern "C" ORCTOKEN *register_opcode(CSOUND *csound, OENTRY *oentry) {
-    //~ int result = csoundAppendOpcodes(csound, oentry, 1);
-    //~ //ORCTOKEN *token = add_token(csound, get_opcode_short_name(csound, oentry->opname), get_opcode_type(oentry));
-    //~ //return token;
-//~ };
-
 static clang_modules_for_csounds_t &clang_modules_for_csounds() {
     static clang_modules_for_csounds_t clang_modules_for_csounds_;
     return clang_modules_for_csounds_;
 };
 
-class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
+class ClangOrc : public csound::OpcodeBase<ClangOrc>
 {
     public:
         // OUTPUTS
@@ -269,26 +224,23 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
         STRINGDAT *S_compiler_options;
         STRINGDAT *S_link_libraries;
         // STATE
-        char *entry_point;
-        char *source_code;
-        char *compiler_options;
-        char *link_libraries;
-        bool diagnostics_enabled = false;
         /**
          * This is an i-time only opcode. Everything happens in init.
          */
         int init(CSOUND *csound)
         {
-            entry_point = csound->strarg2name(csound, (char *)0, S_entry_point->data, (char *)"", 1);
+             //std::fprintf(stderr, "ClangOrc::init: line %d\n", __LINE__);
+            auto diagnostics_enabled = false;
+            auto entry_point = csound->strarg2name(csound, (char *)0, S_entry_point->data, (char *)"", 1);
             if (diagnostics_enabled) csound->Message(csound, "####### clang_orc: entry_point: %s\n", entry_point);
             // Create a temporary file containing the source code.
-            source_code = csound->strarg2name(csound, (char *)0, S_source_code->data, (char *)"", 1);
+            auto source_code = csound->strarg2name(csound, (char *)0, S_source_code->data, (char *)"", 1);
             const char *temp_directory = std::getenv("TMPDIR");
             if (temp_directory == nullptr) {
                 temp_directory = "/tmp";
             }
             char filepath[0x500];
-            std::sprintf(filepath, "%s/clang_opcode_XXXXXX.cpp", temp_directory);
+            std::snprintf(filepath, 0x500, "%s/clang_opcode_XXXXXX.cpp", temp_directory);
             auto file_descriptor = mkstemps(filepath, 4);
             auto file_ = fdopen(file_descriptor, "w");
             std::fwrite(source_code, strlen(source_code), sizeof(source_code[0]), file_);
@@ -297,7 +249,7 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
             args.push_back("clang_opcode");
             args.push_back(filepath);
             // Parse the compiler options.
-            compiler_options = csound->strarg2name(csound, (char *)0, S_compiler_options->data, (char *)"", 1);
+            auto compiler_options = csound->strarg2name(csound, (char *)0, S_compiler_options->data, (char *)"", 1);
             std::vector<std::string> tokens;
             tokenize(compiler_options, ' ', tokens);
             for (int i = 0; i < tokens.size(); ++i) {
@@ -310,15 +262,15 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
             // csound_main entry point. This just needs to be some symbol in 
             // the process; C++ doesn't allow taking the address of ::main.
             void *main_address = (void*)(intptr_t) GetExecutablePath;
-            std::string executable_path = GetExecutablePath(args[0], main_address);
-            if (diagnostics_enabled) csound->Message(csound, "####### clang_orc: executable_path: %s\n", executable_path.c_str());
+            std::string executable_filepath = GetExecutablePath(args[0], main_address);
+            if (diagnostics_enabled) csound->Message(csound, "####### clang_orc: executable_filepath: %s\n", executable_filepath.c_str());
             IntrusiveRefCntPtr<DiagnosticOptions> diagnostic_options = new DiagnosticOptions();
             TextDiagnosticPrinter *diagnostic_client = new TextDiagnosticPrinter(llvm::errs(), &*diagnostic_options);
             IntrusiveRefCntPtr<DiagnosticIDs> diagnostic_ids(new DiagnosticIDs());
             DiagnosticsEngine diagnostics_engine(diagnostic_ids, &*diagnostic_options, diagnostic_client);
             // Infer Csound's runtime architecture, its "triple."
             const std::string process_triple = llvm::sys::getProcessTriple();
-            if (diagnostics_enabled) csound->Message(csound, "####### clang_orc: process_triple: %s\n", process_triple.c_str());
+            if (diagnostics_enabled) csound->Message(csound, "####### clang_orc: triple: %s\n", process_triple.c_str());
             llvm::Triple triple(process_triple);
             // Use ELF on Windows-32 and MingW for now.
         #ifndef CLANG_INTERPRETER_COFF_FORMAT
@@ -327,7 +279,7 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
             }
         #endif
             exit_on_error.setBanner("Csound JIT compiler ");
-            Driver clang_driver(executable_path, triple.str(), diagnostics_engine);
+            Driver clang_driver(executable_filepath, triple.str(), diagnostics_engine);
             clang_driver.setTitle("Csound JIT compiler ");
             clang_driver.setCheckInputsExist(false);
             // FIXME: This is a hack to try to force the driver to do something we can
@@ -335,10 +287,10 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
             // (basically, exactly one input, and the operation mode is hard wired).
             ///SmallVector<const char *, 16> args(argv, argv + argc);
             args.push_back("-fsyntax-only");
-            // TODO: Change this to in-memory?
             for (auto arg : args) {
                 if (diagnostics_enabled) csound->Message(csound, "arg: %s\n", arg);
             }
+            // TODO: Change this to in-memory?
             std::unique_ptr<Compilation> compilation(clang_driver.BuildCompilation(args));
             if(!compilation) {
                 return 0;
@@ -391,32 +343,31 @@ class clang_opcode_t : public csound::OpcodeBase<clang_opcode_t>
             int result = 255;
             std::unique_ptr<llvm::LLVMContext> llvm_context(emit_llvm_action->takeLLVMContext());
             std::unique_ptr<llvm::Module> module = emit_llvm_action->takeModule();
+            //std::fprintf(stderr, "ClangOrc::init: line %d\n", __LINE__);
             if(module) {
-                //auto jit_compiler = exit_on_error(llvm::orc::JITCompiler::Create());
-                static auto jit_compiler = exit_on_error(llvm::orc::JITCompiler::Create());
                 // Load and link all libraries required.
-                link_libraries = csound->strarg2name(csound, (char *)0, S_link_libraries->data, (char *)"", 1);
+                auto link_libraries = csound->strarg2name(csound, (char *)0, S_link_libraries->data, (char *)"", 1);
                 std::vector<std::string> link_libraries_list;
                 tokenize(link_libraries, ' ', link_libraries_list);
                 for (auto link_library : link_libraries_list) {
                     llvm::sys::DynamicLibrary::LoadLibraryPermanently(link_library.c_str());
                 }
+                // The JIT compiler is global for the Csound performance.
+                static auto jit_compiler = exit_on_error(llvm::orc::JITCompiler::Create());
                 exit_on_error(jit_compiler->addModule(llvm::orc::ThreadSafeModule(std::move(module), std::move(llvm_context))));
-                // Call the module's entry point so it can register opcodes -- 
-                // or do anything else. All entry points are C functions 
-                // `int csound_main(CSOUND *)`. It seems the actual 
-                // compilation to machine language happens just when a symbol 
-                // is accessed for the first time.
+                // It seems the actual compilation to machine language happens 
+                // just when a symbol is accessed for the first time.
                 auto csound_main = (int (*)(CSOUND *)) exit_on_error(jit_compiler->getSymbolAddress(entry_point));
+                if (diagnostics_enabled) csound->Message(csound, "####### clang_orc: invoking \"%s\" at %p:\n", entry_point, csound_main);
                 result = csound_main(csound);
-                printf("####### clang_orc: \"%s\": returned: %d\n", entry_point, result);
-                // On success, store the compiled object module until Csound exits.
-                // TODO: Should we be storing the JITCompiler instead, or also?
-                std::shared_ptr<llvm::Module> object_module = std::move(module);
-                if (object_module) {
-                    clang_modules_for_csounds().add(csound, object_module);
-                }
+                if (diagnostics_enabled) csound->Message(csound, "####### clang_orc: \"%s\" returned: %d\n", entry_point, result);
+                //~ // On success, store the compiled module until Csound exits.
+                //~ std::shared_ptr<llvm::Module> object_module = std::move(module);
+                //~ if (object_module) {
+                    //~ clang_modules_for_csounds().add(csound, object_module);
+                //~ }
             }
+            //std::fprintf(stderr, "ClangOrc::init ended at: line %d\n", __LINE__);
             return OK;
         };
 };
@@ -427,12 +378,12 @@ extern "C" {
     {
         int status = csound->AppendOpcode(csound,
                                           (char *)"clang_orc",
-                                          sizeof(clang_opcode_t),
+                                          sizeof(ClangOrc),
                                           0,
                                           1,
                                           (char *)"i",
                                           (char *)"SSW",
-                                          (int (*)(CSOUND*,void*)) clang_opcode_t::init_,
+                                          (int (*)(CSOUND*,void*)) ClangOrc::init_,
                                           (int (*)(CSOUND*,void*)) 0,
                                           (int (*)(CSOUND*,void*)) 0);
         return status;
@@ -440,7 +391,7 @@ extern "C" {
 
     PUBLIC int csoundModuleDestroy_clang_opcode(CSOUND *csound)
     {
-        clang_modules_for_csounds().del(csound);
+        //~clang_modules_for_csounds().del(csound);
         llvm::llvm_shutdown();
         return 0;
     }
