@@ -1,8 +1,8 @@
 # Clang Opcodes
 
 The Clang opcodes embed a just-in-time C/C++ compiler into Csound. This enables 
-a Csound orchestra to contain C/C++ source code, compile and link it, and call
-it during the Csound performance.
+a Csound orchestra to contain C/C++ source code, compile and link that code, and 
+call it during the Csound performance.
 
 The `clang_compile` opcode compiles C or C++ source code, embedded in a Csound 
 orchestra, at performance time. The result is a compiled module of low level 
