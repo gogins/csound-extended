@@ -159,13 +159,13 @@ module.
 
 ## Syntax
 ```
-[m_output_1,...] clang_invoke S_clang_invokeable, i_thread, [, m_input_1,...]
+[m_output_1,...] clang_invoke S_clang_invokeable_factory, i_thread, [, m_input_1,...]
 ```
 ## Initialization
 
-*S_clang_invokable* - A name unique in the Csound process for a factory function 
-`ClangInvokable *(*)` that creates and returns a new object that implements the 
-following pure abstract interface:
+*S_clang_invokeable_factory* - A name unique in the Csound process for a factory 
+function `ClangInvokable *(*)` that creates and returns a new object that implements 
+the following pure abstract interface:
 ```
 /**
  * Defines the pure bstract interface implemented by Clang modules to be 
