@@ -1,12 +1,15 @@
 # Clang Opcodes
 
-The Clang opcodes provide two facilities. The `clang_compile` opcode compiles C 
-or C++ source code, embedded in a Csound orchestra, at performance time. The 
-result is a compiled module of low level virtual machine (LLVM) intermediate 
-representation (IR) code. When any symbol in that module is accessed, the 
-LLVM on-request compiler (ORC) translates the IR code to machine language, 
-resolves symbols and relocations, and in short loads and links the code just 
-like any other compiled C or C++ object.
+The Clang opcodes embed a just-in-time C/C++ compiler into Csound. This enables 
+a Csound orchestra to contain C/C++ source code, compile and link it, and call
+it during the Csound performance.
+
+The `clang_compile` opcode compiles C or C++ source code, embedded in a Csound 
+orchestra, at performance time. The result is a compiled module of low level 
+virtual machine (LLVM) intermediate representation (IR) code. When any symbol in 
+that module is accessed, the LLVM on-request compiler (ORC) translates the IR 
+code to machine language, resolves symbols and relocations, and in short loads 
+and links the code just like any other compiled C or C++ object.
 
 The `clang_invoke` opcode enables a compiled module to be invoked from Csound 
 code during the Csound performance. Commonly, this is used to implement new 
@@ -160,8 +163,9 @@ module.
 ```
 ## Initialization
 
-*S_clang_invokable* - The name of a class that implements the following purely 
-abstract C++ interface:
+*S_clang_invokable* - A name unique in the Csound process for a factory function 
+`ClangInvokable *(*)` that cerates and returns a new object that implements the 
+following pure abstrat interface:
 ```
 struct ClangInvokable {
 	virtual ~ClangInvokable() = 0;
@@ -188,6 +192,12 @@ struct ClangInvokable {
 	 */
 	virtual int noteoff(CSOUND *csound) = 0;
 };
+```
+It is advisable for such factory functions to follow a naming pattern such as: 
+```
+ClangInvokable *create_opcode_a();
+ClangInvokable *create_opcode_b();
+ClangInvokable *create_score_generator();
 ```
 *i_thread* - The "thread" on which this ClangInvokable will run:
 
