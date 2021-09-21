@@ -14,13 +14,19 @@ Csound opcodes in the Csound orchestra that are more powerful, and run faster,
 than user-defined opcodes. It is also used to generate scores or control 
 channel values at the beginning of, or during, the performance.
 
+The `clang_compile` opcode uses the [Clang library and LLVM](https://llvm.org/), 
+and is based on the 
+["Clang C Interpreter Example"](https://github.com/llvm/llvm-project/tree/main/clang/examples/clang-interpreter). 
+The `clang_invoke` opcode was inspired by the 
+[`faustgen`](https://csound.com/docs/manual/faustgen.html) opcode.
+
 # clang_compile
 
-clang_compile - Compiles C/C++ source code into a module, and executes it at
+`clang_compile` - Compiles C/C++ source code into a module, and executes it at
 Csound performance time. The compiled module is callable in the running Csound 
 performance, can call into the running Csound performance using the Csound 
 API, and can call exported functions in other modules compiled by 
-`clang_compile`.
+`clang_compile`, or in any system or user link libraries that have been loaded.
 
 ## Description
 
@@ -31,12 +37,6 @@ other modules, or link libraries from that module. The ORC compiler is a type
 of just-in-time (JIT) compiler, in which the actual translation to machine 
 language takes place whenever a symbol in the module is accessed for the first 
 time from the ORC compiler's LLVM execution session.
-
-The `clang_compile` opcode uses the [Clang library and LLVM](https://llvm.org/), 
-and is based on the 
-["Clang C Interpreter Example"](https://github.com/llvm/llvm-project/tree/main/clang/examples/clang-interpreter). 
-The `clang_invoke` opcode was inspired by the 
-[`faustgen`](https://csound.com/docs/manual/faustgen.html) opcode.
 
 ## Syntax
 ```
@@ -129,11 +129,9 @@ this code could be implemented in one module, the following separate modules
 are defined:
 
 1. A physically modelled guitar opcode, written in C++, which is then 
-    wrapped in a Csound instrument definition.
-   
+   wrapped in a Csound instrument definition.
 2. A reverb opcode, written in C++, which is then wrapped in a Csound instrument 
    definition.
-generating o
 3. A score generating function, written in C++.
    
 The Csound orchestra in this piece uses the signal flow graph opcodes to connect 
@@ -142,7 +140,7 @@ instrument to an output instrument.
 
 # clang_invoke
 
-clang_invoke - creates an instance of a class that implements the `ClangInvokable` 
+`clang_invoke` - creates an instance of a class that implements the `ClangInvokable` 
 interface that has been defined previously using `clang_compile`, and invokes 
 that instance at i-time, k-time, or both.
 
@@ -172,9 +170,9 @@ struct ClangInvokable {
 	 * parameters passed to the `clang_invoke` opcode. The outputs become 
 	 * the values returned from the `clang_invoke` opcode. Performs the 
 	 * same work as `iopadr` in a standard Csound opcode definition. The 
-     * `clang_invoke_ptr` argument can be used to store a back poiner to 
-     * the instance of `clang_invoke` that is doing the invocations, and 
-     * from that, to the Csound intrument definition.
+	 * `clang_invoke_ptr` argument can be used to store a back poiner to 
+	 * the instance of `clang_invoke` that is doing the invocations, and 
+	 * from that, to the Csound intrument definition.
 	 */
 	virtual int init(CSOUND *csound, ClangInvoke *clang_invoke_ptr, MYFLT *outputs, const MYFLT *inputs) = 0;
 	/**
@@ -197,8 +195,8 @@ struct ClangInvokable {
    `ClangInvokable::kontrol` method.
 -  2 = The `ClangInvokable::kontrol` method is called once for every 
    kperiod during the lifetime of the instrument, but not the 
-   `ClangInvokable::init` function. 
-`  3 = The `ClangInvokable::init` method is called once at the 
+   `ClangInvokable::init` function.
+-  3 = The `ClangInvokable::init` method is called once at the 
    init pass for the instrument, and the `ClangInvokable::kontrol` 
    method is called once every kperiod during the lifetime of the 
    instrument.
@@ -214,8 +212,8 @@ k-rate. These are actually the inputs that were provided by Csound to
 The *S_clang_invokeable* symbol is looked up in the LLVM execution session 
 of the global ORC compiler, and a new instance of the ClangInvokable class 
 is created. `clang_invoke` then calls the `ClangInvokable::init` method with the 
-input and output parameters, and the output values are returned in the 
-outputs argument.
+input and output parameters, and any output values computed by the ClangInvokable 
+are returned in the outputs argument.
 
 The user must of course ensure that the ClangInvokable has the right numbers, 
 types, and rates for these parameters and return values. Because of the variable 
@@ -223,8 +221,9 @@ numbers and types of arguments, type checking is virtually impossible.
 
 ## Performance
 
-The `ClangInvokable::kontrol` method is called once per kperiod during the 
-lifetime of the opcode.
+If the `thread` parameter is 2 or 3, the `ClangInvokable::kontrol` method is 
+called once per kperiod during the lifetime of the opcode. Any output values 
+computed by the ClangInvokable are returned in the outputs argument.
 
 When the Csound instrument that has created the `clang_invoke` opcode is 
 turned off, Csound calls the `ClangInvokable::oteoff` method. At that  
