@@ -226,7 +226,7 @@ called once per kperiod during the lifetime of the opcode. Any output values
 computed by the ClangInvokable are returned in the outputs argument.
 
 When the Csound instrument that has created the `clang_invoke` opcode is 
-turned off, Csound calls the `ClangInvokable::oteoff` method. At that  
+turned off, Csound calls the `ClangInvokable::oteoff` method. At that 
 time, the ClangInvokable should release any system resources or memory 
 that it has acquired.
 
