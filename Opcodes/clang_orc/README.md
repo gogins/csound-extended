@@ -62,7 +62,7 @@ on the compiler command line. Can be a multi-line string literal enclosed in
 `{{` and `}}`. If the `-v` option is present, additional diagnostics are 
 enabled for the `clang_compile` opcode itself.
 
-*S_link_libraries* - Optional space-delimited list of standard or custom link 
+*S_link_libraries* - Optional space-delimited list of system or user link 
 libraries, serving the same function as `-l` options for a standalone 
 compiler. Here, however, each link library must be specified as a fully 
 qualified filepath. Each library will be loaded and linked by LLVM before the 
@@ -115,9 +115,9 @@ algorithmic composition, then translate the generated score to a Csound score,
 then call `csound->InputMessage` to schedule the score for immediate 
 performance.
 
-However, one of the significant uses of `clang_compile` is to compile C/C++
+However, one of the most significant uses of `clang_compile` is to compile C/C++
 code into classes that can perform the work of Csound opcodes. This is 
-done by subclassing the `ClangInvokable` class. See `clang_invoke` for how 
+done by implementing the `ClangInvokable` interface. See `clang_invoke` for how 
 this works and how to use it.
 
 ## Example
@@ -133,22 +133,18 @@ are defined:
    
 2. A reverb opcode, written in C++, which is then wrapped in a Csound instrument 
    definition.
-
-3. A score generating opcode, written in C++, which is then wrapped in a Csound 
-   instrument definition.
+generating o
+3. A score generating function, written in C++.
    
 The Csound orchestra in this piece uses the signal flow graph opcodes to connect 
 the guitar instrument to the reverb instrument, and to connect the reverb 
 instrument to an output instrument.
 
-The Csound score in this piece invokes the score generating instrument twice at 
-an offset in time and pitch, to create a canon at the sixth.
-
 # clang_invoke
 
-clang_invoke - creates an instance of a `ClangInvokable` that has been defined 
-previously using `clang_compile`, and invokes that instance at i-time, k-time, 
-or both.
+clang_invoke - creates an instance of a class that implements the `ClangInvokable` 
+interface that has been defined previously using `clang_compile`, and invokes 
+that instance at i-time, k-time, or both.
 
 ## Description
 
@@ -166,48 +162,41 @@ module.
 ```
 ## Initialization
 
-*S_clang_invokable* - The name of a class that implements the following C++ 
-virtual class:
+*S_clang_invokable* - The name of a class that implements the following purely 
+abstract C++ interface:
 ```
-class ClangInvokable {
-	public:
-	virtual ~ClangInvokable();
+struct ClangInvokable {
+	virtual ~ClangInvokable() = 0;
 	/**
 	 * Called once at init time. The inputs are the same as the 
 	 * parameters passed to the `clang_invoke` opcode. The outputs become 
 	 * the values returned from the `clang_invoke` opcode. Performs the 
-	 * same work as `iopadr` in a standard Csound opcode definition.
+	 * same work as `iopadr` in a standard Csound opcode definition. The 
+     * `clang_invoke_ptr` argument can be used to store a back poiner to 
+     * the instance of `clang_invoke` that is doing the invocations, and 
+     * from that, to the Csound intrument definition.
 	 */
-	virtual int init(CSOUND *, MYFLT* outputs, const MYFLT *inputs) {};
+	virtual int init(CSOUND *csound, ClangInvoke *clang_invoke_ptr, MYFLT *outputs, const MYFLT *inputs) = 0;
 	/**
 	 * Called once every kperiod. The inputs are the same as the 
 	 * parameters passed to the `clang_invoke` opcode. The outputs become 
 	 * the values returned from the `clang_invoke` opcode. Performs the 
 	 * same work as `kopadr` in a standard Csound opcode definition.
 	 */
-	virtual int kontrol(CSOUND *, MYFLT* outputs, cost MYFLT *inputs) {};
+	virtual int kontrol(CSOUND *csound, MYFLT* outputs, cost MYFLT *inputs) = 0;
 	/**
 	 * Called by Csound when the Csound instrument that contains this 
 	 * instance of the ClangInvokable is turned off.
 	 */
-	virtual int noteoff(CSOUND *csound) {};
-	protected:
-	/**
-	 * Which methods are called when, the same as for a standard Csound 
-	 * opcode.
-	 */
-	int thread = 3;
-	/**
-	 * Back pointer to the `clang_invoke` opcode.
-	 */
-	std::shared_ptr<ClangInvoke> clang_invoke;
+	virtual int noteoff(CSOUND *csound) = 0;
 };
 ```
 *i_thread* - The "thread" on which this ClangInvokable will run:
 
 -  1 = The `ClangInvokable::init` method is called, but not the 
    `ClangInvokable::kontrol` method.
--  2 = The `ClangInvokable::kontrol` method is called, but not the 
+-  2 = The `ClangInvokable::kontrol` method is called once for every 
+   kperiod during the lifetime of the instrument, but not the 
    `ClangInvokable::init` function. 
 `  3 = The `ClangInvokable::init` method is called once at the 
    init pass for the instrument, and the `ClangInvokable::kontrol` 
@@ -215,34 +204,32 @@ class ClangInvokable {
    instrument.
 
 *m_output_1,...* - Any number, up to 40, of any type of Csound parameters, 
-i-rate or k-rate. These are copied to the same number and type of outputs 
-that were provided by Csound to `clang_invoke`.
+i-rate or k-rate. These are actually the outputs that were provided by 
+Csound to `clang_invoke`.
 
 *m_input_i,...* - Any number of any type of Csound parameters, i-rate or 
-k-rate. These are copied from the same number and type of inputs that were 
-provided by Csound to `clang_invoke`.
+k-rate. These are actually the inputs that were provided by Csound to 
+`clang_invoke`.
 
 The *S_clang_invokeable* symbol is looked up in the LLVM execution session 
 of the global ORC compiler, and a new instance of the ClangInvokable class 
-is created. `clang_invoke` then calls the instances's init method with the 
+is created. `clang_invoke` then calls the `ClangInvokable::init` method with the 
 input and output parameters, and the output values are returned in the 
-argument.
+outputs argument.
 
-Csound will set up the inputs and outputs of `clang_invoke` according to the 
-parameters and return values set up by the user code. The user must of course 
-ensure that the ClangInvokable has the right numbers, types, and rates for 
-these parameters and return values. Because of the variable numbers and types 
-of arguments, type checking is virtually impossible.
-
+The user must of course ensure that the ClangInvokable has the right numbers, 
+types, and rates for these parameters and return values. Because of the variable 
+numbers and types of arguments, type checking is virtually impossible.
 
 ## Performance
 
-The ClangInvokable instance's `kontrol` method is called once per 
-kperiod during the lifetime of the opcode.
+The `ClangInvokable::kontrol` method is called once per kperiod during the 
+lifetime of the opcode.
 
 When the Csound instrument that has created the `clang_invoke` opcode is 
-turned off, the ClangInvokable's `noteoff` method is called. At that  
-time, the ClangInvokable can release system resources or free memory.
+turned off, Csound calls the `ClangInvokable::oteoff` method. At that  
+time, the ClangInvokable should release any system resources or memory 
+that it has acquired.
 
 The ClangInvokable instance is then deleted by the `clang_invoke` opcode.
 
