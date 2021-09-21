@@ -104,7 +104,7 @@ extern "C" int(*)(CSOUND *csound);
 Once the `clang_compile` opcode has compiled the module, Csound will immediately 
 call the entry point function in that module. At that very time, the LLVM ORC 
 compiler will translate the IR code in the module to machine language, resolve 
-relocations, and link it into the running Csound process. 
+symbols, perform relocations, and link it into the running Csound process. 
 
 The entry point function may call the Csound API functions that are members of 
 the `CSOUND` struct, define classes and structs, or do anything at all else that 
@@ -166,7 +166,7 @@ module.
 ```
 ## Initialization
 
-*S_clang_invokeable* - The name of a class that implements the following C++ 
+*S_clang_invokable* - The name of a class that implements the following C++ 
 virtual class:
 ```
 class ClangInvokable {
@@ -202,7 +202,7 @@ class ClangInvokable {
 	 */
 	std::shared_ptr<ClangInvoke> clang_invoke;
 };
-
+```
 *i_thread* - The "thread" on which this ClangInvokable will run:
 
 -  1 = The `ClangInvokable::init` method is called, but not the 
