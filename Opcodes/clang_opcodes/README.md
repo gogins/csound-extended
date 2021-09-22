@@ -1,8 +1,8 @@
 # Clang Opcodes
 
 The Clang opcodes embed a just-in-time C/C++ compiler into Csound. This enables 
-a Csound orchestra to contain C/C++ source code, compile and link it, and call
-it during the Csound performance.
+a Csound orchestra to contain C/C++ source code, compile and link that code, and 
+call it during the Csound performance.
 
 The `clang_compile` opcode compiles C or C++ source code, embedded in a Csound 
 orchestra, at performance time. The result is a compiled module of low level 
@@ -143,8 +143,8 @@ instrument to an output instrument.
 
 # clang_invoke
 
-`clang_invoke` - creates an instance of a class that implements the `ClangInvokable` 
-interface that has been defined previously using `clang_compile`, and invokes 
+`clang_invoke` - creates an instance of a class (previously defined using 
+`clang_compile`) that implements the `ClangInvokable` interface , and invokes 
 that instance at i-time, k-time, or both.
 
 ## Description
@@ -159,14 +159,18 @@ module.
 
 ## Syntax
 ```
-[m_output_1,...] clang_invoke S_clang_invokeable, i_thread, [, m_input_1,...]
+[m_output_1,...] clang_invoke S_clang_invokeable_factory, i_thread, [, m_input_1,...]
 ```
 ## Initialization
 
-*S_clang_invokable* - A name unique in the Csound process for a factory function 
-`ClangInvokable *(*)` that cerates and returns a new object that implements the 
-following pure abstrat interface:
+*S_clang_invokeable_factory* - A name unique in the Csound process for a factory 
+function `ClangInvokable *(*)` that creates and returns a new object that implements 
+the following pure abstract interface:
 ```
+/**
+ * Defines the pure bstract interface implemented by Clang modules to be 
+ * called by Csound using the `clang_invoke` opcode.
+ */
 struct ClangInvokable {
 	virtual ~ClangInvokable() = 0;
 	/**
@@ -174,18 +178,17 @@ struct ClangInvokable {
 	 * parameters passed to the `clang_invoke` opcode. The outputs become 
 	 * the values returned from the `clang_invoke` opcode. Performs the 
 	 * same work as `iopadr` in a standard Csound opcode definition. The 
-	 * `clang_invoke_ptr` argument can be used to store a back poiner to 
-	 * the instance of `clang_invoke` that is doing the invocations, and 
-	 * from that, to the Csound intrument definition.
+	 * `opds` argument can be used to find many things about the invoking 
+     * opcde and its enclosing instrument.
 	 */
-	virtual int init(CSOUND *csound, ClangInvoke *clang_invoke_ptr, MYFLT *outputs, const MYFLT *inputs) = 0;
+	virtual int init(CSOUND *csound, OPDS opds, MYFLT *outputs, const MYFLT *inputs) = 0;
 	/**
 	 * Called once every kperiod. The inputs are the same as the 
 	 * parameters passed to the `clang_invoke` opcode. The outputs become 
 	 * the values returned from the `clang_invoke` opcode. Performs the 
 	 * same work as `kopadr` in a standard Csound opcode definition.
 	 */
-	virtual int kontrol(CSOUND *csound, MYFLT* outputs, cost MYFLT *inputs) = 0;
+	virtual int kontrol(CSOUND *csound, MYFLT* outputs, const MYFLT *inputs) = 0;
 	/**
 	 * Called by Csound when the Csound instrument that contains this 
 	 * instance of the ClangInvokable is turned off.
@@ -211,13 +214,13 @@ ClangInvokable *create_score_generator();
    method is called once every kperiod during the lifetime of the 
    instrument.
 
-*m_output_1,...* - Any number, up to 40, of any type of Csound parameters, 
-i-rate or k-rate. These are actually the outputs that were provided by 
-Csound to `clang_invoke`.
-
 *m_input_i,...* - Any number of any type of Csound parameters, i-rate or 
 k-rate. These are actually the inputs that were provided by Csound to 
 `clang_invoke`.
+
+*m_output_1,...* - Any number, up to 40, of any type of Csound parameters, 
+i-rate or k-rate. These are actually the outputs that were provided by 
+Csound to `clang_invoke`.
 
 The *S_clang_invokeable* symbol is looked up in the LLVM execution session 
 of the global ORC compiler, and a new instance of the ClangInvokable class 
@@ -236,7 +239,7 @@ called once per kperiod during the lifetime of the opcode. Any output values
 computed by the ClangInvokable are returned in the outputs argument.
 
 When the Csound instrument that has created the `clang_invoke` opcode is 
-turned off, Csound calls the `ClangInvokable::oteoff` method. At that 
+turned off, Csound calls the `ClangInvokable::noteoff` method. At that 
 time, the ClangInvokable should release any system resources or memory 
 that it has acquired.
 
