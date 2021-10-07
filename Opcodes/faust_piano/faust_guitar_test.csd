@@ -102,7 +102,7 @@ outleta "outright", a_out_right
 prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
 
-#include "FaustModularBody.inc"
+;#include "FaustModularBody.inc"
 
 #include "MasterOutput.inc"
 
@@ -111,7 +111,7 @@ connect "FaustModularBody",  "outright", "MasterOutput",        "inright"
 connect "FaustGuitar",  "outleft",  "MasterOutput",        "inleft"
 connect "FaustGuitar",  "outright", "MasterOutput",        "inright"
 
-alwayson "MasterOutput"
+alwayson "MasterOutput.inc"
 
 instr Clocker
 if p2 == 0 then
