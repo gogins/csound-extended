@@ -49,17 +49,10 @@ process = button("drop") : bubble(hslider("v:bubble/freq", 600, 150, 2000, 1)) <
 print gi_FaustBubble_compiled
 
 gk_FaustBubble_level chnexport "gk_FaustBubble_level", 3
-gk_FaustBubble_Damp chnexport "gk_FaustBubble_Damp", 3
-gk_FaustBubble_RoomSize chnexport "gk_FaustBubble_RoomSize", 3
-gk_FaustBubble_Stereo_Spread chnexport "gk_FaustBubble_Stereo_Spread", 3
-gk_FaustBubble_Wet chnexport "gk_FaustBubble_Wet", 3
-gk_FaustBubble_midi_dynamic_range init 20
+gk_FaustBubble_midi_dynamic_range chnexport "gk_FaustBubble_midi_dynamic_range", 3
 
 gk_FaustBubble_level init 0
-gk_FaustBubble_Damp init .175
-gk_FaustBubble_RoomSize init .8
-gk_FaustBubble_Stereo_Spread init .8
-gk_FaustBubble_Wet init .35
+gk_FaustBubble_midi_dynamic_range init 20
 
 instr FaustBubble
 i_attack = .005
@@ -83,18 +76,13 @@ k_space_bottom_to_top = p8
 i_phase = p9
 i_frequency = cpsmidinn(i_midi_key)
 ; Adjust the following value until "overall amps" at the end of performance is about -6 dB.
-i_level_correction = 109
+i_level_correction = 68
 i_normalization = ampdb(-i_level_correction) / 2
 i_amplitude = ampdb(i_midi_velocity) * i_normalization
 k_gain = ampdb(gk_FaustBubble_level)
 i_faust_dsp faustdsp gi_FaustBubble_compiled
 k_frequency cpsmidinn i_midi_key
 faustctl i_faust_dsp, "freq", k_frequency
-k_gain = i_midi_velocity
-faustctl i_faust_dsp, "Damp", gk_FaustBubble_Damp
-faustctl i_faust_dsp, "RoomSize", gk_FaustBubble_RoomSize
-faustctl i_faust_dsp, "Stereo Spread", gk_FaustBubble_Stereo_Spread
-faustctl i_faust_dsp, "Wet", gk_FaustBubble_Wet
 faustctl i_faust_dsp, "drop", k(1)
 a_left, a_right faustplay i_faust_dsp
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
