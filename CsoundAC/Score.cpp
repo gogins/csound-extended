@@ -1453,4 +1453,61 @@ double Score::getDurationFromZero() const {
     return end;
 }
 
+std::string Score::toJson() const {
+    std::stringstream stream;
+    stream << "{\n";
+    stream << " \"events\":\n";
+    stream << "  [\n";
+    for (int event_i = 0, event_n = size(); event_i < event_n; ++event_i) {
+        const Event& event = at(event_i);
+        stream << "   [";
+        for (int field_i = 0, field_n = event.size(); field_i < field_n; ++field_i) {
+            auto field = event[field_i];
+            stream << field;
+            if (field_i < (field_n - 1)) {
+                stream << ", ";
+            }
+        }
+        if (event_i < (event_n - 1)) {
+            stream << "   ],\n";
+        } else {
+            stream << "   ]\n";
+        }
+    }
+    stream << "  ],\n";
+    stream << " \"minima\":\n";
+    stream << "  [";
+    for (int field_i = 0, field_n = scaleActualMinima.size(); field_i < field_n; ++field_i) {
+        if (field_i > 0) {
+            stream << ", ";
+        }
+        auto field = scaleActualMinima[field_i];
+        stream << field;
+    }
+    stream << "  ],\n";
+    stream << " \"maxima\":\n";
+    stream << "  [";
+    for (int field_i = 0, field_n = scaleActualMaxima.size(); field_i < field_n; ++field_i) {
+        if (field_i > 0) {
+            stream << ", ";
+        }
+        auto field = scaleActualMaxima[field_i];
+        stream << field;
+    }
+     stream << "  ],\n";
+   stream << " \"ranges\":\n";
+    stream << "  [";
+    for (int field_i = 0, field_n = scaleActualRanges.size(); field_i < field_n; ++field_i) {
+        if (field_i > 0) {
+            stream << ", ";
+        }
+        auto field = scaleActualRanges[field_i];
+        stream << field;
+    }
+    stream << "  ]\n";
+    stream << "};\n";
+    return stream.str();
+}
+
+
 }

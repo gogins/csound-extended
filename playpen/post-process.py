@@ -27,7 +27,7 @@ cwd = os.getcwd()
 print('cwd:                    ', cwd)
 source_filepath = sys.argv[1]
 author = 'Michael Gogins'
-year = '2019'
+year = '2021'
 license = 'ASCAP'
 publisher = 'Irreducible Productions, ASCAP'
 notes = 'Electroacoustic Music'

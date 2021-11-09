@@ -408,6 +408,21 @@ public:
     virtual std::vector<bool> &getRescaleRanges();
     virtual const Event &getScaleActualMinima() const;
     virtual const Event &getScaleActualRanges() const;
+    /**
+     * Translates most of this Score to JSON: 
+     * 1. The vector of Events, sorted and otherwise massaged.
+     * 2. The actual minima, maxima, and ranges.
+     * The JSON schema is:
+     * {
+     *      events: [[],...],
+     *      minima: [],'
+     *      maxima: [], 
+     *      ranges: []
+     * };
+     * This is useful, e.g., for sending a complete score to the JavaScript 
+     * context of a Web page for display using WebGL or Three.js.
+     */
+    virtual std::string toJson() const;
 };
 
 }
