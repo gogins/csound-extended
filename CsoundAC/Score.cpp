@@ -502,6 +502,7 @@ void Score::findScale(void)
 {
     for(int dimension = 0; dimension < Event::ELEMENT_COUNT; ++dimension) {
         getScale(*this, dimension, 0, size(), scaleActualMinima[dimension], scaleActualRanges[dimension]);
+        scaleActualMaxima[dimension] = scaleActualMinima[dimension] + scaleActualRanges[dimension];
     }
 }
 
@@ -1453,7 +1454,9 @@ double Score::getDurationFromZero() const {
     return end;
 }
 
-std::string Score::toJson() const {
+std::string Score::toJson() {
+    sort();
+    findScale();
     std::stringstream stream;
     stream << "{\n";
     stream << " \"events\":\n";

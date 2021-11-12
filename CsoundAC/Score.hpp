@@ -422,7 +422,7 @@ public:
      * This is useful, e.g., for sending a complete score to the JavaScript 
      * context of a Web page for display using WebGL or Three.js.
      */
-    virtual std::string toJson() const;
+    virtual std::string toJson();
 };
 
 }
