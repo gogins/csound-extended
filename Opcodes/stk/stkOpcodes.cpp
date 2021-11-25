@@ -98,7 +98,7 @@ using namespace std;
 using namespace csound;
 
 template<typename T>
-class STKInstrumentAdapter : public OpcodeBase< STKInstrumentAdapter<T> >
+class STKInstrumentAdapter : public OpcodeNoteoffBase< STKInstrumentAdapter<T> >
 {
 public:
   // Outputs.
@@ -150,7 +150,7 @@ public:
           Stk::setSampleRate(csound->GetSr(csound));
           instrument = new T();
         }
-      ksmps = OpcodeBase< STKInstrumentAdapter<T> >::opds.insdshead->ksmps;
+      ksmps = OpcodeNoteoffBase< STKInstrumentAdapter<T> >::opds.insdshead->ksmps;
       instrument->noteOn(*ifrequency, *igain);
       released = false;
       oldkcontroller0 = -1.0;
@@ -174,7 +174,7 @@ public:
   int kontrol(CSOUND *csound)
   {
       uint32_t offset =
-        OpcodeBase< STKInstrumentAdapter<T> >::opds.insdshead->ksmps_offset;
+        OpcodeNoteoffBase< STKInstrumentAdapter<T> >::opds.insdshead->ksmps_offset;
       if(!released)
         {
           if(*kcontroller0 != oldkcontroller0 || *kvalue0 != oldkvalue0)
@@ -241,10 +241,15 @@ public:
         }
       return OK;
   }
+  int noteoff(CSOUND *csound) {
+      delete instrument;
+      instrument = nullptr;
+      return OK;
+  }
 };
 
 template<typename T>
-class STKInstrumentAdapter1 : public OpcodeBase< STKInstrumentAdapter1<T> >
+class STKInstrumentAdapter1 : public OpcodeNoteoffBase< STKInstrumentAdapter1<T> >
 {
 public:
   // Outputs.
@@ -295,7 +300,7 @@ public:
         Stk::setSampleRate(csound->GetSr(csound));
         instrument = new T((StkFloat) 10.0);
       }
-      ksmps = OpcodeBase< STKInstrumentAdapter1<T> >::opds.insdshead->ksmps;
+      ksmps = OpcodeNoteoffBase< STKInstrumentAdapter1<T> >::opds.insdshead->ksmps;
       instrument->noteOn(*ifrequency, *igain);
       released = false;
       oldkcontroller0 = -1.0;
@@ -319,7 +324,7 @@ public:
   int kontrol(CSOUND *csound)
   {
       uint32_t offset =
-        OpcodeBase< STKInstrumentAdapter1<T> >::opds.insdshead->ksmps_offset;
+        OpcodeNoteoffBase< STKInstrumentAdapter1<T> >::opds.insdshead->ksmps_offset;
       if(!released)
         {
           if(*kcontroller0 != oldkcontroller0 || *kvalue0 != oldkvalue0)
@@ -384,6 +389,11 @@ public:
               aoutput[i] = 0;
             }
         }
+      return OK;
+  }
+  int noteoff(CSOUND *csound) {
+      delete instrument;
+      instrument = nullptr;
       return OK;
   }
 };

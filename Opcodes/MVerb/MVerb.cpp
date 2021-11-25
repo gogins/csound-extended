@@ -39,8 +39,11 @@
 
 
 class MVerb;
-class MVerbsForCsounds;
-static MVerbsForCsounds &mverbs();
+//~ class MVerbsForCsounds;
+//~ static MVerbsForCsounds &mverbs();
+class VSTPlugin;
+
+typedef csound::heap_object_manager_t<MVerb> mverbs;
 
 struct Preset {
     float N;
@@ -945,29 +948,29 @@ struct MVerb {
      };
 };
 
-struct MVerbsForCsounds 
-{
-    std::mutex mutex_;
-    std::multimap<CSOUND *, MVerb *> mverbs_for_csounds;
-    void add(CSOUND *csound, MVerb *mverb) {
-        std::lock_guard<std::mutex> guard(mutex_);
-        mverbs_for_csounds.insert({csound, mverb});
-    }
-    void del(CSOUND *csound) {
-        std::lock_guard<std::mutex> guard(mutex_);
-        auto begin_ = mverbs_for_csounds.lower_bound(csound);
-        auto end_ = mverbs_for_csounds.upper_bound(csound);
-        for (auto it = begin_; it != end_; ++it) {
-            delete it->second;
-        }
-        mverbs_for_csounds.erase(csound);
-    }
-};
+//~ struct MVerbsForCsounds 
+//~ {
+    //~ std::mutex mutex_;
+    //~ std::multimap<CSOUND *, MVerb *> mverbs_for_csounds;
+    //~ void add(CSOUND *csound, MVerb *mverb) {
+        //~ std::lock_guard<std::mutex> guard(mutex_);
+        //~ mverbs_for_csounds.insert({csound, mverb});
+    //~ }
+    //~ void del(CSOUND *csound) {
+        //~ std::lock_guard<std::mutex> guard(mutex_);
+        //~ auto begin_ = mverbs_for_csounds.lower_bound(csound);
+        //~ auto end_ = mverbs_for_csounds.upper_bound(csound);
+        //~ for (auto it = begin_; it != end_; ++it) {
+            //~ delete it->second;
+        //~ }
+        //~ mverbs_for_csounds.erase(csound);
+    //~ }
+//~ };
 
-static MVerbsForCsounds &mverbs() {
-    static MVerbsForCsounds mverbs_;
-    return mverbs_;
-};
+//~ static MVerbsForCsounds &mverbs() {
+    //~ static MVerbsForCsounds mverbs_;
+    //~ return mverbs_;
+//~ };
 
 class MVerbOpcode  : public csound::OpcodeBase<MVerbOpcode>
 {
@@ -987,7 +990,7 @@ public:
     {
         if (mverb == nullptr) {
             mverb = new MVerb();
-            mverbs().add(csound, mverb);
+            mverbs::instance().handle_for_object(csound, mverb);
         }
         mverb->initialize(csound);
         mverb->set_preset(preset->data);
@@ -1049,7 +1052,8 @@ extern "C" {
 
     PUBLIC int csoundModuleDestroy_mverb(CSOUND *csound)
     {
-        mverbs().del(csound);
+        //~ mverbs().del(csound);
+        mverbs::instance().module_destroy(csound);
         return 0;
     }
 
