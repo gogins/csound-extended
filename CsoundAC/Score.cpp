@@ -500,6 +500,7 @@ void Score::setScale(std::vector<Event> &score,
 
 void Score::findScale(void)
 {
+    sort();
     for(int dimension = 0; dimension < Event::ELEMENT_COUNT; ++dimension) {
         getScale(*this, dimension, 0, size(), scaleActualMinima[dimension], scaleActualRanges[dimension]);
         scaleActualMaxima[dimension] = scaleActualMinima[dimension] + scaleActualRanges[dimension];
@@ -508,6 +509,7 @@ void Score::findScale(void)
 
 void Score::rescale(void)
 {
+    sort();
     for(int dimension = 0; dimension < Event::ELEMENT_COUNT; ++dimension) {
         setScale(*this,
                  dimension,
@@ -659,11 +661,23 @@ void Score::append(Event event)
 
 void Score::sort()
 {
+    // Negative durations are a problem.
+    for (auto &event : *this) {
+        auto time_ = event.getTime();
+        auto duration = event.getDuration();
+        if (duration < 0) {
+            duration = std::abs(duration);
+            event.setDuration(duration);
+            time_ -= duration;
+            event.setTime(time_);
+        }
+    }
     std::sort(begin(), end());
 }
 
 double Score::getDuration()
 {
+    sort();
     double start = 0.0;
     double end = 0.0;
     for (int i = 0, n = size(); i < n; ++i) {
@@ -1440,6 +1454,7 @@ const Event &Score::getScaleActualRanges() const {
 }
 
 double Score::getDurationFromZero() const {
+    ///sort();
     double end = 0.0;
     for (int i = 0, n = size(); i < n; ++i) {
         const Event &event = at(i);
