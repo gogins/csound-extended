@@ -8,7 +8,7 @@ gk_Bower_midi_dynamic_range init 20
 gk_Bower_attack init .125
 gk_Bower_release init .125
 gk_Bower_level init 0
-gk_Bower_pressure init 0.25
+gk_Bower_pressure init .62
 
 gi_Bower_sine ftgen 0,0,65537,10,1
 
