@@ -1512,8 +1512,8 @@ std::string Score::toJson() {
         auto field = scaleActualMaxima[field_i];
         stream << field;
     }
-     stream << "  ],\n";
-   stream << " \"ranges\":\n";
+    stream << "  ],\n";
+    stream << " \"ranges\":\n";
     stream << "  [";
     for (int field_i = 0, field_n = scaleActualRanges.size(); field_i < field_n; ++field_i) {
         if (field_i > 0) {
