@@ -99,7 +99,7 @@ bext_orig_ref          = basename
 def render_audio():
     try:
         print("render_audio: {} to {}...".format(source_filepath, csound_audio_output))
-        csound_command = "csound {} -o{} -O{}.log".format(source_filepath, csound_audio_output, source_filepath)
+        csound_command = "csound {} -o{}".format(source_filepath, csound_audio_output)
         print("csound command: {}".format(csound_command))
         subprocess.run(csound_command, shell=True)
     except:
@@ -111,7 +111,7 @@ def render_audio():
 def render_soundfile():
     try:
         print("\nrender_soundfile: {} to {}...".format(source_filepath, output_filename))
-        csound_command = "csound {} -o{} -O{}.log".format(source_filepath, output_filename, source_filepath)
+        csound_command = "csound {} -o{} -O{}.log --simple-sorted-score={}.srt".format(source_filepath, output_filename, source_filepath, source_filepath)
         print("csound command: {}".format(csound_command))
         subprocess.run(csound_command, shell=True)
     except:

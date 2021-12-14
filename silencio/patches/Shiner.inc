@@ -8,6 +8,15 @@ gk_Shiner_attack init .0125
 gk_Shiner_release init .0125
 gk_Shiner_level init 0.5
 
+gk_Shiner_front_to_back chnexport "gk_Shiner_front_to_back", 3 ;  0
+gk_Shiner_left_to_right chnexport "gk_Shiner_left_to_right", 3 ;  0.5
+gk_Shiner_bottom_to_top chnexport "gk_Shiner_bottom_to_top", 3 ;  0
+
+gk_Shiner_front_to_back init 0
+gk_Shiner_left_to_right init 0.5
+gk_Shiner_bottom_to_top init 0
+
+
 instr Shiner
 i_instrument = p1
 i_time = p2
@@ -38,10 +47,11 @@ kgain = ampdb(gk_Shiner_level) * .5
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 a_signal = asignal * kgain * adamping
 
+prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
-a_bsignal, a_spatial_reverb_send Spatialize a_signal, gk_PianoOutPianoteq_front_to_back, gk_PianoOutPianoteq_left_to_right, gk_PianoOutPianoteq_bottom_to_top
+a_bsignal, a_spatial_reverb_send Spatialize a_signal, gk_Shiner_front_to_back, gk_Shiner_left_to_right, gk_Shiner_bottom_to_top
 outletv "outbformat", a_bsignal
 outleta "out", a_spatial_reverb_send
 #else
@@ -49,5 +59,4 @@ a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin

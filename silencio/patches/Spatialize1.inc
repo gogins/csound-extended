@@ -298,7 +298,7 @@ opcode LocalReverbByDistance, aa, ak
 ; Re-implemented from Dodge and Jerse.
 asignal, kdistanceMeters xin
 kdry = 1.0 - gk_LocalReverbByDistance_Wet
-knormalizedDistance = kdistanceMeters / gk_Spatialize_SpeakerRigRadius
+knormalizedDistance = kdistanceMeters / gk_Spatialize_SpeakerRigRadius + .00001
 klocalAttenuation = 1.0 / knormalizedDistance
 kglobalAttenuation = 1.0 / sqrt(knormalizedDistance)
 alocalReverbSend = asignal * klocalAttenuation

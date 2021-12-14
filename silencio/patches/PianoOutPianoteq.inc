@@ -16,12 +16,11 @@ gk_PianoOutPianoteq_left_to_right init 0.5
 gk_PianoOutPianoteq_bottom_to_top init 0
 
 instr PianoOutPianoteq
-; Should be "D4 Daily Practice".
-vstprogset gi_Pianoteq, 0
+vstprogset gi_Pianoteq, 3
 ; Sustain off.
-vstparamset gi_Pianoteq, 0, 0
-; Reverb off.
-vstparamset gi_Pianoteq, 72, 0
+vstparamset gi_Pianoteq, 6, 1
+; Reverb switch off.
+vstparamset gi_Pianoteq, 93, 0
 k_gain = ampdb(gk_PianoOutPianoteq_level)
 i_overall_amps = 87
 i_normalization = ampdb(-i_overall_amps) * 2
