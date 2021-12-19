@@ -122,7 +122,6 @@ find_package(PNG)
 find_package(Python3 COMPONENTS Interpreter Development)
 find_package(SWIG)
 include(UseSWIG)
-find_package(STK)
 find_package(SWIG)
 find_package(ZLIB)
 
@@ -206,9 +205,7 @@ add_custom_target(doxygen_reference
 # add_subdirectory(dependencies)
 
 add_subdirectory(Opcodes/cmask)
-add_subdirectory(Opcodes/bformdec2)
 add_subdirectory(Opcodes/MVerb)
-add_subdirectory(Opcodes/stk)
 add_subdirectory(CsoundAC)
 
 # These are the real targets: the packages.
@@ -227,7 +224,7 @@ if(NOT DISTRO_CODENAME)
   endif()
 endif()
 
-set(CPACK_COMPONENTS_ALL csound-base csound-cmask csound-bformdec2 csound-mverb csound-stk)
+set(CPACK_COMPONENTS_ALL csound-base csound-cmask csound-mverb)
 set(CPACK_COMPONENTS_ALL_IN_ONE_PACKAGE "OFF")
 set(CPACK_GENERATOR TGZ; DEB)
 set(CPACK_PACKAGE_CONTACT "${CPACK_DEBIAN_PACKAGE_MAINTAINER}")

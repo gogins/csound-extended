@@ -21,8 +21,7 @@ or collected from older projects of mine. These extensions include:
     with all Csound/HTML5 environments. __PLEASE NOTE: This library is now 
     deprecated, please use the WebAssembly build of CsoundAC instead.__
   
-4.  Some plugin opcodes for Csound, including bformdec2, chuap, cmask, MVerb, 
-    and the STK opcodes.
+4.  Some plugin opcodes for Csound, including cmask and MVerb.
     
 With regret I must announce that CsoundVST and the vst4cs opcodes are no longer
 maintained here. This is due to efforts by Steinberg to force developers to move

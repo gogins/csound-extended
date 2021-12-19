@@ -10,10 +10,10 @@ gk_Sweeper_level chnexport "gk_Sweeper_level", 3 ;  0
 gk_Sweeper_midi_dynamic_range init 20
 gk_Sweeper_attack init .125
 gk_Sweeper_release init .25
-gk_Sweeper_britel init 0.1
-gk_Sweeper_briteh init 2.9
-gk_Sweeper_britels init 2
-gk_Sweeper_britehs init 1
+gk_Sweeper_britel init .01
+gk_Sweeper_briteh init 5
+gk_Sweeper_britels init .5
+gk_Sweeper_britehs init .5
 gk_Sweeper_level init 0
 
 gi_Sweeper_sine ftgen 0, 0, 65537, 10, 1

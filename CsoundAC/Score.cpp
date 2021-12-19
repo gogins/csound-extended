@@ -662,14 +662,15 @@ void Score::append(Event event)
 void Score::sort()
 {
     // Negative durations are a problem.
+    // Fix them up by making the onset of the duration 
+    // the new start time.
     for (auto &event : *this) {
         auto time_ = event.getTime();
         auto duration = event.getDuration();
-        if (duration < 0) {
-            duration = std::abs(duration);
-            event.setDuration(duration);
-            time_ -= duration;
-            event.setTime(time_);
+        if (duration < 0.) {
+            double new_time = time_ + duration;
+            event.setTime(new_time);
+            event.setDuration(std::fabs(duration));
         }
     }
     std::sort(begin(), end());

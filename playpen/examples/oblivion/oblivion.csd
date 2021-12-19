@@ -1,11 +1,10 @@
-
 <CsoundSynthesizer>
 <CsLicense>
 "Oblivion," by Astor Piazzola
 Arranged for Csound by Michael Gogins
 </CsLicense>
 <CsOptions>
--odac:plughw:0,0 -m195 -d
+-odac:plughw:1,0 -m195 -d
 </CsOptions>
 <CsInstruments>
 
