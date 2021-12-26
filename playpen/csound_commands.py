@@ -111,7 +111,7 @@ def render_audio():
 def render_soundfile():
     try:
         print("\nrender_soundfile: {} to {}...".format(source_filepath, output_filename))
-        csound_command = "csound {} -o{} -O{}.log --simple-sorted-score={}.srt".format(source_filepath, output_filename, source_filepath, source_filepath)
+        csound_command = "csound {} -o{} --simple-sorted-score={}.srt".format(source_filepath, output_filename, source_filepath)
         print("csound command: {}".format(csound_command))
         subprocess.run(csound_command, shell=True)
     except:
