@@ -777,10 +777,8 @@ WARN_LOGFILE           =
 
 INPUT                  = ../README.md \
                          ../CsoundAC \
-                         ../Opcodes/bformdec2 \
                          ../Opcodes/cmask \
                          ../Opcodes/MVerb \
-                         ../Opcodes/stk \
                          .
 
 # This tag can be used to specify the character encoding of the source files

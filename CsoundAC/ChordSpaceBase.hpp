@@ -36,7 +36,7 @@
 #include <climits>
 #include <cmath>
 #include <cstdarg>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <functional>
 #include <iostream>
 #include <iterator>
@@ -57,7 +57,7 @@
 #include <cmath>
 #include <csignal>
 #include <cstdarg>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 
 #include <functional>
 #include <iostream>

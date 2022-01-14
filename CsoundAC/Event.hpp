@@ -25,7 +25,7 @@
 %{
 #include "Conversions.hpp"
 #include <algorithm>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <functional>
 #include <iostream>
 #include <map>
@@ -40,7 +40,7 @@
 #else
 #include "Conversions.hpp"
 #include <algorithm>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <functional>
 #include <iostream>
 #include <map>

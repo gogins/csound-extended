@@ -29,7 +29,7 @@
 #include <climits>
 #include <cmath>
 #include <cstdarg>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <Event.hpp>
 #include <functional>
 #include <iostream>
@@ -53,7 +53,7 @@
 #include <cmath>
 #include <csignal>
 #include <cstdarg>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include "Event.hpp"
 #include <functional>
 #include <iostream>

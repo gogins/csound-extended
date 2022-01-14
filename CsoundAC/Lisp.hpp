@@ -26,14 +26,14 @@
 #include <limits>
 #include <map>
 #include "Node.hpp"
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 %}
 #else
 #include <limits>
 #include <map>
 #include "Node.hpp"
 #include <ecl/ecl.h>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #endif
 
 namespace csound

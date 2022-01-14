@@ -122,7 +122,7 @@
 //     gnor = a*(x.^3) + b*(x.^2) + c*x + d;
 */
 
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <OpcodeBase.hpp>
 #include <cmath>
 

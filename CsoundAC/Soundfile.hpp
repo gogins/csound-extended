@@ -70,7 +70,7 @@
 #include <vector>
 #include <cstring>
 #include <complex>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #endif
 
 namespace csound

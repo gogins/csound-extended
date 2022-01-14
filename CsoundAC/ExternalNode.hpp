@@ -26,13 +26,13 @@
 #include "Node.hpp"
 #include "Score.hpp"
 #include "ScoreNode.hpp"
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 %}
 #else
 #include "Node.hpp"
 #include "Score.hpp"
 #include "ScoreNode.hpp"
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #endif
 
 namespace csound

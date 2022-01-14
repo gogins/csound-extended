@@ -30,7 +30,7 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 %}
 #else
 #include "Silence.hpp"
@@ -38,7 +38,7 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #endif
 
     namespace csound
