@@ -20,7 +20,6 @@ if (MUSICXML_FOUND)
     add_compile_definitions(MUSICXML_FOUND)
 endif()
 
-
 find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(FLTK)
 find_package(SWIG)
@@ -121,10 +120,6 @@ if(BUILD_CSOUND_AC)
     if(MUSICXML_FOUND)
         target_link_libraries(libCsoundAC PRIVATE csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBS} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY_A})
     endif()
-
-    #if(APPLE)
-    #	target_link_libraries(libCsoundAC PRIVATE "-framework Cocoa")
-    #endif()
 
     install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIRECTORY}"
         DESTINATION "include/csound"
