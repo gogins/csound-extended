@@ -103,7 +103,7 @@ option(BUILD_WIIMOTE_OPCODES "Build the Wiimote opcodes" ON)
 # First we locate all system packages, these are used to make the Ubuntu
 # csound-extended package, even though local packages may be used for other
 # targets.
-
+message("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
 find_package(Csound REQUIRED)
 find_package(Eigen3 REQUIRED CONFIG)
 # checking property of the target
@@ -111,11 +111,16 @@ get_target_property(inc_dir Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
 message("[DEBUG] inc_dir: ${inc_dir}")
 # or checking the Eigen variable
 message("[DEBUG] EIGEN3_INCLUDE_DIRS: ${EIGEN3_INCLUDE_DIRS}")
-find_package(FLTK REQUIRED NO_MODULE)
-#message("FLTK_USE_FILE: ${FLTK_USE_FILE}")
-#include(${FLTK_USE_FILE})
+# set(FLTK_DIR /usr/local/FLTK.framework/Resources/CMake)
+set(CMAKE_PREFIX_PATH /usr/local)
+# find_package(FLTK REQUIRED  CONFIG PATHS /usr/local/FLTK.framework/Resources/CMake NO_DEFAULT_PATH )
+find_package(FLTK REQUIRED  MODULE)
+#/usr/local/FLTK.framework/Resources/CMake/FLTKConfig.cmake
 find_package(MUSICXML)
 find_package(OpenCV REQUIRED)
+find_package(Boost REQUIRED COMPONENTS ALL)
+message("[DEBUG] Boost_INCLUDE_DIR: ${Boost_INCLUDE_DIR}")
+message("[DEBUG] Boost_COMPONENTS: ${Boost_COMPONENTS}")
 find_package(PORTSMF)
 find_package(Python3 COMPONENTS Interpreter Development)
 find_package(SWIG)

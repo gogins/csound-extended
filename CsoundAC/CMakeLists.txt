@@ -88,6 +88,7 @@ if(BUILD_CSOUND_AC)
     target_include_directories(libCsoundAC SYSTEM PRIVATE ${CSOUND_INCLUDE_PATH})
     target_include_directories(libCsoundAC PRIVATE ${FLTK_INCLUDE_DIR})
     target_include_directories(libCsoundAC PRIVATE ${EIGEN3_INCLUDE_DIRS})
+    target_include_directories(libCsoundAC PRIVATE ${Boost_INCLUDE_DIR})
     if (MUSICXML_FOUND)
         target_include_directories(libCsoundAC PRIVATE ${MUSICXML_INCLUDE_DIRS})
     endif()
@@ -120,6 +121,10 @@ if(BUILD_CSOUND_AC)
     if(MUSICXML_FOUND)
         target_link_libraries(libCsoundAC PRIVATE csnd6 ${CSOUND_LIBRARIES} ${FLTK_LIBRARIES} ${OpenCV_LIBS} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY_A})
     endif()
+
+    #if(APPLE)
+    #	target_link_libraries(libCsoundAC PRIVATE "-framework Cocoa")
+    #endif()
 
     install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIRECTORY}"
         DESTINATION "include/csound"
