@@ -19,12 +19,6 @@
  */
 #pragma once
 
-// PLEASE NOTE:  
-//
-// This file does not depend upon any libraries other than system libraries or 
-// the standard C++ library. However, some of the header files below are 
-// header file-only libraries.
-
 #define EIGEN_INITIALIZE_MATRICES_BY_ZERO
 #include "Platform.hpp"
 #include "System.hpp"

@@ -60,6 +60,7 @@ if(BUILD_CSOUND_AC)
         Shell.cpp
         Soundfile.cpp
         StrangeAttractor.cpp
+        System.cpp
         Voicelead.cpp
         VoiceleadingNode.cpp)
 
