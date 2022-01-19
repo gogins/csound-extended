@@ -36,43 +36,6 @@ class Fl_Image;
 
 namespace csound
 {
-/**
-* Translates images in various RGB formats to scores.
-* Hue is mapped to instrument, value is mapped to loudness.
-*/
-class SILENCE_PUBLIC ImageToScore : public ScoreNode
-{
-protected:
-    std::string imageFilename;
-    Fl_Image *image;
-    size_t maximumVoiceCount;
-    double minimumValue;
-    static void rgbToHsv(double r, double g, double b, double &h, double &s, double &v);
-    virtual void getPixel(size_t x, size_t y, double &hue, double &saturation, double &value) const;
-    virtual void translate(double x, double y, double hue, double value, Event &event) const;
-public:
-    ImageToScore(void);
-    virtual ~ImageToScore(void);
-    virtual void setImageFilename(std::string imageFilename);
-    virtual std::string getImageFilename() const;
-    virtual void setMaximumVoiceCount(size_t maximumVoiceCount);
-    virtual size_t getMaximumVoiceCount() const;
-    virtual void setMinimumValue(double minimumValue);
-    virtual double getMinimumValue() const;
-    virtual void generate();
-};
-
-struct HSV {
-    HSV() : h(0), s(0), v(0) {};
-    void clear() {
-        h = 0;
-        s = 0;
-        v = 0;
-    }
-    uchar h;
-    uchar s;
-    uchar v;
-};
 
 /**
 * Translates images files to scores.
@@ -89,7 +52,7 @@ protected:
     cv::Mat original_image;
     cv::Mat processed_image;
     size_t maximum_voice_count = 7;
-    virtual void pixel_to_event(int column, int row, const HSV &hsv, Event &event) const;
+    virtual void pixel_to_event(int column, int row, const cv::Vec3f &hsv, Event &event) const;
 public:
     ImageToScore2(void);
     virtual ~ImageToScore2(void);
@@ -163,5 +126,10 @@ public:
     virtual void processImage();
     virtual void generate();
 };
+
+/**
+ * Only for backwards compatibility.
+ */
+typedef ImageToScore2 ImageToScore;
 
 }

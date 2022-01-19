@@ -112,8 +112,6 @@ message("[DEBUG] inc_dir: ${inc_dir}")
 # or checking the Eigen variable
 message("[DEBUG] EIGEN3_INCLUDE_DIRS: ${EIGEN3_INCLUDE_DIRS}")
 set(CMAKE_PREFIX_PATH /usr/local)
-find_package(FLTK REQUIRED NO_MODULE)
-#/usr/local/FLTK.framework/Resources/CMake/FLTKConfig.cmake
 find_package(MUSICXML)
 find_package(OpenCV REQUIRED)
 find_package(Boost REQUIRED)
@@ -230,7 +228,7 @@ set(CPACK_GENERATOR TGZ; DEB)
 set(CPACK_PACKAGE_CONTACT "${CPACK_DEBIAN_PACKAGE_MAINTAINER}")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_PACKAGE_NAME "csound-extended-dev")
-set(CPACK_PACKAGE_VERSION "2.2.0")
+set(CPACK_PACKAGE_VERSION "2.3.0")
 # set(CPACK_STRIP_FILES "YES")
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/copyright.txt")

@@ -26,10 +26,6 @@ echo "Updating ecl..."
 apt-get install ecl
 echo "Updating libeigen3-dev..."
 apt-get install libeigen3-dev
-echo "Updating FLTK 1.3..."
-apt-get install fluid
-apt-get install libfltk1.3-dev
-apt-get install libfltk-images1.3
 echo "Updating fluidsynth..."
 apt-get install libfluidsynth-dev
 echo "Updating libgit2-dev..."
