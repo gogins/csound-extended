@@ -559,15 +559,20 @@ namespace csound {
     }
 
     SILENCE_PUBLIC int System::execute(const char *command) {
-        int returnValue = fork();
-        if(!returnValue) {
-            std::vector<std::string> args;
-            std::vector<char *> argv;
-            std::string buffer = command;
-            scatterArgs(buffer, args, argv);
-            argv.push_back((char*) 0);      // argv[] should be null-terminated
-            execvp(argv[0], &argv.front());
-        }
+        int returnValue = -1;
+        #if defined(__APPLE__)
+            System::error("System::execute not defined on macOS.\n");
+        #else
+            returnValue = fork();
+            if(!returnValue) {
+                std::vector<std::string> args;
+                std::vector<char *> argv;
+                std::string buffer = command;
+                scatterArgs(buffer, args, argv);
+                argv.push_back((char*) 0);      // argv[] should be null-terminated
+                execvp(argv[0], &argv.front());
+            }
+        #endif
         return returnValue;
     }
 
