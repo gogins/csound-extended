@@ -20,20 +20,40 @@
 #pragma once
 
 #include "System.hpp"
-//~ #if !defined(EMSCRIPTEN)
-//~ #include "CppSound.hpp"
-//~ #else
-//~ #include <dlfcn.h>
-//~ #include <emscripten/emscripten.h>
-//~ #include <emscripten/val.h>
-//~ #endif
-//~ #include <string.h>
-//~ #include <string>
-//~ #include <vector>
-//~ #include <cstdarg>
-//~ #include <ctime>
 
 namespace csound {
+
+// Note that static variables are wrapped as static variables inside
+// functions, and are lvalues as well as rvalues. This simplifies life with
+// header-only libraries.
+
+    SILENCE_PUBLIC int message_level(int verbosity) {
+        static int verbosity_ = 1;
+        auto prior_verbosity_ = verbosity_;
+        if(verbosity != -1) {
+            verbosity_ = verbosity;
+        }
+        return prior_verbosity_;
+    }
+
+    MessageCallbackType &message_callback() {
+#if !defined(EMSCRIPTEN)
+        static MessageCallbackType message_callback_ = nullptr;
+#else
+        static emscripten::val message_callback_ = emscripten::val::undefined();
+#endif
+        return message_callback_;
+    }
+
+    SILENCE_PUBLIC FILE* &log_file() {
+        static FILE *logfile_ = nullptr;
+        return logfile_;
+    }
+
+    SILENCE_PUBLIC void* &user_data() {
+        static void *user_data_ = nullptr;
+        return user_data_;
+    }
 
     SILENCE_PUBLIC Logger::Logger() {
     }

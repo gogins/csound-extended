@@ -23,15 +23,15 @@
 #ifdef SWIG
 %module CsoundAC
 %{
-    /* #if !defined(EMSCRIPTEN)
-     * #include "CppSound.hpp"
-     * #endif
-     */
-#include <string.h>
-#include <string>
-#include <vector>
-#include <cstdarg>
-#include <ctime>
+	/* #if !defined(EMSCRIPTEN)
+	* #include "CppSound.hpp"
+	* #endif
+	*/
+	#include <string.h>
+	#include <string>
+	#include <vector>
+	#include <cstdarg>
+	#include <ctime>
 %}
 #else
 #if !defined(EMSCRIPTEN)
@@ -66,33 +66,13 @@ namespace csound {
 // functions, and are lvalues as well as rvalues. This simplifies life with
 // header-only libraries.
 
-    inline SILENCE_PUBLIC int message_level(int verbosity) {
-        static int verbosity_ = 1;
-        auto prior_verbosity_ = verbosity_;
-        if(verbosity != -1) {
-            verbosity_ = verbosity;
-        }
-        return prior_verbosity_;
-    }
+    SILENCE_PUBLIC int message_level(int verbosity) ;
 
-    inline MessageCallbackType &message_callback() {
-#if !defined(EMSCRIPTEN)
-        static MessageCallbackType message_callback_ = nullptr;
-#else
-        static emscripten::val message_callback_ = emscripten::val::undefined();
-#endif
-        return message_callback_;
-    }
+    MessageCallbackType &message_callback();
 
-    inline SILENCE_PUBLIC FILE* &log_file() {
-        static FILE *logfile_ = nullptr;
-        return logfile_;
-    }
+    SILENCE_PUBLIC FILE* &log_file() ;
 
-    inline SILENCE_PUBLIC void* &user_data() {
-        static void *user_data_ = nullptr;
-        return user_data_;
-    }
+    SILENCE_PUBLIC void* &user_data() ;
 
     /**
      * Abstraction layer for a minimal set of system services.
