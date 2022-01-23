@@ -1,44 +1,80 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 '''
-C S O U N D   C O M M A N D S
+P L A Y P E N   C O M M A N D S
 Author: Michael Gogins
 
-This Python 3 script provides help with using Csound either from any text 
-editor with configurable external tools, or from the command line. 
-User configuration variables for this script are stored in the user's home 
-directory in a "playpen.ini" file, which has a format similar to a Windows 
-.ini file.
+This Python 3 script provides help with using Csound and related programs, 
+either from any text editor with configurable external tools, or from the 
+command line. User configuration variables for this script are stored in the 
+user's home directory in the "playpen.ini" file, which has a format similar to 
+a Windows .ini file.
 
 Usage:
 
-python3 csound_commands.py render-audio {csd_filepath}
-    Renders the CSD to the system audio device specified in playpen.ini.
+python3 playpen.py csd-audio {source.csd}
+    Renders the csd file to the system audio device specified in playpen.ini.
     
-python3 csound_commands.py render-soundfile {csd_filepath}
-    Renders the CSD to a soundfile constructed using metadata from 
-    playpen.ini.
+python3 playpen.py csd-soundfile {source.csd}
+    Renders the csd file to a soundfile constructed using metadata from 
+    playpen.ini, then post-processes the file to normalize it, save it in 
+    various formats, etc., and finally opens the soundfile using the editor 
+    specified in playpen.ini.
     
-python3 csound_commands.py post {csd_filepath}
-    Renders the CSD to a soundfile constructed using metadata from 
+python3 playpen.py csound-patch {source.inc}
+    Includes the inc file in a csd file, renders it to a soundfile, and 
+    opens the soundfile using the editor specified in playpen.ini.
+    
+python3 playpen html-nw {source.html}
+    Creates a package.json file for the specified HTML file, and runs that 
+    file as a NW.js application.
+    
+python3 playpen.py cpp-lib {source.cpp}
+    Compiles and links source.cpp file as a shared library source.so or 
+    source.dylib, with build options for Csound plugin opcodes.
+    
+python3 playpen.py cpp-app {source.cpp}
+    Compiles and links source.cpp file as a program source or source.app, 
+    with build options for linking with libCsound64 and libCsoundAC.
+    
+python3 playpen.py cpp-audio {source.cpp}
+    Compiles and links source.cpp file as a Csound/CsoundAC composition, and 
+    runs it to render audio.
+    
+python3 playpen.py cpp-soundfile {source.cpp}
+    Compiles and links source.cpp file as a Csound/CsoundAC composition, 
+    renders the piece to a source.wav tagged with metadata from 
     playpen.ini, then post-processes the file to normalize it, save in various 
-    formats, etc.
+    formats, etc., and finally opens the soundfile using the editor specified 
+    in playpen.ini.
     
-python3 csound_commands.py play {csd_filepath}
-    Renders the CSD to a soundfile constructed using metadata from 
-    playpen.ini, then post-processes the file to normalize it, save in various 
-    formats, etc., then plays the soundfile using the player specified in 
-    playpen.ini.
-    
+python3 playpen.py man-csound
+    Opens the online Csound Reference Manual.
+
+python3 playpen.py man-python
+    Opens the online Python documentation.
+
+python3 playpen.py man-csoundac
+    Opens the CsoundAC AP Reference.
+
+python3 playpen.py cpp-astyle {source}
+    Uses the astyle program to reform the source file, using 
+    options configured in playpen.ini.
+
 For post-processing, the sndfile-metadata-set, sox, and ffmpeg programs need 
 to be installed.
 
+For HTML related commands, NW.js needs to be installed.
+
+For build commands, a C++ toolchain needs to be installed.
+
+For reformatting files, the astyle program needs to be installed.
+
 For playing, the audacity program is a good choice because it can display 
-soundfiles as sonograms, which can be very informative, and can export to 
-various formats.
+soundfiles as sonograms, which can be very informative, and audacity can 
+export to various formats.
 
 '''
-
 import configparser
 import datetime
 import os
@@ -98,21 +134,21 @@ bext_description       = metadata_notes
 bext_originator        = metadata_author
 bext_orig_ref          = basename
 
-def render_audio():
+def csd_audio():
     try:
-        print("render_audio: {} to {}...".format(source_filepath, csound_audio_output))
+        print("\ncsd_audio: {} to {}...".format(source_filepath, csound_audio_output))
         csound_command = "csound {} -o{}".format(source_filepath, csound_audio_output)
         print("csound command: {}".format(csound_command))
         subprocess.run(csound_command, shell=True)
     except:
         traceback.print_exc()
     finally:
-        print("render_audio: {} to {}.".format(source_filepath, csound_audio_output))
+        print("csd_audio: {} to {}.".format(source_filepath, csound_audio_output))
         return
         
-def render_soundfile():
+def csd_soundfile():
     try:
-        print("\nrender_soundfile: {} to {}...".format(source_filepath, output_filename))
+        print("\ncsd_soundfile: {} to {}...".format(source_filepath, output_filename))
         csound_command = "csound {} -o{} --simple-sorted-score={}.srt".format(source_filepath, output_filename, source_filepath)
         print("csound command: {}".format(csound_command))
         subprocess.run(csound_command, shell=True)
@@ -124,7 +160,7 @@ def render_soundfile():
         
 def post_process():
     try:
-        print("post_process: {}...".format(source_filepath))
+        print("\npost_process: {}...".format(source_filepath))
         bext_description       = metadata_notes
         bext_originator        = metadata_author
         bext_orig_ref          = basename
@@ -186,19 +222,149 @@ def play():
     except:
         traceback.print_exc()
     finally:
-        print("soundfile: {} to {}.".format(source_filepath, output_filename))
+        print("play: {} to {}.".format(source_filepath, output_filename))
+        return
+        
+package_json_template = '''{
+  "main": "%s",
+  "name": "%s",
+  "description": "HTML5 with Csound",
+  "version": "0.1.0",
+  "keywords": [ "Csound", "node-webkit" ],
+  "nodejs": true,
+  "node-remote": "http://<all-urls>/*",
+  "window": {
+    "title": "%s",
+    "icon": "link.png",
+    "toolbar": false,
+    "frame": false,
+    "maximized": true,
+    "position": "mouse",
+    "fullscreen": true
+  },
+  "webkit": {
+    "plugin": true
+  },
+  "chromium-args": {
+    "--enable-logging": true,
+    "--v=1": 1,
+    "--device-scale-factor": 4
+  }
+}'''
+        
+def html_nw():
+    print("html_nw: {}...".format(source_filepath))
+    try:
+        # It seems the string.format method does not work with multi-line 
+        # strings.
+        package_json = package_json_template % (source_filepath, rootname, rootname)
+        print(package_json)
+        command = "~/nwjs/nw --context-mixed --experimental-modules --alsa-input-device=plughw:2,0 --alsa-output-device=plughw:2,0 --device-scale-factor=2 {}".format(directory)
+        subprocess.run(command, shell=True)
+    except:
+        traceback.print_exc()
+    finally:
+        print("html_nw: {}.".format(source_filepath))
         return
 
-if command == 'audio':
-    render_audio()
-if command == 'soundfile':
-    render_soundfile()
-if command == 'post':
-    render_soundfile()
+def cpp_app():
+    try:
+        print("cpp_app: {}...".format(source_filepath))
+        command = "c++ -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/usr/local/include  {} -o{} -I/usr/local/include/csound -I/usr/include/csound -I/usr/include/luajit-2.1 -lGamma -lcsound64 -lCsoundAC -lluajit-5.1 -lsndfile -lgc -lpthread -ldl -lm; ls -ll".format(source_filepath, rootname)
+        subprocess.run(command, shell=True)
+    except:
+        traceback.print_exc()
+    finally:
+        print("cpp_app: {}.".format(source_filepath))
+        return
+
+def cpp_audio():
+    try:
+        command = "c++ -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/usr/local/include  {} -o{} -I/usr/local/include/csound -I/usr/include/csound -I/usr/include/luajit-2.1 -lGamma -lcsound64 -lCsoundAC -lluajit-5.1 -lsndfile -lgc -lpthread -ldl -lm; ls -ll; ./{} --csound --audio PortAudio --device dac".format(source_filepath, rootname, rootname)
+        subprocess.run(command, shell=True)
+    except:
+        traceback.print_exc()
+    finally:
+        print("cpp_audio: {}.".format(source_filepath))
+        return
+
+def cpp_soundfile():
+    try:
+        command = "c++ -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/usr/local/include  {} -o{} -I/usr/local/include/csound -I/usr/include/csound -I/usr/include/luajit-2.1 -lGamma -lcsound64 -lCsoundAC -lluajit-5.1 -lsndfile -lgc -lpthread -ldl -lm; ls -ll; ./{} --csound --csound --post --playwav audacity".format(source_filepath, rootname, rootname)
+        subprocess.run(command, shell=True)
+    except:
+        traceback.print_exc()
+    finally:
+        print("cpp_audio: {}.".format(source_filepath))
+        return
+
+def man_csound():
+    try:
+        command = "xdg-open https://gogins.github.io/csound-extended-manual/indexframes.html"
+        subprocess.run(command, shell=True)        
+    except:
+        traceback.print_exc()
+    finally:
+        print("man_csound: {}.".format(source_filepath))
+        return
+
+def man_python():
+    try:
+        command = "xdg-open https://docs.python.org/3/"
+        subprocess.run(command, shell=True)        
+    except:
+        traceback.print_exc()
+    finally:
+        print("man_csound: {}.".format(source_filepath))
+        return
+
+def man_csoundac():
+    try:
+        command = "xdg-open file://$HOME/csound-extended/doc/html/index.html"
+        subprocess.run(command, shell=True)        
+    except:
+        traceback.print_exc()
+    finally:
+        print("man_csound: {}.".format(source_filepath))
+        return
+
+def cpp_astyle():
+    try:
+        command = "astyle --style=1tbs --indent=spaces --indent-switches --indent-cases --indent-namespaces --unpad-paren --indent-classes --indent-after-parens --style=attach {}".format(source_filepath)
+        subprocess.run(command, shell=True)
+    except:
+        traceback.print_exc()
+    finally:
+        print("man_csound: {}.".format(source_filepath))
+        return
+
+if command == 'csd-audio':
+    csd_audio()
+if command == 'csd-soundfile':
+    csd_soundfile()
+if command == 'csd-post':
+    csd_soundfile()
     post_process()
-if command == 'play':
-    render_soundfile()
+if command == 'csd-play':
+    csd_soundfile()
     post_process()
     play()
-    
-print("Finished.")
+if command == 'html-nw':
+    html_nw()
+if command == 'cpp-lib':
+    cpp_lib()
+if command == 'cpp-app':
+    cpp_app()
+if command == 'cpp-audio':
+    cpp_audio()
+if command == 'cpp-soundfile':
+    cpp_soundile()
+if command == 'man-csound':
+    man_csound()
+if command == 'man-python':
+    man_python()
+if command == 'man-csoundac':
+    man_csoundac()
+if command == 'cpp-astyle':
+    cpp_astyle()
+
