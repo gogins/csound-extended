@@ -36,14 +36,12 @@ Python code.
 After exhaustively trying many alternatives I have ended up with the system 
 that I maintain in this repository and, more specifically, in this directory.
 
-1.  SciTE is the source code editor, mainly because it is easier to add custom 
-    commands in SciTE than it is in more widely used source code editors such 
-    as Visual Studio Code.
-2.  I have added many custom commands for rendering Csound pieces, Python 
-    pieces, Common Lisp pieces, C++ pieces, and HTML pieces.
-3.  I have added custom commands for compiling C++ code.
-4.  I have added custom commands for running a visual form builder for Python 
-    pieces.
+1.  I have added many Python functions for rendering Csound pieces, compiling 
+    and running C++ code, and so on.
+2.  These commands are implemented in `playpen.py` and can be invoked from any 
+    code editor that provides custom commands.
+4.  The `gedit/tools` directory defines such custom commands for the gedit 
+    text editor.
 
 If you compose in the same way that I do, by writing code for synthesis by 
 Csound, you may well find this system useful. If you do not compose by writing 
@@ -56,27 +54,28 @@ instructions. I give some some specific instructions for Ubuntu Linux. However,
 to the best of my knowledge, all dependencies are available on Linux, MacOS, 
 and Windows.
 
-Core requirements for composing with Csound, including SciTE extensions for 
+Core requirements for composing with Csound, including gedit extensions for 
 rendering Csound pieces and automatically post-processing them:
 
 1.  [Csound](https://csound.com/download.html). For Linux, it is best to build 
     from source code according to [these  
     instructions](https://github.com/csound/csound/blob/develop/BUILD.md).
-2.  The SciTE text editor. On Ubuntu, execute `sudo apt install scite`.
-3.  Configuration files and helper scripts for SciTE in the 
+2.  The gedit text editor. On Ubuntu, execute `sudo apt install gedit`.
+3.  Configuration files and helper scripts for gedit in the 
     `csound-extended/playpen` directory. If you have cloned the 
     csound-extended repository, create symbolic links in your home directory 
     to the following files in the `csound-extended/playpen` directory. 
     Alternatively, download the files to your home directory. You need to 
     customize at least `playpen.ini`, and perhaps others, for your system:
-    1. [.SciTEUser.properties](https://github.com/gogins/csound-extended/blob/develop/playpen/.SciTEUser.properties)
+    1. Copy `playpen/gedit/tools/` and its contents to `~/.config/gedit/tools/`.
     2. [instrument_test.py](https://github.com/gogins/csound-extended/blob/develop/playpen/instrument_test.py)
     3. [effect_test.py](https://github.com/gogins/csound-extended/blob/develop/playpen/effect_test.py)
     4. [playpen.ini](https://github.com/gogins/csound-extended/blob/develop/playpen/playpen.ini)
     5. [post-process.py](https://github.com/gogins/csound-extended/blob/develop/playpen/post-process.py)
-    6. [run_nwjs_application.sh](https://github.com/gogins/csound-extended/blob/develop/playpen/run_nwjs_application.sh)
 4.  [sox](http://sox.sourceforge.net/). For Ubuntu, execute 
     `sudo apt install sox` and `sudo apt install libsox-fmt-all`.
+5.  [FFmpeg](https://ffmpeg.org/) for converting soundfiles to mp4 video format to be uploaded to YouTube.
+5.  [astyle](http://astyle.sourceforge.net/) for reformatting C/C++ style source code to a consistent, readable format.
 5.  The [libsndfile](http://www.mega-nerd.com/libsndfile/) utilities. For Ubuntu, all 
     you need is to execute `sudo apt install sndfile-programs`. For other 
     operating systems, you may need to install libsndfile itself, which should 
@@ -99,13 +98,6 @@ virtual environment.
     `/usr/local/lib/python3.9/dist-packages/ctcsound.py`. To use ctcsound you 
     also need numpy, which can be installed with 
     `sudo python3.8 -m pip install numpy`.
-9.  [GTK 3](https://www.gtk.org/docs/installations/), note that GTK 4 is now 
-    the current version but it is the previous version, GTK 3, that is used here.
-10. [PyGObject](https://pygobject.readthedocs.io/en/latest/getting_started.html) 
-    which automatically generates Python bindings for GTK based on introspection 
-    libraries.
-11. [Glade](https://wiki.gnome.org/Apps/Glade). For Ubuntu Linux, execute 
-    `sudo apt install glade`.
 
 Additional requirements for composing with CsoundAC (usable from C++, Python, or 
 JavaScript). These requirements also apply to composing with C++:
@@ -150,35 +142,21 @@ Additional useful things:
 
 This is a high-resolution version of Joseph Kung's "Xanadu" piece, often used 
 as an introduction to Csound. It's the simplest possible test that your 
-installation of the playpen is working. Just load the piece into SciTE and use 
-the _Tools_ menu _Render csd piece to audio_ item.
+installation of the playpen is working. Just load the piece into gedit and use 
+the _Tools_ menu, _External Tools, _Render csound piece to audio_ item.
 
 To produce a soundfile, normalize it, and translate it to different formats, 
-just use the _Tools_ menu _Render csd piece to soundfile and post-process and 
-play_ item.
+just use the _Tools_ menu, _External Tools, _Render csound piece to soundfile_ item.
 
 ### sierpinski-csound-gtk.py
 
 For this example, install Rick Taube's Python port of the Common Music 
 algorithmic composition system, [musx](https://github.com/musx-admin/musx).
-Just load the piece into SciTE and use the _Tools_ menu _go_ item.
+Just load the piece into gedit and use the _Tools_ menu _go_ item.
 
 ### message.html
 
 This is a basic HTML5 example that runs native Csound using JavaScript and 
 has a custom user interface implemented with JQuery. Just load the piece 
-into SciTE and use the _Tools_ menu _go_ item.
+into gedit and use the _Tools_ menu, _External Tools, _Run piece in NW.js_ item.
 
-## Native Csound for GTK
-
-These libraries are not needed for the purposes outlined above, but you may 
-find them useful. They provide a simplified version of the native Csound API 
-for GTK. They include the `CsoundThreaded` Python extension module, which is 
-an alternative to ctcsound, and the `libjsc_csound` shared library, which 
-injects native Csound into the GTK WebView2, which is an alternative to NW.js. 
-To use these libraries, change to the playpen directory and execute:
-```
-cmake .
-make
-sudo make install
-```
