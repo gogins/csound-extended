@@ -117,7 +117,7 @@ if(BUILD_CSOUND_AC)
     endif()
 
     if(MUSICXML_FOUND)
-        target_link_libraries(libCsoundAC PRIVATE csnd6 ${CSOUND_LIBRARIES} ${OpenCV_LIBS} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY_A})
+        target_link_libraries(libCsoundAC PRIVATE ${CSND6_LIBRARY} ${CSOUND_LIBRARIES} ${OpenCV_LIBS} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY_A})
     endif()
 
     install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIRECTORY}"
@@ -149,12 +149,12 @@ if(BUILD_CSOUND_AC)
         swig_add_library(CsoundAC 
             LANGUAGE python 
             SOURCES CsoundAC.i)
-        swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${Python3_LIBRARIES})
-        target_include_directories(${SWIG_MODULE_CsoundAC_REAL_NAME} PRIVATE ${EIGEN3_INCLUDE_DIRS})
-        set_property(TARGET ${SWIG_MODULE_CsoundAC_REAL_NAME} PROPERTY SWIG_INCLUDE_DIRECTORIES ${EIGEN3_INCLUDE_DIRS})
+        swig_link_libraries(CsoundAC libCsoundAC ${CSND6_LIBRARY} ${CSOUND_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${Python3_LIBRARIES})
+        target_include_directories(${SWIG_MODULE_CsoundAC_REAL_NAME} PRIVATE ${EIGEN3_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
+        set_property(TARGET ${SWIG_MODULE_CsoundAC_REAL_NAME} PROPERTY SWIG_INCLUDE_DIRECTORIES ${EIGEN3_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
  
         if(MUSICXML_FOUND)
-            swig_link_libraries(CsoundAC libCsoundAC csnd6 ${CSOUND_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY_A} ${Python3_LIBRARIES})
+            swig_link_libraries(CsoundAC libCsoundAC ${CSND6_LIBRARY} ${CSOUND_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${MUSICXML_LIBRARY_A} ${Python3_LIBRARIES})
         endif()
 
         if(APPLE)

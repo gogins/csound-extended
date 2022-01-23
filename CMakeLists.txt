@@ -104,14 +104,16 @@ option(BUILD_WIIMOTE_OPCODES "Build the Wiimote opcodes" ON)
 # csound-extended package, even though local packages may be used for other
 # targets.
 message("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
+set(CMAKE_PREFIX_PATH /usr/local)
 find_package(Csound REQUIRED)
+find_library(LIBSNDFILE_LIBRARY sndfile REQUIRED)
+find_library(CSND6_LIBRARY csnd6 REQUIRED)
 find_package(Eigen3 REQUIRED CONFIG)
 # checking property of the target
 get_target_property(inc_dir Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
 message("[DEBUG] inc_dir: ${inc_dir}")
 # or checking the Eigen variable
 message("[DEBUG] EIGEN3_INCLUDE_DIRS: ${EIGEN3_INCLUDE_DIRS}")
-set(CMAKE_PREFIX_PATH /usr/local)
 find_package(MUSICXML)
 find_package(OpenCV REQUIRED)
 find_package(Boost REQUIRED)
