@@ -1,0 +1,9 @@
+#!/bin/sh
+# [Gedit Tool]
+# Name=CsoundAC API Reference
+# Input=nothing
+# Output=output-panel
+# Applicability=all
+# Save-files=nothing
+
+~/playpen.py man-csoundac $GEDIT_CURRENT_DOCUMENT_PATH

@@ -1,0 +1,9 @@
+#!/bin/sh
+# [Gedit Tool]
+# Name=Csound Reference Manual
+# Input=nothing
+# Output=output-panel
+# Applicability=all
+# Save-files=nothing
+
+~/playpen.py man-csound $GEDIT_CURRENT_DOCUMENT_PATH

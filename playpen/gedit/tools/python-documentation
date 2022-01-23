@@ -1,0 +1,9 @@
+#!/bin/sh
+# [Gedit Tool]
+# Name=Python documentation
+# Input=nothing
+# Output=output-panel
+# Applicability=all
+# Save-files=nothing
+
+~/playpen.py man-python $GEDIT_CURRENT_DOCUMENT_PATH
