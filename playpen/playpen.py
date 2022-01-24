@@ -79,6 +79,7 @@ import configparser
 import datetime
 import os
 import os.path
+import platform
 import string
 import subprocess
 import sys
@@ -91,6 +92,11 @@ command = sys.argv[1]
 print("command:                 {}".format(command))
 cwd = os.getcwd()
 print('cwd:                    ', cwd)
+platform_system = platform.system()
+if platform_system == "Darwin":
+    open_command = "open"
+else:
+    open_command = "xdg-open"
 source_filepath = sys.argv[2]
 home_directory = os.environ["HOME"]
 playpen_ini_filepath = os.path.join(home_directory, "playpen.ini")
@@ -104,6 +110,7 @@ metadata_license = settings.get("metadata", "license")
 csound_audio_output = settings.get("csound", "audio-output")
 print("csound_audio_output:     " + csound_audio_output)
 soundfile_editor = settings.get("playpen", "soundfile-editor")
+print("soundfile_editor:        " + soundfile_editor)
 directory, basename = os.path.split(source_filepath)
 rootname, extension = os.path.splitext(basename)
 title = rootname.replace("-", " ").replace("_", " ")
@@ -218,7 +225,8 @@ def post_process():
 def play():
     try:
         print("play: {}".format(source_filepath))
-        command = "audacity {}".format(master_filename)
+        master_filepath = os.path.join(directory, master_filename)
+        command = "{} {}".format(soundfile_editor, master_filepath)
         print("playback command: {}".format(command))
         subprocess.run(command, shell=True)
     except:
@@ -302,7 +310,7 @@ def cpp_soundfile():
 
 def man_csound():
     try:
-        command = "xdg-open https://gogins.github.io/csound-extended-manual/indexframes.html"
+        command = "{} https://gogins.github.io/csound-extended-manual/indexframes.html".format(open_command)
         subprocess.run(command, shell=True)        
     except:
         traceback.print_exc()
@@ -312,7 +320,7 @@ def man_csound():
 
 def man_python():
     try:
-        command = "xdg-open https://docs.python.org/3/"
+        command = "{} https://docs.python.org/3/".format(open_command)
         subprocess.run(command, shell=True)        
     except:
         traceback.print_exc()
@@ -322,7 +330,7 @@ def man_python():
 
 def man_csoundac():
     try:
-        command = "xdg-open file://$HOME/csound-extended/doc/html/index.html"
+        command = "{} file://$HOME/csound-extended/doc/html/index.html".format(open_command)
         subprocess.run(command, shell=True)        
     except:
         traceback.print_exc()
