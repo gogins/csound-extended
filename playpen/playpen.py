@@ -85,6 +85,8 @@ import sys
 import time
 import traceback
 
+if len(sys.argv) == 1:
+    command = ""
 command = sys.argv[1]
 print("command:                 {}".format(command))
 cwd = os.getcwd()
