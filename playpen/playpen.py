@@ -269,7 +269,12 @@ def html_nw():
         # strings.
         package_json = package_json_template % (source_filepath, rootname, rootname)
         print(package_json)
-        command = "~/nwjs/nw --context-mixed --experimental-modules --alsa-input-device=plughw:2,0 --alsa-output-device=plughw:2,0 --device-scale-factor=2 {}".format(directory)
+        with open("package.json", "w") as file:
+            file.write(package_json)
+        if platform_system == "Darwin":
+            command = "open -a nwjs --args --context-mixed --experimental-modules {}".format(directory)
+        else:
+            command = "~/nwjs/nw --context-mixed --experimental-modules --alsa-input-device=plughw:2,0 --alsa-output-device=plughw:2,0 --device-scale-factor=2 {}".format(directory)
         subprocess.run(command, shell=True)
     except:
         traceback.print_exc()
@@ -280,7 +285,10 @@ def html_nw():
 def cpp_app():
     try:
         print("cpp_app: {}...".format(source_filepath))
-        command = "c++ -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/usr/local/include  {} -o{} -I/usr/local/include/csound -I/usr/include/csound -I/usr/include/luajit-2.1 -lGamma -lcsound64 -lCsoundAC -lluajit-5.1 -lsndfile -lgc -lpthread -ldl -lm; ls -ll".format(source_filepath, rootname)
+        if platform_system == "Darwin":
+            command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ls -ll".format(source_filepath, rootname)
+        else:
+            command = "c++ -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I. -I/usr/local/include -o{} -I/usr/local/include/csound -I/usr/include/csound -lcsound64 -lCsoundAC -lsndfile -lgc -lpthread -ldl -lm; ls -ll".format(source_filepath, rootname)
         subprocess.run(command, shell=True)
     except:
         traceback.print_exc()
@@ -290,7 +298,11 @@ def cpp_app():
 
 def cpp_audio():
     try:
-        command = "c++ -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/usr/local/include  {} -o{} -I/usr/local/include/csound -I/usr/include/csound -I/usr/include/luajit-2.1 -lGamma -lcsound64 -lCsoundAC -lluajit-5.1 -lsndfile -lgc -lpthread -ldl -lm; ls -ll; ./{} --csound --audio PortAudio --device dac".format(source_filepath, rootname, rootname)
+        if platform_system == "Darwin":
+            command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ls -ll; ./{} --csound --audio PortAudio --device dac".format(source_filepath, rootname, rootname)
+        else:
+            command = "c++ -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/usr/local/include  {} -o{} -I/usr/local/include/csound -I/usr/include/csound -I/usr/include/luajit-2.1 -lGamma -lcsound64 -lCsoundAC -lsndfile -lgc -lpthread -ldl -lm; ls -ll; ./{} --csound --audio PortAudio --device dac".format(source_filepath, rootname, rootname)
+
         subprocess.run(command, shell=True)
     except:
         traceback.print_exc()
@@ -301,11 +313,12 @@ def cpp_audio():
 def cpp_soundfile():
     try:
         command = "c++ -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/usr/local/include  {} -o{} -I/usr/local/include/csound -I/usr/include/csound -I/usr/include/luajit-2.1 -lGamma -lcsound64 -lCsoundAC -lluajit-5.1 -lsndfile -lgc -lpthread -ldl -lm; ls -ll; ./{} --csound --csound --post --playwav audacity".format(source_filepath, rootname, rootname)
+        command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ls -ll; ./{} --csound --post playwav {}".format(source_filepath, rootname, rootname, soundfile_editor)
         subprocess.run(command, shell=True)
     except:
         traceback.print_exc()
     finally:
-        print("cpp_audio: {}.".format(source_filepath))
+        print("cpp_soundfile: {}.".format(source_filepath))
         return
 
 def man_csound():
