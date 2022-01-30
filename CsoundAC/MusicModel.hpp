@@ -169,6 +169,9 @@ public:
      * --playwav       Play rendered or normalized output soundfile.
      * --post          Post-process Csound output soundfile:
      *                 normalize, CD, MP3, tag, and play it.
+     * 
+     * If none of these are given, all command-line arguments are passed 
+     * directly to Csound.
      */
     virtual int processArgs(const std::vector<std::string> &args);
 

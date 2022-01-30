@@ -24,6 +24,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
+#include <set>
 #include <stdint.h>
 
 namespace csound
@@ -237,11 +238,14 @@ Node *MusicModel::getThisNode()
 int MusicModel::processArgs(const std::vector<std::string> &args)
 {
     System::inform("MusicModel::processArgs...\n");
-    generateAllNames();
+    int errorStatus = 0;
+    static std::set music_model_args = {"--dir", "--midi", "--notation", "--audio", "--device", "--csound", "--pianoteq", "--pianoteq-wav", "--headless", "--playwav", "--post", "--playmidi"};
     std::map<std::string, std::string> argsmap;
     std::string key;
+    std::vector<const char*> argv;
     for (size_t i = 0, n = args.size(); i < n; ++i) {
         const std::string token = args[i];
+        argv.push_back(token.c_str());
         std::string value = "";
         if (token.find("--") == 0) {
             key = token;
@@ -252,8 +256,19 @@ int MusicModel::processArgs(const std::vector<std::string> &args)
         }
         argsmap[key] = value;
     }
+    bool csound_args_only = true;
+    for (auto arg : music_model_args) {
+        if (argsmap.find(arg) != argsmap.end()) {
+            csound_args_only = false;
+            break;
+        }
+    }
+    if (csound_args_only == true) {
+        errorStatus = cppSound->perform((int)argv.size(), &argv[0]);
+        return errorStatus;
+    }
+    generateAllNames();   
     char command[0x200];
-    int errorStatus = 0;
     bool postPossible = false;
     std::string playSoundfileName = getOutputSoundfileFilepath();
     if ((argsmap.find("--dir") != argsmap.end()) && !errorStatus) {
