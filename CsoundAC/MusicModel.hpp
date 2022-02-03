@@ -220,6 +220,11 @@ public:
     virtual void setExtendSeconds(double extendSeconds_) {
         extendSeconds = extendSeconds_;
     }
+    /**
+     * Does not use the csound::Composition options; passes 
+     * argc and argv directly to Csound.
+     */
+    virtual void csoundArgv(int argc, const char **argv);
 protected:
     /**
      * Self-contained Csound object.

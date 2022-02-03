@@ -2060,6 +2060,6 @@ aoutright                       =                       gkMasterLevel * ainright
                                 
             )");
   
-    model.processArgv(argc, argv);
+    model.csoundArgv(argc, argv);
 }
 

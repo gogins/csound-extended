@@ -299,7 +299,7 @@ def cpp_app():
 def cpp_audio():
     try:
         if platform_system == "Darwin":
-            command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include -I/usr/local/include/csound -I/opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3 -I/opt/homebrew/Cellar/opencv/4.5.4_3/include/opencv4 -I/opt/homebrew/Cellar/boost/1.76.0/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ./{} --csound --audio PortAudio --device {}".format(source_filepath, rootname, rootname, csound_audio_output)
+            command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include -I/usr/local/include/csound -I/opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3 -I/opt/homebrew/Cellar/opencv/4.5.4_3/include/opencv4 -I/opt/homebrew/Cellar/boost/1.76.0/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ./{} -o{}".format(source_filepath, rootname, rootname, csound_audio_output)
         else:
             command = "c++ -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/usr/local/include  {} -o{} -I/usr/local/include/csound -I/usr/include/csound -I/usr/include/luajit-2.1 -lGamma -lcsound64 -lCsoundAC -lsndfile -lgc -lpthread -ldl -lm; ls -ll; ./{} --csound --audio PortAudio --device dac".format(source_filepath, rootname, rootname)
 
@@ -312,7 +312,7 @@ def cpp_audio():
 
 def cpp_soundfile():
     try:
-        command = "command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include -I/usr/local/include/csound -I/opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3 -I/opt/homebrew/Cellar/opencv/4.5.4_3/include/opencv4 -I/opt/homebrew/Cellar/boost/1.76.0/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ./{} --csound --post --playwav audacity".format(source_filepath, rootname, rootname)
+        # command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include -I/usr/local/include/csound -I/opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3 -I/opt/homebrew/Cellar/opencv/4.5.4_3/include/opencv4 -I/opt/homebrew/Cellar/boost/1.76.0/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ./{} --csound --post --playwav audacity".format(source_filepath, rootname, rootname)
         command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ls -ll; ./{} --csound --post playwav {}".format(source_filepath, rootname, rootname, soundfile_editor)
         subprocess.run(command, shell=True)
     except:

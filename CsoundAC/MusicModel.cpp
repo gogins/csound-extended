@@ -25,6 +25,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <set>
+#include <sstream>
 #include <stdint.h>
 
 namespace csound
@@ -235,17 +236,30 @@ Node *MusicModel::getThisNode()
     return (Node *)this;
 }
 
+void MusicModel::csoundArgv(int argc, const char **argv) {
+    System::inform("MusicModel::csoundArgv...\n");
+    generateAllNames();
+    getScore().save(getMidifileFilepath().c_str());
+    generate();
+    // Set Csound command from argv.
+    std::stringstream stream;
+    for (int i = 0; i < argc; ++i) {
+        auto arg = argv[i];
+        stream << arg << " ";
+    }
+    setCsoundCommand(stream.str());
+    render();
+    System::inform("MusicModel::csoundArgv.\n");
+}
+
 int MusicModel::processArgs(const std::vector<std::string> &args)
 {
     System::inform("MusicModel::processArgs...\n");
-    int errorStatus = 0;
-    static std::set music_model_args = {"--dir", "--midi", "--notation", "--audio", "--device", "--csound", "--pianoteq", "--pianoteq-wav", "--headless", "--playwav", "--post", "--playmidi"};
+    generateAllNames();
     std::map<std::string, std::string> argsmap;
     std::string key;
-    std::vector<const char*> argv;
     for (size_t i = 0, n = args.size(); i < n; ++i) {
         const std::string token = args[i];
-        argv.push_back(token.c_str());
         std::string value = "";
         if (token.find("--") == 0) {
             key = token;
@@ -256,19 +270,8 @@ int MusicModel::processArgs(const std::vector<std::string> &args)
         }
         argsmap[key] = value;
     }
-    bool csound_args_only = true;
-    for (auto arg : music_model_args) {
-        if (argsmap.find(arg) != argsmap.end()) {
-            csound_args_only = false;
-            break;
-        }
-    }
-    if (csound_args_only == true) {
-        errorStatus = cppSound->perform((int)argv.size(), &argv[0]);
-        return errorStatus;
-    }
-    generateAllNames();   
     char command[0x200];
+    int errorStatus = 0;
     bool postPossible = false;
     std::string playSoundfileName = getOutputSoundfileFilepath();
     if ((argsmap.find("--dir") != argsmap.end()) && !errorStatus) {
@@ -326,7 +329,7 @@ int MusicModel::processArgs(const std::vector<std::string> &args)
         System::inform("Csound command: %s\n", command);
         errorStatus = std::system(command);
     }
-    System::inform("MusicModel::processArgv.\n");
+    System::inform("MusicModel::processArgs.\n");
     return errorStatus;
 }
 
