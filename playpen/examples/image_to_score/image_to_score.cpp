@@ -52,7 +52,7 @@ int main(int argc, const char **argv)
 sr                              =                       96000
 ksmps                           =                       100
 nchnls                          =                       2
-0dbfs                           =                       200000
+0dbfs                           =                       400
 iampdbfs                        init                    3276800
                                 prints                  "Default amplitude at 0 dBFS:  %9.4f\n", iampdbfs
 idbafs                          init                    dbamp(iampdbfs)

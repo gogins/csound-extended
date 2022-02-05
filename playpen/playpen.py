@@ -74,6 +74,7 @@ For playing, the audacity program is a good choice because it can display
 soundfiles as sonograms, which can be very informative, and audacity can 
 export to various formats.
 
+
 '''
 import configparser
 import datetime
@@ -83,6 +84,7 @@ import platform
 import string
 import subprocess
 import sys
+import threading
 import time
 import traceback
 
@@ -123,6 +125,8 @@ cd_quality_filename = '%s.cd.wav' % label
 mp3_filename = '%s.mp3' % label
 mp4_filename = '%s.mp4' % label
 flac_filename = '%s.flac' % label
+common_csound_options = "-d -m163 -+msg_color=0 --midi-key=4 --midi-velocity=5"
+print('Common Csound options:  ', common_csound_options)
 print('Source file:            ', source_filepath)
 print('Basename:               ', basename)
 print('Author:                 ', metadata_author)
@@ -299,11 +303,10 @@ def cpp_app():
 def cpp_audio():
     try:
         if platform_system == "Darwin":
-            command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include -I/usr/local/include/csound -I/opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3 -I/opt/homebrew/Cellar/opencv/4.5.4_3/include/opencv4 -I/opt/homebrew/Cellar/boost/1.76.0/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ./{} -o{}".format(source_filepath, rootname, rootname, csound_audio_output)
+            command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include -I/usr/local/include/csound -I/opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3 -I/opt/homebrew/Cellar/opencv/4.5.4_3/include/opencv4 -I/opt/homebrew/Cellar/boost/1.76.0/include -I/opt/local/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ls -ll;./{} {} -o{}".format(source_filepath, rootname, rootname, common_csound_options, csound_audio_output)
         else:
-            command = "c++ -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/usr/local/include  {} -o{} -I/usr/local/include/csound -I/usr/include/csound -I/usr/include/luajit-2.1 -lGamma -lcsound64 -lCsoundAC -lsndfile -lgc -lpthread -ldl -lm; ls -ll; ./{} --csound --audio PortAudio --device dac".format(source_filepath, rootname, rootname)
-
-        subprocess.run(command, shell=True)
+            command = "c++ -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/usr/local/include  {} -o{} -I/usr/local/include/csound -I/usr/include/csound -I/usr/include/luajit-2.1 -lGamma -lcsound64 -lCsoundAC -lsndfile -lgc -lpthread -ldl -lm; ls -ll;./{} {} -o{}".format(source_filepath, rootname, rootname, common_csound_options, csound_audio_output)
+        pid = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT)
     except:
         traceback.print_exc()
     finally:
@@ -312,9 +315,11 @@ def cpp_audio():
 
 def cpp_soundfile():
     try:
-        # command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include -I/usr/local/include/csound -I/opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3 -I/opt/homebrew/Cellar/opencv/4.5.4_3/include/opencv4 -I/opt/homebrew/Cellar/boost/1.76.0/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ./{} --csound --post --playwav audacity".format(source_filepath, rootname, rootname)
-        command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ls -ll; ./{} --csound --post playwav {}".format(source_filepath, rootname, rootname, soundfile_editor)
-        subprocess.run(command, shell=True)
+        if platform_system == "Darwin":
+            command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include -I/usr/local/include/csound -I/opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3 -I/opt/homebrew/Cellar/opencv/4.5.4_3/include/opencv4 -I/opt/homebrew/Cellar/boost/1.76.0/include -I/opt/local/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ls -ll;./{} {} -o{}".format(source_filepath, rootname, rootname, common_csound_options, output_filename)
+        else:
+            command = "c++ -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/usr/local/include  {} -o{} -I/usr/local/include/csound -I/usr/include/csound -I/usr/include/luajit-2.1 -lGamma -lcsound64 -lCsoundAC -lsndfile -lgc -lpthread -ldl -lm; ls -ll;./{} {} -o{}".format(source_filepath, rootname, rootname, common_csound_options, output_filename)
+        pid = subprocess.run(command, shell=True, stderr=subprocess.STDOUT)
     except:
         traceback.print_exc()
     finally:
@@ -382,6 +387,8 @@ if command == 'cpp-audio':
     cpp_audio()
 if command == 'cpp-soundfile':
     cpp_soundfile()
+    post_process()
+    play()
 if command == 'man-csound':
     man_csound()
 if command == 'man-python':

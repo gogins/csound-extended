@@ -35,22 +35,40 @@ After exhaustively trying many alternatives I have ended up with the system
 that I maintain in this repository and, more specifically, in this directory.
 
 The basic principle is that each piece is always one single self-contained 
-Csound .csd file. Other code used in the piece, such as C++, HTML/JavaScript, 
-Python, or whatever, is embedded in the .csd file as multi-line strings, or 
-as the contents of the score using the `bin` attribute.
+file, preferably a Csound .csd file. Other code used in the piece, such as 
+C++, HTML/JavaScript, Python, or whatever, is if possible embedded in the .csd 
+file as multi-line strings, or as the contents of the score using the `bin` 
+attribute.
 
-Then, these embedded languages are compiled and executed under the direction 
-of Csound, during the Csound performance, by plugin opcodes.
+Then, if possible, these embedded languages are compiled and executed under 
+the direction of Csound, during the Csound performance, by plugin opcodes.
 
 To this end, I have created the Clang opcodes that embed the Clang/LLVM 
 just-in-time C++ compiler in Csound, and the WebKit opcodes that embed the 
 WebKit2Gtk+ Web browser/JavaScript engine in Csound.
+
+The other option, especially on macOS where the Clang opcodes are not yet 
+working, is to embed Csound via its API in a C++, Python, or HTML file.
+
 
 If you compose by writing code, you may well find this system useful. If you 
 do not compose by writing code, you will probably _not_ find this system useful.
 
 ## Getting Started
 
+Support for the playpen is provided by the playpen.py file which contains 
+routines for rendering and post-processing .csd files, .cpp files, and 
+.html files. This file is used by external tools for the gedit text editor, 
+so that the gedit menu will have convenient commands for working with 
+algorithmic composition.
+
+1.  Make a symbolic link in your home directory to csound-extended/playpen/
+    playpen.py.
+2.  Copy csound-extended/playpen/playpen.ini to your home directory and 
+    customize it for your system and your personal metadata.
+3.  Copy the csound-extended/playpen/gedit directory and contents to 
+    ~/.config/gedit.
+    
 Install the following software requirements, each according to its own 
 instructions. I give some some specific instructions for Ubuntu Linux. Many of 
 these dependencies are however available on Windows or macOS.
@@ -89,7 +107,7 @@ installed for the __same version__ of Python. These instructions are for a globa
 installation, but you can also install in your home directory or in a virtual 
 environment.
 
-7.  [Python 3.8](https://www.python.org/downloads/) or higher. For Ubuntu Linux, 
+7.  [Python 3.9](https://www.python.org/downloads/) or higher. For Ubuntu Linux, 
     follow [these instructions](https://linuxize.com/post/how-to-install-python-3-9-on-ubuntu-20-04/).
 8.  Make sure that the `csound/interfaces/ctcsound.py` file 
     is the one that comes with your version of Csound and that it can be found 
@@ -146,4 +164,6 @@ Additional useful things:
     powerful music typesetting system.
     
 ## A Few Examples
+
+
 
