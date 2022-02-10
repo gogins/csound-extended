@@ -1,6 +1,6 @@
 #!/bin/sh
 # [Gedit Tool]
-# Name=Render Csound instrument patch to soundfile
+# Name=Render Csound patch to soundfile
 # Input=document
 # Output=output-panel
 # Applicability=all

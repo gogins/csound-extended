@@ -1,6 +1,6 @@
-#!/usr/bin/sh
+#!/bin/sh
 # [Gedit Tool]
-# Name=Build C++ piece and render to soundfile
+# Name=Build C++ piece and render to file
 # Input=document
 # Output=output-panel
 # Applicability=all

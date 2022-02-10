@@ -1,6 +1,6 @@
 #!/bin/sh
 # [Gedit Tool]
-# Name=Run piece in NW.js
+# Name=Run HTML piece in NW.js
 # Input=document
 # Output=output-panel
 # Applicability=all

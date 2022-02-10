@@ -5,6 +5,7 @@
 # Output=output-panel
 # Applicability=all
 # Save-files=document
+# Languages=
 
 ~/playpen.py cpp-audio $GEDIT_CURRENT_DOCUMENT_PATH
 

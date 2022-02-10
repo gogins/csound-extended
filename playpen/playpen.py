@@ -111,6 +111,8 @@ metadata_notes = settings.get("metadata", "notes")
 metadata_license = settings.get("metadata", "license")
 csound_audio_output = settings.get("csound", "audio-output")
 print("csound_audio_output:     " + csound_audio_output)
+port = settings.get("playpen", "port")
+print("HTTP server port:        " + port)
 soundfile_editor = settings.get("playpen", "soundfile-editor")
 print("soundfile_editor:        " + soundfile_editor)
 directory, basename = os.path.split(source_filepath)
@@ -266,24 +268,38 @@ package_json_template = '''{
   }
 }'''
         
-def html_nw():
+def html_nwjs():
     print("html_nw: {}...".format(source_filepath))
     try:
         # It seems the string.format method does not work with multi-line 
         # strings.
-        package_json = package_json_template % (source_filepath, rootname, rootname)
+        package_json = package_json_template % (basename, rootname, rootname)
         print(package_json)
         with open("package.json", "w") as file:
             file.write(package_json)
         if platform_system == "Darwin":
-            command = "open -a nwjs --args --context-mixed --experimental-modules {}".format(directory)
+            command = "/Applications/nwjs.app/Contents/MacOS/nwjs --context-mixed --experimental-modules --device-scale-factor=2 ."
+            os.chdir(directory)
+            print("cwd: {}".format(os.getcwd()))
         else:
             command = "~/nwjs/nw --context-mixed --experimental-modules --alsa-input-device=plughw:2,0 --alsa-output-device=plughw:2,0 --device-scale-factor=2 {}".format(directory)
+        print("NW.js command: {}".format(command))
         subprocess.run(command, shell=True)
     except:
         traceback.print_exc()
     finally:
         print("html_nw: {}.".format(source_filepath))
+        return
+        
+def html_localhost():
+    try:
+        print("html_localhost: {}...".format(source_filepath))
+        command = "{} http://localhost:{}/{}".format(open_command, port, basename)
+        subprocess.run(command, shell=True)
+    except:
+        traceback.print_exc()
+    finally:
+        print("html_localhost: {}.".format(source_filepath))
         return
 
 def cpp_app():
@@ -379,6 +395,8 @@ if command == 'csd-play':
     play()
 if command == 'html-nw':
     html_nw()
+if command == 'html-localhost':
+    html_localhost()
 if command == 'cpp-lib':
     cpp_lib()
 if command == 'cpp-app':

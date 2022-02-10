@@ -1,0 +1,9 @@
+#!/bin/sh
+# [Gedit Tool]
+# Name=Run HTML piece in localhost
+# Input=nothing
+# Output=output-panel
+# Applicability=all
+# Save-files=nothing
+
+~/playpen.py html-localhost $GEDIT_CURRENT_DOCUMENT_PATH

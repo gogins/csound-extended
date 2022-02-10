@@ -1,6 +1,6 @@
 #!/bin/sh
 # [Gedit Tool]
-# Name=Build and install Csound plugin
+# Name=Build Csound plugin
 # Input=document
 # Output=output-panel
 # Applicability=all
