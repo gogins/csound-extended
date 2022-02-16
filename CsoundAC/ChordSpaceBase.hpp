@@ -5264,7 +5264,7 @@ inline std::vector<Chord> PITV::toChord(int P, int I, int T, int V, bool printme
     T = T % countT;
     V = V % countV;
     if (printme) {
-        System::message("PITV::toChord:   PITV \%:             %8d     %8d     %8d     %8d\n", P, I, T, V);
+        System::message("PITV::toChord:   PITV (modulus):     %8d     %8d     %8d     %8d\n", P, I, T, V);
     }
     auto prime_form_ = PsForIndexes.at(P);
     auto normal_form_ = prime_form_;
