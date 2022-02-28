@@ -213,6 +213,19 @@ public:
      * "key"="value" pairs in CSV format.
      */
     virtual std::string getProperties() const;
+    /**
+     * Gets, or sets by reference, a global flag that determines whether 
+     * Events have all negative durations adjusted to positive durations with 
+     * a new onset time. The default is to correct all negative durations.
+     */
+    virtual bool &correct_negative_durations();
+    /**
+     * If the duration of this Event is negative, first adds it to the 
+     * Event's onset time, i.e. moves the onset to match the beginning 
+     * of the duration, then makes the duration positive. This only has 
+     * an effect if correct_negative_duratiuons() returns true.
+     */
+    virtual void correct_negative_duration();
     static int SORT_ORDER[];
     static const char *labels[];
 #endif

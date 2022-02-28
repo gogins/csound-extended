@@ -44,7 +44,6 @@ if(BUILD_CSOUND_AC)
         CounterpointMain.cpp
         CounterpointNode.cpp
         Event.cpp
-        ExternalNode.cpp
         ImageToScore.cpp
         Lindenmayer.cpp
         MCRM.cpp
@@ -63,6 +62,10 @@ if(BUILD_CSOUND_AC)
         System.cpp
         Voicelead.cpp
         VoiceleadingNode.cpp)
+    if(NOT APPLE)
+        list(APPEND libcsoundac_SRCS
+            ExternalNode.cpp)
+    endif()
 
     if(NOT USE_SYSTEM_PORTSMF)
         list(APPEND libcsoundac_SRCS
@@ -76,6 +79,8 @@ if(BUILD_CSOUND_AC)
             strparse.cpp
             trace.cpp)
     endif()
+    
+    message(STATUS "libcsoundac_SRCS: " ${libcsoundac_SRCS})
 
     if (MSVC)
         add_library(libCsoundAC STATIC ${libcsoundac_SRCS})
