@@ -565,6 +565,7 @@ int Composition::translateToNotation(const std::vector<std::string> partNames, s
         }
     }
     std::map<int, std::vector<Event> > eventsForParts;
+    score.sort();
     for (size_t eventI = 0, eventN = score.size(); eventI < eventN; ++eventI) {
         const Event &event = score[eventI];
         if (event.isNoteOn()) {

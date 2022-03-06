@@ -264,6 +264,7 @@ SILENCE_PUBLIC void ChordScore::getScale(std::vector<Event> &score, int dimensio
     if(beginAt == endAt) {
         return;
     }
+    sort();
     const Event &beginEvent = score[beginAt];
     double maximum = beginEvent[dimension];
     const Event &endEvent = score[endAt - 1];
@@ -320,6 +321,7 @@ SILENCE_PUBLIC void ChordScore::setScale(std::vector<Event> &score,
     if(beginAt == endAt) {
         return;
     }
+    sort();
     double actualMinimum;
     double actualRange;
     getScale(score, dimension, beginAt, endAt, actualMinimum, actualRange);
@@ -366,6 +368,7 @@ SILENCE_PUBLIC double ChordScore::getDuration()
 {
     double start = 0.0;
     double end = 0.0;
+    sort();
     for (int i = 0, n = size(); i < n; ++i) {
         const Event &event = at(i);
         if (i == 0) {
@@ -395,6 +398,7 @@ SILENCE_PUBLIC void ChordScore::setDuration(double targetDuration)
     if (currentDuration == 0.0) {
         return;
     }
+    sort();
     double factor = targetDuration / currentDuration;
     for (size_t i = 0, n = size(); i < n; i++) {
         Event &event = (*this)[i];

@@ -39,6 +39,8 @@ void Cell::transform(Score &score)
     if(score.empty()) {
         return;
     }
+    // Correct negative durations.
+    score.sort();
     const Event &event = score.front();
     double beginSeconds = event.getTime();
     double endSeconds = beginSeconds;

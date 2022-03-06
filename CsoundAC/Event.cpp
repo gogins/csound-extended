@@ -641,6 +641,7 @@ void Event::correct_negative_duration() {
         return;
     }
     auto current_onset = getTime();
+    // Recall that current_duration here is always negative!
     auto corrected_onset = current_onset + current_duration;
     setTime(corrected_onset);
     auto corrected_duration = std::fabs(current_duration);

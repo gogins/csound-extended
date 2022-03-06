@@ -374,6 +374,7 @@ void Score::save_filename(std::string filename)
 
 void Score::save(std::ostream &stream)
 {
+    sort();
     Alg_seq seq;
     for (size_t i = 0, n = size(); i < n; ++i) {
         const Event &event = at(i);
@@ -610,6 +611,7 @@ void Score::add(double time_, double duration, double status, double instrument,
     event.setDepth(depth);
     event.setHeight(height);
     event.setPitches(pitches);
+    event.correct_negative_duration();
     push_back(event);
 }
 
@@ -629,6 +631,7 @@ void Score::append_note(double time_, double duration, double status, double ins
     event.setDepth(depth);
     event.setHeight(height);
     event.setPitches(pitches);
+    event.correct_negative_duration();
     push_back(event);
 }
 
@@ -646,16 +649,19 @@ void Score::append(double time_, double duration, double status, double instrume
     event.setDepth(depth);
     event.setHeight(height);
     event.setPitches(pitches);
+    event.correct_negative_duration();
     push_back(event);
 }
 
 void Score::append_event(Event event)
 {
+    event.correct_negative_duration();
     push_back(event);
 }
 
 void Score::append(Event event)
 {
+    event.correct_negative_duration();
     push_back(event);
 }
 
@@ -665,13 +671,7 @@ void Score::sort()
     // Fix them up by making the onset of the duration 
     // the new start time.
     for (auto &event : *this) {
-        auto time_ = event.getTime();
-        auto duration = event.getDuration();
-        if (duration < 0.) {
-            double new_time = time_ + duration;
-            event.setTime(new_time);
-            event.setDuration(std::fabs(duration));
-        }
+        event.correct_negative_duration();
     }
     std::sort(begin(), end());
 }
