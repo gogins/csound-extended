@@ -21,5 +21,5 @@ aleftoutmix = aleftin * gk_ReverbSC_dry + aleftout * gk_ReverbSC_wet
 arightoutmix = arightin * gk_ReverbSC_dry + arightout * gk_ReverbSC_wet
 outleta "outleft", aleftoutmix
 outleta "outright", arightoutmix
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin

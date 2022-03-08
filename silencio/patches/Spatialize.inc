@@ -74,7 +74,7 @@ absignal, asend Spatializer asignal, 87, 15, 15
 outleta "out", asend
 ; Send the spatialized signal to the global Ambisonc decoder instr.
 outletv "outbformat", absignal
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
 
 TODO
@@ -1145,7 +1145,7 @@ gk_Spatialize_Verbose_not_0:
 kelapsed timeinsts
 printks "SpatialReverb i %5.2f t %5.2f [%5.2f] d %5.2f c %9.2f in %5.2f A[0] %5.2f\n", 1.0, p1, p2, kelapsed, p3, gk_SpatialReverb_CutoffHz, downsamp(arevsig), downsamp(aboutput[0])
 gk_Spatialize_Verbose_0:
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
 
 gk_SpatialReverb_Gain init 0.2
@@ -1456,7 +1456,7 @@ gk_Spatialize_Verbose_not_0:
 aoutput sum aboutput[0], aboutput[1], aboutput[2], aboutput[3], aboutput[4], aboutput[5], aboutput[6], aboutput[7], aboutput[8], aboutput[9], aboutput[10], aboutput[11], aboutput[12], aboutput[13], aboutput[14], aboutput[15]
 kelapsed timeinsts
 gk_Spatialize_Verbose_0:
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
 
 gk_Bformat2DecodeBinaural_krelcoef init 1
@@ -1680,7 +1680,7 @@ irig_else:
  asignal[7] = asignal[7] * kmasterlevel
 irig_endif:
 out asignal
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
 
 /*
@@ -1727,5 +1727,5 @@ absignal[] inletv "inbformat"
 asignal bformdec2 gi_BformatDecoder2_SpeakerRig, absignal, gi_BformatDecoder2_Decoder, gi_BformatDecoder2_Distance, gi_BformatDecoder2_SplitHz, gi_BformatDecoder2_DecoderMix, gS_BformatDecoder2_LeftFile, gS_BformatDecoder2_RightFile
 aoutsignal = asignal * kmasterlevel
 out aoutsignal
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin

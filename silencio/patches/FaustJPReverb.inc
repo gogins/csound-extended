@@ -76,7 +76,7 @@ a_left, a_right faustplay i_faust_dsp, a_inleft, a_inright
 k_gain = ampdb(gk_FaustJPReverb_level)
 outleta "outleft", a_left * k_gain
 outleta "outright", a_right * k_gain
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, i_midi_key, p5, p7, active(p1)
+prints "%-24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, i_midi_key, p5, p7, active(p1)
 endin
 
 

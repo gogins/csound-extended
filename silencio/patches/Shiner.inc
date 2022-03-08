@@ -47,7 +47,7 @@ kgain = ampdb(gk_Shiner_level) * .5
 adamping linseg 0, 0.03, 1, p3 - 0.1, 1, 0.07, 0
 a_signal = asignal * kgain * adamping
 
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+prints "%-24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
