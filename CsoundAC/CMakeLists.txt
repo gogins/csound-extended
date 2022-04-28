@@ -2,8 +2,10 @@
 cmake_minimum_required(VERSION 3.10)
 include(CheckIncludeFiles)
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 17)
 add_definitions(-fPIC -flto)
+add_compile_options(-Wno-c++11-narrowing)
 
 
 # TODO: These will need something more sophisticated.
@@ -61,11 +63,8 @@ if(BUILD_CSOUND_AC)
         StrangeAttractor.cpp
         System.cpp
         Voicelead.cpp
-        VoiceleadingNode.cpp)
-    if(NOT APPLE)
-        list(APPEND libcsoundac_SRCS
-            ExternalNode.cpp)
-    endif()
+        VoiceleadingNode.cpp
+        ExternalNode.cpp)
 
     if(NOT USE_SYSTEM_PORTSMF)
         list(APPEND libcsoundac_SRCS

@@ -88,9 +88,13 @@ import threading
 import time
 import traceback
 
-if len(sys.argv) == 1:
-    command = ""
+if len(sys.argv) < 2:
+    print(__doc__)
+    exit(0)
 command = sys.argv[1]
+if command == 'help':
+    print(__doc__)
+    exit(0)
 print("command:                 {}".format(command))
 cwd = os.getcwd()
 print('cwd:                    ', cwd)

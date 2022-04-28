@@ -96,6 +96,4 @@
 #include "VoiceleadingNode.hpp"
 #include "ChordLindenmayer.hpp"
 #include "HarmonyIFS.hpp"
-#if !defined(SWIGMAC) || !defined(__APPLE__)
 #include "ExternalNode.hpp"
-#endif
