@@ -131,7 +131,7 @@ cd_quality_filename = '%s.cd.wav' % label
 mp3_filename = '%s.mp3' % label
 mp4_filename = '%s.mp4' % label
 flac_filename = '%s.flac' % label
-common_csound_options = "-d -m163 -+msg_color=0 --midi-key=4 --midi-velocity=5"
+common_csound_options = "-d -m163 -W -+msg_color=0 --midi-key=4 --midi-velocity=5"
 print('Common Csound options:  ', common_csound_options)
 print('Source file:            ', source_filepath)
 print('Basename:               ', basename)
@@ -168,7 +168,7 @@ def csd_audio():
 def csd_soundfile():
     try:
         print("\ncsd_soundfile: {} to {}...".format(source_filepath, output_filename))
-        csound_command = "csound {} -o{} --simple-sorted-score={}.srt".format(source_filepath, output_filename, source_filepath)
+        csound_command = "csound {} -RWo{} --simple-sorted-score={}.srt".format(source_filepath, output_filename, source_filepath)
         print("csound command: {}".format(csound_command))
         subprocess.run(csound_command, shell=True)
     except:
