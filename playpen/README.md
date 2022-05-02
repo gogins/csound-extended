@@ -40,16 +40,24 @@ C++, HTML/JavaScript, Python, or whatever, is if possible embedded in the .csd
 file as multi-line strings, or as the contents of the score using the `bin` 
 attribute.
 
+1.  I have added many Python functions for rendering Csound pieces, compiling 
+    and running C++ code, and so on.
+2.  These commands are implemented in `playpen.py` and can be invoked from any 
+    code editor that provides custom commands.
+4.  The `gedit/tools` directory defines such custom commands for the gedit 
+    text editor.
+
 Then, if possible, these embedded languages are compiled and executed under 
 the direction of Csound, during the Csound performance, by plugin opcodes.
 
-To this end, I have created the Clang opcodes that embed the Clang/LLVM 
-just-in-time C++ compiler in Csound, and the WebKit opcodes that embed the 
-WebKit2Gtk+ Web browser/JavaScript engine in Csound.
+To this end, I have created the csound-cxx-opcodes that allow C++ source 
+code to be embedded in the Csound orchestra, and to be compiled, linked, 
+and loaded during the Csound performance, and the csound-webserver-opcodes 
+that allow HTML pages to be embedded in the Csound orchestra, and to be 
+opened in a Web browser during the Csound performance, with a JavaScript 
+interface the running instance of Csound.
 
-The other option, especially on macOS where the Clang opcodes are not yet 
-working, is to embed Csound via its API in a C++, Python, or HTML file.
-
+The other option is to embed Csound via its API in a C++, Python, or HTML file.
 
 If you compose by writing code, you may well find this system useful. If you 
 do not compose by writing code, you will probably _not_ find this system useful.
@@ -73,27 +81,28 @@ Install the following software requirements, each according to its own
 instructions. I give some some specific instructions for Ubuntu Linux. Many of 
 these dependencies are however available on Windows or macOS.
 
-Core requirements for composing with Csound, including SciTE extensions for 
+Core requirements for composing with Csound, including gedit extensions for 
 rendering Csound pieces and automatically post-processing them:
 
 1.  [Csound](https://csound.com/download.html). For Linux, it is best to build 
     from source code according to [these  
     instructions](https://github.com/csound/csound/blob/develop/BUILD.md).
-2.  The SciTE text editor. On Ubuntu, execute `sudo apt install scite`.
-3.  Configuration files and helper scripts for SciTE in the 
+2.  The gedit text editor. On Ubuntu, execute `sudo apt install gedit`.
+3.  Configuration files and helper scripts for gedit in the 
     `csound-extended/playpen` directory. If you have cloned the 
     csound-extended repository, create symbolic links in your home directory 
     to the following files in the `csound-extended/playpen` directory. 
     Alternatively, download the files to your home directory. You need to 
     customize at least `playpen.ini`, and perhaps others, for your system:
-    1. [.SciTEUser.properties](https://github.com/gogins/csound-extended/blob/develop/playpen/.SciTEUser.properties)
+    1. Copy `playpen/gedit/tools/` and its contents to `~/.config/gedit/tools/`.
     2. [instrument_test.py](https://github.com/gogins/csound-extended/blob/develop/playpen/instrument_test.py)
     3. [effect_test.py](https://github.com/gogins/csound-extended/blob/develop/playpen/effect_test.py)
     4. [playpen.ini](https://github.com/gogins/csound-extended/blob/develop/playpen/playpen.ini)
     5. [post-process.py](https://github.com/gogins/csound-extended/blob/develop/playpen/post-process.py)
-    6. [run_nwjs_application.sh](https://github.com/gogins/csound-extended/blob/develop/playpen/run_nwjs_application.sh)
 4.  [sox](http://sox.sourceforge.net/). For Ubuntu, execute 
     `sudo apt install sox` and `sudo apt install libsox-fmt-all`.
+5.  [FFmpeg](https://ffmpeg.org/) for converting soundfiles to mp4 video format to be uploaded to YouTube.
+5.  [astyle](http://astyle.sourceforge.net/) for reformatting C/C++ style source code to a consistent, readable format.
 5.  The [libsndfile](http://www.mega-nerd.com/libsndfile/) utilities. For Ubuntu, all 
     you need is to execute `sudo apt install sndfile-programs`. For other 
     operating systems, you may need to install libsndfile itself, which should 
@@ -125,22 +134,14 @@ JavaScript). These requirements also apply to composing with C++:
     or build if you must, according to instructions 
     [here](https://github.com/gogins/csound-extended).
     
-Additional requirements for composing with HTML5:
+Requirements for composing with HTML5:
 
-10. Install if you can or build if you must Csound for NW.js according to 
-    instructions [here](https://github.com/gogins/csound-extended-node).
-11. Install the SDK version of [NW.js](https://nwjs.io/).
-12. Add the directory containing the `csound.node` binary to your `NODE_PATH` 
-    environment variable.
+10. Install [csound-webserver-opcodes](https://github.com/gogins/csound-webserver-opcodes).
     
-Requirements for the Clang opcodes are described here:
+Requirements for composing in C++:
 
-13. [clang-opcodes](https://github.com/gogins/clang-opcodes).
+13. [csound-cxx-opcodes](https://github.com/gogins/csound-cxx-opcodes).
 
-Requirements for the WebKit opcodes are described here:
-
-14. [webkit-opcodes](https://github.com/gogins/webkit-opcodes).
-    
 Additional useful things:
 
 15. [csound-examples](https://github.com/gogins/csound-vst3-opcodes) is my 
@@ -162,8 +163,5 @@ Additional useful things:
     score editor.
 22. [lilypond](http://lilypond.org/) is an open source, cross-platform, very 
     powerful music typesetting system.
-    
-## A Few Examples
-
 
 
