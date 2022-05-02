@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
+project(csound-extended)
 
 message("CMAKE BUILD SYSTEM FOR CSOUND-EXTENDED")
 message("For a fresh build, run 'bash fresh-build-linux.sh'")
@@ -14,11 +15,9 @@ message("For a fresh build, run 'bash fresh-build-linux.sh'")
 #endif()
 message("There are NO configuration options in this build.")
 message("But if there ARE configuration variables, set them in the ")
-message(" optional \"custom-variables.cmake\" file in this directory.")
-include("custom-variables.cmake" OPTIONAL RESULT_VARIABLE CSOUND_EXTENDED_CUSTOM_CONFIGURATION)
+message(" optional \"Custom.cmake\" file in this directory.")
+include("Custom.cmake" OPTIONAL RESULT_VARIABLE CSOUND_EXTENDED_CUSTOM_CONFIGURATION)
 message("CSOUND_EXTENDED_CUSTOM_CONFIGURATION: ${CSOUND_EXTENDED_CUSTOM_CONFIGURATION}")
-
-project(csound-extended)
 
 # A certain amount of the following has been copied from the core Csound project,
 # and hoisted up here to enable paths etc. to be set for all projects here.
@@ -128,6 +127,7 @@ find_package(SWIG)
 
 include_directories("${CSOUND_INCLUDE_DIR}")
 include_directories("${CSOUND_INCLUDE_DIR}/csound")
+include_directories("${CSOUND_SOURCE_HOME}/interfaces")
 if (MUSICXML_FOUND)
     include_directories("${MUSICXML_INCLUDE_DIRS}")
 endif()

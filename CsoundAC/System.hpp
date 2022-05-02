@@ -23,10 +23,9 @@
 #ifdef SWIG
 %module CsoundAC
 %{
-	/* #if !defined(EMSCRIPTEN)
-	* #include "CppSound.hpp"
-	* #endif
-	*/
+	#if !defined(EMSCRIPTEN)
+	#include "CppSound.hpp"
+	#endif
 	#include <string.h>
 	#include <string>
 	#include <vector>

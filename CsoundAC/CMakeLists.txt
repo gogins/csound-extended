@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD 17)
 add_definitions(-fPIC -flto)
 add_compile_options(-Wno-c++11-narrowing)
 
-
 # TODO: These will need something more sophisticated.
 # For now I am hard-coding them to the Csound Debian control values.
 
@@ -65,7 +64,6 @@ if(BUILD_CSOUND_AC)
         Voicelead.cpp
         VoiceleadingNode.cpp
         ExternalNode.cpp)
-
     if(NOT USE_SYSTEM_PORTSMF)
         list(APPEND libcsoundac_SRCS
             allegro.cpp
@@ -154,7 +152,7 @@ if(BUILD_CSOUND_AC)
             LANGUAGE python 
             SOURCES CsoundAC.i)
         swig_link_libraries(CsoundAC libCsoundAC ${CSND6_LIBRARY} ${CSOUND_LIBRARIES} ${OpenCV_LIBRARIES} ${LIBSNDFILE_LIBRARY} ${Python3_LIBRARIES})
-        target_include_directories(${SWIG_MODULE_CsoundAC_REAL_NAME} PRIVATE ${EIGEN3_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
+        target_include_directories(${SWIG_MODULE_CsoundAC_REAL_NAME} PRIVATE ${EIGEN3_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${CSOUND_SOURCE_HOME}/include)
         set_property(TARGET ${SWIG_MODULE_CsoundAC_REAL_NAME} PROPERTY SWIG_INCLUDE_DIRECTORIES ${EIGEN3_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
  
         if(MUSICXML_FOUND)
