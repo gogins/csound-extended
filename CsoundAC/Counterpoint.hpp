@@ -56,7 +56,7 @@
 #include <cstdarg>
 #include <stdio.h>
 #include <stdlib.h>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <random>
 %}
 #else
@@ -64,7 +64,7 @@
 #include <cstdarg>
 #include <stdio.h>
 #include <stdlib.h>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <random>
 #include "Random.hpp"
 #endif

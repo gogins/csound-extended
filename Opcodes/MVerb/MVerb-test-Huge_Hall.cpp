@@ -1,5 +1,5 @@
 #include <Composition.hpp>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <functional>
 #include <memory>
 #include <MusicModel.hpp>

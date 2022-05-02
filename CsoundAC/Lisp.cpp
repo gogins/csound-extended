@@ -28,7 +28,7 @@
 #include "Score.hpp"
 #include "System.hpp"
 #include <ecl/ecl.h>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #endif
 
 namespace csound

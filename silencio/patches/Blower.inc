@@ -1,7 +1,7 @@
 gk_Blower_grainDensity chnexport "gk_Blower_grainDensity", 3
 gk_Blower_grainDuration chnexport "gk_Blower_grainDuration", 3
-gk_Blower_grainAmplitudeRange chnexport "gk_Blower_grainFrequencyRange", 3
-gk_Blower_grainFrequencyRange chnexport "XXX", 3
+gk_Blower_grainAmplitudeRange chnexport "gk_Blower_grainAmplitudeRange", 3
+gk_Blower_grainFrequencyRange chnexport "gk_Blower_grainFrequencyRange", 3
 gk_Blower_level chnexport "gk_Blower_level", 3
 gk_Blower_midi_dynamic_range chnexport "gk_Blower_midi_dynamic_range", 3
 
@@ -74,6 +74,7 @@ xtratim i_attack + i_release
 a_declicking linsegr 0, i_attack, 1, i_sustain, 1, i_release, 0
 a_signal = a_signal * i_amplitude * a_declicking * k_gain
 
+prints "%-24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
@@ -85,6 +86,5 @@ a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
 #endif
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 ;printks "Blower         i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d l%9.4f r%9.4f\n", 1, p1, p2, p3, p4, p5, p7, active(p1), dbamp(rms(a_out_left)), dbamp(rms(a_out_right))
 endin

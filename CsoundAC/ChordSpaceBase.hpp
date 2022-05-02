@@ -19,12 +19,6 @@
  */
 #pragma once
 
-// PLEASE NOTE:  
-//
-// This file does not depend upon any libraries other than system libraries or 
-// the standard C++ library. However, some of the header files below are 
-// header file-only libraries.
-
 #define EIGEN_INITIALIZE_MATRICES_BY_ZERO
 #include "Platform.hpp"
 #include "System.hpp"
@@ -36,7 +30,7 @@
 #include <climits>
 #include <cmath>
 #include <cstdarg>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <functional>
 #include <iostream>
 #include <iterator>
@@ -57,7 +51,7 @@
 #include <cmath>
 #include <csignal>
 #include <cstdarg>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 
 #include <functional>
 #include <iostream>
@@ -5270,7 +5264,7 @@ inline std::vector<Chord> PITV::toChord(int P, int I, int T, int V, bool printme
     T = T % countT;
     V = V % countV;
     if (printme) {
-        System::message("PITV::toChord:   PITV \%:             %8d     %8d     %8d     %8d\n", P, I, T, V);
+        System::message("PITV::toChord:   PITV (modulus):     %8d     %8d     %8d     %8d\n", P, I, T, V);
     }
     auto prime_form_ = PsForIndexes.at(P);
     auto normal_form_ = prime_form_;

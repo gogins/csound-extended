@@ -26,7 +26,7 @@
 #    file might be covered by the GNU Lesser General Public License.
 
 cmake_minimum_required(VERSION 3.5)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 if(NOT APPLE)
     make_plugin(mverb ${CMAKE_CURRENT_SOURCE_DIR}/MVerb.cpp)
     target_link_libraries(mverb Gamma)

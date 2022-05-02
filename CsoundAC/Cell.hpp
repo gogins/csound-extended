@@ -28,7 +28,7 @@
 #include "Random.hpp"
 #include "ScoreNode.hpp"
 #include "ChordSpace.hpp"
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 %}
 #else
 #include <limits>
@@ -36,7 +36,7 @@
 #include "Random.hpp"
 #include "ScoreNode.hpp"
 #include "ChordSpace.hpp"
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #endif
 
 namespace csound

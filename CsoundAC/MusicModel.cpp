@@ -24,6 +24,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
+#include <set>
+#include <sstream>
 #include <stdint.h>
 
 namespace csound
@@ -234,6 +236,22 @@ Node *MusicModel::getThisNode()
     return (Node *)this;
 }
 
+void MusicModel::csoundArgv(int argc, const char **argv) {
+    System::inform("MusicModel::csoundArgv...\n");
+    generateAllNames();
+    getScore().save(getMidifileFilepath().c_str());
+    generate();
+    // Set Csound command from argv.
+    std::stringstream stream;
+    for (int i = 0; i < argc; ++i) {
+        auto arg = argv[i];
+        stream << arg << " ";
+    }
+    setCsoundCommand(stream.str());
+    render();
+    System::inform("MusicModel::csoundArgv.\n");
+}
+
 int MusicModel::processArgs(const std::vector<std::string> &args)
 {
     System::inform("MusicModel::processArgs...\n");
@@ -311,7 +329,7 @@ int MusicModel::processArgs(const std::vector<std::string> &args)
         System::inform("Csound command: %s\n", command);
         errorStatus = std::system(command);
     }
-    System::inform("MusicModel::processArgv.\n");
+    System::inform("MusicModel::processArgs.\n");
     return errorStatus;
 }
 

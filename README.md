@@ -21,8 +21,7 @@ or collected from older projects of mine. These extensions include:
     with all Csound/HTML5 environments. __PLEASE NOTE: This library is now 
     deprecated, please use the WebAssembly build of CsoundAC instead.__
   
-4.  Some plugin opcodes for Csound, including bformdec2, chuap, cmask, MVerb, 
-    and the STK opcodes.
+4.  Some plugin opcodes for Csound, including cmask and MVerb.
     
 With regret I must announce that CsoundVST and the vst4cs opcodes are no longer
 maintained here. This is due to efforts by Steinberg to force developers to move
@@ -116,6 +115,10 @@ the instructions there.
 
 First clone the Git repository at https://github.com/gogins/csound-extended.
 
+Then copy the Custom.cmake.ex file to Custom.cmake and customize it for your 
+system. It is _essential_ to set a CMake variable CSOUND_SOURCE_HOME to the 
+root directory for the Csound source code, which could be as simple as "~/csound".
+
 #### Building on Linux
 
 The build is highly automated. Many dependencies are local. Most dependencies 
@@ -129,10 +132,10 @@ files have been generated.
 
 Manual configuration steps include, but are not necessarily limited to:
 
-1. Lance Putnum's Gamma library for C++ audio signal 
-processing must be cloned from GitHub, built with the addition of the 
-`-fPIC` compiler option, and installed (CMake should be able to find it in 
-the `/usr/local` tree).
+1.  Lance Putnum's Gamma library for C++ audio signal 
+    processing must be cloned from GitHub, built with the addition of the 
+    `-fPIC` compiler option, and installed (CMake should be able to find it in 
+    the `/usr/local` tree).
 
 2.  CsoundAC can both import and export MusicXML scores. To enable this,
     in the `csound-extended/dependencies/libmusicxml` directory,  
@@ -145,7 +148,6 @@ home directory and installation details. These are exported in `build-env.sh`
 which you can source in your `.profile` script.
 
 ```
-CSOUND_SRC_ROOT=/home/mkg/csound-extended/dependencies/csound
 OPCODE6DIR64=/usr/local/lib/csound/plugins64-6.0
 RAWWAVE_PATH=/home/mkg/stk/rawwaves
 

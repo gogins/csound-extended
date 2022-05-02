@@ -1,7 +1,7 @@
 #include <Composition.hpp>
 #include <HarmonyIFS2.hpp>
 #include <cmath>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <functional>
 #include <memory>
 #include <MusicModel.hpp>

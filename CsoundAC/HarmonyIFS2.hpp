@@ -38,7 +38,7 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 %}
 %template(StringMap) std::map<std::string, std::string>;
 #else
@@ -55,7 +55,7 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #endif
 
 namespace csound {

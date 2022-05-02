@@ -25,7 +25,7 @@
 %{
 #include "Score.hpp"
 #include <vector>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <functional>
 %}
 %include "std_string.i"
@@ -34,7 +34,7 @@
 #else
 #include "Score.hpp"
 #include <vector>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <functional>
 #endif
 

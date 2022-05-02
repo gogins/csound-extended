@@ -374,6 +374,7 @@ void Score::save_filename(std::string filename)
 
 void Score::save(std::ostream &stream)
 {
+    sort();
     Alg_seq seq;
     for (size_t i = 0, n = size(); i < n; ++i) {
         const Event &event = at(i);
@@ -500,13 +501,16 @@ void Score::setScale(std::vector<Event> &score,
 
 void Score::findScale(void)
 {
+    sort();
     for(int dimension = 0; dimension < Event::ELEMENT_COUNT; ++dimension) {
         getScale(*this, dimension, 0, size(), scaleActualMinima[dimension], scaleActualRanges[dimension]);
+        scaleActualMaxima[dimension] = scaleActualMinima[dimension] + scaleActualRanges[dimension];
     }
 }
 
 void Score::rescale(void)
 {
+    sort();
     for(int dimension = 0; dimension < Event::ELEMENT_COUNT; ++dimension) {
         setScale(*this,
                  dimension,
@@ -607,6 +611,7 @@ void Score::add(double time_, double duration, double status, double instrument,
     event.setDepth(depth);
     event.setHeight(height);
     event.setPitches(pitches);
+    event.correct_negative_duration();
     push_back(event);
 }
 
@@ -626,6 +631,7 @@ void Score::append_note(double time_, double duration, double status, double ins
     event.setDepth(depth);
     event.setHeight(height);
     event.setPitches(pitches);
+    event.correct_negative_duration();
     push_back(event);
 }
 
@@ -643,26 +649,36 @@ void Score::append(double time_, double duration, double status, double instrume
     event.setDepth(depth);
     event.setHeight(height);
     event.setPitches(pitches);
+    event.correct_negative_duration();
     push_back(event);
 }
 
 void Score::append_event(Event event)
 {
+    event.correct_negative_duration();
     push_back(event);
 }
 
 void Score::append(Event event)
 {
+    event.correct_negative_duration();
     push_back(event);
 }
 
 void Score::sort()
 {
+    // Negative durations are a problem.
+    // Fix them up by making the onset of the duration 
+    // the new start time.
+    for (auto &event : *this) {
+        event.correct_negative_duration();
+    }
     std::sort(begin(), end());
 }
 
 double Score::getDuration()
 {
+    sort();
     double start = 0.0;
     double end = 0.0;
     for (int i = 0, n = size(); i < n; ++i) {
@@ -1439,6 +1455,7 @@ const Event &Score::getScaleActualRanges() const {
 }
 
 double Score::getDurationFromZero() const {
+    ///sort();
     double end = 0.0;
     for (int i = 0, n = size(); i < n; ++i) {
         const Event &event = at(i);
@@ -1452,5 +1469,64 @@ double Score::getDurationFromZero() const {
     }
     return end;
 }
+
+std::string Score::toJson() {
+    sort();
+    findScale();
+    std::stringstream stream;
+    stream << "{\n";
+    stream << " \"events\":\n";
+    stream << "  [\n";
+    for (int event_i = 0, event_n = size(); event_i < event_n; ++event_i) {
+        const Event& event = at(event_i);
+        stream << "   [";
+        for (int field_i = 0, field_n = event.size(); field_i < field_n; ++field_i) {
+            auto field = event[field_i];
+            stream << field;
+            if (field_i < (field_n - 1)) {
+                stream << ", ";
+            }
+        }
+        if (event_i < (event_n - 1)) {
+            stream << "   ],\n";
+        } else {
+            stream << "   ]\n";
+        }
+    }
+    stream << "  ],\n";
+    stream << " \"minima\":\n";
+    stream << "  [";
+    for (int field_i = 0, field_n = scaleActualMinima.size(); field_i < field_n; ++field_i) {
+        if (field_i > 0) {
+            stream << ", ";
+        }
+        auto field = scaleActualMinima[field_i];
+        stream << field;
+    }
+    stream << "  ],\n";
+    stream << " \"maxima\":\n";
+    stream << "  [";
+    for (int field_i = 0, field_n = scaleActualMaxima.size(); field_i < field_n; ++field_i) {
+        if (field_i > 0) {
+            stream << ", ";
+        }
+        auto field = scaleActualMaxima[field_i];
+        stream << field;
+    }
+    stream << "  ],\n";
+    stream << " \"ranges\":\n";
+    stream << "  [";
+    for (int field_i = 0, field_n = scaleActualRanges.size(); field_i < field_n; ++field_i) {
+        if (field_i > 0) {
+            stream << ", ";
+        }
+        auto field = scaleActualRanges[field_i];
+        stream << field;
+    }
+    stream << "  ]\n";
+    stream << "};\n";
+    return stream.str();
+}
+
 
 }

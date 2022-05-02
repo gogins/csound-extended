@@ -39,6 +39,8 @@ void Cell::transform(Score &score)
     if(score.empty()) {
         return;
     }
+    // Correct negative durations.
+    score.sort();
     const Event &event = score.front();
     double beginSeconds = event.getTime();
     double endSeconds = beginSeconds;
@@ -463,7 +465,7 @@ void CellShuffle::transform(Score &score)
         const Event &event = score[i];
         times.push_back({event.getTime(), event.getDuration()});
     }
-    std::random_shuffle(times.begin(), times.end());
+    std::shuffle(times.begin(), times.end(), mersenneTwister);
     size_t time_iterator = 0;
     for (size_t i = start; i < end_; i+= stride) {
         Event &event = score[i];

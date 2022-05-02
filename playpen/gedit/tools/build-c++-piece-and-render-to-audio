@@ -1,0 +1,11 @@
+#!/bin/sh
+# [Gedit Tool]
+# Name=Build C++ piece and render to audio
+# Input=document
+# Output=output-panel
+# Applicability=all
+# Save-files=document
+# Languages=
+
+~/playpen.py cpp-audio $GEDIT_CURRENT_DOCUMENT_PATH
+

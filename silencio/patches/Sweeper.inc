@@ -10,10 +10,10 @@ gk_Sweeper_level chnexport "gk_Sweeper_level", 3 ;  0
 gk_Sweeper_midi_dynamic_range init 20
 gk_Sweeper_attack init .125
 gk_Sweeper_release init .25
-gk_Sweeper_britel init 0.1
-gk_Sweeper_briteh init 2.9
-gk_Sweeper_britels init 2
-gk_Sweeper_britehs init 1
+gk_Sweeper_britel init .01
+gk_Sweeper_briteh init 5
+gk_Sweeper_britels init .5
+gk_Sweeper_britehs init .5
 gk_Sweeper_level init 0
 
 gi_Sweeper_sine ftgen 0, 0, 65537, 10, 1
@@ -71,6 +71,7 @@ aleft delay a1, rnd(0.1)
 aright delay a2, rnd(0.11)
 a_signal = (aleft + aright) * k_gain
 
+prints "%-24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 #ifdef USE_SPATIALIZATION
 a_spatial_reverb_send init 0
 a_bsignal[] init 16
@@ -81,6 +82,6 @@ outleta "out", a_spatial_reverb_send
 a_out_left, a_out_right pan2 a_signal, k_space_left_to_right
 outleta "outleft", a_out_left
 outleta "outright", a_out_right
+outs a_out_left, a_out_right
 #endif
-prints "%-24.24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin

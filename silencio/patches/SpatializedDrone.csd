@@ -7,7 +7,7 @@ All rights reserved.
 -odac -m195 -d 
 </CsOptions>
 <CsInstruments>
-sr = 44100
+sr = 48000
 ksmps = 100
 nchnls = 2
 0dbfs = 100000

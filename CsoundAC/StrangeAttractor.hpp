@@ -27,7 +27,7 @@
 #include <string>
 #include <vector>
 #include <random>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 %}
 %include "std_string.i"
 %include "std_vector.i"
@@ -36,7 +36,7 @@
 #include <string>
 #include <vector>
 #include <random>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #endif
 
 namespace csound

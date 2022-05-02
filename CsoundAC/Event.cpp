@@ -627,4 +627,25 @@ void Event::createNoteOffEvent(Event &event) const
     event.setDuration(0.0);
 }
 
+bool &Event::correct_negative_durations() {
+    static bool correct_negative_durations_ = true;
+    return correct_negative_durations_;
+}
+
+void Event::correct_negative_duration() {
+    if (correct_negative_durations() == false) {
+        return;
+    } 
+    auto current_duration = getDuration();
+    if (current_duration >= 0.) {
+        return;
+    }
+    auto current_onset = getTime();
+    // Recall that current_duration here is always negative!
+    auto corrected_onset = current_onset + current_duration;
+    setTime(corrected_onset);
+    auto corrected_duration = std::fabs(current_duration);
+    setDuration(corrected_duration);
+}
+
 }

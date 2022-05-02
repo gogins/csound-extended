@@ -1,0 +1,10 @@
+#!/bin/sh
+# [Gedit Tool]
+# Name=Build C++ program
+# Input=document
+# Output=output-panel
+# Applicability=all
+# Save-files=document
+# Shortcut=<Primary><Super>b
+
+~/playpen.py cpp-app $GEDIT_CURRENT_DOCUMENT_PATH

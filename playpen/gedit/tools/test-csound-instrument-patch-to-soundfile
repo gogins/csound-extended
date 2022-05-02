@@ -1,0 +1,9 @@
+#!/bin/sh
+# [Gedit Tool]
+# Name=Render Csound patch to soundfile
+# Input=document
+# Output=output-panel
+# Applicability=all
+# Save-files=document
+
+~/playpen.py csound-patch $GEDIT_CURRENT_DOCUMENT_PATH

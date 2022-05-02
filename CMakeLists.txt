@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
+project(csound-extended)
 
 message("CMAKE BUILD SYSTEM FOR CSOUND-EXTENDED")
 message("For a fresh build, run 'bash fresh-build-linux.sh'")
@@ -14,11 +15,9 @@ message("For a fresh build, run 'bash fresh-build-linux.sh'")
 #endif()
 message("There are NO configuration options in this build.")
 message("But if there ARE configuration variables, set them in the ")
-message(" optional \"custom-variables.cmake\" file in this directory.")
-include("custom-variables.cmake" OPTIONAL RESULT_VARIABLE CSOUND_EXTENDED_CUSTOM_CONFIGURATION)
+message(" optional \"Custom.cmake\" file in this directory.")
+include("Custom.cmake" OPTIONAL RESULT_VARIABLE CSOUND_EXTENDED_CUSTOM_CONFIGURATION)
 message("CSOUND_EXTENDED_CUSTOM_CONFIGURATION: ${CSOUND_EXTENDED_CUSTOM_CONFIGURATION}")
-
-project(csound-extended)
 
 # A certain amount of the following has been copied from the core Csound project,
 # and hoisted up here to enable paths etc. to be set for all projects here.
@@ -103,31 +102,32 @@ option(BUILD_WIIMOTE_OPCODES "Build the Wiimote opcodes" ON)
 # First we locate all system packages, these are used to make the Ubuntu
 # csound-extended package, even though local packages may be used for other
 # targets.
-
+message("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
+set(CMAKE_PREFIX_PATH /usr/local)
 find_package(Csound REQUIRED)
-find_package(Eigen3 REQUIRED NO_MODULE)
-find_package(FLTK REQUIRED NO_MODULE)
-#message("FLTK_USE_FILE: ${FLTK_USE_FILE}")
-#include(${FLTK_USE_FILE})
-find_package(FluidSynth)
-find_package(Gettext)
-find_package(GMM)
-find_package(Java)
-find_package(JNI)
-find_package(LIBLO)
+message("CSOUND_LIBRARIES: ${CSOUND_LIBRARIES}")
+find_library(LIBSNDFILE_LIBRARY sndfile REQUIRED)
+find_library(CSND6_LIBRARY csnd6 REQUIRED)
+find_package(Eigen3 REQUIRED CONFIG)
+# checking property of the target
+get_target_property(inc_dir Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
+message("[DEBUG] inc_dir: ${inc_dir}")
+# or checking the Eigen variable
+message("[DEBUG] EIGEN3_INCLUDE_DIRS: ${EIGEN3_INCLUDE_DIRS}")
 find_package(MUSICXML)
 find_package(OpenCV REQUIRED)
+find_package(Boost REQUIRED)
+message("[DEBUG] Boost_INCLUDE_DIR: ${Boost_INCLUDE_DIR}")
+message("[DEBUG] Boost_COMPONENTS: ${Boost_COMPONENTS}")
 find_package(PORTSMF)
-find_package(PNG)
 find_package(Python3 COMPONENTS Interpreter Development)
 find_package(SWIG)
 include(UseSWIG)
-find_package(STK)
 find_package(SWIG)
-find_package(ZLIB)
 
 include_directories("${CSOUND_INCLUDE_DIR}")
 include_directories("${CSOUND_INCLUDE_DIR}/csound")
+include_directories("${CSOUND_SOURCE_HOME}/interfaces")
 if (MUSICXML_FOUND)
     include_directories("${MUSICXML_INCLUDE_DIRS}")
 endif()
@@ -206,9 +206,7 @@ add_custom_target(doxygen_reference
 # add_subdirectory(dependencies)
 
 add_subdirectory(Opcodes/cmask)
-add_subdirectory(Opcodes/bformdec2)
 add_subdirectory(Opcodes/MVerb)
-add_subdirectory(Opcodes/stk)
 add_subdirectory(CsoundAC)
 
 # These are the real targets: the packages.
@@ -227,13 +225,13 @@ if(NOT DISTRO_CODENAME)
   endif()
 endif()
 
-set(CPACK_COMPONENTS_ALL csound-base csound-cmask csound-bformdec2 csound-mverb csound-stk)
+set(CPACK_COMPONENTS_ALL csound-base csound-cmask csound-mverb)
 set(CPACK_COMPONENTS_ALL_IN_ONE_PACKAGE "OFF")
 set(CPACK_GENERATOR TGZ; DEB)
 set(CPACK_PACKAGE_CONTACT "${CPACK_DEBIAN_PACKAGE_MAINTAINER}")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_PACKAGE_NAME "csound-extended-dev")
-set(CPACK_PACKAGE_VERSION "2.2.0")
+set(CPACK_PACKAGE_VERSION "2.3.0")
 # set(CPACK_STRIP_FILES "YES")
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/copyright.txt")
