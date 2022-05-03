@@ -404,7 +404,7 @@ void Composition::generateAllNames()
     base_filepath = label;
     std::replace(base_filepath.begin(), base_filepath.end(), ' ', '_');
     base_filepath = output_directory + "/" + base_filepath;
-    master_filepath = base_filepath + ".master.wav";
+    master_filepath = base_filepath + ".wav";
     normalized_master_filepath = base_filepath + ".norm.wav";
     spectrogram_filepath = base_filepath + ".png";
     cd_quality_filepath = base_filepath + ".cd.wav";
