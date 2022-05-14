@@ -86,7 +86,7 @@ void MusicModel::createCsoundScore(std::string addToScore, double extendSeconds_
     if (extendSeconds_ >= 0.) {
         extendSeconds = extendSeconds_;
         char e_statement[0x100];
-        std::snprintf(e_statement, 0x100, "\s 0.0\ne %9.4f\n", extendSeconds);
+        std::snprintf(e_statement, 0x100, "\ns 0.0\ne %9.4f\n", extendSeconds);
         cppSound->addScoreLine(e_statement);
     }
 }

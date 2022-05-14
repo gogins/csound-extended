@@ -1,3 +1,5 @@
+#ifndef CONVERSIONS_HPP_INCLUDED
+#define CONVERSIONS_HPP_INCLUDED
 /*
  * C S O U N D
  *
@@ -17,7 +19,6 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#pragma once
 
 #include "Platform.hpp"
 #ifdef SWIG
@@ -73,15 +74,15 @@ class SILENCE_PUBLIC Conversions
     static int sampleSize;
 #endif
 public:
-    static double getPI(void);
-    static double get2PI(void);
-    static double getMiddleCHz(void);
-    static double getNORM_7(void);
+    static double getPI();
+    static double get2PI();
+    static double getMiddleCHz();
+    static double getNORM_7();
     static bool initialize();
     /**
      * Returns the maximum soundfile amplitude for the sample size.
      */
-    static int getSampleSize(void);
+    static int getSampleSize();
     /**
      * Returns the maximum soundfile amplitude for the sample size,
      * assuming either float or twos' complement integer samples.
@@ -184,3 +185,5 @@ public:
 };
 
 }
+
+#endif

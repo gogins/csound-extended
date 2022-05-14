@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DKM_HPP_INCLUDED
+#define DKM_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -204,3 +205,4 @@ const std::vector<std::array<T, N>>& data, uint32_t k) {
 
 } // namespace dkm
 
+#endif

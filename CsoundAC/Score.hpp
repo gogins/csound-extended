@@ -1,3 +1,5 @@
+#ifndef SCORE_HPP_INCLUDED
+#define SCORE_HPP_INCLUDED
 /*
  * C S O U N D
  *
@@ -17,7 +19,6 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#pragma once
 
 #include "Platform.hpp"
 #ifdef SWIG
@@ -65,7 +66,7 @@ public:
     std::map<int, double> pans;
     Score();
     virtual ~Score();
-    virtual void initialize();
+    void initialize();
     virtual void append(Event event);
     virtual void append_event(Event event);
     virtual void append(double time, double duration, double status, double instrument, double key, double velocity, double phase=0, double pan=0, double depth=0, double height=0, double pitches=4095);
@@ -426,3 +427,5 @@ public:
 };
 
 }
+
+#endif

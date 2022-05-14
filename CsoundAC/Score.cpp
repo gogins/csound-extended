@@ -34,10 +34,10 @@
 
 #include "allegro.h"
 
-#if defined(EXP)
-#undef EXP
-#endif
-#define EXP SILENCE_PUBLIC
+//~ #if defined(EXP)
+//~ #undef EXP
+//~ #endif
+//~ #define EXP SILENCE_PUBLIC
 
 #if defined(MUSICXML_FOUND)
 #include <elements.h>
@@ -79,15 +79,14 @@ void SILENCE_PUBLIC printChord(std::string label, const std::vector<double> &cho
     System::inform(stream.str().c_str());
 }
 
-Score::Score(void) :
+Score::Score() :
     rescaleMinima(Event::ELEMENT_COUNT),
     rescaleRanges(Event::ELEMENT_COUNT)
 {
     initialize();
 }
 
-Score::~Score(void)
-{
+Score::~Score() {
 }
 
 #if defined(MUSICXML_FOUND)
@@ -429,12 +428,10 @@ void Score::getScale(std::vector<Event> &score, int dimension, size_t beginAt, s
         const Event &e = score[beginAt];
         maximum = max(e.getTime(), e.getTime() + e.getDuration());
         minimum = min(e.getTime(), e.getTime() + e.getDuration());
-        double beginning;
-        double ending;
         for( ; beginAt != endAt; ++beginAt) {
             const Event &event = score[beginAt];
-            beginning = min(event.getTime(), event.getTime() + event.getDuration());
-            ending = max(event.getTime(), event.getTime() + event.getDuration());
+            double beginning = min(event.getTime(), event.getTime() + event.getDuration());
+            double ending = max(event.getTime(), event.getTime() + event.getDuration());
             if(ending > maximum) {
                 maximum = ending;
             } else if(beginning < minimum) {
@@ -499,7 +496,7 @@ void Score::setScale(std::vector<Event> &score,
     }
 }
 
-void Score::findScale(void)
+void Score::findScale()
 {
     sort();
     for(int dimension = 0; dimension < Event::ELEMENT_COUNT; ++dimension) {
@@ -508,7 +505,7 @@ void Score::findScale(void)
     }
 }
 
-void Score::rescale(void)
+void Score::rescale()
 {
     sort();
     for(int dimension = 0; dimension < Event::ELEMENT_COUNT; ++dimension) {
@@ -564,7 +561,7 @@ std::string Score::toString()
     return stream.str();
 }
 
-void Score::initialize(void)
+void Score::initialize()
 {
     std::vector<Event>::clear();
     scaleTargetMinima[Event::STATUS] = 0;
@@ -1524,7 +1521,7 @@ std::string Score::toJson() {
         stream << field;
     }
     stream << "  ]\n";
-    stream << "};\n";
+    stream << "}\n";
     return stream.str();
 }
 

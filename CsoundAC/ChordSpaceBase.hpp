@@ -1,3 +1,5 @@
+#ifndef CHORDSPACEBASE_HPP_INCLUDED
+#define CHORDSPACEBASE_HPP_INCLUDED
 /*
  * C S O U N D
  *
@@ -17,7 +19,6 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#pragma once
 
 #define EIGEN_INITIALIZE_MATRICES_BY_ZERO
 #include "Platform.hpp"
@@ -5322,3 +5323,4 @@ inline SILENCE_PUBLIC std::map<Chord, Chord> &inverse_prime_forms_for_chords() {
 
 #pragma GCC diagnostic push
   
+#endif

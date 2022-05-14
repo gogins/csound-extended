@@ -1,3 +1,5 @@
+#ifndef CHORD_SPACE_GMP_HPP_INCLUDED
+#define CHORD_SPACE_GMP_HPP_INCLUDED
 /*
  * C S O U N D
  *
@@ -17,7 +19,6 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#pragma once
 
 #define EIGEN_INITIALIZE_MATRICES_BY_ZERO
 #include "Platform.hpp"
@@ -5304,3 +5305,6 @@ inline SILENCE_PUBLIC mp_double voiceleadingSmoothness(const Chord &a, const Cho
 } // End of namespace csound.
 
 #pragma GCC diagnostic push
+
+#endif
+

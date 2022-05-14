@@ -1,3 +1,6 @@
+#ifndef STRANGEATTRACTOR_HPP_INCLUDED
+#define STRANGEATTRACTOR_HPP_INCLUDED
+
 /*
  * C S O U N D
  *
@@ -17,7 +20,6 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#pragma once
 
 #include "Platform.hpp"
 #ifdef SWIG
@@ -165,8 +167,8 @@ protected:
     double ZSAVE;
 public:
     Random randomNode;
-    StrangeAttractor(void);
-    virtual ~StrangeAttractor(void);
+    StrangeAttractor();
+    virtual ~StrangeAttractor();
     virtual void setCode(std::string code);
     virtual std::string getCode() const;
     virtual void setIterationCount(size_t iterationCount);
@@ -217,3 +219,5 @@ public:
 };
 
 }
+
+#endif
