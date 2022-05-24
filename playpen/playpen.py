@@ -103,7 +103,9 @@ if platform_system == "Darwin":
     open_command = "open"
 else:
     open_command = "xdg-open"
-source_filepath = sys.argv[2]
+source_filepath = ""
+if len(sys.argv) > 2:
+    source_filepath = sys.argv[2]
 home_directory = os.environ["HOME"]
 playpen_ini_filepath = os.path.join(home_directory, "playpen.ini")
 settings = configparser.ConfigParser()
