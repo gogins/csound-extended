@@ -174,7 +174,8 @@ def csd_soundfile():
         print("\ncsd_soundfile: {} to {}...".format(source_filepath, output_filename))
         csound_command = "csound {} -RWo{} --simple-sorted-score={}.srt".format(source_filepath, output_filename, source_filepath)
         print("csound command: {}".format(csound_command))
-        subprocess.run(csound_command, shell=True)
+        result = subprocess.run(csound_command, shell=True)
+        print("csd_soundfile result: {}".format(result))
     except:
         traceback.print_exc()
     finally:
