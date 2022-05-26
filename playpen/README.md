@@ -46,7 +46,7 @@ attribute.
     code editor that provides custom commands.
 4.  The `gedit/tools` directory defines such custom commands for the gedit 
     text editor.
-5.  The `.SciTEUser.peroperties` file defines custom commands for the SciTE 
+5.  The `.SciTEUser.properties` file defines such custom commands for the SciTE 
     text editor.
 
 Then, if possible, these embedded languages are compiled and executed under 
