@@ -182,6 +182,19 @@ def csd_soundfile():
         print("soundfile: {} to {}.\n".format(source_filepath, output_filename))
         return
         
+def inc_soundfile():
+    try:
+        print("\ninc_soundfile: {} to {}...".format(source_filepath, output_filename))
+        csound_command = "csound {} -RWo{} --simple-sorted-score={}.srt".format(source_filepath, output_filename, source_filepath)
+        print("csound command: {}".format(csound_command))
+        result = subprocess.run(csound_command, shell=True)
+        print("csd_soundfile result: {}".format(result))
+    except:
+        traceback.print_exc()
+    finally:
+        print("soundfile: {} to {}.\n".format(source_filepath, output_filename))
+        return
+        
 def post_process():
     try:
         print("\npost_process: {}...".format(source_filepath))
@@ -241,7 +254,10 @@ def play():
     try:
         print("play: {}".format(source_filepath))
         master_filepath = os.path.join(directory, master_filename)
-        command = "{} {}".format(soundfile_editor, master_filepath)
+        if platform_system == "Darwin":
+            command = "open {} -a {}".format(master_filepath, soundfile_editor)            
+        else:
+            command = "{} {}".format(soundfile_editor, master_filepath)
         print("playback command: {}".format(command))
         subprocess.run(command, shell=True)
     except:
