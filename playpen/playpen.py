@@ -331,8 +331,8 @@ def cpp_app():
     try:
         print("platform_system:", platform_system)
         print("cpp_app: {}...".format(source_filepath))
-        command = compiler_command + " {} -o{}; ls -ll {}"
-        command = command.format(source_filepath, rootname, rootname)
+        command = compiler_command + " -o{}; ls -ll {};./{}"
+        command = command.format(source_filepath, rootname, rootname, rootname)
         subprocess.run(command, shell=True)
     except:
         traceback.print_exc()
@@ -342,7 +342,7 @@ def cpp_app():
 
 def cpp_audio():
     try:
-        command = compiler_command + " {} -o{};ls -ll {};./{} --csound --audio PortAudio --device {}"
+        command = compiler_command + " -o{};ls -ll {};./{} --csound --audio PortAudio --device {}"
         command = command.format(source_filepath, rootname, rootname, rootname, csound_audio_output)
         print("Executing compiler command:", command)
         pid = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT)
@@ -355,7 +355,7 @@ def cpp_audio():
 def cpp_soundfile():
     print("platform_system:", platform_system)
     try:
-        command = compiler_command + " {} -o{};ls -ll {};./{} --csound {} -o{}"
+        command = compiler_command + " -o{};ls -ll {};./{} --csound {} -o{}"
         command = command.format(source_filepath, rootname, rootname, rootname, common_csound_options, output_filename)
         print("Executing compiler command:", command)
         pid = subprocess.run(command, shell=True, stderr=subprocess.STDOUT)
