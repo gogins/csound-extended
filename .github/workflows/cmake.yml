@@ -45,6 +45,8 @@ jobs:
           brew update
           brew install graphviz
           brew install doxygen
+          brew install libsndfile
+          brew install csound
           echo "Updating all git submodules..."
           git submodule update --init --recursive
           git submodule status --recursive
@@ -68,6 +70,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install graphviz
           sudo apt-get install doxygen
+          sudo apt-get install libsndfile1-dev
+          sudo apt-get install csound
           echo "Updating all git submodules..."
           git submodule update --init --recursive
           git submodule status --recursive
@@ -90,6 +94,17 @@ jobs:
           echo "Installing tools..."
           choco install graphviz -y
           choco install doxygen.install -y
+          echo "Installing dependencies..."
+          vcpkg install libsndfile
+          git clone "https://github.com/csound/csound.git"
+          cd csound
+          mkdir -p build
+          cd build
+          cmake ..
+          make
+          cd ..
+          cd ..
+          pwd
           dir C:\"Program Files"\doxygen
           refreshenv
           echo "Updating all git submodules..."
