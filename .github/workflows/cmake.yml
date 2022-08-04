@@ -77,6 +77,8 @@ jobs:
           sudo apt-get install doxygen
           sudo apt-get install libsndfile1-dev
           sudo apt-get install csound
+          sudo apt-get install libcsound64-dev
+          sudo apt-get install libcsnd6-6.0v5
           sudo apt-get install libopencv-dev
           echo "Environment:"
           env
