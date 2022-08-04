@@ -56,7 +56,7 @@ jobs:
           echo "Environment:"
           env
           echo "Finished updating all git submodules."
-        echo "Trying to find csdl.h..."
+          echo "Trying to find csdl.h..."
           find /opt/runner . -name "csdl.h" -ls 2>/dev/null
           find /Users/runner . -name "csdl.h" -ls 2>/dev/null
           find /usr . -name "csdl.h" -ls 2>/dev/null
