@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _DKM_UTILS_HPP_INCLUDED
+#define _DKM_UTILS_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -125,3 +126,5 @@ const std::vector<std::array<T, N>>& points, uint32_t k, uint32_t n_init = 10) {
 }
 
 } // namespace dkm
+
+#endif

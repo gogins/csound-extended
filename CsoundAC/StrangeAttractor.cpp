@@ -33,7 +33,7 @@ StrangeAttractor::StrangeAttractor () : scoreType(1)
     reset ();
 }
 
-StrangeAttractor::~StrangeAttractor(void)
+StrangeAttractor::~StrangeAttractor()
 {
 }
 

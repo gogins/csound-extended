@@ -69,6 +69,12 @@ log.
     build according to `https://github.com/grame-cncm/libmusicxml/tree/dev/build` 
     but with this command `cmake -DCMAKE_C_FLAGS="-fPIC -flto" -DCMAKE_CXX_FLAGS="-fPIC -flto"`, 
     and finally `sudo make install`.
+    
+3.  There are prebuilt binary releases for this package available at 
+    https://github.com/gogins/csound-extended/releases. These can be downloaded,
+    unzipped in your home directory, and used from there. You will need to add 
+    the directory containing the CsoundAC shared library to your binary search 
+    path.
 
 3.  CsoundAC and other Linux binaries and other resources are installed from
     the Debian package released from this repository, e.g.

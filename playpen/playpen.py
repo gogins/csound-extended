@@ -103,7 +103,9 @@ if platform_system == "Darwin":
     open_command = "open"
 else:
     open_command = "xdg-open"
-source_filepath = sys.argv[2]
+source_filepath = ""
+if len(sys.argv) > 2:
+    source_filepath = sys.argv[2]
 home_directory = os.environ["HOME"]
 playpen_ini_filepath = os.path.join(home_directory, "playpen.ini")
 settings = configparser.ConfigParser()
@@ -132,6 +134,7 @@ mp3_filename = '%s.mp3' % label
 mp4_filename = '%s.mp4' % label
 flac_filename = '%s.flac' % label
 common_csound_options = "-RWd -m163 -W -+msg_color=0 --midi-key=4 --midi-velocity=5"
+compiler_command = settings.get("cplusplus", "compiler-command")
 print('Common Csound options:  ', common_csound_options)
 print('Source file:            ', source_filepath)
 print('Basename:               ', basename)
@@ -149,6 +152,7 @@ print('CD quality filename:    ', cd_quality_filename)
 print('MP3 filename:           ', mp3_filename)
 print('MP4 filename:           ', mp4_filename)
 print('FLAC filename:          ', flac_filename)
+print('C++ compiler command:   ', compiler_command)
 bext_description       = metadata_notes
 bext_originator        = metadata_author
 bext_orig_ref          = basename
@@ -170,7 +174,21 @@ def csd_soundfile():
         print("\ncsd_soundfile: {} to {}...".format(source_filepath, output_filename))
         csound_command = "csound {} -RWo{} --simple-sorted-score={}.srt".format(source_filepath, output_filename, source_filepath)
         print("csound command: {}".format(csound_command))
-        subprocess.run(csound_command, shell=True)
+        result = subprocess.run(csound_command, shell=True)
+        print("csd_soundfile result: {}".format(result))
+    except:
+        traceback.print_exc()
+    finally:
+        print("soundfile: {} to {}.\n".format(source_filepath, output_filename))
+        return
+        
+def inc_soundfile():
+    try:
+        print("\ninc_soundfile: {} to {}...".format(source_filepath, output_filename))
+        csound_command = "csound {} -RWo{} --simple-sorted-score={}.srt".format(source_filepath, output_filename, source_filepath)
+        print("csound command: {}".format(csound_command))
+        result = subprocess.run(csound_command, shell=True)
+        print("csd_soundfile result: {}".format(result))
     except:
         traceback.print_exc()
     finally:
@@ -236,7 +254,10 @@ def play():
     try:
         print("play: {}".format(source_filepath))
         master_filepath = os.path.join(directory, master_filename)
-        command = "{} {}".format(soundfile_editor, master_filepath)
+        if platform_system == "Darwin":
+            command = "open {} -a {}".format(master_filepath, soundfile_editor)            
+        else:
+            command = "{} {}".format(soundfile_editor, master_filepath)
         print("playback command: {}".format(command))
         subprocess.run(command, shell=True)
     except:
@@ -305,14 +326,13 @@ def html_localhost():
     finally:
         print("html_localhost: {}.".format(source_filepath))
         return
-
+        
 def cpp_app():
     try:
+        print("platform_system:", platform_system)
         print("cpp_app: {}...".format(source_filepath))
-        if platform_system == "Darwin":
-            command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include -I/usr/local/include/csound -I/opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3 -I/opt/homebrew/Cellar/opencv/4.5.4_3/include/opencv4 -I/opt/homebrew/Cellar/boost/1.78.0_1/include -I/opt/local/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ls -ll".format(source_filepath, rootname)
-        else:
-            command = "c++ -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I. -I/usr/local/include -o{} -I/usr/local/include -I/usr/include/csound -lcsound64 -lCsoundAC -lsndfile -lgc -lpthread -ldl -lm; ls -ll".format(source_filepath, rootname)
+        command = compiler_command + " -o{}; ls -ll {};./{}"
+        command = command.format(source_filepath, rootname, rootname, rootname)
         subprocess.run(command, shell=True)
     except:
         traceback.print_exc()
@@ -322,10 +342,9 @@ def cpp_app():
 
 def cpp_audio():
     try:
-        if platform_system == "Darwin":
-            command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include -I/usr/local/include/csound -I/opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3 -I/opt/homebrew/Cellar/opencv/4.5.4_3/include/opencv4 -I/opt/homebrew/Cellar/boost/1.78.0_1/include -I/opt/local/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ls -ll;./{} --audio {} -o{}".format(source_filepath, rootname, rootname, common_csound_options, csound_audio_output)
-        else:
-            command = "c++ -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/usr/local/include  {} -o{} -I/usr/local/include/csound -I/usr/include/csound -I/usr/include/luajit-2.1 -lGamma -lcsound64 -lCsoundAC -lsndfile -lgc -lpthread -ldl -lm; ls -ll;./{} --csound     {} -o{}".format(source_filepath, rootname, rootname, common_csound_options, csound_audio_output)
+        command = compiler_command + " -o{};ls -ll {};./{} --csound --audio PortAudio --device {}"
+        command = command.format(source_filepath, rootname, rootname, rootname, csound_audio_output)
+        print("Executing compiler command:", command)
         pid = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT)
     except:
         traceback.print_exc()
@@ -334,11 +353,11 @@ def cpp_audio():
         return
 
 def cpp_soundfile():
+    print("platform_system:", platform_system)
     try:
-        if platform_system == "Darwin":
-            command = "c++ {} -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers -I/usr/local/include -I/usr/local/include/csound -I/opt/homebrew/Cellar/eigen/3.4.0_1/include/eigen3 -I/opt/homebrew/Cellar/opencv/4.5.4_3/include/opencv4 -I/opt/homebrew/Cellar/boost/1.78.0_1/include -I/opt/local/include /Library/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64 -lCsoundAC -L/opt/homebrew/lib -lsndfile -lgc -lpthread -ldl -lm -o{}; ls -ll;./{} --csound {} -o{}".format(source_filepath, rootname, rootname, common_csound_options, output_filename)
-        else:
-            command = "c++ -v --std=gnu++17 -lstdc++ -O3 -g -Wno-write-strings -I.  -I/usr/local/include  {} -o{} -I/usr/local/include/csound -I/usr/include/csound -I/usr/include/luajit-2.1 -lGamma -lcsound64 -lCsoundAC -lsndfile -lgc -lpthread -ldl -lm; ls -ll;./{} {} -o{}".format(source_filepath, rootname, rootname, common_csound_options, output_filename)
+        command = compiler_command + " -o{};ls -ll {};./{} --csound {} -o{}"
+        command = command.format(source_filepath, rootname, rootname, rootname, common_csound_options, output_filename)
+        print("Executing compiler command:", command)
         pid = subprocess.run(command, shell=True, stderr=subprocess.STDOUT)
     except:
         traceback.print_exc()
@@ -407,6 +426,8 @@ if command == 'cpp-app':
     cpp_app()
 if command == 'cpp-audio':
     cpp_audio()
+if command == 'cpp-soundfile':
+    cpp_soundfile()
 if command == 'cpp-play':
     cpp_soundfile()
     post_process()

@@ -1,3 +1,5 @@
+#ifndef VOICELEADINGNODE_HPP_INCLUDED
+#define VOICELEADINGNODE_HPP_INCLUDED
 /*
  * C S O U N D
  *
@@ -17,7 +19,6 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#pragma once
 
 #include "Platform.hpp"
 #include "Voicelead.hpp"
@@ -352,3 +353,5 @@ public:
 };
 
 }
+
+#endif

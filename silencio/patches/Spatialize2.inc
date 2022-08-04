@@ -1,12 +1,13 @@
 gShelp init {{
 S P A T I A L I Z E
 
-Copyright (c) 2014 by Michael Gogins.
+Copyright (c) 2014-2022 by Michael Gogins.
 This software is licensed under the terms of the
 GNU Lesser Public License.
 
 Many thanks to Jan Jacob Hofmann for his advanced Csound
-spatialization system, which I have adapted here.
+spatialization system, which I have adapted here, and adapted to the 
+bformenc1/bformdec2 opcodes.
 
 This software is a system of Ambisonic and/or HRTF-based
 audio spatialization for Csound. I have simplified Hofmann's
@@ -19,16 +20,29 @@ If a single source fans out to one or more sinks, the sinks are opcodes.
 If multiple sources fan in to a single sink, the sources are instr outlets
 and the sink is an instr inlet.
 
-The available apeaker rigs are:
+The available speaker rigs are:
 
- 1 Stereo - L(90), R(-90); this is an M+S style stereo decode.
- 2 Quad - FL(45), BL(135), BR(-135), FR(-45). This is a first-order decode.
- 3 5.0 - L(30), R(-30), C(0), BL(110), BR(-110). Note that many people do not actually use the angles above for their speaker arrays and a good decode for DVD etc can be achieved using the Quad configuration to feed L, R, BL and BR (leaving C silent).
- 4 Octagon - FFL(22.5), FLL(67.5), BLL(112.5), BBL(157.5), BBR(-157.5), BRR(-112.5), FRR(-67.5), FFR(-22.5). This is a first-, second- or third-order decode, depending on the number of input channels.
- 5 Cube - FLD(45,-35.26), FLU(45,35.26), BLD(135,-35.26), BLU(135,35.26), BRD(-135,-35.26), BRU(-135,35.26), FRD(-45,-35.26), FRU(-45,35.26). This is a first-order decode.
- 6 Hexagon - FL(30), L(90) BL(150), BR(-150), R(-90), FR(-30). This is a first- or second- order decode.
-21 2D binaural configuration. This first decodes to a octagon configuration and then applies HRTF filters.
-31 3D binaural configuration. This first decodes to a dodecahedron configuration and then applies HRTF filters.
+ 1  Stereo - L(90), R(-90); this is an M+S style stereo decode.
+    0th order, 4 channels.
+ 2  Quad - FL(45), BL(135), BR(-135), FR(-45). 
+    1st order, 4 channels.
+ 3  5.0 - L(30), R(-30), C(0), BL(110), BR(-110). Note that many people do not 
+    actually use the angles above for their speaker arrays and a good decode 
+    for DVD etc can be achieved using the 
+    2nd or 3rd order -- 9 or 16 channels.
+ 4  Octagon - FFL(22.5), FLL(67.5), BLL(112.5), BBL(157.5), BBR(-157.5), 
+    BRR(-112.5), FRR(-67.5), FFR(-22.5). This is a first-, second- or 
+    third-order decode, depending on the number of input channels.
+    1st, 2nd, or 3rd order -- 4, 9, or 16 channels.
+ 5  Cube - FLD(45,-35.26), FLU(45,35.26), BLD(135,-35.26), BLU(135,35.26), 
+    BRD(-135,-35.26), BRU(-135,35.26), FRD(-45,-35.26), FRU(-45,35.26). 
+    1st order -- 4 channels.
+ 6  Hexagon - FL(30), L(90) BL(150), BR(-150), R(-90), FR(-30). 
+    1st or 2nd order -- 4 or 9 channels.
+21  2D binaural configuration. This first decodes to a octagon configuration and 
+    then applies HRTF filters.
+31  3D binaural configuration. This first decodes to a dodecahedron 
+    configuration and then applies HRTF filters.
 
 Please note the coordinate conventions. The listener is always the origin.
 In this system, spatial locations are passed to the spatialize opcode in
@@ -53,14 +67,14 @@ USAGE
 
 In the orchestra header:
 
-gi_BformatDecoder_SpeakerRig init 31
+gi_BformatDecoder_SpeakerRig init 5
 
 alwayson SpatialReverb
-alwayson BformatDecoder
+alwayson Bformat3Decoder
 
 connect "SpatializingInstrument", "out", "SpatialReverb", "in"
-connect "SpatializingInstrument", "outbformat", "BformatDecoder", "inbformat"
-connect "SpatialReverb", "outbformat", "BformatDecoder", "inbformat"
+connect "SpatializingInstrument", "outbformat", "Bformat3Decoder", "inbformat"
+connect "SpatialReverb", "outbformat", "Bformat3Decoder", "inbformat"
 
 instr SpatializingInstrument
 absignal[] init 16
@@ -73,15 +87,98 @@ outletv "outbformat", absignal
 prints "%-24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
 
+TODO
+
+-- Upgrade demonstration piece with jspline spatial trajectories
+   and algorithmically generated percussive notes.
+
+-- Plug in and test early reflections code.
+
+-- Test with rigs 2 through 5.
+
+-- See if babo can be adapted for spatial reverb.
+
+-- Upgrade panning with arbitrary measured speaker positions.
+
+-- Try spat3d for global reverb and early reflections (not doing,
+   as not periphonic).
+
 }}
+
+opcode kprintlevels, 0, Sa[]
+Slabel, absignal[] xin
+krms0 rms absignal[0]
+krms1 rms absignal[1]
+krms2 rms absignal[2]
+krms3 rms absignal[3]
+printks "%s %9.4f %9.4f %9.4f %9.4f\n", 1., Slabel, krms0, krms1, krms2, krms3
+endop
 
 ;prints gShelp
 
 ; Global parameters that can be re-defined in the orchestra header.
 
 gk_Spatialize_Verbose init 0
-gi_BformatDecoder_SpeakerRig init 31
+gi_BformatDecoder_SpeakerRig chnexport "gi_BformatDecoder_SpeakerRig", 3 ; 0
+gi_BformatDecoder_SpeakerRig init 2
+gk_Spatialize_SpeakerRigRadius chnexport "gk_Spatialize_SpeakerRigRadius", 3 ; 0
 gk_Spatialize_SpeakerRigRadius init 5.0
+
+/**
+ * Returns the highest Ambisonic order available using bformenc1 for the 
+ * global speaker rig.
+ */
+opcode channels_for_rig, i, 0
+i_channels init -1
+if     gi_BformatDecoder_SpeakerRig == 1 then
+  i_channels = 4
+elseif gi_BformatDecoder_SpeakerRig == 2 then
+  i_channels = 4
+elseif gi_BformatDecoder_SpeakerRig == 3 then
+  i_channels = 16
+elseif gi_BformatDecoder_SpeakerRig == 4 then
+  i_channels = 16
+elseif gi_BformatDecoder_SpeakerRig == 5 then
+  i_channels = 4
+elseif gi_BformatDecoder_SpeakerRig == 6 then
+  i_channels = 9
+elseif gi_BformatDecoder_SpeakerRig == 21 then
+  i_channels = 16
+elseif gi_BformatDecoder_SpeakerRig == 31 then
+  i_channels = 16
+endif
+xout i_channels
+endop
+
+opcode ambi_zero, 0, a[]
+a_vector[] xin
+k_index init 0
+k_bound lenarray a_vector
+while k_index < k_bound do
+  a_vector[k_index] = 0
+  k_index = k_index + 1
+od
+endop
+
+opcode ambi_assign, 0, a[]a
+a_vector[], a_scalar xin
+k_index init 0
+k_bound lenarray a_vector
+while k_index < k_bound do
+  a_vector[k_index] = a_scalar
+  k_index = k_index + 1
+od
+endop
+
+opcode ambi_plus_add, 0, a[]a[]
+a_vector[], a_addend[] xin
+k_index init 0
+k_bound lenarray a_vector
+while k_index < k_bound do
+  a_vector[k_index] = a_vector[k_index] + a_addend[k_index]
+  k_index = k_index + 1
+od
+endop
 
 opcode CartesianToPolar, kkk, kkk
 kx, ky, kz xin
@@ -132,6 +229,7 @@ xout kangle, kelevation, kdistance
 endop
 
 ; Zero distance blows this up.
+gk_DopplerByDistance_Mach chnexport "gk_DopplerByDistance_Mach", 3 ; 0
 gk_DopplerByDistance_Mach init 340.29
 opcode DopplerByDistance, a, ak
 asignal, kdistance xin
@@ -258,18 +356,23 @@ aoutput = aoutwet + aoutdry
 xout aoutput
 endop
 
+gk_LocalReverbByDistance_Wet chnexport "gk_LocalReverbByDistance_Wet", 3 ; 0
 gk_LocalReverbByDistance_Wet init 0.2
 ; This is a fraction of the speaker rig radius.
+gk_LocalReverbByDistance_FrontWall chnexport "gk_LocalReverbByDistance_FrontWall", 3 ; 0
 gk_LocalReverbByDistance_FrontWall init 0.9
+gk_LocalReverbByDistance_ReverbDecay chnexport "gk_LocalReverbByDistance_ReverbDecay", 3 ; 0
 gk_LocalReverbByDistance_ReverbDecay init 0.6
+gk_LocalReverbByDistance_CutoffHz chnexport "gk_LocalReverbByDistance_CutoffHz", 3 ; 0
 gk_LocalReverbByDistance_CutoffHz init sr
+gk_LocalReverbByDistance_RandomDelayModulation chnexport "gk_LocalReverbByDistance_RandomDelayModulation", 3 ; 0
 gk_LocalReverbByDistance_RandomDelayModulation init 1.0
 
 opcode LocalReverbByDistance, aa, ak
 ; Re-implemented from Dodge and Jerse.
 asignal, kdistanceMeters xin
 kdry = 1.0 - gk_LocalReverbByDistance_Wet
-knormalizedDistance = kdistanceMeters / gk_Spatialize_SpeakerRigRadius
+knormalizedDistance = kdistanceMeters / gk_Spatialize_SpeakerRigRadius + .00001
 klocalAttenuation = 1.0 / knormalizedDistance
 kglobalAttenuation = 1.0 / sqrt(knormalizedDistance)
 alocalReverbSend = asignal * klocalAttenuation
@@ -284,31 +387,37 @@ alocalReverbLeft, alocalReverbRight reverbsc	alocalReverbSend, alocalReverbSend,
 alocalReverbWet = ((alocalReverbLeft + alocalReverbRight) / 2.0) * gk_LocalReverbByDistance_Wet
 alocalReverbDry = kdry * asignal
 alocalReverberatedSignal = alocalReverbDry + alocalReverbWet
-if gk_Spatialize_Verbose!= 0 goto gk_Spatialize_Verbose_0
-goto gk_Spatialize_Verbose_not_0
-gk_Spatialize_Verbose_0:
+if gk_Spatialize_Verbose == 1 then
 printks "LocalReverbByDistance asignal: %9.4f klocalAttentuaton: %9.4f iglobalReverbSendDelayMilliseconds: %9.4f kglobalAttenuation: %9.4f alocalReverberatedSignal: %9.4f aglobalReverbSend: %9.4f\n", 0.5, asignal, klocalAttenuation, iglobalReverbSendDelayMilliseconds, kglobalAttenuation, alocalReverberatedSignal, aglobalReverbSendDelayed
-gk_Spatialize_Verbose_not_0:
+endif
 xout alocalReverberatedSignal, aglobalReverbSendDelayed
 endop
 
 ; Switch on/off diffuse reflections [0=off, 1=on] and adjust gain of reflection (e.g.: 1= normal gain, 2= twice as loud, 0.5 = half as loud).
+gk_EarlyReflection_diffref chnexport "gk_EarlyReflection_diffref", 3 ; , 0
 gk_EarlyReflection_diffref init 0 * 0
 ; Switch on/off specular reflections [0=off, 1=on] and adjust gain of reflection (e.g.: 1= normal gain, 2= twice as loud, 0.5 = half as loud).
+gk_EarlyReflection_specref chnexport "gk_EarlyReflection_specref", 3 ; , 0
 gk_EarlyReflection_specref init 0 * 0
 ; Position of FrontWall at the x-axis [units] for calculation of early reflections.
+gk_EarlyReflection_FrontWall chnexport "gk_EarlyReflection_FrontWall", 3 ; , 0
 gk_EarlyReflection_FrontWall init 1.6
 ; Position of SideWall at the y-axis [units] for calculation of early reflections.
+gk_EarlyReflection_SideWall chnexport "gk_EarlyReflection_SideWall", 3 ; , 0
 gk_EarlyReflection_SideWall init 1.3
 ; Height of the Ceiling measured from the zero-point of the coordinate-system [units] for calculation of early reflections.
+gk_EarlyReflection_Ceiling chnexport "gk_EarlyReflection_Ceiling", 3 ; , 0
 gk_EarlyReflection_Ceiling init 1.1
 ; Damping factor of the reflecting surface (gain of reverb).
+gk_EarlyReflection_damp chnexport "gk_EarlyReflection_damp", 3 ; , 0
 gk_EarlyReflection_damp init 0.1
 ; Absorbtion characteristics of the wall in respect to high frequencies: frequencies above ihighdamp get filtered out.
+gk_EarlyReflection_highdamp chnexport "gk_EarlyReflection_highdamp", 3 ; , 0
 gk_EarlyReflection_highdamp init 15000
 ; Low frequency boost for sources near a wall.
+gk_EarlyReflection_lfboost chnexport "gk_EarlyReflection_lfboost", 3 ; , 0
 gk_EarlyReflection_lfboost init 1
-opcode DiffuseEarlyReflection, a[], akkki
+opcode DiffuseEarlyReflect, a[], akkki
 asignal, kx, ky, kz, iwhichwall xin
 
 if iwhichwall == 1 goto iwhichwall_1
@@ -396,30 +505,32 @@ asigref = asigref * k_gain
 ; Convert radians to degrees.
 kAref = kAref * 57.2958
 kEref = kEref * 57.2958
-absignal[] init 16
+i_channels channels_for_rig
+absignal[] init i_channels
 absignal bformenc1 asigref, kAref, kEref
 xout absignal
 endop
 
 opcode DiffuseEarlyReflections, a[], akkk
-asignal, kx, ky, kz xin
+asignalin, kx, ky, kz xin
 ; Filter high frequencies to represent absorbtion by the wall.
-asignal tone asignal, gk_EarlyReflection_highdamp
-absignal[] init 16
-abreflectedSignal[] init 16
+asignal tone asignalin, gk_EarlyReflection_highdamp
+i_channels channels_for_rig
+absignal[] init i_channels
+abreflectedSignal[] init i_channels
 ; Bounce the signal off each of the walls.
-abreflectedSignal DiffuseEarlyReflection asignal, kx, ky, kz, 1
-absignal = absignal + abreflectedSignal
-abreflectedSignal DiffuseEarlyReflection asignal, kx, ky, kz, 2
-absignal = absignal + abreflectedSignal
-abreflectedSignal DiffuseEarlyReflection asignal, kx, ky, kz, 3
-absignal = absignal + abreflectedSignal
-abreflectedSignal DiffuseEarlyReflection asignal, kx, ky, kz, 4
-absignal = absignal + abreflectedSignal
-abreflectedSignal DiffuseEarlyReflection asignal, kx, ky, kz, 5
-absignal = absignal + abreflectedSignal
-abreflectedSignal DiffuseEarlyReflection asignal, kx, ky, kz, 6
-absignal = absignal + abreflectedSignal
+abreflectedSignal DiffuseEarlyReflect asignal, kx, ky, kz, 1
+ambi_plus_add absignal, abreflectedSignal
+abreflectedSignal DiffuseEarlyReflect asignal, kx, ky, kz, 2
+ambi_plus_add absignal, abreflectedSignal
+abreflectedSignal DiffuseEarlyReflect asignal, kx, ky, kz, 3
+ambi_plus_add absignal, abreflectedSignal
+abreflectedSignal DiffuseEarlyReflect asignal, kx, ky, kz, 4
+ambi_plus_add absignal, abreflectedSignal
+abreflectedSignal DiffuseEarlyReflect asignal, kx, ky, kz, 5
+ambi_plus_add absignal, abreflectedSignal
+abreflectedSignal DiffuseEarlyReflect asignal, kx, ky, kz, 6
+ambi_plus_add absignal, abreflectedSignal
 xout absignal
 endop
 
@@ -522,8 +633,10 @@ asigref = asigref * k_gain
 ; Convert radians to degrees.
 kAref = kAref * 57.2958
 kEref = kEref * 57.2958
-absignal[] init 16
+i_channels channels_for_rig
+absignal[] init i_channels
 absignal bformenc1 asigref, kAref, kEref
+;;kprintlevels "SpecularEarlyReflect output", absignal
 xout absignal
 endop
 
@@ -543,57 +656,67 @@ kdiff5 = kiwall5 - kz ; distance of reflection to the Ceiling
 kdiff6 = kiwall6 - kz ; distance of reflection to the floor
 ; Filter high frequencies to represent absorption by the walls.
 afilteredSignal tone asignal, gk_EarlyReflection_highdamp
-absignal[] init 16
-abreflectedSignal[] init 16
+i_channels channels_for_rig
+absignal[] init i_channels
+abreflectedSignal[] init i_channels
 abreflectedSignal SpecularEarlyReflection afilteredSignal, kx, ky, kz, 1, kdiff1
-absignal = absignal + abreflectedSignal
+ambi_plus_add absignal, abreflectedSignal
 abreflectedSignal SpecularEarlyReflection afilteredSignal, kx, ky, kz, 2, kdiff2
-absignal = absignal + abreflectedSignal
+ambi_plus_add absignal, abreflectedSignal
 abreflectedSignal SpecularEarlyReflection afilteredSignal, kx, ky, kz, 3, kdiff3
-absignal = absignal + abreflectedSignal
+ambi_plus_add absignal, abreflectedSignal
 abreflectedSignal SpecularEarlyReflection afilteredSignal, kx, ky, kz, 4, kdiff4
-absignal = absignal + abreflectedSignal
+ambi_plus_add absignal, abreflectedSignal
 abreflectedSignal SpecularEarlyReflection afilteredSignal, kx, ky, kz, 5, kdiff5
-absignal = absignal + abreflectedSignal
+ambi_plus_add absignal, abreflectedSignal
 abreflectedSignal SpecularEarlyReflection afilteredSignal, kx, ky, kz, 6, kdiff6
-absignal = absignal + abreflectedSignal
+ambi_plus_add absignal, abreflectedSignal
+;;kprintlevels "SpecularEarlyReflections output", absignal
 xout absignal
 endop
 
 opcode Spatialize, a[]a, akkk
 asignal, kx, ky, kz xin
 kdistance init 0
-afilteredSignal init 0
 kazimuth, kelevation, kdistance CartesianToPolarDegrees kx, ky, kz
+adistanceCuedSignal init 0
+asend init 0
 adoppleredSignal DopplerByDistance asignal, kdistance
 afilteredSignal LowpassByDistance adoppleredSignal, kdistance
-adistanceCuedSignal init 0
+
 aglobalReverbSend init 0
-abspatializedSignal[] init 16
-asend init 0
-adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
-; Use only minimal distance cues for plain stereo.sS
-if gi_BformatDecoder_SpeakerRig == 1 goto SpeakerRig_1
-goto SpeakerRig_other
-SpeakerRig_1:
+i_channels channels_for_rig
+abspatializedSignal[] init i_channels
+if     gi_BformatDecoder_SpeakerRig == 0 then
 abspatializedSignal bformenc1 afilteredSignal, kazimuth, kelevation
 asend = afilteredSignal
-goto SpeakerRig_endif
-SpeakerRig_other:
- abspatializedSignal bformenc1 adistanceCuedSignal, kazimuth, kelevation
- abdiffuseEarlyReflectionsSignal[] init 16
- abdiffuseEarlyReflectionsSignal DiffuseEarlyReflections adistanceCuedSignal, kx, ky, kz
- abspatializedSignal = abspatializedSignal + abdiffuseEarlyReflectionsSignal
- abspecularEarlyReflectionsSignal[] init 16
- abspecularEarlyReflectionsSignal SpecularEarlyReflections afilteredSignal, kx, ky, kz
- abspatializedSignal = abspatializedSignal + abspecularEarlyReflectionsSignal
- asend = aglobalReverbSend
-SpeakerRig_endif:
+elseif gi_BformatDecoder_SpeakerRig == 1 then
+;; adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
+abspatializedSignal bformenc1 adistanceCuedSignal, kazimuth, kelevation
+asend = aglobalReverbSend
+elseif gi_BformatDecoder_SpeakerRig >  1 then   
+adistanceCuedSignal, aglobalReverbSend LocalReverbByDistance afilteredSignal, kdistance
+abspatializedSignal bformenc1 adistanceCuedSignal, kazimuth, kelevation
+i_channels channels_for_rig
+abdiffuseEarlyReflectionsSignal[] init i_channels
+abdiffuseEarlyReflectionsSignal DiffuseEarlyReflections adistanceCuedSignal, kx, ky, kz
+ambi_plus_add abspatializedSignal, abdiffuseEarlyReflectionsSignal
+abspecularEarlyReflectionsSignal[] init i_channels
+abspecularEarlyReflectionsSignal SpecularEarlyReflections afilteredSignal, kx, ky, kz
+ambi_plus_add abspatializedSignal, abspecularEarlyReflectionsSignal
+;;kprintlevels "Spatialize output", abspatializedSignal
+asend = aglobalReverbSend
+endif
+
 xout abspatializedSignal, asend
 endop
 
+
+gk_SpatialReverb_ReverbDecay chnexport "gk_SpatialReverb_ReverbDecay", 3
 gk_SpatialReverb_ReverbDecay init 0.6
+gk_SpatialReverb_CutoffHz chnexport "gk_SpatialReverb_CutoffHz", 3
 gk_SpatialReverb_CutoffHz init sr
+gk_SpatialReverb_RandomDelayModulation chnexport "gk_SpatialReverb_RandomDelayModulation", 3
 gk_SpatialReverb_RandomDelayModulation init 1.0
 
 instr SpatialReverb2
@@ -762,8 +885,9 @@ iE9 = 0.463646 ; height reverberant point 9 ( 26.565?)
 iE10 = -0.463646 ; height reverberant point 10 ( -26.565?)
 iE11 = 1.570796 ; height reverberant point 11 ( 90?)
 iE12 = -1.570796 ; height reverberant point 12 ( -90?)
-aboutput[] init 16
-abreverberated[] init 16
+i_channels channels_for_rig
+aboutput[] init i_channels
+abreverberated[] init i_channels
 aboutput       bformenc1 afilt1, iA1, iE1
 abreverberated bformenc1 afilt2, iA2, iE2
 aboutput[ 0] = aboutput[ 0] + abreverberated[ 0]
@@ -978,246 +1102,52 @@ iE9 = 0.463646 ; height reverberant point 9 ( 26.565?)
 iE10 = -0.463646 ; height reverberant point 10 ( -26.565?)
 iE11 = 1.570796 ; height reverberant point 11 ( 90?)
 iE12 = -1.570796 ; height reverberant point 12 ( -90?)
-aboutput[] init 16
-abreverberated1[] init 16
-abreverberated2[] init 16
-abreverberated3[] init 16
-abreverberated4[] init 16
-abreverberated5[] init 16
-abreverberated6[] init 16
-abreverberated7[] init 16
-abreverberated8[] init 16
-abreverberated9[] init 16
-abreverberated10[] init 16
-abreverberated11[] init 16
-abreverberated12[] init 16
-aboutput[ 0] = 0
-aboutput[ 1] = 0
-aboutput[ 2] = 0
-aboutput[ 3] = 0
-aboutput[ 4] = 0
-aboutput[ 5] = 0
-aboutput[ 6] = 0
-aboutput[ 7] = 0
-aboutput[ 8] = 0
-aboutput[ 9] = 0
-aboutput[10] = 0
-aboutput[11] = 0
-aboutput[12] = 0
-aboutput[13] = 0
-aboutput[14] = 0
-aboutput[15] = 0
+i_channels channels_for_rig
+aboutput[] init i_channels
+abreverberated1[] init i_channels
+abreverberated2[] init i_channels
+abreverberated3[] init i_channels
+abreverberated4[] init i_channels
+abreverberated5[] init i_channels
+abreverberated6[] init i_channels
+abreverberated7[] init i_channels
+abreverberated8[] init i_channels
+abreverberated9[] init i_channels
+abreverberated10[] init i_channels
+abreverberated11[] init i_channels
+abreverberated12[] init i_channels
+ambi_zero aboutput
 abreverberated1 bformenc1 afiltc1, iA1, iE1
-aboutput[ 0] = aboutput[ 0] + abreverberated1[ 0]
-aboutput[ 1] = aboutput[ 1] + abreverberated1[ 1]
-aboutput[ 2] = aboutput[ 2] + abreverberated1[ 2]
-aboutput[ 3] = aboutput[ 3] + abreverberated1[ 3]
-aboutput[ 4] = aboutput[ 4] + abreverberated1[ 4]
-aboutput[ 5] = aboutput[ 5] + abreverberated1[ 5]
-aboutput[ 6] = aboutput[ 6] + abreverberated1[ 6]
-aboutput[ 7] = aboutput[ 7] + abreverberated1[ 7]
-aboutput[ 8] = aboutput[ 8] + abreverberated1[ 8]
-aboutput[ 9] = aboutput[ 9] + abreverberated1[ 9]
-aboutput[10] = aboutput[10] + abreverberated1[10]
-aboutput[11] = aboutput[11] + abreverberated1[11]
-aboutput[12] = aboutput[12] + abreverberated1[12]
-aboutput[13] = aboutput[13] + abreverberated1[13]
-aboutput[14] = aboutput[14] + abreverberated1[14]
-aboutput[15] = aboutput[15] + abreverberated1[15]
+ambi_plus_add aboutput, abreverberated1
 abreverberated2 bformenc1 afiltc2, iA2, iE2
-aboutput[ 0] = aboutput[ 0] + abreverberated2[ 0]
-aboutput[ 1] = aboutput[ 1] + abreverberated2[ 1]
-aboutput[ 2] = aboutput[ 2] + abreverberated2[ 2]
-aboutput[ 3] = aboutput[ 3] + abreverberated2[ 3]
-aboutput[ 4] = aboutput[ 4] + abreverberated2[ 4]
-aboutput[ 5] = aboutput[ 5] + abreverberated2[ 5]
-aboutput[ 6] = aboutput[ 6] + abreverberated2[ 6]
-aboutput[ 7] = aboutput[ 7] + abreverberated2[ 7]
-aboutput[ 8] = aboutput[ 8] + abreverberated2[ 8]
-aboutput[ 9] = aboutput[ 9] + abreverberated2[ 9]
-aboutput[10] = aboutput[10] + abreverberated2[10]
-aboutput[11] = aboutput[11] + abreverberated2[11]
-aboutput[12] = aboutput[12] + abreverberated2[12]
-aboutput[13] = aboutput[13] + abreverberated2[13]
-aboutput[14] = aboutput[14] + abreverberated2[14]
-aboutput[15] = aboutput[15] + abreverberated2[15]
+ambi_plus_add aboutput, abreverberated2
 abreverberated2 bformenc1 afiltc3, iA3, iE3
-aboutput[ 0] = aboutput[ 0] + abreverberated3[ 0]
-aboutput[ 1] = aboutput[ 1] + abreverberated3[ 1]
-aboutput[ 2] = aboutput[ 2] + abreverberated3[ 2]
-aboutput[ 3] = aboutput[ 3] + abreverberated3[ 3]
-aboutput[ 4] = aboutput[ 4] + abreverberated3[ 4]
-aboutput[ 5] = aboutput[ 5] + abreverberated3[ 5]
-aboutput[ 6] = aboutput[ 6] + abreverberated3[ 6]
-aboutput[ 7] = aboutput[ 7] + abreverberated3[ 7]
-aboutput[ 8] = aboutput[ 8] + abreverberated3[ 8]
-aboutput[ 9] = aboutput[ 9] + abreverberated3[ 9]
-aboutput[10] = aboutput[10] + abreverberated3[10]
-aboutput[11] = aboutput[11] + abreverberated3[11]
-aboutput[12] = aboutput[12] + abreverberated3[12]
-aboutput[13] = aboutput[13] + abreverberated3[13]
-aboutput[14] = aboutput[14] + abreverberated3[14]
-aboutput[15] = aboutput[15] + abreverberated3[15]
+ambi_plus_add aboutput, abreverberated3
 abreverberated4 bformenc1 afiltc4, iA4, iE4
-aboutput[ 0] = aboutput[ 0] + abreverberated4[ 0]
-aboutput[ 1] = aboutput[ 1] + abreverberated4[ 1]
-aboutput[ 2] = aboutput[ 2] + abreverberated4[ 2]
-aboutput[ 3] = aboutput[ 3] + abreverberated4[ 3]
-aboutput[ 4] = aboutput[ 4] + abreverberated4[ 4]
-aboutput[ 5] = aboutput[ 5] + abreverberated4[ 5]
-aboutput[ 6] = aboutput[ 6] + abreverberated4[ 6]
-aboutput[ 7] = aboutput[ 7] + abreverberated4[ 7]
-aboutput[ 8] = aboutput[ 8] + abreverberated4[ 8]
-aboutput[ 9] = aboutput[ 9] + abreverberated4[ 9]
-aboutput[10] = aboutput[10] + abreverberated4[10]
-aboutput[11] = aboutput[11] + abreverberated4[11]
-aboutput[12] = aboutput[12] + abreverberated4[12]
-aboutput[13] = aboutput[13] + abreverberated4[13]
-aboutput[14] = aboutput[14] + abreverberated4[14]
-aboutput[15] = aboutput[15] + abreverberated4[15]
+ambi_plus_add aboutput, abreverberated4
 abreverberated5 bformenc1 afiltc5, iA5, iE5
-aboutput[ 0] = aboutput[ 0] + abreverberated5[ 0]
-aboutput[ 1] = aboutput[ 1] + abreverberated5[ 1]
-aboutput[ 2] = aboutput[ 2] + abreverberated5[ 2]
-aboutput[ 3] = aboutput[ 3] + abreverberated5[ 3]
-aboutput[ 4] = aboutput[ 4] + abreverberated5[ 4]
-aboutput[ 5] = aboutput[ 5] + abreverberated5[ 5]
-aboutput[ 6] = aboutput[ 6] + abreverberated5[ 6]
-aboutput[ 7] = aboutput[ 7] + abreverberated5[ 7]
-aboutput[ 8] = aboutput[ 8] + abreverberated5[ 8]
-aboutput[ 9] = aboutput[ 9] + abreverberated5[ 9]
-aboutput[10] = aboutput[10] + abreverberated5[10]
-aboutput[11] = aboutput[11] + abreverberated5[11]
-aboutput[12] = aboutput[12] + abreverberated5[12]
-aboutput[13] = aboutput[13] + abreverberated5[13]
-aboutput[14] = aboutput[14] + abreverberated5[14]
-aboutput[15] = aboutput[15] + abreverberated5[15]
+ambi_plus_add aboutput, abreverberated5
 abreverberated6 bformenc1 afiltc6, iA6, iE6
-aboutput[ 0] = aboutput[ 0] + abreverberated6[ 0]
-aboutput[ 1] = aboutput[ 1] + abreverberated6[ 1]
-aboutput[ 2] = aboutput[ 2] + abreverberated6[ 2]
-aboutput[ 3] = aboutput[ 3] + abreverberated6[ 3]
-aboutput[ 4] = aboutput[ 4] + abreverberated6[ 4]
-aboutput[ 5] = aboutput[ 5] + abreverberated6[ 5]
-aboutput[ 6] = aboutput[ 6] + abreverberated6[ 6]
-aboutput[ 7] = aboutput[ 7] + abreverberated6[ 7]
-aboutput[ 8] = aboutput[ 8] + abreverberated6[ 8]
-aboutput[ 9] = aboutput[ 9] + abreverberated6[ 9]
-aboutput[10] = aboutput[10] + abreverberated6[10]
-aboutput[11] = aboutput[11] + abreverberated6[11]
-aboutput[12] = aboutput[12] + abreverberated6[12]
-aboutput[13] = aboutput[13] + abreverberated6[13]
-aboutput[14] = aboutput[14] + abreverberated6[14]
-aboutput[15] = aboutput[15] + abreverberated6[15]
+ambi_plus_add aboutput, abreverberated6
 abreverberated7 bformenc1 afiltc7, iA7, iE7
-aboutput[ 0] = aboutput[ 0] + abreverberated7[ 0]
-aboutput[ 1] = aboutput[ 1] + abreverberated7[ 1]
-aboutput[ 2] = aboutput[ 2] + abreverberated7[ 2]
-aboutput[ 3] = aboutput[ 3] + abreverberated7[ 3]
-aboutput[ 4] = aboutput[ 4] + abreverberated7[ 4]
-aboutput[ 5] = aboutput[ 5] + abreverberated7[ 5]
-aboutput[ 6] = aboutput[ 6] + abreverberated7[ 6]
-aboutput[ 7] = aboutput[ 7] + abreverberated7[ 7]
-aboutput[ 8] = aboutput[ 8] + abreverberated7[ 8]
-aboutput[ 9] = aboutput[ 9] + abreverberated7[ 9]
-aboutput[10] = aboutput[10] + abreverberated7[10]
-aboutput[11] = aboutput[11] + abreverberated7[11]
-aboutput[12] = aboutput[12] + abreverberated7[12]
-aboutput[13] = aboutput[13] + abreverberated7[13]
-aboutput[14] = aboutput[14] + abreverberated7[14]
-aboutput[15] = aboutput[15] + abreverberated7[15]
+ambi_plus_add aboutput, abreverberated7
 abreverberated8 bformenc1 afiltc8, iA8, iE8
-aboutput[ 0] = aboutput[ 0] + abreverberated8[ 0]
-aboutput[ 1] = aboutput[ 1] + abreverberated8[ 1]
-aboutput[ 2] = aboutput[ 2] + abreverberated8[ 2]
-aboutput[ 3] = aboutput[ 3] + abreverberated8[ 3]
-aboutput[ 4] = aboutput[ 4] + abreverberated8[ 4]
-aboutput[ 5] = aboutput[ 5] + abreverberated8[ 5]
-aboutput[ 6] = aboutput[ 6] + abreverberated8[ 6]
-aboutput[ 7] = aboutput[ 7] + abreverberated8[ 7]
-aboutput[ 8] = aboutput[ 8] + abreverberated8[ 8]
-aboutput[ 9] = aboutput[ 9] + abreverberated8[ 9]
-aboutput[10] = aboutput[10] + abreverberated8[10]
-aboutput[11] = aboutput[11] + abreverberated8[11]
-aboutput[12] = aboutput[12] + abreverberated8[12]
-aboutput[13] = aboutput[13] + abreverberated8[13]
-aboutput[14] = aboutput[14] + abreverberated8[14]
-aboutput[15] = aboutput[15] + abreverberated8[15]
+ambi_plus_add aboutput, abreverberated8
 abreverberated9 bformenc1 afiltc9, iA9, iE9
-aboutput[ 0] = aboutput[ 0] + abreverberated9[ 0]
-aboutput[ 1] = aboutput[ 1] + abreverberated9[ 1]
-aboutput[ 2] = aboutput[ 2] + abreverberated9[ 2]
-aboutput[ 3] = aboutput[ 3] + abreverberated9[ 3]
-aboutput[ 4] = aboutput[ 4] + abreverberated9[ 4]
-aboutput[ 5] = aboutput[ 5] + abreverberated9[ 5]
-aboutput[ 6] = aboutput[ 6] + abreverberated9[ 6]
-aboutput[ 7] = aboutput[ 7] + abreverberated9[ 7]
-aboutput[ 8] = aboutput[ 8] + abreverberated9[ 8]
-aboutput[ 9] = aboutput[ 9] + abreverberated9[ 9]
-aboutput[10] = aboutput[10] + abreverberated9[10]
-aboutput[11] = aboutput[11] + abreverberated9[11]
-aboutput[12] = aboutput[12] + abreverberated9[12]
-aboutput[13] = aboutput[13] + abreverberated9[13]
-aboutput[14] = aboutput[14] + abreverberated9[14]
-aboutput[15] = aboutput[15] + abreverberated9[15]
+ambi_plus_add aboutput, abreverberated9
 abreverberated10 bformenc1 afiltc10, iA10, iE10
-aboutput[ 0] = aboutput[ 0] + abreverberated10[ 0]
-aboutput[ 1] = aboutput[ 1] + abreverberated10[ 1]
-aboutput[ 2] = aboutput[ 2] + abreverberated10[ 2]
-aboutput[ 3] = aboutput[ 3] + abreverberated10[ 3]
-aboutput[ 4] = aboutput[ 4] + abreverberated10[ 4]
-aboutput[ 5] = aboutput[ 5] + abreverberated10[ 5]
-aboutput[ 6] = aboutput[ 6] + abreverberated10[ 6]
-aboutput[ 7] = aboutput[ 7] + abreverberated10[ 7]
-aboutput[ 8] = aboutput[ 8] + abreverberated10[ 8]
-aboutput[ 9] = aboutput[ 9] + abreverberated10[ 9]
-aboutput[10] = aboutput[10] + abreverberated10[10]
-aboutput[11] = aboutput[11] + abreverberated10[11]
-aboutput[12] = aboutput[12] + abreverberated10[12]
-aboutput[13] = aboutput[13] + abreverberated10[13]
-aboutput[14] = aboutput[14] + abreverberated10[14]
-aboutput[15] = aboutput[15] + abreverberated10[15]
+ambi_plus_add aboutput, abreverberated10
 abreverberated11 bformenc1 afiltc11, iA11, iE11
-aboutput[ 0] = aboutput[ 0] + abreverberated11[ 0]
-aboutput[ 1] = aboutput[ 1] + abreverberated11[ 1]
-aboutput[ 2] = aboutput[ 2] + abreverberated11[ 2]
-aboutput[ 3] = aboutput[ 3] + abreverberated11[ 3]
-aboutput[ 4] = aboutput[ 4] + abreverberated11[ 4]
-aboutput[ 5] = aboutput[ 5] + abreverberated11[ 5]
-aboutput[ 6] = aboutput[ 6] + abreverberated11[ 6]
-aboutput[ 7] = aboutput[ 7] + abreverberated11[ 7]
-aboutput[ 8] = aboutput[ 8] + abreverberated11[ 8]
-aboutput[ 9] = aboutput[ 9] + abreverberated11[ 9]
-aboutput[10] = aboutput[10] + abreverberated11[10]
-aboutput[11] = aboutput[11] + abreverberated11[11]
-aboutput[12] = aboutput[12] + abreverberated11[12]
-aboutput[13] = aboutput[13] + abreverberated11[13]
-aboutput[14] = aboutput[14] + abreverberated11[14]
-aboutput[15] = aboutput[15] + abreverberated11[15]
+ambi_plus_add aboutput, abreverberated11
 abreverberated12 bformenc1 afiltc12, iA12, iE12
-aboutput[ 0] = aboutput[ 0] + abreverberated12[ 0]
-aboutput[ 1] = aboutput[ 1] + abreverberated12[ 1]
-aboutput[ 2] = aboutput[ 2] + abreverberated12[ 2]
-aboutput[ 3] = aboutput[ 3] + abreverberated12[ 3]
-aboutput[ 4] = aboutput[ 4] + abreverberated12[ 4]
-aboutput[ 5] = aboutput[ 5] + abreverberated12[ 5]
-aboutput[ 6] = aboutput[ 6] + abreverberated12[ 6]
-aboutput[ 7] = aboutput[ 7] + abreverberated12[ 7]
-aboutput[ 8] = aboutput[ 8] + abreverberated12[ 8]
-aboutput[ 9] = aboutput[ 9] + abreverberated12[ 9]
-aboutput[10] = aboutput[10] + abreverberated12[10]
-aboutput[11] = aboutput[11] + abreverberated12[11]
-aboutput[12] = aboutput[12] + abreverberated12[12]
-aboutput[13] = aboutput[13] + abreverberated12[13]
-aboutput[14] = aboutput[14] + abreverberated12[14]
-aboutput[15] = aboutput[15] + abreverberated12[15]
+ambi_plus_add aboutput, abreverberated12
+kprintlevels "SpatialReverb output", aboutput
 outletv "outbformat", aboutput
 if gk_Spatialize_Verbose != 0 goto gk_Spatialize_Verbose_not_0
 goto gk_Spatialize_Verbose_0
 gk_Spatialize_Verbose_not_0:
 aoutput sum aboutput[0], aboutput[1], aboutput[2], aboutput[3], aboutput[4], aboutput[5], aboutput[6], aboutput[7], aboutput[8], aboutput[9], aboutput[10], aboutput[11], aboutput[12], aboutput[13], aboutput[14], aboutput[15]
 kelapsed timeinsts
-printks "SpatialReverb i %5.2f t %5.2f [%5.2f] d %5.2f c %9.2f in %5.2f A %5.2f\n", 1.0, p1, p2, kelapsed, p3, kcutoff, asignal, aoutput
 gk_Spatialize_Verbose_0:
 prints "%-24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
@@ -1391,105 +1321,106 @@ xout asignal
 endop
 
 gk_BformatDecoder_MasterLevel init 0.0
+instr BformatDecoder
+irig init i(gi_BformatDecoder_SpeakerRig)
+kmasterlevel = pow(10, gk_BformatDecoder_MasterLevel / 20)
+asignal[] init nchnls
+i_channels channels_for_rig
+absignal[] init i_channels
+absignal[] inletv "inbformat"
+if irig == 0 goto irig_0
+goto irig_1
+irig_0:
+ asignal bformdec1 1, absignal
+ goto irig_endif
+irig_1:
+if irig == 1 goto irig_1_1
+goto irig_2
+irig_1_1:
+ asignal Bformat2DecodeBinaural, absignal, sr
+ asignal[0] = asignal[0] * kmasterlevel
+ asignal[1] = asignal[1] * kmasterlevel
+goto irig_endif
+irig_2:
+if irig == 2 goto irig_2_1
+goto irig_3
+irig_2_1:
+ asignal bformdec1 2, absignal
+ asignal[0] = asignal[0] * kmasterlevel
+ asignal[1] = asignal[1] * kmasterlevel
+ asignal[2] = asignal[2] * kmasterlevel
+ asignal[3] = asignal[3] * kmasterlevel
+ goto irig_endif
+irig_3:
+if irig == 3 goto irig_3_1
+goto irig_else
+irig_3_1:
+ asignal bformdec1 3, absignal
+ asignal[0] = asignal[0] * kmasterlevel
+ asignal[1] = asignal[1] * kmasterlevel
+ asignal[2] = asignal[2] * kmasterlevel
+ asignal[3] = asignal[3] * kmasterlevel
+ asignal[4] = asignal[4] * kmasterlevel
+ goto irig_endif
+irig_else:
+ asignal bformdec1 irig, absignal
+ asignal[0] = asignal[0] * kmasterlevel
+ asignal[1] = asignal[1] * kmasterlevel
+ asignal[2] = asignal[2] * kmasterlevel
+ asignal[3] = asignal[3] * kmasterlevel
+ asignal[4] = asignal[4] * kmasterlevel
+ asignal[5] = asignal[5] * kmasterlevel
+ asignal[6] = asignal[6] * kmasterlevel
+ asignal[7] = asignal[7] * kmasterlevel
+irig_endif:
+out asignal
+prints "%-24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
+endin
 
-/*
-1. Stereo - L(90), R(-90); this is an M+S style stereo decode.
-2. Quad - FL(45), BL(135), BR(-135), FR(-45). This is a first-order decode.
-3. 5.0 - L(30), R(-30), C(0), BL(110), BR(-110). Note that many people do not actually use the angles above for their speaker arrays and a good decode for DVD etc can be achieved using the Quad configuration to feed L, R, BL and BR (leaving C silent).
-4. Octagon - FFL(22.5), FLL(67.5), BLL(112.5), BBL(157.5), BBR(-157.5), BRR(-112.5), FRR(-67.5), FFR(-22.5). This is a first-, second- or third-order decode, depending on the number of input channels.
-5. Cube - FLD(45,-35.26), FLU(45,35.26), BLD(135,-35.26), BLU(135,35.26), BRD(-135,-35.26), BRU(-135,35.26), FRD(-45,-35.26), FRU(-45,35.26). This is a first-order decode.
-6. Hexagon - FL(30), L(90) BL(150), BR(-150), R(-90), FR(-30). This is a first- or second- order decode.
-21. 2D binaural configuration. This first decodes to a octagon configuration and then applies HRTF filters.
-31. 3D binaural configuration. This first decodes to a dodecahedron configuration and then applies HRTF filters.
-*/
-gi_BformatDecoder_SpeakerRig init 31
 /*
 0. Dual decoder (velocity and energy decoders using dual-band splitting).
 1. Velocity decoder.
 2. Energy decoder.
 */
-gi_BformatDecoder_Decoder init 0
+gi_BformatDecoder2_Decoder chnexport "gi_BformatDecoder2_Decoder", 3 ; 0
+gi_BformatDecoder2_Decoder init 0
 /*
 Radius of speaker rig in meters.
 */
-gi_BformatDecoder_Distance init 10
+gi_BformatDecoder2_Distance chnexport "gi_BformatDecoder2_Distance", 3 ; 0
+gi_BformatDecoder2_Distance init 1
 /*
 Only effective for dual decoder.
 */
-gi_BformatDecoder_SplitHz init 400
+gi_BformatDecoder2_SplitHz chnexport "gi_BformatDecoder2_SplitHz", 3 ; 0
+gi_BformatDecoder2_SplitHz init 400
 /*
 0. Energy
 1. RMS
 2. Amplitude
 */
-gi_BformatDecoder_DecoderMix init 0
-gS_BformatDecoder_LeftFile init "hrtf-96000-left.dat"
-gS_BformatDecoder_RightFile init "hrtf-96000-right.dat"
-gk_BformatDecoder_MasterLevel init 0
-instr BformatDecoder
-kmasterlevel = pow(10, gk_BformatDecoder_MasterLevel / 20)
+gi_BformatDecoder2_DecoderMix chnexport "gi_BformatDecoder2_DecoderMix", 3 ; 0
+gi_BformatDecoder2_DecoderMix init 0
+gS_BformatDecoder2_LeftFile init "hrtf-96000-left.dat"
+gS_BformatDecoder2_RightFile init "hrtf-96000-right.dat"
+gk_BformatDecoder2_MasterLevel chnexport "gk_BformatDecoder2_MasterLevel", 3 ; 0
+gk_BformatDecoder2_MasterLevel init 0
+instr BformatDecoder2
+kmasterlevel = pow(10, gk_BformatDecoder2_MasterLevel / 20)
+printks2 "gk_BformatDecoder2_MasterLevel", gk_BformatDecoder2_MasterLevel
 asignal[] init nchnls
 aoutsignal[] init nchnls
-absignal[] init 16
+i_channels channels_for_rig
+absignal[] init i_channels
 absignal[] inletv "inbformat"
-// aout[] bformdec2 gi_Bform, abform[], [idecoder, idistance, ifreq, imix, ifilel, ifiler]
-asignal bformdec2 gi_BformatDecoder_SpeakerRig, absignal, gi_BformatDecoder_Decoder, gi_BformatDecoder_Distance, gi_BformatDecoder_SplitHz, gi_BformatDecoder_DecoderMix, gS_BformatDecoder_LeftFile, gS_BformatDecoder_RightFile
-// 1 Stereo - L(90), R(-90); this is an M+S style stereo decode.
-//21 2D binaural configuration. This first decodes to a octagon configuration and then applies HRTF filters.
-//31 3D binaural configuration. This first decodes to a dodecahedron configuration and then applies HRTF filters.
-if (gi_BformatDecoder_SpeakerRig == 1) goto channels_2
-if (gi_BformatDecoder_SpeakerRig == 21) goto channels_2
-if (gi_BformatDecoder_SpeakerRig == 31) goto channels_2
-// 2 Quad - FL(45), BL(135), BR(-135), FR(-45). This is a first-order decode.
-if (gi_BformatDecoder_SpeakerRig == 2) goto channels_4
-// 3 5.0 - L(30), R(-30), C(0), BL(110), BR(-110). Note that many people do not actually use the angles above for their speaker arrays and a good decode for DVD etc can be achieved using the Quad configuration to feed L, R, BL and BR (leaving C silent).
-if (gi_BformatDecoder_SpeakerRig == 3) goto channels_5
-// 6 Hexagon - FL(30), L(90) BL(150), BR(-150), R(-90), FR(-30). This is a first- or second- order decode.
-if (gi_BformatDecoder_SpeakerRig == 6) goto channels_6
-// 4 Octagon - FFL(22.5), FLL(67.5), BLL(112.5), BBL(157.5), BBR(-157.5), BRR(-112.5), FRR(-67.5), FFR(-22.5). This is a first-, second- or third-order decode, depending on the number of input channels.
-// 5 Cube - FLD(45,-35.26), FLU(45,35.26), BLD(135,-35.26), BLU(135,35.26), BRD(-135,-35.26), BRU(-135,35.26), FRD(-45,-35.26), FRU(-45,35.26). This is a first-order decode.
-if (gi_BformatDecoder_SpeakerRig == 4) goto channels_8
-if (gi_BformatDecoder_SpeakerRig == 5) goto channels_8
-prints "Invalid value of gi_BformatDecoder_SpeakerRig.\n"
-exitnow -1
-channels_2:
-aoutsignal[0] dcblock2 asignal[0]
-aoutsignal[1] dcblock2 asignal[1]
-goto channels_end
-channels_4:
-aoutsignal[0] dcblock2 asignal[0]
-aoutsignal[1] dcblock2 asignal[1]
-aoutsignal[2] dcblock2 asignal[2]
-aoutsignal[3] dcblock2 asignal[3]
-goto channels_end
-channels_5:
-aoutsignal[0] dcblock2 asignal[0]
-aoutsignal[1] dcblock2 asignal[1]
-aoutsignal[2] dcblock2 asignal[2]
-aoutsignal[3] dcblock2 asignal[3]
-aoutsignal[4] dcblock2 asignal[4]
-goto channels_end
-channels_6:
-aoutsignal[0] dcblock2 asignal[0]
-aoutsignal[1] dcblock2 asignal[1]
-aoutsignal[2] dcblock2 asignal[2]
-aoutsignal[3] dcblock2 asignal[3]
-aoutsignal[4] dcblock2 asignal[4]
-aoutsignal[5] dcblock2 asignal[5]
-goto channels_end
-channels_8:
-aoutsignal[0] dcblock2 asignal[0]
-aoutsignal[1] dcblock2 asignal[1]
-aoutsignal[2] dcblock2 asignal[2]
-aoutsignal[3] dcblock2 asignal[3]
-aoutsignal[4] dcblock2 asignal[4]
-aoutsignal[5] dcblock2 asignal[5]
-aoutsignal[6] dcblock2 asignal[6]
-aoutsignal[7] dcblock2 asignal[7]
-goto channels_end
-channels_end:
-asignal = aoutsignal * kmasterlevel
-out asignal
+// aout[] bformdec2 isetup, abform[], [idecoder, idistance, ifreq, imix, ifilel, ifiler]
+asignal bformdec2 gi_BformatDecoder_SpeakerRig, absignal, gi_BformatDecoder2_Decoder, gi_BformatDecoder2_Distance, gi_BformatDecoder2_SplitHz, gi_BformatDecoder2_DecoderMix, gS_BformatDecoder2_LeftFile, gS_BformatDecoder2_RightFile
+aoutsignal = asignal * kmasterlevel
+out aoutsignal
+;if gk_Spatialize_Verbose == 0 then
+printks "%-24s in  rig %3d %9.4f %9.4f %9.4f %9.4f #%3d\n", 2., nstrstr(p1), gi_BformatDecoder_SpeakerRig, k(absignal[0]), k(absignal[1]), k(absignal[2]), k(absignal[3]), active(p1)
+printks "%-24s out rig %3d %9.4f %9.4f %9.4f %9.4f #%3d\n", 2., "         ", gi_BformatDecoder_SpeakerRig, k(asignal[0]), k(asignal[1]), k(asignal[2]), k(asignal[3]), active(p1)
+;lllendif
 prints "%-24s i %9.4f t %9.4f d %9.4f k %9.4f v %9.4f p %9.4f #%3d\n", nstrstr(p1), p1, p2, p3, p4, p5, p7, active(p1)
 endin
 

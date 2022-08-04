@@ -1,3 +1,5 @@
+#ifndef PLATFORM_HPP_INCLUDED
+#define PLATFORM_HPP_INCLUDED
 /*
 * C S O U N D
 *
@@ -17,7 +19,6 @@
 * License along with this software; if not, write to the Free Software
 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#pragma once
 
 #if (defined(WIN32) || defined(_WIN32)) && !defined(SWIG) && !defined(_MSC_VER)
 #  define SILENCE_PUBLIC __declspec(dllexport)
@@ -25,5 +26,7 @@
 #  define SILENCE_PUBLIC        __attribute__ ( (visibility("default")) )
 #else
 #  define SILENCE_PUBLIC
+#endif
+
 #endif
 

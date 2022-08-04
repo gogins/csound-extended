@@ -27,7 +27,7 @@ message("CSOUND_EXTENDED_CUSTOM_CONFIGURATION: ${CSOUND_EXTENDED_CUSTOM_CONFIGUR
 include(ExternalProject)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-sign-compare -Wno-unknown-pragmas -Wno-misleading-indentation")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wall -Wno-sign-compare -Wno-unknown-pragmas -Wno-misleading-indentation")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME "csound-base")

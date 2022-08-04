@@ -31,10 +31,10 @@
 
 namespace csound {
 
-    ImageToScore2::ImageToScore2(void) {
+    ImageToScore2::ImageToScore2() {
     }
 
-    ImageToScore2::~ImageToScore2(void) {
+    ImageToScore2::~ImageToScore2() {
     }
 
     void ImageToScore2::setImageFilename(std::string image_filename_) {

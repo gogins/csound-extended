@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COUNTERPOINT_HPP_INCLUDED
+#define COUNTERPOINT_HPP_INCLUDED
 /*
   Status: RO
   Return-Path: <bil@ccrma.Stanford.EDU>
@@ -334,3 +335,5 @@ public:
     std::normal_distribution<> uniform_real_generator;
 #endif
 };
+
+#endif

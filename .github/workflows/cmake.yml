@@ -2,36 +2,162 @@ name: CMake
 
 on:
   push:
-    branches: [ master ]
+    branches: 
+      - master
+      - develop
   pull_request:
-    branches: [ master ]
+    branches: 
+      - develop
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
-
+  BUILD_TYPE: RelWithDebInfo
+  # This will change for later macOS versions, to /opt/homebrew.
+  HOMEBREW_PREFIX: /usr/local
 jobs:
   build:
-    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
-    # You can convert this to a matrix build if you need cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-latest
-
+    runs-on: ${{ matrix.config.os }} 
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - name: "macOS Latest Clang"
+          os: macos-latest
+          cc: "clang"
+          cxx: "clang++"
+        - name: "Ubuntu Latest GCC"
+          os: ubuntu-latest
+          cc: "gcc"
+          cxx: "g++"
+        - name: "Windows Latest MSVC"
+          os: windows-latest
+          cc: "cl"
+          cxx: "cl"
+          environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
     steps:
-    - uses: actions/checkout@v3
+      - name: Check out repository
+        uses: actions/checkout@v3
+                  
+      - name: Build on Mac OS
+        if: runner.os == 'macOS'
+        run: |
+          echo "Installing tools..."
+          brew update
+          brew install graphviz
+          brew install doxygen
+          brew install libsndfile
+          brew install csound
+          echo "Updating all git submodules..."
+          git submodule update --init --recursive
+          git submodule status --recursive
+          echo "Finished updating all git submodules."
+          echo "Trying to find csdl.h..."
+          find /Users/runner -name "csdl.h" -ls 2>/dev/null
+          # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}  
+          # Build with CMake.
+          cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+          echo "Documenting..."
+          doxygen
+          echo "Packaging..."
+          cd build
+          cpack -V
 
-    - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      - name: Build on Linux
+        if: runner.os == 'Linux'
+        run: |
+          echo "Installing tools..."
+          sudo apt-get update
+          sudo apt-get install graphviz
+          sudo apt-get install doxygen
+          sudo apt-get install libsndfile1-dev
+          sudo apt-get install csound
+          echo "Updating all git submodules..."
+          git submodule update --init --recursive
+          git submodule status --recursive
+          echo "Finished updating all git submodules."
+          echo "Trying to find csdl.h..."
+          find /home/runner -name "csdl.h" -ls 2>/dev/null
+          # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          # Build with CMake.
+          cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} 
+          echo "Documenting..."
+          doxygen
+          echo "Packaging..."
+          cd build
+          cpack -V
 
-    - name: Build
-      # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      - name: Build on Windows
+        if: runner.os == 'Windows'
+        run: |
+          echo "Installing tools..."
+          choco install graphviz -y
+          choco install doxygen.install -y
+          echo "Installing dependencies..."
+          vcpkg install libsndfile
+          git clone "https://github.com/csound/csound.git"
+          cd csound
+          mkdir -p build
+          cd build
+          cmake ..
+          make
+          cd ..
+          cd ..
+          pwd
+          dir C:\"Program Files"\doxygen
+          refreshenv
+          echo "Updating all git submodules..."
+          git submodule update --init --recursive
+          git submodule status --recursive
+          echo "Finished updating all git submodules."
+          # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} 
+          # Build with CMake.
+          cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+          dir ${{github.workspace}}/build/Release
+          echo "Documenting..."
+          C:\"Program Files"\doxygen\bin\doxygen
+          echo "Packaging..."
+          cd build
+          cpack -V
+          dir 
 
-    - name: Test
-      working-directory: ${{github.workspace}}/build
-      # Execute tests defined by the CMake configuration.  
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -C ${{env.BUILD_TYPE}}
-      
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        if: runner.os == 'macOS'
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "macos-latest"
+          prerelease: true
+          title: "Mac OS Development Release"
+          files: |
+            LICENSE
+            README.md
+            ${{github.workspace}}/build/*.zip
+ 
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        if: runner.os == 'Linux'
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "linux-latest"
+          prerelease: true
+          title: "Linux Development Release"
+          files: |
+            LICENSE
+            README.md
+            ${{github.workspace}}/build/*.zip
+          
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        if: runner.os == 'Windows'
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "windows-latest"
+          prerelease: true
+          title: "Windows Development Release"
+          files: |
+            LICENSE
+            README.md
+            build/*.zip
+
+
+

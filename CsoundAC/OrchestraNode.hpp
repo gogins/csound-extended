@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ORCHESTRANODE_HPP_INCLUDED
+#define ORCHESTRANODE_HPP_INCLUDED
 
 class Timebase;
 class Event;
@@ -21,3 +22,4 @@ public:
 
 };
 
+#endif

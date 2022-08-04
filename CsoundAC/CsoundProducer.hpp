@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CSOUND_PRODUCER_HPP_INCLUDED
+#define CSOUND_PRODUCER_HPP_INCLUDED
 
 #include <csound_threaded.hpp>
 #include <cstdio>
@@ -346,3 +347,5 @@ namespace csound {
     };
     
 };
+
+#endif

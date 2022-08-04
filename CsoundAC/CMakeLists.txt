@@ -4,7 +4,7 @@ include(CheckIncludeFiles)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 17)
-add_definitions(-fPIC -flto)
+add_definitions(-fPIC)
 add_compile_options(-Wno-c++11-narrowing)
 
 # TODO: These will need something more sophisticated.

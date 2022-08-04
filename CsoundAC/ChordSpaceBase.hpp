@@ -1,3 +1,5 @@
+#ifndef CHORDSPACEBASE_HPP_INCLUDED
+#define CHORDSPACEBASE_HPP_INCLUDED
 /*
  * C S O U N D
  *
@@ -17,7 +19,6 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#pragma once
 
 #define EIGEN_INITIALIZE_MATRICES_BY_ZERO
 #include "Platform.hpp"
@@ -924,8 +925,6 @@ public:
     virtual bool self_inverse(int opt_sector = 0) const;
     /**
      * Returns the chord inverted by the sum of its first two voices.
-     * 
-     * NOTE: Does NOT return an equivalent under any requivalence relation.
      */
     virtual Chord K() const;
     virtual Chord K_range(double range) const;
@@ -3489,10 +3488,19 @@ inline Chord Chord::K() const {
     if (chord.voices() < 2) {
         return chord;
     }
-    // Unordered and in [0, 12).
-    Chord epc = epcs();
-    double center = epc.getPitch(0) + epc.getPitch(1);
-    return I(center);
+    // A _pitch-class segment_ is an _unordered_ collection of pitch-classes, 
+    // which can contain repeated pitch-classes (Morris); this is Chord::epcs 
+    // in CsoundAC. Everything here is done in octave equivalence.
+    Chord epcs_ = epcs();
+    double center = epc(epcs_.getPitch(0) + epcs_.getPitch(1));
+    for (size_t voice = 0; voice < voices(); voice++) {
+        auto pitch = epcs_.getPitch(voice);
+        auto pitch_inverted = center - pitch;
+        auto pitch_inverted_pc = epc(pitch_inverted);
+        chord.setPitch(voice, epc(pitch_inverted_pc));
+        //std::fprintf(stderr, "Chord::K: %3d center %9.4f p %9.4f p_i %9.4f p_i_pc: %9.4f\n", voice, center, pitch, pitch_inverted, pitch_inverted_pc
+    }
+    return chord;
 }
 
 inline Chord Chord::K_range(double range) const {
@@ -3838,7 +3846,7 @@ inline SILENCE_PUBLIC bool gt_tolerance(double a, double b, int epsilons, int ul
 }
 
 inline SILENCE_PUBLIC double I(double pitch, double center) {
-    return 2. * center - pitch;
+    return center - pitch;
 }
 
 inline SILENCE_PUBLIC HyperplaneEquation hyperplane_equation_from_singular_value_decomposition(const std::vector<Chord> &points_, bool make_eT) {
@@ -5322,3 +5330,4 @@ inline SILENCE_PUBLIC std::map<Chord, Chord> &inverse_prime_forms_for_chords() {
 
 #pragma GCC diagnostic push
   
+#endif

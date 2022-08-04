@@ -200,23 +200,23 @@ bool Conversions::initialize()
     return initialized_;
 }
 
-double Conversions::getPI(void)
+double Conversions::getPI()
 {
     return PI_;
 }
-double Conversions::get2PI(void)
+double Conversions::get2PI()
 {
     return TWO_PI_;
 }
-double Conversions::getMiddleCHz(void)
+double Conversions::getMiddleCHz()
 {
     return middleCHz;
 }
-double Conversions::getNORM_7(void)
+double Conversions::getNORM_7()
 {
     return NORM_7_;
 }
-int Conversions::getSampleSize(void)
+int Conversions::getSampleSize()
 {
     return sampleSize;
 }
@@ -555,13 +555,12 @@ std::string Conversions::listPitchClassSets()
 
 char *Conversions::dupstr(const char *string)
 {
-    if (string == 0) {
+    if (string == nullptr) {
         return 0;
     }
     size_t len = std::strlen(string);
     char *copy = (char *)std::malloc(len + 1);
     std::strncpy(copy, string, len);
-    copy[len] = '\0';
     return copy;
 }
 

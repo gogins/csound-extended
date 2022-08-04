@@ -1,6 +1,25 @@
 import ctcsound
+import configparser
+import datetime
+import os
+import os.path
+import platform
 import random
+import string
+import subprocess
 import sys
+import threading
+import time
+import traceback
+
+home_directory = os.environ["HOME"]
+playpen_ini_filepath = os.path.join(home_directory, "playpen.ini")
+settings = configparser.ConfigParser()
+settings.read_file(open(playpen_ini_filepath))
+csound_audio_output = settings.get("csound", "audio-output")
+print("csound_audio_output:     " + csound_audio_output)
+soundfile_editor = settings.get("playpen", "soundfile-editor")
+print("soundfile_editor:        " + soundfile_editor)
 
 orc = '''
 sr = 48000
@@ -9,29 +28,22 @@ nchnls = 2
 nchnls_i = 1
 0dbfs = 1
 
-// These must be initialized here to be in scope for both 
-// the note and the audio patches.
+#define SPATIALIZE_STEREO #1#
 
-gi_Fluidsynth fluidEngine 0, 0
-gi_FluidSteinway fluidLoad "/home/mkg/Dropbox/Steinway_C.sf2", gi_Fluidsynth, 1
-fluidProgramSelect gi_Fluidsynth, 0, gi_FluidSteinway, 0, 1
-
-gi_Pianoteq vstinit "/home/mkg/Pianoteq\ 7/x86-64bit/Pianoteq\ 7.so", 0
-vstinfo gi_Pianoteq 
-
-alwayson "PianoOutFluidsynth"
-alwayson "PianoOutPianoteq"
+opcode instrument_position, kk, iii
+i_onset, i_radius, i_rate xin
+i_rate = (i_rate / 50.)
+k_time times
+// Depth.
+k_x = i_radius * cos(i_onset + ((k_time - i_onset) * i_rate))
+// Pan.
+k_y = i_radius * sin(i_onset + ((k_time - i_onset) * i_rate))
+xout k_x, k_y
+endop
 
 #includestr "$PATCH_FILENAME"
 
-// Comment out if you don't have the Steinway_C.sf2 SoundFont.
-#include "PianoOutFluidsynth.inc"
-
-// Comment out if you don't have the Pianoteq and vst4cs.
-#include "PianoOutPianoteq.inc"
-
 #include "MasterOutput.inc"
-;#include "FaustGreyholeReverb.inc"
 
 iampdbfs init 1
 prints "Default amplitude at 0 dBFS: %9.4f\\n", iampdbfs
@@ -48,12 +60,6 @@ prints "nchnls:                      %9.4f\\n", nchnls
 
 connect "$PATCH_NAME", "outleft", "MasterOutput", "inleft"
 connect "$PATCH_NAME", "outright", "MasterOutput", "inright"
-connect "PianoOutFluidsynth", "outleft", "MasterOutput", "inleft"
-connect "PianoOutFluidsynth", "outright", "MasterOutput", "inright"
-connect "PianoOutPianoteq", "outleft", "MasterOutput", "inleft"
-connect "PianoOutPianoteq", "outright", "MasterOutput", "inright"
-
-;alwayson "FaustGreyholeReverb"
 alwayson "MasterOutput"
 '''
 
@@ -108,7 +114,7 @@ def generate_score():
 print(sys.argv)
 patch_filename = sys.argv[1]
 patch_name = sys.argv[2]
-output = sys.argv[3]
+output = patch_name + ".wav"
 message_level = 1 + 2 + 32 + 128
 csound = ctcsound.Csound()
 csound.message("Patch file: {} Patch name: {} Output: {}\n".format(patch_filename, patch_name, output))
@@ -122,8 +128,14 @@ csound.setOption("-+msg_color=0")
 csound.setOption("--simple-sorted-score")
 csound.setOption("--omacro:PATCH_FILENAME={}".format(patch_filename))
 csound.setOption("--omacro:PATCH_NAME={}".format(patch_name))
+csound.setOption("-o{}".format(output))
 csound.compileOrc(orc)
 csound.readScore(generate_score())
 csound.start()
 csound.perform()
-
+if platform.system() == "Darwin":
+    play_command = "open {} -a {}".format(output, soundfile_editor)
+else:
+    play_command = "{} {}".format(soundfile_editor, output)
+print("Play command: {}".format(play_command))
+subprocess.run(play_command, shell=True)

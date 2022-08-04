@@ -1,3 +1,5 @@
+#ifndef IMAGETOSCORE_HPP_INCLUDED
+#define IMAGETOSCORE_HPP_INCLUDED
 /*
 * C S O U N D
 *
@@ -17,7 +19,6 @@
 * License along with this software; if not, write to the Free Software
 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#pragma once
 
 #include "Platform.hpp"
 #ifdef SWIG
@@ -54,8 +55,8 @@ protected:
     size_t maximum_voice_count = 7;
     virtual void pixel_to_event(int column, int row, const cv::Vec3f &hsv, Event &event) const;
 public:
-    ImageToScore2(void);
-    virtual ~ImageToScore2(void);
+    ImageToScore2();
+    virtual ~ImageToScore2();
     virtual void setImageFilename(std::string imageFilename);
     virtual std::string getImageFilename() const;
     virtual void setMaximumVoiceCount(size_t maximumVoiceCount);
@@ -133,3 +134,5 @@ public:
 typedef ImageToScore2 ImageToScore;
 
 }
+
+#endif

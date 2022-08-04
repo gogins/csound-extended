@@ -1,3 +1,5 @@
+#ifndef SILENCE_HPP_INCLUDED
+#define SILENCE_HPP_INCLUDED
 /*
  * C S O U N D
  *
@@ -17,7 +19,7 @@
  * License along with this software; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#pragma once
+
 /**
  * \section silence_section_licenses License
  *
@@ -97,3 +99,5 @@
 #include "ChordLindenmayer.hpp"
 #include "HarmonyIFS.hpp"
 #include "ExternalNode.hpp"
+
+#endif
