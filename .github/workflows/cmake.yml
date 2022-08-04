@@ -101,7 +101,8 @@ jobs:
           find /home/runner . -name "*csnd*" -ls 2>/dev/null
           find /usr . -name "*csnd*" -ls 2>/dev/null
           # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE=C:\path\to\vcpkg\scripts\buildsystems\vcpkg.cmake
+          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} 
+          ##-DCMAKE_TOOLCHAIN_FILE=C:\path\to\vcpkg\scripts\buildsystems\vcpkg.cmake
           # Build with CMake.
           cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} 
           echo "Documenting..."
@@ -115,7 +116,7 @@ jobs:
         run: |
           echo "Installing tools..."
           choco install graphviz -y
-          choco install doxygen.install -y
+          vcpkg install doxygenf -y
           echo "Installing dependencies..."
           vcpkg install libsndfile
           choco install opencv
