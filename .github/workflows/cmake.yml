@@ -49,6 +49,7 @@ jobs:
           brew install libsndfile
           brew install csound
           brew install eigen
+          brew install opencv
           echo "Updating all git submodules..."
           git submodule update --init --recursive
           git submodule status --recursive
@@ -76,6 +77,7 @@ jobs:
           sudo apt-get install doxygen
           sudo apt-get install libsndfile1-dev
           sudo apt-get install csound
+          sudo apt-get install libopencv-dev
           echo "Environment:"
           env
           echo "Updating all git submodules..."
@@ -83,7 +85,7 @@ jobs:
           git submodule status --recursive
           echo "Finished updating all git submodules."
           echo "Trying to find csdl.h..."
-          find /home/runner -name "csdl.h" -ls 2>/dev/null
+          find /usr -name "csdl.h" -ls 2>/dev/null
           # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
           cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
           # Build with CMake.
@@ -102,6 +104,7 @@ jobs:
           choco install doxygen.install -y
           echo "Installing dependencies..."
           vcpkg install libsndfile
+          choco install opencv
           echo "Environment:"
           set
           git clone "https://github.com/csound/csound.git"
