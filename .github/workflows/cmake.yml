@@ -100,7 +100,7 @@ jobs:
           cd csound
           mkdir -p build
           cd build
-          cmake ..
+          cmake .. -DUSE_VCPKG=YES
           make
           cd ..
           cd ..
