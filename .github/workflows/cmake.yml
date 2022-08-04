@@ -87,6 +87,7 @@ jobs:
           echo "Trying to find csdl.h..."
           find /opt/runner . -name "csdl.h" -ls 2>/dev/null
           find /home/runner . -name "csdl.h" -ls 2>/dev/null
+          find /usr . -name "csdl.h" -ls 2>/dev/null
           # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
           cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
           # Build with CMake.
@@ -107,7 +108,7 @@ jobs:
           vcpkg install libsndfile
           choco install opencv
           echo "Environment:"
-          set
+          env
           git clone "https://github.com/csound/csound.git"
           cd csound
           mkdir -p build
