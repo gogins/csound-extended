@@ -4,6 +4,12 @@ Michael Gogins<br>
 https://github.com/gogins<br>
 http://michaelgogins.tumblr.com
 
+## Notice!
+
+The csound-extended package is now deprecated and is soon going to be replaced 
+by the more or less equivalent, but much easier to maintain and extend, 
+csound-ac package. Watch this space.
+
 ## Introduction
 
 This repository contains various extensions to Csound that have been moved
