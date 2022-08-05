@@ -96,6 +96,9 @@ jobs:
           #find /opt/runner . -name "*csnd*" -ls 2>/dev/null
           find /home/runner . -name "*csnd*" -ls 2>/dev/null
           find /usr . -name "*csnd*" -ls 2>/dev/null
+          echo "Trying to find all CMake package config files..."
+          find /home/runner . -name "*onfig.cmake" -ls 2>/dev/null
+          find /usr . -name "*onfig.cmake" -ls 2>/dev/null
           echo "Updating all git submodules..."
           git submodule update --init --recursive
           git submodule status --recursive
