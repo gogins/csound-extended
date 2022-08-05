@@ -117,18 +117,17 @@ jobs:
         run: |
           echo "Installing tools..."
           choco install graphviz -y
-          sudo apt install graphviz
-          sudo aot-get install doxygen
+          choco install doxygen -y
           echo "Installing dependencies..."
-          vcpkg install libsndfile
-          choco install opencv
+          vcpkg install --triplet x64-windows libsndfile
+          choco install --triplet x64-windowsopencv
           echo "Environment:"
           env
           git clone "https://github.com/csound/csound.git"
           cd csound
           mkdir -p build
           cd build
-          cmake .. -DUSE_VCPKG=YES
+          cmake .. -DUSE_VCPKG=YES -DVCPKG_TRIPLET=x64-windows
           make
           cd ..
           cd ..
