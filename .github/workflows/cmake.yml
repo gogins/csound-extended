@@ -172,7 +172,7 @@ jobs:
           choco install doxygen -y
           echo "Installing dependencies..."
           vcpkg install --triplet x64-windows libsndfile
-          choco install --triplet x64-windowsopencv
+          choco install --triplet x64-windows opencv
           echo "Environment:"
           env
           git clone "https://github.com/csound/csound.git"
