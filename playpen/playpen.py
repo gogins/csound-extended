@@ -25,6 +25,9 @@ python3 playpen.py csound-patch {source.inc}
     Includes the inc file in a csd file, renders it to a soundfile, and 
     opens the soundfile using the editor specified in playpen.ini.
     
+python3 playpen.py html-localhost {source.html}
+    Uses Python to opens source.html from a local webserver.
+
 python3 playpen html-nw {source.html}
     Creates a package.json file for the specified HTML file, and runs that 
     file as a NW.js application.
@@ -60,7 +63,7 @@ python3 playpen.py man-csoundac
 python3 playpen.py cpp-astyle {source}
     Uses the astyle program to reform the source file, using 
     options configured in playpen.ini.
-
+    
 For post-processing, the sndfile-metadata-set, sox, and ffmpeg programs need 
 to be installed.
 
@@ -319,12 +322,12 @@ def html_nwjs():
 def html_localhost():
     try:
         print("html_localhost: {}...".format(source_filepath))
-        command = "{} http://localhost:{}/{}".format(open_command, port, basename)
-        subprocess.run(command, shell=True)
+        command = "python3 -m webbrowser http://localhost:{}/{}".format(port, basename)
     except:
         traceback.print_exc()
     finally:
         print("html_localhost: {}.".format(source_filepath))
+        subprocess.run(command, shell=True)
         return
         
 def cpp_app():
@@ -416,10 +419,10 @@ if command == 'csd-play':
     csd_soundfile()
     post_process()
     play()
-if command == 'html-nw':
-    html_nw()
 if command == 'html-localhost':
     html_localhost()
+if command == 'html-nw':
+    html_nw()
 if command == 'cpp-lib':
     cpp_lib()
 if command == 'cpp-app':
