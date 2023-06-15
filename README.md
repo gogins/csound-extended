@@ -11,7 +11,7 @@ composing music, not programming. However, I do create open-source GitHub
 repositories in order to share tools that I make for composing. As my 
 working methods change, so do the tools I make. 
 
-I now use [csound-ac](https://github.com/gogins/csound-ac)) instead of 
+I now use [csound-ac](https://github.com/gogins/csound-ac) instead of 
 csound-extended to implement my C++ algorithmic composition library, my 
 helper scripts for my computer music playpen, and my Csound patches.
 
